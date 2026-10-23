@@ -1,0 +1,28 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/writer"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn element(String, attrs? : ArrayView[(String, String)], children? : ArrayView[Node]) -> Node
+
+pub fn text(String) -> Node
+
+pub fn to_string(Node) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum Node {
+  Element(String, ReadOnlyArray[(String, String)], ReadOnlyArray[Node])
+  Text(String)
+} derive(Eq, @debug.Debug)
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

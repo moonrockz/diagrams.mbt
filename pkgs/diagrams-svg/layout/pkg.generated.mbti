@@ -1,0 +1,123 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/layout"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/sequence",
+}
+
+// Values
+pub fn check(Geometry, @theme.Palette) -> Array[Finding]
+
+pub fn layout(@sequence.Sequence) -> Geometry
+
+pub let min_contrast : Double
+
+pub let min_text_size : Int32
+
+// Errors
+
+// Types and methods
+pub(all) struct Finding {
+  rule : Rule
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn Finding::equal(Self, Self) -> Bool
+pub fn Finding::not_equal(Self, Self) -> Bool
+pub fn Finding::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Geometry {
+  width : Int32
+  height : Int32
+  lifeline_top : Int32
+  lifeline_bottom : Int32
+  participants : ReadOnlyArray[ParticipantBox]
+  messages : ReadOnlyArray[MessageLine]
+} derive(Eq, @debug.Debug)
+pub fn Geometry::equal(Self, Self) -> Bool
+pub fn Geometry::not_equal(Self, Self) -> Bool
+pub fn Geometry::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Ink {
+  Primary
+  Muted
+  Accent(@theme.Family)
+} derive(Eq, @debug.Debug)
+pub fn Ink::equal(Self, Self) -> Bool
+pub fn Ink::not_equal(Self, Self) -> Bool
+pub fn Ink::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Label {
+  content : String
+  x : Int32
+  baseline : Int32
+  size : Int32
+  weight : Int32
+  box : Rect
+  ink : Ink
+  backdrop : ReadOnlyArray[Layer]
+  owner : String
+} derive(Eq, @debug.Debug)
+pub fn Label::equal(Self, Self) -> Bool
+pub fn Label::not_equal(Self, Self) -> Bool
+pub fn Label::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Layer {
+  Mask
+  Fill(@theme.Family)
+} derive(Eq, @debug.Debug)
+pub fn Layer::equal(Self, Self) -> Bool
+pub fn Layer::not_equal(Self, Self) -> Bool
+pub fn Layer::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MessageLine {
+  index : Int32
+  sender : String
+  receiver : String
+  family : @theme.Family
+  x1 : Int32
+  x2 : Int32
+  y : Int32
+  chip : Rect
+  label : Label
+} derive(Eq, @debug.Debug)
+pub fn MessageLine::equal(Self, Self) -> Bool
+pub fn MessageLine::not_equal(Self, Self) -> Bool
+pub fn MessageLine::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ParticipantBox {
+  id : String
+  family : @theme.Family
+  box : Rect
+  label : Label
+  lifeline_x : Int32
+} derive(Eq, @debug.Debug)
+pub fn ParticipantBox::equal(Self, Self) -> Bool
+pub fn ParticipantBox::not_equal(Self, Self) -> Bool
+pub fn ParticipantBox::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Rect {
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn Rect::equal(Self, Self) -> Bool
+pub fn Rect::not_equal(Self, Self) -> Bool
+pub fn Rect::overlaps(Self, Self) -> Bool
+pub fn Rect::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Rule {
+  Overlap
+  Fit
+  Size
+  Contrast
+} derive(Eq, @debug.Debug)
+pub fn Rule::equal(Self, Self) -> Bool
+pub fn Rule::not_equal(Self, Self) -> Bool
+pub fn Rule::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

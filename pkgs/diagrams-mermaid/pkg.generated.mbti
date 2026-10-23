@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/ast",
+  "moonrockz/diagrams-mermaid/cst",
+  "moonrockz/diagrams-mermaid/sequence",
+  "moonrockz/diagrams/render",
+}
+
+// Values
+pub fn print(@ast.Diagram) -> String
+
+pub fn read(String) -> ReadResult
+
+pub fn render_svg(String) -> @render.Rendered
+
+pub fn to_sequence(@ast.Diagram) -> @sequence.Conversion
+
+// Errors
+
+// Types and methods
+pub struct ReadResult {
+  tree : @cst.Node
+  ast : @ast.Diagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg"
+
+import {
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/sequence",
+}
+
+// Values
+pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme) -> String
+
+// Errors
+
+// Types and methods
+pub struct SvgRenderer {
+  theme : @theme.Theme
+}
+pub fn SvgRenderer::new(theme? : @theme.Theme) -> Self
+pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
+pub impl @render.Renderer for SvgRenderer
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,17 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/printer"
+
+import {
+  "moonrockz/diagrams-mermaid/ast",
+}
+
+// Values
+pub fn print(@ast.Diagram) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

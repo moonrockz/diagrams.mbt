@@ -1,0 +1,22 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/sequence"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/ast",
+}
+
+// Values
+pub fn to_sequence(@ast.Diagram) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  sequence : @moonrockz/diagrams/sequence.Sequence
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

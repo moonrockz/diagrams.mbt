@@ -1,0 +1,12 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/sequence" @model,
+  "moonrockz/diagrams-mermaid/ast",
+}
+
+import {
+  "moonrockz/diagrams/sequence" @model,
+  "moonrockz/diagrams-mermaid/ast",
+  "moonrockz/diagrams-mermaid/sequence",
+  "moonrockz/diagrams-mermaid/syntax",
+} for "test"

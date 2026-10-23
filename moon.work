@@ -2,4 +2,7 @@ members = [
   ".",
   "./apps/site",
   "./pkgs/diagrams",
+  "./pkgs/diagrams-mermaid",
+  "./pkgs/diagrams-svg",
+  "./tests",
 ]

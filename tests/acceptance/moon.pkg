@@ -1,0 +1,3 @@
+import {
+  "moonrockz/diagrams-mermaid" @mermaid,
+} for "test"

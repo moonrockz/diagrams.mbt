@@ -1,0 +1,14 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-mermaid/ast",
+  "moonrockz/diagrams-mermaid/cst",
+  "moonrockz/diagrams-mermaid/printer",
+  "moonrockz/diagrams-mermaid/sequence",
+  "moonrockz/diagrams-mermaid/syntax",
+  "moonrockz/diagrams-svg" @svg,
+}
+
+import {
+  "moonrockz/diagrams-mermaid" @mermaid,
+} for "test"

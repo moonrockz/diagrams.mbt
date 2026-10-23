@@ -11,12 +11,12 @@ and documentation. Run `mise run format`, `mise run check` and
 
 Bead: `diagrams-67z.1`.
 
-- [ ] 1.1 Create `pkgs/diagrams-mermaid`, `pkgs/diagrams-svg` and the unpublished `tests` module, register them in `moon.work` with the root version, and verify that `mise run validate` passes.
-- [ ] 1.2 Add `moonbit-community/metrics` to `diagrams-svg`, and verify that a measure call builds and passes a test on wasm, wasm-gc, js and native.
-- [ ] 1.3 Add the minimum `sequence` model, `render` trait and `Diagram` enum to `moonrockz/diagrams`, and verify them with unit tests.
-- [ ] 1.4 Read `sequenceDiagram` with two participants and one `->>` message into a CST, AST and model; verify CST reproduction, printing and conversion in tests.
-- [ ] 1.5 Lay out and render that diagram as adaptive SVG with the archify classic tokens; verify a stored snapshot, identical bytes on all four targets, and a passing legibility check.
-- [ ] 1.6 Write the first README section of each new module with a runnable example, and verify that the example runs in `mise run test`.
+- [x] 1.1 Create `pkgs/diagrams-mermaid`, `pkgs/diagrams-svg` and the unpublished `tests` module, register them in `moon.work` with the root version, and verify that `mise run validate` passes.
+- [x] 1.2 Add `moonbit-community/metrics` to `diagrams-svg`, and verify that a measure call builds and passes a test on wasm, wasm-gc, js and native.
+- [x] 1.3 Add the minimum `sequence` model, `render` trait and `Diagram` enum to `moonrockz/diagrams`, and verify them with unit tests.
+- [x] 1.4 Read `sequenceDiagram` with two participants and one `->>` message into a CST, AST and model; verify CST reproduction, printing and conversion in tests.
+- [x] 1.5 Lay out and render that diagram as adaptive SVG with the archify classic tokens; verify a stored snapshot, identical bytes on all four targets, and a passing legibility check.
+- [x] 1.6 Write the first README section of each new module with a runnable example, and verify that the example runs in `mise run test`.
 
 ## 2. Read the complete Mermaid sequence syntax
 

@@ -1,0 +1,11 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/sequence",
+  "moonbitlang/core/debug",
+}
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/sequence",
+} for "test"
