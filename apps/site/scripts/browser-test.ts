@@ -5,7 +5,7 @@
 import { chromium, type Page } from 'playwright';
 
 const origin = process.env.SITE_ORIGIN ?? 'http://127.0.0.1:4174';
-const base = process.env.SITE_BASE ?? '/diagrams.mbt-/';
+const base = process.env.SITE_BASE ?? '/diagrams.mbt/';
 const site = `${origin}${base}`;
 const overview = `${site}docs/design/overview/`;
 const failures: string[] = [];
@@ -154,7 +154,7 @@ try {
   await page.goto(apiPage);
   check((await page.locator('[id="version"]').count()) === 1, 'the diagrams API page has the #version anchor');
   check(
-    (await page.locator('.api-source a[href^="https://github.com/moonrockz/diagrams.mbt-/blob/"]').count()) > 0,
+    (await page.locator('.api-source a[href^="https://github.com/moonrockz/diagrams.mbt/blob/"]').count()) > 0,
     'the diagrams API page has a source link on GitHub',
   );
   const apiPhone = await browser.newPage({ viewport: { width: 390, height: 844 } });

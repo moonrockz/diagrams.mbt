@@ -1,4 +1,4 @@
-# Git hooks for moonrockz/diagrams.mbt-. Install them with `mise run hooks:install`.
+# Git hooks for moonrockz/diagrams.mbt. Install them with `mise run hooks:install`.
 # Every check is a mise task, so the hooks run the same commands as CI.
 
 pre-commit:

@@ -77,7 +77,7 @@ Example: the [Design overview](design/overview.md) explains the design.
 
 A link to a path that does not exist, or that leaves the repository, fails the
 build. Each internal link on the site starts with the site base path. The build
-adds it, so do not write `/diagrams.mbt-/` yourself.
+adds it, so do not write `/diagrams.mbt/` yourself.
 
 ## API links
 
@@ -92,7 +92,7 @@ a method. The link text is free.
 ```
 
 The build changes the target to the route of the API page, for example
-`/diagrams.mbt-/api/moonrockz/diagrams/#version`. This link goes to
+`/diagrams.mbt/api/moonrockz/diagrams/#version`. This link goes to
 [`version`](api:moonrockz/diagrams#version).
 
 The build fails when the package has no API page, or when the page has no item or
@@ -241,7 +241,7 @@ Run these tasks from the repository root.
 
 | Task | What it does |
 | --- | --- |
-| `mise run dev:site` | Builds the site, serves it at `http://127.0.0.1:4173/diagrams.mbt-/` and builds again when a source file changes |
+| `mise run dev:site` | Builds the site, serves it at `http://127.0.0.1:4173/diagrams.mbt/` and builds again when a source file changes |
 | `mise run build:site -- --main` | Builds the site as `main` does, into `_site/` |
 | `mise run check:site` | Checks the built site: links, titles, the feed and planning documents |
 | `mise run test:site` | Runs the tests of the site packages |

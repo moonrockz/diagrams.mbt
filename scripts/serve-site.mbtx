@@ -377,32 +377,35 @@ async fn main {
 
 ///|
 test "directory request" {
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/docs/"), Serve("docs/"))
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/"), Serve(""))
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/docs/"), Serve("docs/"))
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/"), Serve(""))
   assert_eq(
-    route("/diagrams.mbt-/", "/diagrams.mbt-/assets/site.css?v=1"),
+    route("/diagrams.mbt/", "/diagrams.mbt/assets/site.css?v=1"),
     Serve("assets/site.css"),
   )
 }
 
 ///|
 test "path outside the base" {
-  assert_eq(route("/diagrams.mbt-/", "/other/"), Redirect("/diagrams.mbt-/"))
-  assert_eq(route("/diagrams.mbt-/", "/"), Redirect("/diagrams.mbt-/"))
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-"), Redirect("/diagrams.mbt-/"))
+  assert_eq(route("/diagrams.mbt/", "/other/"), Redirect("/diagrams.mbt/"))
+  assert_eq(route("/diagrams.mbt/", "/"), Redirect("/diagrams.mbt/"))
+  assert_eq(
+    route("/diagrams.mbt/", "/diagrams.mbt"),
+    Redirect("/diagrams.mbt/"),
+  )
 }
 
 ///|
 test "path escape" {
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/../secret"), Forbidden)
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/%2e%2e/secret"), Forbidden)
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/../secret"), Forbidden)
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/%2e%2e/secret"), Forbidden)
   assert_eq(
-    route("/diagrams.mbt-/", "/diagrams.mbt-/docs/%2E%2E/%2e%2e/x"),
+    route("/diagrams.mbt/", "/diagrams.mbt/docs/%2E%2E/%2e%2e/x"),
     Forbidden,
   )
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/..%5csecret"), Forbidden)
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-//etc/passwd"), Forbidden)
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-/%zz"), Forbidden)
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/..%5csecret"), Forbidden)
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt//etc/passwd"), Forbidden)
+  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/%zz"), Forbidden)
 }
 
 ///|
@@ -446,5 +449,5 @@ test "the watch follows the packages and API modules of site/site.json" {
 
 ///|
 test "the base path comes from site/site.json" {
-  assert_eq(base_path("{\"base_path\": \"/diagrams.mbt-/\"}"), "/diagrams.mbt-/")
+  assert_eq(base_path("{\"base_path\": \"/diagrams.mbt/\"}"), "/diagrams.mbt/")
 }

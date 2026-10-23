@@ -1,4 +1,4 @@
-# Mise configuration for the moonrockz/diagrams.mbt- monorepo.
+# Mise configuration for the moonrockz/diagrams.mbt monorepo.
 #
 # Tools are pinned here. Tasks are MoonBit scripts in scripts/*.mbtx, run with moonx, so one script
 # works on every platform (see AGENTS.md).
@@ -90,7 +90,7 @@ description = "Add the release trees to the next build in _site/ and write the v
 run = "moonx scripts/site.mbtx assemble"
 
 [tasks."dev:site"]
-description = "Build the docs site, serve it at http://127.0.0.1:4173/diagrams.mbt-/ and build again on change (args: --port <n>, --no-watch)"
+description = "Build the docs site, serve it at http://127.0.0.1:4173/diagrams.mbt/ and build again on change (args: --port <n>, --no-watch)"
 depends = ["build:site"]
 run = "moonx scripts/serve-site.mbtx"
 

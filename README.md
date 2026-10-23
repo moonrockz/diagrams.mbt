@@ -57,7 +57,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run validate` | Check workspace membership and shared versions |
 | `mise run test:scripts` | Test the build tooling |
 | `mise run build:site` | Build the docs site into `_site/` |
-| `mise run dev:site` | Build the docs site, serve it at `http://127.0.0.1:4173/diagrams.mbt-/` and build it again after a change |
+| `mise run dev:site` | Build the docs site, serve it at `http://127.0.0.1:4173/diagrams.mbt/` and build it again after a change |
 | `mise run check:site` | Check the links of the built `_site/` |
 | `mise run test:site` | Test the docs site packages and run the browser smoke test on the built site |
 | `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.1.2` |
@@ -70,7 +70,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
   as `@diagrams`. Its `version()` export provides a build and test smoke check.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
-  builds the static site at `https://moonrockz.github.io/diagrams.mbt-/`.
+  builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
 - `docs/` and `site/` hold the content of the docs site.
 - `openspec/` holds the requirements (`specs/`) and the changes in progress
   (`changes/`).
