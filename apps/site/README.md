@@ -70,7 +70,7 @@ mise run test:site
 mise run dev:site
 ```
 
-`dev:site` serves the site at `http://127.0.0.1:4173/diagrams.mbt-/` and builds it
+`dev:site` serves the site at `http://127.0.0.1:4173/diagrams.mbt/` and builds it
 again after a source file changes.
 
 `check:site` checks the built `_site/`: internal links, page titles, the Atom feed,
@@ -85,7 +85,7 @@ starts with the `base_path` of `site/site.json`.
 
 The deployed site is versioned. CI builds `main` as the `next` tree with
 `mise run build:site -- --main --tree next`, so its pages are in `_site/next/` and
-each link starts with `/diagrams.mbt-/next/`. A release builds the tree of its minor
+each link starts with `/diagrams.mbt/next/`. A release builds the tree of its minor
 line with `--tree <minor>`, in `_site/v/<minor>/`, and attaches it as
 `site-<minor>.tar.gz`. `--tree` fails for a minor line that is not the line of the
 root `moon.mod`. A source page cannot have a route below `v`, `next` or `latest`.

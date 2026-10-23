@@ -152,7 +152,7 @@ async fn main {
 ///|
 test "a library module that imports Rabbita fails and is named" {
   let manifest =
-    #|name = "moonrockz/diagrams.mbt-"
+    #|name = "moonrockz/diagrams"
     #|
     #|import {
     #|  "moonbitlang/async@0.22.5",

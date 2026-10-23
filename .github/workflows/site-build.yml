@@ -2,7 +2,7 @@ name: Site build
 
 # Builds the docs site. CI calls it for each pull request with `pages: false`, so ci-ok covers it.
 # The Site workflow calls it on main with `pages: true` and deploys the result.
-# The build is the `next` tree for `main` at /diagrams.mbt-/next/ (openspec add-docs-site, design D22).
+# The build is the `next` tree for `main` at /diagrams.mbt/next/ (openspec add-docs-site, design D22).
 # With `pages: true` it then adds the site asset of the newest release of each minor line, the root
 # and /latest/ copies, the banners and versions.json, and checks the assembled site tree by tree.
 on:
