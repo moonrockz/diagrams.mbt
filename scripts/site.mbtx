@@ -802,7 +802,10 @@ test "check and assemble run their executables on _site" {
 
 ///|
 test "the browser test gets the base path of site.json" {
-  assert_eq(site_base("{\"base_path\": \"/diagrams.mbt-/\"}"), "/diagrams.mbt-/")
+  assert_eq(
+    site_base("{\"base_path\": \"/diagrams.mbt-/\"}"),
+    "/diagrams.mbt-/",
+  )
   let missing = try site_base("{}") catch {
     Failure(message) => message
   } noraise {

@@ -7,11 +7,11 @@ import {
   "moonbitlang/x@0.5.5",
   "moonbit-community/rabbita@0.16.5",
   "moonbit-community/cmark@0.4.12",
-  "bobzhang/beautiful_mermaid@0.1.0",
+  "bobzhang/beautiful_mermaid@0.2.0",
   "moonrockz/expect@0.6.1",
 }
 
-description = "Static docs site generator for Moon-Lander, excluded from publication"
+description = "Static docs site generator for diagrams.mbt, excluded from publication"
 
 repository = "https://github.com/moonrockz/diagrams.mbt-"
 
