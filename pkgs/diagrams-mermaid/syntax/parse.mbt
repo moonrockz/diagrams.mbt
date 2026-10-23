@@ -78,6 +78,15 @@ pub fn parse(source : String) -> ParseResult {
     }
     nodes.push(Node(@cst.Node::new(kind, cursor.tokens)))
   }
+  if !header {
+    diagnostics.push(
+      @diagrams.Diagnostic::error(
+        "mermaid/missing-header",
+        "a sequence diagram starts with `sequenceDiagram`",
+        span=@cst.span(source, source.length(), source.length()),
+      ),
+    )
+  }
   {
     tree: @cst.Node::new(Document, nodes),
     diagnostics: ReadOnlyArray::from_array(diagnostics),

@@ -45,3 +45,12 @@ test "render_svg gives the reader diagnostics and no output for a source without
     "mermaid/missing-header",
   ])
 }
+
+///|
+test "render_svg of an empty source says why it has no output" {
+  let r = @mermaid.render_svg("")
+  assert_eq(r.output, None)
+  assert_eq(r.diagnostics.map(d => d.code).iter().to_array(), [
+    "mermaid/missing-header",
+  ])
+}

@@ -73,3 +73,14 @@ test "a message has its sender, arrow, receiver and text tokens" {
     (Text, "hello there"),
   ])
 }
+
+///|
+test "an empty or comment-only source gives the missing-header diagnostic at its end" {
+  for source in ["", "\n\n", "%% only a comment\n"] {
+    let result = @syntax.parse(source)
+    assert_eq(result.tree.text(), source)
+    let codes = result.diagnostics.map(d => d.code).iter().to_array()
+    assert_eq(codes, ["mermaid/missing-header"], msg="source: \{source}")
+    assert_eq(result.diagnostics[0].span.unwrap().start.offset, source.length())
+  }
+}
