@@ -24,8 +24,9 @@ priv enum Plan {
 
 ///|
 /// A pull request run and a `dry_run` only check. Any other run must be on
-/// main; a tag must name the moon.mod version; an existing GitHub release is
-/// done; a release needs its CHANGELOG.md section.
+/// main: a branch run must be main itself, and a tag must name the moon.mod
+/// version and point into main; an existing GitHub release is done; a release
+/// needs its CHANGELOG.md section.
 fn plan(
   event~ : String,
   ref_type~ : String,
@@ -43,7 +44,8 @@ fn plan(
   if ref_type == "tag" && ref_name != tag {
     return Err("tag \{ref_name} does not match moon.mod version \{version}")
   }
-  if !on_main {
+  // An old branch can be an ancestor of main, so a branch run must be main.
+  if !on_main || (ref_type == "branch" && ref_name != "main") {
     return Err("\{ref_name} is not on main")
   }
   if released {
@@ -284,6 +286,13 @@ test "plan releases only from main with a matching tag and a changelog section" 
   assert_true(plan_case("push", "tag", "v0.1.0", true, false, true) is Err(_))
   assert_true(
     plan_case("push", "branch", "feature", false, false, true) is Err(_),
+  )
+  assert_true(
+    plan_case("workflow_dispatch", "branch", "old", true, false, true) is Err(_),
+  )
+  assert_eq(
+    plan_case("workflow_dispatch", "branch", "main", true, false, true),
+    Ok(Release("0.2.0")),
   )
   assert_true(
     plan_case("push", "branch", "main", true, true, true) is Ok(Skip(_)),
