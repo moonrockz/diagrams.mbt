@@ -1,0 +1,89 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/sequence"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) enum Event {
+  Message(Message)
+} derive(Eq, @debug.Debug)
+pub fn Event::equal(Self, Self) -> Bool
+pub fn Event::not_equal(Self, Self) -> Bool
+pub fn Event::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Head {
+  NoHead
+  Arrow
+} derive(Eq, @debug.Debug)
+pub fn Head::equal(Self, Self) -> Bool
+pub fn Head::not_equal(Self, Self) -> Bool
+pub fn Head::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LineStyle {
+  Solid
+  Dotted
+} derive(Eq, @debug.Debug)
+pub fn LineStyle::equal(Self, Self) -> Bool
+pub fn LineStyle::not_equal(Self, Self) -> Bool
+pub fn LineStyle::to_repr(Self) -> @debug.Repr
+
+pub struct Message {
+  sender : String
+  receiver : String
+  line : LineStyle
+  sender_head : Head
+  receiver_head : Head
+  label : String
+} derive(Eq, @debug.Debug)
+pub fn Message::equal(Self, Self) -> Bool
+pub fn Message::new(String, String, String, line? : LineStyle, sender_head? : Head, receiver_head? : Head) -> Self
+pub fn Message::not_equal(Self, Self) -> Bool
+pub fn Message::to_repr(Self) -> @debug.Repr
+
+pub struct Participant {
+  id : String
+  label : String
+  kind : ParticipantKind
+} derive(Eq, @debug.Debug)
+pub fn Participant::equal(Self, Self) -> Bool
+pub fn Participant::new(String, label? : String, kind? : ParticipantKind) -> Self
+pub fn Participant::not_equal(Self, Self) -> Bool
+pub fn Participant::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ParticipantKind {
+  Participant
+  Actor
+  Boundary
+  Control
+  Entity
+  Database
+  Collections
+  Queue
+  Service
+  Resource
+  Client
+} derive(Eq, @debug.Debug)
+pub fn ParticipantKind::equal(Self, Self) -> Bool
+pub fn ParticipantKind::not_equal(Self, Self) -> Bool
+pub fn ParticipantKind::to_repr(Self) -> @debug.Repr
+
+pub struct Sequence {
+  participants : ReadOnlyArray[Participant]
+  events : ReadOnlyArray[Event]
+  title : String?
+} derive(Eq, @debug.Debug)
+pub fn Sequence::equal(Self, Self) -> Bool
+pub fn Sequence::new(ArrayView[Participant], ArrayView[Event], title? : String) -> Self
+pub fn Sequence::not_equal(Self, Self) -> Bool
+pub fn Sequence::participant(Self, String) -> Participant?
+pub fn Sequence::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

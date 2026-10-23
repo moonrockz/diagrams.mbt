@@ -1,0 +1,65 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/ast"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/cst",
+}
+
+// Values
+pub fn lower(@cst.Node) -> Diagram?
+
+// Errors
+
+// Types and methods
+pub struct Diagram {
+  statements : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::new(ArrayView[Statement]) -> Self
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+
+pub struct MessageStatement {
+  sender : String
+  arrow : String
+  receiver : String
+  text : String
+  span : @diagrams.Span
+} derive(@debug.Debug)
+pub fn MessageStatement::equal(Self, Self) -> Bool
+pub fn MessageStatement::not_equal(Self, Self) -> Bool
+pub fn MessageStatement::to_repr(Self) -> @debug.Repr
+pub impl Eq for MessageStatement
+
+pub struct ParticipantDecl {
+  keyword : ParticipantKeyword
+  id : String
+  label : String?
+  span : @diagrams.Span
+} derive(@debug.Debug)
+pub fn ParticipantDecl::equal(Self, Self) -> Bool
+pub fn ParticipantDecl::not_equal(Self, Self) -> Bool
+pub fn ParticipantDecl::to_repr(Self) -> @debug.Repr
+pub impl Eq for ParticipantDecl
+
+pub(all) enum ParticipantKeyword {
+  Participant
+  Actor
+} derive(Eq, @debug.Debug)
+pub fn ParticipantKeyword::equal(Self, Self) -> Bool
+pub fn ParticipantKeyword::not_equal(Self, Self) -> Bool
+pub fn ParticipantKeyword::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Statement {
+  Participant(ParticipantDecl)
+  Message(MessageStatement)
+} derive(Eq, @debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

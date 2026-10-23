@@ -1,0 +1,22 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/syntax"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/cst",
+}
+
+// Values
+pub fn parse(String) -> ParseResult
+
+// Errors
+
+// Types and methods
+pub struct ParseResult {
+  tree : @cst.Node
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

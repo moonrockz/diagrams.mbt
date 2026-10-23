@@ -1,0 +1,4 @@
+import {
+  "moonrockz/diagrams",
+  "moonbitlang/core/debug",
+}

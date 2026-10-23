@@ -1,0 +1,89 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/theme"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams/sequence",
+}
+
+// Values
+pub let all_families : ReadOnlyArray[Family]
+
+pub fn contrast(Color, Color) -> Double
+
+pub fn family_of(@sequence.ParticipantKind, Int32) -> Family
+
+pub fn luminance(Color) -> Double
+
+pub fn over(Color, Color) -> Color
+
+// Errors
+
+// Types and methods
+pub struct Color {
+  r : Int32
+  g : Int32
+  b : Int32
+  alpha : Int32
+} derive(Eq, @debug.Debug)
+pub fn Color::equal(Self, Self) -> Bool
+pub fn Color::hex(Int32) -> Self
+pub fn Color::not_equal(Self, Self) -> Bool
+pub fn Color::rgba(Int32, Int32, Int32, Int32) -> Self
+pub fn Color::to_css(Self) -> String
+pub fn Color::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Family {
+  Frontend
+  Backend
+  Database
+  Cloud
+  Security
+  MessageBus
+  External
+} derive(Eq, @debug.Debug)
+pub fn Family::equal(Self, Self) -> Bool
+pub fn Family::name(Self) -> String
+pub fn Family::not_equal(Self, Self) -> Bool
+pub fn Family::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FamilyColors {
+  fill : Color
+  stroke : Color
+  ink : Color
+} derive(Eq, @debug.Debug)
+pub fn FamilyColors::equal(Self, Self) -> Bool
+pub fn FamilyColors::not_equal(Self, Self) -> Bool
+pub fn FamilyColors::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Palette {
+  bg : Color
+  text : Color
+  muted : Color
+  mask : Color
+  arrow : Color
+  frontend : FamilyColors
+  backend : FamilyColors
+  database : FamilyColors
+  cloud : FamilyColors
+  security : FamilyColors
+  messagebus : FamilyColors
+  external : FamilyColors
+} derive(Eq, @debug.Debug)
+pub fn Palette::equal(Self, Self) -> Bool
+pub fn Palette::family(Self, Family) -> FamilyColors
+pub fn Palette::not_equal(Self, Self) -> Bool
+pub fn Palette::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Theme {
+  dark : Palette
+  light : Palette
+} derive(Eq, @debug.Debug)
+pub fn Theme::classic() -> Self
+pub fn Theme::equal(Self, Self) -> Bool
+pub fn Theme::not_equal(Self, Self) -> Bool
+pub fn Theme::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

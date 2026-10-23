@@ -1,12 +1,53 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "moonrockz/diagrams"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
 pub fn version() -> String
 
 // Errors
 
 // Types and methods
+pub(all) struct Diagnostic {
+  code : String
+  severity : Severity
+  message : String
+  span : Span?
+} derive(Eq, @debug.Debug)
+pub fn Diagnostic::equal(Self, Self) -> Bool
+pub fn Diagnostic::error(String, String, span? : Span) -> Self
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
+pub fn Diagnostic::warning(String, String, span? : Span) -> Self
+
+pub(all) struct Position {
+  offset : Int32
+  line : Int32
+  column : Int32
+} derive(Eq, @debug.Debug)
+pub fn Position::equal(Self, Self) -> Bool
+pub fn Position::not_equal(Self, Self) -> Bool
+pub fn Position::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Error
+  Warning
+  Info
+} derive(Eq, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Span {
+  start : Position
+  end : Position
+} derive(Eq, @debug.Debug)
+pub fn Span::equal(Self, Self) -> Bool
+pub fn Span::not_equal(Self, Self) -> Bool
+pub fn Span::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

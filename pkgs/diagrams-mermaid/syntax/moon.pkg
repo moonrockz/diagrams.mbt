@@ -1,0 +1,10 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/cst",
+}
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/cst",
+  "moonrockz/diagrams-mermaid/syntax",
+} for "test"

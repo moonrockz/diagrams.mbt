@@ -1,0 +1,12 @@
+import {
+  "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams-svg/theme",
+  "moonbit-community/metrics",
+  "moonbitlang/core/debug",
+}
+
+import {
+  "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams-svg/layout",
+  "moonrockz/diagrams-svg/theme",
+} for "test"

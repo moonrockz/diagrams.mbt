@@ -1,0 +1,10 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/cst",
+  "moonbitlang/core/debug",
+}
+
+import {
+  "moonrockz/diagrams-mermaid/ast",
+  "moonrockz/diagrams-mermaid/syntax",
+} for "test"

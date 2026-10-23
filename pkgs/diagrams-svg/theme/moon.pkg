@@ -1,0 +1,9 @@
+import {
+  "moonrockz/diagrams/sequence",
+  "moonbitlang/core/debug",
+  "moonbitlang/core/math",
+}
+
+import {
+  "moonrockz/diagrams-svg/theme",
+} for "test"

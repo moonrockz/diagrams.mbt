@@ -1,0 +1,40 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/render"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/sequence",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) enum Diagram {
+  Sequence(@sequence.Sequence)
+} derive(Eq, @debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::kind_name(Self) -> String
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+
+pub struct Rendered {
+  output : String?
+  media_type : String
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn Rendered::equal(Self, Self) -> Bool
+pub fn Rendered::failed(String, ArrayView[@diagrams.Diagnostic]) -> Self
+pub fn Rendered::not_equal(Self, Self) -> Bool
+pub fn Rendered::ok(String, String, diagnostics? : ArrayView[@diagrams.Diagnostic]) -> Self
+pub fn Rendered::to_repr(Self) -> @debug.Repr
+pub fn Rendered::unsupported(String, Diagram) -> Self
+
+// Type aliases
+
+// Traits
+pub(open) trait Renderer {
+  fn render(Self, Diagram) -> Rendered
+}
