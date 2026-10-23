@@ -111,12 +111,24 @@ Mermaid does.
 The conversion SHALL report problems that the grammar allows but the meaning
 does not. These SHALL include a deactivation of a participant that is not
 active, an event for a participant after its destruction, and a second
-declaration of a participant with a different kind.
+declaration of a participant with a different kind. As in Mermaid, a `destroy`
+statement comes before the message that destroys the participant, and the
+destruction takes effect after that message.
 
 #### Scenario: A deactivation without an activation
 
 - **WHEN** a source has `deactivate B` and `B` is not active
 - **THEN** the conversion gives an error diagnostic with the code `mermaid/inactive-deactivation` and the span of the statement
+
+#### Scenario: The destroying message is valid
+
+- **WHEN** a source has `destroy B` and then the message `A-xB: stop`
+- **THEN** the conversion gives no diagnostic, and the model has the message and then the destruction of `B`
+
+#### Scenario: An event after the destruction
+
+- **WHEN** a source has `destroy B`, the message `A-xB: stop` and then the message `A->>B: again`
+- **THEN** the conversion gives an error diagnostic with the code `mermaid/destroyed-participant` and the span of the second message
 
 ### Requirement: Links from Mermaid syntax
 

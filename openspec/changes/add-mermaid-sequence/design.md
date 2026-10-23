@@ -157,9 +157,10 @@ adapter, keeps the full ID, and one rule in the renderer shortens it.
 A link with any other scheme stays a normal Mermaid link. A shape ID label must
 match the Smithy shape ID grammar: a namespace of one or more identifiers joined
 by `.`, then `#`, then a shape name, and optionally `$` and a member name. A
-label with any other text stays a plain label. An `openrpc:` link on a message
-comes only from a `link` statement in this change. The OpenRPC change decides
-how a message label names a method.
+label with any other text stays a plain label. A Mermaid `link` statement
+attaches to a participant only. So in this change an `openrpc:` link can be on a
+participant, but not on a message. The change `add-openrpc-sequence` defines how
+a message names an OpenRPC method.
 
 Render properties are a separate, optional value on each participant and
 message:
