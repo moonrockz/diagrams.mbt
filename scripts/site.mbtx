@@ -1,0 +1,882 @@
+///|
+/// Build, check and test the docs site of `apps/site`. The site is written to `_site/`.
+///
+/// Usage: `mise run build:site [-- --main] [--tree <tree>]`, `mise run check:site [-- --tree <tree>]`,
+/// `mise run test:site [-- --tree <tree>]` and `mise run assemble:site`, or the same commands of
+/// `moonx scripts/site.mbtx`.
+/// `build` removes `_site/`, then runs the steps of design D6 in order. Each task stops at the first
+/// step that fails, prints the name of that step, and exits with a non-zero code. `check` checks the
+/// built `_site/`. `test` runs the tests of the site packages and of the TypeScript highlight step,
+/// installs Chromium, and runs the browser smoke test against the built `_site/` (design D16).
+/// `--tree next` builds, checks or tests the `main` tree in `_site/next/`, and `--tree <minor>` the
+/// tree of the minor line of the root `moon.mod` in `_site/v/<minor>/` (design D22). `assemble` adds
+/// the release trees to a `next` build in `_site/` and writes the deployed site.
+/// Run it from the workspace root.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let usage : String = "Usage: site.mbtx build [--main] [--tree <tree>] | check [--tree <tree>] | test [--tree <tree>] | assemble"
+
+///|
+/// The arguments without `--tree <tree>`, and the tree, or `None` without `--tree`.
+fn split_tree(args : Array[String]) -> (Array[String], String?) raise Failure {
+  let rest = []
+  let mut tree = None
+  let mut i = 0
+  while i < args.length() {
+    if args[i] == "--tree" {
+      guard i + 1 < args.length() else {
+        raise Failure("`--tree` needs a tree: `next` or a minor line. \{usage}")
+      }
+      tree = Some(args[i + 1])
+      i += 2
+    } else {
+      rest.push(args[i])
+      i += 1
+    }
+  }
+  (rest, tree)
+}
+
+///|
+/// Whether `text` is a minor line `X.Y` with digits only.
+fn is_minor_line(text : String) -> Bool {
+  let parts = text.split(".").collect()
+  parts.length() == 2 &&
+  parts
+  .iter()
+  .all(part => part != "" && part.iter().all(c => c >= '0' && c <= '9'))
+}
+
+///|
+/// The path of the tree `tree` below `_site/`, with a final `/` (design D22): `next/` for `next`, and
+/// `v/<minor>/` for the minor line `line` of the root `moon.mod`. Another minor line fails, and so do
+/// the reserved names `latest` and `v`, which only the deploy writes.
+fn tree_path(tree : String, line~ : String) -> String raise Failure {
+  if tree == "next" {
+    "next/"
+  } else if is_minor_line(tree) {
+    if tree != line {
+      raise Failure(
+        "moon.mod has the minor line \{line}, but the build asks for the tree \{tree}",
+      )
+    }
+    "v/\{tree}/"
+  } else {
+    raise Failure(
+      "`\{tree}` is not a tree to build: use `next` or the minor line of moon.mod",
+    )
+  }
+}
+
+///|
+/// The minor line of the root `moon.mod`, from `scripts/versions.mbtx minor`.
+async fn root_line() -> String raise Failure {
+  let (code, out) = @process.collect_stdout("moonx", [
+    "scripts/versions.mbtx", "minor",
+  ]) catch {
+    error => raise Failure("scripts/versions.mbtx does not run: \{error}")
+  }
+  let line = (out.text() catch { _ => "" }).trim().to_owned()
+  guard code == 0 && is_minor_line(line) else {
+    raise Failure("scripts/versions.mbtx minor gives no minor line")
+  }
+  line
+}
+
+///|
+/// The tree path of the arguments of a command, or `""` without `--tree`. Only a minor line needs the
+/// version of the root `moon.mod`.
+async fn tree_of(tree : String?) -> String raise Failure {
+  match tree {
+    None => ""
+    Some("next") => "next/"
+    Some(name) =>
+      tree_path(name, line=if is_minor_line(name) { root_line() } else { "" })
+  }
+}
+
+///|
+/// The output directory of the tree at `path` below `_site/`.
+fn tree_dir(path : String) -> String {
+  if path == "" {
+    out_dir
+  } else {
+    "\{out_dir}/\{path[:path.length() - 1]}"
+  }
+}
+
+///|
+/// The output directory, relative to the workspace root.
+let out_dir : String = "_site"
+
+///|
+/// The islands bundle that `moon build` writes, relative to the workspace root.
+let islands_build : String = "_build/js/release/build/moonrockz/diagrams-site/islands/islands.js"
+
+///|
+/// The directory of the `moon doc` output of the API pages, relative to the workspace root. The
+/// output of the module directory `pkgs/notebooks` is in `_build/site-api/pkgs/notebooks/doc/`.
+let api_dir : String = "_build/site-api"
+
+///|
+/// The step that runs `moon doc` in the module directory `dir`. `moon -C` reads `--target-dir`
+/// relative to `dir`, so the target goes up to the workspace root first. Each module has its own
+/// target directory, so a later run does not remove the output of an earlier one.
+fn api_doc_step(dir : String) -> Step {
+  let up = dir.split("/").map(_ => "..").collect().join("/")
+  run("moon doc \{dir}", "moon", [
+    "-C",
+    dir,
+    "doc",
+    "--target-dir",
+    "\{up}/\{api_dir}/\{dir}",
+  ])
+}
+
+///|
+/// The module directories of the `api` key of `site/site.json`. The generator checks the key; a
+/// value that is not an array of strings gives no steps here.
+fn api_dirs(site_json : String) -> Array[String] {
+  let json = @json.parse(site_json) catch { _ => return [] }
+  guard json is Object(fields) && fields.get("api") is Some(Array(items)) else {
+    return []
+  }
+  items.filter_map(item => if item is String(dir) { Some(dir) } else { None })
+}
+
+///|
+/// The bundled islands in the output directory `out`.
+fn islands_bundle(out : String) -> String {
+  "\{out}/assets/islands.js"
+}
+
+///|
+/// The gzip size of the islands bundle that gives a warning (design D13).
+let islands_target : Int32 = 25 * 1024
+
+///|
+/// The gzip size of the islands bundle that fails the build (design D13).
+let islands_limit : Int32 = 27 * 1024
+
+///|
+/// What one step does.
+enum Action {
+  /// Run the command with the arguments.
+  Run(String, Array[String])
+  /// Check the gzip size of the file against the islands budget.
+  GzipBudget(String)
+  /// Serve `_site/` on the port with `serve-site.mbtx --no-watch`, run the browser smoke test against
+  /// the tree at the path below the base path (`""` for the whole site), and stop the server.
+  BrowserTest(Int32, String)
+} derive(Eq, Debug)
+
+///|
+/// The port of the preview server during the browser smoke test (design D16).
+let browser_test_port : Int32 = 4174
+
+///|
+/// The browser smoke test, run by the pinned Node.
+let browser_test_script : String = "apps/site/scripts/browser-test.ts"
+
+///|
+/// The base path in the text of `site/site.json`.
+fn site_base(text : String) -> String raise Failure {
+  let json = @json.parse(text) catch {
+    error => raise Failure("site/site.json: not valid JSON: \{error}")
+  }
+  guard json is Object(fields) && fields.get("base_path") is Some(String(base)) else {
+    raise Failure("site/site.json: missing string field `base_path`")
+  }
+  base
+}
+
+///|
+/// One step of a site task.
+struct Step {
+  name : String
+  action : Action
+} derive(Eq, Debug)
+
+///|
+fn run(name : String, command : String, args : Array[String]) -> Step {
+  { name, action: Run(command, args), }
+}
+
+///|
+/// The step that installs the npm packages of `apps/site` from `bun.lock`.
+let install_step : Step = run("install site dependencies", "bun", [
+  "install", "--frozen-lockfile", "--cwd", "apps/site",
+])
+
+///|
+/// The steps of `build`. `--main` marks a build for the deployed site. `api` holds the module
+/// directories of the API pages; `moon doc` runs in each before `generate`. `tree` is the path of the
+/// version tree below `_site/`, such as `next/`, or `""` for a build at the site root.
+fn build_steps(
+  args : Array[String],
+  api~ : Array[String] = [],
+  tree~ : String = "",
+) -> Array[Step] raise Failure {
+  for arg in args {
+    if arg != "--main" {
+      raise Failure("unknown option `\{arg}`. \{usage}")
+    }
+  }
+  let out = tree_dir(tree)
+  let generate_args = [
+    "run", "--target", "native", "--release", "apps/site/generate", "--", "--root",
+    ".", "--out", out,
+  ]
+  if tree != "" {
+    generate_args.push("--tree-path")
+    generate_args.push(tree)
+  }
+  if args.contains("--main") {
+    generate_args.push("--main")
+  }
+  [
+    install_step,
+    run("build islands", "moon", [
+      "build", "--target", "js", "--release", "apps/site/islands",
+    ]),
+    run("bundle islands", "bun", [
+      "build",
+      islands_build,
+      "--minify",
+      "--format",
+      "esm",
+      "--target",
+      "browser",
+      "--outdir",
+      "\{out}/assets",
+    ]),
+    { name: "check islands size", action: GzipBudget(islands_bundle(out)), },
+    ..api.map(api_doc_step),
+    run("generate", "moon", generate_args),
+    run("highlight", "bun", ["apps/site/scripts/highlight.ts", out]),
+  ]
+}
+
+///|
+/// The steps of `check`. `tree` is the path of the version tree below `_site/`, and `base` the base
+/// path of the site in `_site/`. Without a tree, a `_site/` that the deploy assembled is checked tree
+/// by tree.
+fn check_steps(
+  args : Array[String],
+  tree~ : String = "",
+  base~ : String = "/",
+) -> Array[Step] raise Failure {
+  if args is [arg, ..] {
+    raise Failure("unknown option `\{arg}`. \{usage}")
+  }
+  let check_args = [
+    "run",
+    "--target",
+    "native",
+    "--release",
+    "apps/site/check",
+    "--",
+    "--root",
+    ".",
+    "--dir",
+    tree_dir(tree),
+  ]
+  if tree != "" {
+    check_args.push("--base")
+    check_args.push(base + tree)
+  }
+  [run("check", "moon", check_args)]
+}
+
+///|
+/// The steps of `assemble` (design D22): the `assemble` executable reads the releases with `gh`,
+/// unpacks their site assets below `_site/v/`, and writes the root, `/latest/`, the banners, the
+/// canonical links and `versions.json`.
+fn assemble_steps(args : Array[String]) -> Array[Step] raise Failure {
+  if args is [arg, ..] {
+    raise Failure("unknown option `\{arg}`. \{usage}")
+  }
+  [
+    run("assemble", "moon", [
+      "run", "--target", "native", "--release", "apps/site/assemble", "--", "--root",
+      ".", "--site", out_dir,
+    ]),
+  ]
+}
+
+///|
+/// The module name of `apps/site`.
+let site_module : String = "moonrockz/diagrams-site"
+
+///|
+/// The full names of the site packages that run on native. `packages` holds the directory name and the
+/// `moon.pkg` text of each package below `apps/site`, in order. A package whose `supported_targets` is
+/// `"js"` only, such as `islands`, does not run on native.
+fn native_packages(packages : Array[(String, String)]) -> Array[String] {
+  packages
+  .filter(entry => !entry.1.contains("supported_targets = \"js\""))
+  .map(entry => "\{site_module}/\{entry.0}")
+}
+
+///|
+/// Each package below `apps/site`: the directory name and the `moon.pkg` text.
+async fn site_packages() -> Array[(String, String)] {
+  let found = []
+  for name in @fs.readdir("apps/site", sort=true) {
+    let pkg = "apps/site/\{name}/moon.pkg"
+    if @fs.kind("apps/site/\{name}") is Directory && @fs.exists(pkg) {
+      found.push((name, @fs.read_file(pkg).text()))
+    }
+  }
+  found
+}
+
+///|
+/// The steps of `test` for the native site packages `packages`. The browser test of task 7.2 comes
+/// after the highlight test, and tests the version tree at `tree` below the base path.
+fn test_steps(
+  args : Array[String],
+  packages : Array[String],
+  tree~ : String = "",
+) -> Array[Step] raise Failure {
+  if args is [arg, ..] {
+    raise Failure("unknown option `\{arg}`. \{usage}")
+  }
+  [
+    install_step,
+    run(
+      "test site packages (native)",
+      "moon",
+      ["test", "--target", "native", "-p", ..packages],
+    ),
+    run("test site model (js)", "moon", [
+      "test", "--target", "js", "-p", "moonrockz/diagrams-site/model",
+    ]),
+    run("test highlight", "node", [
+      "--test", "apps/site/scripts/highlight.test.ts",
+    ]),
+    // The Playwright CLI of the locked `playwright` package. It does nothing when the browser is
+    // already installed, for example from the CI cache.
+    run("install chromium", "node", [
+      "apps/site/node_modules/playwright/cli.js", "install", "chromium",
+    ]),
+    {
+      name: "browser smoke test",
+      action: BrowserTest(browser_test_port, tree),
+    },
+  ]
+}
+
+///|
+/// The result of the islands size rule.
+enum Budget {
+  Within
+  /// Above the target: the message names the size and the target.
+  Warn(String)
+  /// Above the limit: the message names the size and the limit.
+  Fail(String)
+} derive(Eq, Debug)
+
+///|
+/// Check the gzip size `size` of `file` against the islands budget: a warning above 25 KB, a failure
+/// above 27 KB.
+fn islands_budget(file : String, size : Int32) -> Budget {
+  if size > islands_limit {
+    Fail(
+      "\{file} is \{size} bytes gzip, above the 27 KB limit (\{islands_limit} bytes)",
+    )
+  } else if size > islands_target {
+    Warn(
+      "\{file} is \{size} bytes gzip, above the 25 KB target (\{islands_target} bytes)",
+    )
+  } else {
+    Within
+  }
+}
+
+///|
+/// The script that prints the gzip size of a file, compressed with zlib as browsers receive it.
+/// `moonbitlang/async/gzip` writes larger output than zlib, so its size is not the size that a
+/// browser downloads.
+let gzip_size_script : String = "apps/site/scripts/gzip-size.ts"
+
+///|
+/// The size in bytes that `gzip_size_script` prints, or `None` when the text is not a size.
+fn parse_size(text : String) -> Int32? {
+  let digits = text.trim()
+  if digits == "" || digits.length() > 9 {
+    return None
+  }
+  let mut size = 0
+  for c in digits {
+    guard c >= '0' && c <= '9' else { return None }
+    size = size * 10 + (c.to_int() - '0'.to_int())
+  }
+  Some(size)
+}
+
+///|
+/// The gzip size of `file`, from `gzip_size_script` below the workspace root `root`.
+async fn gzip_size(file : String, root~ : String = ".") -> Int32 {
+  let (code, out) = @process.collect_stdout("bun", [
+    "\{root}/\{gzip_size_script}",
+    file,
+  ])
+  let text = out.text()
+  guard code == 0 && parse_size(text) is Some(size) else {
+    fail("cannot measure the gzip size of \{file}")
+  }
+  size
+}
+
+///|
+/// Run one step. Returns 0, or a positive exit code.
+async fn run_step(step : Step) -> Int32 {
+  match step.action {
+    Run(command, args) => {
+      let code = @process.run(
+        command,
+        args,
+        stdout=@stdio.stdout,
+        stderr=@stdio.stderr,
+      ) catch {
+        error => {
+          eprintln("❌ \{step.name}: \{error}")
+          return 1
+        }
+      }
+      if code > 0 {
+        code
+      } else if code < 0 {
+        1
+      } else {
+        0
+      }
+    }
+    GzipBudget(file) => {
+      let size = gzip_size(file) catch {
+        error => {
+          eprintln("❌ \{step.name}: \{error}")
+          return 1
+        }
+      }
+      match islands_budget(file, size) {
+        Within => {
+          println("\{file} is \{size} bytes gzip")
+          0
+        }
+        Warn(message) => {
+          println("warning: \{message}")
+          0
+        }
+        Fail(message) => {
+          eprintln("error: \{message}")
+          1
+        }
+      }
+    }
+    BrowserTest(port, tree) => {
+      let site = site_base(@fs.read_file("site/site.json").text()) catch {
+        error => {
+          eprintln("❌ \{step.name}: \{error}")
+          return 1
+        }
+      }
+      let base = site + tree
+      let code = (@async.with_task_group() <| group => {
+        // The group stops the server when the test ends. `moonx` runs the script in its own
+        // process, so the server stops with it.
+        group.spawn_bg(no_wait=true, () => {
+          ignore(
+            @process.run(
+              "moonx",
+              [
+                "scripts/serve-site.mbtx",
+                "--no-watch",
+                "--port",
+                port.to_string(),
+              ],
+              stdout=@stdio.stdout,
+              stderr=@stdio.stderr,
+            ),
+          )
+        })
+        @process.run(
+          "node",
+          [browser_test_script],
+          extra_env={
+            "SITE_ORIGIN": "http://127.0.0.1:\{port}",
+            "SITE_BASE": base,
+          },
+          stdout=@stdio.stdout,
+          stderr=@stdio.stderr,
+        )
+      }) catch {
+        error => {
+          eprintln("❌ \{step.name}: \{error}")
+          return 1
+        }
+      }
+      if code > 0 {
+        code
+      } else if code < 0 {
+        1
+      } else {
+        0
+      }
+    }
+  }
+}
+
+///|
+/// Run `steps` in order and stop at the first failure. Returns 0, or the exit code of the failed step
+/// (1 when that code is not positive).
+async fn run_steps(steps : Array[Step]) -> Int32 {
+  for step in steps {
+    println("🔨 \{step.name}")
+    let code = run_step(step)
+    if code != 0 {
+      eprintln("❌ Step failed: \{step.name}")
+      return code
+    }
+  }
+  0
+}
+
+///|
+async fn main {
+  let args = @env.args()[1:]
+  guard args is [command, .. rest] else {
+    eprintln(usage)
+    @sys.exit(2)
+    return
+  }
+  let (steps, done) = try {
+    let (rest, tree_name) = split_tree(rest.to_owned())
+    let tree = tree_of(tree_name)
+    match command {
+      "build" =>
+        (
+          build_steps(
+            rest,
+            api=api_dirs(@fs.read_file("site/site.json").text()),
+            tree~,
+          ),
+          "✅ Built \{tree_dir(tree)}/",
+        )
+      "check" =>
+        (
+          check_steps(
+            rest,
+            tree~,
+            base=site_base(@fs.read_file("site/site.json").text()),
+          ),
+          "✅ Checked \{tree_dir(tree)}/",
+        )
+      "test" =>
+        (
+          test_steps(rest, native_packages(site_packages()), tree~),
+          "✅ Site tests passed",
+        )
+      "assemble" =>
+        if tree_name is Some(_) {
+          raise Failure("`assemble` takes no tree. \{usage}")
+        } else {
+          (assemble_steps(rest), "✅ Assembled \{out_dir}/")
+        }
+      _ => raise Failure("unknown command `\{command}`. \{usage}")
+    }
+  } catch {
+    Failure(message) => {
+      eprintln("❌ \{message}")
+      @sys.exit(2)
+      return
+    }
+    error => {
+      eprintln("❌ \{error}")
+      @sys.exit(1)
+      return
+    }
+  }
+  if command == "build" && @fs.exists(out_dir) {
+    @fs.rmdir(out_dir, recursive=true)
+  }
+  let code = run_steps(steps)
+  if code != 0 {
+    @sys.exit(code)
+  }
+  println(done)
+}
+
+///|
+test "build runs the steps of design D6 in order" {
+  assert_eq(build_steps([]).map(step => step.name), [
+    "install site dependencies", "build islands", "bundle islands", "check islands size",
+    "generate", "highlight",
+  ])
+  assert_eq(build_steps([])[4], {
+    name: "generate",
+    action: Run("moon", [
+      "run", "--target", "native", "--release", "apps/site/generate", "--", "--root",
+      ".", "--out", "_site",
+    ]),
+  })
+  assert_eq(build_steps([])[3].action, GzipBudget("_site/assets/islands.js"))
+}
+
+///|
+test "moon doc runs in each API module before generate" {
+  let steps = build_steps([], api=["pkgs/diagrams", "pkgs/notebooks"])
+  assert_eq(steps.map(step => step.name), [
+    "install site dependencies", "build islands", "bundle islands", "check islands size",
+    "moon doc pkgs/diagrams", "moon doc pkgs/notebooks", "generate", "highlight",
+  ])
+  assert_eq(
+    steps[5].action,
+    Run("moon", [
+      "-C", "pkgs/notebooks", "doc", "--target-dir", "../../_build/site-api/pkgs/notebooks",
+    ]),
+  )
+}
+
+///|
+test "the api key gives the module directories" {
+  assert_eq(api_dirs("{\"api\": [\"pkgs/diagrams\", \"pkgs/notebooks\"]}"), [
+    "pkgs/diagrams", "pkgs/notebooks",
+  ])
+  assert_eq(api_dirs("{}"), [])
+  assert_eq(api_dirs("not json"), [])
+}
+
+///|
+test "--main reaches generate" {
+  guard build_steps(["--main"])[4].action is Run(_, args) else {
+    fail("generate is not a command")
+  }
+  assert_eq(args[args.length() - 1], "--main")
+  guard build_steps([])[4].action is Run(_, args) else {
+    fail("generate is not a command")
+  }
+  assert_false(args.contains("--main"))
+}
+
+///|
+test "an unknown option fails" {
+  let message = try build_steps(["--mian"]) catch {
+    Failure(message) => message
+  } noraise {
+    _ => ""
+  }
+  assert_eq(message, "unknown option `--mian`. \{usage}")
+}
+
+///|
+test "check runs the check executable on _site" {
+  assert_eq(check_steps([]), [
+    {
+      name: "check",
+      action: Run("moon", [
+        "run", "--target", "native", "--release", "apps/site/check", "--", "--root",
+        ".", "--dir", "_site",
+      ]),
+    },
+  ])
+  let message = try check_steps(["--main"]) catch {
+    Failure(message) => message
+  } noraise {
+    _ => ""
+  }
+  assert_eq(message, "unknown option `--main`. \{usage}")
+}
+
+///|
+test "test runs the site package tests, the highlight test and the browser test" {
+  let steps = test_steps([], ["moonrockz/diagrams-site/model"])
+  assert_eq(steps.map(step => step.name), [
+    "install site dependencies", "test site packages (native)", "test site model (js)",
+    "test highlight", "install chromium", "browser smoke test",
+  ])
+  assert_eq(
+    steps[1].action,
+    Run("moon", [
+      "test", "--target", "native", "-p", "moonrockz/diagrams-site/model",
+    ]),
+  )
+  assert_eq(steps[5].action, BrowserTest(4174, ""))
+  let next = test_steps([], [], tree="next/")
+  assert_eq(next[5].action, BrowserTest(4174, "next/"))
+}
+
+///|
+test "Minor line tree: a tree build writes below its tree" {
+  let steps = build_steps(["--main"], tree="next/")
+  assert_eq(
+    steps[2].action,
+    Run("bun", [
+      "build", islands_build, "--minify", "--format", "esm", "--target", "browser",
+      "--outdir", "_site/next/assets",
+    ]),
+  )
+  assert_eq(steps[3].action, GzipBudget("_site/next/assets/islands.js"))
+  assert_eq(
+    steps[4].action,
+    Run("moon", [
+      "run", "--target", "native", "--release", "apps/site/generate", "--", "--root",
+      ".", "--out", "_site/next", "--tree-path", "next/", "--main",
+    ]),
+  )
+  assert_eq(
+    steps[5].action,
+    Run("bun", ["apps/site/scripts/highlight.ts", "_site/next"]),
+  )
+  assert_eq(tree_path("next", line="0.2"), "next/")
+  assert_eq(tree_path("0.2", line="0.2"), "v/0.2/")
+  assert_eq(tree_dir("v/0.2/"), "_site/v/0.2")
+}
+
+///|
+test "Wrong line" {
+  let message = try tree_path("0.1", line="0.2") catch {
+    Failure(message) => message
+  } noraise {
+    _ => ""
+  }
+  assert_eq(
+    message, "moon.mod has the minor line 0.2, but the build asks for the tree 0.1",
+  )
+  let reserved = try tree_path("latest", line="0.2") catch {
+    Failure(message) => message
+  } noraise {
+    _ => ""
+  }
+  assert_eq(
+    reserved, "`latest` is not a tree to build: use `next` or the minor line of moon.mod",
+  )
+}
+
+///|
+test "--tree is split from the other arguments" {
+  assert_eq(
+    split_tree(["--main", "--tree", "next"]),
+    (["--main"], Some("next")),
+  )
+  assert_eq(split_tree(["--main"]), (["--main"], None))
+  let message = try split_tree(["--tree"]) catch {
+    Failure(message) => message
+  } noraise {
+    _ => ""
+  }
+  assert_eq(message, "`--tree` needs a tree: `next` or a minor line. \{usage}")
+}
+
+///|
+test "check and assemble run their executables on _site" {
+  assert_eq(check_steps([], tree="next/", base="/diagrams.mbt-/"), [
+    {
+      name: "check",
+      action: Run("moon", [
+        "run", "--target", "native", "--release", "apps/site/check", "--", "--root",
+        ".", "--dir", "_site/next", "--base", "/diagrams.mbt-/next/",
+      ]),
+    },
+  ])
+  assert_eq(assemble_steps([]), [
+    {
+      name: "assemble",
+      action: Run("moon", [
+        "run", "--target", "native", "--release", "apps/site/assemble", "--", "--root",
+        ".", "--site", "_site",
+      ]),
+    },
+  ])
+}
+
+///|
+test "the browser test gets the base path of site.json" {
+  assert_eq(site_base("{\"base_path\": \"/diagrams.mbt-/\"}"), "/diagrams.mbt-/")
+  let missing = try site_base("{}") catch {
+    Failure(message) => message
+  } noraise {
+    _ => "no failure"
+  }
+  assert_eq(missing, "site/site.json: missing string field `base_path`")
+}
+
+///|
+test "js-only packages do not run on native" {
+  assert_eq(
+    native_packages([
+      ("check", "supported_targets = \"native\"\n"),
+      ("islands", "supported_targets = \"js\"\n"),
+      ("model", "import {}\n"),
+    ]),
+    ["moonrockz/diagrams-site/check", "moonrockz/diagrams-site/model"],
+  )
+}
+
+///|
+test "the islands budget warns above 25 KB and fails above 27 KB" {
+  assert_eq(islands_budget("a.js", 25 * 1024), Within)
+  assert_eq(
+    islands_budget("a.js", 25 * 1024 + 1),
+    Warn("a.js is 25601 bytes gzip, above the 25 KB target (25600 bytes)"),
+  )
+  assert_eq(
+    islands_budget("a.js", 27 * 1024),
+    Warn("a.js is 27648 bytes gzip, above the 25 KB target (25600 bytes)"),
+  )
+  assert_eq(
+    islands_budget("a.js", 28 * 1024),
+    Fail("a.js is 28672 bytes gzip, above the 27 KB limit (27648 bytes)"),
+  )
+}
+
+///|
+test "the gzip size script prints a size in bytes" {
+  assert_eq(parse_size("22573"), Some(22573))
+  assert_eq(parse_size(" 18\n"), Some(18))
+  assert_eq(parse_size(""), None)
+  assert_eq(parse_size("12 KB"), None)
+  assert_eq(parse_size("-1"), None)
+}
+
+///|
+async test "gzip size is the size of the compressed data" {
+  // Script tests run in `scripts/`, one directory below the workspace root.
+  let file = "_build/site-gzip-size-test.txt"
+  @fs.write_file(file, String::make(10000, 'a'))
+  defer @fs.remove(file)
+  let size = gzip_size(file, root="..")
+  assert_true(size > 18 && size < 1000, msg="size \{size}")
+}
+
+///|
+async test "a failed step stops the build with a non-zero code" {
+  let code = run_steps([
+    run("fails", "moon", ["no-such-command"]),
+    run("never runs", "moon", ["version"]),
+  ])
+  assert_true(code != 0)
+}
+
+///|
+async test "a missing bundle fails the size step" {
+  let code = run_steps([
+    { name: "size", action: GzipBudget("no-such-dir/islands.js"), },
+  ])
+  assert_eq(code, 1)
+}
+
+///|
+async test "steps that pass give 0" {
+  assert_eq(run_steps([run("ok", "moon", ["version"])]), 0)
+}

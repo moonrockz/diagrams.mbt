@@ -1,0 +1,15 @@
+import {
+  "moonrockz/diagrams-site/model",
+  "moonbit-community/rabbita",
+  "moonbit-community/rabbita/html",
+}
+
+import {
+  "moonrockz/diagrams-site/model",
+  "moonrockz/diagrams-site/views",
+  "moonbitlang/async",
+} for "test"
+
+supported_targets = "native"
+
+warnings = "-alert_experimental-alert_xss_vulnerable"

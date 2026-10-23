@@ -1,0 +1,13 @@
+import {
+  "moonrockz/diagrams-site/model",
+  "moonbit-community/cmark/cmark_html",
+  "bobzhang/beautiful_mermaid" @mermaid,
+  "moonbitlang/core/debug",
+}
+
+import {
+  "moonrockz/diagrams-site/content",
+  "moonrockz/diagrams-site/model",
+} for "test"
+
+supported_targets = "native"

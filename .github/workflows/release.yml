@@ -1,0 +1,163 @@
+# Release: plan, validate, publish, verify, GitHub release. Adapted from
+# Smithy's release flow (CONTRIBUTING.md). diagrams.mbt ships no binaries.
+#
+# plan      decides if this run releases: a push to main that changes moon.mod
+#           or a vX.Y.Z tag, when vX.Y.Z has no GitHub release yet and
+#           CHANGELOG.md has its section.
+# validate  runs the full checks and the shared-version check.
+# publish   publishes the public modules (an existing version counts as
+#           done).
+# site      builds the docs site of the moon.mod minor line through
+#           site-asset.yml and gives site-<minor>.tar.gz to the release job
+#           (openspec add-docs-site, design D22).
+# release   creates the GitHub release vX.Y.Z with the CHANGELOG.md section and
+#           attaches site-<minor>.tar.gz, then starts the Site workflow, which
+#           serves each minor line from that asset.
+#
+# Pull requests that change release files, and manual runs with dry_run, only
+# plan, validate and build the site asset. Re-running failed jobs is safe:
+# publish and release are idempotent, and the release job attaches the asset
+# again to an existing release.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: [moon.mod]
+    tags: ['v*']
+  pull_request:
+    paths:
+      - .github/workflows/release.yml
+      - scripts/release.mbtx
+      - scripts/publish.mbtx
+      - scripts/credentials.mbtx
+      - scripts/versions.mbtx
+      - .github/workflows/site-asset.yml
+      - moon.mod
+      - CHANGELOG.md
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Run every check, but do not publish or create a release
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('release-pr-{0}', github.event.number) || 'release' }}
+  cancel-in-progress: false
+
+env:
+  MISE_EXPERIMENTAL: 'true'
+
+jobs:
+  plan:
+    name: Plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      release: ${{ steps.plan.outputs.release }}
+      dry_run: ${{ steps.plan.outputs.dry_run }}
+      version: ${{ steps.plan.outputs.version }}
+      tag: ${{ steps.plan.outputs.tag }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Install pinned tools
+        uses: ./.github/actions/setup
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Decide what this run does
+        id: plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run == true && 'true' || 'false' }}
+        run: mise run release:plan
+
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    needs: [plan]
+    if: needs.plan.outputs.release == 'true' || needs.plan.outputs.dry_run == 'true'
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install pinned tools
+        uses: ./.github/actions/setup
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run lint, validate, test and build
+        run: mise run check
+      - name: Check that every version is ${{ needs.plan.outputs.version }}
+        run: moonx scripts/versions.mbtx check ${{ needs.plan.outputs.version }}
+
+  publish:
+    name: Publish to mooncakes.io
+    runs-on: ubuntu-latest
+    needs: [plan, validate]
+    if: needs.plan.outputs.release == 'true'
+    timeout-minutes: 45
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install pinned tools
+        uses: ./.github/actions/setup
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Write the mooncakes.io credentials
+        env:
+          MOONCAKES_USER_TOKEN: ${{ secrets.MOONCAKES_USER_TOKEN }}
+        run: mise run release:credentials
+      - name: Publish the modules
+        run: mise run release:publish
+
+  site:
+    name: Site asset
+    needs: [plan]
+    if: needs.plan.outputs.release == 'true' || needs.plan.outputs.dry_run == 'true'
+    uses: ./.github/workflows/site-asset.yml
+
+  release:
+    name: GitHub release
+    runs-on: ubuntu-latest
+    needs: [plan, publish, site]
+    if: needs.plan.outputs.release == 'true'
+    timeout-minutes: 15
+    # actions: write lets this job start the Site workflow. A release event from GITHUB_TOKEN starts
+    # no workflow, but a workflow_dispatch does.
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install pinned tools
+        uses: ./.github/actions/setup
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Write the release notes
+        run: mise run release:notes ${{ needs.plan.outputs.version }} > "$RUNNER_TEMP/notes.md"
+      - name: Download the site asset
+        uses: actions/download-artifact@v8
+        with:
+          name: site-asset
+          path: ${{ runner.temp }}/site-asset
+      - name: Create the release with the site asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.plan.outputs.version }}
+          ASSET: ${{ runner.temp }}/site-asset/${{ needs.site.outputs.asset }}
+        run: mise run release:github "$VERSION" "$RUNNER_TEMP/notes.md" "$ASSET"
+      # The Site deploy of the version-bump push can run before this release exists. gh publishes the
+      # release only after it uploads the asset, and the deploy skips drafts, so that deploy does not
+      # fail; it only misses the new line. This run deploys the site again with the new release.
+      - name: Deploy the docs site with the new release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run site.yml --ref main

@@ -1,0 +1,18 @@
+schema: spec-driven
+context: |
+  diagrams.mbt is a MoonBit library for diagrams. It supports formats such as
+  Mermaid, PlantUML, Draw.io and Graphviz DOT. It has the same focus, design
+  principles and release pipelines as the other moonrockz projects, such as
+  moonrockz/moon-lander. The library has no UI. One exception: the unpublished
+  docs tool apps/site can use Rabbita (moonbit-community/rabbita). No other
+  module can import it. Library code must build and test on the wasm, wasm-gc,
+  js and native targets. Process, signal and filesystem I/O stay in host
+  adapters that use moonbitlang/async; domain logic is pure over explicit
+  inputs and immutable public values.
+  Beads (bd) tracks implementation work. OpenSpec holds requirements and design.
+  Write all artifacts in ASD-STE100 Simplified Technical English.
+rules:
+  tasks:
+    - Group tasks into story-sized units. Each group names its beads issue ID once one exists.
+  proposal:
+    - State what is out of scope.

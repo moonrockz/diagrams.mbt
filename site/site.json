@@ -1,0 +1,15 @@
+{
+  "title": "diagrams.mbt",
+  "description": "Diagramming for MoonBit.",
+  "base_path": "/diagrams.mbt-/",
+  "site_url": "https://moonrockz.github.io/diagrams.mbt-/",
+  "repo_url": "https://github.com/moonrockz/diagrams.mbt-",
+  "versions": { "since": "0.1" },
+  "packages": ["diagrams"],
+  "api": ["pkgs/diagrams"],
+  "nav": [
+    { "group": "Design", "items": ["design/"] },
+    { "group": "Packages", "items": ["packages/"] },
+    { "group": "Contribute", "items": ["WRITING_FOR_THE_SITE.md"] }
+  ]
+}

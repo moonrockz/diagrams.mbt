@@ -1,0 +1,7 @@
+import {
+  "moonrockz/diagrams" @diagrams,
+} for "test"
+
+options(
+  "is-main": false,
+)
