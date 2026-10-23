@@ -389,7 +389,10 @@ test "directory request" {
 test "path outside the base" {
   assert_eq(route("/diagrams.mbt-/", "/other/"), Redirect("/diagrams.mbt-/"))
   assert_eq(route("/diagrams.mbt-/", "/"), Redirect("/diagrams.mbt-/"))
-  assert_eq(route("/diagrams.mbt-/", "/diagrams.mbt-"), Redirect("/diagrams.mbt-/"))
+  assert_eq(
+    route("/diagrams.mbt-/", "/diagrams.mbt-"),
+    Redirect("/diagrams.mbt-/"),
+  )
 }
 
 ///|
@@ -446,5 +449,8 @@ test "the watch follows the packages and API modules of site/site.json" {
 
 ///|
 test "the base path comes from site/site.json" {
-  assert_eq(base_path("{\"base_path\": \"/diagrams.mbt-/\"}"), "/diagrams.mbt-/")
+  assert_eq(
+    base_path("{\"base_path\": \"/diagrams.mbt-/\"}"),
+    "/diagrams.mbt-/",
+  )
 }
