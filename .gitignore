@@ -51,3 +51,39 @@ node_modules/
 *.exe
 # macOS debug symbol bundles.
 *.dSYM/
+
+# Mise
+
+# Local mise overrides (copy .config/mise/config.local.toml.example).
+.config/mise/config.local.toml
+mise.local.toml
+.mise.local.toml
+
+# Lefthook
+
+# Local hook overrides.
+lefthook-local.yml
+
+# Misc
+
+.DS_Store
+*.log
+
+# AI working documents (specs, plans, scratch)
+
+.dev/
+
+# Release outputs
+
+dist/
+
+# Docs site output (mise run build:site)
+
+_site/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+*.gate.lock*

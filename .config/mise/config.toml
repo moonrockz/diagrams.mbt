@@ -1,0 +1,174 @@
+# Mise configuration for the moonrockz/diagrams.mbt- monorepo.
+#
+# Tools are pinned here. Tasks are MoonBit scripts in scripts/*.mbtx, run with moonx, so one script
+# works on every platform (see AGENTS.md).
+#
+# Local overrides go in .config/mise/config.local.toml (gitignored); see config.local.toml.example.
+
+[tools]
+# Node.js runs the js target in `moon test --target js` and `moon run --target js`.
+node = "24.14.1"
+
+# Bun installs the docs site dependencies and bundles its browser script
+bun = "1.4.3"
+
+# Browser harness CLI for the docs site smoke test; must match apps/site/package.json and the Playwright
+# version of the site build workflow.
+"npm:@playwright/test" = "1.64.1"
+
+# YAML linting, pinned so lint results do not change between machines
+yamllint = "1.38.0"
+
+# Git hooks manager; the hooks are in lefthook.yml
+lefthook = "2.1.1"
+
+# Spec-driven change proposals under openspec/; needs Node.js 20.19 or later
+"npm:@fission-ai/openspec" = "1.14.1"
+
+# C compiler used through the external moonrockz/zig-cross tool
+zig = "0.17.0"
+
+# MoonBit toolchain, pinned. mise cannot resolve "latest" for an http: tool, and a pinned version
+# keeps CI and every machine on the same compiler. To move to a newer release, change the version
+# here and in each URL (with "+" written as "%2B"), taken from
+# https://cli.moonbitlang.com/binaries/<version>/.
+#
+# The binary archive omits the core library. CI (and a fresh machine) completes it with
+# `curl -fsSL https://cli.moonbitlang.com/install/unix.sh | MOON_HOME=$(mise where http:moonbit) bash -s -- <version>`.
+
+[tools."http:moonbit"]
+version = "0.10.17+093cb8f9c"
+bin_path = "bin"
+
+[tools."http:moonbit".platforms]
+linux-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.17%2B093cb8f9c/moonbit-linux-x86_64.tar.gz" }
+linux-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.17%2B093cb8f9c/moonbit-linux-aarch64.tar.gz" }
+macos-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.17%2B093cb8f9c/moonbit-darwin-aarch64.tar.gz" }
+windows-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.17%2B093cb8f9c/moonbit-windows-x86_64.zip", format = "zip" }
+# No Windows arm64 build is published; Windows on Arm runs the x64 build under emulation.
+windows-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.17%2B093cb8f9c/moonbit-windows-x86_64.zip", format = "zip" }
+
+[env]
+_.path = ["./node_modules/.bin"]
+
+# Every task is a MoonBit script: `moonx scripts/<name>.mbtx`. Pass arguments after `--`.
+
+[tasks.build]
+description = "Build all workspace members (args: targets, --release; default: wasm wasm-gc js native)"
+run = "moonx scripts/build.mbtx"
+
+[tasks."build:wasm"]
+description = "Build all workspace members for the wasm target"
+run = "moonx scripts/build.mbtx wasm"
+
+[tasks."build:wasm-gc"]
+description = "Build all workspace members for the wasm-gc target"
+run = "moonx scripts/build.mbtx wasm-gc"
+
+[tasks."build:js"]
+description = "Build all workspace members for the js target"
+run = "moonx scripts/build.mbtx js"
+
+[tasks."build:native"]
+description = "Build all workspace members for native in release mode"
+run = "moonx scripts/build.mbtx native --release"
+
+[tasks."build:site"]
+description = "Build the docs site into _site/ (args: --main, --tree next|<minor>)"
+run = "moonx scripts/site.mbtx build"
+
+[tasks."check:site"]
+description = "Check the built docs site in _site/, tree by tree when it is assembled (args: --tree next|<minor>)"
+run = "moonx scripts/site.mbtx check"
+
+[tasks."test:site"]
+description = "Test the docs site packages and the highlight step, and run the browser smoke test on _site/ (args: --tree next|<minor>)"
+run = "moonx scripts/site.mbtx test"
+
+[tasks."assemble:site"]
+description = "Add the release trees to the next build in _site/ and write the versioned site (needs gh; CI deploy)"
+run = "moonx scripts/site.mbtx assemble"
+
+[tasks."dev:site"]
+description = "Build the docs site, serve it at http://127.0.0.1:4173/diagrams.mbt-/ and build again on change (args: --port <n>, --no-watch)"
+depends = ["build:site"]
+run = "moonx scripts/serve-site.mbtx"
+
+[tasks.test]
+description = "Run tests for all workspace members (args: targets; default: wasm wasm-gc js native)"
+run = "moonx scripts/test.mbtx"
+
+[tasks.format]
+description = "Format MoonBit code"
+run = "moonx scripts/format.mbtx"
+
+[tasks.lint]
+description = "Run all lint tasks (YAML, MoonBit format and check)"
+run = "moonx scripts/lint.mbtx"
+
+[tasks."lint:moonbit"]
+description = "Check MoonBit formatting and run moon check"
+run = "moonx scripts/lint-moonbit.mbtx"
+
+[tasks."lint:yaml"]
+description = "Lint YAML files with yamllint"
+run = "moonx scripts/lint-yaml.mbtx"
+
+[tasks.validate]
+description = "Run all validation checks"
+depends = ["validate:packages", "validate:versions"]
+
+[tasks."validate:packages"]
+description = "Verify the workspace package structure against moon.work"
+run = "moonx scripts/validate-packages.mbtx"
+
+[tasks."validate:versions"]
+description = "Verify that every module and version string has the version of the root moon.mod"
+run = "moonx scripts/versions.mbtx check"
+
+[tasks."test:native-zig"]
+description = "Run native tests with zig as the C compiler"
+run = "moonx moonrockz/zig-cross@0.1.2 exec host -- moonx scripts/test.mbtx native"
+
+[tasks."test:scripts"]
+description = "Test the task scripts"
+run = "moonx scripts/test-scripts.mbtx"
+
+[tasks.check]
+description = "Run lint, validate, tests, task script tests and builds"
+run = "moonx scripts/check.mbtx"
+
+[tasks."release:plan"]
+description = "Decide whether a Release workflow run releases (CI)"
+run = "moonx scripts/release.mbtx plan"
+
+[tasks."release:credentials"]
+description = "Write mooncakes.io credentials from MOONCAKES_USER_TOKEN (CI only)"
+run = "moonx scripts/credentials.mbtx"
+
+[tasks."release:publish"]
+description = "Publish the public modules to mooncakes.io; already published versions count as done (CI only)"
+run = "moonx scripts/publish.mbtx"
+
+[tasks."release:notes"]
+description = "Print the CHANGELOG.md section of a version (args: X.Y.Z)"
+run = "moonx scripts/release.mbtx notes"
+
+[tasks."release:github"]
+description = "Create the GitHub release vX.Y.Z unless it exists (args: X.Y.Z NOTES_FILE; CI only)"
+run = "moonx scripts/release.mbtx github"
+
+[tasks.clean]
+description = "Remove build artifacts"
+run = "moonx scripts/clean.mbtx"
+
+[tasks."hooks:install"]
+description = "Install git hooks with lefthook"
+run = "moonx scripts/hooks-install.mbtx"
+
+[tasks.list-tasks]
+description = "List mise tasks"
+run = "mise tasks"
+
+[settings]
+experimental = true

@@ -1,0 +1,60 @@
+name: Site build
+
+# Builds the docs site. CI calls it for each pull request with `pages: false`, so ci-ok covers it.
+# The Site workflow calls it on main with `pages: true` and deploys the result.
+# The build is the `next` tree for `main` at /diagrams.mbt-/next/ (openspec add-docs-site, design D22).
+# With `pages: true` it then adds the site asset of the newest release of each minor line, the root
+# and /latest/ copies, the banners and versions.json, and checks the assembled site tree by tree.
+on:
+  workflow_call:
+    inputs:
+      pages:
+        description: Assemble the versioned site and upload it as the GitHub Pages artifact
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  MISE_EXPERIMENTAL: 'true'
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      - name: Install pinned tools
+        uses: ./.github/actions/setup
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build site
+        run: mise run build:site -- --main --tree next
+      - name: Check site
+        run: mise run check:site -- --tree next
+      # test:site installs Chromium with the Playwright CLI of apps/site/bun.lock. The cache keeps the
+      # download, so the install does nothing on a hit. The runner image has the OS libraries of Chromium.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: site-playwright-${{ runner.os }}-${{ hashFiles('apps/site/bun.lock') }}
+      - name: Test site
+        run: mise run test:site -- --tree next
+      # gh reads the releases and downloads their site assets with the read-only token of this job.
+      - name: Assemble the versioned site
+        if: inputs.pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mise run assemble:site
+      - name: Check the assembled site
+        if: inputs.pages
+        run: mise run check:site
+      - name: Upload Pages artifact
+        if: inputs.pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
