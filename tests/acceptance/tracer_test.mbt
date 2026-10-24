@@ -166,14 +166,14 @@ test "the Mermaid source renders as the same SVG on every target" {
     #|  </g>
     #|  <g class="messages">
     #|    <g class="message f-frontend" data-index="0" data-from="U" data-to="Client">
-    #|      <path class="m-line" d="M237 124 H87" marker-end="url(#head-frontend)"/>
-    #|      <rect class="mask" x="96" y="100" width="132" height="20" rx="3"/>
-    #|      <text class="m-label" x="162" y="114" text-anchor="middle">open the forecast</text>
+    #|      <path class="m-line" d="M237 127 H87" marker-end="url(#head-frontend)"/>
+    #|      <rect class="mask" x="96" y="100" width="132" height="23" rx="3"/>
+    #|      <text class="m-label" x="162" y="115" text-anchor="middle">open the forecast</text>
     #|    </g>
     #|    <g class="message f-frontend" data-index="1" data-from="Client" data-to="API">
-    #|      <path class="m-line" d="M87 172 H381" marker-end="url(#head-frontend)"/>
-    #|      <rect class="mask" x="182" y="148" width="105" height="20" rx="3"/>
-    #|      <text class="m-label" x="234" y="162" text-anchor="middle">GET /forecast</text>
+    #|      <path class="m-line" d="M87 175 H381" marker-end="url(#head-frontend)"/>
+    #|      <rect class="mask" x="182" y="148" width="105" height="23" rx="3"/>
+    #|      <text class="m-label" x="234" y="163" text-anchor="middle">GET /forecast</text>
     #|    </g>
     #|  </g>
     #|  <g class="participants">
@@ -195,5 +195,7 @@ test "the Mermaid source renders as the same SVG on every target" {
     #|  </g>
     #|</svg>
     #|
+
+
   ))
 }

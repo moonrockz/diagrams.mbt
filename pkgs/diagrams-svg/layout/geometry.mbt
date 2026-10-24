@@ -28,6 +28,7 @@ pub(all) enum Ink {
   Primary
   Muted
   Accent(@theme.Family)
+  Color(@theme.Color)
 } derive(Eq, Debug)
 
 ///|
@@ -41,6 +42,7 @@ pub extend Ink with @debug.Debug::{to_repr}
 pub(all) enum Layer {
   Mask
   Fill(@theme.Family)
+  Tint(@theme.Color)
 } derive(Eq, Debug)
 
 ///|
@@ -79,6 +81,11 @@ pub(all) struct ParticipantBox {
   box : Rect
   label : Label
   lifeline_x : Int
+  lifeline_top : Int
+  lifeline_bottom : Int
+  destroyed : Bool
+  participant : @sequence.Participant
+  sublabel : Label?
 } derive(Eq, Debug)
 
 ///|
@@ -99,6 +106,9 @@ pub(all) struct MessageLine {
   y : Int
   chip : Rect
   label : Label
+  sublabel : Label?
+  path : ReadOnlyArray[Segment]
+  message : @sequence.Message
 } derive(Eq, Debug)
 
 ///|
@@ -117,6 +127,12 @@ pub(all) struct Geometry {
   lifeline_bottom : Int
   participants : ReadOnlyArray[ParticipantBox]
   messages : ReadOnlyArray[MessageLine]
+  notes : ReadOnlyArray[NoteBox]
+  activations : ReadOnlyArray[ActivationBar]
+  frames : ReadOnlyArray[FrameBox]
+  groups : ReadOnlyArray[GroupBox]
+  title : Label?
+  title_box : Rect?
 } derive(Eq, Debug)
 
 ///|
@@ -124,3 +140,98 @@ pub extend Geometry with Eq::{not_equal, equal}
 
 ///|
 pub extend Geometry with @debug.Debug::{to_repr}
+
+///|
+/// One axis-aligned path segment. Owners associate a path with its label.
+pub(all) struct Segment {
+  x1 : Int
+  y1 : Int
+  x2 : Int
+  y2 : Int
+  owner : String
+} derive(Eq, Debug)
+
+///|
+pub extend Segment with Eq::{not_equal, equal}
+
+///|
+pub extend Segment with @debug.Debug::{to_repr}
+
+///|
+/// A note with measured text. The box spans each anchor for an over note.
+pub(all) struct NoteBox {
+  index : Int
+  note : @sequence.Note
+  box : Rect
+  label : Label
+} derive(Eq, Debug)
+
+///|
+pub extend NoteBox with Eq::{not_equal, equal}
+
+///|
+pub extend NoteBox with @debug.Debug::{to_repr}
+
+///|
+/// One activation, numbered from depth zero. Nested bars move right by 4 px.
+pub(all) struct ActivationBar {
+  participant : String
+  depth : Int
+  box : Rect
+} derive(Eq, Debug)
+
+///|
+pub extend ActivationBar with Eq::{not_equal, equal}
+
+///|
+pub extend ActivationBar with @debug.Debug::{to_repr}
+
+///|
+/// One frame section, with an optional label and preceding divider.
+pub(all) struct FrameSection {
+  box : Rect
+  label : Label?
+  chip : Rect?
+  divider : Segment?
+} derive(Eq, Debug)
+
+///|
+pub extend FrameSection with Eq::{not_equal, equal}
+
+///|
+pub extend FrameSection with @debug.Debug::{to_repr}
+
+///|
+/// A frame and its ordered sections. The array of frames is in preorder.
+pub(all) struct FrameBox {
+  index : Int
+  parent : Int?
+  kind : @sequence.FrameKind
+  colour : String?
+  box : Rect
+  header : Label?
+  chip : Rect?
+  sections : ReadOnlyArray[FrameSection]
+} derive(Eq, Debug)
+
+///|
+pub extend FrameBox with Eq::{not_equal, equal}
+
+///|
+pub extend FrameBox with @debug.Debug::{to_repr}
+
+///|
+/// A participant group and its title. The box includes its members
+/// and their lifelines, including members created later in the diagram.
+pub(all) struct GroupBox {
+  group : @sequence.BoxGroup
+  box : Rect
+  label : Label
+  chip : Rect
+} derive(Eq, Debug)
+
+///|
+pub extend GroupBox with Eq::{not_equal, equal}
+
+///|
+pub extend GroupBox with @debug.Debug::{to_repr}
