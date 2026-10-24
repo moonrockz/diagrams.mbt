@@ -1,7 +1,8 @@
 # diagrams.mbt
 
-diagrams.mbt is a MoonBit library for diagrams. It supports formats such as
-Mermaid, PlantUML, Draw.io, Graphviz DOT and more. It has no user interface.
+diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence
+diagrams and renders standalone SVG. Other diagram kinds and formats, such as
+PlantUML, Draw.io and Graphviz DOT, are planned. It has no user interface.
 
 This project shares the setup, the design principles and the release pipelines of
 the other moonrockz projects, such as
