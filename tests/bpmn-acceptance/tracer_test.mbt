@@ -106,3 +106,15 @@ test "unsupported task markers are diagnosed instead of silently drawn as plain 
   assert_eq(result.output, None)
   assert_eq(result.diagnostics[0].code, "bpmn/unsupported-view")
 }
+
+///|
+test "all frozen normative XSD inputs have complete namespace-aware XML trees" {
+  for input in @corpus.inputs {
+    if !input.name.has_suffix(".xsd") { continue }
+    let r = @bpmn.read(input.source, source_id=input.name)
+    assert_eq(r.tree.text(), input.source)
+    assert_true(r.tree.complete, msg=input.name)
+    let schemas = r.tree.nodes.filter(n => n.kind == Element && n.name.unwrap().namespace_uri == "http://www.w3.org/2001/XMLSchema" && n.name.unwrap().local_name == "schema").iter().to_array()
+    assert_eq(schemas.length(), 1)
+  }
+}

@@ -278,3 +278,18 @@ test "supplementary name characters bind prefixes using UTF-16 source offsets" {
   assert_eq(r.tree.nodes[1].attributes[1].name.local_name, "a")
   assert_eq(r.tree.nodes[1].attributes[1].name.namespace_uri, "urn:unicode")
 }
+
+///|
+test "references that decode to whitespace are still forbidden outside the root" {
+  let root = "<definitions xmlns='http://www.omg.org/spec/BPMN/20100524/MODEL'/>"
+  for spelling in ["&#32;", "&#x20;", "&#9;", "&#10;", "&#13;"] {
+    for source in [spelling + root, root + spelling] {
+      let r = @bpmn.read(source)
+      partition(source, r)
+      assert_false(r.tree.complete)
+      assert_eq(r.document, None)
+      assert_eq(xml_errors(r), ["xml/outside-root"])
+    }
+  }
+  assert_true(@bpmn.read(" \t\r\n" + root + "\r\n ").tree.complete)
+}

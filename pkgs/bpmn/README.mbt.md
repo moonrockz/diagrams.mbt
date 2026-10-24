@@ -48,7 +48,8 @@ its original text and half-open UTF-16 span. Tokens partition the source. Use
 
 Literal CRLF and CR become LF in decoded values. Literal attribute whitespace
 becomes spaces; referenced whitespace retains its referenced character. CDATA
-and processing instructions do not expand references. Malformed comments,
+and processing instructions do not expand references. Outside the root, only
+literal XML whitespace is allowed; references to whitespace are errors. Malformed comments,
 forbidden characters, invalid scalars and undeclared entities give findings.
 DTD, entity and other markup declarations are prohibited, with no expansion or
 resource resolution. Neither schema locations nor namespace URIs cause I/O.

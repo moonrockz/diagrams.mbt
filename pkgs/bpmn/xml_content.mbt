@@ -132,7 +132,7 @@ fn XmlParser::text(self : XmlParser) -> Unit {
   }
   let before = self.diagnostics.length()
   let value = self.decode(start, self.pos, false, true, Text)
-  if self.stack.is_empty() && !value.iter().all(c => space(c.to_int())) { self.error("xml/outside-root", "Non-whitespace text outside the document element", start, self.pos) }
+  if self.stack.is_empty() && !self.source[start:self.pos].iter().all(c => space(c.to_int())) { self.error("xml/outside-root", "Non-whitespace text outside the document element", start, self.pos) }
   self.nodes[index].value = value
   self.nodes[index].end = self.pos
   self.nodes[index].complete = before == self.diagnostics.length() && !self.halted
