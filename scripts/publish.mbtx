@@ -16,6 +16,8 @@ import {
 /// are not published.
 let publish_list : Array[(String, String)] = [
   ("pkgs/diagrams", "moonrockz/diagrams"),
+  ("pkgs/diagrams-svg", "moonrockz/diagrams-svg"),
+  ("pkgs/diagrams-mermaid", "moonrockz/diagrams-mermaid"),
 ]
 
 ///|

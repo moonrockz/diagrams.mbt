@@ -73,9 +73,9 @@ Depends on: `diagrams-67z.5`.
 Bead: `diagrams-67z.7`.
 Depends on: `diagrams-67z.6`.
 
-- [ ] 7.1 Add the `mise run gallery` task that writes `_gallery/index.html` with each corpus diagram in dark and light, add `_gallery/` to `.gitignore`, and verify that the task runs.
-- [ ] 7.2 Add `diagrams-mermaid` and `diagrams-svg` to `scripts/publish.mbtx` in dependency order, and verify the task script tests.
-- [ ] 7.3 Add the terms "diagram kind", "link" and "render properties" to `CONTEXT.md`, update `docs/design/overview.md` for one model per diagram kind, and add a docs page with a rendered example; verify `mise run build:site` and `mise run check:site`.
+- [x] 7.1 Add the `mise run gallery` task that writes `_gallery/index.html` with each corpus diagram in dark and light, add `_gallery/` to `.gitignore`, and verify that the task runs.
+- [x] 7.2 Add `diagrams-mermaid` and `diagrams-svg` to `scripts/publish.mbtx` in dependency order, and verify the task script tests.
+- [x] 7.3 Add the terms "diagram kind", "link" and "render properties" to `CONTEXT.md`, update `docs/design/overview.md` for one model per diagram kind, and add a docs page with a rendered example; verify `mise run build:site` and `mise run check:site`.
 - [ ] 7.4 Ask the owner to review the gallery, and record the result in the pull request.
 
 ## Workflow follow-up

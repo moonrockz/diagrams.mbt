@@ -1,0 +1,82 @@
+///|
+/// Write the review gallery after checking snapshots against the renderer.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn escape(text : String) -> String {
+  text
+  .replace_all(old="&", new="&amp;")
+  .replace_all(old="<", new="&lt;")
+  .replace_all(old=">", new="&gt;")
+  .replace_all(old="\"", new="&quot;")
+}
+
+///|
+async fn main {
+  let code = @process.run(
+    "moon",
+    ["test", "--target", "js", "-p", "moonrockz/diagrams-tests/acceptance"],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+  if !@fs.exists("_gallery") {
+    @fs.mkdir("_gallery", recursive=true)
+  }
+  let html = StringBuilder()
+  html.write_string(
+    (
+      #|<!doctype html>
+      #|<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+      #|<title>Mermaid sequence gallery</title>
+      #|<style>
+      #|body{margin:2rem;background:#e2e8f0;color:#0f172a;font:16px system-ui}h1{font-size:1.8rem}
+      #|article{margin:2rem 0}h2 a{color:inherit}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+      #|figure{margin:0;overflow:auto;border-radius:8px}figcaption{padding:.75rem;font-weight:600}
+      #|.dark{background:#020617;color:#e2e8f0}.light{background:#f4f5f7}img{display:block;max-width:none}
+      #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
+      #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
+      #|</style><h1>Mermaid sequence gallery</h1>
+      #|<p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
+      #|The task verifies these SVG bytes against the current renderer before writing this page.
+      #|Each diagram scrolls at its natural size. Expand the source to compare syntax.</p>
+      #|
+    ),
+  )
+  let base = "tests/corpus/mermaid-12.2.0"
+  for line in @fs.read_file("\{base}/SHA256SUMS").text().split("\n") {
+    if line.trim() == "" {
+      continue
+    }
+    let path = line.view(start_offset=66).trim().to_owned()
+    let name = path
+      .replace_all(old="examples/", new="")
+      .replace_all(old=".mmd", new="")
+    html.write_string(
+      "<article id=\"example-\{name}\"><h2><a href=\"#example-\{name}\">Example \{name}</a></h2><div class=\"pair\">",
+    )
+    for variant in ["dark", "light"] {
+      let file = "\{name}-\{variant}.svg"
+      let svg = @fs.read_file("tests/acceptance/__snapshot__/svg/\{file}")
+      @fs.write_file("_gallery/\{file}", svg)
+      html.write_string(
+        "<figure class=\"\{variant}\"><figcaption>\{variant}</figcaption><img src=\"\{file}\" alt=\"Example \{name}, \{variant} theme\" loading=\"lazy\"></figure>",
+      )
+    }
+    let source = escape(@fs.read_file("\{base}/\{path}").text())
+    html.write_string(
+      "</div><details><summary>Mermaid source</summary><pre><code>\{source}</code></pre></details></article>\n",
+    )
+  }
+  html.write_string("</html>\n")
+  @fs.write_file("_gallery/index.html", html.to_string())
+  println("Gallery: _gallery/index.html")
+}
