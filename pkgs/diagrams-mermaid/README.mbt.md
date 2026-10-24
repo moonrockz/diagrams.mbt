@@ -8,8 +8,9 @@ AST to the format-independent `Sequence` model of `moonrockz/diagrams`.
 The reader follows the sequence diagram grammar of Mermaid 12.2.0. The syntax
 tree has every statement, every arrow, comments, directives and front matter.
 It reads each sequence example of the Mermaid 12.2.0 documentation without a
-diagnostic. Today the typed AST and the model have participants, actors and
-messages; the other statements come in the next parts of the OpenSpec change
+diagnostic. The typed AST has every statement, with frames and boxes as nested
+values. Today the conversion to the model reads participants, actors and
+messages; the other statements come in the next part of the OpenSpec change
 `add-mermaid-sequence`.
 
 These rules of Mermaid apply:
@@ -44,6 +45,43 @@ test {
   )
   let model = @mermaid.to_sequence(ast).sequence
   assert_eq(model.participants.length(), 2)
+}
+```
+
+## Canonical printing
+
+`print` writes canonical Mermaid from the AST. Reading the printed text gives an
+equal AST, and printing that AST again gives the same text. AST equality does
+not compare source positions. The rules are:
+
+- The front matter comes first, then each `%%{...}%%` directive on its own
+  line, then `sequenceDiagram`.
+- Each statement is on its own line. Statements have two spaces of indentation
+  for each level: one under the header, and one more in each frame and box.
+- Keywords are in lower case, except `sequenceDiagram`, `accTitle` and
+  `accDescr`. `title: text` becomes `title text`.
+- A message is the sender, `()` if it has one before the arrow, the arrow as
+  written, `+` or `-`, `()` if it has one after the arrow, the receiver, `:`,
+  and a space and the text if the text is not empty. Notes and `link`,
+  `links`, `properties` and `details` statements use the same `: text` form.
+- Two note participants are joined by `,` with no spaces.
+- A participant configuration is written `@{ ` and its text and ` }`.
+- A `-` after an arrow that ends with `-`, such as `/|-`, has a space before it,
+  because `/|--` is another arrow.
+- A description with a line break (`\n` or `\r`) uses `accDescr { ... }` with
+  its lines as written. Any other description uses `accDescr: text`.
+- Comments are not printed, because the AST does not keep them.
+
+```mbt check
+///|
+test {
+  let source = "sequenceDiagram\nALT Is sick\n  B ->>- A : Not so good\nELSE is well\nNote Over A , B: fine\nEND\n"
+  let printed = @mermaid.print(@mermaid.read(source).ast.unwrap())
+  assert_eq(
+    printed,
+    "sequenceDiagram\n  alt Is sick\n    B->>-A: Not so good\n  else is well\n    note over A,B: fine\n  end\n",
+  )
+  assert_eq(@mermaid.read(printed).ast, @mermaid.read(source).ast)
 }
 ```
 
