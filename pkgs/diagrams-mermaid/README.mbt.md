@@ -66,8 +66,10 @@ not compare source positions. The rules are:
   `links`, `properties` and `details` statements use the same `: text` form.
 - Two note participants are joined by `,` with no spaces.
 - A participant configuration is written `@{ ` and its text and ` }`.
-- A description with a line break uses `accDescr { ... }` with its lines as
-  written. Any other description uses `accDescr: text`.
+- A `-` after an arrow that ends with `-`, such as `/|-`, has a space before it,
+  because `/|--` is another arrow.
+- A description with a line break (`\n` or `\r`) uses `accDescr { ... }` with
+  its lines as written. Any other description uses `accDescr: text`.
 - Comments are not printed, because the AST does not keep them.
 
 ```mbt check

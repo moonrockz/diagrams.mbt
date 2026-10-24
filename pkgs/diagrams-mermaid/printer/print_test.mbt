@@ -102,3 +102,39 @@ test "reading the printed text gives the same AST, and printing again gives the 
   assert_eq(again, d)
   assert_eq(@printer.print(again), text)
 }
+
+///|
+test "a deactivation after an arrow that ends with a dash keeps its meaning" {
+  for arrow in ["/|-", "\\|-", "//-", "\\\\-"] {
+    let d = ast_of("sequenceDiagram\nA\{arrow} -B: done\n")
+    let text = @printer.print(d)
+    assert_eq(ast_of(text), d, msg="\{arrow}: \{text}")
+  }
+}
+
+///|
+test "a description with a lone carriage return keeps the multi-line form" {
+  let d = ast_of("sequenceDiagram\naccDescr {one\rtwo}\n")
+  let text = @printer.print(d)
+  assert_eq(ast_of(text), d, msg=text)
+}
+
+///|
+test "every arrow with every modifier obeys the read-print-read law" {
+  let forms = [
+    ("", ""),
+    ("", "+"),
+    ("", "-"),
+    ("", "()"),
+    ("()", ""),
+    ("()", "()"),
+  ]
+  for arrow in @syntax.arrows {
+    for form in forms {
+      let source = "sequenceDiagram\nA \{form.0} \{arrow} \{form.1} B: x\n"
+      let d = ast_of(source)
+      let text = @printer.print(d)
+      assert_eq(ast_of(text), d, msg="\{source} printed as \{text}")
+    }
+  }
+}

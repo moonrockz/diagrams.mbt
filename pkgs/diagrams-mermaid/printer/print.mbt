@@ -88,7 +88,8 @@ fn statement(buf : StringBuilder, depth : Int, kind : @ast.StatementKind) -> Uni
       let before = if m.central_before { "()" } else { "" }
       let after = match m.activation {
         Some(Activate) => "+"
-        Some(Deactivate) => "-"
+        // A `-` right after an arrow that ends with `-` makes a longer arrow.
+        Some(Deactivate) => if m.arrow.has_suffix("-") { " -" } else { "-" }
         None => ""
       }
       let central = if m.central_after { "()" } else { "" }
@@ -119,7 +120,7 @@ fn statement(buf : StringBuilder, depth : Int, kind : @ast.StatementKind) -> Uni
     Title(t) => line(buf, depth, "title \{t}")
     AccTitle(t) => line(buf, depth, colon("accTitle", t))
     AccDescr(t) =>
-      if t.contains("\n") {
+      if t.contains("\n") || t.contains("\r") {
         line(buf, depth, "accDescr {")
         buf.write_string(t)
         buf.write_string("\n")
@@ -172,8 +173,10 @@ fn statement(buf : StringBuilder, depth : Int, kind : @ast.StatementKind) -> Uni
 /// - Notes and link statements have the same `: text` form. Two note
 ///   participants are joined by `,` without spaces.
 /// - A participant configuration is `@{ ` and its text and ` }`.
-/// - A description with a line break uses the `accDescr { ... }` form, with
-///   its lines as written; others use `accDescr: text`.
+/// - A `-` after an arrow that ends with `-`, such as `/|-`, has a space before
+///   it, because `/|--` is another arrow.
+/// - A description with a line break (`\n` or `\r`) uses the `accDescr { ... }`
+///   form, with its lines as written; others use `accDescr: text`.
 /// - Comments are not printed, because the AST does not keep them.
 pub fn print(diagram : @ast.Diagram) -> String {
   let buf = StringBuilder()
