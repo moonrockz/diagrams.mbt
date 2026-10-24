@@ -146,7 +146,7 @@ fn XmlOutput::content_valid(self : XmlOutput, content : Content, outside : Bool,
 }
 
 ///|
-priv struct WalkFrame { node : Element; depth : Int; mut entered : Bool; mut next : Int; preserve : Bool }
+priv struct WalkFrame { node : Element; depth : Int; mut entered : Bool; mut next : Int; preserve : Bool; expected_type : ExpandedName? }
 
 ///|
 fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
@@ -154,7 +154,7 @@ fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
   self.records(1,false,None)
   for c in document.prolog { self.content_valid(c,true,None) }
   for c in document.epilog { self.content_valid(c,true,None) }
-  let stack = [WalkFrame::{ node: document.root, depth: 0, entered: false, next: 0, preserve: false }]
+  let stack = [WalkFrame::{ node: document.root, depth: 0, entered: false, next: 0, preserve: false, expected_type: Kind::Definitions.declared_type() }]
   while !stack.is_empty() && !self.stopped {
     let f = stack[stack.length()-1]
     let node=f.node
@@ -168,6 +168,10 @@ fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
       match node.kind { Foreign(_) | Unknown(_) => { self.fail("bpmn/unsupported-element","Opaque/unknown element writing follows in the extension story",node.span); break }; _ => () }
       if node.value_type is Some(t) && t.namespace_uri != "http://www.w3.org/2001/XMLSchema" && schema_type(t) == None {
         self.fail("bpmn/unsupported-type","Constructed type is outside the pinned schema",node.span); break
+      }
+      let type_name=ExpandedName::new("http://www.w3.org/2001/XMLSchema-instance","type")
+      if node.value_type != f.expected_type && !node.values.iter().any(a => a.name == Some(type_name)) {
+        self.fail("bpmn/type-conflict","Constructed type differs from its containment type without an explicit xsi:type",node.span); break
       }
       self.name_valid(node.kind.name(),node.span) |> ignore
       self.binding_valid(node.bindings,node.span)
@@ -199,7 +203,7 @@ fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
       Element(child) => {
         if self.input_records >= self.limits.nodes { self.fail("bpmn/write-node-limit","Writer node limit exceeded",child.span); break }
         if f.depth >= self.limits.depth-1 { self.fail("bpmn/write-depth-limit","Writer element depth limit exceeded",child.span); break }
-        stack.push({ node: child, depth: f.depth+1, entered: false, next: 0, preserve: space_policy(node,f.preserve) })
+        stack.push({ node: child, depth: f.depth+1, entered: false, next: 0, preserve: space_policy(node,f.preserve), expected_type: child_type(node.value_type,child.kind) })
       }
       _ => self.content_valid(part,false,node.span)
     }

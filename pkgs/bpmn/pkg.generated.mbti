@@ -237,6 +237,7 @@ pub struct Element {
   value_type : ExpandedName?
   text_value : Scalar?
   span : Span?
+  // private fields
 } derive(@debug.Debug)
 pub fn Element::attribute(Self, String) -> String?
 pub fn Element::boolean(Self, String) -> Field[Bool]

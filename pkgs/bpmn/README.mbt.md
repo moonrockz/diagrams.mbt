@@ -173,7 +173,10 @@ coverage manifest under `tests/corpus/bpmn-2.0.2/coverage.json`.
 `Element` holds a standard kind, schema type identity, typed `Scalar` attributes,
 optional scalar text, and ordered `Content`. Content distinguishes text,
 elements, comments and inert processing instructions. Constructors copy input
-collections into read-only arrays. Updating an element returns a new value.
+collections into read-only arrays. Updating an element returns a new value. Parsed elements retain their effective
+namespace context in a shared immutable core map, so content updates keep
+inherited QName bindings and prefix shadowing without copying every ancestor
+binding into every descendant.
 `Document` holds its root plus ordered prolog and epilog comments/instructions.
 Outside-root whitespace is source trivia and is omitted from document values.
 
@@ -222,7 +225,10 @@ References retain original spelling plus expanded namespace identity.
 bindings. No external document is opened. Construct references from an
 `ExpandedName` to avoid inventing a source prefix. `Element::new` accepts string
 attributes with explicit local `bindings`; `Element::from_values` accepts typed
-attributes and ordered content. An explicit type override adds the corresponding
+attributes, optional typed scalar text and ordered content. A local child name
+whose schema type depends on its parent needs an explicit `value_type` when
+constructed outside that context. The writer rejects a missing or conflicting
+type identity instead of producing a document that reads back differently. An explicit type override adds the corresponding
 `xsi:type` reference so it survives serialization. No IDs or DI are generated.
 
 ```mbt check

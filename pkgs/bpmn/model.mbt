@@ -28,6 +28,7 @@ pub struct Element {
   value_type : ExpandedName?
   text_value : Scalar?
   span : Span?
+  priv context : @namespaces.HashMap[String,String]
 } derive(Debug)
 
 ///|
@@ -65,18 +66,19 @@ fn ordered_contents(contents : ArrayView[Content]) -> Array[Content] {
 }
 
 ///|
-fn make_element(kind : Kind, values : ArrayView[Attribute], contents : ArrayView[Content], bindings : ArrayView[(String,String)], value_type : ExpandedName?, text_value : Scalar?, span : Span?) -> Element {
+fn make_element(kind : Kind, values : ArrayView[Attribute], contents : ArrayView[Content], bindings : ArrayView[(String,String)], value_type : ExpandedName?, text_value : Scalar?, span : Span?, context? : @namespaces.HashMap[String,String]) -> Element {
+  let context = context.unwrap_or_else(() => @namespaces.HashMap::from_iter(bindings.iter()))
   let contents = ordered_contents(contents)
   let children : Array[Element] = []
   let text = StringBuilder()
   for part in contents { match part { Element(e) => children.push(e); Text(t) => text.write_string(t); _ => () } }
   let content = text.to_string()
   let value_type = match value_type { Some(_) => value_type; None => kind.declared_type() }
-  let text_value = match text_value { Some(_) => text_value; None => if simple_type(value_type) { Some(parse_scalar(value_type.unwrap(),content,bindings)) } else { None } }
+  let text_value = match text_value { Some(_) => text_value; None => if simple_type(value_type) { Some(parse_scalar_lookup(value_type.unwrap(),content,prefix => context.get(prefix))) } else { None } }
   {
     kind, attributes: ReadOnlyArray::from_array(values.map(a => (a.raw_name,a.value.token()))),
     values: ReadOnlyArray::from_array(values), children: ReadOnlyArray::from_array(children),
-    contents: ReadOnlyArray::from_array(contents), content, bindings: ReadOnlyArray::from_array(bindings), value_type, text_value, span,
+    contents: ReadOnlyArray::from_array(contents), content, bindings: ReadOnlyArray::from_array(bindings), value_type, text_value, span, context,
   }
 }
 
@@ -125,17 +127,20 @@ pub fn Element::scalar(self : Element, name : ExpandedName) -> Scalar? { self.va
 pub fn Element::with_attribute(self : Element, attribute : Attribute) -> Element {
   let values = self.values.iter().filter(a => if attribute.name is Some(n) { a.name != Some(n) } else { a.raw_name != attribute.raw_name }).to_array()
   values.push(attribute)
-  make_element(self.kind,values,self.contents,self.bindings,self.value_type,self.text_value,None)
+  make_element(self.kind,values,self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context)
 }
 
 ///|
 pub fn Element::with_contents(self : Element, contents : ArrayView[Content]) -> Element {
-  make_element(self.kind,self.values,contents,self.bindings,self.value_type,None,None)
+  let text=StringBuilder()
+  for part in contents { if part is Text(s) { text.write_string(s) } }
+  let retained = if text.to_string() == self.content { self.text_value } else { None }
+  make_element(self.kind,self.values,contents,self.bindings,self.value_type,retained,None,context=self.context)
 }
 
 ///|
 pub fn Element::with_kind(self : Element, kind : Kind) -> Element {
-  Element::from_values(kind,values=self.values,contents=self.contents,bindings=self.bindings,value_type?=self.value_type,text_value?=self.text_value)
+  make_element(kind,annotated_values(kind,self.values,self.value_type),self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context)
 }
 
 ///|

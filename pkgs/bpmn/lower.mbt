@@ -36,6 +36,7 @@ priv struct PreparedElement {
   text_value : Scalar?
   preserve_space : Bool
   mixed : Bool
+  context : @namespaces.HashMap[String,String]
 }
 
 ///|
@@ -81,6 +82,8 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
       }
     }
     let parent = match node.parent { Some(p) => prepared[p]; None => None }
+    let mut context=parent.map(p => p.context).unwrap_or_else(() => @namespaces.HashMap::new())
+    for (prefix,uri) in node.bindings { context=context.add(prefix,uri) }
     let mut value_type = child_type(match parent { Some(p) => p.value_type; None => None },kind)
     for attr in node.attributes {
       if attr.name.namespace_uri == "http://www.w3.org/2001/XMLSchema-instance" && attr.name.local_name == "type" {
@@ -115,7 +118,7 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
       inspect_scalar(value,node.span); text_value = Some(value)
     }
     let mixed = match value_type { Some(t) => schema_type(t).map(t => t.has_mixed_content()).unwrap_or(false); None => false }
-    prepared[i] = Some({ kind,values,value_type,text_value,preserve_space,mixed })
+    prepared[i] = Some({ kind,values,value_type,text_value,preserve_space,mixed,context })
   }
   if exhausted || unsupported { return None }
   for i = tree.nodes.length()-1; i > 0; i = i-1 {
@@ -135,7 +138,7 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
       } }
     }
     flush()
-    lowered[i] = Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span)))
+    lowered[i] = Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span),context=p.context))
   }
   let roots = tree.nodes[0].children.filter(i => tree.nodes[i].kind == Element).iter().to_array()
   guard roots.length() == 1 && lowered[roots[0]] is Some(root) && root.kind == Kind::Definitions else {

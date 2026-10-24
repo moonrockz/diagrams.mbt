@@ -174,6 +174,7 @@ test "string enums retain their whitespace facet and typed scalar text construct
   let result=@bpmn.read("<definitions xmlns='\{model_uri}'><process processType=' Public '/></definitions>")
   assert_eq(result.diagnostics[0].code,"bpmn/invalid-scalar")
   let incoming=@bpmn.Element::from_values(Incoming,text_value=Reference(@bpmn.Reference::new(@bpmn.ExpandedName::new("urn:q","F"))))
+  assert_eq(incoming.with_contents(incoming.contents),incoming)
   roundtrip(@bpmn.Definitions::new("urn:t",children=[@bpmn.Element::new(Task,children=[incoming])]).document())
   let renamed=@bpmn.Element::new(Task).with_kind(UserTask)
   roundtrip(@bpmn.Definitions::new("urn:t",children=[renamed]).document())
@@ -207,4 +208,31 @@ test "adjacent text construction coalesces without losing spaces or bypassing to
   assert_eq(@bpmn.try_write(doc,limits=@bpmn.Limits::new(token_units=100)).output,None)
   roundtrip(foundation_doc("<b:process>before<![CDATA[ ]]>after</b:process>"))
   assert_eq(foundation_doc("<b:process>before<![CDATA[ ]]>after</b:process>").root.children[0].content,"before after")
+}
+
+///|
+test "writer rejects a constructed scoped field with a missing type identity" {
+  let condition=@bpmn.Element::new(Condition,content="a < b")
+  let behavior=@bpmn.Element::new(ComplexBehaviorDefinition,children=[condition])
+  let doc=@bpmn.Definitions::new("urn:t",children=[behavior]).document()
+  let result=@bpmn.try_write(doc)
+  assert_eq(result.output,None)
+  assert_eq(result.diagnostics[0].code,"bpmn/type-conflict")
+  let typed=@bpmn.Element::from_values(Condition,contents=[Text("a < b")],value_type=@bpmn.ExpandedName::new(model_uri,"tFormalExpression"))
+  roundtrip(@bpmn.Definitions::new("urn:t",children=[@bpmn.Element::new(ComplexBehaviorDefinition,children=[typed])]).document())
+}
+
+///|
+test "content updates preserve effective inherited and shadowed QName bindings" {
+  let doc=foundation_doc("<b:process xmlns:r='urn:r'><b:task xmlns:q='urn:shadow'><b:incoming>q:F</b:incoming></b:task></b:process>")
+  let process=doc.root.children[0]; let task=process.children[0]; let incoming=task.children[0]
+  let unchanged=incoming.with_contents(incoming.contents)
+  assert_eq(unchanged,incoming)
+  let changed=incoming.with_contents([Text("r:G")])
+  assert_eq(changed.text_value,Some(@bpmn.Scalar::Reference(@bpmn.Reference::new(@bpmn.ExpandedName::new("urn:r","G")))))
+  for updated in [unchanged,changed] {
+    let revised_task=task.with_contents([Element(updated)])
+    let revised_process=process.with_contents([Element(revised_task)])
+    roundtrip(@bpmn.Document::new(doc.root.with_contents([Element(revised_process)])))
+  }
 }
