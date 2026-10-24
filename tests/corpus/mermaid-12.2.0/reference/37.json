@@ -1,0 +1,76 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "a6b0082ad10a3227348a86637c56ff2f6ef95659a1321854edcade6a11affad9",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "John",
+        "type": "participant",
+        "box": null,
+        "links": {
+          "Dashboard": "https://dashboard.contoso.com/alice",
+          "Wiki": "https://wiki.contoso.com/alice"
+        },
+        "properties": {}
+      },
+      {
+        "id": "John",
+        "name": "John",
+        "description": "John",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {
+          "Dashboard": "https://dashboard.contoso.com/john",
+          "Wiki": "https://wiki.contoso.com/john"
+        },
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello John, how are you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "John",
+        "to": "Alice",
+        "wrap": false,
+        "type": 1,
+        "message": "Great!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 24,
+        "message": "See you later!",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

@@ -35,3 +35,24 @@ the examples, because tests on the wasm targets cannot read files. Run
 
 Do not edit the example files. To move to a later Mermaid release, add a new
 folder for that release.
+
+## Independent sequence fixtures
+
+`reference/*.json` is the database dump of each example from
+`moonbit-community/mermaid@0.2.0`. Each fixture names that version and the SHA-256
+of its original `.mmd` source. Its MIT licence is available with the package at
+https://mooncakes.io/docs/moonbit-community/mermaid.
+
+Run `mise run corpus:reference` to refresh the files. The pinned MoonBit script
+`scripts/sequence-fixtures.mbtx` invokes the public sequence parser. It removes
+the leading front matter and shields entity spellings before parsing, as
+Mermaid's outer preprocessing does, then restores the entity spellings in the
+dump. It does not use diagrams.mbt to produce the expected values.
+
+`mise run corpus:generate` embeds these files in `reference.generated.mbt` for
+all four test targets. `mise run validate:corpus` checks fixture provenance,
+source digests, coverage and the generated file. The acceptance test compares
+participants, messages and nested frame boundaries. It normalizes only display
+wrap prefixes and HTML line-break spellings; notes, activations, lifetimes,
+numbering and links have focused tests. Normal CI does not compile the reference
+parser. The script exits with failure if any reference example fails to parse.

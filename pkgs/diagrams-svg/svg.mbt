@@ -91,10 +91,9 @@ fn label(class : String, l : @layout.Label) -> @writer.Node {
 }
 
 ///|
-fn description(s : @sequence.Sequence) -> String {
+fn description(s : @sequence.Sequence, m : Int) -> String {
   let ids = s.participants.map(p => p.id).iter().to_array()
   let n = ids.length()
-  let m = s.events.length()
   let parts = if n == 1 { "1 participant" } else { "\{n} participants" }
   let list = if n > 0 { " (\{ids.join(", ")})" } else { "" }
   let msgs = if m == 1 { "1 message" } else { "\{m} messages" }
@@ -192,7 +191,7 @@ fn paint(
       @writer.element("title", children=[
         @writer.text(sequence.title.unwrap_or("Sequence diagram")),
       ]),
-      @writer.element("desc", children=[@writer.text(description(sequence))]),
+      @writer.element("desc", children=[@writer.text(description(sequence, g.messages.length()))]),
       @writer.element("defs", children=defs),
       @writer.element("rect", attrs=[
         ("class", "bg"),

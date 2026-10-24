@@ -1,0 +1,143 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "df13c1b9dfa701372a204f3e95e6e5a009848159943bfe7f348bea98d25ecf3e",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "John",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "John",
+        "name": "John",
+        "description": "John",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": "Bob",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Bob",
+        "name": "Bob",
+        "description": "Bob",
+        "wrap": false,
+        "prevActor": "John",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 26,
+        "message": {
+          "start": null,
+          "step": null,
+          "visible": true
+        }
+      },
+      {
+        "id": "1",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello John, how are you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 10,
+        "message": "HealthCheck",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "John",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "Fight against hypochondria",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 11,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "John",
+        "to": "John",
+        "wrap": false,
+        "type": 2,
+        "message": "Rational thoughts!",
+        "placement": 1
+      },
+      {
+        "id": "6",
+        "from": "John",
+        "to": "Alice",
+        "wrap": false,
+        "type": 1,
+        "message": "Great!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "7",
+        "from": "John",
+        "to": "Bob",
+        "wrap": false,
+        "type": 0,
+        "message": "How about you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "8",
+        "from": "Bob",
+        "to": "John",
+        "wrap": false,
+        "type": 1,
+        "message": "Jolly good!",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

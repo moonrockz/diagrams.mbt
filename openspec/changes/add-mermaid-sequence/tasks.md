@@ -41,11 +41,11 @@ Depends on: `diagrams-67z.2`.
 Bead: `diagrams-67z.4`.
 Depends on: `diagrams-67z.3`.
 
-- [ ] 4.1 Complete the model: head values, frames with sections, notes, activations, creation, destruction, box groups, title, accessibility fields, autonumber, links and render properties; verify immutability and each model scenario in tests.
-- [ ] 4.2 Convert the AST to the model with implicit participants, the activation shorthand and semantic diagnostics; verify each conversion scenario.
-- [ ] 4.3 Make links from `link` and `links` statements and from shape ID labels; verify the four link scenarios and the Smithy shape ID grammar edge cases.
-- [ ] 4.4 Add the fixture script that runs `moonbit-community/mermaid` on the corpus, write the fixtures, and verify that the model matches them for participants, messages and frames.
-- [ ] 4.5 Add the link resolution contract with a test resolver, and verify the found and not-found scenarios.
+- [x] 4.1 Complete the model: head values, frames with sections, notes, activations, creation, destruction, box groups, title, accessibility fields, autonumber, links and render properties; verify immutability and each model scenario in tests.
+- [x] 4.2 Convert the AST to the model with implicit participants, the activation shorthand and semantic diagnostics; verify each conversion scenario.
+- [x] 4.3 Make links from `link` and `links` statements and from shape ID labels; verify the four link scenarios and the Smithy shape ID grammar edge cases.
+- [x] 4.4 Add the fixture script that runs `moonbit-community/mermaid` on the corpus, write the fixtures, and verify that the model matches them for participants, messages and frames.
+- [x] 4.5 Add the link resolution contract with a test resolver, and verify the found and not-found scenarios.
 
 ## 5. Lay out every sequence element
 

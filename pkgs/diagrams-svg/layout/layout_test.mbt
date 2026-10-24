@@ -115,3 +115,21 @@ test "the check finds text with low contrast" {
   let rules = @layout.check(g, flat).map(f => f.rule)
   assert_eq(rules.filter(r => r == Contrast).length(), 3)
 }
+
+///|
+test "messages inside nested frames remain in diagram order" {
+  let s = @sequence.Sequence::new(
+    [@sequence.Participant::new("A"), @sequence.Participant::new("B")],
+    [
+      Activate("A"),
+      Frame(@sequence.Frame::new(Alt, @sequence.Section::new([
+        Message(@sequence.Message::new("A", "B", "one")),
+        Frame(@sequence.Frame::new(Loop, @sequence.Section::new([
+          Message(@sequence.Message::new("B", "A", "two")),
+        ]))),
+      ]))),
+      Deactivate("A"),
+    ],
+  )
+  assert_eq(@layout.layout(s).messages.map(m => m.label.content).iter().to_array(), ["one", "two"])
+}

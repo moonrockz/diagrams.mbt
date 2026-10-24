@@ -1,0 +1,124 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "07788f7e3ced9064c9d896e61f0fecbab9124f37b6e4eaed7d06dfb18044c9ca",
+  "model": {
+    "actors": [
+      {
+        "id": "Consumer",
+        "name": "Consumer",
+        "description": "Consumer",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "API",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "API",
+        "name": "API",
+        "description": "API",
+        "wrap": false,
+        "prevActor": "Consumer",
+        "nextActor": "BookingService",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "BookingService",
+        "name": "BookingService",
+        "description": "BookingService",
+        "wrap": false,
+        "prevActor": "API",
+        "nextActor": "BillingService",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "BillingService",
+        "name": "BillingService",
+        "description": "BillingService",
+        "wrap": false,
+        "prevActor": "BookingService",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "Consumer",
+        "to": "API",
+        "wrap": false,
+        "type": 6,
+        "message": "Book something",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "API",
+        "to": "BookingService",
+        "wrap": false,
+        "type": 6,
+        "message": "Start booking process",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 30,
+        "message": "when the booking process fails",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "API",
+        "to": "Consumer",
+        "wrap": false,
+        "type": 6,
+        "message": "show failure",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 31,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "API",
+        "to": "BillingService",
+        "wrap": false,
+        "type": 6,
+        "message": "Start billing process",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

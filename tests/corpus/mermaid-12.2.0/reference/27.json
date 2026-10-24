@@ -1,0 +1,130 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "5ba07f36cdf08b28445a16fd8f24d05afbf5cd349679847aab70f7fddf476084",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "Bob",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Bob",
+        "name": "Bob",
+        "description": "Bob",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "Alice",
+        "to": "Bob",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello Bob, how are you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 12,
+        "message": "is sick",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "Bob",
+        "to": "Alice",
+        "wrap": false,
+        "type": 0,
+        "message": "Not so good :(",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 13,
+        "message": "is well",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": "Bob",
+        "to": "Alice",
+        "wrap": false,
+        "type": 0,
+        "message": "Feeling fresh like a daisy",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 14,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "6",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 15,
+        "message": "Extra response",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "7",
+        "from": "Bob",
+        "to": "Alice",
+        "wrap": false,
+        "type": 0,
+        "message": "Thanks for asking",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "8",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 16,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

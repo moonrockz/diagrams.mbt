@@ -52,3 +52,8 @@ pub fn render_svg(source : String) -> @render.Rendered {
 ///|
 /// Every diagnostic code that reading can give.
 pub let diagnostic_codes : ReadOnlyArray[String] = @syntax.diagnostic_codes
+
+///|
+/// Every diagnostic code that conversion can give. Reading uses
+/// `diagnostic_codes`; link resolution uses `sequence/unresolved-link`.
+pub let conversion_diagnostic_codes : ReadOnlyArray[String] = @sequence.diagnostic_codes

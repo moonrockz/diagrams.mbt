@@ -1,7 +1,9 @@
 import {
+  "moonrockz/diagrams",
   "moonbitlang/core/debug",
 }
 
 import {
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams",
 } for "test"

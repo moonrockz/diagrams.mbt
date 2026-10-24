@@ -1,0 +1,123 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "93d3c0ff3d5d384a0044c0882501febf51d0ba59c26ca2c237eae58d27ad53aa",
+  "model": {
+    "actors": [
+      {
+        "id": "A",
+        "name": "A",
+        "description": "A",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "J",
+        "type": "participant",
+        "box": "Alice & John",
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "J",
+        "name": "J",
+        "description": "J",
+        "wrap": false,
+        "prevActor": "A",
+        "nextActor": "B",
+        "type": "participant",
+        "box": "Alice & John",
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "B",
+        "name": "B",
+        "description": "B",
+        "wrap": false,
+        "prevActor": "J",
+        "nextActor": "C",
+        "type": "participant",
+        "box": "Another Group",
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "C",
+        "name": "C",
+        "description": "C",
+        "wrap": false,
+        "prevActor": "B",
+        "nextActor": null,
+        "type": "participant",
+        "box": "Another Group",
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "A",
+        "to": "J",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello John, how are you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "J",
+        "to": "A",
+        "wrap": false,
+        "type": 0,
+        "message": "Great!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "A",
+        "to": "B",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello Bob, how is Charley?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "B",
+        "to": "C",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello Charley, how are you?",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [
+      {
+        "name": "Alice & John",
+        "wrap": false,
+        "fill": "Purple",
+        "actorKeys": [
+          "A",
+          "J"
+        ]
+      },
+      {
+        "name": "Another Group",
+        "wrap": false,
+        "fill": "transparent",
+        "actorKeys": [
+          "B",
+          "C"
+        ]
+      }
+    ],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

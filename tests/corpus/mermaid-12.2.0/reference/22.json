@@ -1,0 +1,37 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "592325d67537970355724d77fa9fdd310904e33537cd0ec6c8fe02fd8885c7df",
+  "model": {
+    "actors": [
+      {
+        "id": "John",
+        "name": "John",
+        "description": "John",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "John",
+        "to": "John",
+        "wrap": false,
+        "type": 2,
+        "message": "Text in note",
+        "placement": 1
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

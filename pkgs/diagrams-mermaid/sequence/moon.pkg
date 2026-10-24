@@ -1,4 +1,6 @@
 import {
+  "moonbitlang/core/json",
+  "moonbitlang/core/string",
   "moonrockz/diagrams",
   "moonrockz/diagrams/sequence" @model,
   "moonrockz/diagrams-mermaid/ast",

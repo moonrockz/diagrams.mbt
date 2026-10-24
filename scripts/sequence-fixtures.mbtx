@@ -1,0 +1,104 @@
+///|
+/// Refresh the independent Mermaid sequence reference fixtures. This command
+/// alone imports the full reference parser; normal tests use committed JSON.
+/// Run from the repository root with `mise run corpus:reference`.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/sys",
+  "moonbit-community/mermaid@0.2.0/diagrams/sequence" @reference,
+  "moonbit-community/mermaid@0.2.0/config",
+}
+
+///|
+async fn main {
+  let base = "tests/corpus/mermaid-12.2.0"
+  let dir = "\{base}/reference"
+  if !@fs.exists(dir) {
+    @fs.mkdir(dir, recursive=true)
+  }
+  let sums = @fs.read_file("\{base}/SHA256SUMS").text()
+  for line in sums.split("\n") {
+    if line.trim() == "" {
+      continue
+    }
+    let digest = line.view(end_offset=64).to_owned()
+    let path = line.view(start_offset=66).trim().to_owned()
+    let name = path
+      .replace_all(old="examples/", new="")
+      .replace_all(old=".mmd", new="")
+    let source = @fs.read_file("\{base}/\{path}").text()
+    // The public sequence parser accepts the grammar body. Front matter is
+    // handled outside it in mermaid.js. The corpus has one front-matter case.
+    let body = source
+      .view(start_offset=source.find("sequenceDiagram").unwrap())
+      .to_owned()
+    let db = @reference.parse(
+      protect_entities(body) + "\n",
+      @config.Config::new(diagram_type="sequence"),
+    )
+    let model = @json.parse(
+      db
+      .dump()
+      .stringify()
+      .replace_all(old="ﬂ°°", new="#")
+      .replace_all(old="ﬂ°", new="#")
+      .replace_all(old="¶ß", new=";"),
+    )
+    let fixture : Json = {
+      "reference": "moonbit-community/mermaid@0.2.0",
+      "source_sha256": digest,
+      "model": model,
+    }
+    @fs.write_file("\{dir}/\{name}.json", fixture.stringify(indent=2) + "\n")
+    println("Wrote reference \{name}")
+  }
+  let code = @process.run(
+    "moonx",
+    ["scripts/corpus.mbtx", "generate"],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}
+
+///|
+/// Mermaid shields #word; entity spellings before invoking its grammar.
+fn protect_entities(source : String) -> String {
+  let out = StringBuilder()
+  let mut i = 0
+  let mut copied = 0
+  while i < source.length() {
+    if source.code_unit_at(i) == 35 {
+      let mut end = i + 1
+      let mut digits = true
+      while end < source.length() {
+        let c = source.code_unit_at(end).to_int()
+        if !(c is ('A'..<='Z' | 'a'..<='z' | '0'..<='9' | '_')) {
+          break
+        }
+        if !(c is ('0'..<='9')) {
+          digits = false
+        }
+        end += 1
+      }
+      if end > i + 1 && end < source.length() && source.code_unit_at(end) == 59 {
+        out.write_view(source.view(start_offset=copied, end_offset=i))
+        out.write_string(if digits { "ﬂ°°" } else { "ﬂ°" })
+        out.write_view(source.view(start_offset=i + 1, end_offset=end))
+        out.write_string("¶ß")
+        i = end + 1
+        copied = i
+        continue
+      }
+    }
+    i += 1
+  }
+  out.write_view(source.view(start_offset=copied))
+  out.to_string()
+}

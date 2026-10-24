@@ -1,0 +1,70 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "a74c5de6ef55136d555087cde5874e57a2742175012a00e31ff405b59157f9fe",
+  "model": {
+    "actors": [
+      {
+        "id": "Service",
+        "name": "Service",
+        "description": "Service",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "DB",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "DB",
+        "name": "DB",
+        "description": "DB",
+        "wrap": false,
+        "prevActor": "Service",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 27,
+        "message": "Establish a connection to the DB",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "Service",
+        "to": "DB",
+        "wrap": false,
+        "type": 6,
+        "message": "connect",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 29,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

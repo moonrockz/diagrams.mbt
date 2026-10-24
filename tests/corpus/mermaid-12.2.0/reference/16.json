@@ -1,0 +1,130 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "5fa9f1e6f236b76b71424993a30eac3e12fa3c6b6f336ee7bc9d028c44914ccb",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "Bob",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Bob",
+        "name": "Bob",
+        "description": "Bob",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": "Carl",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Carl",
+        "name": "Carl",
+        "description": "Carl",
+        "wrap": false,
+        "prevActor": "Bob",
+        "nextActor": "D",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "D",
+        "name": "D",
+        "description": "Donald",
+        "wrap": false,
+        "prevActor": "Carl",
+        "nextActor": null,
+        "type": "actor",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "Alice",
+        "to": "Bob",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello Bob, how are you ?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "Bob",
+        "to": "Alice",
+        "wrap": false,
+        "type": 0,
+        "message": "Fine, thank you. And you?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "Alice",
+        "to": "Carl",
+        "wrap": false,
+        "type": 0,
+        "message": "Hi Carl!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "Carl",
+        "to": "D",
+        "wrap": false,
+        "type": 0,
+        "message": "Hi!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": "Alice",
+        "to": "Carl",
+        "wrap": false,
+        "type": 3,
+        "message": "We are too many",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "Bob",
+        "to": "Alice",
+        "wrap": false,
+        "type": 0,
+        "message": "I agree",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {
+      "Carl": 2,
+      "D": 3
+    },
+    "destroyedActors": {
+      "Carl": 4,
+      "Bob": 5
+    },
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

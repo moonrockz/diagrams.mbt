@@ -1,0 +1,120 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "8a0283b4e38a5069c52d99c3d48bd613e409c3817082ee2687720d22fc765660",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "John",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "John",
+        "name": "John",
+        "description": "John",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "Hello John, how are you?",
+        "activate": true,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "John",
+        "to": null,
+        "wrap": false,
+        "type": 17,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "John, can you hear me?",
+        "activate": true,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "John",
+        "to": null,
+        "wrap": false,
+        "type": 17,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": "John",
+        "to": "Alice",
+        "wrap": false,
+        "type": 1,
+        "message": "Hi Alice, I can hear you!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "John",
+        "to": null,
+        "wrap": false,
+        "type": 18,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "6",
+        "from": "John",
+        "to": "Alice",
+        "wrap": false,
+        "type": 1,
+        "message": "I feel great!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "7",
+        "from": "John",
+        "to": null,
+        "wrap": false,
+        "type": 18,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

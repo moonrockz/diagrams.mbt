@@ -1,0 +1,92 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "ed25c7aa66b7d0181e20fb015fd49edbf10d89db03bda3ec62031b9e7fdb1eb3",
+  "model": {
+    "actors": [
+      {
+        "id": "API",
+        "name": "API",
+        "description": "Public API",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "Auth",
+        "type": "boundary",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Auth",
+        "name": "Auth",
+        "description": "Auth Service",
+        "wrap": false,
+        "prevActor": "API",
+        "nextActor": "DB",
+        "type": "control",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "DB",
+        "name": "DB",
+        "description": "User Database",
+        "wrap": false,
+        "prevActor": "Auth",
+        "nextActor": null,
+        "type": "database",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "API",
+        "to": "Auth",
+        "wrap": false,
+        "type": 0,
+        "message": "Login request",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "Auth",
+        "to": "DB",
+        "wrap": false,
+        "type": 0,
+        "message": "Query user",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "DB",
+        "to": "Auth",
+        "wrap": false,
+        "type": 1,
+        "message": "User data",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "Auth",
+        "to": "API",
+        "wrap": false,
+        "type": 1,
+        "message": "Access token",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}
