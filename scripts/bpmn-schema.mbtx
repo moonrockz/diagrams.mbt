@@ -1,0 +1,846 @@
+///|
+/// Generate fixed BPMN 2.0.2 schema metadata and model discriminants. This tool
+/// accepts only the five digest-pinned inputs; it is not a general XSD compiler.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/core/env",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+priv struct XNode {
+  tag : String
+  attrs : Map[String, String]
+  bindings : Map[String, String]
+  children : Array[XNode]
+  path : String
+}
+
+///|
+fn cu(s : String, i : Int32) -> Int32 {
+  if i < 0 || i >= s.length() {
+    -1
+  } else {
+    s.code_unit_at(i).to_int()
+  }
+}
+
+///|
+fn ws(c : Int32) -> Bool {
+  c == 32 || c == 9 || c == 10 || c == 13
+}
+
+///|
+fn fail(message : String) -> Unit {
+  eprintln(message)
+  @sys.exit(1)
+}
+
+///|
+fn literal(s : String) -> String {
+  let b = StringBuilder()
+  b.write_char('"')
+  for c in s {
+    match c {
+      '"' => b.write_string("\\\"")
+      '\\' => b.write_string("\\\\")
+      '\r' => b.write_string("\\r")
+      '\n' => b.write_string("\\n")
+      '\t' => b.write_string("\\t")
+      _ => b.write_char(c)
+    }
+  }
+  b.write_char('"')
+  b.to_string()
+}
+
+///|
+fn name_key(uri : String, name : String) -> String {
+  "\{uri}|\{name}"
+}
+
+///|
+fn qname(node : XNode, value : String) -> (String, String) {
+  if value.find(":") is Some(i) {
+    let prefix = value[:i].to_owned()
+    guard node.bindings.get(prefix) is Some(uri) else {
+      fail("Unbound schema QName: \{value}")
+      return ("", "")
+    }
+    (uri, value[i + 1:].to_owned())
+  } else {
+    (node.bindings.get("").unwrap_or(""), value)
+  }
+}
+
+///|
+fn name_code(name : (String, String)) -> String {
+  "{ namespace_uri: \{literal(name.0)}, local_name: \{literal(name.1)} }"
+}
+
+///|
+fn maybe_name(name : (String, String)?) -> String {
+  match name {
+    Some(n) => "Some(\{name_code(n)})"
+    None => "None"
+  }
+}
+
+///|
+fn maybe_string(value : String?) -> String {
+  match value {
+    Some(v) => "Some(\{literal(v)})"
+    None => "None"
+  }
+}
+
+///|
+/// All input attributes use these five entities; unsupported spellings fail the
+/// fixed-input generator rather than being silently interpreted.
+fn decode(text : String) -> String {
+  let b = StringBuilder()
+  let mut i = 0
+  while i < text.length() {
+    if cu(text, i) != 38 {
+      b.write_string(text[i:i + 1].to_owned())
+      i += 1
+      continue
+    }
+    guard text[i:].find(";") is Some(n) else {
+      fail("Invalid schema reference")
+      break
+    }
+    let value = match text[i:i + n + 1].to_owned() {
+      "&amp;" => "&"
+      "&lt;" => "<"
+      "&gt;" => ">"
+      "&quot;" => "\""
+      "&apos;" => "'"
+      _ => {
+        fail("Unexpected reference in pinned XSD")
+        ""
+      }
+    }
+    b.write_string(value)
+    i += n + 1
+  }
+  b.to_string()
+}
+
+///|
+/// A small tool-only XML tree reader for the pinned XSD vocabulary. Runtime
+/// document processing uses the independently tested bpmn reader.
+fn xml(source : String, file : String) -> XNode {
+  let roots : Array[XNode] = []
+  let stack : Array[XNode] = []
+  let mut pos = if cu(source, 0) == 0xfeff { 1 } else { 0 }
+  while pos < source.length() {
+    if source[pos:].has_prefix("<?") || source[pos:].has_prefix("<!--") {
+      let close = if source[pos:].has_prefix("<?") { "?>" } else { "-->" }
+      guard source[pos:].find(close) is Some(n) else {
+        fail("Unclosed schema trivia")
+        break
+      }
+      pos += n + close.length()
+      continue
+    }
+    if cu(source, pos) != 60 {
+      if !ws(cu(source, pos)) {
+        fail(
+          "Unexpected schema text in \{file} at \{pos}: \{source[pos:Int::min(pos+70,source.length())]}",
+        )
+      }
+      pos += 1
+      continue
+    }
+    pos += 1
+    let end_tag = cu(source, pos) == 47
+    if end_tag {
+      pos += 1
+    }
+    let start = pos
+    while pos < source.length() &&
+          !ws(cu(source, pos)) &&
+          cu(source, pos) != 62 &&
+          cu(source, pos) != 47 {
+      pos += 1
+    }
+    let raw_name = source[start:pos].to_owned()
+    if !raw_name.has_prefix("xsd:") {
+      fail("Unexpected schema prefix: \{raw_name}")
+    }
+    let tag = raw_name[4:].to_owned()
+    if end_tag {
+      while ws(cu(source, pos)) {
+        pos += 1
+      }
+      if cu(source, pos) != 62 ||
+        stack.is_empty() ||
+        stack[stack.length() - 1].tag != tag {
+        fail("Mismatched schema tag")
+      }
+      pos += 1
+      stack.pop() |> ignore
+      continue
+    }
+    let attrs : Map[String, String] = Map([])
+    while pos < source.length() &&
+          cu(source, pos) != 62 &&
+          cu(source, pos) != 47 {
+      while ws(cu(source, pos)) {
+        pos += 1
+      }
+      if cu(source, pos) == 62 || cu(source, pos) == 47 {
+        break
+      }
+      let begin = pos
+      while pos < source.length() &&
+            !ws(cu(source, pos)) &&
+            cu(source, pos) != 61 {
+        pos += 1
+      }
+      let key = source[begin:pos].to_owned()
+      while ws(cu(source, pos)) {
+        pos += 1
+      }
+      if cu(source, pos) != 61 {
+        fail("Invalid schema attribute")
+      }
+      pos += 1
+      while ws(cu(source, pos)) {
+        pos += 1
+      }
+      let quote = cu(source, pos)
+      if quote != 34 && quote != 39 {
+        fail("Unquoted schema attribute")
+      }
+      pos += 1
+      let begin = pos
+      while pos < source.length() && cu(source, pos) != quote {
+        pos += 1
+      }
+      if pos == source.length() {
+        fail("Unclosed schema attribute")
+      }
+      attrs[key] = decode(source[begin:pos].to_owned())
+      pos += 1
+    }
+    let closed = cu(source, pos) == 47
+    if closed {
+      pos += 1
+    }
+    if cu(source, pos) != 62 {
+      fail("Invalid schema close")
+    }
+    pos += 1
+    let bindings = if stack.is_empty() {
+      Map([])
+    } else {
+      stack[stack.length() - 1].bindings.copy()
+    }
+    for key, value in attrs {
+      if key == "xmlns" {
+        bindings[""] = value
+      } else if key.has_prefix("xmlns:") {
+        bindings[key[6:].to_owned()] = value
+      }
+    }
+    let siblings = if stack.is_empty() {
+      roots
+    } else {
+      stack[stack.length() - 1].children
+    }
+    let path = (if stack.is_empty() {
+        file
+      } else {
+        stack[stack.length() - 1].path
+      }) +
+      "/\{tag}[\{siblings.length()}]"
+    let node = XNode::{ tag, attrs, bindings, children: [], path, }
+    siblings.push(node)
+    if !closed {
+      stack.push(node)
+    }
+  }
+  if !stack.is_empty() || roots.length() != 1 || roots[0].tag != "schema" {
+    fail("Invalid pinned schema")
+  }
+  roots[0]
+}
+
+///|
+fn all_nodes(root : XNode) -> Array[XNode] {
+  let out = []
+  let stack = [root]
+  while !stack.is_empty() {
+    let node = stack.pop().unwrap()
+    out.push(node)
+    for i = node.children.length() - 1; i >= 0; i = i - 1 {
+      stack.push(node.children[i])
+    }
+  }
+  out
+}
+
+///|
+fn owned_nodes(root : XNode) -> Array[XNode] {
+  let out = []
+  let stack = [root]
+  while !stack.is_empty() {
+    let node = stack.pop().unwrap()
+    out.push(node)
+    for i = node.children.length() - 1; i >= 0; i = i - 1 {
+      let child = node.children[i]
+      if child.tag != "complexType" && child.tag != "simpleType" {
+        stack.push(child)
+      }
+    }
+  }
+  out
+}
+
+///|
+fn upper(s : String) -> String {
+  if s.is_empty() {
+    return s
+  }
+  let b = StringBuilder()
+  let mut next = true
+  for c in s {
+    let n = c.to_int()
+    if (n >= 65 && n <= 90) || (n >= 97 && n <= 122) || (n >= 48 && n <= 57) {
+      b.write_char(
+        if next && n >= 97 && n <= 122 {
+          (n - 32).unsafe_to_char()
+        } else {
+          c
+        },
+      )
+      next = false
+    } else {
+      next = true
+    }
+  }
+  b.to_string()
+}
+
+///|
+fn prefix(uri : String) -> String {
+  match uri {
+    "http://www.omg.org/spec/BPMN/20100524/MODEL" => ""
+    "http://www.omg.org/spec/BPMN/20100524/DI" => "Bpmn"
+    "http://www.omg.org/spec/DD/20100524/DC" => "Dc"
+    "http://www.omg.org/spec/DD/20100524/DI" => "Di"
+    _ => {
+      fail("Unexpected schema namespace: \{uri}")
+      ""
+    }
+  }
+}
+
+///|
+fn type_symbol(name : (String, String)) -> String {
+  let stem = if prefix(name.0) == "" &&
+    name.1.has_prefix("t") &&
+    cu(name.1, 1) >= 65 &&
+    cu(name.1, 1) <= 90 {
+    name.1[1:].to_owned()
+  } else {
+    name.1
+  }
+  prefix(name.0) + upper(stem)
+}
+
+///|
+fn kind_symbol(name : (String, String)) -> String {
+  match name {
+    ("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNDiagram") => "Diagram"
+    ("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNPlane") => "Plane"
+    ("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNShape") => "Shape"
+    ("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNEdge") => "Edge"
+    ("http://www.omg.org/spec/DD/20100524/DC", "Bounds") => "Bounds"
+    ("http://www.omg.org/spec/DD/20100524/DI", "waypoint") => "Waypoint"
+    _ => prefix(name.0) + upper(name.1)
+  }
+}
+
+///|
+fn occurrence(node : XNode, key : String, fallback : String) -> String {
+  node.attrs.get(key).unwrap_or(fallback)
+}
+
+///|
+fn maximum(node : XNode) -> String {
+  let value = occurrence(node, "maxOccurs", "1")
+  if value == "unbounded" {
+    "None"
+  } else {
+    "Some(\{value})"
+  }
+}
+
+///|
+priv struct Schema {
+  file : String
+  digest : String
+  uri : String
+  root : XNode
+  types : Array[(XNode, (String, String))]
+}
+
+///|
+fn type_names(root : XNode, uri : String) -> Array[(XNode, (String, String))] {
+  let types = []
+  let stack = [(root, "Schema")]
+  while !stack.is_empty() {
+    let (node, parent) = stack.pop().unwrap()
+    let mut owner = parent
+    if node.tag == "complexType" || node.tag == "simpleType" {
+      let name = node.attrs
+        .get("name")
+        .unwrap_or("Anonymous_\{parent}_\{types.length()}")
+      types.push((node, (uri, name)))
+      owner = name
+    } else if node.attrs.get("name") is Some(name) {
+      owner = "\{parent}_\{name}"
+    }
+    for i = node.children.length() - 1; i >= 0; i = i - 1 {
+      stack.push((node.children[i], owner))
+    }
+  }
+  types
+}
+
+///|
+fn nested_type(
+  node : XNode,
+  types : Array[(XNode, (String, String))],
+) -> (String, String)? {
+  for child in node.children {
+    if child.tag == "complexType" || child.tag == "simpleType" {
+      for (entry, name) in types {
+        if entry.path == child.path {
+          return Some(name)
+        }
+      }
+    }
+  }
+  None
+}
+
+///|
+fn value_type(
+  node : XNode,
+  types : Array[(XNode, (String, String))],
+) -> (String, String)? {
+  match node.attrs.get("type") {
+    Some(t) => Some(qname(node, t))
+    None => nested_type(node, types)
+  }
+}
+
+///|
+fn generate_enums(
+  code : StringBuilder,
+  types : Array[(XNode, (String, String))],
+) -> Unit {
+  let enums : Array[((String, String), Array[String], Bool)] = []
+  for (node, name) in types {
+    if node.tag != "simpleType" {
+      continue
+    }
+    let values : Array[String] = []
+    let mut union_value = false
+    for child in all_nodes(node) {
+      if child.tag == "enumeration" {
+        values.push(child.attrs.get("value").unwrap())
+      }
+      if child.tag == "union" {
+        union_value = true
+      }
+    }
+    if values.is_empty() {
+      continue
+    }
+    enums.push((name, values, union_value))
+    let symbol = type_symbol(name)
+    code.write_string(
+      "\n///|\n/// Values of the pinned XSD type \{name.1}.\npub(all) enum \{symbol} {\n",
+    )
+    for value in values {
+      code.write_string("  \{upper(value)}\n")
+    }
+    if union_value {
+      code.write_string("  Uri(String)\n")
+    }
+    code.write_string(
+      "} derive(Eq, Debug)\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::token(self : \{symbol}) -> String {\n  match self {\n",
+    )
+    for value in values {
+      code.write_string("    \{upper(value)} => \{literal(value)}\n")
+    }
+    if union_value {
+      code.write_string("    Uri(value) => value\n")
+    }
+    code.write_string(
+      "  }\n}\n\n///|\npub fn \{symbol}::parse(token : String) -> \{symbol}? {\n  match token {\n",
+    )
+    for value in values {
+      code.write_string(
+        "    \{literal(value)} => Some(\{symbol}::\{upper(value)})\n",
+      )
+    }
+    code.write_string(
+      if union_value {
+        "    _ => Some(\{symbol}::Uri(token))\n"
+      } else {
+        "    _ => None\n"
+      },
+    )
+    code.write_string("  }\n}\n")
+  }
+  code.write_string(
+    "\n///|\n/// Typed alternatives retain the identity of each normative enumeration.\npub(all) enum BpmnEnum {\n",
+  )
+  for (name, _, _) in enums {
+    let symbol = type_symbol(name)
+    code.write_string("  \{symbol}(\{symbol})\n")
+  }
+  code.write_string(
+    "} derive(Eq, Debug)\n\n///|\npub extend BpmnEnum with Eq::{equal, not_equal}\n\n///|\npub extend BpmnEnum with @debug.Debug::{to_repr}\n\n///|\npub fn BpmnEnum::type_id(self : BpmnEnum) -> TypeId {\n  match self {\n",
+  )
+  for (name, _, _) in enums {
+    let symbol = type_symbol(name)
+    code.write_string("    \{symbol}(_) => TypeId::\{symbol}\n")
+  }
+  code.write_string(
+    "  }\n}\n\n///|\npub fn BpmnEnum::token(self : BpmnEnum) -> String {\n  match self {\n",
+  )
+  for (name, _, _) in enums {
+    let symbol = type_symbol(name)
+    code.write_string("    \{symbol}(value) => value.token()\n")
+  }
+  code.write_string(
+    "  }\n}\n\n///|\nfn parse_schema_enum(id : TypeId, token : String) -> BpmnEnum? {\n  match id {\n",
+  )
+  for (name, _, _) in enums {
+    let symbol = type_symbol(name)
+    code.write_string(
+      "    TypeId::\{symbol} => \{symbol}::parse(token).map(v => BpmnEnum::\{symbol}(v))\n",
+    )
+  }
+  code.write_string("    _ => None\n  }\n}\n")
+}
+
+///|
+fn generates(schemas : Array[Schema]) -> (String, String) {
+  let supported = [
+    "schema", "element", "attribute", "complexType", "simpleType", "complexContent",
+    "extension", "restriction", "sequence", "choice", "union", "enumeration", "any",
+    "anyAttribute", "import", "include",
+  ]
+  let kinds : Map[String, (String, String)] = Map([])
+  let globals : Map[String, (String, String)] = Map([])
+  let type_entries : Array[(XNode, (String, String))] = []
+  let manifest : Array[Json] = []
+  let code = StringBuilder()
+  code.write_string(
+    "// Generated by `mise run bpmn-schema:generate` from five pinned OMG XSDs. Do not edit.\n\n",
+  )
+  for schema in schemas {
+    type_entries.append(schema.types)
+    for node in all_nodes(schema.root) {
+      if !supported.contains(node.tag) {
+        fail("Unsupported XSD feature: \{node.tag}")
+      }
+      if node.tag == "element" && node.attrs.get("name") is Some(name) {
+        let identity = (schema.uri, name)
+        kinds[name_key(identity.0, identity.1)] = identity
+      }
+      if node.tag == "element" || node.tag == "attribute" {
+        let record : Json = {
+          "file": schema.file,
+          "path": node.path,
+          "declaration": node.tag,
+          "name": node.attrs.get("name").unwrap_or(""),
+          "ref": node.attrs.get("ref").unwrap_or(""),
+        }
+        manifest.push(record)
+      }
+    }
+    for node in schema.root.children {
+      if node.tag == "element" &&
+        node.attrs.get("name") is Some(name) &&
+        value_type(node, schema.types) is Some(t) {
+        globals[name_key(schema.uri, name)] = t
+      }
+    }
+  }
+  let identities = kinds.values().to_array()
+  identities.sort_by((a, b) => name_key(a.0, a.1).compare(name_key(b.0, b.1)))
+  code.write_string(
+    "///|\n/// Standard element names derived from global and local declarations.\npub(all) enum Kind {\n",
+  )
+  let symbols : Map[String, Bool] = Map([])
+  for name in identities {
+    let symbol = kind_symbol(name)
+    if symbols.contains(symbol) {
+      fail("Kind symbol collision: \{symbol}")
+    }
+    symbols[symbol] = true
+    code.write_string("  \{symbol}\n")
+  }
+  code.write_string(
+    "  Foreign(ExpandedName)\n  Unknown(ExpandedName)\n} derive(Eq, Debug)\n\n///|\npub extend Kind with Eq::{equal, not_equal}\n\n///|\npub extend Kind with @debug.Debug::{to_repr}\n\n///|\npub fn Kind::local_name(self : Kind) -> String {\n  match self {\n",
+  )
+  for name in identities {
+    code.write_string("    \{kind_symbol(name)} => \{literal(name.1)}\n")
+  }
+  code.write_string(
+    "    Foreign(n) | Unknown(n) => n.local_name\n  }\n}\n\n///|\npub fn Kind::namespace_uri(self : Kind) -> String {\n  match self {\n",
+  )
+  for name in identities {
+    code.write_string("    \{kind_symbol(name)} => \{literal(name.0)}\n")
+  }
+  code.write_string(
+    "    Foreign(n) | Unknown(n) => n.namespace_uri\n  }\n}\n\n///|\npub let standard_kinds : ReadOnlyArray[Kind] = [\n",
+  )
+  for name in identities {
+    code.write_string("  \{kind_symbol(name)},\n")
+  }
+  code.write_string("]\n\n///|\npub(all) enum TypeId {\n")
+  let type_symbols : Map[String, Bool] = Map([])
+  for (_, name) in type_entries {
+    let symbol = type_symbol(name)
+    if type_symbols.contains(symbol) {
+      fail("Type symbol collision: \{symbol}")
+    }
+    type_symbols[symbol] = true
+    code.write_string("  \{symbol}\n")
+  }
+  code.write_string(
+    "} derive(Eq, Debug)\n\n///|\npub extend TypeId with Eq::{equal, not_equal}\n\n///|\npub extend TypeId with @debug.Debug::{to_repr}\n\n///|\npub let schema_types : ReadOnlyArray[SchemaType] = [\n",
+  )
+  for (node, name) in type_entries {
+    let members : Array[(String, String)] = []
+    let enums : Array[String] = []
+    let mut base : (String, String)? = None
+    for child in owned_nodes(node) {
+      if child.tag == "extension" || child.tag == "restriction" {
+        if child.attrs.get("base") is Some(b) {
+          base = Some(qname(child, b))
+        }
+      }
+      if child.tag == "enumeration" {
+        enums.push(child.attrs.get("value").unwrap())
+      }
+      if child.tag == "union" {
+        if child.attrs.get("memberTypes") is Some(names) {
+          for t in names.split(" ") {
+            if !t.is_empty() {
+              members.push(qname(child, t.to_owned()))
+            }
+          }
+        }
+        for t in child.children {
+          if t.tag == "simpleType" {
+            for (entry, identity) in type_entries {
+              if entry.path == t.path {
+                members.push(identity)
+              }
+            }
+          }
+        }
+      }
+    }
+    code.write_string(
+      "  { id: TypeId::\{type_symbol(name)}, name: \{name_code(name)}, base: \{maybe_name(base)}, abstract_type: \{node.attrs.get("abstract") == Some("true")}, mixed: \{node.attrs.get("mixed") == Some("true")}, simple: \{node.tag == "simpleType"}, anonymous: \{node.attrs.get("name") == None}, enum_values: [\{enums.map(literal).join(", ")}], union_members: [\{members.map(name_code).join(", ")}] },\n",
+    )
+  }
+  code.write_string(
+    "]\n\n///|\npub let schema_elements : ReadOnlyArray[SchemaElement] = [\n",
+  )
+  for schema in schemas {
+    for node in schema.root.children {
+      if node.tag != "element" {
+        continue
+      }
+      let name = (schema.uri, node.attrs.get("name").unwrap())
+      let substitution = node.attrs
+        .get("substitutionGroup")
+        .map(v => qname(node, v))
+      code.write_string(
+        "  { name: \{name_code(name)}, value_type: \{maybe_name(value_type(node,schema.types))}, substitution_group: \{maybe_name(substitution)}, abstract_element: \{node.attrs.get("abstract") == Some("true")} },\n",
+      )
+    }
+  }
+  code.write_string(
+    "]\n\n///|\npub let schema_fields : ReadOnlyArray[SchemaField] = [\n",
+  )
+  let group_lines = StringBuilder()
+  for (owner, identity) in type_entries {
+    let stack : Array[(XNode, String)] = []
+    for i = owner.children.length() - 1; i >= 0; i = i - 1 {
+      stack.push((owner.children[i], ""))
+    }
+    while !stack.is_empty() {
+      let (node, group) = stack.pop().unwrap()
+      if node.tag == "complexType" || node.tag == "simpleType" {
+        continue
+      }
+      let mut group = group
+      if node.tag == "sequence" || node.tag == "choice" {
+        group_lines.write_string(
+          "  { owner: TypeId::\{type_symbol(identity)}, path: \{literal(node.path)}, parent: \{literal(group)}, choice: \{node.tag == "choice"}, minimum: \{occurrence(node,"minOccurs","1")}, maximum: \{maximum(node)} },\n",
+        )
+        group = node.path
+      }
+      if ["element", "attribute", "any", "anyAttribute"].contains(node.tag) {
+        let ref_name = node.attrs.get("ref").map(v => qname(node, v))
+        let name = match node.attrs.get("name") {
+          Some(n) =>
+            Some((if node.tag == "attribute" { "" } else { identity.0 }, n))
+          None => ref_name
+        }
+        let t = match ref_name {
+          Some(n) => globals.get(name_key(n.0, n.1))
+          None => value_type(node, type_entries)
+        }
+        let kind = match node.tag {
+          "element" => "Child"
+          "attribute" => "Attribute"
+          "any" => "AnyChild"
+          _ => "AnyAttribute"
+        }
+        code.write_string(
+          "  { owner: TypeId::\{type_symbol(identity)}, kind: \{kind}, name: \{maybe_name(name)}, value_type: \{maybe_name(t)}, reference_element: \{maybe_name(ref_name)}, minimum: \{if node.tag == "attribute" { if node.attrs.get("use") == Some("required") { "1" } else { "0" } } else { occurrence(node,"minOccurs","1") }}, maximum: \{if node.tag == "attribute" { "Some(1)" } else { maximum(node) }}, default_value: \{maybe_string(node.attrs.get("default"))}, fixed_value: \{maybe_string(node.attrs.get("fixed"))}, group: \{literal(group)}, namespace_constraint: \{literal(node.attrs.get("namespace").unwrap_or(""))}, source_path: \{literal(node.path)} },\n",
+        )
+      }
+      for i = node.children.length() - 1; i >= 0; i = i - 1 {
+        stack.push((node.children[i], group))
+      }
+    }
+  }
+  code.write_string(
+    "]\n\n///|\npub let schema_groups : ReadOnlyArray[SchemaGroup] = [\n\{group_lines.to_string()}]\n",
+  )
+  generate_enums(code, type_entries)
+  let provenance : Array[Json] = schemas.map(s => {
+    let record : Json = {
+      "file": s.file,
+      "sha256": s.digest,
+      "url": "https://www.omg.org/spec/BPMN/20100501/\{s.file}",
+    }
+    record
+  })
+  let coverage : Json = {
+    "version": "BPMN 2.0.2",
+    "sources": Json(provenance),
+    "declarations": Json(manifest),
+  }
+  (code.to_string(), coverage.stringify(indent=2) + "\n")
+}
+
+///|
+async fn load_schemas(root~ : String = ".") -> Array[Schema] {
+  let dir = root + "/tests/corpus/bpmn-2.0.2"
+  let sums : Map[String, String] = Map([])
+  for line in @fs.read_file("\{dir}/SHA256SUMS").text().split("\n") {
+    if line.length() >= 66 {
+      sums[line[66:].to_owned()] = line[:64].to_owned()
+    }
+  }
+  let schemas : Array[Schema] = []
+  for file in ["BPMN20.xsd", "BPMNDI.xsd", "DC.xsd", "DI.xsd", "Semantic.xsd"] {
+    let source = @fs.read_file("\{dir}/\{file}").text()
+    let digest = @crypto.bytes_to_hex_string(
+      @crypto.sha256(@utf8.encode(source)),
+    )
+    if sums.get(file) != Some(digest) {
+      fail("Pinned schema digest mismatch: \{file}")
+    }
+    let root = xml(source, file)
+    let uri = root.attrs.get("targetNamespace").unwrap()
+    schemas.push({ file, digest, uri, root, types: type_names(root, uri), })
+  }
+  schemas
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  let mode = if args.length() > 1 { args[1] } else { "check" }
+  if mode != "check" && mode != "generate" {
+    fail("Usage: bpmn-schema.mbtx check | generate")
+  }
+  let schemas = load_schemas()
+  let (metadata, coverage) = generates(schemas)
+  for
+    (path, expected) in [
+      ("pkgs/bpmn/schema.generated.mbt", metadata),
+      ("tests/corpus/bpmn-2.0.2/coverage.json", coverage),
+    ] {
+    if mode == "generate" {
+      @fs.write_file(path, expected)
+    } else if !@fs.exists(path) || @fs.read_file(path).text() != expected {
+      fail("Stale schema output: \{path}; run mise run bpmn-schema:generate")
+    }
+  }
+  println("✅ BPMN schema digests, metadata and declaration coverage match")
+}
+
+///|
+test "schema reader retains ordered occurrence and namespace metadata" {
+  let root = xml(
+    "<xsd:schema xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns='urn:t'><xsd:element name='a' type='T'/><xsd:complexType name='T'><xsd:choice maxOccurs='unbounded'><xsd:element name='b'/></xsd:choice></xsd:complexType></xsd:schema>",
+    "test.xsd",
+  )
+  assert_eq(root.children[0].attrs.get("name"), Some("a"))
+  assert_eq(qname(root.children[0], "T"), ("urn:t", "T"))
+  assert_eq(maximum(root.children[1].children[0]), "None")
+  assert_eq(type_names(root, "urn:t").length(), 1)
+}
+
+///|
+async test "pinned generation is deterministic and every declaration has unique coverage" {
+  let schemas = load_schemas(root="..")
+  let first = generates(schemas)
+  assert_eq(generates(load_schemas(root="..")), first)
+  assert_eq(@fs.read_file("../pkgs/bpmn/schema.generated.mbt").text(), first.0)
+  assert_eq(
+    @fs.read_file("../tests/corpus/bpmn-2.0.2/coverage.json").text(),
+    first.1,
+  )
+  let json = @json.parse(first.1)
+  guard json is Object(fields) &&
+    fields.get("declarations") is Some(Array(declarations)) &&
+    fields.get("sources") is Some(Array(sources)) else {
+    fail("Invalid coverage manifest")
+  }
+  assert_eq(sources.length(), 5)
+  assert_eq(declarations.length(), 508)
+  let keys : Map[String, Bool] = Map([])
+  let mut elements = 0
+  let mut attributes = 0
+  for declaration in declarations {
+    guard declaration is Object(d) &&
+      d.get("file") is Some(String(file)) &&
+      d.get("path") is Some(String(path)) &&
+      d.get("declaration") is Some(String(kind)) else {
+      fail("Invalid coverage entry")
+    }
+    let key = file + path
+    assert_false(keys.contains(key))
+    keys[key] = true
+    if kind == "element" {
+      elements += 1
+    } else if kind == "attribute" {
+      attributes += 1
+    }
+  }
+  assert_eq((elements, attributes), (313, 195))
+}

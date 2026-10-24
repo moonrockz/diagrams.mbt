@@ -6,15 +6,170 @@ import {
 }
 
 // Values
+pub fn kind_from_name(ExpandedName) -> Kind?
+
 pub fn read(String, source_id? : String, limits? : Limits) -> ReadResult
 
-pub fn write(Document) -> String
+pub let schema_elements : ReadOnlyArray[SchemaElement]
+
+pub let schema_fields : ReadOnlyArray[SchemaField]
+
+pub let schema_groups : ReadOnlyArray[SchemaGroup]
+
+pub fn schema_type(ExpandedName) -> SchemaType?
+
+pub let schema_types : ReadOnlyArray[SchemaType]
+
+pub let standard_kinds : ReadOnlyArray[Kind]
+
+pub fn try_write(Document, format? : WriteFormat, limits? : Limits) -> WriteResult
+
+pub fn write(Document, format? : WriteFormat, limits? : Limits) -> String raise WriteError
 
 pub let xml_diagnostic_codes : ReadOnlyArray[String]
 
 // Errors
+pub(all) suberror WriteError {
+  Failed(ReadOnlyArray[Diagnostic])
+} derive(Eq, @debug.Debug)
+pub fn WriteError::equal(Self, Self) -> Bool
+pub fn WriteError::not_equal(Self, Self) -> Bool
+pub fn WriteError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+pub(all) enum AdHocOrdering {
+  Parallel
+  Sequential
+} derive(Eq, @debug.Debug)
+pub fn AdHocOrdering::equal(Self, Self) -> Bool
+pub fn AdHocOrdering::not_equal(Self, Self) -> Bool
+pub fn AdHocOrdering::parse(String) -> Self?
+pub fn AdHocOrdering::to_repr(Self) -> @debug.Repr
+pub fn AdHocOrdering::token(Self) -> String
+
+pub(all) enum AnonymousTImplementation78 {
+  Unspecified
+  WebService
+} derive(Eq, @debug.Debug)
+pub fn AnonymousTImplementation78::equal(Self, Self) -> Bool
+pub fn AnonymousTImplementation78::not_equal(Self, Self) -> Bool
+pub fn AnonymousTImplementation78::parse(String) -> Self?
+pub fn AnonymousTImplementation78::to_repr(Self) -> @debug.Repr
+pub fn AnonymousTImplementation78::token(Self) -> String
+
+pub(all) enum AnonymousTTransactionMethod144 {
+  Compensate
+  Image
+  Store
+} derive(Eq, @debug.Debug)
+pub fn AnonymousTTransactionMethod144::equal(Self, Self) -> Bool
+pub fn AnonymousTTransactionMethod144::not_equal(Self, Self) -> Bool
+pub fn AnonymousTTransactionMethod144::parse(String) -> Self?
+pub fn AnonymousTTransactionMethod144::to_repr(Self) -> @debug.Repr
+pub fn AnonymousTTransactionMethod144::token(Self) -> String
+
+pub(all) enum AssociationDirection {
+  None
+  One
+  Both
+} derive(Eq, @debug.Debug)
+pub fn AssociationDirection::equal(Self, Self) -> Bool
+pub fn AssociationDirection::not_equal(Self, Self) -> Bool
+pub fn AssociationDirection::parse(String) -> Self?
+pub fn AssociationDirection::to_repr(Self) -> @debug.Repr
+pub fn AssociationDirection::token(Self) -> String
+
+pub struct Attribute {
+  name : ExpandedName?
+  raw_name : String
+  value : Scalar
+  span : Span?
+} derive(Eq, @debug.Debug)
+pub fn Attribute::equal(Self, Self) -> Bool
+pub fn Attribute::new(ExpandedName, Scalar) -> Self
+pub fn Attribute::not_equal(Self, Self) -> Bool
+pub fn Attribute::to_repr(Self) -> @debug.Repr
+
+pub struct BaseElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BaseElement::documentation(Self) -> ReadOnlyArray[Documentation]
+pub fn BaseElement::equal(Self, Self) -> Bool
+pub fn BaseElement::extension_elements(Self) -> Element?
+pub fn BaseElement::from_element(Element) -> Self?
+pub fn BaseElement::id(Self) -> Field[String]
+pub fn BaseElement::not_equal(Self, Self) -> Bool
+pub fn BaseElement::to_repr(Self) -> @debug.Repr
+
+pub(all) enum BpmnEnum {
+  BpmnParticipantBandKind(BpmnParticipantBandKind)
+  BpmnMessageVisibleKind(BpmnMessageVisibleKind)
+  AdHocOrdering(AdHocOrdering)
+  AssociationDirection(AssociationDirection)
+  ChoreographyLoopType(ChoreographyLoopType)
+  EventBasedGatewayType(EventBasedGatewayType)
+  GatewayDirection(GatewayDirection)
+  Implementation(Implementation)
+  AnonymousTImplementation78(AnonymousTImplementation78)
+  ItemKind(ItemKind)
+  MultiInstanceFlowCondition(MultiInstanceFlowCondition)
+  ProcessType(ProcessType)
+  RelationshipDirection(RelationshipDirection)
+  TransactionMethod(TransactionMethod)
+  AnonymousTTransactionMethod144(AnonymousTTransactionMethod144)
+} derive(Eq, @debug.Debug)
+pub fn BpmnEnum::equal(Self, Self) -> Bool
+pub fn BpmnEnum::not_equal(Self, Self) -> Bool
+pub fn BpmnEnum::to_repr(Self) -> @debug.Repr
+pub fn BpmnEnum::token(Self) -> String
+pub fn BpmnEnum::type_id(Self) -> TypeId
+
+pub(all) enum BpmnMessageVisibleKind {
+  Initiating
+  NonInitiating
+} derive(Eq, @debug.Debug)
+pub fn BpmnMessageVisibleKind::equal(Self, Self) -> Bool
+pub fn BpmnMessageVisibleKind::not_equal(Self, Self) -> Bool
+pub fn BpmnMessageVisibleKind::parse(String) -> Self?
+pub fn BpmnMessageVisibleKind::to_repr(Self) -> @debug.Repr
+pub fn BpmnMessageVisibleKind::token(Self) -> String
+
+pub(all) enum BpmnParticipantBandKind {
+  TopInitiating
+  MiddleInitiating
+  BottomInitiating
+  TopNonInitiating
+  MiddleNonInitiating
+  BottomNonInitiating
+} derive(Eq, @debug.Debug)
+pub fn BpmnParticipantBandKind::equal(Self, Self) -> Bool
+pub fn BpmnParticipantBandKind::not_equal(Self, Self) -> Bool
+pub fn BpmnParticipantBandKind::parse(String) -> Self?
+pub fn BpmnParticipantBandKind::to_repr(Self) -> @debug.Repr
+pub fn BpmnParticipantBandKind::token(Self) -> String
+
+pub(all) enum ChoreographyLoopType {
+  None
+  Standard
+  MultiInstanceSequential
+  MultiInstanceParallel
+} derive(Eq, @debug.Debug)
+pub fn ChoreographyLoopType::equal(Self, Self) -> Bool
+pub fn ChoreographyLoopType::not_equal(Self, Self) -> Bool
+pub fn ChoreographyLoopType::parse(String) -> Self?
+pub fn ChoreographyLoopType::to_repr(Self) -> @debug.Repr
+pub fn ChoreographyLoopType::token(Self) -> String
+
+pub(all) enum Content {
+  Text(String)
+  Element(Element)
+  Comment(String)
+  ProcessingInstruction(target~ : String, data~ : String)
+} derive(Eq, @debug.Debug)
+pub fn Content::equal(Self, Self) -> Bool
+pub fn Content::not_equal(Self, Self) -> Bool
+pub fn Content::to_repr(Self) -> @debug.Repr
+
 pub struct Cst {
   tokens : ReadOnlyArray[Token]
   nodes : ReadOnlyArray[XmlNode]
@@ -24,6 +179,19 @@ pub fn Cst::equal(Self, Self) -> Bool
 pub fn Cst::not_equal(Self, Self) -> Bool
 pub fn Cst::text(Self) -> String
 pub fn Cst::to_repr(Self) -> @debug.Repr
+
+pub struct Definitions {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Definitions::document(Self) -> Document
+pub fn Definitions::equal(Self, Self) -> Bool
+pub fn Definitions::from_element(Element) -> Self?
+pub fn Definitions::imports(Self) -> ReadOnlyArray[Import]
+pub fn Definitions::new(String, id? : String, name? : String, expression_language? : String, type_language? : String, exporter? : String, exporter_version? : String, children? : ArrayView[Element]) -> Self
+pub fn Definitions::not_equal(Self, Self) -> Bool
+pub fn Definitions::roots(Self) -> ReadOnlyArray[RootElement]
+pub fn Definitions::target_namespace(Self) -> Field[String]
+pub fn Definitions::to_repr(Self) -> @debug.Repr
 
 pub struct Diagnostic {
   code : String
@@ -38,53 +206,367 @@ pub fn Diagnostic::to_repr(Self) -> @debug.Repr
 
 pub struct Document {
   root : Element
+  prolog : ReadOnlyArray[Content]
+  epilog : ReadOnlyArray[Content]
 } derive(Eq, @debug.Debug)
+pub fn Document::definitions(Self) -> Definitions?
 pub fn Document::equal(Self, Self) -> Bool
-pub fn Document::new(Element) -> Self
+pub fn Document::new(Element, prolog? : ArrayView[Content], epilog? : ArrayView[Content]) -> Self
 pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::walk(Self, (Element) -> Unit) -> Unit
 
+pub struct Documentation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Documentation::equal(Self, Self) -> Bool
+pub fn Documentation::from_element(Element) -> Self?
+pub fn Documentation::new(ArrayView[Content], id? : String, text_format? : String) -> Self
+pub fn Documentation::not_equal(Self, Self) -> Bool
+pub fn Documentation::text_format(Self) -> Field[String]
+pub fn Documentation::to_repr(Self) -> @debug.Repr
+
 pub struct Element {
   kind : Kind
   attributes : ReadOnlyArray[(String, String)]
+  values : ReadOnlyArray[Attribute]
   children : ReadOnlyArray[Element]
+  contents : ReadOnlyArray[Content]
   content : String
-} derive(Eq, @debug.Debug)
+  bindings : ReadOnlyArray[(String, String)]
+  value_type : ExpandedName?
+  text_value : Scalar?
+  span : Span?
+  // private fields
+} derive(@debug.Debug)
 pub fn Element::attribute(Self, String) -> String?
+pub fn Element::boolean(Self, String) -> Field[Bool]
+pub fn Element::enumeration(Self, String) -> Field[BpmnEnum]
 pub fn Element::equal(Self, Self) -> Bool
-pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? : ArrayView[Self], content? : String) -> Self
+pub fn Element::from_values(Kind, values? : ArrayView[Attribute], contents? : ArrayView[Content], bindings? : ArrayView[(String, String)], value_type? : ExpandedName, text_value? : Scalar) -> Self
+pub fn Element::integer(Self, String) -> Field[ExactInteger]
+pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? : ArrayView[Self], content? : String, bindings? : ArrayView[(String, String)], value_type? : ExpandedName) -> Self
 pub fn Element::not_equal(Self, Self) -> Bool
+pub fn Element::number(Self, String) -> Field[ExactNumber]
+pub fn Element::reference(Self, String) -> Field[Reference]
+pub fn Element::scalar(Self, ExpandedName) -> Scalar?
+pub fn Element::string(Self, String) -> Field[String]
 pub fn Element::to_repr(Self) -> @debug.Repr
+pub fn Element::with_attribute(Self, Attribute) -> Self
+pub fn Element::with_contents(Self, ArrayView[Content]) -> Self
+pub fn Element::with_kind(Self, Kind) -> Self
+pub impl Eq for Element
+
+pub(all) enum EventBasedGatewayType {
+  Exclusive
+  Parallel
+} derive(Eq, @debug.Debug)
+pub fn EventBasedGatewayType::equal(Self, Self) -> Bool
+pub fn EventBasedGatewayType::not_equal(Self, Self) -> Bool
+pub fn EventBasedGatewayType::parse(String) -> Self?
+pub fn EventBasedGatewayType::to_repr(Self) -> @debug.Repr
+pub fn EventBasedGatewayType::token(Self) -> String
+
+pub struct ExactInteger {
+  token : String
+} derive(Eq, @debug.Debug)
+pub fn ExactInteger::equal(Self, Self) -> Bool
+pub fn ExactInteger::not_equal(Self, Self) -> Bool
+pub fn ExactInteger::parse(String) -> Self?
+pub fn ExactInteger::to_repr(Self) -> @debug.Repr
+
+pub struct ExactNumber {
+  token : String
+} derive(Eq, @debug.Debug)
+pub fn ExactNumber::equal(Self, Self) -> Bool
+pub fn ExactNumber::is_finite(Self) -> Bool
+pub fn ExactNumber::not_equal(Self, Self) -> Bool
+pub fn ExactNumber::parse(String) -> Self?
+pub fn ExactNumber::to_repr(Self) -> @debug.Repr
 
 pub struct ExpandedName {
   namespace_uri : String
   local_name : String
 } derive(Eq, @debug.Debug)
 pub fn ExpandedName::equal(Self, Self) -> Bool
+pub fn ExpandedName::new(String, String) -> Self
 pub fn ExpandedName::not_equal(Self, Self) -> Bool
 pub fn ExpandedName::to_repr(Self) -> @debug.Repr
 
+pub(all) enum Field[T] {
+  Absent
+  Present(T)
+  InvalidValue(Scalar)
+} derive(Eq, @debug.Debug)
+pub fn[T : Eq] Field::equal(Self[T], Self[T]) -> Bool
+pub fn[T : Eq] Field::not_equal(Self[T], Self[T]) -> Bool
+pub fn[T : @debug.Debug] Field::to_repr(Self[T]) -> @debug.Repr
+pub fn[T] Field::value(Self[T]) -> T?
+
+pub(all) enum GatewayDirection {
+  Unspecified
+  Converging
+  Diverging
+  Mixed
+} derive(Eq, @debug.Debug)
+pub fn GatewayDirection::equal(Self, Self) -> Bool
+pub fn GatewayDirection::not_equal(Self, Self) -> Bool
+pub fn GatewayDirection::parse(String) -> Self?
+pub fn GatewayDirection::to_repr(Self) -> @debug.Repr
+pub fn GatewayDirection::token(Self) -> String
+
+pub(all) enum Implementation {
+  Unspecified
+  WebService
+  Uri(String)
+} derive(Eq, @debug.Debug)
+pub fn Implementation::equal(Self, Self) -> Bool
+pub fn Implementation::not_equal(Self, Self) -> Bool
+pub fn Implementation::parse(String) -> Self?
+pub fn Implementation::to_repr(Self) -> @debug.Repr
+pub fn Implementation::token(Self) -> String
+
+pub struct Import {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Import::equal(Self, Self) -> Bool
+pub fn Import::from_element(Element) -> Self?
+pub fn Import::import_type(Self) -> Field[String]
+pub fn Import::location(Self) -> Field[String]
+pub fn Import::namespace_uri(Self) -> Field[String]
+pub fn Import::new(String, String, String) -> Self
+pub fn Import::not_equal(Self, Self) -> Bool
+pub fn Import::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ItemKind {
+  Information
+  Physical
+} derive(Eq, @debug.Debug)
+pub fn ItemKind::equal(Self, Self) -> Bool
+pub fn ItemKind::not_equal(Self, Self) -> Bool
+pub fn ItemKind::parse(String) -> Self?
+pub fn ItemKind::to_repr(Self) -> @debug.Repr
+pub fn ItemKind::token(Self) -> String
+
 pub(all) enum Kind {
-  Definitions
-  Process
-  StartEvent
+  DcFont
+  DiEdge
+  DiNode
+  DcPoint
+  DiLabel
+  DiPlane
+  DiShape
+  DiStyle
+  Bounds
+  To
+  DiDiagram
+  Waypoint
+  From
+  Lane
   Task
-  EndEvent
-  SequenceFlow
-  Incoming
-  Outgoing
-  Diagram
+  Text
+  DiExtension
+  Edge
+  Error
+  Event
+  Group
+  BpmnBPMNLabel
   Plane
   Shape
-  Edge
-  Bounds
-  Waypoint
+  Import
+  Script
+  Signal
+  Source
+  Target
+  DiLabeledEdge
+  Gateway
+  LaneSet
+  Message
+  Process
+  DiLabeledShape
+  Diagram
+  Activity
+  Artifact
+  Auditing
+  Category
+  DataPath
+  EndEvent
+  EndPoint
+  ErrorRef
+  FlowNode
+  Incoming
+  InputSet
+  Outgoing
+  Property
+  Resource
+  SendTask
+  Supports
+  TimeDate
+  UserTask
+  Condition
+  DataInput
+  DataState
+  DataStore
+  Extension
+  Interface
+  IoBinding
+  Operation
+  OutputSet
+  Performer
+  Rendering
+  SourceRef
+  TargetRef
+  TimeCycle
+  DiDiagramElement
+  Assignment
+  CatchEvent
+  DataObject
+  DataOutput
+  Escalation
+  Expression
+  GlobalTask
+  ManualTask
+  Monitoring
+  ScriptTask
+  StartEvent
+  SubProcess
+  ThrowEvent
+  BpmnBPMNLabelStyle
+  Association
+  BaseElement
+  Definitions
+  EndPointRef
+  FlowElement
+  FlowNodeRef
+  MessageFlow
+  MessagePath
+  Participant
+  PartnerRole
+  ReceiveTask
+  ResourceRef
+  RootElement
+  ServiceTask
+  Transaction
+  CallActivity
+  ChildLaneSet
+  Choreography
+  Conversation
+  InMessageRef
+  InputSetRefs
+  InterfaceRef
+  OperationRef
+  Relationship
+  ResourceRole
+  SequenceFlow
+  TimeDuration
+  BoundaryEvent
+  CategoryValue
+  Collaboration
+  DataInputRefs
+  Documentation
+  InputDataItem
+  LoopCondition
+  OutMessageRef
+  OutputSetRefs
+  PartnerEntity
+  ComplexGateway
+  CorrelationKey
+  DataOutputRefs
+  GlobalUserTask
+  HumanPerformer
+  ItemDefinition
+  MessageFlowRef
+  OutputDataItem
+  ParticipantRef
+  PotentialOwner
+  TextAnnotation
+  Transformation
+  AdHocSubProcess
+  CallableElement
+  ChoreographyRef
+  DataAssociation
+  EventDefinition
+  IoSpecification
+  LoopCardinality
+  ParallelGateway
+  SubChoreography
+  SubConversation
+  BusinessRuleTask
+  CallChoreography
+  CallConversation
+  CategoryValueRef
+  ChoreographyTask
+  ConversationLink
+  ConversationNode
+  ExclusiveGateway
+  FormalExpression
+  GlobalManualTask
+  GlobalScriptTask
+  InclusiveGateway
+  LoopDataInputRef
+  PartitionElement
+  EventBasedGateway
+  ExtensionElements
+  LoopDataOutputRef
+  OptionalInputRefs
+  ResourceParameter
+  DataStoreReference
+  EventDefinitionRef
+  GlobalConversation
+  ImplicitThrowEvent
+  OptionalOutputRefs
+  ActivationCondition
+  CompletionCondition
+  ConditionExpression
+  CorrelationProperty
+  DataObjectReference
+  InnerParticipantRef
+  LinkEventDefinition
+  LoopCharacteristics
+  OuterParticipantRef
+  ChoreographyActivity
+  DataInputAssociation
+  ErrorEventDefinition
+  TimerEventDefinition
+  CancelEventDefinition
+  DataOutputAssociation
+  SignalEventDefinition
+  SupportedInterfaceRef
+  CorrelationPropertyRef
+  GlobalBusinessRuleTask
+  GlobalChoreographyTask
+  IntermediateCatchEvent
+  IntermediateThrowEvent
+  MessageEventDefinition
+  MessageFlowAssociation
+  ParticipantAssociation
+  ConversationAssociation
+  CorrelationSubscription
+  ParticipantMultiplicity
+  WhileExecutingInputRefs
+  ResourceParameterBinding
+  TerminateEventDefinition
+  WhileExecutingOutputRefs
+  CompensateEventDefinition
+  ComplexBehaviorDefinition
+  EscalationEventDefinition
+  ConditionalEventDefinition
+  CorrelationPropertyBinding
+  BaseElementWithMixedContent
+  StandardLoopCharacteristics
+  ResourceAssignmentExpression
+  MultiInstanceLoopCharacteristics
+  CorrelationPropertyRetrievalExpression
+  Foreign(ExpandedName)
+  Unknown(ExpandedName)
 } derive(Eq, @debug.Debug)
+pub fn Kind::declared_type(Self) -> ExpandedName?
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::local_name(Self) -> String
+pub fn Kind::name(Self) -> ExpandedName
 pub fn Kind::namespace_uri(Self) -> String
 pub fn Kind::not_equal(Self, Self) -> Bool
+pub fn Kind::substitutes(Self, ExpandedName) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
 pub struct Limits {
@@ -109,6 +591,18 @@ pub fn Location::equal(Self, Self) -> Bool
 pub fn Location::not_equal(Self, Self) -> Bool
 pub fn Location::to_repr(Self) -> @debug.Repr
 
+pub(all) enum MultiInstanceFlowCondition {
+  None
+  One
+  All
+  Complex
+} derive(Eq, @debug.Debug)
+pub fn MultiInstanceFlowCondition::equal(Self, Self) -> Bool
+pub fn MultiInstanceFlowCondition::not_equal(Self, Self) -> Bool
+pub fn MultiInstanceFlowCondition::parse(String) -> Self?
+pub fn MultiInstanceFlowCondition::to_repr(Self) -> @debug.Repr
+pub fn MultiInstanceFlowCondition::token(Self) -> String
+
 pub struct Position {
   offset : Int32
   line : Int32
@@ -117,6 +611,17 @@ pub struct Position {
 pub fn Position::equal(Self, Self) -> Bool
 pub fn Position::not_equal(Self, Self) -> Bool
 pub fn Position::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ProcessType {
+  None
+  Public
+  Private
+} derive(Eq, @debug.Debug)
+pub fn ProcessType::equal(Self, Self) -> Bool
+pub fn ProcessType::not_equal(Self, Self) -> Bool
+pub fn ProcessType::parse(String) -> Self?
+pub fn ProcessType::to_repr(Self) -> @debug.Repr
+pub fn ProcessType::token(Self) -> String
 
 pub struct ReadResult {
   tree : Cst
@@ -127,6 +632,131 @@ pub struct ReadResult {
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr
+
+pub struct Reference {
+  kind : ReferenceKind
+  spelling : String
+  name : ExpandedName?
+} derive(@debug.Debug)
+pub fn Reference::equal(Self, Self) -> Bool
+pub fn Reference::new(ExpandedName, kind? : ReferenceKind) -> Self
+pub fn Reference::not_equal(Self, Self) -> Bool
+pub fn Reference::parse(String, bindings? : ArrayView[(String, String)], kind? : ReferenceKind) -> Self
+pub fn Reference::to_repr(Self) -> @debug.Repr
+pub impl Eq for Reference
+
+pub(all) enum ReferenceKind {
+  Id
+  QName
+} derive(Eq, @debug.Debug)
+pub fn ReferenceKind::equal(Self, Self) -> Bool
+pub fn ReferenceKind::not_equal(Self, Self) -> Bool
+pub fn ReferenceKind::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RelationshipDirection {
+  None
+  Forward
+  Backward
+  Both
+} derive(Eq, @debug.Debug)
+pub fn RelationshipDirection::equal(Self, Self) -> Bool
+pub fn RelationshipDirection::not_equal(Self, Self) -> Bool
+pub fn RelationshipDirection::parse(String) -> Self?
+pub fn RelationshipDirection::to_repr(Self) -> @debug.Repr
+pub fn RelationshipDirection::token(Self) -> String
+
+pub struct RootElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn RootElement::base(Self) -> BaseElement
+pub fn RootElement::equal(Self, Self) -> Bool
+pub fn RootElement::from_element(Element) -> Self?
+pub fn RootElement::not_equal(Self, Self) -> Bool
+pub fn RootElement::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Scalar {
+  Text(String)
+  Identifier(String)
+  Uri(String)
+  Boolean(Bool)
+  Integer(ExactInteger)
+  Number(ExactNumber)
+  Reference(Reference)
+  Enumeration(BpmnEnum)
+  Invalid(raw~ : String, expected~ : ExpandedName)
+} derive(Eq, @debug.Debug)
+pub fn Scalar::equal(Self, Self) -> Bool
+pub fn Scalar::not_equal(Self, Self) -> Bool
+pub fn Scalar::to_repr(Self) -> @debug.Repr
+pub fn Scalar::token(Self) -> String
+
+pub struct SchemaElement {
+  name : ExpandedName
+  value_type : ExpandedName?
+  substitution_group : ExpandedName?
+  abstract_element : Bool
+} derive(Eq, @debug.Debug)
+pub fn SchemaElement::equal(Self, Self) -> Bool
+pub fn SchemaElement::not_equal(Self, Self) -> Bool
+pub fn SchemaElement::to_repr(Self) -> @debug.Repr
+
+pub struct SchemaField {
+  owner : TypeId
+  kind : SchemaFieldKind
+  name : ExpandedName?
+  value_type : ExpandedName?
+  reference_element : ExpandedName?
+  minimum : Int32
+  maximum : Int32?
+  default_value : String?
+  fixed_value : String?
+  group : String
+  namespace_constraint : String
+  source_path : String
+} derive(Eq, @debug.Debug)
+pub fn SchemaField::equal(Self, Self) -> Bool
+pub fn SchemaField::not_equal(Self, Self) -> Bool
+pub fn SchemaField::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SchemaFieldKind {
+  Attribute
+  Child
+  AnyAttribute
+  AnyChild
+} derive(Eq, @debug.Debug)
+pub fn SchemaFieldKind::equal(Self, Self) -> Bool
+pub fn SchemaFieldKind::not_equal(Self, Self) -> Bool
+pub fn SchemaFieldKind::to_repr(Self) -> @debug.Repr
+
+pub struct SchemaGroup {
+  owner : TypeId
+  path : String
+  parent : String
+  choice : Bool
+  minimum : Int32
+  maximum : Int32?
+} derive(Eq, @debug.Debug)
+pub fn SchemaGroup::equal(Self, Self) -> Bool
+pub fn SchemaGroup::not_equal(Self, Self) -> Bool
+pub fn SchemaGroup::to_repr(Self) -> @debug.Repr
+
+pub struct SchemaType {
+  id : TypeId
+  name : ExpandedName
+  base : ExpandedName?
+  abstract_type : Bool
+  mixed : Bool
+  simple : Bool
+  anonymous : Bool
+  enum_values : ReadOnlyArray[String]
+  union_members : ReadOnlyArray[ExpandedName]
+} derive(Eq, @debug.Debug)
+pub fn SchemaType::equal(Self, Self) -> Bool
+pub fn SchemaType::fields(Self) -> ReadOnlyArray[SchemaField]
+pub fn SchemaType::has_mixed_content(Self) -> Bool
+pub fn SchemaType::is_subtype_of(Self, ExpandedName) -> Bool
+pub fn SchemaType::not_equal(Self, Self) -> Bool
+pub fn SchemaType::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Severity {
   Error
@@ -185,6 +815,211 @@ pub(all) enum TokenKind {
 pub fn TokenKind::equal(Self, Self) -> Bool
 pub fn TokenKind::not_equal(Self, Self) -> Bool
 pub fn TokenKind::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TransactionMethod {
+  Compensate
+  Image
+  Store
+  Uri(String)
+} derive(Eq, @debug.Debug)
+pub fn TransactionMethod::equal(Self, Self) -> Bool
+pub fn TransactionMethod::not_equal(Self, Self) -> Bool
+pub fn TransactionMethod::parse(String) -> Self?
+pub fn TransactionMethod::to_repr(Self) -> @debug.Repr
+pub fn TransactionMethod::token(Self) -> String
+
+pub(all) enum TypeId {
+  Definitions
+  Import
+  BpmnBPMNDiagram
+  BpmnBPMNPlane
+  BpmnBPMNEdge
+  BpmnBPMNShape
+  BpmnBPMNLabel
+  BpmnBPMNLabelStyle
+  BpmnParticipantBandKind
+  BpmnMessageVisibleKind
+  DcFont
+  DcPoint
+  DcBounds
+  DiDiagramElement
+  DiAnonymousDiagramElementExtension1
+  DiDiagram
+  DiNode
+  DiEdge
+  DiLabeledEdge
+  DiShape
+  DiLabeledShape
+  DiLabel
+  DiPlane
+  DiStyle
+  Activity
+  AdHocSubProcess
+  AdHocOrdering
+  Artifact
+  Assignment
+  Association
+  AssociationDirection
+  Auditing
+  BaseElement
+  BaseElementWithMixedContent
+  BoundaryEvent
+  BusinessRuleTask
+  CallableElement
+  CallActivity
+  CallChoreography
+  CallConversation
+  CancelEventDefinition
+  CatchEvent
+  Category
+  CategoryValue
+  Choreography
+  ChoreographyActivity
+  ChoreographyLoopType
+  ChoreographyTask
+  Collaboration
+  CompensateEventDefinition
+  ComplexBehaviorDefinition
+  ComplexGateway
+  ConditionalEventDefinition
+  Conversation
+  ConversationAssociation
+  ConversationLink
+  ConversationNode
+  CorrelationKey
+  CorrelationProperty
+  CorrelationPropertyBinding
+  CorrelationPropertyRetrievalExpression
+  CorrelationSubscription
+  DataAssociation
+  DataInput
+  DataInputAssociation
+  DataObject
+  DataObjectReference
+  DataOutput
+  DataOutputAssociation
+  DataState
+  DataStore
+  DataStoreReference
+  Documentation
+  EndEvent
+  EndPoint
+  Error
+  ErrorEventDefinition
+  Escalation
+  EscalationEventDefinition
+  Event
+  EventBasedGateway
+  EventBasedGatewayType
+  EventDefinition
+  ExclusiveGateway
+  Expression
+  Extension
+  ExtensionElements
+  FlowElement
+  FlowNode
+  FormalExpression
+  Gateway
+  GatewayDirection
+  GlobalBusinessRuleTask
+  GlobalChoreographyTask
+  GlobalConversation
+  GlobalManualTask
+  GlobalScriptTask
+  GlobalTask
+  GlobalUserTask
+  Group
+  HumanPerformer
+  Implementation
+  AnonymousTImplementation78
+  ImplicitThrowEvent
+  InclusiveGateway
+  InputSet
+  Interface
+  IntermediateCatchEvent
+  IntermediateThrowEvent
+  InputOutputBinding
+  InputOutputSpecification
+  ItemDefinition
+  ItemKind
+  Lane
+  LaneSet
+  LinkEventDefinition
+  LoopCharacteristics
+  ManualTask
+  Message
+  MessageEventDefinition
+  MessageFlow
+  MessageFlowAssociation
+  Monitoring
+  MultiInstanceLoopCharacteristics
+  MultiInstanceFlowCondition
+  Operation
+  OutputSet
+  ParallelGateway
+  Participant
+  ParticipantAssociation
+  ParticipantMultiplicity
+  PartnerEntity
+  PartnerRole
+  Performer
+  PotentialOwner
+  Process
+  ProcessType
+  Property
+  ReceiveTask
+  Relationship
+  RelationshipDirection
+  Rendering
+  Resource
+  ResourceAssignmentExpression
+  ResourceParameter
+  ResourceParameterBinding
+  ResourceRole
+  RootElement
+  ScriptTask
+  Script
+  SendTask
+  SequenceFlow
+  ServiceTask
+  Signal
+  SignalEventDefinition
+  StandardLoopCharacteristics
+  StartEvent
+  SubChoreography
+  SubConversation
+  SubProcess
+  Task
+  TerminateEventDefinition
+  TextAnnotation
+  Text
+  ThrowEvent
+  TimerEventDefinition
+  Transaction
+  TransactionMethod
+  AnonymousTTransactionMethod144
+  UserTask
+} derive(Eq, @debug.Debug)
+pub fn TypeId::equal(Self, Self) -> Bool
+pub fn TypeId::name(Self) -> ExpandedName
+pub fn TypeId::not_equal(Self, Self) -> Bool
+pub fn TypeId::to_repr(Self) -> @debug.Repr
+
+pub(all) enum WriteFormat {
+  Compact
+  Pretty
+} derive(Eq, @debug.Debug)
+pub fn WriteFormat::equal(Self, Self) -> Bool
+pub fn WriteFormat::not_equal(Self, Self) -> Bool
+pub fn WriteFormat::to_repr(Self) -> @debug.Repr
+
+pub struct WriteResult {
+  output : String?
+  diagnostics : ReadOnlyArray[Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn WriteResult::equal(Self, Self) -> Bool
+pub fn WriteResult::not_equal(Self, Self) -> Bool
+pub fn WriteResult::to_repr(Self) -> @debug.Repr
 
 pub struct XmlAttribute {
   raw_name : String

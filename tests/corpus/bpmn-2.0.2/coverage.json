@@ -1,0 +1,3588 @@
+{
+  "version": "BPMN 2.0.2",
+  "sources": [
+    {
+      "file": "BPMN20.xsd",
+      "sha256": "a07c159cb0594573dd7c97b1370dd116112378f377e43c89a8bf512ac5030705",
+      "url": "https://www.omg.org/spec/BPMN/20100501/BPMN20.xsd"
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "sha256": "f0dff1cd559d1514d8ebfc8c646f58402bcaced27ec22e2aa6456c2dcc80b038",
+      "url": "https://www.omg.org/spec/BPMN/20100501/BPMNDI.xsd"
+    },
+    {
+      "file": "DC.xsd",
+      "sha256": "a2f90e5ad9bb48c6915e4e034b4e27ac838264a1d4f27bfc70dbdfc69351312d",
+      "url": "https://www.omg.org/spec/BPMN/20100501/DC.xsd"
+    },
+    {
+      "file": "DI.xsd",
+      "sha256": "8220b179c175572df74e08a51bffabe957867962035cee7b5fee0b6acb4c4498",
+      "url": "https://www.omg.org/spec/BPMN/20100501/DI.xsd"
+    },
+    {
+      "file": "Semantic.xsd",
+      "sha256": "c4318842f7d2bbc262d7954c9452c501db16f0868eac0b8732ec5d7fb384d9a7",
+      "url": "https://www.omg.org/spec/BPMN/20100501/Semantic.xsd"
+    }
+  ],
+  "declarations": [
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/element[2]",
+      "declaration": "element",
+      "name": "definitions",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "import"
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "extension"
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "rootElement"
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "bpmndi:BPMNDiagram"
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "",
+      "ref": "relationship"
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[1]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[2]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[3]",
+      "declaration": "attribute",
+      "name": "targetNamespace",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[4]",
+      "declaration": "attribute",
+      "name": "expressionLanguage",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[5]",
+      "declaration": "attribute",
+      "name": "typeLanguage",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[6]",
+      "declaration": "attribute",
+      "name": "exporter",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[3]/attribute[7]",
+      "declaration": "attribute",
+      "name": "exporterVersion",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/element[4]",
+      "declaration": "element",
+      "name": "import",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[5]/attribute[0]",
+      "declaration": "attribute",
+      "name": "namespace",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[5]/attribute[1]",
+      "declaration": "attribute",
+      "name": "location",
+      "ref": ""
+    },
+    {
+      "file": "BPMN20.xsd",
+      "path": "BPMN20.xsd/schema[0]/complexType[5]/attribute[2]",
+      "declaration": "attribute",
+      "name": "importType",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[2]",
+      "declaration": "element",
+      "name": "BPMNDiagram",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[3]",
+      "declaration": "element",
+      "name": "BPMNPlane",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[4]",
+      "declaration": "element",
+      "name": "BPMNLabelStyle",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[5]",
+      "declaration": "element",
+      "name": "BPMNShape",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[6]",
+      "declaration": "element",
+      "name": "BPMNLabel",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/element[7]",
+      "declaration": "element",
+      "name": "BPMNEdge",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[8]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "bpmndi:BPMNPlane"
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[8]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "bpmndi:BPMNLabelStyle"
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[9]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "bpmnElement",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "bpmndi:BPMNLabel"
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "bpmnElement",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "sourceElement",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "targetElement",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "messageVisibleKind",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "bpmndi:BPMNLabel"
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "bpmnElement",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isHorizontal",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isExpanded",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "isMarkerVisible",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[5]",
+      "declaration": "attribute",
+      "name": "isMessageVisible",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[6]",
+      "declaration": "attribute",
+      "name": "participantBandKind",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[11]/complexContent[0]/extension[0]/attribute[7]",
+      "declaration": "attribute",
+      "name": "choreographyActivityShape",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[12]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "labelStyle",
+      "ref": ""
+    },
+    {
+      "file": "BPMNDI.xsd",
+      "path": "BPMNDI.xsd/schema[0]/complexType[13]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dc:Font"
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/element[0]",
+      "declaration": "element",
+      "name": "Font",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/element[1]",
+      "declaration": "element",
+      "name": "Point",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/element[2]",
+      "declaration": "element",
+      "name": "Bounds",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[1]",
+      "declaration": "attribute",
+      "name": "size",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isBold",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isItalic",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[4]",
+      "declaration": "attribute",
+      "name": "isUnderline",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[3]/attribute[5]",
+      "declaration": "attribute",
+      "name": "isStrikeThrough",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[4]/attribute[0]",
+      "declaration": "attribute",
+      "name": "x",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[4]/attribute[1]",
+      "declaration": "attribute",
+      "name": "y",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[5]/attribute[0]",
+      "declaration": "attribute",
+      "name": "x",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[5]/attribute[1]",
+      "declaration": "attribute",
+      "name": "y",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[5]/attribute[2]",
+      "declaration": "attribute",
+      "name": "width",
+      "ref": ""
+    },
+    {
+      "file": "DC.xsd",
+      "path": "DC.xsd/schema[0]/complexType[5]/attribute[3]",
+      "declaration": "attribute",
+      "name": "height",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[1]",
+      "declaration": "element",
+      "name": "DiagramElement",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[2]",
+      "declaration": "element",
+      "name": "Diagram",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[3]",
+      "declaration": "element",
+      "name": "Style",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[4]",
+      "declaration": "element",
+      "name": "Node",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[5]",
+      "declaration": "element",
+      "name": "Edge",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[6]",
+      "declaration": "element",
+      "name": "Shape",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[7]",
+      "declaration": "element",
+      "name": "Plane",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[8]",
+      "declaration": "element",
+      "name": "LabeledEdge",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[9]",
+      "declaration": "element",
+      "name": "Label",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/element[10]",
+      "declaration": "element",
+      "name": "LabeledShape",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[11]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "extension",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[11]/attribute[1]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[12]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[12]/attribute[1]",
+      "declaration": "attribute",
+      "name": "documentation",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[12]/attribute[2]",
+      "declaration": "attribute",
+      "name": "resolution",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[12]/attribute[3]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[14]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "waypoint",
+      "ref": ""
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[16]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dc:Bounds"
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[18]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dc:Bounds"
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[19]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "di:DiagramElement"
+    },
+    {
+      "file": "DI.xsd",
+      "path": "DI.xsd/schema[0]/complexType[20]/attribute[0]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[0]",
+      "declaration": "element",
+      "name": "activity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "ioSpecification"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "property"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataInputAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataOutputAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceRole"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/sequence[0]/element[5]",
+      "declaration": "element",
+      "name": "",
+      "ref": "loopCharacteristics"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "isForCompensation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "startQuantity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "completionQuantity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[1]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "default",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[2]",
+      "declaration": "element",
+      "name": "adHocSubProcess",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[3]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "completionCondition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[3]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "cancelRemainingInstances",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[3]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "ordering",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[5]",
+      "declaration": "element",
+      "name": "artifact",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[7]",
+      "declaration": "element",
+      "name": "assignment",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[8]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "from",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[8]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "to",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[9]",
+      "declaration": "element",
+      "name": "association",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "sourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "targetRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[10]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "associationDirection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[12]",
+      "declaration": "element",
+      "name": "auditing",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[14]",
+      "declaration": "element",
+      "name": "baseElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[15]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "documentation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[15]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "extensionElements"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[15]/attribute[1]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[16]",
+      "declaration": "element",
+      "name": "baseElementWithMixedContent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[17]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "documentation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[17]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "extensionElements"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[17]/attribute[1]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[18]",
+      "declaration": "element",
+      "name": "boundaryEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[19]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "cancelActivity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[19]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "attachedToRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[20]",
+      "declaration": "element",
+      "name": "businessRuleTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[21]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[22]",
+      "declaration": "element",
+      "name": "callableElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[23]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "supportedInterfaceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[23]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "ioSpecification"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[23]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "ioBinding"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[23]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[24]",
+      "declaration": "element",
+      "name": "callActivity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[25]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "calledElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[26]",
+      "declaration": "element",
+      "name": "callChoreography",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[27]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "participantAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[27]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "calledChoreographyRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[28]",
+      "declaration": "element",
+      "name": "callConversation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[29]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "participantAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[29]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "calledCollaborationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[30]",
+      "declaration": "element",
+      "name": "cancelEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[32]",
+      "declaration": "element",
+      "name": "catchEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataOutput"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataOutputAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "outputSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "eventDefinition"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "eventDefinitionRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[33]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "parallelMultiple",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[34]",
+      "declaration": "element",
+      "name": "category",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[35]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "categoryValue"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[35]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[36]",
+      "declaration": "element",
+      "name": "categoryValue",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[37]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "value",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[38]",
+      "declaration": "element",
+      "name": "choreography",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[39]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "flowElement"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[40]",
+      "declaration": "element",
+      "name": "choreographyActivity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[41]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "participantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[41]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationKey"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[41]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "initiatingParticipantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[41]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "loopType",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[43]",
+      "declaration": "element",
+      "name": "choreographyTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[44]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "messageFlowRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[45]",
+      "declaration": "element",
+      "name": "collaboration",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "participant"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "messageFlow"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "artifact"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "conversationNode"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "",
+      "ref": "conversationAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[5]",
+      "declaration": "element",
+      "name": "",
+      "ref": "participantAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[6]",
+      "declaration": "element",
+      "name": "",
+      "ref": "messageFlowAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[7]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationKey"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[8]",
+      "declaration": "element",
+      "name": "choreographyRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/sequence[0]/element[9]",
+      "declaration": "element",
+      "name": "",
+      "ref": "conversationLink"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[46]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isClosed",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[47]",
+      "declaration": "element",
+      "name": "compensateEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[48]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "waitForCompletion",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[48]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "activityRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[49]",
+      "declaration": "element",
+      "name": "complexBehaviorDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[50]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "condition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[50]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "event",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[51]",
+      "declaration": "element",
+      "name": "complexGateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[52]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "activationCondition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[52]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "default",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[53]",
+      "declaration": "element",
+      "name": "conditionalEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[54]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "condition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[55]",
+      "declaration": "element",
+      "name": "conversation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[57]",
+      "declaration": "element",
+      "name": "conversationAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[58]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "innerConversationNodeRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[58]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "outerConversationNodeRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[59]",
+      "declaration": "element",
+      "name": "conversationLink",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[60]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[60]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "sourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[60]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "targetRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[61]",
+      "declaration": "element",
+      "name": "conversationNode",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[62]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "participantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[62]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "messageFlowRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[62]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationKey"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[62]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[63]",
+      "declaration": "element",
+      "name": "correlationKey",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[64]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "correlationPropertyRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[64]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[65]",
+      "declaration": "element",
+      "name": "correlationProperty",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[66]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationPropertyRetrievalExpression"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[66]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[66]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "type",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[67]",
+      "declaration": "element",
+      "name": "correlationPropertyBinding",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[68]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "dataPath",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[68]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "correlationPropertyRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[69]",
+      "declaration": "element",
+      "name": "correlationPropertyRetrievalExpression",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[70]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "messagePath",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[70]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "messageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[71]",
+      "declaration": "element",
+      "name": "correlationSubscription",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[72]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationPropertyBinding"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[72]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "correlationKeyRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[73]",
+      "declaration": "element",
+      "name": "dataAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[74]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "sourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[74]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "targetRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[74]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "transformation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[74]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "assignment"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[75]",
+      "declaration": "element",
+      "name": "dataInput",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[76]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[76]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[76]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[76]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isCollection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[77]",
+      "declaration": "element",
+      "name": "dataInputAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[79]",
+      "declaration": "element",
+      "name": "dataObject",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[80]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[80]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[80]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isCollection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[81]",
+      "declaration": "element",
+      "name": "dataObjectReference",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[82]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[82]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[82]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "dataObjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[83]",
+      "declaration": "element",
+      "name": "dataOutput",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[84]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[84]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[84]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[84]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isCollection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[85]",
+      "declaration": "element",
+      "name": "dataOutputAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[87]",
+      "declaration": "element",
+      "name": "dataState",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[88]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[89]",
+      "declaration": "element",
+      "name": "dataStore",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[90]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[90]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[90]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "capacity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[90]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isUnlimited",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[90]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[91]",
+      "declaration": "element",
+      "name": "dataStoreReference",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[92]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[92]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[92]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "dataStoreRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[93]",
+      "declaration": "element",
+      "name": "documentation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[94]/attribute[1]",
+      "declaration": "attribute",
+      "name": "id",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[94]/attribute[2]",
+      "declaration": "attribute",
+      "name": "textFormat",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[95]",
+      "declaration": "element",
+      "name": "endEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[97]",
+      "declaration": "element",
+      "name": "endPoint",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[99]",
+      "declaration": "element",
+      "name": "error",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[100]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[100]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "errorCode",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[100]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "structureRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[101]",
+      "declaration": "element",
+      "name": "errorEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[102]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "errorRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[103]",
+      "declaration": "element",
+      "name": "escalation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[104]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[104]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "escalationCode",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[104]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "structureRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[105]",
+      "declaration": "element",
+      "name": "escalationEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[106]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "escalationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[107]",
+      "declaration": "element",
+      "name": "event",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[108]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "property"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[109]",
+      "declaration": "element",
+      "name": "eventBasedGateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[110]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "instantiate",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[110]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "eventGatewayType",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[112]",
+      "declaration": "element",
+      "name": "eventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[114]",
+      "declaration": "element",
+      "name": "exclusiveGateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[115]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "default",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[116]",
+      "declaration": "element",
+      "name": "expression",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[118]",
+      "declaration": "element",
+      "name": "extension",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[119]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "documentation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[119]/attribute[1]",
+      "declaration": "attribute",
+      "name": "definition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[119]/attribute[2]",
+      "declaration": "attribute",
+      "name": "mustUnderstand",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[120]",
+      "declaration": "element",
+      "name": "extensionElements",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[122]",
+      "declaration": "element",
+      "name": "flowElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[123]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "auditing"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[123]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "monitoring"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[123]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "categoryValueRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[123]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[124]",
+      "declaration": "element",
+      "name": "flowNode",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[125]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "incoming",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[125]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "outgoing",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[126]",
+      "declaration": "element",
+      "name": "formalExpression",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[127]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "language",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[127]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "evaluatesToTypeRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[128]",
+      "declaration": "element",
+      "name": "gateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[129]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "gatewayDirection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[131]",
+      "declaration": "element",
+      "name": "globalBusinessRuleTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[132]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[133]",
+      "declaration": "element",
+      "name": "globalChoreographyTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[134]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "initiatingParticipantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[135]",
+      "declaration": "element",
+      "name": "globalConversation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[137]",
+      "declaration": "element",
+      "name": "globalManualTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[139]",
+      "declaration": "element",
+      "name": "globalScriptTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[140]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "script"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[140]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "scriptLanguage",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[141]",
+      "declaration": "element",
+      "name": "globalTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[142]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceRole"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[143]",
+      "declaration": "element",
+      "name": "globalUserTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[144]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "rendering"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[144]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[145]",
+      "declaration": "element",
+      "name": "group",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[146]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "categoryValueRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[147]",
+      "declaration": "element",
+      "name": "humanPerformer",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[150]",
+      "declaration": "element",
+      "name": "implicitThrowEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[152]",
+      "declaration": "element",
+      "name": "inclusiveGateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[153]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "default",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[154]",
+      "declaration": "element",
+      "name": "inputSet",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[155]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "dataInputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[155]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "optionalInputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[155]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "whileExecutingInputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[155]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "outputSetRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[155]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[156]",
+      "declaration": "element",
+      "name": "interface",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[157]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "operation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[157]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[157]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "implementationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[158]",
+      "declaration": "element",
+      "name": "intermediateCatchEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[160]",
+      "declaration": "element",
+      "name": "intermediateThrowEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[162]",
+      "declaration": "element",
+      "name": "ioBinding",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[163]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "operationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[163]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "inputDataRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[163]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "outputDataRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[164]",
+      "declaration": "element",
+      "name": "ioSpecification",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[165]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataInput"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[165]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataOutput"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[165]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "inputSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[165]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "outputSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[166]",
+      "declaration": "element",
+      "name": "itemDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[167]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "structureRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[167]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "isCollection",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[167]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "itemKind",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[169]",
+      "declaration": "element",
+      "name": "lane",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[170]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "partitionElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[170]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "flowNodeRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[170]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "childLaneSet",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[170]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[170]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "partitionElementRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[171]",
+      "declaration": "element",
+      "name": "laneSet",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[172]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "lane"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[172]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[173]",
+      "declaration": "element",
+      "name": "linkEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[174]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "source",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[174]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "target",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[174]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[175]",
+      "declaration": "element",
+      "name": "loopCharacteristics",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[177]",
+      "declaration": "element",
+      "name": "manualTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[179]",
+      "declaration": "element",
+      "name": "message",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[180]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[180]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "itemRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[181]",
+      "declaration": "element",
+      "name": "messageEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[182]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "operationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[182]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "messageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[183]",
+      "declaration": "element",
+      "name": "messageFlow",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[184]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[184]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "sourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[184]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "targetRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[184]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "messageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[185]",
+      "declaration": "element",
+      "name": "messageFlowAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[186]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "innerMessageFlowRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[186]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "outerMessageFlowRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[187]",
+      "declaration": "element",
+      "name": "monitoring",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[189]",
+      "declaration": "element",
+      "name": "multiInstanceLoopCharacteristics",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "loopCardinality",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "loopDataInputRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "loopDataOutputRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "inputDataItem",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "outputDataItem",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[5]",
+      "declaration": "element",
+      "name": "",
+      "ref": "complexBehaviorDefinition"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/sequence[0]/element[6]",
+      "declaration": "element",
+      "name": "completionCondition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "isSequential",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "behavior",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "oneBehaviorEventRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[190]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "noneBehaviorEventRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[192]",
+      "declaration": "element",
+      "name": "operation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[193]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "inMessageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[193]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "outMessageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[193]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "errorRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[193]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[193]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "implementationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[194]",
+      "declaration": "element",
+      "name": "outputSet",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[195]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "dataOutputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[195]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "optionalOutputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[195]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "whileExecutingOutputRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[195]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "inputSetRefs",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[195]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[196]",
+      "declaration": "element",
+      "name": "parallelGateway",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[198]",
+      "declaration": "element",
+      "name": "participant",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[199]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "interfaceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[199]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "endPointRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[199]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "participantMultiplicity"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[199]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[199]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "processRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[200]",
+      "declaration": "element",
+      "name": "participantAssociation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[201]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "innerParticipantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[201]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "outerParticipantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[202]",
+      "declaration": "element",
+      "name": "participantMultiplicity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[203]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "minimum",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[203]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "maximum",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[204]",
+      "declaration": "element",
+      "name": "partnerEntity",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[205]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "participantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[205]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[206]",
+      "declaration": "element",
+      "name": "partnerRole",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[207]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "participantRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[207]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[208]",
+      "declaration": "element",
+      "name": "performer",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[210]",
+      "declaration": "element",
+      "name": "potentialOwner",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[212]",
+      "declaration": "element",
+      "name": "process",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "auditing"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "monitoring"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "property"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "laneSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "",
+      "ref": "flowElement"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[5]",
+      "declaration": "element",
+      "name": "",
+      "ref": "artifact"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[6]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceRole"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[7]",
+      "declaration": "element",
+      "name": "",
+      "ref": "correlationSubscription"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/sequence[0]/element[8]",
+      "declaration": "element",
+      "name": "supports",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "processType",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isClosed",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isExecutable",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[213]/complexContent[0]/extension[0]/attribute[4]",
+      "declaration": "attribute",
+      "name": "definitionalCollaborationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[215]",
+      "declaration": "element",
+      "name": "property",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[216]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataState"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[216]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[216]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "itemSubjectRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[217]",
+      "declaration": "element",
+      "name": "receiveTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[218]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[218]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "instantiate",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[218]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "messageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[218]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "operationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[219]",
+      "declaration": "element",
+      "name": "relationship",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[220]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "source",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[220]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "target",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[220]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "type",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[220]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "direction",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[222]",
+      "declaration": "element",
+      "name": "rendering",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[224]",
+      "declaration": "element",
+      "name": "resource",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[225]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceParameter"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[225]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[226]",
+      "declaration": "element",
+      "name": "resourceAssignmentExpression",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[227]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "expression"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[228]",
+      "declaration": "element",
+      "name": "resourceParameter",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[229]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[229]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "type",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[229]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "isRequired",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[230]",
+      "declaration": "element",
+      "name": "resourceParameterBinding",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[231]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "expression"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[231]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "parameterRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[232]",
+      "declaration": "element",
+      "name": "resourceRole",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[233]/complexContent[0]/extension[0]/choice[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "resourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[233]/complexContent[0]/extension[0]/choice[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceParameterBinding"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[233]/complexContent[0]/extension[0]/choice[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "resourceAssignmentExpression"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[233]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[234]",
+      "declaration": "element",
+      "name": "rootElement",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[236]",
+      "declaration": "element",
+      "name": "scriptTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[237]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "script"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[237]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "scriptFormat",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[238]",
+      "declaration": "element",
+      "name": "script",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[240]",
+      "declaration": "element",
+      "name": "sendTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[241]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[241]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "messageRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[241]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "operationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[242]",
+      "declaration": "element",
+      "name": "sequenceFlow",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[243]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "conditionExpression",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[243]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "sourceRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[243]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "targetRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[243]/complexContent[0]/extension[0]/attribute[3]",
+      "declaration": "attribute",
+      "name": "isImmediate",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[244]",
+      "declaration": "element",
+      "name": "serviceTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[245]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[245]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "operationRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[246]",
+      "declaration": "element",
+      "name": "signal",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[247]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "name",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[247]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "structureRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[248]",
+      "declaration": "element",
+      "name": "signalEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[249]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "signalRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[250]",
+      "declaration": "element",
+      "name": "standardLoopCharacteristics",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[251]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "loopCondition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[251]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "testBefore",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[251]/complexContent[0]/extension[0]/attribute[2]",
+      "declaration": "attribute",
+      "name": "loopMaximum",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[252]",
+      "declaration": "element",
+      "name": "startEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[253]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "isInterrupting",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[254]",
+      "declaration": "element",
+      "name": "subChoreography",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[255]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "flowElement"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[255]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "artifact"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[256]",
+      "declaration": "element",
+      "name": "subConversation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[257]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "conversationNode"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[258]",
+      "declaration": "element",
+      "name": "subProcess",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[259]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "laneSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[259]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "flowElement"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[259]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "artifact"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[259]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "triggeredByEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[260]",
+      "declaration": "element",
+      "name": "task",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[262]",
+      "declaration": "element",
+      "name": "terminateEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[264]",
+      "declaration": "element",
+      "name": "textAnnotation",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[265]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "text"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[265]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "textFormat",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[266]",
+      "declaration": "element",
+      "name": "text",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[268]",
+      "declaration": "element",
+      "name": "throwEvent",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[269]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataInput"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[269]/complexContent[0]/extension[0]/sequence[0]/element[1]",
+      "declaration": "element",
+      "name": "",
+      "ref": "dataInputAssociation"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[269]/complexContent[0]/extension[0]/sequence[0]/element[2]",
+      "declaration": "element",
+      "name": "",
+      "ref": "inputSet"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[269]/complexContent[0]/extension[0]/sequence[0]/element[3]",
+      "declaration": "element",
+      "name": "",
+      "ref": "eventDefinition"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[269]/complexContent[0]/extension[0]/sequence[0]/element[4]",
+      "declaration": "element",
+      "name": "eventDefinitionRef",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[270]",
+      "declaration": "element",
+      "name": "timerEventDefinition",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[271]/complexContent[0]/extension[0]/choice[0]/element[0]",
+      "declaration": "element",
+      "name": "timeDate",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[271]/complexContent[0]/extension[0]/choice[0]/element[1]",
+      "declaration": "element",
+      "name": "timeDuration",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[271]/complexContent[0]/extension[0]/choice[0]/element[2]",
+      "declaration": "element",
+      "name": "timeCycle",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[272]",
+      "declaration": "element",
+      "name": "transaction",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[273]/complexContent[0]/extension[0]/attribute[0]",
+      "declaration": "attribute",
+      "name": "method",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/element[275]",
+      "declaration": "element",
+      "name": "userTask",
+      "ref": ""
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[276]/complexContent[0]/extension[0]/sequence[0]/element[0]",
+      "declaration": "element",
+      "name": "",
+      "ref": "rendering"
+    },
+    {
+      "file": "Semantic.xsd",
+      "path": "Semantic.xsd/schema[0]/complexType[276]/complexContent[0]/extension[0]/attribute[1]",
+      "declaration": "attribute",
+      "name": "implementation",
+      "ref": ""
+    }
+  ]
+}
