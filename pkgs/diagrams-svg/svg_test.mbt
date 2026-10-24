@@ -211,9 +211,9 @@ test "the SVG of a simple sequence" {
     #|  </g>
     #|  <g class="messages">
     #|    <g class="message f-frontend" data-index="0" data-from="Client" data-to="API">
-    #|      <path class="m-line" d="M87 124 H217" marker-end="url(#head-frontend)"/>
-    #|      <rect class="mask" x="100" y="100" width="105" height="20" rx="3"/>
-    #|      <text class="m-label" x="152" y="114" text-anchor="middle">GET /forecast</text>
+    #|      <path class="m-line" d="M87 127 H217" marker-end="url(#head-frontend)"/>
+    #|      <rect class="mask" x="100" y="100" width="105" height="23" rx="3"/>
+    #|      <text class="m-label" x="152" y="115" text-anchor="middle">GET /forecast</text>
     #|    </g>
     #|  </g>
     #|  <g class="participants">
@@ -230,6 +230,7 @@ test "the SVG of a simple sequence" {
     #|  </g>
     #|</svg>
     #|
+
   ))
 }
 

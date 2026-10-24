@@ -19,6 +19,15 @@ pub let min_text_size : Int32
 // Errors
 
 // Types and methods
+pub(all) struct ActivationBar {
+  participant : String
+  depth : Int32
+  box : Rect
+} derive(Eq, @debug.Debug)
+pub fn ActivationBar::equal(Self, Self) -> Bool
+pub fn ActivationBar::not_equal(Self, Self) -> Bool
+pub fn ActivationBar::to_repr(Self) -> @debug.Repr
+
 pub(all) struct Finding {
   rule : Rule
   message : String
@@ -27,6 +36,30 @@ pub fn Finding::equal(Self, Self) -> Bool
 pub fn Finding::not_equal(Self, Self) -> Bool
 pub fn Finding::to_repr(Self) -> @debug.Repr
 
+pub(all) struct FrameBox {
+  index : Int32
+  parent : Int32?
+  kind : @sequence.FrameKind
+  colour : String?
+  box : Rect
+  header : Label?
+  chip : Rect?
+  sections : ReadOnlyArray[FrameSection]
+} derive(Eq, @debug.Debug)
+pub fn FrameBox::equal(Self, Self) -> Bool
+pub fn FrameBox::not_equal(Self, Self) -> Bool
+pub fn FrameBox::to_repr(Self) -> @debug.Repr
+
+pub(all) struct FrameSection {
+  box : Rect
+  label : Label?
+  chip : Rect?
+  divider : Segment?
+} derive(Eq, @debug.Debug)
+pub fn FrameSection::equal(Self, Self) -> Bool
+pub fn FrameSection::not_equal(Self, Self) -> Bool
+pub fn FrameSection::to_repr(Self) -> @debug.Repr
+
 pub(all) struct Geometry {
   width : Int32
   height : Int32
@@ -34,15 +67,32 @@ pub(all) struct Geometry {
   lifeline_bottom : Int32
   participants : ReadOnlyArray[ParticipantBox]
   messages : ReadOnlyArray[MessageLine]
+  notes : ReadOnlyArray[NoteBox]
+  activations : ReadOnlyArray[ActivationBar]
+  frames : ReadOnlyArray[FrameBox]
+  groups : ReadOnlyArray[GroupBox]
+  title : Label?
+  title_box : Rect?
 } derive(Eq, @debug.Debug)
 pub fn Geometry::equal(Self, Self) -> Bool
 pub fn Geometry::not_equal(Self, Self) -> Bool
 pub fn Geometry::to_repr(Self) -> @debug.Repr
 
+pub(all) struct GroupBox {
+  group : @sequence.BoxGroup
+  box : Rect
+  label : Label
+  chip : Rect
+} derive(Eq, @debug.Debug)
+pub fn GroupBox::equal(Self, Self) -> Bool
+pub fn GroupBox::not_equal(Self, Self) -> Bool
+pub fn GroupBox::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Ink {
   Primary
   Muted
   Accent(@theme.Family)
+  Color(@theme.Color)
 } derive(Eq, @debug.Debug)
 pub fn Ink::equal(Self, Self) -> Bool
 pub fn Ink::not_equal(Self, Self) -> Bool
@@ -66,6 +116,7 @@ pub fn Label::to_repr(Self) -> @debug.Repr
 pub(all) enum Layer {
   Mask
   Fill(@theme.Family)
+  Tint(@theme.Color)
 } derive(Eq, @debug.Debug)
 pub fn Layer::equal(Self, Self) -> Bool
 pub fn Layer::not_equal(Self, Self) -> Bool
@@ -81,10 +132,23 @@ pub(all) struct MessageLine {
   y : Int32
   chip : Rect
   label : Label
+  sublabel : Label?
+  path : ReadOnlyArray[Segment]
+  message : @sequence.Message
 } derive(Eq, @debug.Debug)
 pub fn MessageLine::equal(Self, Self) -> Bool
 pub fn MessageLine::not_equal(Self, Self) -> Bool
 pub fn MessageLine::to_repr(Self) -> @debug.Repr
+
+pub(all) struct NoteBox {
+  index : Int32
+  note : @sequence.Note
+  box : Rect
+  label : Label
+} derive(Eq, @debug.Debug)
+pub fn NoteBox::equal(Self, Self) -> Bool
+pub fn NoteBox::not_equal(Self, Self) -> Bool
+pub fn NoteBox::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ParticipantBox {
   id : String
@@ -92,6 +156,11 @@ pub(all) struct ParticipantBox {
   box : Rect
   label : Label
   lifeline_x : Int32
+  lifeline_top : Int32
+  lifeline_bottom : Int32
+  destroyed : Bool
+  participant : @sequence.Participant
+  sublabel : Label?
 } derive(Eq, @debug.Debug)
 pub fn ParticipantBox::equal(Self, Self) -> Bool
 pub fn ParticipantBox::not_equal(Self, Self) -> Bool
@@ -117,6 +186,17 @@ pub(all) enum Rule {
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::not_equal(Self, Self) -> Bool
 pub fn Rule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Segment {
+  x1 : Int32
+  y1 : Int32
+  x2 : Int32
+  y2 : Int32
+  owner : String
+} derive(Eq, @debug.Debug)
+pub fn Segment::equal(Self, Self) -> Bool
+pub fn Segment::not_equal(Self, Self) -> Bool
+pub fn Segment::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

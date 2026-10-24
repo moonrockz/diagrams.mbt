@@ -52,9 +52,9 @@ Depends on: `diagrams-67z.3`.
 Bead: `diagrams-67z.5`.
 Depends on: `diagrams-67z.4`.
 
-- [ ] 5.1 Lay out columns and rows with gaps from measured label widths; verify the long-label scenario and the spacing rules in tests.
-- [ ] 5.2 Lay out self-messages, notes, nested activations, nested frames with sections, box groups, creation and destruction; verify the geometry of each with focused tests.
-- [ ] 5.3 Implement the public legibility check for overlap, fit, text size and contrast with alpha composition; verify that it finds each kind of problem in a broken layout and finds nothing in the corpus.
+- [x] 5.1 Lay out columns and rows with gaps from measured label widths; verify the long-label scenario and the spacing rules in tests.
+- [x] 5.2 Lay out self-messages, notes, nested activations, nested frames with sections, box groups, creation and destruction; verify the geometry of each with focused tests.
+- [x] 5.3 Implement the public legibility check for overlap, fit, text size and contrast with alpha composition; verify that it finds each kind of problem in a broken layout and finds nothing in the corpus.
 
 ## 6. Paint the complete archify look
 

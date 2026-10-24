@@ -1,5 +1,7 @@
 import {
   "moonbitlang/core/json",
+  "moonrockz/diagrams-svg/layout",
+  "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams/sequence" @model,
   "moonrockz/diagrams-mermaid" @mermaid,
   "moonrockz/diagrams-tests/corpus",

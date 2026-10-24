@@ -41,6 +41,9 @@ test "a long label makes a wider gap between lifelines" {
   let m = long.messages[0]
   assert_true(m.chip.x > long.participants[0].lifeline_x)
   assert_true(right(m.chip) < long.participants[1].lifeline_x)
+  assert_true(m.chip.x - long.participants[0].lifeline_x >= 16)
+  assert_true(long.participants[1].lifeline_x - right(m.chip) >= 16)
+  clean(long)
 }
 
 ///|

@@ -44,6 +44,7 @@ fn ink_color(p : @theme.Palette, ink : Ink) -> @theme.Color {
     Primary => p.text
     Muted => p.muted
     Accent(f) => p.family(f).ink
+    Color(c) => c
   }
 }
 
@@ -54,6 +55,7 @@ fn backdrop_color(p : @theme.Palette, layers : ReadOnlyArray[Layer]) -> @theme.C
     c = match layer {
       Mask => p.mask
       Fill(f) => @theme.over(p.family(f).fill, c)
+      Tint(tint) => @theme.over(tint, c)
     }
   }
   c
@@ -67,85 +69,115 @@ fn ratio_text(r : Double) -> String {
 }
 
 ///|
-/// The legibility findings of `geometry` with the colours of `palette`. The
-/// check finds overlapping texts and boxes, text that does not fit in its box
-/// or chip, text smaller than `min_text_size`, and text with less contrast
-/// than `min_contrast`. Lifelines do not count for overlap, because label
-/// chips are opaque.
+fn contains(outer : Rect, inner : Rect, padding : Int) -> Bool {
+  inner.x >= outer.x + padding && inner.y >= outer.y + padding &&
+  inner.x + inner.width <= outer.x + outer.width - padding &&
+  inner.y + inner.height <= outer.y + outer.height - padding
+}
+
+///|
+fn border(box : Rect, owner : String) -> Array[Segment] {
+  let right = box.x + box.width
+  let bottom = box.y + box.height
+  [
+    { x1: box.x, y1: box.y, x2: right, y2: box.y, owner },
+    { x1: right, y1: box.y, x2: right, y2: bottom, owner },
+    { x1: right, y1: bottom, x2: box.x, y2: bottom, owner },
+    { x1: box.x, y1: bottom, x2: box.x, y2: box.y, owner },
+  ]
+}
+
+///|
+/// A stroke occupies one pixel on either side of its centre line. Layout
+/// paths are axis aligned, including all three segments of a self-message.
+fn stroke_box(line : Segment) -> Rect {
+  { x: min(line.x1, line.x2) - 1, y: min(line.y1, line.y2) - 1,
+    width: (line.x2 - line.x1).abs() + 2, height: (line.y2 - line.y1).abs() + 2 }
+}
+
+///|
+/// Check every text block and its actual container. Lifelines are the sole
+/// excluded lines: opaque label chips may cover them. Frame and group borders,
+/// section dividers, message paths, activation bars and lifetime crosses count.
+/// Contrast composes background layers in paint order and then the text alpha.
 pub fn check(geometry : Geometry, palette : @theme.Palette) -> Array[Finding] {
-  let findings = []
-  let labels = []
-  for p in geometry.participants {
-    labels.push(p.label)
-  }
-  for m in geometry.messages {
-    labels.push(m.label)
-  }
-  for l in labels {
-    if l.size < min_text_size {
-      findings.push({
-        rule: Size,
-        message: "\"\{l.content}\" is \{l.size} px; the minimum is \{min_text_size} px",
-      })
+  let findings : Array[Finding] = []
+  let labels : Array[(Label, Rect)] = []
+  let blockers : Array[(String, Rect)] = []
+  let lines : Array[Segment] = []
+  fn add(label : Label?, container : Rect?) -> Unit {
+    if label is Some(label) {
+      labels.push((label, container.unwrap_or({ x: label.box.x, y: label.box.y, width: 0, height: 0 })))
     }
   }
-  for i, a in labels {
+  for p in geometry.participants {
+    labels.push((p.label, p.box))
+    if p.sublabel is Some(label) { labels.push((label, p.box)) }
+    blockers.push(("participant:\{p.id}", p.box))
+    if p.destroyed {
+      blockers.push(("destruction:\{p.id}", { x: p.lifeline_x - 6, y: p.lifeline_bottom - 6, width: 12, height: 12 }))
+    }
+  }
+  for m in geometry.messages {
+    labels.push((m.label, m.chip))
+    blockers.push((m.label.owner, m.chip))
+    if m.sublabel is Some(label) { labels.push((label, m.chip)) }
+    lines.append(m.path[:])
+  }
+  for note in geometry.notes {
+    labels.push((note.label, note.box))
+    blockers.push((note.label.owner, note.box))
+  }
+  for bar in geometry.activations { blockers.push(("activation:\{bar.participant}:\{bar.depth}", bar.box)) }
+  for frame in geometry.frames {
+    add(frame.header, frame.chip)
+    if frame.header is Some(label) && frame.chip is Some(chip) { blockers.push((label.owner, chip)) }
+    lines.append(border(frame.box, "border:frame:\{frame.index}"))
+    for section in frame.sections {
+      add(section.label, section.chip)
+      if section.label is Some(label) && section.chip is Some(chip) { blockers.push((label.owner, chip)) }
+      if section.divider is Some(line) { lines.push(line) }
+    }
+  }
+  for group in geometry.groups {
+    labels.push((group.label, group.chip))
+    blockers.push((group.label.owner, group.chip))
+    lines.append(border(group.box, "border:group:\{group.group.id}"))
+  }
+  add(geometry.title, geometry.title_box)
+  if geometry.title is Some(label) && geometry.title_box is Some(box) { blockers.push((label.owner, box)) }
+  let canvas : Rect = { x: 0, y: 0, width: geometry.width, height: geometry.height }
+  for i, item in labels {
+    let (label, container) = item
+    if label.size < min_text_size {
+      findings.push({ rule: Size, message: "\"\{label.content}\" is \{label.size} px; the minimum is \{min_text_size} px" })
+    }
+    let measured_width = text_width(label.content, label.size, label.weight)
+    let measured_height = text_height(label.content, label.size)
+    if measured_width > label.box.width || measured_height > label.box.height ||
+      !contains(container, label.box, fit_padding) || !contains(canvas, container, 0) {
+      findings.push({ rule: Fit, message: "\"\{label.content}\" does not fit in its container or canvas" })
+    }
     for j in (i + 1)..<labels.length() {
-      let b = labels[j]
-      if a.box.overlaps(b.box) {
-        findings.push({
-          rule: Overlap,
-          message: "\"\{a.content}\" overlaps \"\{b.content}\"",
-        })
+      if label.box.overlaps(labels[j].0.box) {
+        findings.push({ rule: Overlap, message: "\"\{label.content}\" overlaps \"\{labels[j].0.content}\"" })
       }
     }
-    for p in geometry.participants {
-      if a.owner != "participant:\{p.id}" && a.box.overlaps(p.box) {
-        findings.push({
-          rule: Overlap,
-          message: "\"\{a.content}\" overlaps the box of \{p.id}",
-        })
+    for (owner, box) in blockers {
+      if owner != label.owner && label.box.overlaps(box) {
+        findings.push({ rule: Overlap, message: "\"\{label.content}\" overlaps \{owner}" })
       }
     }
-  }
-  for m in geometry.messages {
-    for other in geometry.messages {
-      if other.index != m.index {
-        let lo = if other.x1 < other.x2 { other.x1 } else { other.x2 }
-        let w = (other.x2 - other.x1).abs()
-        let line = { x: lo, y: other.y - 1, width: w, height: 2 }
-        if m.chip.overlaps(line) {
-          findings.push({
-            rule: Overlap,
-            message: "the label of message \{m.index} overlaps message \{other.index}",
-          })
-        }
+    for line in lines {
+      if line.owner != label.owner && label.box.overlaps(stroke_box(line)) {
+        findings.push({ rule: Overlap, message: "\"\{label.content}\" overlaps the line of \{line.owner}" })
       }
     }
-  }
-  for p in geometry.participants {
-    if p.label.box.width + 2 * fit_padding > p.box.width {
-      findings.push({
-        rule: Fit,
-        message: "\"\{p.label.content}\" does not fit in its box",
-      })
-    }
-  }
-  for m in geometry.messages {
-    if m.label.box.width + 2 * fit_padding > m.chip.width {
-      findings.push({
-        rule: Fit,
-        message: "\"\{m.label.content}\" does not fit in its chip",
-      })
-    }
-  }
-  for l in labels {
-    let r = @theme.contrast(ink_color(palette, l.ink), backdrop_color(palette, l.backdrop))
-    if r < min_contrast {
-      findings.push({
-        rule: Contrast,
-        message: "\"\{l.content}\" has a contrast of \{ratio_text(r)}:1; the minimum is 4.5:1",
-      })
+    let background = backdrop_color(palette, label.backdrop)
+    let foreground = @theme.over(ink_color(palette, label.ink), background)
+    let ratio = @theme.contrast(foreground, background)
+    if ratio < min_contrast {
+      findings.push({ rule: Contrast, message: "\"\{label.content}\" has a contrast of \{ratio_text(ratio)}:1; the minimum is 4.5:1" })
     }
   }
   findings
