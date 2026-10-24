@@ -26,10 +26,10 @@ Bead: diagrams-u42.1.
 Bead: diagrams-u42.2.
 Depends on: group 1.
 
-- [ ] 2.1 Complete XML tokens and CST nodes for namespaces, attributes, comments, processing instructions, CDATA, mixed text and character references; verify reproduction and source partition laws for valid and malformed fixtures.
-- [ ] 2.2 Add namespace scope resolution, duplicate expanded-attribute checks and recovery at tag boundaries; verify namespace-alias equality, undeclared prefixes, mismatched tags and multiple findings in one source.
-- [ ] 2.3 Add UTF-16 source maps, stable diagnostic codes, explicit limits and prohibited DTD/entity handling; verify CRLF/non-BMP locations, each limit boundary and zero resource access.
-- [ ] 2.4 Document reading stages, limits, encoding and every XML diagnostic; verify runnable examples and agreement between the documented and exported code inventory.
+- [x] 2.1 Complete XML tokens and CST nodes for namespaces, attributes, comments, processing instructions, CDATA, mixed text and character references; verify reproduction and source partition laws for valid and malformed fixtures.
+- [x] 2.2 Add namespace scope resolution, duplicate expanded-attribute checks and recovery at tag boundaries; verify namespace-alias equality, undeclared prefixes, mismatched tags and multiple findings in one source.
+- [x] 2.3 Add UTF-16 source maps, stable diagnostic codes, explicit limits and prohibited DTD/entity handling; verify CRLF/non-BMP locations, each limit boundary and zero resource access.
+- [x] 2.4 Document reading stages, limits, encoding and every XML diagnostic; verify runnable examples and agreement between the documented and exported code inventory.
 
 ## 3. Add schema-derived document foundations and canonical writing
 
