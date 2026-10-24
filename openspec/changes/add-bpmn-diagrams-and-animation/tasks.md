@@ -36,10 +36,10 @@ Depends on: group 1.
 Bead: diagrams-u42.3.
 Depends on: group 2.
 
-- [ ] 3.1 Add the pinned-input schema inventory/generation MoonBit task and mise entry points; verify deterministic regeneration, schema digests and the generated element/attribute coverage manifest.
-- [ ] 3.2 Add immutable document/root/base values, typed scalar/enum/reference fields, exact DI numbers, absence tracking and ordered containment; verify constructor immutability, exact values and no inserted defaults.
-- [ ] 3.3 Implement canonical and pretty writers with deterministic namespace/attribute policies and iterative bounds checks; verify read-write-read equality, stable canonical bytes, forbidden-text rejection and mixed-content preservation on all four targets.
-- [ ] 3.4 Document construction, equality, source reproduction and canonical writing as separate APIs; verify their tested examples and negative namespace-binding cases.
+- [x] 3.1 Add the pinned-input schema inventory/generation MoonBit task and mise entry points; verify deterministic regeneration, schema digests and the generated element/attribute coverage manifest.
+- [x] 3.2 Add immutable document/root/base values, typed scalar/enum/reference fields, exact DI numbers, absence tracking and ordered containment; verify constructor immutability, exact values and no inserted defaults.
+- [x] 3.3 Implement canonical and pretty writers with deterministic namespace/attribute policies and iterative bounds checks; verify read-write-read equality, stable canonical bytes, forbidden-text rejection and mixed-content preservation on all four targets.
+- [x] 3.4 Document construction, equality, source reproduction and canonical writing as separate APIs; verify their tested examples and negative namespace-binding cases.
 
 ## 4. Complete process and collaboration document types
 

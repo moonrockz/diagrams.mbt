@@ -85,8 +85,8 @@ All `Limits::new` fields are inclusive and must be positive.
 | Field | Default | What it bounds |
 | --- | --- | --- |
 | `source_units` | 16,777,216 | Decoded source in UTF-16 units |
-| `output_units` | 16,777,216 | Reserved for the bounded writer in group 3 |
-| `nodes` | 1,000,000 | Document, element/content nodes and attributes |
+| `output_units` | 16,777,216 | Complete generated XML in UTF-16 units |
+| `nodes` | 1,000,000 | Document, element/content nodes, attributes and namespace declarations |
 | `depth` | 4,096 | Element depth, including empty elements |
 | `token_units` | 1,048,576 | One lexical token or complete attribute/text value |
 | `diagnostics` | 256 | Findings shared by XML reading and typed lowering |
@@ -162,36 +162,167 @@ test "the documented inventory agrees with the exported codes" {
 
 ## Typed BPMN values and writing
 
-The typed projection currently supports definitions, processes, generic tasks,
-start/end events, sequence flows, incoming/outgoing text and DI
-plane/shape/bounds/edge/waypoint values. Unknown families and namespaced typed
-fields remain inspectable in the complete CST and give lowering findings.
-Schema-derived foundations, complete BPMN families, extension values,
-validation, explicit references and the full traversal contract follow in
-later groups of `add-bpmn-diagrams-and-animation`.
+The five frozen BPMN 2.0.2 schemas drive the standard `Kind` alternatives,
+`TypeId`, type derivation, substitution groups, fields, occurrence bounds,
+choices and named enumeration types. `schema_types`, `schema_elements`,
+`schema_fields` and `schema_groups` expose this read-only inventory. Run
+`mise run bpmn-schema:generate` to regenerate it. `validate:bpmn-schema` checks
+input digests and byte-identical regeneration, including the declaration
+coverage manifest under `tests/corpus/bpmn-2.0.2/coverage.json`.
+
+`Element` holds a standard kind, schema type identity, typed `Scalar` attributes,
+optional scalar text, and ordered `Content`. Content distinguishes text,
+elements, comments and inert processing instructions. Constructors copy input
+collections into read-only arrays. Updating an element returns a new value.
+`Document` holds its root plus ordered prolog and epilog comments/instructions.
+Outside-root whitespace is source trivia and is omitted from document values.
+
+`Definitions`, `Import`, `BaseElement`, `RootElement` and `Documentation` give
+typed foundation construction or inspection. Abstract base/root views require
+a concrete element whose schema type derives from that base. Family-specific
+process/collaboration APIs follow in group 4; complete choreography,
+conversation, DI and opaque vendor data qualification follow in group 5.
+Unknown elements or foreign attributes still give an unsupported finding and
+prevent typed projection in this slice. Their XML CST remains available.
+Structure validation, reference-resource resolution and full traversal follow
+in later groups. Reading or writing does not validate all BPMN constraints.
 
 ```mbt check
 ///|
-test "read, inspect, write and keep the original source" {
-  let source = "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" targetNamespace=\"urn:example\"><process id=\"P\"><task id=\"T\" name=\"Review &amp; approve\"/></process></definitions>"
-  let result = @bpmn.read(source)
-  assert_eq(result.tree.text(), source)
-  assert_eq(result.diagnostics.length(), 0)
-  let document = result.document.unwrap()
-  let tasks : Array[String] = []
-  document.walk(e => { if e.kind == Task { tasks.push(e.attribute("name").unwrap()) } })
-  assert_eq(tasks, ["Review & approve"])
-  assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
+test "construct immutable foundations without inserting defaults" {
+  let documentation = @bpmn.Documentation::new([Text("Review & approve")])
+  let process = @bpmn.Element::new(Process, attributes=[("id", "P")], children=[documentation.element])
+  let definitions = @bpmn.Definitions::new("urn:example", children=[process])
+  let document = definitions.document()
+  assert_eq(definitions.roots()[0].base().id(), Present("P"))
+  assert_eq(process.boolean("isExecutable"), Absent)
+  assert_eq(documentation.text_format(), Absent)
+  let compact = @bpmn.write(document)
+  let pretty = @bpmn.write(document, format=Pretty)
+  assert_false(compact.contains("textFormat"))
+  assert_eq(@bpmn.read(compact).document, Some(document))
+  assert_eq(@bpmn.read(pretty).document, Some(document))
 }
 ```
 
-`write` emits compact XML with fixed standard prefixes and ordered attributes
-and children. It is for valid minimal values; group 3 adds the validating,
-bounded canonical/pretty writer. `tree.text()` is the source reproduction API.
-Coordinate attribute strings keep exact values. Constructors copy their input
-collections into read-only arrays; a walk visits containment in preorder and
-does not follow reference attributes.
+`Field[T]` distinguishes `Absent`, `Present(value)` and `InvalidValue(scalar)`.
+Absent schema defaults stay absent. Booleans, identifiers, URIs, exact integers,
+exact numeric tokens, references and generated enumeration alternatives have
+separate `Scalar` cases. `ExactNumber` retains the DI token without passing
+through a host float. Decimal fractions and exponent tokens therefore keep all
+digits. XML Schema double also admits `INF`, `-INF` and `NaN`;
+`is_finite()` distinguishes them. `ExactInteger` has no host integer-size limit;
+fields declared as XML Schema `int` enforce its signed 32-bit range. String
+whitespace is retained; token, URI, numeric and reference types apply their
+schema whitespace policy. Invalid scalar spellings remain inspectable in a
+typed document with findings, and cannot be written as valid values.
 
-Current lowering codes are `bpmn/unsupported-content`,
-`bpmn/unsupported-attribute`, `bpmn/unsupported-element` and
-`bpmn/definitions-required`. They do not change the XML CST's completeness.
+References retain original spelling plus expanded namespace identity.
+`ReferenceKind::Id` uses a local NCName; `QName` resolves prefixes against explicit
+bindings. No external document is opened. Construct references from an
+`ExpandedName` to avoid inventing a source prefix. `Element::new` accepts string
+attributes with explicit local `bindings`; `Element::from_values` accepts typed
+attributes and ordered content. An explicit type override adds the corresponding
+`xsi:type` reference so it survives serialization. No IDs or DI are generated.
+
+```mbt check
+///|
+test "constructed references carry expanded identity" {
+  let source = @bpmn.Reference::new(@bpmn.ExpandedName::new("urn:other", "Task"))
+  let flow = @bpmn.Element::from_values(MessageFlow, values=[
+    @bpmn.Attribute::new(@bpmn.ExpandedName::new("", "sourceRef"), Reference(source)),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[flow]).document()
+  let xml = @bpmn.write(document)
+  assert_true(xml.contains("xmlns:ns1=\"urn:other\""))
+  assert_true(xml.contains("sourceRef=\"ns1:Task\""))
+  assert_eq(@bpmn.read(xml).document, Some(document))
+}
+```
+
+## Equality, source reproduction and canonical output
+
+Document equality compares standard kind/type, expanded attribute names, typed
+scalar values and ordered semantic content. It ignores source spans, raw prefix
+aliases, attribute ordering and element-only formatting whitespace. Adjacent
+text/CDATA normalize to text values. Mixed content, comments, processing
+instructions and inherited `xml:space` are retained. Exact number tokens compare
+exactly. Namespace aliases on known QName values compare by expanded identity.
+
+`tree.text()` reproduces the source bytes represented by the decoded string,
+including quote style, CDATA, declarations and invalid regions. `write` produces
+this library's deterministic XML format, not XML C14N. The default is compact;
+`format=Pretty` uses two spaces for element-only content. Both keep mixed text
+and containment order. Pretty output adds no whitespace inside mixed content,
+scalar elements or an inherited `xml:space='preserve'` scope.
+
+Canonical namespaces use `bpmn`, `bpmndi`, `dc`, `di`, `xml` and `xsi` for known
+URIs, and `ns1`, `ns2`, ... for other used QName identities in sorted URI order.
+Used bindings are declared at the root. Unused aliases disappear. Attributes
+sort by namespace URI, then local name. Namespace names are literal strings;
+they do not trigger I/O. Known QName tokens are rewritten with matching
+bindings. Opaque vendor subtree namespace preservation is completed in group 5.
+
+```mbt check
+///|
+test "source reproduction and canonical writing serve different purposes" {
+  let source = "<d:definitions xmlns:d='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><d:process id='P'/></d:definitions>"
+  let result = @bpmn.read(source)
+  assert_eq(result.tree.text(), source)
+  let document = result.document.unwrap()
+  let canonical = @bpmn.write(document)
+  assert_false(canonical == source)
+  assert_eq(@bpmn.read(canonical).document, Some(document))
+  assert_eq(@bpmn.write(@bpmn.read(canonical).document.unwrap()), canonical)
+}
+```
+
+## Writer failures and limits
+
+`try_write(document, format?, limits?)` returns `WriteResult` with either complete
+output or diagnostics. It never exposes a partial buffer. `write` is a convenience
+API that returns the string or raises `WriteError::Failed(diagnostics)`.
+This adds a checked error to the earlier provisional convenience API.
+
+The writer checks XML names/characters, namespace bindings, duplicate expanded
+attributes, typed scalar consistency, comments and processing instructions.
+It rejects unbound QName references, invalid scalars and incompatible `xsi:type`
+values. Namespace bindings must obey XML reserved-prefix rules. Comments cannot
+contain `--` or end with `-`. Comment/PI CR and leading PI data whitespace are
+rejected because XML normalization would change their value. Construct text CR
+is preserved through a character reference instead.
+
+```mbt check
+///|
+test "invalid QName binding returns an explicit failure" {
+  let flow = @bpmn.Element::new(MessageFlow, attributes=[("sourceRef", "missing:T")])
+  let document = @bpmn.Definitions::new("urn:example", children=[flow]).document()
+  let result = @bpmn.try_write(document)
+  assert_eq(result.output, None)
+  assert_eq(result.diagnostics[0].code, "bpmn/unbound-qname")
+  let reserved = @bpmn.Element::new(Definitions, bindings=[("xml", "urn:wrong")])
+  assert_eq(@bpmn.try_write(@bpmn.Document::new(reserved)).diagnostics[0].code, "bpmn/namespace-conflict")
+}
+```
+
+The writer uses explicit stacks for preflight and emission, including very deep
+constructed documents. It checks depth and node/attribute/binding counts before
+descending. It bounds complete output and individual escaped tokens before
+appending. Canonical namespace declarations count toward output records. Input
+and output record counts each obey `nodes`; neither is the sum of both passes.
+Pretty indentation also obeys the token/output bounds. Limits must be positive;
+`source_units` applies to reading, while `output_units` applies to writing.
+Writer failure produces one error with an optional original span. Constructed
+values have no invented source location.
+
+Writer codes are `bpmn/output-limit`, `bpmn/write-node-limit`,
+`bpmn/write-depth-limit`, `bpmn/write-token-limit`, `bpmn/write-invalid-limits`,
+`bpmn/forbidden-text`, `bpmn/invalid-name`, `bpmn/namespace-conflict`,
+`bpmn/invalid-scalar`, `bpmn/scalar-type-mismatch`, `bpmn/unbound-qname`,
+`bpmn/type-conflict`, `bpmn/duplicate-attribute`, `bpmn/invalid-content`,
+`bpmn/invalid-comment`, `bpmn/invalid-pi`, `bpmn/outside-root`,
+`bpmn/definitions-required`, `bpmn/unsupported-element`, `bpmn/unsupported-type`
+and `bpmn/unsupported-attribute`. Lowering also uses `bpmn/invalid-scalar`,
+`bpmn/unbound-qname`, the unsupported codes and `bpmn/definitions-required`.
+These findings do not change the XML CST's completeness. A simple `walk` visits
+containment in preorder and never follows reference attributes.

@@ -22,3 +22,12 @@ unpublished test inputs, not part of the portable module.
 `mise run validate:bpmn-corpus` to check the files and their embedded test data;
 `mise run bpmn-corpus:generate` updates the embedding. Unpublished acceptance
 tests compute all six digests again on each of the four targets.
+
+`mise run bpmn-schema:generate` derives the standard kind/type inventory, typed
+enumeration alternatives and schema field/group metadata from these five fixed
+inputs. It also writes `coverage.json`, with one file/path entry per element or
+attribute declaration and the input digests. `mise run validate:bpmn-schema`
+checks byte-identical regeneration. The manifest includes 313 element and 195
+attribute declarations; the portable acceptance suite independently counts them
+through the XML CST and checks generated metadata. Rendering and family-specific
+API qualification are separate tasks in the active OpenSpec change.
