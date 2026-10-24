@@ -13,36 +13,113 @@ pub fn lower(@cst.Node) -> Diagram?
 // Errors
 
 // Types and methods
-pub struct Diagram {
+pub(all) enum Activation {
+  Activate
+  Deactivate
+} derive(Eq, @debug.Debug)
+pub fn Activation::equal(Self, Self) -> Bool
+pub fn Activation::not_equal(Self, Self) -> Bool
+pub fn Activation::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Autonumber {
+  On(start~ : String?, step~ : String?)
+  Off
+} derive(Eq, @debug.Debug)
+pub fn Autonumber::equal(Self, Self) -> Bool
+pub fn Autonumber::not_equal(Self, Self) -> Bool
+pub fn Autonumber::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Box {
+  label : String
+  statements : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Box::equal(Self, Self) -> Bool
+pub fn Box::not_equal(Self, Self) -> Bool
+pub fn Box::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Diagram {
+  front_matter : String?
+  directives : ReadOnlyArray[String]
   statements : ReadOnlyArray[Statement]
 } derive(Eq, @debug.Debug)
 pub fn Diagram::equal(Self, Self) -> Bool
-pub fn Diagram::new(ArrayView[Statement]) -> Self
+pub fn Diagram::new(ArrayView[Statement], front_matter? : String, directives? : ArrayView[String]) -> Self
 pub fn Diagram::not_equal(Self, Self) -> Bool
 pub fn Diagram::to_repr(Self) -> @debug.Repr
 
-pub struct MessageStatement {
+pub(all) struct Frame {
+  kind : FrameKind
+  sections : ReadOnlyArray[Section]
+} derive(Eq, @debug.Debug)
+pub fn Frame::equal(Self, Self) -> Bool
+pub fn Frame::not_equal(Self, Self) -> Bool
+pub fn Frame::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FrameKind {
+  Loop
+  Rect
+  Opt
+  Alt
+  Par
+  ParOver
+  Critical
+  Break
+} derive(Eq, @debug.Debug)
+pub fn FrameKind::equal(Self, Self) -> Bool
+pub fn FrameKind::not_equal(Self, Self) -> Bool
+pub fn FrameKind::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LinkKind {
+  Link
+  Links
+  Properties
+  Details
+} derive(Eq, @debug.Debug)
+pub fn LinkKind::equal(Self, Self) -> Bool
+pub fn LinkKind::not_equal(Self, Self) -> Bool
+pub fn LinkKind::to_repr(Self) -> @debug.Repr
+
+pub(all) struct LinkStatement {
+  kind : LinkKind
+  participant : String
+  text : String
+} derive(Eq, @debug.Debug)
+pub fn LinkStatement::equal(Self, Self) -> Bool
+pub fn LinkStatement::not_equal(Self, Self) -> Bool
+pub fn LinkStatement::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MessageStatement {
   sender : String
   arrow : String
   receiver : String
   text : String
-  span : @diagrams.Span
-} derive(@debug.Debug)
+  activation : Activation?
+  central_before : Bool
+  central_after : Bool
+} derive(Eq, @debug.Debug)
 pub fn MessageStatement::equal(Self, Self) -> Bool
 pub fn MessageStatement::not_equal(Self, Self) -> Bool
 pub fn MessageStatement::to_repr(Self) -> @debug.Repr
-pub impl Eq for MessageStatement
 
-pub struct ParticipantDecl {
+pub(all) struct NoteStatement {
+  placement : Placement
+  participants : ReadOnlyArray[String]
+  text : String
+} derive(Eq, @debug.Debug)
+pub fn NoteStatement::equal(Self, Self) -> Bool
+pub fn NoteStatement::not_equal(Self, Self) -> Bool
+pub fn NoteStatement::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ParticipantDecl {
+  created : Bool
   keyword : ParticipantKeyword
   id : String
+  config : String?
   label : String?
-  span : @diagrams.Span
-} derive(@debug.Debug)
+} derive(Eq, @debug.Debug)
 pub fn ParticipantDecl::equal(Self, Self) -> Bool
 pub fn ParticipantDecl::not_equal(Self, Self) -> Bool
 pub fn ParticipantDecl::to_repr(Self) -> @debug.Repr
-pub impl Eq for ParticipantDecl
 
 pub(all) enum ParticipantKeyword {
   Participant
@@ -52,13 +129,50 @@ pub fn ParticipantKeyword::equal(Self, Self) -> Bool
 pub fn ParticipantKeyword::not_equal(Self, Self) -> Bool
 pub fn ParticipantKeyword::to_repr(Self) -> @debug.Repr
 
-pub(all) enum Statement {
-  Participant(ParticipantDecl)
-  Message(MessageStatement)
+pub(all) enum Placement {
+  LeftOf
+  RightOf
+  Over
 } derive(Eq, @debug.Debug)
+pub fn Placement::equal(Self, Self) -> Bool
+pub fn Placement::not_equal(Self, Self) -> Bool
+pub fn Placement::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Section {
+  label : String
+  statements : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Section::equal(Self, Self) -> Bool
+pub fn Section::not_equal(Self, Self) -> Bool
+pub fn Section::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Statement {
+  kind : StatementKind
+  span : @diagrams.Span
+} derive(@debug.Debug)
 pub fn Statement::equal(Self, Self) -> Bool
 pub fn Statement::not_equal(Self, Self) -> Bool
 pub fn Statement::to_repr(Self) -> @debug.Repr
+pub impl Eq for Statement
+
+pub(all) enum StatementKind {
+  Participant(ParticipantDecl)
+  Destroy(String)
+  Activate(String)
+  Deactivate(String)
+  Message(MessageStatement)
+  Note(NoteStatement)
+  Link(LinkStatement)
+  Title(String)
+  AccTitle(String)
+  AccDescr(String)
+  Autonumber(Autonumber)
+  Frame(Frame)
+  Box(Box)
+} derive(Eq, @debug.Debug)
+pub fn StatementKind::equal(Self, Self) -> Bool
+pub fn StatementKind::not_equal(Self, Self) -> Bool
+pub fn StatementKind::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

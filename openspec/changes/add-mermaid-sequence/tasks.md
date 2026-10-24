@@ -33,8 +33,8 @@ Depends on: `diagrams-67z.1`.
 Bead: `diagrams-67z.3`.
 Depends on: `diagrams-67z.2`.
 
-- [ ] 3.1 Complete the typed AST for every statement, with the exact arrow spelling, and verify that each corpus diagram lowers with no error diagnostics.
-- [ ] 3.2 Implement the canonical printer and document its order and spelling rules; verify the read-print-read law and print stability for the corpus on all four targets.
+- [x] 3.1 Complete the typed AST for every statement, with the exact arrow spelling, and verify that each corpus diagram lowers with no error diagnostics.
+- [x] 3.2 Implement the canonical printer and document its order and spelling rules; verify the read-print-read law and print stability for the corpus on all four targets.
 
 ## 4. Complete the sequence model and the Mermaid conversion
 
