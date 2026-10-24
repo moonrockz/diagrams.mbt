@@ -116,3 +116,13 @@ test "a flat palette produces a contrast finding for every text element" {
   // a section label, a group title and the diagram title.
   assert_eq(findings.map(f => f.rule), Array::make(10, @layout.Rule::Contrast))
 }
+
+
+///|
+test "empty rectangles and touching edges do not share an area" {
+  let box : @layout.Rect = { x: 0, y: 0, width: 20, height: 20 }
+  assert_false(box.overlaps({ x: 5, y: 5, width: 0, height: 10 }))
+  assert_false(box.overlaps({ x: 5, y: 5, width: 10, height: 0 }))
+  assert_false(box.overlaps({ x: 20, y: 0, width: 10, height: 10 }))
+  assert_true(box.overlaps({ x: 19, y: 0, width: 10, height: 10 }))
+}

@@ -16,6 +16,7 @@ pub extend Rect with @debug.Debug::{to_repr}
 ///|
 /// True when two rectangles share an area.
 pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
+  self.width > 0 && self.height > 0 && other.width > 0 && other.height > 0 &&
   self.x < other.x + other.width &&
   other.x < self.x + self.width &&
   self.y < other.y + other.height &&
