@@ -48,3 +48,7 @@ pub fn render_svg(source : String) -> @render.Rendered {
   }
   @render.Rendered::ok(rendered.output.unwrap_or(""), "image/svg+xml", diagnostics~)
 }
+
+///|
+/// Every diagnostic code that reading can give.
+pub let diagnostic_codes : ReadOnlyArray[String] = @syntax.diagnostic_codes

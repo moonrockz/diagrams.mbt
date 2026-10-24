@@ -23,10 +23,10 @@ Bead: `diagrams-67z.1`.
 Bead: `diagrams-67z.2`.
 Depends on: `diagrams-67z.1`.
 
-- [ ] 2.1 Freeze the Mermaid 12.2.0 sequence documentation examples in `tests` with source, licence and SHA-256 digest, and verify the digests in a test.
-- [ ] 2.2 Complete the lexer and the lossless CST for every statement, arrow form, comment and directive of the grammar; verify CST reproduction for the corpus, CRLF sources and non-BMP text.
-- [ ] 2.3 Add error recovery and the diagnostic codes with UTF-16 spans; verify one test for each code, the two-errors case and the missing-`end` case.
-- [ ] 2.4 Document each diagnostic code in the `diagrams-mermaid` README, and verify that a test lists the same codes as the README.
+- [x] 2.1 Freeze the Mermaid 12.2.0 sequence documentation examples in `tests` with source, licence and SHA-256 digest, and verify the digests in a test.
+- [x] 2.2 Complete the lexer and the lossless CST for every statement, arrow form, comment and directive of the grammar; verify CST reproduction for the corpus, CRLF sources and non-BMP text.
+- [x] 2.3 Add error recovery and the diagnostic codes with UTF-16 spans; verify one test for each code, the two-errors case and the missing-`end` case.
+- [x] 2.4 Document each diagnostic code in the `diagrams-mermaid` README, and verify that a test lists the same codes as the README.
 
 ## 3. Type the AST and print canonical Mermaid
 

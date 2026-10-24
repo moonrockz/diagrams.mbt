@@ -1,3 +1,4 @@
 import {
   "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-tests/corpus",
 } for "test"
