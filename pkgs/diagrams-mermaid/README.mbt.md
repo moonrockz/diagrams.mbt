@@ -14,7 +14,10 @@ messages; the other statements come in the next parts of the OpenSpec change
 
 These rules of Mermaid apply:
 
-- A `;` ends a statement, as a line break does.
+- A `;` ends a statement, as a line break does. One exception comes from the
+  grammar: an `autonumber` number must have a space or a line break after it,
+  so `autonumber 10;` is an error in Mermaid and here, but `autonumber 10 ;` is
+  not.
 - `#` starts a comment, also in a message text, but an entity code such as
   `#9829;` is text.
 - `%%` at the start of a statement starts a comment, and `%%{...}%%` is a

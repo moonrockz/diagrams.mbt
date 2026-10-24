@@ -426,3 +426,15 @@ test "each diagnostic code is listed" {
     "mermaid/unclosed-directive", "mermaid/unclosed-description",
   ])
 }
+
+///|
+/// Mermaid 12.2.0 reads an `autonumber` number only when a space or a line
+/// break follows it (the `NUM` rule has the lookahead `(?=[ \n]+)`). Its
+/// parser rejects `autonumber 10;` and `autonumber 10 5;` but accepts
+/// `autonumber;`. The grammar wins over the general rule for `;`.
+test "a semicolon right after an autonumber number is an error, as in Mermaid" {
+  assert_eq(codes("sequenceDiagram\nautonumber 10; A->>B: hi\n"), ["mermaid/invalid-autonumber"])
+  assert_eq(codes("sequenceDiagram\nautonumber 10 5;\nA->>B: hi\n"), ["mermaid/invalid-autonumber"])
+  assert_eq(codes("sequenceDiagram\nautonumber; A->>B: hi\n"), [])
+  assert_eq(codes("sequenceDiagram\nautonumber 10 ; A->>B: hi\n"), [])
+}
