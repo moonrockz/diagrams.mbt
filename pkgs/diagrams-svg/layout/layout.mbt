@@ -190,6 +190,8 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
   let frames : Array[FrameBox] = []
   let mut cursor = initial_bottom + 28
   let mut last_message_y = cursor
+  // Consecutive activation/deactivation/destruction events belong to the
+  // preceding message row, including the events emitted by Mermaid shorthand.
   let mut after_message = false
   fn flush_creations() -> Unit {
     for i in pending_creations { box_y[i] = cursor; cursor += heights[i] + 16 }
@@ -268,12 +270,10 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
         Activate(id) => {
           let i = index(id)
           if i >= 0 { starts[i].push(max(box_y[i] + heights[i], if after_message { last_message_y } else { cursor })); if !after_message { cursor += 16 } }
-          after_message = false
         }
         Deactivate(id) => {
           let i = index(id)
           if i >= 0 { finish_activation(i, if after_message { last_message_y } else { cursor }); if !after_message { cursor += 16 } }
-          after_message = false
         }
         Create(id) => {
           let i = index(id)
@@ -288,7 +288,6 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
             while !starts[i].is_empty() { finish_activation(i, y) }
             if !after_message { cursor += 20 }
           }
-          after_message = false
         }
         Autonumber(_) => ()
         Frame(f) => {

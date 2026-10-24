@@ -229,3 +229,31 @@ test "long group titles remain legible when first-use order interleaves groups" 
   assert_eq(g.participants.map(p => p.id).iter().to_array(), ["A", "B", "C", "D"])
   clean(g)
 }
+
+
+///|
+test "all state changes after a message share its row until another visual event" {
+  let g = @layout.layout(model([
+    Activate("B"), Activate("C"),
+    Message(@sequence.Message::new("B", "A", "done")), Deactivate("B"),
+    Destroy("B"), Destroy("C"), Note(@sequence.Note::new(Over, ["A"], "later")),
+  ]))
+  assert_eq(g.participants[1].lifeline_bottom, g.messages[0].y)
+  assert_eq(g.participants[2].lifeline_bottom, g.messages[0].y)
+  for bar in g.activations { assert_eq(bar.box.y + bar.box.height, g.messages[0].y) }
+  assert_true(g.notes[0].box.y > g.messages[0].y)
+  clean(g)
+}
+
+
+///|
+test "a note ends the association with the preceding message row" {
+  let g = @layout.layout(model([
+    Message(@sequence.Message::new("A", "B", "before")),
+    Note(@sequence.Note::new(Over, ["A"], "separate event")), Activate("B"),
+    Message(@sequence.Message::new("B", "A", "after")), Deactivate("B"),
+  ]))
+  assert_true(g.activations[0].box.y >= g.notes[0].box.y + g.notes[0].box.height)
+  assert_eq(g.activations[0].box.y + g.activations[0].box.height, g.messages[1].y)
+  clean(g)
+}
