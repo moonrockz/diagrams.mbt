@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 847 612" width="847" height="612" role="img" data-diagram="sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 847 612" width="847" height="612" role="img" data-diagram="sequence" id="seq-f3a94249120c8db6-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 5 participants (Alice, Bob, John, Charlie, Diana) and 4 messages.</desc>
   <defs>
-    <marker id="head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f3a94249120c8db6-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
     </marker>
-    <marker id="head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f3a94249120c8db6-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
     </marker>
-    <marker id="head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f3a94249120c8db6-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#a78bfa" stroke="#a78bfa" stroke-width="1.4"/>
     </marker>
-    <marker id="head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f3a94249120c8db6-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#a78bfa" stroke="#a78bfa" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -32,28 +32,28 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="Alice" data-to="Bob" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M119 170 L249 170" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#head-0-end)"/>
+      <path class="m-line" d="M119 170 L249 170" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-f3a94249120c8db6-head-0-end)"/>
       <rect class="mask" x="135" y="143" width="98" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="184" y="158" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
         <tspan x="184" y="158">Go help John</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="1" data-from="Alice" data-to="John" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M119 277 L393 277" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#head-1-end)"/>
+      <path class="m-line" d="M119 277 L393 277" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-f3a94249120c8db6-head-1-end)"/>
       <rect class="mask" x="174" y="250" width="165" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="256" y="265" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
         <tspan x="256" y="265">I want this done today</tspan>
       </text>
     </g>
     <g class="message f-database" data-index="2" data-from="John" data-to="Charlie" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M407 368 L584 368" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#head-2-end)"/>
+      <path class="m-line" d="M407 368 L584 368" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#seq-f3a94249120c8db6-head-2-end)"/>
       <rect class="mask" x="416" y="341" width="159" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="495" y="356" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#a78bfa">
         <tspan x="495" y="356">Can we do this today?</tspan>
       </text>
     </g>
     <g class="message f-database" data-index="3" data-from="John" data-to="Diana" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M407 475 L728 475" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#head-3-end)"/>
+      <path class="m-line" d="M407 475 L728 475" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#seq-f3a94249120c8db6-head-3-end)"/>
       <rect class="mask" x="485" y="448" width="165" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="567" y="463" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#a78bfa">
         <tspan x="567" y="463">Can you help us today?</tspan>

@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 240" width="310" height="240" role="img" data-diagram="sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 240" width="310" height="240" role="img" data-diagram="sequence" id="seq-f203611bc6ae6b83-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (Alice, Bob) and 2 messages.</desc>
   <defs>
-    <marker id="head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f203611bc6ae6b83-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#a78bfa" stroke="#a78bfa" stroke-width="1.4"/>
     </marker>
-    <marker id="head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-f203611bc6ae6b83-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -18,14 +18,14 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-database" data-index="0" data-from="Alice" data-to="Bob" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M87 127 L223 127" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#head-0-end)"/>
+      <path class="m-line" d="M87 127 L223 127" fill="none" stroke="#a78bfa" stroke-width="1.4" marker-end="url(#seq-f203611bc6ae6b83-head-0-end)"/>
       <rect class="mask" x="100" y="100" width="111" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="155" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#a78bfa">
         <tspan x="155" y="115">Entity request</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="1" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M223 175 L87 175" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#head-1-end)"/>
+      <path class="m-line" d="M223 175 L87 175" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-f203611bc6ae6b83-head-1-end)"/>
       <rect class="mask" x="96" y="148" width="118" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="155" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
         <tspan x="155" y="163">Entity response</tspan>

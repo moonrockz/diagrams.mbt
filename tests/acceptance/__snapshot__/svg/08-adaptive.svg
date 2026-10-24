@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 240" width="310" height="240" role="img" data-diagram="sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310 240" width="310" height="240" role="img" data-diagram="sequence" id="seq-207f1a03ca3fd616-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (Alice, Bob) and 2 messages.</desc>
   <defs>
     <style>
-svg {
+svg#seq-207f1a03ca3fd616-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg {
+  svg#seq-207f1a03ca3fd616-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg {
     --external-ink: #606f85;
   }
 }
-svg[data-theme="dark"] {
+svg#seq-207f1a03ca3fd616-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg[data-theme="light"] {
+svg#seq-207f1a03ca3fd616-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,10 +118,10 @@ svg[data-theme="light"] {
   --external-ink: #606f85;
 }
 </style>
-    <marker id="head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-207f1a03ca3fd616-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--database-stroke)" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-207f1a03ca3fd616-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -134,14 +134,14 @@ svg[data-theme="light"] {
   <g class="activations"/>
   <g class="messages">
     <g class="message f-database" data-index="0" data-from="Alice" data-to="Bob" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M87 127 L223 127" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-end="url(#head-0-end)"/>
+      <path class="m-line" d="M87 127 L223 127" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-end="url(#seq-207f1a03ca3fd616-head-0-end)"/>
       <rect class="mask" x="100" y="100" width="111" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="155" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="155" y="115">Entity request</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="1" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M223 175 L87 175" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#head-1-end)"/>
+      <path class="m-line" d="M223 175 L87 175" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-207f1a03ca3fd616-head-1-end)"/>
       <rect class="mask" x="96" y="148" width="118" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="155" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="155" y="163">Entity response</tspan>

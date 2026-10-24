@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304 828" width="304" height="828" role="img" data-diagram="sequence" id="seq-1633913a409b8e5a-diagram">
+  <title>Sequence diagram</title>
+  <desc>Sequence diagram with 2 participants (A, B) and 12 messages.</desc>
+  <defs>
+    <marker id="seq-1633913a409b8e5a-head-0-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-2-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-3-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-4-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-5-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-6-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-7-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-8-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-8-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-9-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-9-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-10-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-10-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-11-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-1633913a409b8e5a-head-11-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="304" height="828" rx="0" fill="#f4f5f7"/>
+  <g class="bands"/>
+  <g class="lifelines">
+    <path class="lifeline" d="M80 72 V796" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M224 72 V796" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations"/>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="A" data-to="B" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
+      <path class="m-line" d="M87 127 L217 127" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-0-start)" marker-end="url(#seq-1633913a409b8e5a-head-0-end)"/>
+      <rect class="mask" x="124" y="100" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="152" y="115">A to B</tspan>
+      </text>
+      <circle class="central-connection" cx="224" cy="127" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="B" data-to="A" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
+      <path class="m-line" d="M217 175 L87 175" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-1-start)" marker-end="url(#seq-1633913a409b8e5a-head-1-end)"/>
+      <rect class="mask" x="124" y="148" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
+        <tspan x="152" y="163">B to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="175" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="2" data-from="A" data-to="A" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
+      <path class="m-line" d="M87 223 L161 223 L161 251 L87 251" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-2-start)" marker-end="url(#seq-1633913a409b8e5a-head-2-end)"/>
+      <rect class="mask" x="96" y="196" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="124" y="211" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="124" y="211">A to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="251" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="3" data-from="A" data-to="B" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
+      <path class="m-line" d="M87 298 L217 298" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-3-start)" marker-end="url(#seq-1633913a409b8e5a-head-3-end)"/>
+      <rect class="mask" x="124" y="271" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="286" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="152" y="286">A to B</tspan>
+      </text>
+      <circle class="central-connection" cx="224" cy="298" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-backend" data-index="4" data-from="B" data-to="A" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
+      <path class="m-line" d="M217 346 L87 346" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-4-start)" marker-end="url(#seq-1633913a409b8e5a-head-4-end)"/>
+      <rect class="mask" x="124" y="319" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="334" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
+        <tspan x="152" y="334">B to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="346" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="5" data-from="A" data-to="A" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
+      <path class="m-line" d="M87 394 L161 394 L161 422 L87 422" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-5-start)" marker-end="url(#seq-1633913a409b8e5a-head-5-end)"/>
+      <rect class="mask" x="96" y="367" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="124" y="382" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="124" y="382">A to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="422" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="6" data-from="A" data-to="B" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
+      <path class="m-line" d="M87 469 L217 469" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-6-start)" marker-end="url(#seq-1633913a409b8e5a-head-6-end)"/>
+      <rect class="mask" x="124" y="442" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="457" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="152" y="457">A to B</tspan>
+      </text>
+      <circle class="central-connection" cx="224" cy="469" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-backend" data-index="7" data-from="B" data-to="A" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
+      <path class="m-line" d="M217 517 L87 517" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-7-start)" marker-end="url(#seq-1633913a409b8e5a-head-7-end)"/>
+      <rect class="mask" x="124" y="490" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="505" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
+        <tspan x="152" y="505">B to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="517" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="8" data-from="A" data-to="A" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
+      <path class="m-line" d="M87 565 L161 565 L161 593 L87 593" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-8-start)" marker-end="url(#seq-1633913a409b8e5a-head-8-end)"/>
+      <rect class="mask" x="96" y="538" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="124" y="553" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="124" y="553">A to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="593" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="9" data-from="A" data-to="B" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
+      <path class="m-line" d="M87 640 L217 640" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-9-start)" marker-end="url(#seq-1633913a409b8e5a-head-9-end)"/>
+      <rect class="mask" x="124" y="613" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="628" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="152" y="628">A to B</tspan>
+      </text>
+      <circle class="central-connection" cx="224" cy="640" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+    <g class="message f-backend" data-index="10" data-from="B" data-to="A" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
+      <path class="m-line" d="M217 688 L87 688" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-10-start)" marker-end="url(#seq-1633913a409b8e5a-head-10-end)"/>
+      <rect class="mask" x="124" y="661" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="152" y="676" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
+        <tspan x="152" y="676">B to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="688" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
+    </g>
+    <g class="message f-frontend" data-index="11" data-from="A" data-to="A" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
+      <path class="m-line" d="M87 736 L161 736 L161 764 L87 764" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-11-start)" marker-end="url(#seq-1633913a409b8e5a-head-11-end)"/>
+      <rect class="mask" x="96" y="709" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="124" y="724" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="124" y="724">A to A</tspan>
+      </text>
+      <circle class="central-connection" cx="80" cy="764" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="A">
+      <rect class="mask" x="32" y="24" width="96" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="32" y="24" width="96" height="48" rx="6" fill="rgba(34, 211, 238, 0.15)" stroke="#0891b2" stroke-width="1.5"/>
+      <text class="p-label" x="80" y="52" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="80" y="52">A</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="B">
+      <rect class="mask" x="176" y="24" width="96" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="176" y="24" width="96" height="48" rx="6" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="p-label" x="224" y="52" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="224" y="52">B</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations"/>
+</svg>

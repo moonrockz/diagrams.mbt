@@ -7,7 +7,7 @@ import { strict as assert } from 'node:assert';
 const corpus = 'tests/acceptance/__snapshot__/svg';
 const files = (await readdir(corpus)).filter(f => f.endsWith('.svg')).sort().map(f => `${corpus}/${f}`);
 assert.equal(files.length, 114, '38 corpus diagrams in all three modes');
-files.push(...['simple', 'rich-adaptive', 'rich-dark', 'rich-light'].map(f => `pkgs/diagrams-svg/__snapshot__/${f}.svg`));
+files.push(...['simple', 'rich-adaptive', 'rich-dark', 'rich-light', 'namespaced', 'half-arrows-light'].map(f => `pkgs/diagrams-svg/__snapshot__/${f}.svg`));
 
 const browser = await chromium.launch();
 try {
@@ -55,6 +55,27 @@ try {
             }
           }
         }
+        // Half-arrow upper/lower are page coordinates, including reversed
+        // senders, right-to-left receivers and the return leg of self-messages.
+        for (const group of svg.querySelectorAll('.message')) {
+          const line = group.querySelector<SVGPathElement>('.m-line')!;
+          for (const [end, field] of [['start', 'sender'], ['end', 'receiver']]) {
+            const head = group.getAttribute(`data-${field}-head`)!;
+            if (!head.includes('half-')) continue;
+            const length = line.getTotalLength();
+            const p = line.getPointAtLength(end === 'start' ? 0 : length);
+            const q = line.getPointAtLength(end === 'start' ? 1 : length - 1);
+            const direction = p.x > q.x ? 1 : -1;
+            const ref = line.getAttribute(`marker-${end}`)!;
+            const marker = svg.querySelector<SVGMarkerElement>(`[id="${ref.slice(5, -1)}"]`)!;
+            const box = marker.querySelector('path')!.getBBox();
+            const ys = [box.y * direction, (box.y + box.height) * direction];
+            const upper = head.includes('half-upper-');
+            if (upper ? Math.max(...ys) > 0 || Math.min(...ys) >= 0 : Math.min(...ys) < 0 || Math.max(...ys) <= 0) {
+              throw new Error(`${field} ${head} painted on the wrong side`);
+            }
+          }
+        }
         const color = (s: string) => {
           const channels = s.match(/[\d.]+/g)?.map(Number);
           if (!channels || channels.length < 3) throw new Error(`Unresolved color ${s}`);
@@ -89,6 +110,35 @@ try {
       assert.ok(result.texts > 0, `${file}: visible labels`);
     }
   }
+  // Distinct inline diagrams must resolve each marker in their own tree.
+  const inline = await Promise.all(['01-light', '23-light'].map(f => readFile(`${corpus}/${f}.svg`, 'utf8')));
+  await page.setContent(inline.join(''));
+  assert.equal(await page.evaluate(() => {
+    const ids = [...document.querySelectorAll('[id]')].map(n => n.id);
+    if (new Set(ids).size !== ids.length) return false;
+    return [...document.querySelectorAll('svg')].every(svg => [...svg.querySelectorAll('.m-line')].every(line =>
+      ['marker-start', 'marker-end'].every(attr => {
+        const ref = line.getAttribute(attr);
+        return !ref || document.getElementById(ref.slice(5, -1))?.ownerSVGElement === svg;
+      })));
+  }), true, 'inline SVGs retain their own marker shapes and colours');
+
+  // CSS must also stay within each SVG when two palettes share a page.
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.setContent((await readFile('pkgs/diagrams-svg/__snapshot__/simple.svg', 'utf8')) +
+    (await readFile('pkgs/diagrams-svg/__snapshot__/custom-adaptive.svg', 'utf8')));
+  assert.deepEqual(await page.locator('.bg').evaluateAll(nodes => nodes.map(n => getComputedStyle(n).fill)),
+    ['rgb(2, 6, 23)', 'rgb(16, 24, 32)']);
+
+  // A caller prefix permits independent overrides of an identical diagram.
+  await page.setContent((await readFile('pkgs/diagrams-svg/__snapshot__/simple.svg', 'utf8')) +
+    (await readFile('pkgs/diagrams-svg/__snapshot__/namespaced.svg', 'utf8')));
+  await page.evaluate(() => {
+    const roots = document.querySelectorAll('svg');
+    roots[0].setAttribute('data-theme', 'dark'); roots[1].setAttribute('data-theme', 'light');
+  });
+  assert.deepEqual(await page.locator('.bg').evaluateAll(nodes => nodes.map(n => getComputedStyle(n).fill)),
+    ['rgb(2, 6, 23)', 'rgb(244, 245, 247)']);
   assert.deepEqual(requests, [], 'all SVGs render without network requests');
   console.log(`Verified ${files.length} standalone SVGs in both browser preferences, including root overrides and text contrast.`);
 } finally {

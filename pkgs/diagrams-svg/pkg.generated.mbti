@@ -9,7 +9,7 @@ import {
 }
 
 // Values
-pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode) -> String
+pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode, id_prefix? : String) -> String
 
 // Errors
 
@@ -25,8 +25,9 @@ pub fn Mode::to_repr(Self) -> @debug.Repr
 pub struct SvgRenderer {
   theme : @theme.Theme
   mode : Mode
+  id_prefix : String?
 }
-pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode) -> Self
+pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String) -> Self
 pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub impl @render.Renderer for SvgRenderer
 

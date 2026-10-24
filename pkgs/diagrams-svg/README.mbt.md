@@ -37,6 +37,12 @@ Use `mode=Fixed(Dark)` or `mode=Fixed(Light)` for slide tools and viewers that
 need literal SVG presentation attributes. Fixed output has no style element,
 CSS variables or media rules. Both entry points accept `theme` and `mode`.
 
+Generated marker IDs and adaptive CSS use a deterministic namespace derived
+from the output, including its palette and mode. For repeated inline copies of
+the same diagram with separate root overrides, supply a distinct `id_prefix`
+to each copy. Both entry points accept it. The prefix is encoded into an XML
+and CSS safe identifier; labels and other user text stay unchanged.
+
 ```mbt check
 ///|
 test {

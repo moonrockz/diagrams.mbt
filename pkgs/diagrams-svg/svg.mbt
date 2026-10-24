@@ -27,14 +27,14 @@ fn variables(p : @theme.Palette, indent : String) -> String {
 /// The style sheet of the adaptive mode. Dark is the default. The viewer's
 /// light preference selects light, and a `data-theme` attribute on the root
 /// overrides both.
-fn style_sheet(t : @theme.Theme) -> String {
+fn style_sheet(t : @theme.Theme, selector? : String = "svg") -> String {
   let buf = StringBuilder()
-  buf.write_string("\nsvg {\n\{variables(t.dark, "  ")}}\n")
+  buf.write_string("\n\{selector} {\n\{variables(t.dark, "  ")}}\n")
   buf.write_string(
-    "@media (prefers-color-scheme: light) {\n  svg {\n\{variables(t.light, "    ")}  }\n}\n",
+    "@media (prefers-color-scheme: light) {\n  \{selector} {\n\{variables(t.light, "    ")}  }\n}\n",
   )
-  buf.write_string("svg[data-theme=\"dark\"] {\n\{variables(t.dark, "  ")}}\n")
-  buf.write_string("svg[data-theme=\"light\"] {\n\{variables(t.light, "  ")}}\n")
+  buf.write_string("\{selector}[data-theme=\"dark\"] {\n\{variables(t.dark, "  ")}}\n")
+  buf.write_string("\{selector}[data-theme=\"light\"] {\n\{variables(t.light, "  ")}}\n")
   buf.to_string()
 }
 
@@ -134,14 +134,17 @@ fn head_name(h : @sequence.Head) -> String {
 
 ///|
 /// Markers point along the path; auto-start-reverse turns a sender head back.
-fn marker(id : String, head : @sequence.Head, stroke : String) -> @writer.Node {
+fn marker(id : String, head : @sequence.Head, stroke : String, reversed : Bool) -> @writer.Node {
   let (d, filled) = match head {
     Arrow => ("M-9,-4 L0,0 L-9,4 z", true)
     OpenArrow => ("M-9,-4 L0,0 L-9,4", false)
     Cross => ("M-4,-4 L4,4 M-4,4 L4,-4", false)
     Async => ("M-9,-4 L0,0", false)
-    HalfArrow(upper~, filled~) => ((if upper { "M-9,-4 L0,0" } else { "M-9,4 L0,0" }) + (if filled { " L-9,0 z" } else { "" }), filled)
-    Central(h) => return marker(id, h, stroke)
+    HalfArrow(upper~, filled~) => {
+      let upper = if reversed { !upper } else { upper }
+      ((if upper { "M-9,-4 L0,0" } else { "M-9,4 L0,0" }) + (if filled { " L-9,0 z" } else { "" }), filled)
+    }
+    Central(h) => return marker(id, h, stroke, reversed)
     NoHead => ("", false)
   }
   @writer.element("marker", attrs=[("id", id), ("viewBox", "-10 -5 15 10"), ("refX", "0"), ("refY", "0"),
@@ -161,7 +164,7 @@ fn description(s : @sequence.Sequence, m : Int) -> String {
 }
 
 ///|
-fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode) -> (String, Array[@diagrams.Diagnostic]) {
+fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode, id_prefix : String?) -> (String, Array[@diagrams.Diagnostic]) {
   let g = @layout.layout(sequence)
   let p = Paint::{ theme, mode }
   let diagnostics : Array[@diagrams.Diagnostic] = []
@@ -235,7 +238,9 @@ fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode) -> (S
     for (end, head) in [("start", m.message.sender_head), ("end", m.message.receiver_head)] {
       if head != NoHead && head != Central(NoHead) {
         let id = "head-\{m.index}-\{end}"
-        defs.push(marker(id, head, stroke))
+        let edge = if end == "start" { m.path[0] } else { m.path[m.path.length() - 1] }
+        let reversed = if end == "start" { edge.x2 > edge.x1 } else { edge.x2 < edge.x1 }
+        defs.push(marker(id, head, stroke, reversed))
         line_attrs.push(("marker-\{end}", "url(#\{id})"))
       }
     }
@@ -284,26 +289,43 @@ fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode) -> (S
   for (name, palette) in palettes {
     for f in @layout.check(g, palette) { diagnostics.push(@diagrams.Diagnostic::warning("svg/legibility", "\{name}: \{f.message}")) }
   }
-  (@writer.to_string(root), diagnostics)
+  let prefix = match id_prefix {
+    Some(value) => {
+      let encoded = StringBuilder()
+      for c in value { encoded.write_string("\{c.to_int().to_string(radix=16)}-") }
+      "seq-u-\{encoded.to_string()}"
+    }
+    None => {
+      // FNV-1a over UTF-16 units keeps IDs deterministic on every backend.
+      // Hash the complete unscoped output, including both palettes and mode.
+      let source = @writer.to_string(root)
+      let mut hash : UInt64 = 14695981039346656037
+      for i in 0..<source.length() {
+        hash = (hash ^ source.code_unit_at(i).to_int().to_uint64()) * 1099511628211
+      }
+      "seq-\{hash.to_string(radix=16)}-"
+    }
+  }
+  (@writer.to_string(scope_svg(root, prefix, theme)), diagnostics)
 }
 
 ///|
 /// Render one standalone SVG. Adaptive is the default; fixed selects a palette.
-pub fn render_sequence(sequence : @sequence.Sequence, theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive) -> String {
-  paint(sequence, theme, mode).0
+pub fn render_sequence(sequence : @sequence.Sequence, theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String) -> String {
+  paint(sequence, theme, mode, id_prefix).0
 }
 
 ///|
 /// A renderer that writes one standalone SVG document.
-pub struct SvgRenderer { theme : @theme.Theme; mode : Mode }
+pub struct SvgRenderer { theme : @theme.Theme; mode : Mode; id_prefix : String? }
 
 ///|
-pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive) -> SvgRenderer { { theme, mode } }
+pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String) -> SvgRenderer { { theme, mode, id_prefix } }
 
 ///|
 pub impl @render.Renderer for SvgRenderer with render(self, diagram) {
   match diagram { Sequence(s) => {
-    let (svg, diagnostics) = paint(s, self.theme, self.mode)
+    let (svg, diagnostics) = paint(s, self.theme, self.mode, self.id_prefix)
     @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
   } }
 }
@@ -322,3 +344,27 @@ pub extend Mode with Eq::{not_equal, equal}
 
 ///|
 pub extend Mode with @debug.Debug::{to_repr}
+
+///|
+/// Rewrite only generated identifiers and fragment references, never user text.
+/// Scope the stylesheet too, so adjacent SVGs can have different custom themes.
+fn scope_svg(node : @writer.Node, prefix : String, theme : @theme.Theme) -> @writer.Node {
+  match node {
+    Text(_) => node
+    Element(name, attributes, children) => {
+      let attrs = attributes.map(pair => {
+        let (key, value) = pair
+        let value = if key == "id" { prefix + value }
+          else if key == "marker-start" || key == "marker-end" {
+            "url(#\{prefix}\{value.view(start_offset=5, end_offset=value.length() - 1)})"
+          } else { value }
+        (key, value)
+      }).iter().to_array()
+      if name == "svg" { attrs.push(("id", prefix + "diagram")) }
+      let children = if name == "style" {
+        [@writer.text(style_sheet(theme, selector="svg#\{prefix}diagram"))]
+      } else { children.map(c => scope_svg(c, prefix, theme)).iter().to_array() }
+      @writer.element(name, attrs~, children~)
+    }
+  }
+}

@@ -48,10 +48,10 @@ test "the SVG has a title and a description" {
 ///|
 test "the adaptive SVG is dark by default and light when the viewer prefers light" {
   let svg = svg_of(simple())
-  assert_true(svg.contains("svg {\n  --bg: #020617;"))
-  assert_true(svg.contains("@media (prefers-color-scheme: light) {\n  svg {\n    --bg: #f4f5f7;"))
-  assert_true(svg.contains("svg[data-theme=\"dark\"] {\n  --bg: #020617;"))
-  assert_true(svg.contains("svg[data-theme=\"light\"] {\n  --bg: #f4f5f7;"))
+  assert_true(svg.contains("--bg: #020617;"))
+  assert_true(svg.contains("@media (prefers-color-scheme: light)") && svg.contains("--bg: #f4f5f7;"))
+  assert_true(svg.contains("[data-theme=\"dark\"] {\n  --bg: #020617;"))
+  assert_true(svg.contains("[data-theme=\"light\"] {\n  --bg: #f4f5f7;"))
 }
 
 ///|
@@ -197,4 +197,50 @@ test "rich geometry and paint agree about legibility" {
     let r = @svg.SvgRenderer::new(mode~).render(Sequence(rich()))
     assert_eq(r.diagnostics.length(), 0, msg=r.diagnostics.map(d => d.message).iter().to_array().join("; "))
   }
+}
+
+///|
+test "caller prefixes distinguish identical diagrams and escape hostile IDs" {
+  let a = @svg.render_sequence(simple(), id_prefix="one")
+  let b = @svg.render_sequence(simple(), id_prefix="two")
+  assert_false(a == b)
+  assert_eq(a, @svg.render_sequence(simple(), id_prefix="one"))
+  let hostile = @svg.render_sequence(simple(), id_prefix="x)\"<&")
+  assert_false(hostile.contains("x)\"<&"))
+  assert_true(hostile.contains("id=\"seq-u-78-29-22-3c-26-diagram\""))
+  let renderer = @svg.SvgRenderer::new(id_prefix="one")
+  assert_eq(renderer.render(Sequence(simple())).output.unwrap(), a)
+}
+
+///|
+test "explicit namespace snapshot" {
+  let t = @test.Test("namespaced")
+  t.write(@svg.render_sequence(simple(), id_prefix="second"))
+  t.snapshot(filename="namespaced.svg")
+}
+
+///|
+test "all half-arrow directions snapshot" {
+  let events : Array[@sequence.Event] = []
+  for upper in [true, false] {
+    for filled in [true, false] {
+      for (a, b) in [("A", "B"), ("B", "A"), ("A", "A")] {
+        let head = @sequence.Head::HalfArrow(upper~, filled~)
+        events.push(Message(@sequence.Message::new(a, b, "\{a} to \{b}", sender_head=head, receiver_head=Central(head))))
+      }
+    }
+  }
+  let s = @sequence.Sequence::new([@sequence.Participant::new("A"), @sequence.Participant::new("B")], events)
+  let t = @test.Test("half-arrows")
+  t.write(@svg.render_sequence(s, mode=Fixed(Light)))
+  t.snapshot(filename="half-arrows-light.svg")
+}
+
+///|
+test "custom adaptive palette snapshot" {
+  let classic = @theme.Theme::classic()
+  let theme = { ..classic, dark: { ..classic.dark, bg: @theme.Color::hex(0x101820) } }
+  let t = @test.Test("custom-adaptive")
+  t.write(@svg.render_sequence(simple(), theme~))
+  t.snapshot(filename="custom-adaptive.svg")
 }

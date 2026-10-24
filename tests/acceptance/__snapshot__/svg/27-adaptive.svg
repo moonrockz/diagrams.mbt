@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 417 553" width="417" height="553" role="img" data-diagram="sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 417 553" width="417" height="553" role="img" data-diagram="sequence" id="seq-cccebbb055cf8ba-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (Alice, Bob) and 4 messages.</desc>
   <defs>
     <style>
-svg {
+svg#seq-cccebbb055cf8ba-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg {
+  svg#seq-cccebbb055cf8ba-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg {
     --external-ink: #606f85;
   }
 }
-svg[data-theme="dark"] {
+svg#seq-cccebbb055cf8ba-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg[data-theme="light"] {
+svg#seq-cccebbb055cf8ba-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,16 +118,16 @@ svg[data-theme="light"] {
   --external-ink: #606f85;
 }
 </style>
-    <marker id="head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-cccebbb055cf8ba-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-cccebbb055cf8ba-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--backend-stroke)" stroke="var(--backend-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-cccebbb055cf8ba-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--backend-stroke)" stroke="var(--backend-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-cccebbb055cf8ba-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--backend-stroke)" stroke="var(--backend-stroke)" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -145,28 +145,28 @@ svg[data-theme="light"] {
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="Alice" data-to="Bob" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M103 127 L314 127" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#head-0-end)"/>
+      <path class="m-line" d="M103 127 L314 127" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-cccebbb055cf8ba-head-0-end)"/>
       <rect class="mask" x="122" y="100" width="172" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="208" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="208" y="115">Hello Bob, how are you?</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="1" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M314 218 L103 218" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#head-1-end)"/>
+      <path class="m-line" d="M314 218 L103 218" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-cccebbb055cf8ba-head-1-end)"/>
       <rect class="mask" x="153" y="191" width="111" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="208" y="206" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--backend-ink)">
         <tspan x="208" y="206">Not so good :(</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="2" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M314 325 L103 325" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#head-2-end)"/>
+      <path class="m-line" d="M314 325 L103 325" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-cccebbb055cf8ba-head-2-end)"/>
       <rect class="mask" x="112" y="298" width="193" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="208" y="313" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--backend-ink)">
         <tspan x="208" y="313">Feeling fresh like a daisy</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="3" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M314 452 L103 452" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#head-3-end)"/>
+      <path class="m-line" d="M314 452 L103 452" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-cccebbb055cf8ba-head-3-end)"/>
       <rect class="mask" x="142" y="425" width="132" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="208" y="440" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--backend-ink)">
         <tspan x="208" y="440">Thanks for asking</tspan>

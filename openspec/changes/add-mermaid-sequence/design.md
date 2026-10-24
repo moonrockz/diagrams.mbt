@@ -290,6 +290,14 @@ The SVG has a `<title>` and a `<desc>` from the title and the accessibility
 fields. Participant and message groups have `data-` attributes for their IDs and
 links. The animated renderer will use these attributes later.
 
+**Call:** marker IDs and adaptive selectors use a deterministic namespace from
+an FNV-1a hash of the unscoped SVG, including the theme and mode. Both rendering
+entry points accept `id_prefix` for repeated inline copies that need separate
+root overrides. The renderer encodes caller prefixes as code points. It scopes
+only generated IDs, fragment references and CSS, and keeps user text unchanged.
+Half-arrow markers reflect their local upper or lower side when the endpoint
+points left, including sender heads and self-message return legs.
+
 ### D8. Legibility checks
 
 **Owner:** legibility is a tested property, not a review opinion.

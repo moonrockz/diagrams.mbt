@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249 203" width="249" height="203" role="img" data-diagram="sequence">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249 203" width="249" height="203" role="img" data-diagram="sequence" id="seq-f0df58c9a2157aa9-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 1 participant (John) and 0 messages.</desc>
   <defs>
     <style>
-svg {
+svg#seq-f0df58c9a2157aa9-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg {
+  svg#seq-f0df58c9a2157aa9-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg {
     --external-ink: #606f85;
   }
 }
-svg[data-theme="dark"] {
+svg#seq-f0df58c9a2157aa9-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg[data-theme="light"] {
+svg#seq-f0df58c9a2157aa9-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;

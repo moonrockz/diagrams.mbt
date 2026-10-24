@@ -93,6 +93,21 @@ kind SHALL get the next family in a fixed cycle.
 - **WHEN** a diagram has a dotted message
 - **THEN** the SVG draws the message line dashed in the reply colour
 
+#### Scenario: Two diagrams share an inline page
+
+- **WHEN** a page contains two rendered diagrams with different arrowheads or palettes
+- **THEN** each diagram uses its own marker shapes, colours and adaptive CSS
+
+#### Scenario: Repeated inline copies have separate overrides
+
+- **WHEN** a caller gives two copies of the same diagram distinct `id_prefix` values
+- **THEN** each copy has its own generated IDs and can use a separate root theme override
+
+#### Scenario: A reversed half-arrow keeps its side
+
+- **WHEN** a sender half-arrow or a right-to-left receiver half-arrow has `upper=true`
+- **THEN** the arrowhead is above the message line, also on a self-message return leg
+
 ### Requirement: Coloured text and author colours
 
 Lines, boxes and fills SHALL use the theme accent colours as they are. Coloured
