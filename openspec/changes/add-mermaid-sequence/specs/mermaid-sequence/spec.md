@@ -134,22 +134,28 @@ destruction takes effect after that message.
 
 The conversion SHALL make a participant link from a `link` or `links` statement
 whose URL uses a known link scheme. It SHALL make a message link when the whole
-message label is a Smithy shape ID. Any other URL or label SHALL stay as it is.
+message label is a Smithy shape written with `/` in place of `#`, with a namespace
+of two or more identifiers. Any other URL or label SHALL stay as it is.
 
 #### Scenario: A participant link statement
 
-- **WHEN** a source has `link W: shape @ smithy:example.weather#Weather`
+- **WHEN** a source has `link W: shape @ smithy:example.weather/Weather`
 - **THEN** the participant `W` has a link with the scheme `smithy` and the target `example.weather#Weather`
 
 #### Scenario: A shape ID label
 
-- **WHEN** a source has the message `C->>W: example.weather#GetForecast`
-- **THEN** the message has a link with the scheme `smithy` and the target `example.weather#GetForecast`, and the label `example.weather#GetForecast`
+- **WHEN** a source has the message `C->>W: example.weather/GetForecast`
+- **THEN** the message has a link with the scheme `smithy` and the target `example.weather#GetForecast`, and the label `example.weather/GetForecast`
 
 #### Scenario: A label that only looks like a shape ID
 
-- **WHEN** a source has the message `C->>W: see #42`
-- **THEN** the message has no link and the label `see #42`
+- **WHEN** a source has the message `C->>W: read/write`
+- **THEN** the message has no link and the label `read/write`
+
+#### Scenario: A shape ID with `#` is a comment, as in Mermaid
+
+- **WHEN** a source has the message `C->>W: example.weather#GetForecast`
+- **THEN** the message has no link and the label `example.weather`, because `#GetForecast` is a comment
 
 #### Scenario: A web link stays a Mermaid link
 

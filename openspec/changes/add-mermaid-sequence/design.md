@@ -137,30 +137,38 @@ test records the case.
 
 **Owner:** a link connects a participant or a message to the item that it
 represents. The Mermaid syntax for links is valid Mermaid, so GitHub and
-mermaid.js still render the file:
+mermaid.js still render the file. In Mermaid, `#` starts a comment, also in a
+message text and in a `link` text, so a Smithy shape is written with `/` in
+place of `#`:
 
 - A participant gets a link from Mermaid's `link` or `links` statement when the
-  URL has a link scheme, for example `link W: shape @ smithy:example.weather#Weather`.
-- A message gets a link when its whole label is a Smithy shape ID, for example
-  `C->>W: example.weather#GetForecast`. The renderer then shows the short name
-  `GetForecast`.
+  URL has a link scheme, for example `link W: shape @ smithy:example.weather/Weather`.
+- A message gets a link when its whole label is a Smithy shape in this form,
+  for example `C->>W: example.weather/GetForecast`. The renderer then shows the
+  short name `GetForecast`.
 
-**Call:** the model label keeps the text as written, for example
-`example.weather#GetForecast`, and the link holds the target. The renderer
-shows the short name of a label that is equal to its `smithy` link target. The
-short name is the text after `#`, so `example.weather#City$name` shows as
-`City$name`. So each producer of the model, such as the Smithy transcript
-adapter, keeps the full ID, and one rule in the renderer shortens it.
+The owner chose this spelling on 2026-10-23 (bead `diagrams-67z.8`). The first
+version of this design used `#`, which Mermaid reads as the start of a comment.
+
+**Call:** the link target is the Smithy shape ID in its normal form, with `#`,
+for example `example.weather#GetForecast`. Only the Mermaid spelling uses `/`.
+So a resolver and the Smithy transcript adapter use normal shape IDs. The model
+label keeps the text as written, for example `example.weather/GetForecast`. The
+renderer shows the short name of a label that names its `smithy` link target,
+in either spelling. The short name is the text after `/` or `#`, so
+`example.weather/City$name` shows as `City$name`.
 
 **Call:** a link is a scheme and a target, for example `smithy` and
 `example.weather#Weather`. This change knows the schemes `smithy` and `openrpc`.
-A link with any other scheme stays a normal Mermaid link. A shape ID label must
-match the Smithy shape ID grammar: a namespace of one or more identifiers joined
-by `.`, then `#`, then a shape name, and optionally `$` and a member name. A
-label with any other text stays a plain label. A Mermaid `link` statement
-attaches to a participant only. So in this change an `openrpc:` link can be on a
-participant, but not on a message. The change `add-openrpc-sequence` defines how
-a message names an OpenRPC method.
+A link with any other scheme stays a normal Mermaid link. A shape label must
+match this form: a namespace of two or more identifiers joined by `.`, then
+`/`, then a shape name, and optionally `$` and a member name. Smithy also
+allows a namespace of one identifier, but a label such as `read/write` must not
+become a link, so a label needs at least one `.` in its namespace. A label with
+any other text stays a plain label. A Mermaid `link` statement attaches to a
+participant only. So in this change an `openrpc:` link can be on a participant,
+but not on a message. The change `add-openrpc-sequence` defines how a message
+names an OpenRPC method.
 
 Render properties are a separate, optional value on each participant and
 message:

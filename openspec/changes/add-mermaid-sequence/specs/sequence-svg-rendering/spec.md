@@ -146,8 +146,8 @@ title and autonumber values.
 
 The renderer SHALL use render properties when they are present. A render kind
 SHALL select the colour family. A sublabel SHALL show under the participant
-label or under the message label. A message label that is equal to its `smithy`
-link target SHALL show as the text after `#`.
+label or under the message label. A message label that names its `smithy`
+link target, with `/` or `#`, SHALL show as the text after the `/` or `#`.
 
 #### Scenario: A participant sublabel
 
@@ -156,7 +156,7 @@ link target SHALL show as the text after `#`.
 
 #### Scenario: A shape ID label shows its short name
 
-- **WHEN** a message has the label `example.weather#City$name` and a `smithy` link to the same target
+- **WHEN** a message has the label `example.weather/City$name` and a `smithy` link to `example.weather#City$name`
 - **THEN** the SVG shows the label `City$name`
 
 #### Scenario: Link attributes
