@@ -5,9 +5,10 @@
   "site_url": "https://moonrockz.github.io/diagrams.mbt/",
   "repo_url": "https://github.com/moonrockz/diagrams.mbt",
   "versions": { "since": "0.1" },
-  "packages": ["diagrams"],
-  "api": ["pkgs/diagrams"],
+  "packages": ["diagrams", "diagrams-svg", "diagrams-mermaid"],
+  "api": ["pkgs/diagrams", "pkgs/diagrams-svg", "pkgs/diagrams-mermaid"],
   "nav": [
+    { "group": "Guides", "items": ["guides/"] },
     { "group": "Design", "items": ["design/"] },
     { "group": "Packages", "items": ["packages/"] },
     { "group": "Contribute", "items": ["WRITING_FOR_THE_SITE.md"] }

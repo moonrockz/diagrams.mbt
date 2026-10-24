@@ -209,9 +209,11 @@ kinds, messages, arrow forms, central connections and nested frame boundaries.
 
 ## Render as SVG
 
-The current SVG renderer draws participant boxes and message lines, including
-messages nested in frames. Full event layout and styling are the next task
-groups of `add-mermaid-sequence`.
+The SVG renderer draws every sequence element, including nested frames,
+activations, notes, self-messages, creation and destruction. Its adaptive theme
+follows the viewer's light preference. Use `moonrockz/diagrams-svg` directly
+for fixed dark or light colours and public layout and legibility checks.
+Run `mise run gallery` to compare all 38 frozen corpus diagrams in both themes.
 
 ```mbt check
 ///|

@@ -1,7 +1,8 @@
 # diagrams.mbt
 
-diagrams.mbt is a MoonBit library for diagrams. It supports formats such as
-Mermaid, PlantUML, Draw.io, Graphviz DOT and more. It has no user interface.
+diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence
+diagrams and renders standalone SVG. Other diagram kinds and formats, such as
+PlantUML, Draw.io and Graphviz DOT, are planned. It has no user interface.
 
 This project shares the setup, the design principles and the release pipelines of
 the other moonrockz projects, such as
@@ -51,6 +52,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
 | `mise run test:svg` | Check standalone SVG and adaptive themes in Chromium |
+| `mise run gallery` | Verify the renderer snapshots and write all corpus diagrams in dark and light to `_gallery/index.html` |
 | `mise run build -- js --release` | Build a selected target in release mode |
 | `mise run test -- native` | Test a selected target |
 | `mise run format` | Format the workspace |
@@ -69,7 +71,10 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `moon.mod` holds the shared version, currently `0.1.0`.
 - `moon.work` lists the workspace members.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
-  as `@diagrams`. Its `version()` export provides a build and test smoke check.
+  as `@diagrams`, the immutable sequence model and the renderer contract.
+- `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence diagrams.
+- `pkgs/diagrams-svg/` lays out sequence models and writes standalone SVG.
+- `tests/` contains the unpublished acceptance suites and frozen Mermaid corpus.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
 - `docs/` and `site/` hold the content of the docs site.
