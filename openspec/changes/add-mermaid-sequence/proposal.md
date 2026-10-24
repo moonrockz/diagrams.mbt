@@ -16,7 +16,8 @@ renderer. It also sets the structure that the other formats will use.
 - Add a format-independent `Sequence` model to `moonrockz/diagrams`. Mermaid,
   PlantUML and Smithy transcripts will all produce this one model.
 - Add links. A participant or a message can link to the item that it
-  represents, for example the Smithy shape `example.weather#GetForecast`. The
+  represents, for example the Smithy shape `example.weather#GetForecast`, which a
+  Mermaid file writes as `example.weather/GetForecast`. The
   model can also hold render properties, such as a participant kind and a
   sublabel. Later adapters fill these properties from the linked item.
 - Add a `Renderer` trait. A renderer turns a diagram model into output. Later
