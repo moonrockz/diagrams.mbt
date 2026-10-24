@@ -186,6 +186,10 @@ run = "moonx scripts/clean.mbtx"
 description = "Install git hooks with lefthook"
 run = "moonx scripts/hooks-install.mbtx"
 
+[tasks."openspec:setup"]
+description = "Refresh OpenSpec skills and commands for Codex, Claude, Grok, Cursor and Copilot"
+run = "moonx scripts/openspec-setup.mbtx"
+
 [tasks.list-tasks]
 description = "List mise tasks"
 run = "mise tasks"

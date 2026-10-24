@@ -65,6 +65,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run test:site` | Test the docs site packages and run the browser smoke test on the built site |
 | `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.1.2` |
 | `mise run clean` | Remove build artifacts |
+| `mise run openspec:setup` | Refresh OpenSpec skills and commands for the supported agents |
 
 ## Layout
 

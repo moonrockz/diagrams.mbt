@@ -25,6 +25,23 @@ Graphviz DOT. The library has no UI package.
   merge, close the beads with the PR and merge SHA, close a finished epic, and sync.
 - Run `mise exec -- openspec validate --all --strict` after you edit `openspec/`.
 
+### OpenSpec agent entry points
+
+Run OpenSpec commands through `mise exec -- openspec` from the repository root.
+Read `openspec/config.yaml` and the relevant accepted specifications before
+planning or implementing a change. Use the six installed workflows: explore,
+propose, update, apply, sync and archive. `CONTRIBUTING.md` lists the entry points
+for each agent and the required beads and landing steps. Its landing rules take
+precedence over generic generated workflow instructions: close beads only after
+merge, and archive the last task group in its pull request.
+
+Codex and portable agents, including Muse, use `.agents/skills/openspec-*/SKILL.md`.
+Claude, Grok, Cursor and Copilot also have client-specific generated entry points.
+If a client cannot discover skills, read the matching shared `SKILL.md` explicitly
+and follow it. For example, to implement a change, read
+`.agents/skills/openspec-apply-change/SKILL.md`. No slash-command support is required.
+Refresh the generated files with `mise run openspec:setup`; do not edit them by hand.
+
 ## Toolchain and tasks
 
 - Pin tools in `.config/mise/config.toml`. Run `mise trust` and `mise install`.

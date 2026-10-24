@@ -50,7 +50,74 @@ A change folder has these files:
 
 Use kebab-case names that start with a verb, for example `add-configuration-core`.
 
-With Claude Code, use the commands that `openspec init` installed in `.claude/`:
+The repository includes OpenSpec entry points for Codex, Claude Code, Grok Build,
+Cursor and GitHub Copilot. Muse uses the portable workflow in `AGENTS.md` and the
+shared skills in `.agents/skills/`. All agents use the same specifications,
+project configuration and beads tracker.
+
+| Workflow | Shared skill name | Purpose |
+| --- | --- | --- |
+| explore | `openspec-explore` | Examine an idea before writing a change |
+| propose | `openspec-propose` | Create a change and its planning artifacts |
+| update | `openspec-update-change` | Revise an existing change |
+| apply | `openspec-apply-change` | Implement tasks |
+| sync | `openspec-sync-specs` | Copy requirement changes into accepted specifications |
+| archive | `openspec-archive-change` | Archive a complete change |
+
+Use the invocation syntax of your agent. These examples select the apply workflow;
+substitute the workflow or skill name from the table above.
+
+| Agent | Installed skills | Invocation |
+| --- | --- | --- |
+| Codex CLI / IDE | `.agents/skills/` | `$openspec-apply-change <change>` |
+| Codex desktop | `.agents/skills/` | Select `openspec-apply-change` from Skills in the sidebar |
+| Claude Code | `.claude/skills/` | `/opsx:apply <change>` or `/openspec-apply-change <change>` |
+| Grok Build | `.grok/skills/` | `/openspec-apply-change <change>` |
+| Cursor | `.cursor/skills/` | `/opsx-apply <change>` |
+| GitHub Copilot | `.github/skills/` | `/opsx-apply <change>` |
+| Muse / portable agents | `.agents/skills/` | Ask it to read the matching `SKILL.md` and follow it for `<change>` |
+
+If skill discovery is unavailable, use this prompt with any agent:
+
+> Read AGENTS.md, CONTRIBUTING.md and
+> .agents/skills/openspec-apply-change/SKILL.md. Follow that workflow to implement
+> change `<change>`, including its beads and verification steps.
+
+The paths and invocation syntax follow the
+[OpenSpec tool matrix](https://openspec.dev/docs/supported-tools). Codex discovers
+repository skills in `.agents/skills/`, as described in the
+[official OpenAI documentation](https://learn.chatgpt.com/docs/build-skills).
+Muse has no built-in OpenSpec adapter; its portable entry point does not require
+a particular Muse client or slash-command system.
+
+### Refresh agent integrations
+
+After changing the pinned OpenSpec version, or to restore missing entry points, run:
+
+```shell
+mise run openspec:setup
+mise exec -- openspec validate --all --strict
+```
+
+The setup task installs the six core workflows as skills for all five supported
+clients, plus commands for Claude, Cursor and Copilot. It uses temporary OpenSpec
+settings with `profile: core` and `delivery: both`; your machine-wide profile and
+delivery settings stay unchanged. It preserves `openspec/config.yaml`, existing
+specifications and changes. Review and commit the generated files with the setup
+task. Keep repository-specific instructions in `AGENTS.md`, `CONTRIBUTING.md` and
+`openspec/config.yaml`, rather than editing generated skills or commands.
+
+Restart or reload the agent if the new entry points do not appear. In Codex CLI
+or the IDE extension, check `/skills` or type `$openspec-` to select a workflow.
+In Codex desktop, check Skills in the sidebar. With a portable client, explicitly
+load `AGENTS.md` at the start of the session.
+
+The task configures Copilot skills and editor prompts. GitHub-hosted Copilot
+environment setup is separate; it is not installed by this task.
+
+### Claude command reference
+
+Claude Code also provides the following commands:
 
 | Command | Use |
 | --- | --- |
