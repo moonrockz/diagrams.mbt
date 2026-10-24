@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -196,3 +196,11 @@ run = "mise tasks"
 
 [settings]
 experimental = true
+
+[tasks."validate:bpmn-corpus"]
+description = "Check frozen BPMN schema/fixture digests and embedded test inputs"
+run = "moonx scripts/bpmn-corpus.mbtx check"
+
+[tasks."bpmn-corpus:generate"]
+description = "Embed frozen BPMN schemas and the minimal fixture for portable tests"
+run = "moonx scripts/bpmn-corpus.mbtx generate"

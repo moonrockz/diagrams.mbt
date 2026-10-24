@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="https://moonrockz.dev/bpmn/examples">
+  <bpmn:process id="Process_1" name="Review request" isExecutable="false">
+    <bpmn:startEvent id="Start"/>
+    <bpmn:task id="Review" name="Review request"/>
+    <bpmn:endEvent id="End"/>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start" targetRef="Review"/>
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Review" targetRef="End"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="40" y="62" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Review_di" bpmnElement="Review"><dc:Bounds x="140" y="40" width="180" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_di" bpmnElement="End"><dc:Bounds x="384" y="62" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="76" y="80"/><di:waypoint x="140" y="80"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="320" y="80"/><di:waypoint x="384" y="80"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

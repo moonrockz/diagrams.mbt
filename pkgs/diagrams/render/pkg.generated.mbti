@@ -4,6 +4,7 @@ package "moonrockz/diagrams/render"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/sequence",
 }
 
@@ -14,6 +15,7 @@ import {
 // Types and methods
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
+  Bpmn(@bpmn.Bpmn)
 } derive(Eq, @debug.Debug)
 pub fn Diagram::equal(Self, Self) -> Bool
 pub fn Diagram::kind_name(Self) -> String

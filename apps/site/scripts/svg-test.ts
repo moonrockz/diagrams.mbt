@@ -141,6 +141,44 @@ try {
     ['rgb(2, 6, 23)', 'rgb(244, 245, 247)']);
   assert.deepEqual(requests, [], 'all SVGs render without network requests');
   console.log(`Verified ${files.length} standalone SVGs in both browser preferences, including root overrides and text contrast.`);
+  // Group 1 BPMN tracer: offline path overlay, paused startup and keyboard play/pause.
+  const bpmnSvg = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
+  assert.equal(await page.evaluate(source => {
+    const xml = new DOMParser().parseFromString(source, 'image/svg+xml');
+    return xml.querySelector('parsererror, script, foreignObject') === null
+      && xml.querySelectorAll('.bpmn-flow').length === 2
+      && xml.querySelectorAll('circle').length === 2;
+  }, bpmnSvg), true);
+  const html = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.html', 'utf8');
+  const errors: string[] = [];
+  page.on('pageerror', e => errors.push(e.message));
+  const unexpected: string[] = [];
+  await page.route('**/*', route => { unexpected.push(route.request().url()); return route.abort(); });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.setContent(html);
+  const play = page.getByRole('button', { name: 'Play', exact: true });
+  assert.equal(await play.getAttribute('aria-pressed'), 'false');
+  assert.equal(await page.locator('.motion-overlay').isVisible(), false);
+  await play.focus();
+  await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: 'Pause', exact: true }).waitFor();
+  const dot = page.locator('.motion-overlay circle');
+  const before = await dot.getAttribute('cx');
+  await page.waitForFunction(x => document.querySelector('.motion-overlay circle')?.getAttribute('cx') !== x, before);
+  const geometry = await page.locator('.motion-overlay path').getAttribute('d');
+  assert.equal(geometry, 'M76 80 L140 80');
+  await page.getByRole('button', { name: 'Pause', exact: true }).click();
+  const paused = await dot.getAttribute('cx');
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  assert.equal(await dot.getAttribute('cx'), paused, 'pause retains the current position');
+  assert.equal(await page.locator('[role="status"]').textContent(), 'Paused');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: 'Play', exact: true }).getAttribute('aria-pressed'), 'false');
+  assert.notEqual(await dot.getAttribute('cx'), paused, 'reduced motion allows explicit inspection');
+  assert.deepEqual(unexpected, [], 'BPMN playback remains offline');
+  assert.deepEqual(errors, [], 'BPMN playback has no browser errors');
+  console.log('BPMN static XML and offline play/pause qualification passed');
 } finally {
   await browser.close();
 }

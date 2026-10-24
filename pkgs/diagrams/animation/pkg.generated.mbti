@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/animation"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct MotionPlan {
+  view_id : String
+  flow_id : String
+  duration_ms : Int32
+} derive(Eq, @debug.Debug)
+pub fn MotionPlan::equal(Self, Self) -> Bool
+pub fn MotionPlan::new(String, String, duration_ms? : Int32) -> Self?
+pub fn MotionPlan::not_equal(Self, Self) -> Bool
+pub fn MotionPlan::sample(Self, Int32) -> (Int32, Int32)
+pub fn MotionPlan::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
