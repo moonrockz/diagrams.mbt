@@ -1,6 +1,7 @@
 import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/bpmn",
   "moonbitlang/core/debug",
 }
 

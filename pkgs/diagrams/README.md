@@ -41,3 +41,12 @@ numbering and metadata. An absent target produces a warning with code
 `sequence/unresolved-link` and the target, and preserves any existing
 properties. Source adapters cannot replace the diagram structure through this
 contract. The Smithy and OpenRPC adapters belong to later changes.
+
+## BPMN compatibility
+
+`Diagram` now includes `Bpmn(view)`. Callers with exhaustive enum matches must
+handle this case. The immutable visual values are in `moonrockz/diagrams/bpmn`;
+first-slice explicit-time motion plans are in `moonrockz/diagrams/animation`.
+The independent BPMN document module does not depend on these packages. The
+BPMN implementation is in progress; module guides state each slice's coverage.
+Existing sequence models and static SVG bytes keep their current behavior.

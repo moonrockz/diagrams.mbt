@@ -17,6 +17,7 @@ async fn main {
         "moon",
         [
           "test", "--target", "js", "-p", "moonrockz/diagrams-svg", "-p", "moonrockz/diagrams-tests/acceptance",
+          "-p", "moonrockz/diagrams-tests/bpmn-acceptance",
         ],
       ),
       (

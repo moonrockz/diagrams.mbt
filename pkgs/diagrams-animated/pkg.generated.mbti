@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-animated"
+
+import {
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/render",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct AnimatedRenderer {
+  plan : @animation.MotionPlan?
+}
+pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan) -> Self
+pub fn AnimatedRenderer::render(Self, @render.Diagram) -> @render.Rendered
+pub impl @render.Renderer for AnimatedRenderer
+
+// Type aliases
+
+// Traits

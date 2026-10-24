@@ -14,6 +14,7 @@ struct Count {}
 ///|
 impl @render.Renderer for Count with render(_, diagram) {
   match diagram {
+    Bpmn(_) => @render.Rendered::unsupported("text/plain", diagram)
     Sequence(s) =>
       @render.Rendered::ok(s.participants.length().to_string(), "text/plain")
   }

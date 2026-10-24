@@ -1,0 +1,7 @@
+import { "moonbitlang/core/debug" }
+
+import {
+ "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
+ "moonbitlang/core/encoding/utf8",
+ "moonbitlang/x/crypto",
+} for "test"

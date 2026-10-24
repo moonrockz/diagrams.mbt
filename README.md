@@ -2,7 +2,10 @@
 
 diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence
 diagrams and renders standalone SVG. Other diagram kinds and formats, such as
-PlantUML, Draw.io and Graphviz DOT, are planned. It has no user interface.
+PlantUML, Draw.io and Graphviz DOT, are planned. It has no user interface. The BPMN change is in progress: the first slice reads a
+minimal BPMN process with DI, renders script-free SVG, and emits standalone HTML
+with illustrative flow playback. See the module guides under `pkgs/bpmn`,
+`pkgs/diagrams-bpmn` and `pkgs/diagrams-animated` for current limits.
 
 This project shares the setup, the design principles and the release pipelines of
 the other moonrockz projects, such as

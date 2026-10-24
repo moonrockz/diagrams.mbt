@@ -1,0 +1,11 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-svg" @svg,
+}
+
+import {
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams/bpmn" @model,
+} for "test"

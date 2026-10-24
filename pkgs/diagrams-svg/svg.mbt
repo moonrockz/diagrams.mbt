@@ -327,7 +327,9 @@ pub impl @render.Renderer for SvgRenderer with render(self, diagram) {
   match diagram { Sequence(s) => {
     let (svg, diagnostics) = paint(s, self.theme, self.mode, self.id_prefix)
     @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
-  } }
+  }
+  Bpmn(b) => paint_bpmn(b, self.theme, self.mode, self.id_prefix)
+  }
 }
 
 ///|

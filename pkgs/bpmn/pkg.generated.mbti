@@ -1,0 +1,112 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/bpmn"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn read(String) -> ReadResult
+
+pub fn write(Document) -> String
+
+// Errors
+
+// Types and methods
+pub struct Cst {
+  tokens : ReadOnlyArray[Token]
+} derive(Eq, @debug.Debug)
+pub fn Cst::equal(Self, Self) -> Bool
+pub fn Cst::not_equal(Self, Self) -> Bool
+pub fn Cst::text(Self) -> String
+pub fn Cst::to_repr(Self) -> @debug.Repr
+
+pub struct Diagnostic {
+  code : String
+  severity : Severity
+  message : String
+  span : Span?
+} derive(Eq, @debug.Debug)
+pub fn Diagnostic::equal(Self, Self) -> Bool
+pub fn Diagnostic::not_equal(Self, Self) -> Bool
+pub fn Diagnostic::to_repr(Self) -> @debug.Repr
+
+pub struct Document {
+  root : Element
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::new(Element) -> Self
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+pub fn Document::walk(Self, (Element) -> Unit) -> Unit
+
+pub struct Element {
+  kind : Kind
+  attributes : ReadOnlyArray[(String, String)]
+  children : ReadOnlyArray[Element]
+  content : String
+} derive(Eq, @debug.Debug)
+pub fn Element::attribute(Self, String) -> String?
+pub fn Element::equal(Self, Self) -> Bool
+pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? : ArrayView[Self], content? : String) -> Self
+pub fn Element::not_equal(Self, Self) -> Bool
+pub fn Element::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Kind {
+  Definitions
+  Process
+  StartEvent
+  Task
+  EndEvent
+  SequenceFlow
+  Incoming
+  Outgoing
+  Diagram
+  Plane
+  Shape
+  Edge
+  Bounds
+  Waypoint
+} derive(Eq, @debug.Debug)
+pub fn Kind::equal(Self, Self) -> Bool
+pub fn Kind::local_name(Self) -> String
+pub fn Kind::namespace_uri(Self) -> String
+pub fn Kind::not_equal(Self, Self) -> Bool
+pub fn Kind::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  tree : Cst
+  document : Document?
+  diagnostics : ReadOnlyArray[Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn ReadResult::equal(Self, Self) -> Bool
+pub fn ReadResult::not_equal(Self, Self) -> Bool
+pub fn ReadResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Error
+  Warning
+} derive(Eq, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub struct Span {
+  start : Int32
+  end : Int32
+} derive(Eq, @debug.Debug)
+pub fn Span::equal(Self, Self) -> Bool
+pub fn Span::not_equal(Self, Self) -> Bool
+pub fn Span::to_repr(Self) -> @debug.Repr
+
+pub struct Token {
+  text : String
+  span : Span
+} derive(Eq, @debug.Debug)
+pub fn Token::equal(Self, Self) -> Bool
+pub fn Token::not_equal(Self, Self) -> Bool
+pub fn Token::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

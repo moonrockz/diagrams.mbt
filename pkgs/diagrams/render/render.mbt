@@ -2,6 +2,7 @@
 /// A diagram of one kind. Each kind has its own format-independent model.
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
+  Bpmn(@bpmn.Bpmn)
 } derive(Eq, Debug)
 
 ///|
@@ -15,6 +16,7 @@ pub extend Diagram with @debug.Debug::{to_repr}
 pub fn Diagram::kind_name(self : Diagram) -> String {
   match self {
     Sequence(_) => "sequence"
+    Bpmn(_) => "bpmn"
   }
 }
 

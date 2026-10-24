@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-bpmn"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/bpmn",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
+}
+
+// Values
+pub fn render_svg(String) -> @render.Rendered
+
+pub fn to_diagram(@bpmn.Document) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  diagram : @render.Diagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn Conversion::equal(Self, Self) -> Bool
+pub fn Conversion::not_equal(Self, Self) -> Bool
+pub fn Conversion::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
