@@ -61,12 +61,12 @@ Depends on: `diagrams-67z.4`.
 Bead: `diagrams-67z.6`.
 Depends on: `diagrams-67z.5`.
 
-- [ ] 6.1 Implement the XML writer with attribute and text escaping, and verify well-formed output and escaping of `<`, `&`, `"` and control characters.
-- [ ] 6.2 Paint every element with the archify classic tokens, kind colour families, the colour cycle, message colours and arrowhead markers for each head value; verify the style scenarios and the snapshots of the corpus.
-- [ ] 6.3 Compute the text shades of the accents and paint author colours as tints; verify the stored shade values, the three colour scenarios and a contrast test for each shade.
-- [ ] 6.4 Implement the adaptive and fixed theme modes; verify the fixed-mode scenario by text checks and the adaptive scenarios in a Playwright check with light and dark preference.
-- [ ] 6.5 Use render properties in the output and write the `data-` attributes for IDs and links; verify the sublabel and link-attribute scenarios.
-- [ ] 6.6 Verify the standalone-SVG scenarios for every corpus diagram, and credit archify in the `diagrams-svg` README.
+- [x] 6.1 Implement the XML writer with attribute and text escaping, and verify well-formed output and escaping of `<`, `&`, `"` and control characters.
+- [x] 6.2 Paint every element with the archify classic tokens, kind colour families, the colour cycle, message colours and arrowhead markers for each head value; verify the style scenarios and the snapshots of the corpus.
+- [x] 6.3 Compute the text shades of the accents and paint author colours as tints; verify the stored shade values, the three colour scenarios and a contrast test for each shade.
+- [x] 6.4 Implement the adaptive and fixed theme modes; verify the fixed-mode scenario by text checks and the adaptive scenarios in a Playwright check with light and dark preference.
+- [x] 6.5 Use render properties in the output and write the `data-` attributes for IDs and links; verify the sublabel and link-attribute scenarios.
+- [x] 6.6 Verify the standalone-SVG scenarios for every corpus diagram, and credit archify in the `diagrams-svg` README.
 
 ## 7. Review the result and document it
 

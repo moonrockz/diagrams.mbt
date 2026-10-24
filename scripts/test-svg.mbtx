@@ -1,0 +1,38 @@
+///|
+/// Browser qualification of standalone SVG snapshots. The normal MoonBit tests
+/// compare the snapshots with the current renderer on all four targets.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+async fn main {
+  for
+    (command, args) in [
+      ("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"]),
+      (
+        "moon",
+        [
+          "test", "--target", "js", "-p", "moonrockz/diagrams-svg", "-p", "moonrockz/diagrams-tests/acceptance",
+        ],
+      ),
+      (
+        "node",
+        ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
+      ),
+      ("node", ["apps/site/scripts/svg-test.ts"]),
+    ] {
+    let code = @process.run(
+      command,
+      args,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+  }
+}

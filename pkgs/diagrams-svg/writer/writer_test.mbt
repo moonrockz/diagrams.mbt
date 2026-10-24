@@ -39,3 +39,9 @@ test "control characters that XML does not allow are removed" {
   let n = @writer.element("t", children=[@writer.text("a\u{0001}b\u{001f}c\td")])
   assert_eq(@writer.to_string(n), "<t>abc\td</t>\n")
 }
+
+///|
+test "XML attribute whitespace survives parsing and noncharacters are removed" {
+  let n = @writer.element("text", attrs=[("data-id", "a\tb\nc\rd")], children=[@writer.text("x\u{fffe}\u{ffff}y\rZ😀")])
+  assert_eq(@writer.to_string(n), "<text data-id=\"a&#x9;b&#xa;c&#xd;d\">xy&#xd;Z😀</text>\n")
+}

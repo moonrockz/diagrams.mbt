@@ -50,6 +50,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run check` | Lint, validate, test the library and task scripts, and build |
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
+| `mise run test:svg` | Check standalone SVG and adaptive themes in Chromium |
 | `mise run build -- js --release` | Build a selected target in release mode |
 | `mise run test -- native` | Test a selected target |
 | `mise run format` | Format the workspace |

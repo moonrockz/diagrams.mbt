@@ -1,4 +1,5 @@
 import {
+  "moonbitlang/core/debug",
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/sequence",
@@ -8,6 +9,7 @@ import {
 }
 
 import {
+  "moonbitlang/core/test",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg" @svg,

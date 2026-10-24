@@ -102,8 +102,8 @@ pub extend Theme with Eq::{not_equal, equal}
 pub extend Theme with @debug.Debug::{to_repr}
 
 ///|
-fn fam(fill : Color, stroke : Int, ink : Int) -> FamilyColors {
-  { fill, stroke: Color::hex(stroke), ink: Color::hex(ink) }
+fn fam(fill : Color, stroke : Int, background : Int, mask : Int) -> FamilyColors {
+  { fill, stroke: Color::hex(stroke), ink: text_shade(Color::hex(stroke), [Color::hex(background), Color::hex(mask)]) }
 }
 
 ///|
@@ -119,13 +119,13 @@ pub fn Theme::classic() -> Theme {
       muted: Color::hex(0x94a3b8),
       mask: Color::hex(0x0f172a),
       arrow: Color::hex(0x94a3b8),
-      frontend: fam(rgba(8, 51, 68, 40), 0x22d3ee, 0x22d3ee),
-      backend: fam(rgba(6, 78, 59, 40), 0x34d399, 0x34d399),
-      database: fam(rgba(76, 29, 149, 40), 0xa78bfa, 0xa78bfa),
-      cloud: fam(rgba(120, 53, 15, 30), 0xfbbf24, 0xfbbf24),
-      security: fam(rgba(136, 19, 55, 40), 0xfb7185, 0xfb7185),
-      messagebus: fam(rgba(251, 146, 60, 30), 0xfb923c, 0xfb923c),
-      external: fam(rgba(30, 41, 59, 50), 0x94a3b8, 0x94a3b8),
+      frontend: fam(rgba(8, 51, 68, 40), 0x22d3ee, 0x020617, 0x0f172a),
+      backend: fam(rgba(6, 78, 59, 40), 0x34d399, 0x020617, 0x0f172a),
+      database: fam(rgba(76, 29, 149, 40), 0xa78bfa, 0x020617, 0x0f172a),
+      cloud: fam(rgba(120, 53, 15, 30), 0xfbbf24, 0x020617, 0x0f172a),
+      security: fam(rgba(136, 19, 55, 40), 0xfb7185, 0x020617, 0x0f172a),
+      messagebus: fam(rgba(251, 146, 60, 30), 0xfb923c, 0x020617, 0x0f172a),
+      external: fam(rgba(30, 41, 59, 50), 0x94a3b8, 0x020617, 0x0f172a),
     },
     light: {
       bg: Color::hex(0xf4f5f7),
@@ -133,13 +133,13 @@ pub fn Theme::classic() -> Theme {
       muted: Color::hex(0x5b6474),
       mask: Color::hex(0xffffff),
       arrow: Color::hex(0x64748b),
-      frontend: fam(rgba(34, 211, 238, 15), 0x0891b2, 0x077995),
-      backend: fam(rgba(52, 211, 153, 18), 0x059669, 0x047d58),
-      database: fam(rgba(167, 139, 250, 20), 0x7c3aed, 0x7c3aed),
-      cloud: fam(rgba(251, 191, 36, 18), 0xd97706, 0xa75c05),
-      security: fam(rgba(251, 113, 133, 15), 0xe11d48, 0xd81c45),
-      messagebus: fam(rgba(251, 146, 60, 15), 0xea580c, 0xc3490a),
-      external: fam(rgba(148, 163, 184, 18), 0x64748b, 0x606f85),
+      frontend: fam(rgba(34, 211, 238, 15), 0x0891b2, 0xf4f5f7, 0xffffff),
+      backend: fam(rgba(52, 211, 153, 18), 0x059669, 0xf4f5f7, 0xffffff),
+      database: fam(rgba(167, 139, 250, 20), 0x7c3aed, 0xf4f5f7, 0xffffff),
+      cloud: fam(rgba(251, 191, 36, 18), 0xd97706, 0xf4f5f7, 0xffffff),
+      security: fam(rgba(251, 113, 133, 15), 0xe11d48, 0xf4f5f7, 0xffffff),
+      messagebus: fam(rgba(251, 146, 60, 15), 0xea580c, 0xf4f5f7, 0xffffff),
+      external: fam(rgba(148, 163, 184, 18), 0x64748b, 0xf4f5f7, 0xffffff),
     },
   }
 }

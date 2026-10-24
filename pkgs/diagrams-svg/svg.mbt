@@ -27,67 +27,130 @@ fn variables(p : @theme.Palette, indent : String) -> String {
 /// The style sheet of the adaptive mode. Dark is the default. The viewer's
 /// light preference selects light, and a `data-theme` attribute on the root
 /// overrides both.
-fn style_sheet(t : @theme.Theme) -> String {
+fn style_sheet(t : @theme.Theme, selector? : String = "svg") -> String {
   let buf = StringBuilder()
-  buf.write_string("\nsvg {\n\{variables(t.dark, "  ")}}\n")
+  buf.write_string("\n\{selector} {\n\{variables(t.dark, "  ")}}\n")
   buf.write_string(
-    "@media (prefers-color-scheme: light) {\n  svg {\n\{variables(t.light, "    ")}  }\n}\n",
+    "@media (prefers-color-scheme: light) {\n  \{selector} {\n\{variables(t.light, "    ")}  }\n}\n",
   )
-  buf.write_string("svg[data-theme=\"dark\"] {\n\{variables(t.dark, "  ")}}\n")
-  buf.write_string("svg[data-theme=\"light\"] {\n\{variables(t.light, "  ")}}\n")
-  buf.write_string("text { font-family: \{font_stack}; }\n")
-  buf.write_string(".bg { fill: var(--bg); }\n")
-  buf.write_string(".mask { fill: var(--mask); }\n")
-  buf.write_string(
-    ".lifeline { stroke: var(--arrow); stroke-width: 0.8; stroke-dasharray: 3 7; fill: none; }\n",
-  )
-  for f in @theme.all_families {
-    let n = f.name()
-    buf.write_string(
-      ".f-\{n} { --fill: var(--\{n}-fill); --stroke: var(--\{n}-stroke); --ink: var(--\{n}-ink); }\n",
-    )
-  }
-  buf.write_string(".box { fill: var(--fill); stroke: var(--stroke); stroke-width: 1.5; }\n")
-  buf.write_string(".p-label { fill: var(--text); font-size: 12px; font-weight: 600; }\n")
-  buf.write_string(".m-line { stroke: var(--stroke); stroke-width: 1.4; fill: none; }\n")
-  buf.write_string(".m-head { fill: var(--stroke); }\n")
-  buf.write_string(".m-label { fill: var(--ink); font-size: 11px; }\n")
+  buf.write_string("\{selector}[data-theme=\"dark\"] {\n\{variables(t.dark, "  ")}}\n")
+  buf.write_string("\{selector}[data-theme=\"light\"] {\n\{variables(t.light, "  ")}}\n")
   buf.to_string()
 }
 
 ///|
-fn num(n : Int) -> String {
-  n.to_string()
+/// The palette selected by fixed output.
+pub(all) enum Variant { Dark; Light } derive(Eq, Debug)
+
+///|
+/// Adaptive uses CSS variables; fixed writes literal presentation attributes.
+pub(all) enum Mode { Adaptive; Fixed(Variant) } derive(Eq, Debug)
+
+///|
+priv struct Paint {
+  theme : @theme.Theme
+  mode : Mode
 }
 
 ///|
-fn rect(
-  class : String,
-  r : @layout.Rect,
-  radius : Int,
-) -> @writer.Node {
-  @writer.element("rect", attrs=[
-    ("class", class),
-    ("x", num(r.x)),
-    ("y", num(r.y)),
-    ("width", num(r.width)),
-    ("height", num(r.height)),
-    ("rx", num(radius)),
+fn Paint::color(self : Paint, token : String) -> String {
+  match self.mode {
+    Adaptive => "var(--\{token})"
+    Fixed(v) => {
+      let p = match v { Dark => self.theme.dark; Light => self.theme.light }
+      let c = match token {
+        "bg" => p.bg; "mask" => p.mask; "text" => p.text; "muted" => p.muted; "arrow" => p.arrow
+        _ => {
+          let mut found = p.text
+          for f in @theme.all_families {
+            let c = p.family(f)
+            if token == "\{f.name()}-fill" { found = c.fill }
+            if token == "\{f.name()}-stroke" { found = c.stroke }
+            if token == "\{f.name()}-ink" { found = c.ink }
+          }
+          found
+        }
+      }
+      c.to_css()
+    }
+  }
+}
+
+///|
+fn Paint::ink(self : Paint, ink : @layout.Ink) -> String {
+  match ink {
+    Primary => self.color("text")
+    Muted => self.color("muted")
+    Accent(f) => self.color("\{f.name()}-ink")
+    Color(c) => c.to_css()
+  }
+}
+
+///|
+fn rect(class : String, r : @layout.Rect, radius : Int, fill : String, stroke? : String) -> @writer.Node {
+  let attrs = [("class", class), ("x", r.x.to_string()), ("y", r.y.to_string()),
+    ("width", r.width.to_string()), ("height", r.height.to_string()), ("rx", radius.to_string()), ("fill", fill)]
+  if stroke is Some(s) { attrs.push(("stroke", s)); attrs.push(("stroke-width", "1.5")) }
+  @writer.element("rect", attrs~)
+}
+
+///|
+fn path(class : String, d : String, stroke : String, dash? : String, width? : String = "1.4") -> @writer.Node {
+  let attrs = [("class", class), ("d", d), ("fill", "none"), ("stroke", stroke), ("stroke-width", width)]
+  if dash is Some(d) { attrs.push(("stroke-dasharray", d)) }
+  @writer.element("path", attrs~)
+}
+
+///|
+fn segment(s : @layout.Segment) -> String { "M\{s.x1} \{s.y1} L\{s.x2} \{s.y2}" }
+
+///|
+fn Paint::label(self : Paint, class : String, l : @layout.Label) -> @writer.Node {
+  let children = l.content.split("\n").to_array().mapi((i, line) => {
+    @writer.element("tspan", attrs=[("x", l.x.to_string()), ("y", (l.baseline + i * (l.size + 4)).to_string())], children=[@writer.text(line.to_owned())])
+  })
+  @writer.element("text", attrs=[("class", class), ("x", l.x.to_string()), ("y", l.baseline.to_string()),
+    ("text-anchor", "middle"), ("font-family", font_stack), ("font-size", l.size.to_string()),
+    ("font-weight", l.weight.to_string()), ("fill", self.ink(l.ink))], children~)
+}
+
+///|
+fn metadata(attrs : Array[(String, String)], link : @sequence.Link?, description : String?) -> Unit {
+  if link is Some(l) {
+    let scheme = match l.scheme { Smithy => "smithy"; OpenRpc => "openrpc" }
+    attrs.push(("data-link", "\{scheme}:\{l.target}"))
+  }
+  if description is Some(d) { attrs.push(("data-description", d)) }
+}
+
+///|
+fn head_name(h : @sequence.Head) -> String {
+  match h {
+    NoHead => "none"; Arrow => "arrow"; OpenArrow => "open"; Cross => "cross"; Async => "async"
+    HalfArrow(upper~, filled~) => "half-\{if upper { "upper" } else { "lower" }}-\{if filled { "filled" } else { "open" }}"
+    Central(h) => "central-\{head_name(h)}"
+  }
+}
+
+///|
+/// Markers point along the path; auto-start-reverse turns a sender head back.
+fn marker(id : String, head : @sequence.Head, stroke : String, reversed : Bool) -> @writer.Node {
+  let (d, filled) = match head {
+    Arrow => ("M-9,-4 L0,0 L-9,4 z", true)
+    OpenArrow => ("M-9,-4 L0,0 L-9,4", false)
+    Cross => ("M-4,-4 L4,4 M-4,4 L4,-4", false)
+    Async => ("M-9,-4 L0,0", false)
+    HalfArrow(upper~, filled~) => {
+      let upper = if reversed { !upper } else { upper }
+      ((if upper { "M-9,-4 L0,0" } else { "M-9,4 L0,0" }) + (if filled { " L-9,0 z" } else { "" }), filled)
+    }
+    Central(h) => return marker(id, h, stroke, reversed)
+    NoHead => ("", false)
+  }
+  @writer.element("marker", attrs=[("id", id), ("viewBox", "-10 -5 15 10"), ("refX", "0"), ("refY", "0"),
+    ("markerWidth", "15"), ("markerHeight", "10"), ("markerUnits", "userSpaceOnUse"), ("orient", "auto-start-reverse")], children=[
+    @writer.element("path", attrs=[("d", d), ("fill", if filled { stroke } else { "none" }), ("stroke", stroke), ("stroke-width", "1.4")]),
   ])
-}
-
-///|
-fn label(class : String, l : @layout.Label) -> @writer.Node {
-  @writer.element(
-    "text",
-    attrs=[
-      ("class", class),
-      ("x", num(l.x)),
-      ("y", num(l.baseline)),
-      ("text-anchor", "middle"),
-    ],
-    children=[@writer.text(l.content)],
-  )
 }
 
 ///|
@@ -101,153 +164,207 @@ fn description(s : @sequence.Sequence, m : Int) -> String {
 }
 
 ///|
-/// The adaptive SVG of `sequence`, and the legibility findings of its layout
-/// in the dark and light palettes of `theme`.
-fn paint(
-  sequence : @sequence.Sequence,
-  theme : @theme.Theme,
-) -> (String, Array[@diagrams.Diagnostic]) {
+fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode, id_prefix : String?) -> (String, Array[@diagrams.Diagnostic]) {
   let g = @layout.layout(sequence)
-  let used = []
+  let p = Paint::{ theme, mode }
+  let diagnostics : Array[@diagrams.Diagnostic] = []
+  let defs : Array[@writer.Node] = []
+  if mode == Adaptive { defs.push(@writer.element("style", children=[@writer.text(style_sheet(theme))])) }
+  let bg = p.color("bg")
+  let mask = p.color("mask")
+  let arrow = p.color("arrow")
+  let backgrounds : Array[@writer.Node] = []
+  let foregrounds : Array[@writer.Node] = []
+  // A theme-background mask makes every author tint independent of nesting.
+  fn band(class : String, box : @layout.Rect, colour : String?) -> Unit {
+    backgrounds.push(rect("band-mask", box, 6, bg))
+    let fill = match colour {
+      Some(raw) => match @theme.parse_color(raw) {
+        Some(c) => c.tint().to_css()
+        None => {
+          diagnostics.push(@diagrams.Diagnostic::warning("svg/invalid-colour", "Cannot read colour '\{raw}'; using the theme colour."))
+          p.color("external-fill")
+        }
+      }
+      None => p.color("external-fill")
+    }
+    backgrounds.push(rect(class, box, 6, fill, stroke=arrow))
+  }
+  for group in g.groups {
+    band("box-group", group.box, group.group.colour)
+    foregrounds.push(rect("mask", group.chip, 3, mask))
+    foregrounds.push(p.label("group-label", group.label))
+  }
+  for frame in g.frames {
+    band("frame", frame.box, frame.colour)
+    if frame.chip is Some(c) { foregrounds.push(rect("mask", c, 3, mask)) }
+    if frame.header is Some(l) { foregrounds.push(p.label("frame-label", l)) }
+    for section in frame.sections {
+      if section.divider is Some(s) { foregrounds.push(path("section-divider", segment(s), arrow, dash="4 4")) }
+      if section.chip is Some(c) { foregrounds.push(rect("mask", c, 3, mask)) }
+      if section.label is Some(l) { foregrounds.push(p.label("section-label", l)) }
+    }
+  }
+  let lifelines : Array[@writer.Node] = []
+  for participant in g.participants {
+    lifelines.push(path("lifeline", "M\{participant.lifeline_x} \{participant.lifeline_top} V\{participant.lifeline_bottom}", arrow, dash="3 7", width="0.8"))
+    if participant.destroyed {
+      let x = participant.lifeline_x
+      let y = participant.lifeline_bottom
+      foregrounds.push(path("destruction", "M\{x - 6} \{y - 6} L\{x + 6} \{y + 6} M\{x - 6} \{y + 6} L\{x + 6} \{y - 6}", p.color("security-stroke")))
+    }
+  }
+  let bars : Array[@writer.Node] = []
+  for a in g.activations {
+    let mut family : @theme.Family = Backend
+    for part in g.participants { if part.id == a.participant { family = part.family } }
+    bars.push(rect("activation-mask", a.box, 0, mask))
+    bars.push(rect("activation", a.box, 0, p.color("\{family.name()}-fill"), stroke=p.color("\{family.name()}-stroke")))
+  }
+  let messages : Array[@writer.Node] = []
   for m in g.messages {
-    if !used.contains(m.family) {
-      used.push(m.family)
+    let family = m.family
+    let stroke = if m.message.line == Dotted && family != Security { arrow } else { p.color("\{family.name()}-stroke") }
+    let attrs = [("class", "message f-\{family.name()}"), ("data-index", m.index.to_string()), ("data-from", m.sender), ("data-to", m.receiver),
+      ("data-sender-head", head_name(m.message.sender_head)), ("data-receiver-head", head_name(m.message.receiver_head))]
+    metadata(attrs, m.message.link, m.message.properties.bind(props => props.description))
+    let d = StringBuilder()
+    for i, s in m.path {
+      if i == 0 { d.write_string("M\{s.x1} \{s.y1}") }
+      d.write_string(" L\{s.x2} \{s.y2}")
+    }
+    let line_attrs = [("class", "m-line"), ("d", d.to_string()), ("fill", "none"), ("stroke", stroke), ("stroke-width", "1.4")]
+    if m.message.line == Dotted { line_attrs.push(("stroke-dasharray", "4 4")) }
+    for (end, head) in [("start", m.message.sender_head), ("end", m.message.receiver_head)] {
+      if head != NoHead && head != Central(NoHead) {
+        let id = "head-\{m.index}-\{end}"
+        let edge = if end == "start" { m.path[0] } else { m.path[m.path.length() - 1] }
+        let reversed = if end == "start" { edge.x2 > edge.x1 } else { edge.x2 < edge.x1 }
+        defs.push(marker(id, head, stroke, reversed))
+        line_attrs.push(("marker-\{end}", "url(#\{id})"))
+      }
+    }
+    let children = [@writer.element("path", attrs=line_attrs), rect("mask", m.chip, 3, mask), p.label("m-label", m.label)]
+    for (id, head, y) in [(m.sender, m.message.sender_head, m.y), (m.receiver, m.message.receiver_head, m.path[m.path.length() - 1].y2)] {
+      if head is Central(_) {
+        for part in g.participants {
+          if part.id == id { children.push(@writer.element("circle", attrs=[("class", "central-connection"), ("cx", part.lifeline_x.to_string()), ("cy", y.to_string()), ("r", "5"), ("fill", mask), ("stroke", stroke), ("stroke-width", "1.4")])) }
+        }
+      }
+    }
+    if m.sublabel is Some(l) { children.push(p.label("sublabel", l)) }
+    messages.push(@writer.element("g", attrs~, children~))
+  }
+  let notes : Array[@writer.Node] = []
+  for n in g.notes {
+    notes.push(rect("note-mask", n.box, 4, mask))
+    notes.push(rect("note", n.box, 4, p.color("external-fill"), stroke=p.color("external-stroke")))
+    notes.push(p.label("note-label", n.label))
+  }
+  let participants : Array[@writer.Node] = []
+  for part in g.participants {
+    let attrs = [("class", "participant f-\{part.family.name()}"), ("data-id", part.id)]
+    metadata(attrs, part.participant.link, part.participant.properties.bind(props => props.description))
+    let children = [rect("mask", part.box, 6, mask), rect("box", part.box, 6, p.color("\{part.family.name()}-fill"), stroke=p.color("\{part.family.name()}-stroke")), p.label("p-label", part.label)]
+    if part.sublabel is Some(l) { children.push(p.label("sublabel", l)) }
+    participants.push(@writer.element("g", attrs~, children~))
+  }
+  if g.title_box is Some(b) { foregrounds.push(rect("mask", b, 3, mask)) }
+  if g.title is Some(l) { foregrounds.push(p.label("diagram-title", l)) }
+  let root = @writer.element("svg", attrs=[("xmlns", "http://www.w3.org/2000/svg"), ("viewBox", "0 0 \{g.width} \{g.height}"),
+    ("width", g.width.to_string()), ("height", g.height.to_string()), ("role", "img"), ("data-diagram", "sequence")], children=[
+    @writer.element("title", children=[@writer.text(sequence.accessibility_title.unwrap_or(sequence.title.unwrap_or("Sequence diagram")))]),
+    @writer.element("desc", children=[@writer.text(sequence.accessibility_description.unwrap_or(description(sequence, g.messages.length())))]),
+    @writer.element("defs", children=defs),
+    rect("bg", { x: 0, y: 0, width: g.width, height: g.height }, 0, bg),
+    @writer.element("g", attrs=[("class", "bands")], children=backgrounds),
+    @writer.element("g", attrs=[("class", "lifelines")], children=lifelines),
+    @writer.element("g", attrs=[("class", "activations")], children=bars),
+    @writer.element("g", attrs=[("class", "messages")], children=messages),
+    @writer.element("g", attrs=[("class", "notes")], children=notes),
+    @writer.element("g", attrs=[("class", "participants")], children=participants),
+    @writer.element("g", attrs=[("class", "annotations")], children=foregrounds),
+  ])
+  let palettes = match mode { Adaptive => [("dark", theme.dark), ("light", theme.light)]; Fixed(Dark) => [("dark", theme.dark)]; Fixed(Light) => [("light", theme.light)] }
+  for (name, palette) in palettes {
+    for f in @layout.check(g, palette) { diagnostics.push(@diagrams.Diagnostic::warning("svg/legibility", "\{name}: \{f.message}")) }
+  }
+  let prefix = match id_prefix {
+    Some(value) => {
+      let encoded = StringBuilder()
+      for c in value { encoded.write_string("\{c.to_int().to_string(radix=16)}-") }
+      "seq-u-\{encoded.to_string()}"
+    }
+    None => {
+      // FNV-1a over UTF-16 units keeps IDs deterministic on every backend.
+      // Hash the complete unscoped output, including both palettes and mode.
+      let source = @writer.to_string(root)
+      let mut hash : UInt64 = 14695981039346656037
+      for i in 0..<source.length() {
+        hash = (hash ^ source.code_unit_at(i).to_int().to_uint64()) * 1099511628211
+      }
+      "seq-\{hash.to_string(radix=16)}-"
     }
   }
-  let markers = @theme.all_families
-    .iter()
-    .filter(f => used.contains(f))
-    .map(f => @writer.element(
-      "marker",
-      attrs=[
-        ("id", "head-\{f.name()}"),
-        ("viewBox", "0 0 10 7"),
-        ("refX", "9"),
-        ("refY", "3.5"),
-        ("markerWidth", "10"),
-        ("markerHeight", "7"),
-        ("markerUnits", "userSpaceOnUse"),
-        ("orient", "auto"),
-      ],
-      children=[
-        @writer.element("path", attrs=[
-          ("class", "m-head f-\{f.name()}"),
-          ("d", "M0,0 L10,3.5 L0,7 z"),
-        ]),
-      ],
-    ))
-    .to_array()
-  let defs = [@writer.element("style", children=[@writer.text(style_sheet(theme))])]
-  for m in markers {
-    defs.push(m)
-  }
-  let lifelines = g.participants
-    .map(p => @writer.element("path", attrs=[
-      ("class", "lifeline"),
-      ("d", "M\{p.lifeline_x} \{g.lifeline_top} V\{g.lifeline_bottom}"),
-    ]))
-    .iter()
-    .to_array()
-  let messages = g.messages
-    .map(m => @writer.element(
-      "g",
-      attrs=[
-        ("class", "message f-\{m.family.name()}"),
-        ("data-index", num(m.index)),
-        ("data-from", m.sender),
-        ("data-to", m.receiver),
-      ],
-      children=[
-        @writer.element("path", attrs=[
-          ("class", "m-line"),
-          ("d", "M\{m.x1} \{m.y} H\{m.x2}"),
-          ("marker-end", "url(#head-\{m.family.name()})"),
-        ]),
-        rect("mask", m.chip, 3),
-        label("m-label", m.label),
-      ],
-    ))
-    .iter()
-    .to_array()
-  let participants = g.participants
-    .map(p => @writer.element(
-      "g",
-      attrs=[("class", "participant f-\{p.family.name()}"), ("data-id", p.id)],
-      children=[rect("mask", p.box, 6), rect("box", p.box, 6), label("p-label", p.label)],
-    ))
-    .iter()
-    .to_array()
-  let root = @writer.element(
-    "svg",
-    attrs=[
-      ("xmlns", "http://www.w3.org/2000/svg"),
-      ("viewBox", "0 0 \{g.width} \{g.height}"),
-      ("width", num(g.width)),
-      ("height", num(g.height)),
-      ("role", "img"),
-      ("data-diagram", "sequence"),
-    ],
-    children=[
-      @writer.element("title", children=[
-        @writer.text(sequence.title.unwrap_or("Sequence diagram")),
-      ]),
-      @writer.element("desc", children=[@writer.text(description(sequence, g.messages.length()))]),
-      @writer.element("defs", children=defs),
-      @writer.element("rect", attrs=[
-        ("class", "bg"),
-        ("x", "0"),
-        ("y", "0"),
-        ("width", num(g.width)),
-        ("height", num(g.height)),
-      ]),
-      @writer.element("g", attrs=[("class", "lifelines")], children=lifelines),
-      @writer.element("g", attrs=[("class", "messages")], children=messages),
-      @writer.element("g", attrs=[("class", "participants")], children=participants),
-    ],
-  )
-  let diagnostics = []
-  for variant in [("dark", theme.dark), ("light", theme.light)] {
-    for f in @layout.check(g, variant.1) {
-      diagnostics.push(
-        @diagrams.Diagnostic::warning("svg/legibility", "\{variant.0}: \{f.message}"),
-      )
-    }
-  }
-  (@writer.to_string(root), diagnostics)
+  (@writer.to_string(scope_svg(root, prefix, theme)), diagnostics)
 }
 
 ///|
-/// The adaptive SVG of `sequence`.
-pub fn render_sequence(
-  sequence : @sequence.Sequence,
-  theme? : @theme.Theme = @theme.Theme::classic(),
-) -> String {
-  paint(sequence, theme).0
+/// Render one standalone SVG. Adaptive is the default; fixed selects a palette.
+pub fn render_sequence(sequence : @sequence.Sequence, theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String) -> String {
+  paint(sequence, theme, mode, id_prefix).0
 }
 
 ///|
-/// A renderer that writes one standalone SVG document. The SVG uses the dark
-/// theme by default and the light theme when the viewer prefers light.
-pub struct SvgRenderer {
-  theme : @theme.Theme
-}
+/// A renderer that writes one standalone SVG document.
+pub struct SvgRenderer { theme : @theme.Theme; mode : Mode; id_prefix : String? }
 
 ///|
-/// An SVG renderer with `theme`, which is archify's classic preset by default.
-pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic()) -> SvgRenderer {
-  { theme, }
-}
+pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String) -> SvgRenderer { { theme, mode, id_prefix } }
 
 ///|
-/// Render `diagram` as SVG. Legibility findings are warnings in the result.
 pub impl @render.Renderer for SvgRenderer with render(self, diagram) {
-  match diagram {
-    Sequence(s) => {
-      let (svg, diagnostics) = paint(s, self.theme)
-      @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
-    }
-  }
+  match diagram { Sequence(s) => {
+    let (svg, diagnostics) = paint(s, self.theme, self.mode, self.id_prefix)
+    @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
+  } }
 }
 
 ///|
 pub extend SvgRenderer with @render.Renderer::{render}
+
+///|
+pub extend Variant with Eq::{not_equal, equal}
+
+///|
+pub extend Variant with @debug.Debug::{to_repr}
+
+///|
+pub extend Mode with Eq::{not_equal, equal}
+
+///|
+pub extend Mode with @debug.Debug::{to_repr}
+
+///|
+/// Rewrite only generated identifiers and fragment references, never user text.
+/// Scope the stylesheet too, so adjacent SVGs can have different custom themes.
+fn scope_svg(node : @writer.Node, prefix : String, theme : @theme.Theme) -> @writer.Node {
+  match node {
+    Text(_) => node
+    Element(name, attributes, children) => {
+      let attrs = attributes.map(pair => {
+        let (key, value) = pair
+        let value = if key == "id" { prefix + value }
+          else if key == "marker-start" || key == "marker-end" {
+            "url(#\{prefix}\{value.view(start_offset=5, end_offset=value.length() - 1)})"
+          } else { value }
+        (key, value)
+      }).iter().to_array()
+      if name == "svg" { attrs.push(("id", prefix + "diagram")) }
+      let children = if name == "style" {
+        [@writer.text(style_sheet(theme, selector="svg#\{prefix}diagram"))]
+      } else { children.map(c => scope_svg(c, prefix, theme)).iter().to_array() }
+      @writer.element(name, attrs~, children~)
+    }
+  }
+}

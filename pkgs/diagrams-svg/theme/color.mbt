@@ -36,7 +36,9 @@ fn hex2(n : Int) -> String {
 ///|
 /// The opacity as a decimal number, for example `0.4` for 40 percent.
 fn opacity_text(percent : Int) -> String {
-  if percent >= 100 {
+  if percent <= 0 {
+    "0"
+  } else if percent >= 100 {
     "1"
   } else if percent % 10 == 0 {
     "0.\{percent / 10}"
@@ -91,3 +93,35 @@ pub fn contrast(a : Color, b : Color) -> Double {
   let (hi, lo) = if la > lb { (la, lb) } else { (lb, la) }
   (hi + 0.05) / (lo + 0.05)
 }
+
+///|
+/// Lower HSL lightness in 0.01 steps, retaining hue and saturation. Both the
+/// background and opaque chips must pass. Classic dark accents pass unchanged.
+pub fn text_shade(accent : Color, backgrounds : ArrayView[Color]) -> Color {
+  fn passes(c : Color) -> Bool { backgrounds.iter().all(bg => contrast(c, bg) >= 4.5) }
+  if passes(accent) { return accent }
+  let hi = max(accent.r, max(accent.g, accent.b)).to_double()
+  let lo = min(accent.r, min(accent.g, accent.b)).to_double()
+  let delta = hi - lo
+  let light = (hi + lo) / 2.0
+  let sat = if delta == 0.0 { 0.0 } else { delta / (255.0 - (2.0 * light - 255.0).abs()) }
+  for step in 1..=100 {
+    let l = if light > step.to_double() * 2.55 { light - step.to_double() * 2.55 } else { 0.0 }
+    let chroma = (255.0 - (2.0 * l - 255.0).abs()) * sat
+    let base = l - chroma / 2.0
+    let channel = (c : Int) => (base + (if delta == 0.0 { 0.0 } else { (c.to_double() - lo) / delta * chroma })).round().to_int()
+    let shade = Color::rgba(channel(accent.r), channel(accent.g), channel(accent.b), 100)
+    if passes(shade) { return shade }
+  }
+  Color::hex(0)
+}
+
+///|
+/// Author colours have 18 percent opacity, multiplied by any authored alpha.
+pub fn Color::tint(self : Color) -> Color { { ..self, alpha: (self.alpha * 18 + 50) / 100 } }
+
+///|
+fn max(a : Int, b : Int) -> Int { if a > b { a } else { b } }
+
+///|
+fn min(a : Int, b : Int) -> Int { if a < b { a } else { b } }

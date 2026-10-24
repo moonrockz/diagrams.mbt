@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 376" width="840" height="376" role="img" data-diagram="sequence" id="seq-c53594b78055f02f-diagram">
+  <title>Sequence diagram</title>
+  <desc>Sequence diagram with 4 participants (A, J, B, C) and 4 messages.</desc>
+  <defs>
+    <style>
+svg#seq-c53594b78055f02f-diagram {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+@media (prefers-color-scheme: light) {
+  svg#seq-c53594b78055f02f-diagram {
+    --bg: #f4f5f7;
+    --text: #111827;
+    --muted: #5b6474;
+    --mask: #ffffff;
+    --arrow: #64748b;
+    --frontend-fill: rgba(34, 211, 238, 0.15);
+    --frontend-stroke: #0891b2;
+    --frontend-ink: #077995;
+    --backend-fill: rgba(52, 211, 153, 0.18);
+    --backend-stroke: #059669;
+    --backend-ink: #047d58;
+    --database-fill: rgba(167, 139, 250, 0.2);
+    --database-stroke: #7c3aed;
+    --database-ink: #7c3aed;
+    --cloud-fill: rgba(251, 191, 36, 0.18);
+    --cloud-stroke: #d97706;
+    --cloud-ink: #a75c05;
+    --security-fill: rgba(251, 113, 133, 0.15);
+    --security-stroke: #e11d48;
+    --security-ink: #d81c45;
+    --messagebus-fill: rgba(251, 146, 60, 0.15);
+    --messagebus-stroke: #ea580c;
+    --messagebus-ink: #c3490a;
+    --external-fill: rgba(148, 163, 184, 0.18);
+    --external-stroke: #64748b;
+    --external-ink: #606f85;
+  }
+}
+svg#seq-c53594b78055f02f-diagram[data-theme="dark"] {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+svg#seq-c53594b78055f02f-diagram[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #111827;
+  --muted: #5b6474;
+  --mask: #ffffff;
+  --arrow: #64748b;
+  --frontend-fill: rgba(34, 211, 238, 0.15);
+  --frontend-stroke: #0891b2;
+  --frontend-ink: #077995;
+  --backend-fill: rgba(52, 211, 153, 0.18);
+  --backend-stroke: #059669;
+  --backend-ink: #047d58;
+  --database-fill: rgba(167, 139, 250, 0.2);
+  --database-stroke: #7c3aed;
+  --database-ink: #7c3aed;
+  --cloud-fill: rgba(251, 191, 36, 0.18);
+  --cloud-stroke: #d97706;
+  --cloud-ink: #a75c05;
+  --security-fill: rgba(251, 113, 133, 0.15);
+  --security-stroke: #e11d48;
+  --security-ink: #d81c45;
+  --messagebus-fill: rgba(251, 146, 60, 0.15);
+  --messagebus-stroke: #ea580c;
+  --messagebus-ink: #c3490a;
+  --external-fill: rgba(148, 163, 184, 0.18);
+  --external-stroke: #64748b;
+  --external-ink: #606f85;
+}
+</style>
+    <marker id="seq-c53594b78055f02f-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-c53594b78055f02f-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--backend-stroke)" stroke="var(--backend-stroke)" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-c53594b78055f02f-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-c53594b78055f02f-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--database-stroke)" stroke="var(--database-stroke)" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="840" height="376" rx="0" fill="var(--bg)"/>
+  <g class="bands">
+    <rect class="band-mask" x="34" y="24" width="369" height="332" rx="6" fill="var(--bg)"/>
+    <rect class="box-group" x="34" y="24" width="369" height="332" rx="6" fill="rgba(128, 0, 128, 0.18)" stroke="var(--arrow)" stroke-width="1.5"/>
+    <rect class="band-mask" x="431" y="24" width="375" height="332" rx="6" fill="var(--bg)"/>
+    <rect class="box-group" x="431" y="24" width="375" height="332" rx="6" fill="var(--external-fill)" stroke="var(--arrow)" stroke-width="1.5"/>
+  </g>
+  <g class="lifelines">
+    <path class="lifeline" d="M98 112 V344" fill="none" stroke="var(--arrow)" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M339 112 V344" fill="none" stroke="var(--arrow)" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M495 112 V344" fill="none" stroke="var(--arrow)" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M742 112 V344" fill="none" stroke="var(--arrow)" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations"/>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="A" data-to="J" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M105 167 L332 167" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-c53594b78055f02f-head-0-end)"/>
+      <rect class="mask" x="129" y="140" width="179" height="23" rx="3" fill="var(--mask)"/>
+      <text class="m-label" x="218" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
+        <tspan x="218" y="155">Hello John, how are you?</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="J" data-to="A" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M332 215 L105 215" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-c53594b78055f02f-head-1-end)"/>
+      <rect class="mask" x="190" y="188" width="57" height="23" rx="3" fill="var(--mask)"/>
+      <text class="m-label" x="218" y="203" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="218" y="203">Great!</tspan>
+      </text>
+    </g>
+    <g class="message f-frontend" data-index="2" data-from="A" data-to="B" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M105 263 L488 263" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-c53594b78055f02f-head-2-end)"/>
+      <rect class="mask" x="200" y="236" width="193" height="23" rx="3" fill="var(--mask)"/>
+      <text class="m-label" x="296" y="251" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
+        <tspan x="296" y="251">Hello Bob, how is Charley?</tspan>
+      </text>
+    </g>
+    <g class="message f-database" data-index="3" data-from="B" data-to="C" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M502 311 L735 311" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-end="url(#seq-c53594b78055f02f-head-3-end)"/>
+      <rect class="mask" x="519" y="284" width="199" height="23" rx="3" fill="var(--mask)"/>
+      <text class="m-label" x="618" y="299" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
+        <tspan x="618" y="299">Hello Charley, how are you?</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="A">
+      <rect class="mask" x="50" y="64" width="96" height="48" rx="6" fill="var(--mask)"/>
+      <rect class="box" x="50" y="64" width="96" height="48" rx="6" fill="var(--frontend-fill)" stroke="var(--frontend-stroke)" stroke-width="1.5"/>
+      <text class="p-label" x="98" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+        <tspan x="98" y="92">A</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="J">
+      <rect class="mask" x="291" y="64" width="96" height="48" rx="6" fill="var(--mask)"/>
+      <rect class="box" x="291" y="64" width="96" height="48" rx="6" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="p-label" x="339" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+        <tspan x="339" y="92">J</tspan>
+      </text>
+    </g>
+    <g class="participant f-database" data-id="B">
+      <rect class="mask" x="447" y="64" width="96" height="48" rx="6" fill="var(--mask)"/>
+      <rect class="box" x="447" y="64" width="96" height="48" rx="6" fill="var(--database-fill)" stroke="var(--database-stroke)" stroke-width="1.5"/>
+      <text class="p-label" x="495" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+        <tspan x="495" y="92">B</tspan>
+      </text>
+    </g>
+    <g class="participant f-cloud" data-id="C">
+      <rect class="mask" x="694" y="64" width="96" height="48" rx="6" fill="var(--mask)"/>
+      <rect class="box" x="694" y="64" width="96" height="48" rx="6" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
+      <text class="p-label" x="742" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+        <tspan x="742" y="92">C</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations">
+    <rect class="mask" x="113" y="28" width="105" height="24" rx="3" fill="var(--mask)"/>
+    <text class="group-label" x="165" y="44" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+      <tspan x="165" y="44">Alice &amp; John</tspan>
+    </text>
+    <rect class="mask" x="510" y="28" width="113" height="24" rx="3" fill="var(--mask)"/>
+    <text class="group-label" x="566" y="44" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="var(--text)">
+      <tspan x="566" y="44">Another Group</tspan>
+    </text>
+  </g>
+</svg>

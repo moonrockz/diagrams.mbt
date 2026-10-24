@@ -17,6 +17,10 @@ pub fn luminance(Color) -> Double
 
 pub fn over(Color, Color) -> Color
 
+pub fn parse_color(String) -> Color?
+
+pub fn text_shade(Color, ArrayView[Color]) -> Color
+
 // Errors
 
 // Types and methods
@@ -30,6 +34,7 @@ pub fn Color::equal(Self, Self) -> Bool
 pub fn Color::hex(Int32) -> Self
 pub fn Color::not_equal(Self, Self) -> Bool
 pub fn Color::rgba(Int32, Int32, Int32, Int32) -> Self
+pub fn Color::tint(Self) -> Self
 pub fn Color::to_css(Self) -> String
 pub fn Color::to_repr(Self) -> @debug.Repr
 
