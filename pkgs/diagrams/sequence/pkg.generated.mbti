@@ -3,23 +3,79 @@ package "moonrockz/diagrams/sequence"
 
 import {
   "moonbitlang/core/debug",
+  "moonrockz/diagrams",
 }
 
 // Values
+pub fn[S : LinkSource] resolve(Sequence, S) -> Resolution
 
 // Errors
 
 // Types and methods
+pub(all) enum Autonumber {
+  On(start~ : Double?, step~ : Double?)
+  Off
+} derive(Eq, @debug.Debug)
+pub fn Autonumber::equal(Self, Self) -> Bool
+pub fn Autonumber::not_equal(Self, Self) -> Bool
+pub fn Autonumber::to_repr(Self) -> @debug.Repr
+
+pub struct BoxGroup {
+  id : String
+  label : String
+  colour : String?
+} derive(Eq, @debug.Debug)
+pub fn BoxGroup::equal(Self, Self) -> Bool
+pub fn BoxGroup::new(String, String, colour? : String) -> Self
+pub fn BoxGroup::not_equal(Self, Self) -> Bool
+pub fn BoxGroup::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Event {
   Message(Message)
+  Note(Note)
+  Activate(String)
+  Deactivate(String)
+  Create(String)
+  Destroy(String)
+  Frame(Frame)
+  Autonumber(Autonumber)
 } derive(Eq, @debug.Debug)
 pub fn Event::equal(Self, Self) -> Bool
 pub fn Event::not_equal(Self, Self) -> Bool
 pub fn Event::to_repr(Self) -> @debug.Repr
 
+pub struct Frame {
+  kind : FrameKind
+  sections : ReadOnlyArray[Section]
+  colour : String?
+} derive(Eq, @debug.Debug)
+pub fn Frame::equal(Self, Self) -> Bool
+pub fn Frame::new(FrameKind, Section, rest? : ArrayView[Section], colour? : String) -> Self
+pub fn Frame::not_equal(Self, Self) -> Bool
+pub fn Frame::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FrameKind {
+  Loop
+  Alt
+  Opt
+  Par
+  ParOver
+  Critical
+  Break
+  Rect
+} derive(Eq, @debug.Debug)
+pub fn FrameKind::equal(Self, Self) -> Bool
+pub fn FrameKind::not_equal(Self, Self) -> Bool
+pub fn FrameKind::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Head {
   NoHead
   Arrow
+  OpenArrow
+  Cross
+  Async
+  HalfArrow(upper~ : Bool, filled~ : Bool)
+  Central(Head)
 } derive(Eq, @debug.Debug)
 pub fn Head::equal(Self, Self) -> Bool
 pub fn Head::not_equal(Self, Self) -> Bool
@@ -33,6 +89,23 @@ pub fn LineStyle::equal(Self, Self) -> Bool
 pub fn LineStyle::not_equal(Self, Self) -> Bool
 pub fn LineStyle::to_repr(Self) -> @debug.Repr
 
+pub struct Link {
+  scheme : LinkScheme
+  target : String
+} derive(Eq, @debug.Debug)
+pub fn Link::equal(Self, Self) -> Bool
+pub fn Link::new(LinkScheme, String) -> Self
+pub fn Link::not_equal(Self, Self) -> Bool
+pub fn Link::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LinkScheme {
+  Smithy
+  OpenRpc
+} derive(Eq, @debug.Debug)
+pub fn LinkScheme::equal(Self, Self) -> Bool
+pub fn LinkScheme::not_equal(Self, Self) -> Bool
+pub fn LinkScheme::to_repr(Self) -> @debug.Repr
+
 pub struct Message {
   sender : String
   receiver : String
@@ -40,21 +113,49 @@ pub struct Message {
   sender_head : Head
   receiver_head : Head
   label : String
+  link : Link?
+  properties : MessageProperties?
+  number : Double?
 } derive(Eq, @debug.Debug)
 pub fn Message::equal(Self, Self) -> Bool
-pub fn Message::new(String, String, String, line? : LineStyle, sender_head? : Head, receiver_head? : Head) -> Self
+pub fn Message::new(String, String, String, line? : LineStyle, sender_head? : Head, receiver_head? : Head, link? : Link, properties? : MessageProperties, number? : Double) -> Self
 pub fn Message::not_equal(Self, Self) -> Bool
 pub fn Message::to_repr(Self) -> @debug.Repr
+pub fn Message::with_properties(Self, MessageProperties) -> Self
+
+pub struct MessageProperties {
+  sublabel : String?
+  description : String?
+} derive(Eq, @debug.Debug)
+pub fn MessageProperties::equal(Self, Self) -> Bool
+pub fn MessageProperties::new(sublabel? : String, description? : String) -> Self
+pub fn MessageProperties::not_equal(Self, Self) -> Bool
+pub fn MessageProperties::to_repr(Self) -> @debug.Repr
+
+pub struct Note {
+  placement : Placement
+  participants : ReadOnlyArray[String]
+  text : String
+} derive(Eq, @debug.Debug)
+pub fn Note::equal(Self, Self) -> Bool
+pub fn Note::new(Placement, ArrayView[String], String) -> Self
+pub fn Note::not_equal(Self, Self) -> Bool
+pub fn Note::to_repr(Self) -> @debug.Repr
 
 pub struct Participant {
   id : String
   label : String
   kind : ParticipantKind
+  group : BoxGroup?
+  link : Link?
+  properties : ParticipantProperties?
 } derive(Eq, @debug.Debug)
 pub fn Participant::equal(Self, Self) -> Bool
-pub fn Participant::new(String, label? : String, kind? : ParticipantKind) -> Self
+pub fn Participant::new(String, label? : String, kind? : ParticipantKind, group? : BoxGroup, link? : Link, properties? : ParticipantProperties) -> Self
 pub fn Participant::not_equal(Self, Self) -> Bool
+pub fn Participant::render_kind(Self) -> ParticipantKind
 pub fn Participant::to_repr(Self) -> @debug.Repr
+pub fn Participant::with_properties(Self, ParticipantProperties) -> Self
 
 pub(all) enum ParticipantKind {
   Participant
@@ -73,13 +174,48 @@ pub fn ParticipantKind::equal(Self, Self) -> Bool
 pub fn ParticipantKind::not_equal(Self, Self) -> Bool
 pub fn ParticipantKind::to_repr(Self) -> @debug.Repr
 
+pub struct ParticipantProperties {
+  kind : ParticipantKind?
+  sublabel : String?
+  description : String?
+} derive(Eq, @debug.Debug)
+pub fn ParticipantProperties::equal(Self, Self) -> Bool
+pub fn ParticipantProperties::new(kind? : ParticipantKind, sublabel? : String, description? : String) -> Self
+pub fn ParticipantProperties::not_equal(Self, Self) -> Bool
+pub fn ParticipantProperties::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Placement {
+  LeftOf
+  RightOf
+  Over
+} derive(Eq, @debug.Debug)
+pub fn Placement::equal(Self, Self) -> Bool
+pub fn Placement::not_equal(Self, Self) -> Bool
+pub fn Placement::to_repr(Self) -> @debug.Repr
+
+pub struct Resolution {
+  sequence : Sequence
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Section {
+  label : String?
+  events : ReadOnlyArray[Event]
+} derive(Eq, @debug.Debug)
+pub fn Section::equal(Self, Self) -> Bool
+pub fn Section::new(ArrayView[Event], label? : String) -> Self
+pub fn Section::not_equal(Self, Self) -> Bool
+pub fn Section::to_repr(Self) -> @debug.Repr
+
 pub struct Sequence {
   participants : ReadOnlyArray[Participant]
   events : ReadOnlyArray[Event]
   title : String?
+  accessibility_title : String?
+  accessibility_description : String?
 } derive(Eq, @debug.Debug)
 pub fn Sequence::equal(Self, Self) -> Bool
-pub fn Sequence::new(ArrayView[Participant], ArrayView[Event], title? : String) -> Self
+pub fn Sequence::new(ArrayView[Participant], ArrayView[Event], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
 pub fn Sequence::not_equal(Self, Self) -> Bool
 pub fn Sequence::participant(Self, String) -> Participant?
 pub fn Sequence::to_repr(Self) -> @debug.Repr
@@ -87,3 +223,7 @@ pub fn Sequence::to_repr(Self) -> @debug.Repr
 // Type aliases
 
 // Traits
+pub(open) trait LinkSource {
+  fn participant(Self, Link) -> ParticipantProperties?
+  fn message(Self, Link) -> MessageProperties?
+}

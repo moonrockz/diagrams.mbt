@@ -9,9 +9,9 @@ The reader follows the sequence diagram grammar of Mermaid 12.2.0. The syntax
 tree has every statement, every arrow, comments, directives and front matter.
 It reads each sequence example of the Mermaid 12.2.0 documentation without a
 diagnostic. The typed AST has every statement, with frames and boxes as nested
-values. Today the conversion to the model reads participants, actors and
-messages; the other statements come in the next part of the OpenSpec change
-`add-mermaid-sequence`.
+values. Conversion keeps all sequence events, nested frames and sections,
+participant kinds and boxes, title and accessibility fields, and numbering
+changes. It also adds links and reports semantic problems with source spans.
 
 These rules of Mermaid apply:
 
@@ -136,7 +136,82 @@ test {
 }
 ```
 
+## Sequence model and semantics
+
+Conversion adds undeclared participants at their first use. Participant metadata
+accepts JSON and YAML scalar `type` and `alias` fields. An explicit `as` label
+wins over the metadata alias. The types are `participant`, `actor`, `boundary`,
+`control`, `entity`, `database`, `collections`, `queue`, `service`, `resource`
+and `client`. A box has a stable ID within one conversion, its label and its
+optional leading CSS colour. Boxes with equal labels remain distinct groups.
+
+Each arrow has a solid or dotted line and independent heads at its sender and
+receiver. Heads include filled, open, cross, async, filled and unfilled half
+arrows, and central connections. `par_over` remains a distinct frame kind.
+A `rect` frame stores its colour separately from section labels.
+
+`A->>+B` starts an activation on `B` after the message; `B-->>-A` ends an
+activation on `B` after the reply. Activations can nest. Creation is an event
+before its message. A `destroy B` statement waits for the next message, which
+must involve `B`, then adds the destruction event after that message. Events
+that use `B` after its destruction give a diagnostic.
+
+Autonumber changes remain in event order, including inside frames. Each message
+has its visible number or `None`. The counter advances even while numbers are
+hidden. Turning numbering on without a start or step resumes the counter and
+step. Nonzero explicit values replace them. The counter rounds to two decimal
+places after each message, as Mermaid does.
+
+Conversion has a separate code list, `conversion_diagnostic_codes`:
+
+| Code | Meaning |
+| --- | --- |
+| `mermaid/inactive-deactivation` | The participant has no active activation. |
+| `mermaid/destroyed-participant` | A statement uses a destroyed participant. |
+| `mermaid/conflicting-participant-kind` | A declaration changes an already declared kind. |
+| `mermaid/invalid-participant-config` | A configuration has invalid fields or an unknown kind. |
+| `mermaid/missing-destroying-message` | A destroy statement has no associated next message involving its participant. |
+| `mermaid/invalid-links` | A `links` value is not a JSON object. |
+| `mermaid/conflicting-box-group` | A participant is declared in two different boxes. |
+| `mermaid/duplicate-creation` | A create statement names an existing participant. |
+
+## Links
+
+A known URL scheme in `link` or `links` attaches a model link to the participant.
+The schemes are `smithy:` and `openrpc:`. Other URLs stay in the AST. A `links`
+object selects its first URL with a known scheme in source order; later link
+statements can replace that selection.
+
+Smithy IDs use `/` in Mermaid, because `#` starts a comment. A participant link
+such as `smithy:example.weather/Weather` becomes the canonical target
+`example.weather#Weather`. A whole message label such as
+`example.weather/GetForecast` also becomes a Smithy link. The label stays as
+written. Message labels require at least two namespace identifiers, so
+`read/write` stays plain text. Names follow the
+[Smithy 2.0 shape ID grammar](https://smithy.io/2.0/spec/model.html#shape-id-abnf),
+including an optional `$member`. An `openrpc:` URL stays an opaque target;
+message labels do not infer OpenRPC links.
+
+```mbt check
+///|
+test {
+  let source = "sequenceDiagram\nparticipant W\nlink W: shape @ smithy:example.weather/Weather\nC->>W: example.weather/GetForecast\n"
+  let converted = @mermaid.to_sequence(@mermaid.read(source).ast.unwrap())
+  assert_eq(converted.diagnostics.length(), 0)
+  assert_eq(converted.sequence.participant("W").unwrap().link.unwrap().target, "example.weather#Weather")
+}
+```
+
+The independent fixtures for the 38 frozen examples come from
+`moonbit-community/mermaid@0.2.0`. Refresh them with `mise run corpus:reference`.
+Normal tests read the committed JSON and compare participant order, labels,
+kinds, messages, arrow forms, central connections and nested frame boundaries.
+
 ## Render as SVG
+
+The current SVG renderer draws participant boxes and message lines, including
+messages nested in frames. Full event layout and styling are the next task
+groups of `add-mermaid-sequence`.
 
 ```mbt check
 ///|

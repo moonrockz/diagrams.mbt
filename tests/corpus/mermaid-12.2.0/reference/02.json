@@ -1,0 +1,165 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "b46ca8f030ae22c724720f00d238e528d416593c51d52a6e4f22d99b99f93b2d",
+  "model": {
+    "actors": [
+      {
+        "id": "Customer",
+        "name": "Customer",
+        "description": "Customer",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "Web",
+        "type": "actor",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Web",
+        "name": "Web",
+        "description": "Web app",
+        "wrap": false,
+        "prevActor": "Customer",
+        "nextActor": "API",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "API",
+        "name": "API",
+        "description": "API gateway",
+        "wrap": false,
+        "prevActor": "Web",
+        "nextActor": "Bank",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Bank",
+        "name": "Bank",
+        "description": "Bank",
+        "wrap": false,
+        "prevActor": "API",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 26,
+        "message": {
+          "start": null,
+          "step": null,
+          "visible": true
+        }
+      },
+      {
+        "id": "1",
+        "from": "Customer",
+        "to": "Web",
+        "wrap": false,
+        "type": 0,
+        "message": "Place order",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": "Web",
+        "to": "API",
+        "wrap": false,
+        "type": 0,
+        "message": "POST /orders",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "API",
+        "to": null,
+        "wrap": false,
+        "type": 17,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": "API",
+        "to": "Bank",
+        "wrap": false,
+        "type": 0,
+        "message": "Authorise payment",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "Bank",
+        "to": "API",
+        "wrap": false,
+        "type": 1,
+        "message": "Approved",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "6",
+        "from": "API",
+        "to": "Web",
+        "wrap": false,
+        "type": 1,
+        "message": "201 Created",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "7",
+        "from": "API",
+        "to": null,
+        "wrap": false,
+        "type": 18,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "8",
+        "from": "Web",
+        "to": "Customer",
+        "wrap": false,
+        "type": 1,
+        "message": "Order confirmed",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "9",
+        "from": "Customer",
+        "to": "Bank",
+        "wrap": false,
+        "type": 2,
+        "message": "One order, one transaction",
+        "placement": 2
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

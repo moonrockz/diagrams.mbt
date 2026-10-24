@@ -1,0 +1,110 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "201a0912328e98f240b39c1412adc00d0bf51c483304d8078d4d8552dac24083",
+  "model": {
+    "actors": [
+      {
+        "id": "Service",
+        "name": "Service",
+        "description": "Service",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "DB",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "DB",
+        "name": "DB",
+        "description": "DB",
+        "wrap": false,
+        "prevActor": "Service",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 27,
+        "message": "Establish a connection to the DB",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "Service",
+        "to": "DB",
+        "wrap": false,
+        "type": 6,
+        "message": "connect",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 28,
+        "message": "Network timeout",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "Service",
+        "to": "Service",
+        "wrap": false,
+        "type": 6,
+        "message": "Log error",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 28,
+        "message": "Credentials rejected",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "Service",
+        "to": "Service",
+        "wrap": false,
+        "type": 6,
+        "message": "Log different error",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "6",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 29,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

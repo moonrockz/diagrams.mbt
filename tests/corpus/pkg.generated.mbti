@@ -8,6 +8,8 @@ import {
 // Values
 pub let mermaid_12_2_0 : ReadOnlyArray[Example]
 
+pub let sequence_references : ReadOnlyArray[(String, String)]
+
 // Errors
 
 // Types and methods

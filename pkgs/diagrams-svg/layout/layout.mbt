@@ -117,11 +117,16 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
     found
   }
   let messages = []
-  for e in sequence.events {
-    match e {
-      Message(m) => messages.push(m)
+  fn collect(events : ReadOnlyArray[@sequence.Event]) -> Unit {
+    for e in events {
+      match e {
+        Message(m) => messages.push(m)
+        Frame(f) => for s in f.sections { collect(s.events) }
+        _ => ()
+      }
     }
   }
+  collect(sequence.events)
   for m in messages {
     let a = index_of(m.sender)
     let b = index_of(m.receiver)

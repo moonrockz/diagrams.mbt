@@ -1,0 +1,176 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "af802c7e61fb411636f36a09caed92ea597c51fcae3f79976682ca3391962f3c",
+  "model": {
+    "actors": [
+      {
+        "id": "Alice",
+        "name": "Alice",
+        "description": "Alice",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "Bob",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Bob",
+        "name": "Bob",
+        "description": "Bob",
+        "wrap": false,
+        "prevActor": "Alice",
+        "nextActor": "John",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "John",
+        "name": "John",
+        "description": "John",
+        "wrap": false,
+        "prevActor": "Bob",
+        "nextActor": "Charlie",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Charlie",
+        "name": "Charlie",
+        "description": "Charlie",
+        "wrap": false,
+        "prevActor": "John",
+        "nextActor": "Diana",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "Diana",
+        "name": "Diana",
+        "description": "Diana",
+        "wrap": false,
+        "prevActor": "Charlie",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 19,
+        "message": "Alice to Bob",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "Alice",
+        "to": "Bob",
+        "wrap": false,
+        "type": 0,
+        "message": "Go help John",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "2",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 20,
+        "message": "Alice to John",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "3",
+        "from": "Alice",
+        "to": "John",
+        "wrap": false,
+        "type": 0,
+        "message": "I want this done today",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "4",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 19,
+        "message": "John to Charlie",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "5",
+        "from": "John",
+        "to": "Charlie",
+        "wrap": false,
+        "type": 0,
+        "message": "Can we do this today?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "6",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 20,
+        "message": "John to Diana",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "7",
+        "from": "John",
+        "to": "Diana",
+        "wrap": false,
+        "type": 0,
+        "message": "Can you help us today?",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "8",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 21,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "9",
+        "from": null,
+        "to": null,
+        "wrap": false,
+        "type": 21,
+        "message": "",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

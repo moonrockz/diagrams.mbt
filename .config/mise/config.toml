@@ -134,6 +134,10 @@ run = "moonx scripts/corpus.mbtx check"
 description = "Write tests/corpus/examples.generated.mbt from the frozen Mermaid corpus"
 run = "moonx scripts/corpus.mbtx generate"
 
+[tasks."corpus:reference"]
+description = "Refresh sequence reference fixtures with moonbit-community/mermaid@0.2.0"
+run = "moonx scripts/sequence-fixtures.mbtx"
+
 [tasks."test:native-zig"]
 description = "Run native tests with zig as the C compiler"
 run = "moonx moonrockz/zig-cross@0.1.2 exec host -- moonx scripts/test.mbtx native"

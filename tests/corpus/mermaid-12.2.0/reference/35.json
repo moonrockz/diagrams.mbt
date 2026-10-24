@@ -1,0 +1,60 @@
+{
+  "reference": "moonbit-community/mermaid@0.2.0",
+  "source_sha256": "942c34f9cb6c3d14f51620085702449a986e34569759d1723ff02b6daec278c3",
+  "model": {
+    "actors": [
+      {
+        "id": "A",
+        "name": "A",
+        "description": "A",
+        "wrap": false,
+        "prevActor": null,
+        "nextActor": "B",
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      },
+      {
+        "id": "B",
+        "name": "B",
+        "description": "B",
+        "wrap": false,
+        "prevActor": "A",
+        "nextActor": null,
+        "type": "participant",
+        "box": null,
+        "links": {},
+        "properties": {}
+      }
+    ],
+    "messages": [
+      {
+        "id": "0",
+        "from": "A",
+        "to": "B",
+        "wrap": false,
+        "type": 0,
+        "message": "I #9829; you!",
+        "activate": false,
+        "centralConnection": 0
+      },
+      {
+        "id": "1",
+        "from": "B",
+        "to": "A",
+        "wrap": false,
+        "type": 0,
+        "message": "I #9829; you #infin; times more!",
+        "activate": false,
+        "centralConnection": 0
+      }
+    ],
+    "boxes": [],
+    "createdActors": {},
+    "destroyedActors": {},
+    "title": "",
+    "accTitle": "",
+    "accDescription": ""
+  }
+}

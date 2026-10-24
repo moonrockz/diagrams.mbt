@@ -10,6 +10,8 @@ import {
 }
 
 // Values
+pub let conversion_diagnostic_codes : ReadOnlyArray[String]
+
 pub let diagnostic_codes : ReadOnlyArray[String]
 
 pub fn print(@ast.Diagram) -> String

@@ -7,6 +7,8 @@ import {
 }
 
 // Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
 pub fn to_sequence(@ast.Diagram) -> Conversion
 
 // Errors

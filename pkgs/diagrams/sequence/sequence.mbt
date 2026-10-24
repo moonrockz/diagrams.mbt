@@ -26,6 +26,9 @@ pub struct Participant {
   id : String
   label : String
   kind : ParticipantKind
+  group : BoxGroup?
+  link : Link?
+  properties : ParticipantProperties?
 } derive(Eq, Debug)
 
 ///|
@@ -40,8 +43,11 @@ pub fn Participant::new(
   id : String,
   label? : String,
   kind? : ParticipantKind = Participant,
+  group? : BoxGroup,
+  link? : Link,
+  properties? : ParticipantProperties,
 ) -> Participant {
-  { id, label: label.unwrap_or(id), kind }
+  { id, label: label.unwrap_or(id), kind, group, link, properties }
 }
 
 ///|
@@ -62,6 +68,11 @@ pub extend LineStyle with @debug.Debug::{to_repr}
 pub(all) enum Head {
   NoHead
   Arrow
+  OpenArrow
+  Cross
+  Async
+  HalfArrow(upper~ : Bool, filled~ : Bool)
+  Central(Head)
 } derive(Eq, Debug)
 
 ///|
@@ -79,6 +90,9 @@ pub struct Message {
   sender_head : Head
   receiver_head : Head
   label : String
+  link : Link?
+  properties : MessageProperties?
+  number : Double?
 } derive(Eq, Debug)
 
 ///|
@@ -96,14 +110,24 @@ pub fn Message::new(
   line? : LineStyle = Solid,
   sender_head? : Head = NoHead,
   receiver_head? : Head = Arrow,
+  link? : Link,
+  properties? : MessageProperties,
+  number? : Double,
 ) -> Message {
-  { sender, receiver, line, sender_head, receiver_head, label }
+  { sender, receiver, line, sender_head, receiver_head, label, link, properties, number }
 }
 
 ///|
 /// One event of a sequence, in diagram order.
 pub(all) enum Event {
   Message(Message)
+  Note(Note)
+  Activate(String)
+  Deactivate(String)
+  Create(String)
+  Destroy(String)
+  Frame(Frame)
+  Autonumber(Autonumber)
 } derive(Eq, Debug)
 
 ///|
@@ -118,6 +142,8 @@ pub struct Sequence {
   participants : ReadOnlyArray[Participant]
   events : ReadOnlyArray[Event]
   title : String?
+  accessibility_title : String?
+  accessibility_description : String?
 } derive(Eq, Debug)
 
 ///|
@@ -133,11 +159,15 @@ pub fn Sequence::new(
   participants : ArrayView[Participant],
   events : ArrayView[Event],
   title? : String,
+  accessibility_title? : String,
+  accessibility_description? : String,
 ) -> Sequence {
   {
     participants: ReadOnlyArray::from_array(participants),
     events: ReadOnlyArray::from_array(events),
     title,
+    accessibility_title,
+    accessibility_description,
   }
 }
 

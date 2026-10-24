@@ -232,3 +232,14 @@ test "the SVG of a simple sequence" {
     #|
   ))
 }
+
+///|
+test "the description counts messages rather than other events" {
+  let s = @sequence.Sequence::new(
+    [@sequence.Participant::new("A"), @sequence.Participant::new("B")],
+    [Activate("A"), Frame(@sequence.Frame::new(Loop, @sequence.Section::new([
+      Message(@sequence.Message::new("A", "B", "hello")),
+    ]))), Deactivate("A")],
+  )
+  assert_true(svg_of(s).contains("and 1 message.</desc>"))
+}
