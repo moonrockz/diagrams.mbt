@@ -81,6 +81,9 @@ dist/
 
 _site/
 
+# Sequence corpus gallery (mise run gallery)
+_gallery/
+
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db

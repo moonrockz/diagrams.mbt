@@ -8,6 +8,7 @@ const origin = process.env.SITE_ORIGIN ?? 'http://127.0.0.1:4174';
 const base = process.env.SITE_BASE ?? '/diagrams.mbt/';
 const site = `${origin}${base}`;
 const overview = `${site}docs/design/overview/`;
+const sequenceGuide = `${site}docs/guides/mermaid-sequence/`;
 const failures: string[] = [];
 const check = (ok: boolean, message: string) => {
   if (!ok) failures.push(message);
@@ -89,13 +90,22 @@ try {
   );
   await page.evaluate(() => localStorage.removeItem('site-theme'));
 
-  // The Design overview: the status banner and a diagram.
+  // The implemented design overview and the rendered sequence guide.
   await page.goto(overview);
   check(
-    (await page.locator('.status-banner').textContent())?.trim() === 'Proposed — not implemented',
-    'the Design overview shows the "Proposed — not implemented" banner',
+    (await page.locator('.status-banner').count()) === 0,
+    'the implemented Design overview has no proposed-status banner',
   );
   check((await page.locator('figure.diagram svg').count()) > 0, 'the Design overview has a diagram as an SVG');
+  await page.goto(sequenceGuide);
+  const example = page.locator('.docs-article img[src$="sequence.svg"]');
+  check((await example.count()) === 1, 'the sequence guide has its rendered SVG example');
+  if ((await example.count()) === 1) {
+    check(
+      await example.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0),
+      'the rendered sequence example loads',
+    );
+  }
 
   // The feed.
   const feed = await page.request.get(`${site}articles/atom.xml`);
@@ -109,7 +119,7 @@ try {
   // No horizontal scroll on a phone.
   const phone = await browser.newPage({ viewport: { width: 390, height: 844 } });
   phone.on('pageerror', (e) => errors.push(`${phone.url()}: ${e.message}`));
-  for (const path of ['', 'docs/design/overview/']) {
+  for (const path of ['', 'docs/design/overview/', 'docs/guides/mermaid-sequence/']) {
     await phone.goto(`${site}${path}`);
     check(
       await phone.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
@@ -122,10 +132,10 @@ try {
   const copyContext = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
   const copyPage = await copyContext.newPage();
   copyPage.on('pageerror', (e) => errors.push(`${copyPage.url()}: ${e.message}`));
-  await copyPage.goto(overview);
+  await copyPage.goto(sequenceGuide);
   const block = copyPage.locator('.prose .code-block').first();
   const copy = block.locator('.copy-button');
-  check((await copy.count()) === 1, 'a code block of the Design overview has one copy button');
+  check((await copy.count()) === 1, 'a code block of the sequence guide has one copy button');
   if ((await copy.count()) === 1) {
     check((await copy.getAttribute('data-tooltip')) === 'Copy', 'the copy button tooltip says "Copy"');
     const code = (await block.locator('code').innerText()).replace(/\n$/, '');
