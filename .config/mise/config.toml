@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions"]
+depends = ["validate:packages", "validate:versions", "validate:corpus"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -125,6 +125,14 @@ run = "moonx scripts/validate-packages.mbtx"
 [tasks."validate:versions"]
 description = "Verify that every module and version string has the version of the root moon.mod"
 run = "moonx scripts/versions.mbtx check"
+
+[tasks."validate:corpus"]
+description = "Check the digests of the frozen Mermaid corpus and that its generated MoonBit file is current"
+run = "moonx scripts/corpus.mbtx check"
+
+[tasks."corpus:generate"]
+description = "Write tests/corpus/examples.generated.mbt from the frozen Mermaid corpus"
+run = "moonx scripts/corpus.mbtx generate"
 
 [tasks."test:native-zig"]
 description = "Run native tests with zig as the C compiler"

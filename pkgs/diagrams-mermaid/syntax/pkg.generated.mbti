@@ -7,6 +7,10 @@ import {
 }
 
 // Values
+pub let arrows : ReadOnlyArray[String]
+
+pub let diagnostic_codes : ReadOnlyArray[String]
+
 pub fn parse(String) -> ParseResult
 
 // Errors

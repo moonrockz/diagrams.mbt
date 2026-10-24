@@ -91,6 +91,10 @@ pub fn Diagram::new(statements : ArrayView[Statement]) -> Diagram {
 /// The typed AST of a lossless syntax tree. Error nodes are not in the AST,
 /// because the parser already reported them. A tree without the
 /// `sequenceDiagram` header gives `None`.
+///
+/// This version reads top-level `participant`, `actor` and message
+/// statements. The other statements come with task group 3 of
+/// `add-mermaid-sequence`.
 pub fn lower(tree : @cst.Node) -> Diagram? {
   let source = tree.text()
   let nodes = tree.nodes()
@@ -101,32 +105,41 @@ pub fn lower(tree : @cst.Node) -> Diagram? {
       .tokens()
       .filter(t => t.kind != Whitespace && t.kind != Newline)
     guard tokens.last() is Some(last) else { continue }
-    let end = last.offset + last.text.length()
-    let span = @cst.span(source, tokens[0].offset, end)
+    let span = @cst.span(source, tokens[0].offset, last.offset + last.text.length())
+    let names = tokens.filter(t => t.kind == Identifier).map(t => t.text)
+    let text = match tokens.iter().find_first(t => t.kind == Text) {
+      Some(t) => Some(t.text)
+      None => None
+    }
     match node.kind {
       Participant => {
-        let keyword : ParticipantKeyword = if tokens[0].text == "actor" {
+        let keyword : ParticipantKeyword = if tokens.iter().any(t => t.kind == Keyword &&
+            t.text.to_lower() == "actor") {
           Actor
         } else {
           Participant
         }
-        let label = if tokens.length() >= 4 {
-          Some(tokens[3].text)
-        } else {
-          None
-        }
+        let labelled = tokens.iter().any(t => t.kind == Keyword && t.text.to_lower() == "as")
         statements.push(
-          Statement::Participant({ keyword, id: tokens[1].text, label, span }),
+          Statement::Participant({
+            keyword,
+            id: names[0],
+            label: if labelled { text } else { None },
+            span,
+          }),
         )
       }
       Message => {
-        let text = if tokens.length() >= 5 { tokens[4].text } else { "" }
+        let arrow = match tokens.iter().find_first(t => t.kind == Arrow) {
+          Some(t) => t.text
+          None => ""
+        }
         statements.push(
           Statement::Message({
-            sender: tokens[0].text,
-            arrow: tokens[1].text,
-            receiver: tokens[2].text,
-            text,
+            sender: names[0],
+            arrow,
+            receiver: names[1],
+            text: text.unwrap_or(""),
             span,
           }),
         )

@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-tests/corpus"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub let mermaid_12_2_0 : ReadOnlyArray[Example]
+
+// Errors
+
+// Types and methods
+pub(all) struct Example {
+  name : String
+  sha256 : String
+  source : String
+} derive(Eq, @debug.Debug)
+pub fn Example::equal(Self, Self) -> Bool
+pub fn Example::not_equal(Self, Self) -> Bool
+pub fn Example::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

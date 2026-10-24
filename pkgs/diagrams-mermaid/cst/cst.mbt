@@ -4,11 +4,22 @@ pub(all) enum TokenKind {
   Keyword
   Identifier
   Arrow
+  Modifier
   Colon
+  Comma
+  Number
   Text
+  ConfigOpen
+  Config
+  ConfigClose
+  OpenBrace
+  CloseBrace
   Whitespace
   Newline
+  Separator
   Comment
+  Directive
+  FrontMatter
   Unknown
 } derive(Eq, Debug)
 
@@ -40,15 +51,32 @@ pub fn Token::new(kind : TokenKind, text : String, offset : Int) -> Token {
 }
 
 ///|
-/// The kind of a node. Each line of a sequence diagram is one node below the
-/// document node. A line node includes its line break.
+/// The kind of a node. A statement is one node. A frame, such as `loop` or
+/// `box`, is a `Block` node with a `BlockStart`, its statements, a `Section`
+/// node for each `else`, `and` or `option`, and a `BlockEnd`. Whitespace,
+/// line breaks, separators, comments, directives and front matter are tokens
+/// of the parent node.
 pub(all) enum NodeKind {
   Document
   Header
   Participant
+  Destroy
+  Activate
+  Deactivate
+  Note
+  Link
+  Links
+  Properties
+  Details
+  Title
+  AccTitle
+  AccDescr
+  Autonumber
   Message
-  Comment
-  Blank
+  Block
+  BlockStart
+  Section
+  BlockEnd
   Error
 } derive(Eq, Debug)
 

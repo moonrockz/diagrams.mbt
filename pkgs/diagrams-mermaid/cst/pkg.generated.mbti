@@ -39,9 +39,23 @@ pub(all) enum NodeKind {
   Document
   Header
   Participant
+  Destroy
+  Activate
+  Deactivate
+  Note
+  Link
+  Links
+  Properties
+  Details
+  Title
+  AccTitle
+  AccDescr
+  Autonumber
   Message
-  Comment
-  Blank
+  Block
+  BlockStart
+  Section
+  BlockEnd
   Error
 } derive(Eq, @debug.Debug)
 pub fn NodeKind::equal(Self, Self) -> Bool
@@ -62,11 +76,22 @@ pub(all) enum TokenKind {
   Keyword
   Identifier
   Arrow
+  Modifier
   Colon
+  Comma
+  Number
   Text
+  ConfigOpen
+  Config
+  ConfigClose
+  OpenBrace
+  CloseBrace
   Whitespace
   Newline
+  Separator
   Comment
+  Directive
+  FrontMatter
   Unknown
 } derive(Eq, @debug.Debug)
 pub fn TokenKind::equal(Self, Self) -> Bool
