@@ -2,23 +2,41 @@
 package "moonrockz/diagrams-svg"
 
 import {
+  "moonbitlang/core/debug",
   "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/sequence",
 }
 
 // Values
-pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme) -> String
+pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode) -> String
 
 // Errors
 
 // Types and methods
+pub(all) enum Mode {
+  Adaptive
+  Fixed(Variant)
+} derive(Eq, @debug.Debug)
+pub fn Mode::equal(Self, Self) -> Bool
+pub fn Mode::not_equal(Self, Self) -> Bool
+pub fn Mode::to_repr(Self) -> @debug.Repr
+
 pub struct SvgRenderer {
   theme : @theme.Theme
+  mode : Mode
 }
-pub fn SvgRenderer::new(theme? : @theme.Theme) -> Self
+pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode) -> Self
 pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub impl @render.Renderer for SvgRenderer
+
+pub(all) enum Variant {
+  Dark
+  Light
+} derive(Eq, @debug.Debug)
+pub fn Variant::equal(Self, Self) -> Bool
+pub fn Variant::not_equal(Self, Self) -> Bool
+pub fn Variant::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

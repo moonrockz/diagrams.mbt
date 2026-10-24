@@ -2,6 +2,7 @@ import {
   "moonrockz/diagrams/sequence",
   "moonbitlang/core/debug",
   "moonbitlang/core/math",
+  "moonbitlang/core/string",
 }
 
 import {

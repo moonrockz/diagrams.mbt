@@ -230,7 +230,9 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
             free_x(centres[lo] + clearance(right_clear[lo]), centres[hi] - clearance(left_clear[hi]), w, (centres[a] + centres[b]) / 2, obstacles)
           }
           let chip = { x: chip_x, y: cursor, width: w, height: h }
-          let family = families[a]
+          fn cross(head : @sequence.Head) -> Bool { match head { Cross => true; Central(h) => cross(h); _ => false } }
+          let family = if cross(m.sender_head) || cross(m.receiver_head) { @theme.Family::Security }
+            else if m.line == Dotted { @theme.Family::External } else { families[a] }
           let label = make_label(message_text(m), chip.x + w / 2, chip.y + 4, 11, 400, Accent(family), [Mask], owner)
           let sublabel = message_sublabel(m).map(s => make_label(s, chip.x + w / 2, label.box.y + label.box.height + 4, 11, 400, Muted, [Mask], owner))
           let path : Array[Segment] = if a == b {

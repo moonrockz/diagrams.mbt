@@ -1,5 +1,8 @@
 import {
+  "moonbitlang/core/test",
   "moonbitlang/core/json",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/render",
   "moonrockz/diagrams-svg/layout",
   "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams/sequence" @model,

@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 417 553" width="417" height="553" role="img" data-diagram="sequence">
+  <title>Sequence diagram</title>
+  <desc>Sequence diagram with 2 participants (Alice, Bob) and 4 messages.</desc>
+  <defs>
+    <marker id="head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
+    </marker>
+    <marker id="head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#34d399" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#34d399" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#34d399" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="417" height="553" rx="0" fill="#020617"/>
+  <g class="bands">
+    <rect class="band-mask" x="32" y="148" width="353" height="218" rx="6" fill="#020617"/>
+    <rect class="frame" x="32" y="148" width="353" height="218" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect class="band-mask" x="32" y="382" width="353" height="111" rx="6" fill="#020617"/>
+    <rect class="frame" x="32" y="382" width="353" height="111" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+  </g>
+  <g class="lifelines">
+    <path class="lifeline" d="M96 72 V521" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M321 72 V521" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations"/>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="Alice" data-to="Bob" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M103 127 L314 127" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#head-0-end)"/>
+      <rect class="mask" x="122" y="100" width="172" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="208" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
+        <tspan x="208" y="115">Hello Bob, how are you?</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M314 218 L103 218" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#head-1-end)"/>
+      <rect class="mask" x="153" y="191" width="111" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="208" y="206" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="208" y="206">Not so good :(</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="2" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M314 325 L103 325" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#head-2-end)"/>
+      <rect class="mask" x="112" y="298" width="193" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="208" y="313" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="208" y="313">Feeling fresh like a daisy</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="3" data-from="Bob" data-to="Alice" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M314 452 L103 452" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#head-3-end)"/>
+      <rect class="mask" x="142" y="425" width="132" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="208" y="440" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="208" y="440">Thanks for asking</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="Alice">
+      <rect class="mask" x="48" y="24" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="48" y="24" width="96" height="48" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="p-label" x="96" y="52" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="96" y="52">Alice</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="Bob">
+      <rect class="mask" x="273" y="24" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="273" y="24" width="96" height="48" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="p-label" x="321" y="52" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="321" y="52">Bob</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations">
+    <rect class="mask" x="40" y="156" width="91" height="23" rx="3" fill="#0f172a"/>
+    <text class="frame-label" x="85" y="171" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#ffffff">
+      <tspan x="85" y="171">alt is sick</tspan>
+    </text>
+    <path class="section-divider" d="M32 255 L385 255" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="263" width="64" height="23" rx="3" fill="#0f172a"/>
+    <text class="section-label" x="72" y="278" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#ffffff">
+      <tspan x="72" y="278">is well</tspan>
+    </text>
+    <rect class="mask" x="40" y="390" width="138" height="23" rx="3" fill="#0f172a"/>
+    <text class="frame-label" x="109" y="405" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#ffffff">
+      <tspan x="109" y="405">opt Extra response</tspan>
+    </text>
+  </g>
+</svg>

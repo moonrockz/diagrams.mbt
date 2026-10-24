@@ -35,7 +35,8 @@ pub fn text(content : String) -> Node {
 /// True for a code point that XML 1.0 does not allow in a document.
 fn forbidden(c : Char) -> Bool {
   let n = c.to_int()
-  n < 0x20 && n != 0x09 && n != 0x0a && n != 0x0d
+  (n < 0x20 && n != 0x09 && n != 0x0a && n != 0x0d) ||
+  (n >= 0xd800 && n <= 0xdfff) || n == 0xfffe || n == 0xffff
 }
 
 ///|
@@ -45,6 +46,9 @@ fn write_escaped(buf : StringBuilder, s : String, attribute : Bool) -> Unit {
       '<' => buf.write_string("&lt;")
       '>' => buf.write_string("&gt;")
       '&' => buf.write_string("&amp;")
+      '\t' if attribute => buf.write_string("&#x9;")
+      '\n' if attribute => buf.write_string("&#xa;")
+      '\r' => buf.write_string("&#xd;")
       '"' if attribute => buf.write_string("&quot;")
       _ => if !forbidden(c) { buf.write_char(c) }
     }

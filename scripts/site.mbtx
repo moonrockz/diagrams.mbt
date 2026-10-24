@@ -369,6 +369,7 @@ fn test_steps(
     run("install chromium", "node", [
       "apps/site/node_modules/playwright/cli.js", "install", "chromium",
     ]),
+    run("test SVG paint in chromium", "node", ["apps/site/scripts/svg-test.ts"]),
     {
       name: "browser smoke test",
       action: BrowserTest(browser_test_port, tree),
@@ -703,7 +704,7 @@ test "test runs the site package tests, the highlight test and the browser test"
   let steps = test_steps([], ["moonrockz/diagrams-site/model"])
   assert_eq(steps.map(step => step.name), [
     "install site dependencies", "test site packages (native)", "test site model (js)",
-    "test highlight", "install chromium", "browser smoke test",
+    "test highlight", "install chromium", "test SVG paint in chromium", "browser smoke test",
   ])
   assert_eq(
     steps[1].action,
@@ -711,9 +712,9 @@ test "test runs the site package tests, the highlight test and the browser test"
       "test", "--target", "native", "-p", "moonrockz/diagrams-site/model",
     ]),
   )
-  assert_eq(steps[5].action, BrowserTest(4174, ""))
+  assert_eq(steps[6].action, BrowserTest(4174, ""))
   let next = test_steps([], [], tree="next/")
-  assert_eq(next[5].action, BrowserTest(4174, "next/"))
+  assert_eq(next[6].action, BrowserTest(4174, "next/"))
 }
 
 ///|
