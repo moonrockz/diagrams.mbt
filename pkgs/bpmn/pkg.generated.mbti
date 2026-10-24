@@ -6,15 +6,19 @@ import {
 }
 
 // Values
-pub fn read(String) -> ReadResult
+pub fn read(String, source_id? : String, limits? : Limits) -> ReadResult
 
 pub fn write(Document) -> String
+
+pub let xml_diagnostic_codes : ReadOnlyArray[String]
 
 // Errors
 
 // Types and methods
 pub struct Cst {
   tokens : ReadOnlyArray[Token]
+  nodes : ReadOnlyArray[XmlNode]
+  complete : Bool
 } derive(Eq, @debug.Debug)
 pub fn Cst::equal(Self, Self) -> Bool
 pub fn Cst::not_equal(Self, Self) -> Bool
@@ -26,6 +30,7 @@ pub struct Diagnostic {
   severity : Severity
   message : String
   span : Span?
+  location : Location?
 } derive(Eq, @debug.Debug)
 pub fn Diagnostic::equal(Self, Self) -> Bool
 pub fn Diagnostic::not_equal(Self, Self) -> Bool
@@ -52,6 +57,14 @@ pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? :
 pub fn Element::not_equal(Self, Self) -> Bool
 pub fn Element::to_repr(Self) -> @debug.Repr
 
+pub struct ExpandedName {
+  namespace_uri : String
+  local_name : String
+} derive(Eq, @debug.Debug)
+pub fn ExpandedName::equal(Self, Self) -> Bool
+pub fn ExpandedName::not_equal(Self, Self) -> Bool
+pub fn ExpandedName::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Kind {
   Definitions
   Process
@@ -74,9 +87,41 @@ pub fn Kind::namespace_uri(Self) -> String
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+pub struct Limits {
+  source_units : Int32
+  output_units : Int32
+  nodes : Int32
+  depth : Int32
+  token_units : Int32
+  diagnostics : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(source_units? : Int32, output_units? : Int32, nodes? : Int32, depth? : Int32, token_units? : Int32, diagnostics? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct Location {
+  source_id : String?
+  start : Position
+  end : Position
+} derive(Eq, @debug.Debug)
+pub fn Location::equal(Self, Self) -> Bool
+pub fn Location::not_equal(Self, Self) -> Bool
+pub fn Location::to_repr(Self) -> @debug.Repr
+
+pub struct Position {
+  offset : Int32
+  line : Int32
+  column : Int32
+} derive(Eq, @debug.Debug)
+pub fn Position::equal(Self, Self) -> Bool
+pub fn Position::not_equal(Self, Self) -> Bool
+pub fn Position::to_repr(Self) -> @debug.Repr
+
 pub struct ReadResult {
   tree : Cst
   document : Document?
+  source_map : SourceMap?
   diagnostics : ReadOnlyArray[Diagnostic]
 } derive(Eq, @debug.Debug)
 pub fn ReadResult::equal(Self, Self) -> Bool
@@ -91,6 +136,17 @@ pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::not_equal(Self, Self) -> Bool
 pub fn Severity::to_repr(Self) -> @debug.Repr
 
+pub struct SourceMap {
+  source_id : String?
+  length : Int32
+  line_starts : ReadOnlyArray[Int32]
+} derive(Eq, @debug.Debug)
+pub fn SourceMap::equal(Self, Self) -> Bool
+pub fn SourceMap::location(Self, Span) -> Location?
+pub fn SourceMap::not_equal(Self, Self) -> Bool
+pub fn SourceMap::position(Self, Int32) -> Position?
+pub fn SourceMap::to_repr(Self) -> @debug.Repr
+
 pub struct Span {
   start : Int32
   end : Int32
@@ -100,12 +156,77 @@ pub fn Span::not_equal(Self, Self) -> Bool
 pub fn Span::to_repr(Self) -> @debug.Repr
 
 pub struct Token {
+  kind : TokenKind
   text : String
   span : Span
 } derive(Eq, @debug.Debug)
 pub fn Token::equal(Self, Self) -> Bool
 pub fn Token::not_equal(Self, Self) -> Bool
 pub fn Token::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TokenKind {
+  Open
+  EndOpen
+  Close
+  EmptyClose
+  Name
+  Whitespace
+  Equals
+  Quote
+  AttributeValue
+  Text
+  CharacterReference
+  Comment
+  ProcessingInstruction
+  CData
+  Declaration
+  Error
+} derive(Eq, @debug.Debug)
+pub fn TokenKind::equal(Self, Self) -> Bool
+pub fn TokenKind::not_equal(Self, Self) -> Bool
+pub fn TokenKind::to_repr(Self) -> @debug.Repr
+
+pub struct XmlAttribute {
+  raw_name : String
+  name : ExpandedName
+  value : String
+  span : Span
+  value_span : Span
+  namespace_declaration : Bool
+} derive(Eq, @debug.Debug)
+pub fn XmlAttribute::equal(Self, Self) -> Bool
+pub fn XmlAttribute::not_equal(Self, Self) -> Bool
+pub fn XmlAttribute::to_repr(Self) -> @debug.Repr
+
+pub struct XmlNode {
+  kind : XmlNodeKind
+  raw_name : String
+  name : ExpandedName?
+  attributes : ReadOnlyArray[XmlAttribute]
+  bindings : ReadOnlyArray[(String, String)]
+  children : ReadOnlyArray[Int32]
+  parent : Int32?
+  span : Span
+  value : String
+  complete : Bool
+} derive(Eq, @debug.Debug)
+pub fn XmlNode::equal(Self, Self) -> Bool
+pub fn XmlNode::not_equal(Self, Self) -> Bool
+pub fn XmlNode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum XmlNodeKind {
+  Document
+  Element
+  Text
+  Comment
+  ProcessingInstruction
+  CData
+  Declaration
+  Error
+} derive(Eq, @debug.Debug)
+pub fn XmlNodeKind::equal(Self, Self) -> Bool
+pub fn XmlNodeKind::not_equal(Self, Self) -> Bool
+pub fn XmlNodeKind::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

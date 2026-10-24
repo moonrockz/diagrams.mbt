@@ -1,155 +1,74 @@
 ///|
-priv struct Frame {
-  name : String
-  kind : Kind
-  attributes : Array[(String, String)]
-  children : Array[Element]
-  bindings : Array[(String, String)]
-  mut content : String
-}
-
-///|
-fn unit(s : String, i : Int) -> Int { s.code_unit_at(i).to_int() }
-
-///|
-fn space(c : Int) -> Bool { c == 32 || c == 9 || c == 10 || c == 13 }
-
-///|
-fn decode(s : String) -> String? {
-  let b = StringBuilder()
-  let mut i = 0
-  while i < s.length() {
-    if unit(s, i) != 38 { b.write_string(s[i:i+1].to_owned()); i += 1; continue }
-    guard s[i:].find(";") is Some(n) else { return None }
-    let value = match s[i:i+n+1].to_owned() {
-      "&amp;" => "&"; "&lt;" => "<"; "&gt;" => ">"; "&quot;" => "\""; "&apos;" => "'"
-      _ => return None
-    }
-    b.write_string(value); i += n + 1
-  }
-  Some(b.to_string())
-}
-
-///|
-fn tag(s : String) -> (String, Array[(String, String)])? {
-  let mut i = 0
-  while i < s.length() && !space(unit(s, i)) { i += 1 }
-  let name = s[:i].to_owned()
-  if name.is_empty() { return None }
-  let attrs : Array[(String, String)] = []
-  while i < s.length() {
-    while i < s.length() && space(unit(s, i)) { i += 1 }
-    if i == s.length() { break }
-    let start = i
-    while i < s.length() && !space(unit(s, i)) && unit(s, i) != 61 { i += 1 }
-    let key = s[start:i].to_owned()
-    while i < s.length() && space(unit(s, i)) { i += 1 }
-    if key.is_empty() || i >= s.length() || unit(s, i) != 61 { return None }
-    i += 1
-    while i < s.length() && space(unit(s, i)) { i += 1 }
-    if i >= s.length() || (unit(s, i) != 34 && unit(s, i) != 39) { return None }
-    let quote = unit(s, i); i += 1
-    let start = i
-    while i < s.length() && unit(s, i) != quote { i += 1 }
-    if i == s.length() { return None }
-    guard decode(s[start:i].to_owned()) is Some(value) else { return None }
-    if attrs.iter().any(a => a.0 == key) { return None }
-    attrs.push((key, value)); i += 1
-  }
-  Some((name, attrs))
-}
-
-///|
-fn kind_of(name : String, bindings : Array[(String, String)]) -> Kind? {
-  let parts = name.split(":").to_array()
-  if parts.length() > 2 { return None }
-  let prefix = if parts.length() == 1 { "" } else { parts[0].to_owned() }
-  let local_name = parts[parts.length()-1].to_owned()
-  let mut uri = ""
-  for (p, u) in bindings { if p == prefix { uri = u } }
-  for k in [Definitions, Process, StartEvent, Task, EndEvent, SequenceFlow, Incoming, Outgoing, Diagram, Plane, Shape, Edge, Bounds, Waypoint] {
-    if k.local_name() == local_name && k.namespace_uri() == uri { return Some(k) }
+fn kind_of(name : ExpandedName) -> Kind? {
+  for kind in [Definitions, Process, StartEvent, Task, EndEvent, SequenceFlow, Incoming, Outgoing, Diagram, Plane, Shape, Edge, Bounds, Waypoint] {
+    if name.local_name == kind.local_name() && name.namespace_uri == kind.namespace_uri() { return Some(kind) }
   }
   None
 }
 
 ///|
-/// Read the first-slice vocabulary with an explicit stack. The CST owns every
-/// source code unit even when lowering fails. No URI causes resource access.
-pub fn read(source : String) -> ReadResult {
-  let tokens = []
-  let diagnostics = []
-  let stack : Array[Frame] = []
-  let roots : Array[Element] = []
-  let mut i = 0
-  fn error(code : String, message : String, start : Int, end : Int) -> Unit {
-    diagnostics.push(finding(code, message, start~, end~))
+/// Typed lowering remains separate from complete XML reading. Later stories add
+/// schema-derived BPMN families; unsupported content remains inspectable in CST.
+fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], maximum : Int) -> Document? {
+  let lowered : Array[Element?] = Array::make(tree.nodes.length(), None)
+  let mut exhausted = false
+  fn report(code : String, message : String, span : Span) -> Unit {
+    if diagnostics.length() < maximum { diagnostics.push(finding(code, message, span~, map~)) }
+    else if !exhausted { diagnostics[maximum-1] = finding("xml/diagnostic-limit", "Diagnostic limit exceeded during typed lowering", span~, map~); exhausted = true }
   }
-  fn attach(e : Element) -> Unit {
-    if stack.is_empty() { roots.push(e) } else { stack[stack.length()-1].children.push(e) }
-  }
-  while i < source.length() {
-    let start = i
-    let markup = unit(source, i) == 60
-    if markup {
-      let mut quote = 0
-      i += 1
-      while i < source.length() {
-        let c = unit(source, i)
-        if quote != 0 { if c == quote { quote = 0 } }
-        else if c == 34 || c == 39 { quote = c }
-        else if c == 62 { i += 1; break }
-        i += 1
-      }
-    } else { while i < source.length() && unit(source, i) != 60 { i += 1 } }
-    let raw = source[start:i].to_owned()
-    tokens.push(Token::{ text: raw, span: { start, end: i } })
-    if !markup {
-      if stack.is_empty() {
-        if !raw.trim().is_empty() { error("xml/outside-root", "Text outside the root element", start, i) }
-      } else if decode(raw) is Some(text) {
-        let f = stack[stack.length()-1]
-        if f.kind == Incoming || f.kind == Outgoing { f.content += text }
-        else if !text.trim().is_empty() { error("bpmn/unsupported-content", "Mixed text is not supported in this slice", start, i) }
-      } else { error("xml/character-reference", "Unsupported or invalid character reference", start, i) }
+  for i = tree.nodes.length()-1; i > 0; i = i-1 {
+    if exhausted { break }
+    let node = tree.nodes[i]
+    if node.kind != Element { continue }
+    guard node.name is Some(name) && kind_of(name) is Some(kind) else {
+      report("bpmn/unsupported-element", "Unsupported BPMN element: \{node.raw_name}", node.span)
       continue
     }
-    if raw.has_prefix("<?xml ") && raw.has_suffix("?>") && start == 0 { continue }
-    if raw.has_prefix("<!") { error("xml/prohibited-declaration", "Declarations are not supported; DTD and entities are prohibited", start, i); continue }
-    if !raw.has_suffix(">") { error("xml/unclosed-tag", "Unclosed tag", start, i); continue }
-    if raw.has_prefix("</") {
-      let name = raw[2:raw.length()-1].trim().to_owned()
-      if stack.is_empty() { error("xml/mismatched-tag", "Unexpected closing tag", start, i) }
-      else {
-        let f = stack.pop().unwrap()
-        if f.name != name { error("xml/mismatched-tag", "Closing tag does not match \{f.name}", start, i) }
-        attach(Element::new(f.kind, attributes=f.attributes, children=f.children, content=f.content))
+    let attrs : Array[(String, String)] = []
+    for attr in node.attributes {
+      if exhausted { break }
+      if attr.namespace_declaration { continue }
+      if attr.name.namespace_uri != "" { report("bpmn/unsupported-attribute", "Typed namespaced fields follow in the document foundations", attr.span) }
+      else { attrs.push((attr.name.local_name, attr.value)) }
+    }
+    let children : Array[Element] = []
+    let content = StringBuilder()
+    for child in node.children {
+      if exhausted { break }
+      let child_node = tree.nodes[child]
+      if lowered[child] is Some(e) { children.push(e) }
+      else if child_node.kind == Text || child_node.kind == CData {
+        if kind == Incoming || kind == Outgoing { content.write_string(child_node.value) }
+        else if !child_node.value.iter().all(c => space(c.to_int())) { report("bpmn/unsupported-content", "Typed mixed content follows in the document foundations", child_node.span) }
       }
-      continue
     }
-    let closed = raw.has_suffix("/>")
-    let end = raw.length() - (if closed { 2 } else { 1 })
-    guard tag(raw[1:end].to_owned()) is Some((name, attrs)) else {
-      error("xml/invalid-tag", "Invalid name or attribute syntax", start, i); continue
-    }
-    let bindings = if stack.is_empty() { [] } else { stack[stack.length()-1].bindings.copy() }
-    let ordinary = []
-    for (key, value) in attrs {
-      if key == "xmlns" { bindings.push(("", value)) }
-      else if key.has_prefix("xmlns:") { bindings.push((key[6:].to_owned(), value)) }
-      else if key.contains(":") { error("bpmn/unsupported-attribute", "Namespaced attributes need the complete XML reader", start, i) }
-      else { ordinary.push((key, value)) }
-    }
-    guard kind_of(name, bindings) is Some(kind) else {
-      error("bpmn/unsupported-element", "Unsupported element or namespace: \{name}", start, i); continue
-    }
-    if closed { attach(Element::new(kind, attributes=ordinary)) }
-    else { stack.push({ name, kind, attributes: ordinary, children: [], bindings, content: "" }) }
+    lowered[i] = Some(Element::new(kind, attributes=attrs, children~, content=content.to_string()))
   }
-  if !stack.is_empty() { error("xml/unclosed-tag", "An element remains open", source.length(), source.length()) }
-  if roots.length() != 1 || (roots.length() == 1 && roots[0].kind != Definitions) {
-    error("bpmn/definitions-required", "One BPMN definitions root is required", 0, source.length())
+  let roots = tree.nodes[0].children.filter(i => tree.nodes[i].kind == Element).iter().to_array()
+  guard roots.length() == 1 && lowered[roots[0]] is Some(root) && root.kind == Definitions else {
+    report("bpmn/definitions-required", "One BPMN definitions root is required", tree.nodes[0].span)
+    return None
   }
-  let document = if diagnostics.is_empty() { Some(Document::new(roots[0])) } else { None }
-  { tree: { tokens: ReadOnlyArray::from_array(tokens) }, document, diagnostics: ReadOnlyArray::from_array(diagnostics) }
+  if diagnostics.is_empty() { Some(Document::new(root)) } else { None }
+}
+
+///|
+/// Read decoded XML without resource access. CST reproduction remains available
+/// after errors or limit exhaustion; a syntax error prevents typed lowering.
+pub fn read(source : String, source_id? : String, limits? : Limits = Limits::new()) -> ReadResult {
+  let invalid = limits.source_units <= 0 || limits.output_units <= 0 || limits.nodes <= 0 || limits.depth <= 0 || limits.token_units <= 0 || limits.diagnostics <= 0
+  if invalid || source.length() > limits.source_units {
+    let code = if invalid { "xml/invalid-limits" } else { "xml/source-limit" }
+    let diagnostic = if invalid { finding(code, "All processing limits must be positive") }
+    else {
+      let point = Position::{ offset: 0, line: 1, column: 1 }
+      Diagnostic::{ code, severity: Error, message: "Source exceeds its configured UTF-16 limit", span: Some({ start: 0, end: 0 }), location: Some({ source_id, start: point, end: point }) }
+    }
+    let tokens : ReadOnlyArray[Token] = if source.is_empty() { [] } else { [{ kind: Error, text: source, span: { start: 0, end: source.length() } }] }
+    return { tree: { tokens, nodes: [], complete: false }, document: None, source_map: None, diagnostics: [diagnostic] }
+  }
+  let map = source_map(source, source_id)
+  let (tree, diagnostics) = parse_xml(source, map, limits)
+  let document = if tree.complete { lower_minimal(tree, map, diagnostics, limits.diagnostics) } else { None }
+  { tree, document, source_map: Some(map), diagnostics: ReadOnlyArray::from_array(diagnostics) }
 }
