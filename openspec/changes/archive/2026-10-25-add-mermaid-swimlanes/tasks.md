@@ -78,7 +78,7 @@ Depends on: group 6.
 - [x] 7.1 Extend the gallery/site examples with static and animated swimlanes, all directions and an approval/return-path example; verify repeatable example generation and gallery links through existing tasks.
 - [x] 7.2 Update the glossary, architecture overview, module navigation and site guide to the tested APIs; verify `mise run build:site`, `mise run check:site` and `mise run test:site`.
 - [x] 7.3 Run full corpus/reference, four-target, SVG and animation qualification on the final candidate using existing CI gates; verify current-commit snapshots and browser inputs agree without adding duplicate compilation or a new platform matrix.
-- [ ] 7.4 Obtain owner gallery review and record the supported shape/metadata policy, compatibility notes and approval in the final PR; verify all story tasks are checked before archival.
+- [x] 7.4 Obtain owner gallery review and record the supported shape/metadata policy, compatibility notes and approval in the final PR; verify all story tasks are checked before archival.
 
 ## Workflow follow-up
 
@@ -86,3 +86,9 @@ Depends on: group 6.
 - After each merge, close its completed beads with the PR and merge SHA. Close
   the epic only after all children close, then verify `bd dolt pull` and push.
 - Publication or a version release requires separate owner approval.
+
+## Owner review
+
+The owner approved the gallery for merge on 2026-10-25, subject to passing
+checks. Pull request #28 records this approval, supported shape/metadata policy,
+compatibility notes and validation evidence.
