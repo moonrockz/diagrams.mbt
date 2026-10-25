@@ -13,11 +13,15 @@ async fn main {
   for
     (command, args) in [
       ("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"]),
+      ("moon", ["test", "--target", "js", "-p", "moonrockz/diagrams-svg"]),
+      (
+        "moon",
+        ["test", "--target", "js", "-p", "moonrockz/diagrams-tests/acceptance"],
+      ),
       (
         "moon",
         [
-          "test", "--target", "js", "-p", "moonrockz/diagrams-svg", "-p", "moonrockz/diagrams-tests/acceptance",
-          "-p", "moonrockz/diagrams-tests/bpmn-acceptance",
+          "test", "--target", "js", "-p", "moonrockz/diagrams-tests/bpmn-acceptance",
         ],
       ),
       (

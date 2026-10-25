@@ -3,6 +3,7 @@ package "moonrockz/diagrams-svg"
 
 import {
   "moonbitlang/core/debug",
+  "moonrockz/diagrams-svg/bpmn-layout",
   "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/render",
@@ -10,6 +11,8 @@ import {
 }
 
 // Values
+pub fn bpmn_geometry_path(@bpmn-layout.Connection, max_units? : Int32) -> String?
+
 pub fn bpmn_path(@bpmn.Flow) -> String
 
 pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode, id_prefix? : String) -> String
@@ -29,8 +32,10 @@ pub struct SvgRenderer {
   theme : @theme.Theme
   mode : Mode
   id_prefix : String?
+  bpmn_policy : @bpmn.GeometryPolicy
+  bpmn_limits : @bpmn-layout.Limits
 }
-pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String) -> Self
+pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy, bpmn_limits? : @bpmn-layout.Limits) -> Self
 pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub impl @render.Renderer for SvgRenderer
 

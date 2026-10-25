@@ -226,11 +226,11 @@ fn Projection::connections(self : Projection, instance : Instance) -> Unit {
 ///|
 /// Pure view conversion over caller-supplied resources. Geometry remains optional;
 /// the SVG renderer owns complete-DI versus whole-view layout policy.
-pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automatic, resources? : @bpmn.ResourceSet = @bpmn.ResourceSet::new(), resource_id? : String, limits? : @bpmn.Limits = @bpmn.Limits::new()) -> Conversion {
+pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automatic, resources? : @bpmn.ResourceSet = @bpmn.ResourceSet::new(), resource_id? : String, limits? : @bpmn.Limits = @bpmn.Limits::new(), geometry_policy? : @model.GeometryPolicy = PreferDi) -> Conversion {
   let documents=resources.documents.iter().to_array()
   if resource_id is Some(id) && !documents.iter().any(d => d.location == id) { documents.push(@bpmn.DocumentResource::new(id,document)) }
   let resources=@bpmn.ResourceSet::new(documents~,external=resources.external)
-  let c=Converter::{sources:[],dependencies:Map([]),resources,limits,diagnostics:[],failed:false,work:0}
+  let c=Converter::{ignore_di:geometry_policy == @model.GeometryPolicy::Automatic,sources:[],dependencies:Map([]),resources,limits,diagnostics:[],failed:false,work:0}
   fn result(diagram : @render.Diagram?) -> Conversion { {diagram:if c.failed { None } else { diagram },diagnostics:ReadOnlyArray::from_array(c.diagnostics)} }
   if limits.nodes <= 0 || limits.depth <= 0 || limits.diagnostics <= 0 || limits.token_units <= 0 || limits.source_units <= 0 || limits.output_units <= 0 { return {diagram:None,diagnostics:[@diagrams.Diagnostic::error("bpmn/conversion-limit","All limits must be positive")]} }
   let root=make_source(document,resource_id,resources,limits)
@@ -240,7 +240,7 @@ pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automati
   let view=c.sources[selected.resource].index.nodes[selected.node].element
   if actual(view) != Some(Process) && !is_type(view,SubProcess) && actual(view) != Some(Collaboration) { c.add("bpmn/unsupported-view","Choreography and conversation rendering is deferred",e=view); return result(None) }
   let p=Projection::{converter:c,instances:[],nodes:[],flows:[],visuals:Map([]),selected:Map([]),di:Map([]),di_order:[],used_di:Map([]),shapes:Map([]),visual_order:[]}
-  p.selected_di(selected)
+  if !c.ignore_di { p.selected_di(selected) }
   if c.failed { return result(None) }
   p.include_scope(selected.resource,selected.node,"",None)
   if c.failed { return result(None) }
@@ -321,14 +321,16 @@ pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automati
 
 ///|
 /// Read, select, convert and render without performing filesystem/network I/O.
-pub fn render_svg(source : String, selector? : ViewSelector = Automatic, resources? : @bpmn.ResourceSet = @bpmn.ResourceSet::new()) -> @render.Rendered {
+pub fn render_svg(source : String, selector? : ViewSelector = Automatic, resources? : @bpmn.ResourceSet = @bpmn.ResourceSet::new(), geometry_policy? : @model.GeometryPolicy = PreferDi) -> @render.Rendered {
   let read=@bpmn.read(source)
-  let diagnostics=read.diagnostics.map(map_diagnostic).iter().to_array()
-  guard read.document is Some(document) else { return @render.Rendered::failed("image/svg+xml",diagnostics) }
-  let converted=to_diagram(document,selector~,resources~)
+  guard read.document is Some(document) else { return @render.Rendered::failed("image/svg+xml",read.diagnostics.map(map_diagnostic)) }
+  let converted=to_diagram(document,selector~,resources~,geometry_policy~)
+  // A successful selected view has already checked its semantic fields. Lowering
+  // findings in other views or explicitly ignored DI remain visible as warnings.
+  let diagnostics=read.diagnostics.map(d => { let mapped=map_diagnostic(d); if converted.diagram != None { {..mapped,severity:Warning} } else { mapped } }).iter().to_array()
   diagnostics.append(converted.diagnostics)
   guard converted.diagram is Some(diagram) else { return @render.Rendered::failed("image/svg+xml",diagnostics) }
-  let rendered=@svg.SvgRenderer::new().render(diagram)
+  let rendered=@svg.SvgRenderer::new(bpmn_policy=geometry_policy).render(diagram)
   diagnostics.append(rendered.diagnostics)
   match rendered.output { Some(output) => @render.Rendered::ok(output,rendered.media_type,diagnostics~); None => @render.Rendered::failed(rendered.media_type,diagnostics) }
 }

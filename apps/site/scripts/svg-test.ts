@@ -141,13 +141,109 @@ try {
     ['rgb(2, 6, 23)', 'rgb(244, 245, 247)']);
   assert.deepEqual(requests, [], 'all SVGs render without network requests');
   console.log(`Verified ${files.length} standalone SVGs in both browser preferences, including root overrides and text contrast.`);
+  // BPMN qualification reuses the current-head portable snapshots. Each JSON
+  // entry owns a named SVG, so every symbol and marker is checked independently.
+  const symbolFrames = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/symbols.json', 'utf8')) as [string, string, string][];
+  const markerFrames = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/markers.json', 'utf8')) as [string, string, string][];
+  assert.equal(symbolFrames.length, 117);
+  assert.equal(markerFrames.length, 37);
+  const viewFrames = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/views.json', 'utf8')) as [string, string, string][];
+  assert.equal(viewFrames.length, 6);
+  const minimal = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
+  for (const [name, mode, source] of [...symbolFrames, ...markerFrames, ...viewFrames, ['minimal', 'adaptive', minimal]]) {
+    for (const preference of ['dark', 'light'] as const) {
+      await page.emulateMedia({ colorScheme: preference });
+      await page.setContent('');
+      await page.evaluate(({ source, mode, preference }) => {
+        const xml = new DOMParser().parseFromString(source, 'image/svg+xml');
+        if (xml.querySelector('parsererror')) throw new Error('Invalid BPMN XML');
+        const svg = document.importNode(xml.documentElement, true) as unknown as SVGSVGElement;
+        document.body.append(svg);
+        if (svg.namespaceURI !== 'http://www.w3.org/2000/svg' || !svg.querySelector('title') || !svg.querySelector('desc')) throw new Error('Missing BPMN SVG accessibility');
+        const ids = [svg.id, ...Array.from(svg.querySelectorAll('[id]'), n => n.id)];
+        if (new Set(ids).size !== ids.length) throw new Error('Duplicate BPMN IDs');
+        for (const node of svg.querySelectorAll('*')) {
+          if (['script', 'foreignObject', 'image', 'use', 'a', 'iframe'].includes(node.localName)) throw new Error(`Active BPMN node ${node.localName}`);
+          for (const attr of node.attributes) {
+            if (/^on/i.test(attr.name) || /href$/i.test(attr.name)) throw new Error(`Active BPMN attribute ${attr.name}`);
+            for (const match of attr.value.matchAll(/url\(([^)]+)\)/g)) {
+              if (!match[1].startsWith('#') || !svg.querySelector(`[id="${match[1].slice(1)}"]`)) throw new Error(`Broken BPMN local reference ${match[1]}`);
+            }
+          }
+        }
+        const fixed = mode === 'dark' || mode === 'light';
+        const background = svg.querySelector<SVGRectElement>(':scope > .bg')!;
+        const expected = (fixed ? mode : preference) === 'dark' ? 'rgb(2, 6, 23)' : 'rgb(244, 245, 247)';
+        if (getComputedStyle(background).fill !== expected) throw new Error('Incorrect BPMN palette');
+        if (fixed && (svg.querySelector('style') || /var\(|@media/.test(source))) throw new Error('Fixed BPMN SVG contains adaptive CSS');
+        if (!fixed) {
+          for (const theme of ['dark', 'light']) {
+            svg.setAttribute('data-theme', theme);
+            const color = theme === 'dark' ? 'rgb(2, 6, 23)' : 'rgb(244, 245, 247)';
+            if (getComputedStyle(background).fill !== color) throw new Error('BPMN root override failed');
+          }
+          svg.removeAttribute('data-theme');
+        }
+        const color = (value: string) => {
+          const n = value.match(/[\d.]+/g)?.map(Number);
+          if (!n || n.length < 3) throw new Error(`Unresolved BPMN color ${value}`);
+          return [n[0], n[1], n[2], n[3] ?? 1];
+        };
+        const over = (top: number[], bottom: number[]) => top.slice(0, 3).map((v, i) => v * top[3] + bottom[i] * (1 - top[3])).concat(1);
+        const luminance = (value: number[]) => value.slice(0, 3).map(v => {
+          const c = v / 255; return c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
+        }).reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+        for (const text of svg.querySelectorAll<SVGTextElement>('text')) {
+          const style = getComputedStyle(text);
+          if (parseFloat(style.fontSize) < 11) throw new Error('BPMN text below 11 px');
+          const box = text.getBBox();
+          const point = new DOMPoint(box.x + box.width / 2, box.y + box.height / 2).matrixTransform(text.getScreenCTM()!);
+          let behind = color(getComputedStyle(background).fill);
+          for (const rect of svg.querySelectorAll<SVGRectElement>('rect')) {
+            if (!(rect.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+            const fill = getComputedStyle(rect).fill;
+            if (fill === 'none') continue;
+            const local = point.matrixTransform(rect.getScreenCTM()!.inverse());
+            const b = rect.getBBox();
+            if (local.x >= b.x && local.x <= b.x + b.width && local.y >= b.y && local.y <= b.y + b.height) behind = over(color(fill), behind);
+          }
+          const ink = over(color(style.fill), behind);
+          const a = luminance(ink), b = luminance(behind);
+          const ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+          if (ratio < 4.5) throw new Error(`BPMN text ${text.textContent} contrast ${ratio}`);
+        }
+        const viewport = svg.querySelector<SVGGElement>('.bpmn-viewport')!;
+        const translation = viewport.transform.baseVal.consolidate()!.matrix;
+        for (const shape of svg.querySelectorAll<SVGGElement>('.bpmn-shape')) {
+          const bounds = shape.querySelector<SVGRectElement>(':scope > .bpmn-bounds')!;
+          const b = bounds.getBBox();
+          const matrix = svg.getScreenCTM()!.inverse().multiply(bounds.getScreenCTM()!);
+          const point = new DOMPoint(b.x, b.y).matrixTransform(matrix);
+          if (Math.abs(point.x - (Number(bounds.getAttribute('x')) + translation.e)) > .01 || Math.abs(point.y - (Number(bounds.getAttribute('y')) + translation.f)) > .01) throw new Error('BPMN viewport changes authored geometry');
+        }
+      }, { source, mode, preference }).catch(error => { throw new Error(`BPMN ${name}/${mode}/${preference}: ${error.message}`); });
+    }
+  }
+  const inlineBpmn = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/inline.json', 'utf8')) as string[];
+  await page.setContent(inlineBpmn.join(''));
+  assert.equal(await page.evaluate(() => {
+    const ids = [...document.querySelectorAll('[id]')].map(node => node.id);
+    if (new Set(ids).size !== ids.length) return false;
+    const roots = document.querySelectorAll<SVGSVGElement>('svg');
+    roots[0].setAttribute('data-theme', 'dark'); roots[1].setAttribute('data-theme', 'light');
+    return getComputedStyle(roots[0].querySelector('.bg')!).fill === 'rgb(2, 6, 23)' && getComputedStyle(roots[1].querySelector('.bg')!).fill === 'rgb(244, 245, 247)' && [...roots].every(svg => [...svg.querySelectorAll('path')].every(path => ['marker-start', 'marker-end'].every(attr => {
+      const value = path.getAttribute(attr); return !value || document.getElementById(value.slice(5, -1))?.ownerSVGElement === svg;
+    })));
+  }), true, 'BPMN caller prefixes isolate IDs, markers and root theme overrides');
+  assert.deepEqual(requests, [], 'BPMN SVG qualification remains offline');
+  console.log(`Verified ${symbolFrames.length + markerFrames.length + viewFrames.length + 1} BPMN SVG outputs in both preferences, including geometry, root overrides and contrast.`);
   // Group 1 BPMN tracer: offline path overlay, paused startup and keyboard play/pause.
   const bpmnSvg = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
   assert.equal(await page.evaluate(source => {
     const xml = new DOMParser().parseFromString(source, 'image/svg+xml');
     return xml.querySelector('parsererror, script, foreignObject') === null
       && xml.querySelectorAll('.bpmn-flow').length === 2
-      && xml.querySelectorAll('circle').length === 2;
+      && xml.querySelectorAll('.bpmn-shape[data-kind$="Event"] circle').length === 2;
   }, bpmnSvg), true);
   const html = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.html', 'utf8');
   const errors: string[] = [];
@@ -165,6 +261,7 @@ try {
   const dot = page.locator('.motion-overlay circle');
   const before = await dot.getAttribute('cx');
   await page.waitForFunction(x => document.querySelector('.motion-overlay circle')?.getAttribute('cx') !== x, before);
+  assert.equal(await page.locator('.motion-overlay').evaluate(node => node.parentElement?.classList.contains('bpmn-viewport')), true, 'overlay shares the translated viewport');
   const geometry = await page.locator('.motion-overlay path').getAttribute('d');
   assert.equal(geometry, 'M76 80 L140 80');
   await page.getByRole('button', { name: 'Pause', exact: true }).click();

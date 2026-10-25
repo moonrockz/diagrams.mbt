@@ -96,10 +96,10 @@ Depends on: groups 6 and 7.
 Bead: diagrams-u42.9.
 Depends on: group 8.
 
-- [ ] 9.1 Add separate BPMN geometry and complete valid-DI consumption with a common viewport translation; verify every shape/label bound, edge waypoint and pool/lane/subprocess containment in the selected plane.
-- [ ] 9.2 Paint all standard process/collaboration symbols, event/task/gateway markers and connection kinds with the shared themes; verify per-symbol corpus snapshots and recognizable BPMN notation in dark/light adaptive and fixed output.
-- [ ] 9.3 Implement prefer/require/automatic geometry-policy dispatch and BPMN legibility findings; verify missing/partial/invalid DI, intentional attachments and broken imported geometry without silent rearrangement.
-- [ ] 9.4 Add standalone XML, escaping, accessibility, ID-prefix isolation and metadata checks; verify byte-identical SVG on all targets, a browser theme check and tested supplied-DI examples.
+- [x] 9.1 Add separate BPMN geometry and complete valid-DI consumption with a common viewport translation; verify every shape/label bound, edge waypoint and pool/lane/subprocess containment in the selected plane.
+- [x] 9.2 Paint all standard process/collaboration symbols, event/task/gateway markers and connection kinds with the shared themes; verify per-symbol corpus snapshots and recognizable BPMN notation in dark/light adaptive and fixed output.
+- [x] 9.3 Implement prefer/require/automatic geometry-policy dispatch and BPMN legibility findings; verify missing/partial/invalid DI, intentional attachments and broken imported geometry without silent rearrangement.
+- [x] 9.4 Add standalone XML, escaping, accessibility, ID-prefix isolation and metadata checks; verify byte-identical SVG on all targets, a browser theme check and tested supplied-DI examples.
 
 ## 10. Lay out BPMN views without supplied geometry
 

@@ -317,10 +317,10 @@ pub fn render_sequence(sequence : @sequence.Sequence, theme? : @theme.Theme = @t
 
 ///|
 /// A renderer that writes one standalone SVG document.
-pub struct SvgRenderer { theme : @theme.Theme; mode : Mode; id_prefix : String? }
+pub struct SvgRenderer { theme : @theme.Theme; mode : Mode; id_prefix : String?; bpmn_policy : @bpmn.GeometryPolicy; bpmn_limits : @bpmn_layout.Limits }
 
 ///|
-pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String) -> SvgRenderer { { theme, mode, id_prefix } }
+pub fn SvgRenderer::new(theme? : @theme.Theme = @theme.Theme::classic(), mode? : Mode = Adaptive, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy = PreferDi, bpmn_limits? : @bpmn_layout.Limits = @bpmn_layout.Limits::new()) -> SvgRenderer { { theme, mode, id_prefix, bpmn_policy, bpmn_limits } }
 
 ///|
 pub impl @render.Renderer for SvgRenderer with render(self, diagram) {
@@ -328,7 +328,7 @@ pub impl @render.Renderer for SvgRenderer with render(self, diagram) {
     let (svg, diagnostics) = paint(s, self.theme, self.mode, self.id_prefix)
     @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
   }
-  Bpmn(b) => paint_bpmn(b, self.theme, self.mode, self.id_prefix)
+  Bpmn(b) => paint_bpmn(b, self.theme, self.mode, self.id_prefix, self.bpmn_policy, self.bpmn_limits)
   }
 }
 

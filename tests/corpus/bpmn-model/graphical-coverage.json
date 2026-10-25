@@ -5,192 +5,268 @@
     {
       "schemaType": "tStartEvent",
       "tag": "startEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tEndEvent",
       "tag": "endEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tIntermediateCatchEvent",
       "tag": "intermediateCatchEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tIntermediateThrowEvent",
       "tag": "intermediateThrowEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tBoundaryEvent",
       "tag": "boundaryEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tTask",
       "tag": "task",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tUserTask",
       "tag": "userTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tServiceTask",
       "tag": "serviceTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tSendTask",
       "tag": "sendTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tReceiveTask",
       "tag": "receiveTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tManualTask",
       "tag": "manualTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tBusinessRuleTask",
       "tag": "businessRuleTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tScriptTask",
       "tag": "scriptTask",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tSubProcess",
       "tag": "subProcess",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tAdHocSubProcess",
       "tag": "adHocSubProcess",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tTransaction",
       "tag": "transaction",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tCallActivity",
       "tag": "callActivity",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tExclusiveGateway",
       "tag": "exclusiveGateway",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tInclusiveGateway",
       "tag": "inclusiveGateway",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tParallelGateway",
       "tag": "parallelGateway",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tComplexGateway",
       "tag": "complexGateway",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tEventBasedGateway",
       "tag": "eventBasedGateway",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tParticipant",
       "tag": "participant",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tLane",
       "tag": "lane",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataObject",
       "tag": "dataObject",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataObjectReference",
       "tag": "dataObjectReference",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataStore",
       "tag": "dataStore",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataStoreReference",
       "tag": "dataStoreReference",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataInput",
       "tag": "dataInput",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataOutput",
       "tag": "dataOutput",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tGroup",
       "tag": "group",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tTextAnnotation",
       "tag": "textAnnotation",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tMessage",
       "tag": "message",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tSequenceFlow",
       "tag": "sequenceFlow",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tMessageFlow",
       "tag": "messageFlow",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tAssociation",
       "tag": "association",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataInputAssociation",
       "tag": "dataInputAssociation",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     },
     {
       "schemaType": "tDataOutputAssociation",
       "tag": "dataOutputAssociation",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind",
+      "renderingAssertion": "tests/bpmn-acceptance/rendering_test.mbt: all graphical kinds and connection forms have standalone theme snapshots",
+      "snapshot": "tests/bpmn-acceptance/__snapshot__/symbols.json"
     }
   ]
 }

@@ -12,6 +12,8 @@ pub let inputs : ReadOnlyArray[Input]
 
 pub let model_inputs : ReadOnlyArray[Input]
 
+pub let render_inputs : ReadOnlyArray[Input]
+
 // Errors
 
 // Types and methods
