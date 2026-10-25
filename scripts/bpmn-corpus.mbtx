@@ -124,8 +124,9 @@ async fn main {
   let model_dir = "tests/corpus/bpmn-model"
   let model_sums = parse_sums(@fs.read_file(model_dir + "/SHA256SUMS").text())
   let model_names = [
-    "activities.bpmn", "events.bpmn", "collaboration.bpmn", "minimal.reference.json",
-    "activities.reference.json", "events.reference.json", "collaboration.reference.json",
+    "activities.bpmn", "events.bpmn", "collaboration.bpmn", "choreography-conversation.bpmn",
+    "di-views.bpmn", "minimal.reference.json", "activities.reference.json", "events.reference.json",
+    "collaboration.reference.json", "choreography-conversation.reference.json", "di-views.reference.json",
   ]
   if model_sums.map(p => p.1) != model_names {
     fail_with("Model corpus inventory differs from its pinned fixtures")

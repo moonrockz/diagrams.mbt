@@ -1,0 +1,961 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately",
+    "ConversationNode.messageFlowRef: normative singular tag projected to reference messageFlowRefs; output field normalized back",
+    "ParticipantAssociation inner/outer references: normative child elements projected to reference attributes"
+  ],
+  "nodes": [
+    {
+      "key": "#A",
+      "parent": "#Choreography",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "A"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Buyer"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#B",
+      "parent": "#Choreography",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "B"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Seller"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CA",
+      "parent": "#Conversations",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CA"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Buyer"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CB",
+      "parent": "#Conversations",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CB"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Seller"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CF1",
+      "parent": "#Choreography",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CF1"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Start"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "CT"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CF2",
+      "parent": "#Choreography",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CF2"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "CT"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "SubCT"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CF3",
+      "parent": "#Choreography",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CF3"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "SubCT"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "CallCT"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CF4",
+      "parent": "#Choreography",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CF4"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "CallCT"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "End"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CM",
+      "parent": "#Conversations",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CM"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "CB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CPA",
+      "parent": "#CallCT",
+      "type": "bpmn:ParticipantAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CPA"
+        },
+        "innerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "RA"
+          ]
+        },
+        "outerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CT",
+      "parent": "#Choreography",
+      "type": "bpmn:ChoreographyTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CT"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "loopType": {
+          "kind": "string",
+          "value": "MultiInstanceSequential"
+        },
+        "messageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "MF"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CallCT",
+      "parent": "#Choreography",
+      "type": "bpmn:CallChoreography",
+      "fields": {
+        "calledChoreographyRef": {
+          "kind": "reference",
+          "value": [
+            "Reusable"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "CallCT"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "children": [
+        "#CPA"
+      ]
+    },
+    {
+      "key": "#CallConversation",
+      "parent": "#Conversations",
+      "type": "bpmn:CallConversation",
+      "fields": {
+        "calledCollaborationRef": {
+          "kind": "reference",
+          "value": [
+            "GlobalConversation"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "CallConversation"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        }
+      },
+      "children": [
+        "#CallParticipant"
+      ]
+    },
+    {
+      "key": "#CallParticipant",
+      "parent": "#CallConversation",
+      "type": "bpmn:ParticipantAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CallParticipant"
+        },
+        "innerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "RCA"
+          ]
+        },
+        "outerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Choreography",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:Choreography",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Choreography"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Exchange"
+        }
+      },
+      "children": [
+        "#A",
+        "#B",
+        "#CF1",
+        "#CF2",
+        "#CF3",
+        "#CF4",
+        "#CT",
+        "#CallCT",
+        "#End",
+        "#MF",
+        "#Start",
+        "#SubCT"
+      ]
+    },
+    {
+      "key": "#ChoreographyConversations",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ChoreographyConversations"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "urn:choreography"
+        }
+      },
+      "children": [
+        "#Choreography",
+        "#Conversations",
+        "#GlobalChoreography",
+        "#GlobalConversation",
+        "#Message",
+        "#Reusable"
+      ]
+    },
+    {
+      "key": "#Conversation",
+      "parent": "#Conversations",
+      "type": "bpmn:Conversation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Conversation"
+        },
+        "messageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "CM"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Order"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "CA",
+            "CB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ConversationAssociation",
+      "parent": "#Conversations",
+      "type": "bpmn:ConversationAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ConversationAssociation"
+        },
+        "innerConversationNodeRef": {
+          "kind": "reference",
+          "value": [
+            "NestedConversation"
+          ]
+        },
+        "outerConversationNodeRef": {
+          "kind": "reference",
+          "value": [
+            "Conversation"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ConversationLinkA",
+      "parent": "#Conversations",
+      "type": "bpmn:ConversationLink",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ConversationLinkA"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Buyer link"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Conversation"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ConversationLinkB",
+      "parent": "#Conversations",
+      "type": "bpmn:ConversationLink",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ConversationLinkB"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Conversation"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "CB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Conversations",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:Collaboration",
+      "fields": {
+        "choreographyRef": {
+          "kind": "reference",
+          "value": [
+            "Choreography"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Conversations"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Conversation view"
+        }
+      },
+      "children": [
+        "#CA",
+        "#CB",
+        "#CM",
+        "#CallConversation",
+        "#Conversation",
+        "#ConversationAssociation",
+        "#ConversationLinkA",
+        "#ConversationLinkB",
+        "#MessageAssociation",
+        "#ParticipantAssociation",
+        "#SubConversation"
+      ]
+    },
+    {
+      "key": "#End",
+      "parent": "#Choreography",
+      "type": "bpmn:EndEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "End"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GA",
+      "parent": "#GlobalChoreography",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GA"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GB",
+      "parent": "#GlobalChoreography",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GB"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalChoreography",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:GlobalChoreographyTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalChoreography"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "GA"
+          ]
+        }
+      },
+      "children": [
+        "#GA",
+        "#GB"
+      ]
+    },
+    {
+      "key": "#GlobalConversation",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:GlobalConversation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalConversation"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reusable conversation"
+        }
+      },
+      "children": [
+        "#RCA",
+        "#RCB",
+        "#RCM"
+      ]
+    },
+    {
+      "key": "#MF",
+      "parent": "#Choreography",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "MF"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "B"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Message",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:Message",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Message"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#MessageAssociation",
+      "parent": "#Conversations",
+      "type": "bpmn:MessageFlowAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "MessageAssociation"
+        },
+        "innerMessageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "RCM"
+          ]
+        },
+        "outerMessageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "CM"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#NestedCT",
+      "parent": "#SubCT",
+      "type": "bpmn:ChoreographyTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "NestedCT"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "messageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "MF"
+          ]
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#NestedConversation",
+      "parent": "#SubConversation",
+      "type": "bpmn:Conversation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "NestedConversation"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Line items"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "CA",
+            "CB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ParticipantAssociation",
+      "parent": "#Conversations",
+      "type": "bpmn:ParticipantAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ParticipantAssociation"
+        },
+        "innerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "RCA"
+          ]
+        },
+        "outerParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RA",
+      "parent": "#Reusable",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RA"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RB",
+      "parent": "#Reusable",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RB"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RCA",
+      "parent": "#GlobalConversation",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RCA"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RCB",
+      "parent": "#GlobalConversation",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RCB"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RCM",
+      "parent": "#GlobalConversation",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RCM"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "RCA"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "RCB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RM",
+      "parent": "#Reusable",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RM"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "RA"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "RB"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Reusable",
+      "parent": "#ChoreographyConversations",
+      "type": "bpmn:Choreography",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Reusable"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reusable exchange"
+        }
+      },
+      "children": [
+        "#RA",
+        "#RB",
+        "#RM"
+      ]
+    },
+    {
+      "key": "#Start",
+      "parent": "#Choreography",
+      "type": "bpmn:StartEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Start"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SubCT",
+      "parent": "#Choreography",
+      "type": "bpmn:SubChoreography",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubCT"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "B"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Nested"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "children": [
+        "#NestedCT"
+      ]
+    },
+    {
+      "key": "#SubConversation",
+      "parent": "#Conversations",
+      "type": "bpmn:SubConversation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubConversation"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Details"
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "CA"
+          ]
+        }
+      },
+      "children": [
+        "#NestedConversation"
+      ]
+    }
+  ],
+  "source_sha256": "adc82e887410e5ebb761f4c84a008703077e3bca54af16b1ad639642f7ae595a"
+}

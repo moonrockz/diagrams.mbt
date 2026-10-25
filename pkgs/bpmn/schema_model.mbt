@@ -134,6 +134,7 @@ pub fn SchemaType::has_mixed_content(self : SchemaType) -> Bool {
 
 ///|
 pub fn Kind::declared_type(self : Kind) -> ExpandedName? {
+  if opaque_kind(self) { return None }
   let name = self.name()
   if schema_elements.iter().find_first(e => e.name == name) is Some(element) { return element.value_type }
   let mut found : ExpandedName? = None

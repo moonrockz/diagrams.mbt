@@ -70,10 +70,10 @@ fn normalize_reference(doc : @bpmn.Document) -> Json raise {
 
 ///|
 test "pinned bpmn-moddle agrees on identities containment references and minimal DI" {
-  for name in ["minimal","activities","events","collaboration"] {
+  for name in ["minimal","activities","events","collaboration","choreography-conversation","di-views"] {
     let source=if name == "minimal" { fixture() } else { model_source(name+".bpmn") }
     let result=@bpmn.read(source)
-    assert_eq(result.diagnostics.iter().map(d => d.code).to_array(),[],msg=name)
+    assert_eq(result.diagnostics.iter().map(d => (d.code,d.span.map(s => source[s.start:s.end].to_owned()))).to_array(),[])
     let expected=@json.parse(model_source(name+".reference.json"))
     guard expected is Object(fields) else { fail("reference fixture must be an object") }
     assert_eq(fields.get("reference"),Some(Json("bpmn-moddle@10.3.1")))

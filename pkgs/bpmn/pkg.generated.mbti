@@ -257,6 +257,38 @@ pub fn BoundaryEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn BoundaryEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn BoundaryEvent::to_repr(Self) -> @debug.Repr
 
+pub struct BpmnDiagram {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnDiagram::bpmn_label_style(Self) -> Field[ReadOnlyArray[BpmnLabelStyle]]
+pub fn BpmnDiagram::bpmn_plane(Self) -> Field[BpmnPlane]
+pub fn BpmnDiagram::documentation(Self) -> Field[String]
+pub fn BpmnDiagram::equal(Self, Self) -> Bool
+pub fn BpmnDiagram::from_element(Element) -> Self?
+pub fn BpmnDiagram::id(Self) -> Field[String]
+pub fn BpmnDiagram::name(Self) -> Field[String]
+pub fn BpmnDiagram::new(name? : String, documentation? : String, resolution? : ExactNumber, id? : String, contents? : ArrayView[Content]) -> Self
+pub fn BpmnDiagram::not_equal(Self, Self) -> Bool
+pub fn BpmnDiagram::resolution(Self) -> Field[ExactNumber]
+pub fn BpmnDiagram::to_repr(Self) -> @debug.Repr
+
+pub struct BpmnEdge {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnEdge::bpmn_element(Self) -> Field[Reference]
+pub fn BpmnEdge::bpmn_label(Self) -> Field[BpmnLabel]
+pub fn BpmnEdge::equal(Self, Self) -> Bool
+pub fn BpmnEdge::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn BpmnEdge::from_element(Element) -> Self?
+pub fn BpmnEdge::id(Self) -> Field[String]
+pub fn BpmnEdge::message_visible_kind(Self) -> Field[BpmnMessageVisibleKind]
+pub fn BpmnEdge::new(id? : String, bpmn_element? : Reference, source_element? : Reference, target_element? : Reference, message_visible_kind? : BpmnMessageVisibleKind, contents? : ArrayView[Content]) -> Self
+pub fn BpmnEdge::not_equal(Self, Self) -> Bool
+pub fn BpmnEdge::source_element(Self) -> Field[Reference]
+pub fn BpmnEdge::target_element(Self) -> Field[Reference]
+pub fn BpmnEdge::to_repr(Self) -> @debug.Repr
+pub fn BpmnEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
+
 pub(all) enum BpmnEnum {
   BpmnParticipantBandKind(BpmnParticipantBandKind)
   BpmnMessageVisibleKind(BpmnMessageVisibleKind)
@@ -295,6 +327,30 @@ pub fn BpmnError::not_equal(Self, Self) -> Bool
 pub fn BpmnError::structure_ref(Self) -> Field[Reference]
 pub fn BpmnError::to_repr(Self) -> @debug.Repr
 
+pub struct BpmnLabel {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnLabel::bounds(Self) -> Field[DcBounds]
+pub fn BpmnLabel::equal(Self, Self) -> Bool
+pub fn BpmnLabel::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn BpmnLabel::from_element(Element) -> Self?
+pub fn BpmnLabel::id(Self) -> Field[String]
+pub fn BpmnLabel::label_style(Self) -> Field[Reference]
+pub fn BpmnLabel::new(id? : String, label_style? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn BpmnLabel::not_equal(Self, Self) -> Bool
+pub fn BpmnLabel::to_repr(Self) -> @debug.Repr
+
+pub struct BpmnLabelStyle {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnLabelStyle::equal(Self, Self) -> Bool
+pub fn BpmnLabelStyle::font(Self) -> Field[DcFont]
+pub fn BpmnLabelStyle::from_element(Element) -> Self?
+pub fn BpmnLabelStyle::id(Self) -> Field[String]
+pub fn BpmnLabelStyle::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn BpmnLabelStyle::not_equal(Self, Self) -> Bool
+pub fn BpmnLabelStyle::to_repr(Self) -> @debug.Repr
+
 pub(all) enum BpmnMessageVisibleKind {
   Initiating
   NonInitiating
@@ -318,6 +374,39 @@ pub fn BpmnParticipantBandKind::not_equal(Self, Self) -> Bool
 pub fn BpmnParticipantBandKind::parse(String) -> Self?
 pub fn BpmnParticipantBandKind::to_repr(Self) -> @debug.Repr
 pub fn BpmnParticipantBandKind::token(Self) -> String
+
+pub struct BpmnPlane {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnPlane::bpmn_element(Self) -> Field[Reference]
+pub fn BpmnPlane::diagram_element(Self) -> Field[ReadOnlyArray[DiDiagramElement]]
+pub fn BpmnPlane::equal(Self, Self) -> Bool
+pub fn BpmnPlane::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn BpmnPlane::from_element(Element) -> Self?
+pub fn BpmnPlane::id(Self) -> Field[String]
+pub fn BpmnPlane::new(id? : String, bpmn_element? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn BpmnPlane::not_equal(Self, Self) -> Bool
+pub fn BpmnPlane::to_repr(Self) -> @debug.Repr
+
+pub struct BpmnShape {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnShape::bounds(Self) -> Field[DcBounds]
+pub fn BpmnShape::bpmn_element(Self) -> Field[Reference]
+pub fn BpmnShape::bpmn_label(Self) -> Field[BpmnLabel]
+pub fn BpmnShape::choreography_activity_shape(Self) -> Field[Reference]
+pub fn BpmnShape::equal(Self, Self) -> Bool
+pub fn BpmnShape::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn BpmnShape::from_element(Element) -> Self?
+pub fn BpmnShape::id(Self) -> Field[String]
+pub fn BpmnShape::is_expanded(Self) -> Field[Bool]
+pub fn BpmnShape::is_horizontal(Self) -> Field[Bool]
+pub fn BpmnShape::is_marker_visible(Self) -> Field[Bool]
+pub fn BpmnShape::is_message_visible(Self) -> Field[Bool]
+pub fn BpmnShape::new(id? : String, bpmn_element? : Reference, is_horizontal? : Bool, is_expanded? : Bool, is_marker_visible? : Bool, is_message_visible? : Bool, participant_band_kind? : BpmnParticipantBandKind, choreography_activity_shape? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn BpmnShape::not_equal(Self, Self) -> Bool
+pub fn BpmnShape::participant_band_kind(Self) -> Field[BpmnParticipantBandKind]
+pub fn BpmnShape::to_repr(Self) -> @debug.Repr
 
 pub struct BusinessRuleTask {
   element : Element
@@ -376,6 +465,48 @@ pub fn CallActivity::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn CallActivity::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn CallActivity::start_quantity(Self) -> Field[ExactInteger]
 pub fn CallActivity::to_repr(Self) -> @debug.Repr
+
+pub struct CallChoreography {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CallChoreography::auditing(Self) -> Field[Auditing]
+pub fn CallChoreography::called_choreography_ref(Self) -> Field[Reference]
+pub fn CallChoreography::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallChoreography::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn CallChoreography::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CallChoreography::equal(Self, Self) -> Bool
+pub fn CallChoreography::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CallChoreography::from_element(Element) -> Self?
+pub fn CallChoreography::id(Self) -> Field[String]
+pub fn CallChoreography::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallChoreography::initiating_participant_ref(Self) -> Field[Reference]
+pub fn CallChoreography::loop_type(Self) -> Field[ChoreographyLoopType]
+pub fn CallChoreography::monitoring(Self) -> Field[Monitoring]
+pub fn CallChoreography::name(Self) -> Field[String]
+pub fn CallChoreography::new(id? : String, name? : String, initiating_participant_ref? : Reference, loop_type? : ChoreographyLoopType, called_choreography_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CallChoreography::not_equal(Self, Self) -> Bool
+pub fn CallChoreography::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallChoreography::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn CallChoreography::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallChoreography::to_repr(Self) -> @debug.Repr
+
+pub struct CallConversation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CallConversation::called_collaboration_ref(Self) -> Field[Reference]
+pub fn CallConversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn CallConversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CallConversation::equal(Self, Self) -> Bool
+pub fn CallConversation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CallConversation::from_element(Element) -> Self?
+pub fn CallConversation::id(Self) -> Field[String]
+pub fn CallConversation::message_flow_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallConversation::name(Self) -> Field[String]
+pub fn CallConversation::new(id? : String, name? : String, called_collaboration_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CallConversation::not_equal(Self, Self) -> Bool
+pub fn CallConversation::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn CallConversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallConversation::to_repr(Self) -> @debug.Repr
 
 pub struct CallableElement {
   element : Element
@@ -456,6 +587,52 @@ pub fn CategoryValue::not_equal(Self, Self) -> Bool
 pub fn CategoryValue::to_repr(Self) -> @debug.Repr
 pub fn CategoryValue::value(Self) -> Field[String]
 
+pub struct Choreography {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Choreography::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn Choreography::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Choreography::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
+pub fn Choreography::conversation_link(Self) -> Field[ReadOnlyArray[ConversationLink]]
+pub fn Choreography::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
+pub fn Choreography::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn Choreography::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Choreography::equal(Self, Self) -> Bool
+pub fn Choreography::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Choreography::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn Choreography::from_element(Element) -> Self?
+pub fn Choreography::id(Self) -> Field[String]
+pub fn Choreography::is_closed(Self) -> Field[Bool]
+pub fn Choreography::message_flow(Self) -> Field[ReadOnlyArray[MessageFlow]]
+pub fn Choreography::message_flow_association(Self) -> Field[ReadOnlyArray[MessageFlowAssociation]]
+pub fn Choreography::name(Self) -> Field[String]
+pub fn Choreography::new(id? : String, name? : String, is_closed? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn Choreography::not_equal(Self, Self) -> Bool
+pub fn Choreography::participant(Self) -> Field[ReadOnlyArray[Participant]]
+pub fn Choreography::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn Choreography::to_repr(Self) -> @debug.Repr
+
+pub struct ChoreographyActivity {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ChoreographyActivity::auditing(Self) -> Field[Auditing]
+pub fn ChoreographyActivity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyActivity::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn ChoreographyActivity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ChoreographyActivity::equal(Self, Self) -> Bool
+pub fn ChoreographyActivity::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ChoreographyActivity::from_element(Element) -> Self?
+pub fn ChoreographyActivity::id(Self) -> Field[String]
+pub fn ChoreographyActivity::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyActivity::initiating_participant_ref(Self) -> Field[Reference]
+pub fn ChoreographyActivity::loop_type(Self) -> Field[ChoreographyLoopType]
+pub fn ChoreographyActivity::monitoring(Self) -> Field[Monitoring]
+pub fn ChoreographyActivity::name(Self) -> Field[String]
+pub fn ChoreographyActivity::not_equal(Self, Self) -> Bool
+pub fn ChoreographyActivity::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyActivity::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyActivity::to_repr(Self) -> @debug.Repr
+
 pub(all) enum ChoreographyLoopType {
   None
   Standard
@@ -468,14 +645,37 @@ pub fn ChoreographyLoopType::parse(String) -> Self?
 pub fn ChoreographyLoopType::to_repr(Self) -> @debug.Repr
 pub fn ChoreographyLoopType::token(Self) -> String
 
+pub struct ChoreographyTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ChoreographyTask::auditing(Self) -> Field[Auditing]
+pub fn ChoreographyTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyTask::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn ChoreographyTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ChoreographyTask::equal(Self, Self) -> Bool
+pub fn ChoreographyTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ChoreographyTask::from_element(Element) -> Self?
+pub fn ChoreographyTask::id(Self) -> Field[String]
+pub fn ChoreographyTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyTask::initiating_participant_ref(Self) -> Field[Reference]
+pub fn ChoreographyTask::loop_type(Self) -> Field[ChoreographyLoopType]
+pub fn ChoreographyTask::message_flow_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyTask::monitoring(Self) -> Field[Monitoring]
+pub fn ChoreographyTask::name(Self) -> Field[String]
+pub fn ChoreographyTask::new(id? : String, name? : String, initiating_participant_ref? : Reference, loop_type? : ChoreographyLoopType, contents? : ArrayView[Content]) -> Self
+pub fn ChoreographyTask::not_equal(Self, Self) -> Bool
+pub fn ChoreographyTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyTask::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ChoreographyTask::to_repr(Self) -> @debug.Repr
+
 pub struct Collaboration {
   element : Element
 } derive(Eq, @debug.Debug)
 pub fn Collaboration::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn Collaboration::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
-pub fn Collaboration::conversation_association(Self) -> Field[ReadOnlyArray[Element]]
-pub fn Collaboration::conversation_link(Self) -> Field[ReadOnlyArray[Element]]
-pub fn Collaboration::conversation_node(Self) -> Field[ReadOnlyArray[Element]]
+pub fn Collaboration::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
+pub fn Collaboration::conversation_link(Self) -> Field[ReadOnlyArray[ConversationLink]]
+pub fn Collaboration::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
 pub fn Collaboration::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
 pub fn Collaboration::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Collaboration::equal(Self, Self) -> Bool
@@ -563,6 +763,66 @@ pub(all) enum Content {
 pub fn Content::equal(Self, Self) -> Bool
 pub fn Content::not_equal(Self, Self) -> Bool
 pub fn Content::to_repr(Self) -> @debug.Repr
+
+pub struct Conversation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Conversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn Conversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Conversation::equal(Self, Self) -> Bool
+pub fn Conversation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Conversation::from_element(Element) -> Self?
+pub fn Conversation::id(Self) -> Field[String]
+pub fn Conversation::message_flow_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Conversation::name(Self) -> Field[String]
+pub fn Conversation::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn Conversation::not_equal(Self, Self) -> Bool
+pub fn Conversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Conversation::to_repr(Self) -> @debug.Repr
+
+pub struct ConversationAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ConversationAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ConversationAssociation::equal(Self, Self) -> Bool
+pub fn ConversationAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ConversationAssociation::from_element(Element) -> Self?
+pub fn ConversationAssociation::id(Self) -> Field[String]
+pub fn ConversationAssociation::inner_conversation_node_ref(Self) -> Field[Reference]
+pub fn ConversationAssociation::new(id? : String, inner_conversation_node_ref? : Reference, outer_conversation_node_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ConversationAssociation::not_equal(Self, Self) -> Bool
+pub fn ConversationAssociation::outer_conversation_node_ref(Self) -> Field[Reference]
+pub fn ConversationAssociation::to_repr(Self) -> @debug.Repr
+
+pub struct ConversationLink {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ConversationLink::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ConversationLink::equal(Self, Self) -> Bool
+pub fn ConversationLink::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ConversationLink::from_element(Element) -> Self?
+pub fn ConversationLink::id(Self) -> Field[String]
+pub fn ConversationLink::name(Self) -> Field[String]
+pub fn ConversationLink::new(id? : String, name? : String, source_ref? : Reference, target_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ConversationLink::not_equal(Self, Self) -> Bool
+pub fn ConversationLink::source_ref(Self) -> Field[Reference]
+pub fn ConversationLink::target_ref(Self) -> Field[Reference]
+pub fn ConversationLink::to_repr(Self) -> @debug.Repr
+
+pub struct ConversationNode {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ConversationNode::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn ConversationNode::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ConversationNode::equal(Self, Self) -> Bool
+pub fn ConversationNode::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ConversationNode::from_element(Element) -> Self?
+pub fn ConversationNode::id(Self) -> Field[String]
+pub fn ConversationNode::message_flow_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ConversationNode::name(Self) -> Field[String]
+pub fn ConversationNode::not_equal(Self, Self) -> Bool
+pub fn ConversationNode::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ConversationNode::to_repr(Self) -> @debug.Repr
 
 pub struct CorrelationKey {
   element : Element
@@ -812,6 +1072,45 @@ pub fn DataStoreReference::new(id? : String, name? : String, item_subject_ref? :
 pub fn DataStoreReference::not_equal(Self, Self) -> Bool
 pub fn DataStoreReference::to_repr(Self) -> @debug.Repr
 
+pub struct DcBounds {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DcBounds::equal(Self, Self) -> Bool
+pub fn DcBounds::from_element(Element) -> Self?
+pub fn DcBounds::height(Self) -> Field[ExactNumber]
+pub fn DcBounds::new(x? : ExactNumber, y? : ExactNumber, width? : ExactNumber, height? : ExactNumber, contents? : ArrayView[Content]) -> Self
+pub fn DcBounds::not_equal(Self, Self) -> Bool
+pub fn DcBounds::to_repr(Self) -> @debug.Repr
+pub fn DcBounds::width(Self) -> Field[ExactNumber]
+pub fn DcBounds::x(Self) -> Field[ExactNumber]
+pub fn DcBounds::y(Self) -> Field[ExactNumber]
+
+pub struct DcFont {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DcFont::equal(Self, Self) -> Bool
+pub fn DcFont::from_element(Element) -> Self?
+pub fn DcFont::is_bold(Self) -> Field[Bool]
+pub fn DcFont::is_italic(Self) -> Field[Bool]
+pub fn DcFont::is_strike_through(Self) -> Field[Bool]
+pub fn DcFont::is_underline(Self) -> Field[Bool]
+pub fn DcFont::name(Self) -> Field[String]
+pub fn DcFont::new(name? : String, size? : ExactNumber, is_bold? : Bool, is_italic? : Bool, is_underline? : Bool, is_strike_through? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn DcFont::not_equal(Self, Self) -> Bool
+pub fn DcFont::size(Self) -> Field[ExactNumber]
+pub fn DcFont::to_repr(Self) -> @debug.Repr
+
+pub struct DcPoint {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DcPoint::equal(Self, Self) -> Bool
+pub fn DcPoint::from_element(Element) -> Self?
+pub fn DcPoint::new(x? : ExactNumber, y? : ExactNumber, contents? : ArrayView[Content]) -> Self
+pub fn DcPoint::not_equal(Self, Self) -> Bool
+pub fn DcPoint::to_repr(Self) -> @debug.Repr
+pub fn DcPoint::x(Self) -> Field[ExactNumber]
+pub fn DcPoint::y(Self) -> Field[ExactNumber]
+
 pub struct Definitions {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -830,6 +1129,121 @@ pub fn Definitions::roots(Self) -> ReadOnlyArray[RootElement]
 pub fn Definitions::target_namespace(Self) -> Field[String]
 pub fn Definitions::to_repr(Self) -> @debug.Repr
 pub fn Definitions::type_language(Self) -> Field[String]
+
+pub struct DiAnonymousDiagramElementExtension1 {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiAnonymousDiagramElementExtension1::equal(Self, Self) -> Bool
+pub fn DiAnonymousDiagramElementExtension1::from_element(Element) -> Self?
+pub fn DiAnonymousDiagramElementExtension1::not_equal(Self, Self) -> Bool
+pub fn DiAnonymousDiagramElementExtension1::to_repr(Self) -> @debug.Repr
+
+pub struct DiDiagram {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiDiagram::documentation(Self) -> Field[String]
+pub fn DiDiagram::equal(Self, Self) -> Bool
+pub fn DiDiagram::from_element(Element) -> Self?
+pub fn DiDiagram::id(Self) -> Field[String]
+pub fn DiDiagram::name(Self) -> Field[String]
+pub fn DiDiagram::not_equal(Self, Self) -> Bool
+pub fn DiDiagram::resolution(Self) -> Field[ExactNumber]
+pub fn DiDiagram::to_repr(Self) -> @debug.Repr
+
+pub struct DiDiagramElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiDiagramElement::equal(Self, Self) -> Bool
+pub fn DiDiagramElement::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiDiagramElement::from_element(Element) -> Self?
+pub fn DiDiagramElement::id(Self) -> Field[String]
+pub fn DiDiagramElement::not_equal(Self, Self) -> Bool
+pub fn DiDiagramElement::to_repr(Self) -> @debug.Repr
+
+pub struct DiEdge {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiEdge::equal(Self, Self) -> Bool
+pub fn DiEdge::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiEdge::from_element(Element) -> Self?
+pub fn DiEdge::id(Self) -> Field[String]
+pub fn DiEdge::not_equal(Self, Self) -> Bool
+pub fn DiEdge::to_repr(Self) -> @debug.Repr
+pub fn DiEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
+
+pub struct DiLabel {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiLabel::bounds(Self) -> Field[DcBounds]
+pub fn DiLabel::equal(Self, Self) -> Bool
+pub fn DiLabel::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiLabel::from_element(Element) -> Self?
+pub fn DiLabel::id(Self) -> Field[String]
+pub fn DiLabel::not_equal(Self, Self) -> Bool
+pub fn DiLabel::to_repr(Self) -> @debug.Repr
+
+pub struct DiLabeledEdge {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiLabeledEdge::equal(Self, Self) -> Bool
+pub fn DiLabeledEdge::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiLabeledEdge::from_element(Element) -> Self?
+pub fn DiLabeledEdge::id(Self) -> Field[String]
+pub fn DiLabeledEdge::not_equal(Self, Self) -> Bool
+pub fn DiLabeledEdge::to_repr(Self) -> @debug.Repr
+pub fn DiLabeledEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
+
+pub struct DiLabeledShape {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiLabeledShape::bounds(Self) -> Field[DcBounds]
+pub fn DiLabeledShape::equal(Self, Self) -> Bool
+pub fn DiLabeledShape::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiLabeledShape::from_element(Element) -> Self?
+pub fn DiLabeledShape::id(Self) -> Field[String]
+pub fn DiLabeledShape::not_equal(Self, Self) -> Bool
+pub fn DiLabeledShape::to_repr(Self) -> @debug.Repr
+
+pub struct DiNode {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiNode::equal(Self, Self) -> Bool
+pub fn DiNode::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiNode::from_element(Element) -> Self?
+pub fn DiNode::id(Self) -> Field[String]
+pub fn DiNode::not_equal(Self, Self) -> Bool
+pub fn DiNode::to_repr(Self) -> @debug.Repr
+
+pub struct DiPlane {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiPlane::diagram_element(Self) -> Field[ReadOnlyArray[DiDiagramElement]]
+pub fn DiPlane::equal(Self, Self) -> Bool
+pub fn DiPlane::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiPlane::from_element(Element) -> Self?
+pub fn DiPlane::id(Self) -> Field[String]
+pub fn DiPlane::not_equal(Self, Self) -> Bool
+pub fn DiPlane::to_repr(Self) -> @debug.Repr
+
+pub struct DiShape {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiShape::bounds(Self) -> Field[DcBounds]
+pub fn DiShape::equal(Self, Self) -> Bool
+pub fn DiShape::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
+pub fn DiShape::from_element(Element) -> Self?
+pub fn DiShape::id(Self) -> Field[String]
+pub fn DiShape::not_equal(Self, Self) -> Bool
+pub fn DiShape::to_repr(Self) -> @debug.Repr
+
+pub struct DiStyle {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DiStyle::equal(Self, Self) -> Bool
+pub fn DiStyle::from_element(Element) -> Self?
+pub fn DiStyle::id(Self) -> Field[String]
+pub fn DiStyle::not_equal(Self, Self) -> Bool
+pub fn DiStyle::to_repr(Self) -> @debug.Repr
 
 pub struct Diagnostic {
   code : String
@@ -884,9 +1298,11 @@ pub fn Element::enumeration(Self, String) -> Field[BpmnEnum]
 pub fn Element::equal(Self, Self) -> Bool
 pub fn Element::from_values(Kind, values? : ArrayView[Attribute], contents? : ArrayView[Content], bindings? : ArrayView[(String, String)], value_type? : ExpandedName, text_value? : Scalar) -> Self
 pub fn Element::integer(Self, String) -> Field[ExactInteger]
+pub fn Element::namespace_binding(Self, String) -> String?
 pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? : ArrayView[Self], content? : String, bindings? : ArrayView[(String, String)], value_type? : ExpandedName) -> Self
 pub fn Element::not_equal(Self, Self) -> Bool
 pub fn Element::number(Self, String) -> Field[ExactNumber]
+pub fn Element::opaque_attributes(Self) -> ReadOnlyArray[Attribute]
 pub fn Element::reference(Self, String) -> Field[Reference]
 pub fn Element::scalar(Self, ExpandedName) -> Scalar?
 pub fn Element::string(Self, String) -> Field[String]
@@ -894,6 +1310,7 @@ pub fn Element::to_repr(Self) -> @debug.Repr
 pub fn Element::with_attribute(Self, Attribute) -> Self
 pub fn Element::with_contents(Self, ArrayView[Content]) -> Self
 pub fn Element::with_kind(Self, Kind) -> Self
+pub fn Element::xml(Self) -> XmlElement?
 pub impl Eq for Element
 
 pub struct EndEvent {
@@ -1216,6 +1633,56 @@ pub fn GlobalBusinessRuleTask::not_equal(Self, Self) -> Bool
 pub fn GlobalBusinessRuleTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn GlobalBusinessRuleTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalBusinessRuleTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalChoreographyTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalChoreographyTask::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn GlobalChoreographyTask::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalChoreographyTask::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
+pub fn GlobalChoreographyTask::conversation_link(Self) -> Field[ReadOnlyArray[ConversationLink]]
+pub fn GlobalChoreographyTask::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
+pub fn GlobalChoreographyTask::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn GlobalChoreographyTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalChoreographyTask::equal(Self, Self) -> Bool
+pub fn GlobalChoreographyTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalChoreographyTask::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn GlobalChoreographyTask::from_element(Element) -> Self?
+pub fn GlobalChoreographyTask::id(Self) -> Field[String]
+pub fn GlobalChoreographyTask::initiating_participant_ref(Self) -> Field[Reference]
+pub fn GlobalChoreographyTask::is_closed(Self) -> Field[Bool]
+pub fn GlobalChoreographyTask::message_flow(Self) -> Field[ReadOnlyArray[MessageFlow]]
+pub fn GlobalChoreographyTask::message_flow_association(Self) -> Field[ReadOnlyArray[MessageFlowAssociation]]
+pub fn GlobalChoreographyTask::name(Self) -> Field[String]
+pub fn GlobalChoreographyTask::new(id? : String, name? : String, is_closed? : Bool, initiating_participant_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn GlobalChoreographyTask::not_equal(Self, Self) -> Bool
+pub fn GlobalChoreographyTask::participant(Self) -> Field[ReadOnlyArray[Participant]]
+pub fn GlobalChoreographyTask::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn GlobalChoreographyTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalConversation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalConversation::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn GlobalConversation::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalConversation::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
+pub fn GlobalConversation::conversation_link(Self) -> Field[ReadOnlyArray[ConversationLink]]
+pub fn GlobalConversation::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
+pub fn GlobalConversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn GlobalConversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalConversation::equal(Self, Self) -> Bool
+pub fn GlobalConversation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalConversation::from_element(Element) -> Self?
+pub fn GlobalConversation::id(Self) -> Field[String]
+pub fn GlobalConversation::is_closed(Self) -> Field[Bool]
+pub fn GlobalConversation::message_flow(Self) -> Field[ReadOnlyArray[MessageFlow]]
+pub fn GlobalConversation::message_flow_association(Self) -> Field[ReadOnlyArray[MessageFlowAssociation]]
+pub fn GlobalConversation::name(Self) -> Field[String]
+pub fn GlobalConversation::new(id? : String, name? : String, is_closed? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn GlobalConversation::not_equal(Self, Self) -> Bool
+pub fn GlobalConversation::participant(Self) -> Field[ReadOnlyArray[Participant]]
+pub fn GlobalConversation::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn GlobalConversation::to_repr(Self) -> @debug.Repr
 
 pub struct GlobalManualTask {
   element : Element
@@ -2659,6 +3126,47 @@ pub fn StartEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn StartEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn StartEvent::to_repr(Self) -> @debug.Repr
 
+pub struct SubChoreography {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SubChoreography::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn SubChoreography::auditing(Self) -> Field[Auditing]
+pub fn SubChoreography::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubChoreography::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn SubChoreography::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SubChoreography::equal(Self, Self) -> Bool
+pub fn SubChoreography::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SubChoreography::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn SubChoreography::from_element(Element) -> Self?
+pub fn SubChoreography::id(Self) -> Field[String]
+pub fn SubChoreography::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubChoreography::initiating_participant_ref(Self) -> Field[Reference]
+pub fn SubChoreography::loop_type(Self) -> Field[ChoreographyLoopType]
+pub fn SubChoreography::monitoring(Self) -> Field[Monitoring]
+pub fn SubChoreography::name(Self) -> Field[String]
+pub fn SubChoreography::new(id? : String, name? : String, initiating_participant_ref? : Reference, loop_type? : ChoreographyLoopType, contents? : ArrayView[Content]) -> Self
+pub fn SubChoreography::not_equal(Self, Self) -> Bool
+pub fn SubChoreography::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubChoreography::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubChoreography::to_repr(Self) -> @debug.Repr
+
+pub struct SubConversation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SubConversation::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
+pub fn SubConversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn SubConversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SubConversation::equal(Self, Self) -> Bool
+pub fn SubConversation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SubConversation::from_element(Element) -> Self?
+pub fn SubConversation::id(Self) -> Field[String]
+pub fn SubConversation::message_flow_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubConversation::name(Self) -> Field[String]
+pub fn SubConversation::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn SubConversation::not_equal(Self, Self) -> Bool
+pub fn SubConversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubConversation::to_repr(Self) -> @debug.Repr
+
 pub struct SubProcess {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -3102,6 +3610,30 @@ pub struct XmlAttribute {
 pub fn XmlAttribute::equal(Self, Self) -> Bool
 pub fn XmlAttribute::not_equal(Self, Self) -> Bool
 pub fn XmlAttribute::to_repr(Self) -> @debug.Repr
+
+pub(all) enum XmlContent {
+  Text(String)
+  Element(XmlElement)
+  Comment(String)
+  ProcessingInstruction(target~ : String, data~ : String)
+} derive(Eq, @debug.Debug)
+pub fn XmlContent::equal(Self, Self) -> Bool
+pub fn XmlContent::not_equal(Self, Self) -> Bool
+pub fn XmlContent::to_repr(Self) -> @debug.Repr
+
+pub struct XmlElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn XmlElement::attributes(Self) -> ReadOnlyArray[Attribute]
+pub fn XmlElement::bindings(Self) -> ReadOnlyArray[(String, String)]
+pub fn XmlElement::contents(Self) -> ReadOnlyArray[Content]
+pub fn XmlElement::equal(Self, Self) -> Bool
+pub fn XmlElement::from_element(Element) -> Self?
+pub fn XmlElement::name(Self) -> ExpandedName
+pub fn XmlElement::namespace_binding(Self, String) -> String?
+pub fn XmlElement::new(ExpandedName, attributes? : ArrayView[(ExpandedName, String)], contents? : ArrayView[XmlContent], bindings? : ArrayView[(String, String)]) -> Self
+pub fn XmlElement::not_equal(Self, Self) -> Bool
+pub fn XmlElement::to_repr(Self) -> @debug.Repr
 
 pub struct XmlNode {
   kind : XmlNodeKind
