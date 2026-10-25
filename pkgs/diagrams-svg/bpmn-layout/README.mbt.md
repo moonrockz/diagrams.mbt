@@ -13,7 +13,8 @@ It has no XML parser, DOM, clock or I/O dependency.
 waypoints alongside numeric boxes. Labels retain exact bounds and font settings.
 A single `translate_x`/`translate_y` and canvas extent enclose every visible shape,
 label and waypoint with padding. Renderers apply that translation once. Hidden
-subprocess contents are omitted. Message connections may use visible display
+subprocess contents are omitted using the core model's shared `Bpmn::scope`
+visibility. Boundary events inherit their activity's visibility. Message connections may use visible display
 anchors while their source flow keeps its original semantic endpoint identities.
 
 Supplied numeric tokens are preserved verbatim. Layout calculations require

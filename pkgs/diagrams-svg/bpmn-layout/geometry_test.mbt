@@ -127,3 +127,18 @@ test "lane artifacts and group labels are intentional while unowned flow nodes s
   assert_false(findings.iter().any(f => f.rule == Overlap && f.identities.contains("D")))
   assert_true(findings.iter().any(f => f.rule == Overlap && f.identities.contains("T")))
 }
+
+///|
+test "a hidden boundary message follows attachment ownership to its visible scope anchor" {
+  let view=@model.Bpmn::new("P",[
+    @model.Node::new("Sub",SubProcess),
+    @model.Node::new("Inside",Task,ownership=@model.Ownership::new(subprocess="Sub")),
+    @model.Node::new("Boundary",BoundaryEvent,ownership=@model.Ownership::new(attached_to="Inside")),
+    @model.Node::new("External",Participant,black_box=true),
+  ],[@model.Flow::new("M","Boundary","External",kind=MessageFlow)])
+  let result=@layout.layout(view,policy=Automatic)
+  assert_true(result.geometry != None,msg=@debug.to_string(result.diagnostics))
+  assert_eq(result.geometry.unwrap().shapes.length(),2)
+  assert_eq(result.geometry.unwrap().connections[0].source,"Sub")
+  assert_eq(result.geometry.unwrap().connections[0].flow.semantic_source.unwrap().source_id,Some("Boundary"))
+}
