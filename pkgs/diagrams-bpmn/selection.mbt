@@ -8,7 +8,7 @@ pub extend ViewSelector with Eq::{equal,not_equal}
 pub extend ViewSelector with @debug.Debug::{to_repr}
 
 ///|
-priv struct Source { id : String?; index : @bpmn.DocumentIndex; references : @bpmn.ReferenceResult; findings : ReadOnlyArray[@bpmn.ValidationFinding] }
+priv struct Source { id : String?; index : @bpmn.DocumentIndex; references : @bpmn.ReferenceResult; findings : ReadOnlyArray[@bpmn.ValidationFinding]; fields : Map[(Int,String),Array[@bpmn.ResolvedReference]] }
 
 ///|
 priv struct Selected { resource : Int; node : Int; plane : Int? }
@@ -59,10 +59,20 @@ fn Converter::charge(self : Converter, count : Int) -> Bool {
 }
 
 ///|
+fn reference_fields(references : @bpmn.ReferenceResult) -> Map[(Int,String),Array[@bpmn.ResolvedReference]] {
+  let fields : Map[(Int,String),Array[@bpmn.ResolvedReference]]=Map([])
+  for reference in references.references {
+    let key=(reference.source.ordinal,reference.field.local_name)
+    match fields.get(key) { Some(values) => values.push(reference); None => fields[key]=[reference] }
+  }
+  fields
+}
+
+///|
 fn make_source(document : @bpmn.Document, id : String?, resources : @bpmn.ResourceSet, limits : @bpmn.Limits) -> Source {
   let structure=@bpmn.validate_structure(document,resource_id?=id,limits~)
   let references=@bpmn.resolve_references(structure.index,resources~,resource_id?=id,limits~)
-  {id,index:structure.index,references,findings:ReadOnlyArray::from_array(structure.findings.iter().concat(references.findings.iter()).to_array())}
+  {id,index:structure.index,references,fields:reference_fields(references),findings:ReadOnlyArray::from_array(structure.findings.iter().concat(references.findings.iter()).to_array())}
 }
 
 ///|
@@ -81,7 +91,7 @@ fn Converter::source_for(self : Converter, resolved : @bpmn.ResolvedElement) -> 
   let references=@bpmn.resolve_references(index,resources=self.resources,resource_id=id,limits=self.limits)
   if !references.complete { self.add("bpmn/conversion-limit","Imported reference processing did not complete"); return None }
   let structure_findings=self.sources[0].references.findings.filter(f => f.stage == Structure && f.resource_id == Some(id))
-  let source=Source::{id:Some(id),index,references,findings:ReadOnlyArray::from_array(structure_findings.iter().concat(references.findings.iter()).to_array())}
+  let source=Source::{id:Some(id),index,references,fields:reference_fields(references),findings:ReadOnlyArray::from_array(structure_findings.iter().concat(references.findings.iter()).to_array())}
   self.sources.push(source); Some((self.sources.length()-1,resolved.node.ordinal))
 }
 
@@ -89,15 +99,16 @@ fn Converter::source_for(self : Converter, resolved : @bpmn.ResolvedElement) -> 
 fn Converter::resolve_field(self : Converter, resource : Int, ordinal : Int, field : String) -> Array[(Int,Int)] {
   let source=self.sources[resource]
   let out=[]
-  if !self.charge(source.references.references.length()) { return out }
-  for reference in source.references.references {
-    if reference.source.ordinal != ordinal || reference.field.local_name != field { continue }
+  let references=source.fields.get((ordinal,field)).unwrap_or([])
+  if !self.charge(references.length()+1) { return out }
+  for reference in references {
     match reference.resolution {
       Found(target) => if self.source_for(target) is Some(key) {
         out.push(key)
         if ["calledElement","dataObjectRef","dataStoreRef","categoryValueRef","eventDefinitionRef","labelStyle"].contains(field) {
+          let known=self.dependencies.contains(key)
           self.dependencies[key]=true
-          if field != "calledElement" {
+          if field != "calledElement" && !known {
             let index=self.sources[key.0].index
             if self.charge(index.nodes.length()) {
               let members=Map([(key.1,true)])

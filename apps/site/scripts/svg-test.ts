@@ -149,8 +149,10 @@ try {
   assert.equal(markerFrames.length, 37);
   const viewFrames = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/views.json', 'utf8')) as [string, string, string][];
   assert.equal(viewFrames.length, 6);
+  const automaticFrames = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/automatic.json', 'utf8')) as [string, string, string][];
+  assert.equal(automaticFrames.length, 24);
   const minimal = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
-  for (const [name, mode, source] of [...symbolFrames, ...markerFrames, ...viewFrames, ['minimal', 'adaptive', minimal]]) {
+  for (const [name, mode, source] of [...symbolFrames, ...markerFrames, ...viewFrames, ...automaticFrames, ['minimal', 'adaptive', minimal]]) {
     for (const preference of ['dark', 'light'] as const) {
       await page.emulateMedia({ colorScheme: preference });
       await page.setContent('');
@@ -236,7 +238,7 @@ try {
     })));
   }), true, 'BPMN caller prefixes isolate IDs, markers and root theme overrides');
   assert.deepEqual(requests, [], 'BPMN SVG qualification remains offline');
-  console.log(`Verified ${symbolFrames.length + markerFrames.length + viewFrames.length + 1} BPMN SVG outputs in both preferences, including geometry, root overrides and contrast.`);
+  console.log(`Verified ${symbolFrames.length + markerFrames.length + viewFrames.length + automaticFrames.length + 1} BPMN SVG outputs in both preferences, including geometry, root overrides and contrast.`);
   // Group 1 BPMN tracer: offline path overlay, paused startup and keyboard play/pause.
   const bpmnSvg = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
   assert.equal(await page.evaluate(source => {

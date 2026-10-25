@@ -106,10 +106,10 @@ Depends on: group 8.
 Bead: diagrams-u42.10.
 Depends on: group 9.
 
-- [ ] 10.1 Add deterministic scope decomposition, cycle condensation, ranking and measured lane/node placement; verify nested lanes/subprocesses, disconnected components, loops and long labels with focused geometry tests.
-- [ ] 10.2 Add endpoint ports and orthogonal routing for sequence/message/data flows, parallel edges, return paths and boundary events; verify actual endpoint identities, containment and distinct routes in the corpus.
-- [ ] 10.3 Enforce node/edge/search budgets and complete fallback layout under prefer-supplied; verify limit diagnostics, absence of mixed-coordinate results and no legibility findings for automatic corpus layouts.
-- [ ] 10.4 Document layout policies, supplied-geometry preservation and failure limits; verify generated/supplied examples, browser snapshots and the original sequence SVG snapshots.
+- [x] 10.1 Add deterministic scope decomposition, cycle condensation, ranking and measured lane/node placement; verify nested lanes/subprocesses, disconnected components, loops and long labels with focused geometry tests.
+- [x] 10.2 Add endpoint ports and orthogonal routing for sequence/message/data flows, parallel edges, return paths and boundary events; verify actual endpoint identities, containment and distinct routes in the corpus.
+- [x] 10.3 Enforce node/edge/search budgets and complete fallback layout under prefer-supplied; verify limit diagnostics, absence of mixed-coordinate results and no legibility findings for automatic corpus layouts.
+- [x] 10.4 Document layout policies, supplied-geometry preservation and failure limits; verify generated/supplied examples, browser snapshots and the original sequence SVG snapshots.
 
 ## 11. Add pure motion plans and occurrence-aware exploration
 

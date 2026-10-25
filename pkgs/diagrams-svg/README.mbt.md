@@ -176,6 +176,10 @@ Invalid supplied coordinates return an error under the first two policies.
 Source conversion and selection are provided by `moonrockz/diagrams-bpmn`.
 Choreography and conversation rendering remain deferred.
 
+Automatic layout condenses cycles, ranks scopes, allocates measured lane/group
+bands and routes orthogonal connections around shapes and labels within bounded
+search limits. Its checked module guide describes policies and failure results.
+
 The separate `bpmn-layout` package retains exact decimal/exponent tokens for
 shape bounds, label bounds and edge waypoints. Every element shares one viewport
 translation, including pools, lanes, expanded subprocesses and boundary events.

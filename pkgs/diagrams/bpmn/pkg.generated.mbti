@@ -286,9 +286,10 @@ pub struct Ownership {
   lanes : ReadOnlyArray[String]
   subprocess : String?
   attached_to : String?
+  groups : ReadOnlyArray[String]
 } derive(Eq, @debug.Debug)
 pub fn Ownership::equal(Self, Self) -> Bool
-pub fn Ownership::new(pool? : String, lanes? : ArrayView[String], subprocess? : String, attached_to? : String) -> Self
+pub fn Ownership::new(pool? : String, lanes? : ArrayView[String], subprocess? : String, attached_to? : String, groups? : ArrayView[String]) -> Self
 pub fn Ownership::not_equal(Self, Self) -> Bool
 pub fn Ownership::to_repr(Self) -> @debug.Repr
 

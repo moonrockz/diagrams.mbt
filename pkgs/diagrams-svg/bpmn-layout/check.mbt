@@ -65,6 +65,11 @@ fn on_shape(point : Point, shape : Shape) -> Bool {
 }
 
 ///|
+fn outward(anchor : Point, next : Point, shape : Shape) -> Bool {
+  on_shape(anchor,shape) && (anchor.x-shape.box.x-shape.box.width/2.0)*(next.x-anchor.x)+(anchor.y-shape.box.y-shape.box.height/2.0)*(next.y-anchor.y) >= 0.0
+}
+
+///|
 fn crosses(a : Point, b : Point, box : Rect) -> Bool {
   let left=box.x+0.5; let right=box.x+box.width-0.5; let top=box.y+0.5; let bottom=box.y+box.height-0.5
   if left >= right || top >= bottom { return false }
@@ -189,9 +194,18 @@ pub fn check(geometry : Geometry, palette : @theme.Palette, work_limit? : Int = 
     if target is Some(t) && !on_shape(edge.line[edge.line.length()-1],geometry.shapes[t]) { add(Endpoint,[edge.flow.id,edge.target],"Connection \{edge.flow.id} misses its target border") }
     for shape in geometry.shapes {
       if !charge() { break }
-      if shape.node.kind == Group || ancestor(edge.source,shape.node.id) || ancestor(edge.target,shape.node.id) { continue }
+      let source_inside=ancestor(edge.source,shape.node.id); let target_inside=ancestor(edge.target,shape.node.id)
+      if source_inside && target_inside && (shape.node.kind == Participant || (activity(shape.node.kind) && shape.node.expanded.unwrap_or(false))) {
+        for point in edge.line {
+          if !charge() { break }
+          if !shape.box.contains({x:point.x,y:point.y,width:0.0,height:0.0},tolerance=1.0) { add(Containment,[edge.flow.id,shape.node.id],"Connection \{edge.flow.id} leaves its common scope \{shape.node.id}"); break }
+        }
+      }
+      if shape.node.kind == Group || shape.node.kind == Lane || source_inside || target_inside { continue }
       for i in 1..<edge.line.length() {
         if !charge() { break }
+        if i == 1 && shape.node.id == edge.source && outward(edge.line[0],edge.line[1],shape) { continue }
+        if i == edge.line.length()-1 && shape.node.id == edge.target && outward(edge.line[i],edge.line[i-1],shape) { continue }
         if crosses(edge.line[i-1],edge.line[i],shape.box) { add(Overlap,[edge.flow.id,shape.node.id],"Connection \{edge.flow.id} crosses shape \{shape.node.id}"); break }
       }
     }

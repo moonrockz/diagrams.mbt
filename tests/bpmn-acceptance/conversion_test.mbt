@@ -266,7 +266,7 @@ test "black box message endpoints fall back to the pool shape when DI omits the 
 }
 
 ///|
-test "conversion budget exhaustion before the root collaboration instance never panics" {
+test "indexed collaboration conversion returns bounded failures under tight work budgets" {
   let participants=StringBuilder(); let shapes=StringBuilder()
   for i in 0..<24 {
     participants.write_string("<b:participant id='Pool\{i}'/>")
@@ -280,9 +280,12 @@ test "conversion budget exhaustion before the root collaboration instance never 
   let references=@bpmn.resolve_references(structure.index,limits~)
   assert_true(references.complete); assert_eq(references.findings,[])
   let result=@adapter.to_diagram(doc,limits~)
-  assert_eq(result.diagram,None)
-  assert_true(result.diagnostics.iter().any(d => d.code == "bpmn/conversion-limit"))
+  if nodes == 512 { assert_eq(result.diagram,None); assert_true(result.diagnostics.iter().any(d => d.code == "bpmn/conversion-limit")) }
+  else { assert_true(result.diagram != None,msg=@debug.to_string(result.diagnostics)); assert_eq(result.diagnostics,[]) }
   }
+  let exhausted=@adapter.to_diagram(doc,limits=@bpmn.Limits::new(nodes=1))
+  assert_eq(exhausted.diagram,None)
+  assert_true(exhausted.diagnostics.iter().any(d => d.code == "bpmn/conversion-limit"))
 }
 
 ///|
@@ -302,4 +305,19 @@ test "activity local IO remains semantic endpoints and cannot gain nonstandard D
   let doc=validation_document(process+"<bd:BPMNDiagram><bd:BPMNPlane bpmnElement='P'><bd:BPMNShape bpmnElement='I'><dc:Bounds x='0' y='0' width='50' height='60'/></bd:BPMNShape></bd:BPMNPlane></bd:BPMNDiagram>",extra="xmlns:bd='http://www.omg.org/spec/BPMN/20100524/DI' xmlns:dc='http://www.omg.org/spec/DD/20100524/DC'")
   let result=@adapter.to_diagram(doc)
   assert_eq(result.diagram,None); assert_eq(result.diagnostics[0].code,"bpmn/unsupported-element")
+}
+
+///|
+test "category membership survives conversion for automatic group bounds" {
+  let input=@corpus.render_inputs.iter().find_first(i => i.name == "process-di.bpmn").unwrap()
+  let document=@bpmn.read(input.source).document.unwrap()
+  let result=@adapter.to_diagram(document,geometry_policy=Automatic)
+  guard result.diagram is Some(Bpmn(view)) else { fail(@debug.to_string(result.diagnostics)) }
+  for id in ["Review","Decision"] {
+    assert_eq(view.nodes.iter().find_first(n => n.id == id).unwrap().ownership.groups,["ReviewGroup"])
+  }
+  assert_eq(view.nodes.iter().find_first(n => n.id == "Send").unwrap().ownership.groups,[])
+  let groups=["ReviewGroup"]
+  let owned=@model.Ownership::new(groups~); groups[0]="changed"
+  assert_eq(owned.groups,["ReviewGroup"])
 }
