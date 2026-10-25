@@ -1,10 +1,10 @@
 name = "moonrockz/diagrams-animated"
 
-version = "0.1.0"
+version = "0.2.0"
 
 import {
-  "moonrockz/diagrams@0.1.0",
-  "moonrockz/diagrams-svg@0.1.0",
+  "moonrockz/diagrams@0.2.0",
+  "moonrockz/diagrams-svg@0.2.0",
 }
 
 description = "Standalone illustrative diagram playback for diagrams.mbt"
