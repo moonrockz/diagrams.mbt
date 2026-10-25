@@ -1,0 +1,133 @@
+///|
+/// Refresh test-only semantic references. Normal validation uses frozen JSON and
+/// never installs or imports this JavaScript reference into a MoonBit module.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let reference_adapter : String =
+  #|import { BpmnModdle } from 'bpmn-moddle';
+  #|import pkg from 'bpmn-moddle/package.json' with { type: 'json' };
+  #|if (pkg.version !== '10.3.1') throw new Error('Reference version mismatch');
+  #|let source = await Bun.stdin.text();
+  #|const normalizations = ['explicit own properties only; schema defaults omitted', 'reference targets use local IDs', 'numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately', 'containment is compared by parent and sorted child identities; source order tested separately'];
+  #|const normative = '<bpmn:globalScriptTask id="GlobalScript" scriptLanguage="urn:inert"><bpmn:script>describe-only()</bpmn:script></bpmn:globalScriptTask>';
+  #|if (source.includes(normative)) {
+  #|  source = source.replace(normative, '<bpmn:globalScriptTask id="GlobalScript" scriptLanguage="urn:inert" script="describe-only()"/>');
+  #|  normalizations.push('GlobalScriptTask.script: normative child projected to reference attribute; original source remains frozen');
+  #|}
+  #|const { rootElement, warnings } = await new BpmnModdle().fromXML(source);
+  #|if (warnings.length) throw new Error(warnings.map(w => w.message).join('\n'));
+  #|const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+  #|const nodes = [];
+  #|const keys = new Set();
+  #|const stack = [{ value: rootElement, key: rootElement.id ? '#' + rootElement.id : '$', parent: null }];
+  #|while (stack.length) {
+  #|  const { value, key, parent } = stack.pop();
+  #|  if (keys.has(key)) throw new Error('Duplicate normalized identity: ' + key);
+  #|  keys.add(key);
+  #|  const fields = {};
+  #|  const children = [];
+  #|  const counts = new Map();
+  #|  for (const p of value.$descriptor.properties) {
+  #|    if (!Object.prototype.hasOwnProperty.call(value, p.name)) continue;
+  #|    const v = value[p.name];
+  #|    if (v === undefined || v === null || (Array.isArray(v) && v.length === 0)) continue;
+  #|    if (p.isReference) {
+  #|      const targets = (Array.isArray(v) ? v : [v]).map(t => {
+  #|        if (!t.id) throw new Error('Reference target has no ID');
+  #|        return t.id;
+  #|      });
+  #|      fields[p.name] = { kind: 'reference', value: targets };
+  #|    } else if (typeof v !== 'object') {
+  #|      fields[p.isBody ? '@body' : p.name] = { kind: typeof v, value: v };
+  #|    } else {
+  #|      for (const child of (Array.isArray(v) ? v : [v])) {
+  #|        if (!child.$type) throw new Error('Unknown reference value');
+  #|        const ordinal = counts.get(child.$type) || 0;
+  #|        counts.set(child.$type, ordinal + 1);
+  #|        const childKey = child.id ? '#' + child.id : key + '/' + child.$type + '[' + ordinal + ']';
+  #|        children.push(childKey);
+  #|        stack.push({ value: child, key: childKey, parent: key });
+  #|      }
+  #|    }
+  #|  }
+  #|  const orderedFields = Object.fromEntries(Object.entries(fields).sort(([a], [b]) => compare(a, b)));
+  #|  nodes.push({ key, parent, type: value.$type, fields: orderedFields, children: children.sort(compare) });
+  #|}
+  #|nodes.sort((a, b) => compare(a.key, b.key));
+  #|console.log(JSON.stringify({ reference: 'bpmn-moddle@10.3.1', normalizations, nodes }, null, 2));
+
+///|
+async fn main {
+  let code = @process.run(
+    "bun",
+    ["install", "--frozen-lockfile", "--cwd", "tests/bpmn-reference"],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+  let dir = "tests/corpus/bpmn-model"
+  for
+    (name, path) in [
+      ("minimal", "tests/corpus/bpmn-2.0.2/minimal.bpmn"),
+      ("activities", dir + "/activities.bpmn"),
+      ("events", dir + "/events.bpmn"),
+      ("collaboration", dir + "/collaboration.bpmn"),
+    ] {
+    let source = @fs.read_file(path).text()
+    let input = @process.redirect_from_file(path)
+    let (code, out, err) = @process.collect_output(
+      "bun",
+      ["--eval", reference_adapter],
+      cwd="tests/bpmn-reference",
+      stdin=input,
+    )
+    if code != 0 {
+      eprintln(err.text())
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    let json = @json.parse(out.text())
+    guard json is Object(fields) else { @sys.exit(1) }
+    fields["source_sha256"] = Json(
+      @crypto.bytes_to_hex_string(@crypto.sha256(@utf8.encode(source))),
+    )
+    @fs.write_file(
+      dir + "/" + name + ".reference.json",
+      Json(fields).stringify(indent=2) + "\n",
+    )
+    println("Wrote bpmn-moddle reference " + name)
+  }
+  let files = [
+    "activities.bpmn", "events.bpmn", "collaboration.bpmn", "minimal.reference.json",
+    "activities.reference.json", "events.reference.json", "collaboration.reference.json",
+  ]
+  let sums = StringBuilder()
+  for file in files {
+    let source = @fs.read_file(dir + "/" + file).text()
+    let digest = @crypto.bytes_to_hex_string(
+      @crypto.sha256(@utf8.encode(source)),
+    )
+    sums.write_string(digest + "  " + file + "\n")
+  }
+  @fs.write_file(dir + "/SHA256SUMS", sums.to_string())
+  let code = @process.run(
+    "moonx",
+    ["scripts/bpmn-corpus.mbtx", "generate"],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}

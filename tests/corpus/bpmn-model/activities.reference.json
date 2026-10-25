@@ -1,0 +1,1017 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately",
+    "GlobalScriptTask.script: normative child projected to reference attribute; original source remains frozen"
+  ],
+  "nodes": [
+    {
+      "key": "#Activities",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Activities"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "urn:activities"
+        }
+      },
+      "children": [
+        "#Error",
+        "#Escalation",
+        "#GlobalManual",
+        "#GlobalRule",
+        "#GlobalScript",
+        "#GlobalTask",
+        "#GlobalUser",
+        "#Interface",
+        "#Item",
+        "#Message",
+        "#P",
+        "#Signal"
+      ]
+    },
+    {
+      "key": "#AdHoc",
+      "parent": "#P",
+      "type": "bpmn:AdHocSubProcess",
+      "fields": {
+        "cancelRemainingInstances": {
+          "kind": "boolean",
+          "value": true
+        },
+        "id": {
+          "kind": "string",
+          "value": "AdHoc"
+        },
+        "ordering": {
+          "kind": "string",
+          "value": "Parallel"
+        }
+      },
+      "children": [
+        "#AdHoc/bpmn:FormalExpression[0]",
+        "#AdHocTask"
+      ]
+    },
+    {
+      "key": "#AdHoc/bpmn:FormalExpression[0]",
+      "parent": "#AdHoc",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "done == true"
+        },
+        "language": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#AdHocTask",
+      "parent": "#AdHoc",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "AdHocTask"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Audit",
+      "parent": "#P",
+      "type": "bpmn:Auditing",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Audit"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Behavior",
+      "parent": "#Multi",
+      "type": "bpmn:ComplexBehaviorDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Behavior"
+        }
+      },
+      "children": [
+        "#Behavior/bpmn:FormalExpression[0]",
+        "#Implicit"
+      ]
+    },
+    {
+      "key": "#Behavior/bpmn:FormalExpression[0]",
+      "parent": "#Behavior",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "count > 1"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Call",
+      "parent": "#P",
+      "type": "bpmn:CallActivity",
+      "fields": {
+        "calledElement": {
+          "kind": "string",
+          "value": "GlobalTask"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Call"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Doc",
+      "parent": "#P",
+      "type": "bpmn:Documentation",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "Review & approve 😀"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Doc"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Error",
+      "parent": "#Activities",
+      "type": "bpmn:Error",
+      "fields": {
+        "errorCode": {
+          "kind": "string",
+          "value": "E1"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Error"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Failure"
+        },
+        "structureRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Escalation",
+      "parent": "#Activities",
+      "type": "bpmn:Escalation",
+      "fields": {
+        "escalationCode": {
+          "kind": "string",
+          "value": "S1"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Escalation"
+        },
+        "structureRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalManual",
+      "parent": "#Activities",
+      "type": "bpmn:GlobalManualTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalManual"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalRule",
+      "parent": "#Activities",
+      "type": "bpmn:GlobalBusinessRuleTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalRule"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##unspecified"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalScript",
+      "parent": "#Activities",
+      "type": "bpmn:GlobalScriptTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalScript"
+        },
+        "script": {
+          "kind": "string",
+          "value": "describe-only()"
+        },
+        "scriptLanguage": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalTask",
+      "parent": "#Activities",
+      "type": "bpmn:GlobalTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalTask"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reusable"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#GlobalUser",
+      "parent": "#Activities",
+      "type": "bpmn:GlobalUserTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "GlobalUser"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##unspecified"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reusable review"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Implicit",
+      "parent": "#Behavior",
+      "type": "bpmn:ImplicitThrowEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Implicit"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#InputItem",
+      "parent": "#Multi",
+      "type": "bpmn:DataInput",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "InputItem"
+        },
+        "isCollection": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "row"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Interface",
+      "parent": "#Activities",
+      "type": "bpmn:Interface",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Interface"
+        },
+        "implementationRef": {
+          "kind": "string",
+          "value": "Item"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Service"
+        }
+      },
+      "children": [
+        "#Operation"
+      ]
+    },
+    {
+      "key": "#Item",
+      "parent": "#Activities",
+      "type": "bpmn:ItemDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Item"
+        },
+        "isCollection": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemKind": {
+          "kind": "string",
+          "value": "Information"
+        },
+        "structureRef": {
+          "kind": "string",
+          "value": "xsi:type"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Loop",
+      "parent": "#StandardLoop",
+      "type": "bpmn:StandardLoopCharacteristics",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Loop"
+        },
+        "loopMaximum": {
+          "kind": "number",
+          "value": 1e+24
+        },
+        "testBefore": {
+          "kind": "boolean",
+          "value": true
+        }
+      },
+      "children": [
+        "#Loop/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Loop/bpmn:FormalExpression[0]",
+      "parent": "#Loop",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "retry < 3"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Manual",
+      "parent": "#P",
+      "type": "bpmn:ManualTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Manual"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Message",
+      "parent": "#Activities",
+      "type": "bpmn:Message",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Message"
+        },
+        "itemRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Monitor",
+      "parent": "#P",
+      "type": "bpmn:Monitoring",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Monitor"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Multi",
+      "parent": "#MultiLoop",
+      "type": "bpmn:MultiInstanceLoopCharacteristics",
+      "fields": {
+        "behavior": {
+          "kind": "string",
+          "value": "Complex"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Multi"
+        },
+        "isSequential": {
+          "kind": "boolean",
+          "value": false
+        },
+        "loopDataInputRef": {
+          "kind": "reference",
+          "value": [
+            "Property"
+          ]
+        },
+        "loopDataOutputRef": {
+          "kind": "reference",
+          "value": [
+            "Property"
+          ]
+        }
+      },
+      "children": [
+        "#Behavior",
+        "#InputItem",
+        "#Multi/bpmn:FormalExpression[0]",
+        "#Multi/bpmn:FormalExpression[1]",
+        "#OutputItem"
+      ]
+    },
+    {
+      "key": "#Multi/bpmn:FormalExpression[0]",
+      "parent": "#Multi",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "3"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Multi/bpmn:FormalExpression[1]",
+      "parent": "#Multi",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "allDone"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#MultiLoop",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "MultiLoop"
+        }
+      },
+      "children": [
+        "#Multi"
+      ]
+    },
+    {
+      "key": "#Operation",
+      "parent": "#Interface",
+      "type": "bpmn:Operation",
+      "fields": {
+        "errorRef": {
+          "kind": "reference",
+          "value": [
+            "Error"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Operation"
+        },
+        "inMessageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Invoke"
+        },
+        "outMessageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#OutputItem",
+      "parent": "#Multi",
+      "type": "bpmn:DataOutput",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "OutputItem"
+        },
+        "isCollection": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "result"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#P",
+      "parent": "#Activities",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "P"
+        },
+        "isClosed": {
+          "kind": "boolean",
+          "value": false
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Activity inventory"
+        },
+        "processType": {
+          "kind": "string",
+          "value": "Private"
+        }
+      },
+      "children": [
+        "#AdHoc",
+        "#Audit",
+        "#Call",
+        "#Doc",
+        "#Manual",
+        "#Monitor",
+        "#MultiLoop",
+        "#Property",
+        "#Receive",
+        "#Rule",
+        "#Script",
+        "#Send",
+        "#Service",
+        "#StandardLoop",
+        "#Sub",
+        "#Task",
+        "#Transaction",
+        "#User"
+      ]
+    },
+    {
+      "key": "#Property",
+      "parent": "#P",
+      "type": "bpmn:Property",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Property"
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Receive",
+      "parent": "#P",
+      "type": "bpmn:ReceiveTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Receive"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##WebService"
+        },
+        "instantiate": {
+          "kind": "boolean",
+          "value": false
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "operationRef": {
+          "kind": "reference",
+          "value": [
+            "Operation"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Rendering",
+      "parent": "#User",
+      "type": "bpmn:Rendering",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Rendering"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Rule",
+      "parent": "#P",
+      "type": "bpmn:BusinessRuleTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Rule"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "urn:rules"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Script",
+      "parent": "#P",
+      "type": "bpmn:ScriptTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Script"
+        },
+        "script": {
+          "kind": "string",
+          "value": "neverExecute(<request>)"
+        },
+        "scriptFormat": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Send",
+      "parent": "#P",
+      "type": "bpmn:SendTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Send"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##WebService"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        },
+        "operationRef": {
+          "kind": "reference",
+          "value": [
+            "Operation"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Service",
+      "parent": "#P",
+      "type": "bpmn:ServiceTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Service"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##WebService"
+        },
+        "operationRef": {
+          "kind": "reference",
+          "value": [
+            "Operation"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Signal",
+      "parent": "#Activities",
+      "type": "bpmn:Signal",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Signal"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Ready"
+        },
+        "structureRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#StandardLoop",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "StandardLoop"
+        }
+      },
+      "children": [
+        "#Loop"
+      ]
+    },
+    {
+      "key": "#Sub",
+      "parent": "#P",
+      "type": "bpmn:SubProcess",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Sub"
+        },
+        "triggeredByEvent": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": [
+        "#SubEnd",
+        "#SubFlow1",
+        "#SubFlow2",
+        "#SubStart",
+        "#SubTask"
+      ]
+    },
+    {
+      "key": "#SubEnd",
+      "parent": "#Sub",
+      "type": "bpmn:EndEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubEnd"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SubFlow1",
+      "parent": "#Sub",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubFlow1"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "SubStart"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "SubTask"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SubFlow2",
+      "parent": "#Sub",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubFlow2"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "SubTask"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "SubEnd"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SubStart",
+      "parent": "#Sub",
+      "type": "bpmn:StartEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubStart"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SubTask",
+      "parent": "#Sub",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SubTask"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Task",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "completionQuantity": {
+          "kind": "number",
+          "value": 2
+        },
+        "id": {
+          "kind": "string",
+          "value": "Task"
+        },
+        "isForCompensation": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Generic"
+        },
+        "startQuantity": {
+          "kind": "number",
+          "value": 1
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Transaction",
+      "parent": "#P",
+      "type": "bpmn:Transaction",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Transaction"
+        },
+        "method": {
+          "kind": "string",
+          "value": "##Compensate"
+        }
+      },
+      "children": [
+        "#TransactionTask"
+      ]
+    },
+    {
+      "key": "#TransactionTask",
+      "parent": "#Transaction",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "TransactionTask"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#User",
+      "parent": "#P",
+      "type": "bpmn:UserTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "User"
+        },
+        "implementation": {
+          "kind": "string",
+          "value": "##unspecified"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Review"
+        }
+      },
+      "children": [
+        "#Rendering"
+      ]
+    }
+  ],
+  "source_sha256": "02649df4ef544cf0c3d488b803aa74bb9ee0470a291f593e00cec6d5159c205d"
+}

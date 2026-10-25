@@ -782,6 +782,7 @@ async fn main {
   for
     (path, expected) in [
       ("pkgs/bpmn/schema.generated.mbt", metadata),
+      ("pkgs/bpmn/semantic.generated.mbt", generate_models(schemas)),
       ("tests/corpus/bpmn-2.0.2/coverage.json", coverage),
     ] {
     if mode == "generate" {
@@ -843,4 +844,290 @@ async test "pinned generation is deterministic and every declaration has unique 
     }
   }
   assert_eq((elements, attributes), (313, 195))
+}
+
+///|
+priv struct ModelField {
+  name : (String, String)
+  value_type : (String, String)?
+  attribute : Bool
+  substitution : Bool
+  repeated : Bool
+}
+
+///|
+fn model_selected(node : XNode, name : (String, String)) -> Bool {
+  name.0 == "http://www.omg.org/spec/BPMN/20100524/MODEL" &&
+  node.tag == "complexType" &&
+  ![
+    "tChoreography", "tChoreographyActivity", "tChoreographyTask", "tSubChoreography",
+    "tCallChoreography", "tGlobalChoreographyTask", "tConversationNode", "tConversation",
+    "tSubConversation", "tCallConversation", "tGlobalConversation", "tConversationLink",
+    "tConversationAssociation",
+  ].contains(name.1)
+}
+
+///|
+fn model_fields(
+  name : (String, String),
+  types : Array[(XNode, (String, String))],
+  globals : Map[String, (String, String)],
+) -> Array[ModelField] {
+  let chain : Array[XNode] = []
+  let mut current = Some(name)
+  for _ in 0..<(types.length() + 1) {
+    guard current is Some(identity) &&
+      types.iter().find_first(t => t.1 == identity) is Some((node, _)) else {
+      break
+    }
+    chain.push(node)
+    current = None
+    for child in owned_nodes(node) {
+      if (child.tag == "extension" || child.tag == "restriction") &&
+        child.attrs.get("base") is Some(base) {
+        current = Some(qname(child, base))
+      }
+    }
+  }
+  let fields : Array[ModelField] = []
+  for i = chain.length() - 1; i >= 0; i = i - 1 {
+    for node in owned_nodes(chain[i]) {
+      if node.tag != "element" && node.tag != "attribute" {
+        continue
+      }
+      let ref_name = node.attrs.get("ref").map(v => qname(node, v))
+      let identity = match node.attrs.get("name") {
+        Some(local_name) =>
+          (if node.tag == "attribute" { "" } else { name.0 }, local_name)
+        None => ref_name.unwrap()
+      }
+      let field : ModelField = {
+        name: identity,
+        value_type: match ref_name {
+          Some(r) => globals.get(name_key(r.0, r.1))
+          None => value_type(node, types)
+        },
+        attribute: node.tag == "attribute",
+        substitution: ref_name != None,
+        repeated: occurrence(node, "maxOccurs", "1") != "1",
+      }
+      if !fields
+        .iter()
+        .any(f => f.name == identity && f.attribute == field.attribute) {
+        fields.push(field)
+      }
+    }
+  }
+  fields
+}
+
+///|
+fn snake_name(value : String) -> String {
+  let b = StringBuilder()
+  for i in 0..<value.length() {
+    let c = cu(value, i)
+    if c >= 65 && c <= 90 {
+      let previous = cu(value, i - 1)
+      let next = cu(value, i + 1)
+      if i > 0 &&
+        (
+          (previous >= 97 && previous <= 122) ||
+          (previous >= 48 && previous <= 57) ||
+          (previous >= 65 && previous <= 90 && next >= 97 && next <= 122)
+        ) {
+        b.write_string("_")
+      }
+      b.write_char((c + 32).unsafe_to_char())
+    } else {
+      b.write_char(c.unsafe_to_char())
+    }
+  }
+  let name = b.to_string()
+  if [
+      "type", "default", "loop", "match", "fn", "let", "mut", "pub", "priv", "import",
+      "as", "test", "namespace", "method", "local", "enum", "struct", "trait", "impl",
+      "self", "raise", "try", "catch", "finally", "async", "await", "return", "continue",
+      "break", "in", "for", "while", "if", "else", "guard", "with",
+    ].contains(name) {
+    name + "_"
+  } else {
+    name
+  }
+}
+
+///|
+/// Moon type and Scalar pattern for a schema scalar. Complex values use Element.
+fn model_scalar(
+  name : (String, String)?,
+  types : Array[(XNode, (String, String))],
+) -> (String, String) {
+  let mut current = name
+  for _ in 0..<(types.length() + 1) {
+    guard current is Some(identity) else { return ("Element", "") }
+    if identity.0 == "http://www.w3.org/2001/XMLSchema" {
+      return match identity.1 {
+        "boolean" => ("Bool", "Boolean")
+        "integer" | "int" => ("ExactInteger", "Integer")
+        "double" => ("ExactNumber", "Number")
+        "QName" | "IDREF" => ("Reference", "Reference")
+        "ID" => ("String", "Identifier")
+        "anyURI" => ("String", "Uri")
+        _ => ("String", "Text")
+      }
+    }
+    guard types.iter().find_first(t => t.1 == identity) is Some((node, _)) else {
+      return ("Element", "")
+    }
+    if node.tag == "complexType" {
+      return ("Element", "")
+    }
+    if all_nodes(node).iter().any(n => n.tag == "enumeration") {
+      return (
+        type_symbol(identity),
+        "Enumeration(BpmnEnum::" + type_symbol(identity),
+      )
+    }
+    current = None
+    for child in owned_nodes(node) {
+      if child.attrs.get("base") is Some(base) {
+        current = Some(qname(child, base))
+      }
+    }
+  }
+  ("Element", "")
+}
+
+///|
+fn model_pattern(pattern : String, variable : String) -> String {
+  pattern +
+  "(" +
+  variable +
+  ")" +
+  (if pattern.has_prefix("Enumeration(") { ")" } else { "" })
+}
+
+///|
+fn model_symbol(name : (String, String)) -> String {
+  let symbol = type_symbol(name)
+  if symbol == "Error" {
+    "BpmnError"
+  } else {
+    symbol
+  }
+}
+
+///|
+fn generate_models(schemas : Array[Schema]) -> String {
+  let types : Array[(XNode, (String, String))] = []
+  let globals : Map[String, (String, String)] = Map([])
+  let elements : Array[((String, String), (String, String))] = []
+  for schema in schemas {
+    types.append(schema.types)
+    for node in schema.root.children {
+      if node.tag == "element" && value_type(node, schema.types) is Some(t) {
+        let name = (schema.uri, node.attrs.get("name").unwrap())
+        globals[name_key(name.0, name.1)] = t
+        elements.push((name, t))
+      }
+    }
+  }
+  let selected = types.filter(pair => model_selected(pair.0, pair.1))
+  let manual = [
+    "Definitions", "Import", "BaseElement", "RootElement", "Documentation",
+  ]
+  let b = StringBuilder()
+  b.write_string(
+    "// Generated by `mise run bpmn-schema:generate`. Do not edit.\n\n///|\n/// Schema types with qualified process/collaboration model APIs.\npub let typed_model_types : ReadOnlyArray[TypeId] = [\n",
+  )
+  for (_, name) in selected {
+    b.write_string("  TypeId::\{type_symbol(name)},\n")
+  }
+  b.write_string(
+    "]\n\n///|\n/// Every generated attribute/child accessor, including inherited fields.\npub let typed_model_fields : ReadOnlyArray[(TypeId,SchemaFieldKind,ExpandedName)] = [\n",
+  )
+  for (_, name) in selected {
+    if manual.contains(type_symbol(name)) {
+      continue
+    }
+    for field in model_fields(name, types, globals) {
+      b.write_string(
+        "  (TypeId::\{type_symbol(name)},SchemaFieldKind::\{if field.attribute { "Attribute" } else { "Child" }},\{name_code(field.name)}),\n",
+      )
+    }
+  }
+  b.write_string("]\n")
+  for (node, name) in selected {
+    let type_id = type_symbol(name)
+    let symbol = model_symbol(name)
+    if manual.contains(symbol) {
+      continue
+    }
+    let fields = model_fields(name, types, globals)
+    b.write_string(
+      "\n///|\n/// Immutable typed view of schema \{name.1}.\npub struct \{symbol} { element : Element } derive(Eq, Debug)\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::from_element(element : Element) -> \{symbol}? {\n  if typed_element_is(element,TypeId::\{type_id}) { Some({ element, }) } else { None }\n}\n",
+    )
+    if node.attrs.get("abstract") != Some("true") &&
+      elements.iter().find_first(e => e.1 == name) is Some((element, _)) {
+      let args : Array[String] = []
+      let lines = StringBuilder()
+      for field in fields {
+        if !field.attribute {
+          continue
+        }
+        let (typ, pattern) = model_scalar(field.value_type, types)
+        let arg = snake_name(field.name.1)
+        args.push("\{arg}? : \{typ}")
+        lines.write_string(
+          "  if \{arg} is Some(value) { values.push(Attribute::new(\{name_code(field.name)},\{model_pattern(pattern,"value")})) }\n",
+        )
+      }
+      args.push("contents? : ArrayView[Content] = []")
+      b.write_string(
+        "\n///|\npub fn \{symbol}::new(\{args.join(", ")}) -> \{symbol} {\n  let values : Array[Attribute] = []\n\{lines.to_string()}  { element: Element::from_values(Kind::\{kind_symbol(element)},values~,contents~) }\n}\n",
+      )
+    }
+    for field in fields {
+      let mut accessor = snake_name(field.name.1)
+      if !field.attribute &&
+        fields.iter().any(f => f.attribute && snake_name(f.name.1) == accessor) {
+        accessor += "_element"
+      }
+      let (scalar_type, pattern) = model_scalar(field.value_type, types)
+      if field.attribute {
+        b.write_string(
+          "\n///|\npub fn \{symbol}::\{accessor}(self : \{symbol}) -> Field[\{scalar_type}] {\n  match self.element.scalar(\{name_code(field.name)}) { None => Absent; Some(\{model_pattern(pattern,"value")}) => Present(value); Some(other) => InvalidValue(other) }\n}\n",
+        )
+      } else {
+        let mut typ = scalar_type
+        let projection = if scalar_type == "Element" {
+          match field.value_type {
+            Some(t) if selected.iter().any(pair => pair.1 == t) => {
+              typ = model_symbol(t)
+              "match \{typ}::from_element(e) { Some(value) => Present(value); None => InvalidValue(Invalid(raw=e.kind.local_name(),expected=\{name_code(t)})) }"
+            }
+            _ => "Present(e)"
+          }
+        } else {
+          "match e.text_value { Some(\{model_pattern(pattern,"value")}) => Present(value); Some(other) => InvalidValue(other); None => InvalidValue(Invalid(raw=e.content,expected=\{name_code(field.value_type.unwrap())})) }"
+        }
+        let result = if field.repeated { "ReadOnlyArray[\{typ}]" } else { typ }
+        let helper = if field.repeated {
+          "typed_repeated_child"
+        } else {
+          "typed_single_child"
+        }
+        b.write_string(
+          "\n///|\npub fn \{symbol}::\{accessor}(self : \{symbol}) -> Field[\{result}] {\n  \{helper}(self.element,\{name_code(field.name)},\{field.substitution},e => { \{projection} })\n}\n",
+        )
+      }
+    }
+  }
+  b.to_string()
+}
+
+///|
+async test "semantic typed API regeneration is deterministic" {
+  let models = generate_models(load_schemas(root=".."))
+  assert_eq(models, generate_models(load_schemas(root="..")))
+  assert_eq(@fs.read_file("../pkgs/bpmn/semantic.generated.mbt").text(), models)
 }

@@ -1,0 +1,421 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately"
+  ],
+  "nodes": [
+    {
+      "key": "#Definitions_1",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Definitions_1"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "https://moonrockz.dev/bpmn/examples"
+        }
+      },
+      "children": [
+        "#Diagram_1",
+        "#Process_1"
+      ]
+    },
+    {
+      "key": "#Diagram_1",
+      "parent": "#Definitions_1",
+      "type": "bpmndi:BPMNDiagram",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Diagram_1"
+        }
+      },
+      "children": [
+        "#Plane_1"
+      ]
+    },
+    {
+      "key": "#End",
+      "parent": "#Process_1",
+      "type": "bpmn:EndEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "End"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#End_di",
+      "parent": "#Plane_1",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "End"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "End_di"
+        }
+      },
+      "children": [
+        "#End_di/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#End_di/dc:Bounds[0]",
+      "parent": "#End_di",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 36
+        },
+        "width": {
+          "kind": "number",
+          "value": 36
+        },
+        "x": {
+          "kind": "number",
+          "value": 384
+        },
+        "y": {
+          "kind": "number",
+          "value": 62
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_1",
+      "parent": "#Process_1",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Flow_1"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Start"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_1_di",
+      "parent": "#Plane_1",
+      "type": "bpmndi:BPMNEdge",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "Flow_1"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Flow_1_di"
+        }
+      },
+      "children": [
+        "#Flow_1_di/dc:Point[0]",
+        "#Flow_1_di/dc:Point[1]"
+      ]
+    },
+    {
+      "key": "#Flow_1_di/dc:Point[0]",
+      "parent": "#Flow_1_di",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 76
+        },
+        "y": {
+          "kind": "number",
+          "value": 80
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_1_di/dc:Point[1]",
+      "parent": "#Flow_1_di",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 140
+        },
+        "y": {
+          "kind": "number",
+          "value": 80
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_2",
+      "parent": "#Process_1",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Flow_2"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "End"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_2_di",
+      "parent": "#Plane_1",
+      "type": "bpmndi:BPMNEdge",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "Flow_2"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Flow_2_di"
+        }
+      },
+      "children": [
+        "#Flow_2_di/dc:Point[0]",
+        "#Flow_2_di/dc:Point[1]"
+      ]
+    },
+    {
+      "key": "#Flow_2_di/dc:Point[0]",
+      "parent": "#Flow_2_di",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 320
+        },
+        "y": {
+          "kind": "number",
+          "value": 80
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Flow_2_di/dc:Point[1]",
+      "parent": "#Flow_2_di",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 384
+        },
+        "y": {
+          "kind": "number",
+          "value": 80
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Plane_1",
+      "parent": "#Diagram_1",
+      "type": "bpmndi:BPMNPlane",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "Process_1"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Plane_1"
+        }
+      },
+      "children": [
+        "#End_di",
+        "#Flow_1_di",
+        "#Flow_2_di",
+        "#Review_di",
+        "#Start_di"
+      ]
+    },
+    {
+      "key": "#Process_1",
+      "parent": "#Definitions_1",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Process_1"
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Review request"
+        }
+      },
+      "children": [
+        "#End",
+        "#Flow_1",
+        "#Flow_2",
+        "#Review",
+        "#Start"
+      ]
+    },
+    {
+      "key": "#Review",
+      "parent": "#Process_1",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Review"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Review request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Review_di",
+      "parent": "#Plane_1",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Review_di"
+        }
+      },
+      "children": [
+        "#Review_di/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#Review_di/dc:Bounds[0]",
+      "parent": "#Review_di",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 80
+        },
+        "width": {
+          "kind": "number",
+          "value": 180
+        },
+        "x": {
+          "kind": "number",
+          "value": 140
+        },
+        "y": {
+          "kind": "number",
+          "value": 40
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Start",
+      "parent": "#Process_1",
+      "type": "bpmn:StartEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Start"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Start_di",
+      "parent": "#Plane_1",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "Start"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Start_di"
+        }
+      },
+      "children": [
+        "#Start_di/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#Start_di/dc:Bounds[0]",
+      "parent": "#Start_di",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 36
+        },
+        "width": {
+          "kind": "number",
+          "value": 36
+        },
+        "x": {
+          "kind": "number",
+          "value": 40
+        },
+        "y": {
+          "kind": "number",
+          "value": 62
+        }
+      },
+      "children": []
+    }
+  ],
+  "source_sha256": "aca8036d737d39d6e416381e2b70aa57b9b4dc1a1b546c119b45791643e8995f"
+}

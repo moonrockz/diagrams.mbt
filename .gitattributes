@@ -1,3 +1,7 @@
 # Frozen corpus digests are over original bytes, including OMG schema CRLF.
 /tests/corpus/bpmn-2.0.2/*.xsd -text
 /tests/corpus/bpmn-2.0.2/*.bpmn -text
+
+# Preserve portable fixture/reference digests on every checkout.
+tests/corpus/bpmn-model/*.bpmn -text
+tests/corpus/bpmn-model/*.json -text

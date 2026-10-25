@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="CollaborationDefinitions" targetNamespace="urn:collaboration">
+  <bpmn:import namespace="urn:optional" location="https://invalid.example/not-fetched" importType="http://www.omg.org/spec/BPMN/20100524/MODEL"/>
+  <bpmn:itemDefinition id="Item" structureRef="xsi:type"/>
+  <bpmn:message id="Request" name="Request" itemRef="Item"/>
+  <bpmn:category id="Category" name="Department"><bpmn:categoryValue id="CategoryValue" value="Operations"/></bpmn:category>
+  <bpmn:dataStore id="Store" name="Archive" capacity="10000000000000000000000" isUnlimited="false" itemSubjectRef="Item"/>
+  <bpmn:resource id="Resource" name="Reviewer"><bpmn:resourceParameter id="Parameter" name="team" type="Item" isRequired="true"/></bpmn:resource>
+  <bpmn:process id="Buyer" name="Buyer" isExecutable="false">
+    <bpmn:laneSet id="Lanes" name="Teams"><bpmn:lane id="Operations" name="Operations"><bpmn:flowNodeRef>Send</bpmn:flowNodeRef><bpmn:childLaneSet id="NestedLanes"><bpmn:lane id="Reviewers" name="Reviewers"><bpmn:flowNodeRef>Review</bpmn:flowNodeRef></bpmn:lane></bpmn:childLaneSet></bpmn:lane></bpmn:laneSet>
+    <bpmn:dataObject id="Object" name="Request data" itemSubjectRef="Item" isCollection="false"><bpmn:dataState id="State" name="draft"/></bpmn:dataObject>
+    <bpmn:dataObjectReference id="ObjectRef" name="Request" dataObjectRef="Object" itemSubjectRef="Item"/>
+    <bpmn:dataStoreReference id="StoreRef" dataStoreRef="Store" itemSubjectRef="Item"/>
+    <bpmn:sendTask id="Send" messageRef="Request"/>
+    <bpmn:userTask id="Review" name="Review &amp; approve">
+      <bpmn:ioSpecification id="IO"><bpmn:dataInput id="Input" name="request" itemSubjectRef="Item" isCollection="false"/><bpmn:dataOutput id="Output" name="decision" itemSubjectRef="Item"/><bpmn:inputSet id="InputSet"><bpmn:dataInputRefs>Input</bpmn:dataInputRefs><bpmn:optionalInputRefs>Input</bpmn:optionalInputRefs></bpmn:inputSet><bpmn:outputSet id="OutputSet"><bpmn:dataOutputRefs>Output</bpmn:dataOutputRefs></bpmn:outputSet></bpmn:ioSpecification>
+      <bpmn:dataInputAssociation id="DataIn"><bpmn:sourceRef>ObjectRef</bpmn:sourceRef><bpmn:targetRef>Input</bpmn:targetRef><bpmn:transformation id="Transform" language="urn:inert">copy(input)</bpmn:transformation><bpmn:assignment id="Assignment"><bpmn:from xsi:type="bpmn:tFormalExpression">request</bpmn:from><bpmn:to xsi:type="bpmn:tFormalExpression">input</bpmn:to></bpmn:assignment></bpmn:dataInputAssociation>
+      <bpmn:dataOutputAssociation id="DataOut"><bpmn:sourceRef>Output</bpmn:sourceRef><bpmn:targetRef>StoreRef</bpmn:targetRef></bpmn:dataOutputAssociation>
+      <bpmn:potentialOwner id="Owner" name="Reviewers"><bpmn:resourceRef>Resource</bpmn:resourceRef><bpmn:resourceParameterBinding parameterRef="Parameter"><bpmn:expression xsi:type="bpmn:tFormalExpression">team</bpmn:expression></bpmn:resourceParameterBinding><bpmn:resourceAssignmentExpression><bpmn:expression xsi:type="bpmn:tFormalExpression">reviewers</bpmn:expression></bpmn:resourceAssignmentExpression></bpmn:potentialOwner>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="BuyerFlow" sourceRef="Send" targetRef="Review"/>
+    <bpmn:group id="Group" categoryValueRef="CategoryValue"/>
+    <bpmn:textAnnotation id="Note" textFormat="text/plain"><bpmn:text>Illustrative document; no execution.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Association" sourceRef="Review" targetRef="Note" associationDirection="One"/>
+  </bpmn:process>
+  <bpmn:process id="Seller" name="Seller" isExecutable="false"><bpmn:receiveTask id="Receive" messageRef="Request" instantiate="false"/></bpmn:process>
+  <bpmn:collaboration id="Collaboration" name="Request exchange" isClosed="false"><bpmn:participant id="BuyerPool" name="Buyer" processRef="Buyer"><bpmn:participantMultiplicity id="Multiplicity" minimum="1" maximum="3"/></bpmn:participant><bpmn:participant id="SellerPool" name="Seller" processRef="Seller"/><bpmn:messageFlow id="RequestFlow" name="Request" sourceRef="Send" targetRef="Receive" messageRef="Request"/></bpmn:collaboration>
+</bpmn:definitions>

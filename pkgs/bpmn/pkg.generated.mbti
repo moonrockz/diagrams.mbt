@@ -24,6 +24,10 @@ pub let standard_kinds : ReadOnlyArray[Kind]
 
 pub fn try_write(Document, format? : WriteFormat, limits? : Limits) -> WriteResult
 
+pub let typed_model_fields : ReadOnlyArray[(TypeId, SchemaFieldKind, ExpandedName)]
+
+pub let typed_model_types : ReadOnlyArray[TypeId]
+
 pub fn write(Document, format? : WriteFormat, limits? : Limits) -> String raise WriteError
 
 pub let xml_diagnostic_codes : ReadOnlyArray[String]
@@ -37,6 +41,33 @@ pub fn WriteError::not_equal(Self, Self) -> Bool
 pub fn WriteError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+pub struct Activity {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Activity::auditing(Self) -> Field[Auditing]
+pub fn Activity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Activity::completion_quantity(Self) -> Field[ExactInteger]
+pub fn Activity::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn Activity::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn Activity::default_(Self) -> Field[Reference]
+pub fn Activity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Activity::equal(Self, Self) -> Bool
+pub fn Activity::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Activity::from_element(Element) -> Self?
+pub fn Activity::id(Self) -> Field[String]
+pub fn Activity::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Activity::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn Activity::is_for_compensation(Self) -> Field[Bool]
+pub fn Activity::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn Activity::monitoring(Self) -> Field[Monitoring]
+pub fn Activity::name(Self) -> Field[String]
+pub fn Activity::not_equal(Self, Self) -> Bool
+pub fn Activity::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Activity::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn Activity::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn Activity::start_quantity(Self) -> Field[ExactInteger]
+pub fn Activity::to_repr(Self) -> @debug.Repr
+
 pub(all) enum AdHocOrdering {
   Parallel
   Sequential
@@ -46,6 +77,41 @@ pub fn AdHocOrdering::not_equal(Self, Self) -> Bool
 pub fn AdHocOrdering::parse(String) -> Self?
 pub fn AdHocOrdering::to_repr(Self) -> @debug.Repr
 pub fn AdHocOrdering::token(Self) -> String
+
+pub struct AdHocSubProcess {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn AdHocSubProcess::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn AdHocSubProcess::auditing(Self) -> Field[Auditing]
+pub fn AdHocSubProcess::cancel_remaining_instances(Self) -> Field[Bool]
+pub fn AdHocSubProcess::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn AdHocSubProcess::completion_condition(Self) -> Field[Expression]
+pub fn AdHocSubProcess::completion_quantity(Self) -> Field[ExactInteger]
+pub fn AdHocSubProcess::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn AdHocSubProcess::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn AdHocSubProcess::default_(Self) -> Field[Reference]
+pub fn AdHocSubProcess::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn AdHocSubProcess::equal(Self, Self) -> Bool
+pub fn AdHocSubProcess::extension_elements(Self) -> Field[ExtensionElements]
+pub fn AdHocSubProcess::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn AdHocSubProcess::from_element(Element) -> Self?
+pub fn AdHocSubProcess::id(Self) -> Field[String]
+pub fn AdHocSubProcess::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn AdHocSubProcess::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn AdHocSubProcess::is_for_compensation(Self) -> Field[Bool]
+pub fn AdHocSubProcess::lane_set(Self) -> Field[ReadOnlyArray[LaneSet]]
+pub fn AdHocSubProcess::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn AdHocSubProcess::monitoring(Self) -> Field[Monitoring]
+pub fn AdHocSubProcess::name(Self) -> Field[String]
+pub fn AdHocSubProcess::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, triggered_by_event? : Bool, cancel_remaining_instances? : Bool, ordering? : AdHocOrdering, contents? : ArrayView[Content]) -> Self
+pub fn AdHocSubProcess::not_equal(Self, Self) -> Bool
+pub fn AdHocSubProcess::ordering(Self) -> Field[AdHocOrdering]
+pub fn AdHocSubProcess::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn AdHocSubProcess::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn AdHocSubProcess::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn AdHocSubProcess::start_quantity(Self) -> Field[ExactInteger]
+pub fn AdHocSubProcess::to_repr(Self) -> @debug.Repr
+pub fn AdHocSubProcess::triggered_by_event(Self) -> Field[Bool]
 
 pub(all) enum AnonymousTImplementation78 {
   Unspecified
@@ -67,6 +133,46 @@ pub fn AnonymousTTransactionMethod144::not_equal(Self, Self) -> Bool
 pub fn AnonymousTTransactionMethod144::parse(String) -> Self?
 pub fn AnonymousTTransactionMethod144::to_repr(Self) -> @debug.Repr
 pub fn AnonymousTTransactionMethod144::token(Self) -> String
+
+pub struct Artifact {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Artifact::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Artifact::equal(Self, Self) -> Bool
+pub fn Artifact::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Artifact::from_element(Element) -> Self?
+pub fn Artifact::id(Self) -> Field[String]
+pub fn Artifact::not_equal(Self, Self) -> Bool
+pub fn Artifact::to_repr(Self) -> @debug.Repr
+
+pub struct Assignment {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Assignment::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Assignment::equal(Self, Self) -> Bool
+pub fn Assignment::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Assignment::from(Self) -> Field[Expression]
+pub fn Assignment::from_element(Element) -> Self?
+pub fn Assignment::id(Self) -> Field[String]
+pub fn Assignment::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn Assignment::not_equal(Self, Self) -> Bool
+pub fn Assignment::to(Self) -> Field[Expression]
+pub fn Assignment::to_repr(Self) -> @debug.Repr
+
+pub struct Association {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Association::association_direction(Self) -> Field[AssociationDirection]
+pub fn Association::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Association::equal(Self, Self) -> Bool
+pub fn Association::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Association::from_element(Element) -> Self?
+pub fn Association::id(Self) -> Field[String]
+pub fn Association::new(id? : String, source_ref? : Reference, target_ref? : Reference, association_direction? : AssociationDirection, contents? : ArrayView[Content]) -> Self
+pub fn Association::not_equal(Self, Self) -> Bool
+pub fn Association::source_ref(Self) -> Field[Reference]
+pub fn Association::target_ref(Self) -> Field[Reference]
+pub fn Association::to_repr(Self) -> @debug.Repr
 
 pub(all) enum AssociationDirection {
   None
@@ -90,6 +196,18 @@ pub fn Attribute::new(ExpandedName, Scalar) -> Self
 pub fn Attribute::not_equal(Self, Self) -> Bool
 pub fn Attribute::to_repr(Self) -> @debug.Repr
 
+pub struct Auditing {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Auditing::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Auditing::equal(Self, Self) -> Bool
+pub fn Auditing::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Auditing::from_element(Element) -> Self?
+pub fn Auditing::id(Self) -> Field[String]
+pub fn Auditing::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn Auditing::not_equal(Self, Self) -> Bool
+pub fn Auditing::to_repr(Self) -> @debug.Repr
+
 pub struct BaseElement {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -100,6 +218,44 @@ pub fn BaseElement::from_element(Element) -> Self?
 pub fn BaseElement::id(Self) -> Field[String]
 pub fn BaseElement::not_equal(Self, Self) -> Bool
 pub fn BaseElement::to_repr(Self) -> @debug.Repr
+
+pub struct BaseElementWithMixedContent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BaseElementWithMixedContent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn BaseElementWithMixedContent::equal(Self, Self) -> Bool
+pub fn BaseElementWithMixedContent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn BaseElementWithMixedContent::from_element(Element) -> Self?
+pub fn BaseElementWithMixedContent::id(Self) -> Field[String]
+pub fn BaseElementWithMixedContent::not_equal(Self, Self) -> Bool
+pub fn BaseElementWithMixedContent::to_repr(Self) -> @debug.Repr
+
+pub struct BoundaryEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BoundaryEvent::attached_to_ref(Self) -> Field[Reference]
+pub fn BoundaryEvent::auditing(Self) -> Field[Auditing]
+pub fn BoundaryEvent::cancel_activity(Self) -> Field[Bool]
+pub fn BoundaryEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BoundaryEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
+pub fn BoundaryEvent::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn BoundaryEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn BoundaryEvent::equal(Self, Self) -> Bool
+pub fn BoundaryEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn BoundaryEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BoundaryEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn BoundaryEvent::from_element(Element) -> Self?
+pub fn BoundaryEvent::id(Self) -> Field[String]
+pub fn BoundaryEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BoundaryEvent::monitoring(Self) -> Field[Monitoring]
+pub fn BoundaryEvent::name(Self) -> Field[String]
+pub fn BoundaryEvent::new(id? : String, name? : String, parallel_multiple? : Bool, cancel_activity? : Bool, attached_to_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn BoundaryEvent::not_equal(Self, Self) -> Bool
+pub fn BoundaryEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BoundaryEvent::output_set(Self) -> Field[OutputSet]
+pub fn BoundaryEvent::parallel_multiple(Self) -> Field[Bool]
+pub fn BoundaryEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn BoundaryEvent::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BpmnEnum {
   BpmnParticipantBandKind(BpmnParticipantBandKind)
@@ -123,6 +279,21 @@ pub fn BpmnEnum::not_equal(Self, Self) -> Bool
 pub fn BpmnEnum::to_repr(Self) -> @debug.Repr
 pub fn BpmnEnum::token(Self) -> String
 pub fn BpmnEnum::type_id(Self) -> TypeId
+
+pub struct BpmnError {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BpmnError::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn BpmnError::equal(Self, Self) -> Bool
+pub fn BpmnError::error_code(Self) -> Field[String]
+pub fn BpmnError::extension_elements(Self) -> Field[ExtensionElements]
+pub fn BpmnError::from_element(Element) -> Self?
+pub fn BpmnError::id(Self) -> Field[String]
+pub fn BpmnError::name(Self) -> Field[String]
+pub fn BpmnError::new(id? : String, name? : String, error_code? : String, structure_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn BpmnError::not_equal(Self, Self) -> Bool
+pub fn BpmnError::structure_ref(Self) -> Field[Reference]
+pub fn BpmnError::to_repr(Self) -> @debug.Repr
 
 pub(all) enum BpmnMessageVisibleKind {
   Initiating
@@ -148,6 +319,143 @@ pub fn BpmnParticipantBandKind::parse(String) -> Self?
 pub fn BpmnParticipantBandKind::to_repr(Self) -> @debug.Repr
 pub fn BpmnParticipantBandKind::token(Self) -> String
 
+pub struct BusinessRuleTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn BusinessRuleTask::auditing(Self) -> Field[Auditing]
+pub fn BusinessRuleTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BusinessRuleTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn BusinessRuleTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn BusinessRuleTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn BusinessRuleTask::default_(Self) -> Field[Reference]
+pub fn BusinessRuleTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn BusinessRuleTask::equal(Self, Self) -> Bool
+pub fn BusinessRuleTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn BusinessRuleTask::from_element(Element) -> Self?
+pub fn BusinessRuleTask::id(Self) -> Field[String]
+pub fn BusinessRuleTask::implementation(Self) -> Field[Implementation]
+pub fn BusinessRuleTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BusinessRuleTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn BusinessRuleTask::is_for_compensation(Self) -> Field[Bool]
+pub fn BusinessRuleTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn BusinessRuleTask::monitoring(Self) -> Field[Monitoring]
+pub fn BusinessRuleTask::name(Self) -> Field[String]
+pub fn BusinessRuleTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, implementation? : Implementation, contents? : ArrayView[Content]) -> Self
+pub fn BusinessRuleTask::not_equal(Self, Self) -> Bool
+pub fn BusinessRuleTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn BusinessRuleTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn BusinessRuleTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn BusinessRuleTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn BusinessRuleTask::to_repr(Self) -> @debug.Repr
+
+pub struct CallActivity {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CallActivity::auditing(Self) -> Field[Auditing]
+pub fn CallActivity::called_element(Self) -> Field[Reference]
+pub fn CallActivity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallActivity::completion_quantity(Self) -> Field[ExactInteger]
+pub fn CallActivity::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn CallActivity::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn CallActivity::default_(Self) -> Field[Reference]
+pub fn CallActivity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CallActivity::equal(Self, Self) -> Bool
+pub fn CallActivity::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CallActivity::from_element(Element) -> Self?
+pub fn CallActivity::id(Self) -> Field[String]
+pub fn CallActivity::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallActivity::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn CallActivity::is_for_compensation(Self) -> Field[Bool]
+pub fn CallActivity::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn CallActivity::monitoring(Self) -> Field[Monitoring]
+pub fn CallActivity::name(Self) -> Field[String]
+pub fn CallActivity::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, called_element? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CallActivity::not_equal(Self, Self) -> Bool
+pub fn CallActivity::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallActivity::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn CallActivity::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn CallActivity::start_quantity(Self) -> Field[ExactInteger]
+pub fn CallActivity::to_repr(Self) -> @debug.Repr
+
+pub struct CallableElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CallableElement::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CallableElement::equal(Self, Self) -> Bool
+pub fn CallableElement::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CallableElement::from_element(Element) -> Self?
+pub fn CallableElement::id(Self) -> Field[String]
+pub fn CallableElement::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn CallableElement::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn CallableElement::name(Self) -> Field[String]
+pub fn CallableElement::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn CallableElement::not_equal(Self, Self) -> Bool
+pub fn CallableElement::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CallableElement::to_repr(Self) -> @debug.Repr
+
+pub struct CancelEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CancelEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CancelEventDefinition::equal(Self, Self) -> Bool
+pub fn CancelEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CancelEventDefinition::from_element(Element) -> Self?
+pub fn CancelEventDefinition::id(Self) -> Field[String]
+pub fn CancelEventDefinition::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn CancelEventDefinition::not_equal(Self, Self) -> Bool
+pub fn CancelEventDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct CatchEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CatchEvent::auditing(Self) -> Field[Auditing]
+pub fn CatchEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CatchEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
+pub fn CatchEvent::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn CatchEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CatchEvent::equal(Self, Self) -> Bool
+pub fn CatchEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn CatchEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CatchEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CatchEvent::from_element(Element) -> Self?
+pub fn CatchEvent::id(Self) -> Field[String]
+pub fn CatchEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CatchEvent::monitoring(Self) -> Field[Monitoring]
+pub fn CatchEvent::name(Self) -> Field[String]
+pub fn CatchEvent::not_equal(Self, Self) -> Bool
+pub fn CatchEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CatchEvent::output_set(Self) -> Field[OutputSet]
+pub fn CatchEvent::parallel_multiple(Self) -> Field[Bool]
+pub fn CatchEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn CatchEvent::to_repr(Self) -> @debug.Repr
+
+pub struct Category {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Category::category_value(Self) -> Field[ReadOnlyArray[CategoryValue]]
+pub fn Category::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Category::equal(Self, Self) -> Bool
+pub fn Category::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Category::from_element(Element) -> Self?
+pub fn Category::id(Self) -> Field[String]
+pub fn Category::name(Self) -> Field[String]
+pub fn Category::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn Category::not_equal(Self, Self) -> Bool
+pub fn Category::to_repr(Self) -> @debug.Repr
+
+pub struct CategoryValue {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CategoryValue::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CategoryValue::equal(Self, Self) -> Bool
+pub fn CategoryValue::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CategoryValue::from_element(Element) -> Self?
+pub fn CategoryValue::id(Self) -> Field[String]
+pub fn CategoryValue::new(id? : String, value? : String, contents? : ArrayView[Content]) -> Self
+pub fn CategoryValue::not_equal(Self, Self) -> Bool
+pub fn CategoryValue::to_repr(Self) -> @debug.Repr
+pub fn CategoryValue::value(Self) -> Field[String]
+
 pub(all) enum ChoreographyLoopType {
   None
   Standard
@@ -160,6 +468,92 @@ pub fn ChoreographyLoopType::parse(String) -> Self?
 pub fn ChoreographyLoopType::to_repr(Self) -> @debug.Repr
 pub fn ChoreographyLoopType::token(Self) -> String
 
+pub struct Collaboration {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Collaboration::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn Collaboration::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Collaboration::conversation_association(Self) -> Field[ReadOnlyArray[Element]]
+pub fn Collaboration::conversation_link(Self) -> Field[ReadOnlyArray[Element]]
+pub fn Collaboration::conversation_node(Self) -> Field[ReadOnlyArray[Element]]
+pub fn Collaboration::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
+pub fn Collaboration::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Collaboration::equal(Self, Self) -> Bool
+pub fn Collaboration::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Collaboration::from_element(Element) -> Self?
+pub fn Collaboration::id(Self) -> Field[String]
+pub fn Collaboration::is_closed(Self) -> Field[Bool]
+pub fn Collaboration::message_flow(Self) -> Field[ReadOnlyArray[MessageFlow]]
+pub fn Collaboration::message_flow_association(Self) -> Field[ReadOnlyArray[MessageFlowAssociation]]
+pub fn Collaboration::name(Self) -> Field[String]
+pub fn Collaboration::new(id? : String, name? : String, is_closed? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn Collaboration::not_equal(Self, Self) -> Bool
+pub fn Collaboration::participant(Self) -> Field[ReadOnlyArray[Participant]]
+pub fn Collaboration::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
+pub fn Collaboration::to_repr(Self) -> @debug.Repr
+
+pub struct CompensateEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CompensateEventDefinition::activity_ref(Self) -> Field[Reference]
+pub fn CompensateEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CompensateEventDefinition::equal(Self, Self) -> Bool
+pub fn CompensateEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CompensateEventDefinition::from_element(Element) -> Self?
+pub fn CompensateEventDefinition::id(Self) -> Field[String]
+pub fn CompensateEventDefinition::new(id? : String, wait_for_completion? : Bool, activity_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CompensateEventDefinition::not_equal(Self, Self) -> Bool
+pub fn CompensateEventDefinition::to_repr(Self) -> @debug.Repr
+pub fn CompensateEventDefinition::wait_for_completion(Self) -> Field[Bool]
+
+pub struct ComplexBehaviorDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ComplexBehaviorDefinition::condition(Self) -> Field[FormalExpression]
+pub fn ComplexBehaviorDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ComplexBehaviorDefinition::equal(Self, Self) -> Bool
+pub fn ComplexBehaviorDefinition::event(Self) -> Field[ImplicitThrowEvent]
+pub fn ComplexBehaviorDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ComplexBehaviorDefinition::from_element(Element) -> Self?
+pub fn ComplexBehaviorDefinition::id(Self) -> Field[String]
+pub fn ComplexBehaviorDefinition::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn ComplexBehaviorDefinition::not_equal(Self, Self) -> Bool
+pub fn ComplexBehaviorDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct ComplexGateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ComplexGateway::activation_condition(Self) -> Field[Expression]
+pub fn ComplexGateway::auditing(Self) -> Field[Auditing]
+pub fn ComplexGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ComplexGateway::default_(Self) -> Field[Reference]
+pub fn ComplexGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ComplexGateway::equal(Self, Self) -> Bool
+pub fn ComplexGateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ComplexGateway::from_element(Element) -> Self?
+pub fn ComplexGateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn ComplexGateway::id(Self) -> Field[String]
+pub fn ComplexGateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ComplexGateway::monitoring(Self) -> Field[Monitoring]
+pub fn ComplexGateway::name(Self) -> Field[String]
+pub fn ComplexGateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, default_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ComplexGateway::not_equal(Self, Self) -> Bool
+pub fn ComplexGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ComplexGateway::to_repr(Self) -> @debug.Repr
+
+pub struct ConditionalEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ConditionalEventDefinition::condition(Self) -> Field[Expression]
+pub fn ConditionalEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ConditionalEventDefinition::equal(Self, Self) -> Bool
+pub fn ConditionalEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ConditionalEventDefinition::from_element(Element) -> Self?
+pub fn ConditionalEventDefinition::id(Self) -> Field[String]
+pub fn ConditionalEventDefinition::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn ConditionalEventDefinition::not_equal(Self, Self) -> Bool
+pub fn ConditionalEventDefinition::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Content {
   Text(String)
   Element(Element)
@@ -169,6 +563,77 @@ pub(all) enum Content {
 pub fn Content::equal(Self, Self) -> Bool
 pub fn Content::not_equal(Self, Self) -> Bool
 pub fn Content::to_repr(Self) -> @debug.Repr
+
+pub struct CorrelationKey {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CorrelationKey::correlation_property_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn CorrelationKey::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CorrelationKey::equal(Self, Self) -> Bool
+pub fn CorrelationKey::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CorrelationKey::from_element(Element) -> Self?
+pub fn CorrelationKey::id(Self) -> Field[String]
+pub fn CorrelationKey::name(Self) -> Field[String]
+pub fn CorrelationKey::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn CorrelationKey::not_equal(Self, Self) -> Bool
+pub fn CorrelationKey::to_repr(Self) -> @debug.Repr
+
+pub struct CorrelationProperty {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CorrelationProperty::correlation_property_retrieval_expression(Self) -> Field[ReadOnlyArray[CorrelationPropertyRetrievalExpression]]
+pub fn CorrelationProperty::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CorrelationProperty::equal(Self, Self) -> Bool
+pub fn CorrelationProperty::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CorrelationProperty::from_element(Element) -> Self?
+pub fn CorrelationProperty::id(Self) -> Field[String]
+pub fn CorrelationProperty::name(Self) -> Field[String]
+pub fn CorrelationProperty::new(id? : String, name? : String, type_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CorrelationProperty::not_equal(Self, Self) -> Bool
+pub fn CorrelationProperty::to_repr(Self) -> @debug.Repr
+pub fn CorrelationProperty::type_(Self) -> Field[Reference]
+
+pub struct CorrelationPropertyBinding {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CorrelationPropertyBinding::correlation_property_ref(Self) -> Field[Reference]
+pub fn CorrelationPropertyBinding::data_path(Self) -> Field[FormalExpression]
+pub fn CorrelationPropertyBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CorrelationPropertyBinding::equal(Self, Self) -> Bool
+pub fn CorrelationPropertyBinding::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CorrelationPropertyBinding::from_element(Element) -> Self?
+pub fn CorrelationPropertyBinding::id(Self) -> Field[String]
+pub fn CorrelationPropertyBinding::new(id? : String, correlation_property_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CorrelationPropertyBinding::not_equal(Self, Self) -> Bool
+pub fn CorrelationPropertyBinding::to_repr(Self) -> @debug.Repr
+
+pub struct CorrelationPropertyRetrievalExpression {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CorrelationPropertyRetrievalExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CorrelationPropertyRetrievalExpression::equal(Self, Self) -> Bool
+pub fn CorrelationPropertyRetrievalExpression::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CorrelationPropertyRetrievalExpression::from_element(Element) -> Self?
+pub fn CorrelationPropertyRetrievalExpression::id(Self) -> Field[String]
+pub fn CorrelationPropertyRetrievalExpression::message_path(Self) -> Field[FormalExpression]
+pub fn CorrelationPropertyRetrievalExpression::message_ref(Self) -> Field[Reference]
+pub fn CorrelationPropertyRetrievalExpression::new(id? : String, message_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CorrelationPropertyRetrievalExpression::not_equal(Self, Self) -> Bool
+pub fn CorrelationPropertyRetrievalExpression::to_repr(Self) -> @debug.Repr
+
+pub struct CorrelationSubscription {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn CorrelationSubscription::correlation_key_ref(Self) -> Field[Reference]
+pub fn CorrelationSubscription::correlation_property_binding(Self) -> Field[ReadOnlyArray[CorrelationPropertyBinding]]
+pub fn CorrelationSubscription::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn CorrelationSubscription::equal(Self, Self) -> Bool
+pub fn CorrelationSubscription::extension_elements(Self) -> Field[ExtensionElements]
+pub fn CorrelationSubscription::from_element(Element) -> Self?
+pub fn CorrelationSubscription::id(Self) -> Field[String]
+pub fn CorrelationSubscription::new(id? : String, correlation_key_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn CorrelationSubscription::not_equal(Self, Self) -> Bool
+pub fn CorrelationSubscription::to_repr(Self) -> @debug.Repr
 
 pub struct Cst {
   tokens : ReadOnlyArray[Token]
@@ -180,18 +645,191 @@ pub fn Cst::not_equal(Self, Self) -> Bool
 pub fn Cst::text(Self) -> String
 pub fn Cst::to_repr(Self) -> @debug.Repr
 
+pub struct DataAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
+pub fn DataAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataAssociation::equal(Self, Self) -> Bool
+pub fn DataAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataAssociation::from_element(Element) -> Self?
+pub fn DataAssociation::id(Self) -> Field[String]
+pub fn DataAssociation::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn DataAssociation::not_equal(Self, Self) -> Bool
+pub fn DataAssociation::source_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataAssociation::target_ref(Self) -> Field[Reference]
+pub fn DataAssociation::to_repr(Self) -> @debug.Repr
+pub fn DataAssociation::transformation(Self) -> Field[FormalExpression]
+
+pub struct DataInput {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataInput::data_state(Self) -> Field[DataState]
+pub fn DataInput::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataInput::equal(Self, Self) -> Bool
+pub fn DataInput::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataInput::from_element(Element) -> Self?
+pub fn DataInput::id(Self) -> Field[String]
+pub fn DataInput::is_collection(Self) -> Field[Bool]
+pub fn DataInput::item_subject_ref(Self) -> Field[Reference]
+pub fn DataInput::name(Self) -> Field[String]
+pub fn DataInput::new(id? : String, name? : String, item_subject_ref? : Reference, is_collection? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn DataInput::not_equal(Self, Self) -> Bool
+pub fn DataInput::to_repr(Self) -> @debug.Repr
+
+pub struct DataInputAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataInputAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
+pub fn DataInputAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataInputAssociation::equal(Self, Self) -> Bool
+pub fn DataInputAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataInputAssociation::from_element(Element) -> Self?
+pub fn DataInputAssociation::id(Self) -> Field[String]
+pub fn DataInputAssociation::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn DataInputAssociation::not_equal(Self, Self) -> Bool
+pub fn DataInputAssociation::source_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataInputAssociation::target_ref(Self) -> Field[Reference]
+pub fn DataInputAssociation::to_repr(Self) -> @debug.Repr
+pub fn DataInputAssociation::transformation(Self) -> Field[FormalExpression]
+
+pub struct DataObject {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataObject::auditing(Self) -> Field[Auditing]
+pub fn DataObject::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataObject::data_state(Self) -> Field[DataState]
+pub fn DataObject::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataObject::equal(Self, Self) -> Bool
+pub fn DataObject::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataObject::from_element(Element) -> Self?
+pub fn DataObject::id(Self) -> Field[String]
+pub fn DataObject::is_collection(Self) -> Field[Bool]
+pub fn DataObject::item_subject_ref(Self) -> Field[Reference]
+pub fn DataObject::monitoring(Self) -> Field[Monitoring]
+pub fn DataObject::name(Self) -> Field[String]
+pub fn DataObject::new(id? : String, name? : String, item_subject_ref? : Reference, is_collection? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn DataObject::not_equal(Self, Self) -> Bool
+pub fn DataObject::to_repr(Self) -> @debug.Repr
+
+pub struct DataObjectReference {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataObjectReference::auditing(Self) -> Field[Auditing]
+pub fn DataObjectReference::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataObjectReference::data_object_ref(Self) -> Field[Reference]
+pub fn DataObjectReference::data_state(Self) -> Field[DataState]
+pub fn DataObjectReference::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataObjectReference::equal(Self, Self) -> Bool
+pub fn DataObjectReference::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataObjectReference::from_element(Element) -> Self?
+pub fn DataObjectReference::id(Self) -> Field[String]
+pub fn DataObjectReference::item_subject_ref(Self) -> Field[Reference]
+pub fn DataObjectReference::monitoring(Self) -> Field[Monitoring]
+pub fn DataObjectReference::name(Self) -> Field[String]
+pub fn DataObjectReference::new(id? : String, name? : String, item_subject_ref? : Reference, data_object_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn DataObjectReference::not_equal(Self, Self) -> Bool
+pub fn DataObjectReference::to_repr(Self) -> @debug.Repr
+
+pub struct DataOutput {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataOutput::data_state(Self) -> Field[DataState]
+pub fn DataOutput::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataOutput::equal(Self, Self) -> Bool
+pub fn DataOutput::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataOutput::from_element(Element) -> Self?
+pub fn DataOutput::id(Self) -> Field[String]
+pub fn DataOutput::is_collection(Self) -> Field[Bool]
+pub fn DataOutput::item_subject_ref(Self) -> Field[Reference]
+pub fn DataOutput::name(Self) -> Field[String]
+pub fn DataOutput::new(id? : String, name? : String, item_subject_ref? : Reference, is_collection? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn DataOutput::not_equal(Self, Self) -> Bool
+pub fn DataOutput::to_repr(Self) -> @debug.Repr
+
+pub struct DataOutputAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataOutputAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
+pub fn DataOutputAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataOutputAssociation::equal(Self, Self) -> Bool
+pub fn DataOutputAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataOutputAssociation::from_element(Element) -> Self?
+pub fn DataOutputAssociation::id(Self) -> Field[String]
+pub fn DataOutputAssociation::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn DataOutputAssociation::not_equal(Self, Self) -> Bool
+pub fn DataOutputAssociation::source_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataOutputAssociation::target_ref(Self) -> Field[Reference]
+pub fn DataOutputAssociation::to_repr(Self) -> @debug.Repr
+pub fn DataOutputAssociation::transformation(Self) -> Field[FormalExpression]
+
+pub struct DataState {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataState::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataState::equal(Self, Self) -> Bool
+pub fn DataState::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataState::from_element(Element) -> Self?
+pub fn DataState::id(Self) -> Field[String]
+pub fn DataState::name(Self) -> Field[String]
+pub fn DataState::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn DataState::not_equal(Self, Self) -> Bool
+pub fn DataState::to_repr(Self) -> @debug.Repr
+
+pub struct DataStore {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataStore::capacity(Self) -> Field[ExactInteger]
+pub fn DataStore::data_state(Self) -> Field[DataState]
+pub fn DataStore::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataStore::equal(Self, Self) -> Bool
+pub fn DataStore::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataStore::from_element(Element) -> Self?
+pub fn DataStore::id(Self) -> Field[String]
+pub fn DataStore::is_unlimited(Self) -> Field[Bool]
+pub fn DataStore::item_subject_ref(Self) -> Field[Reference]
+pub fn DataStore::name(Self) -> Field[String]
+pub fn DataStore::new(id? : String, name? : String, capacity? : ExactInteger, is_unlimited? : Bool, item_subject_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn DataStore::not_equal(Self, Self) -> Bool
+pub fn DataStore::to_repr(Self) -> @debug.Repr
+
+pub struct DataStoreReference {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn DataStoreReference::auditing(Self) -> Field[Auditing]
+pub fn DataStoreReference::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn DataStoreReference::data_state(Self) -> Field[DataState]
+pub fn DataStoreReference::data_store_ref(Self) -> Field[Reference]
+pub fn DataStoreReference::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn DataStoreReference::equal(Self, Self) -> Bool
+pub fn DataStoreReference::extension_elements(Self) -> Field[ExtensionElements]
+pub fn DataStoreReference::from_element(Element) -> Self?
+pub fn DataStoreReference::id(Self) -> Field[String]
+pub fn DataStoreReference::item_subject_ref(Self) -> Field[Reference]
+pub fn DataStoreReference::monitoring(Self) -> Field[Monitoring]
+pub fn DataStoreReference::name(Self) -> Field[String]
+pub fn DataStoreReference::new(id? : String, name? : String, item_subject_ref? : Reference, data_store_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn DataStoreReference::not_equal(Self, Self) -> Bool
+pub fn DataStoreReference::to_repr(Self) -> @debug.Repr
+
 pub struct Definitions {
   element : Element
 } derive(Eq, @debug.Debug)
 pub fn Definitions::document(Self) -> Document
 pub fn Definitions::equal(Self, Self) -> Bool
+pub fn Definitions::exporter(Self) -> Field[String]
+pub fn Definitions::exporter_version(Self) -> Field[String]
+pub fn Definitions::expression_language(Self) -> Field[String]
 pub fn Definitions::from_element(Element) -> Self?
+pub fn Definitions::id(Self) -> Field[String]
 pub fn Definitions::imports(Self) -> ReadOnlyArray[Import]
+pub fn Definitions::name(Self) -> Field[String]
 pub fn Definitions::new(String, id? : String, name? : String, expression_language? : String, type_language? : String, exporter? : String, exporter_version? : String, children? : ArrayView[Element]) -> Self
 pub fn Definitions::not_equal(Self, Self) -> Bool
 pub fn Definitions::roots(Self) -> ReadOnlyArray[RootElement]
 pub fn Definitions::target_namespace(Self) -> Field[String]
 pub fn Definitions::to_repr(Self) -> @debug.Repr
+pub fn Definitions::type_language(Self) -> Field[String]
 
 pub struct Diagnostic {
   code : String
@@ -221,6 +859,7 @@ pub struct Documentation {
 } derive(Eq, @debug.Debug)
 pub fn Documentation::equal(Self, Self) -> Bool
 pub fn Documentation::from_element(Element) -> Self?
+pub fn Documentation::id(Self) -> Field[String]
 pub fn Documentation::new(ArrayView[Content], id? : String, text_format? : String) -> Self
 pub fn Documentation::not_equal(Self, Self) -> Bool
 pub fn Documentation::text_format(Self) -> Field[String]
@@ -257,6 +896,122 @@ pub fn Element::with_contents(Self, ArrayView[Content]) -> Self
 pub fn Element::with_kind(Self, Kind) -> Self
 pub impl Eq for Element
 
+pub struct EndEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn EndEvent::auditing(Self) -> Field[Auditing]
+pub fn EndEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EndEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
+pub fn EndEvent::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn EndEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn EndEvent::equal(Self, Self) -> Bool
+pub fn EndEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn EndEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EndEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn EndEvent::from_element(Element) -> Self?
+pub fn EndEvent::id(Self) -> Field[String]
+pub fn EndEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EndEvent::input_set(Self) -> Field[InputSet]
+pub fn EndEvent::monitoring(Self) -> Field[Monitoring]
+pub fn EndEvent::name(Self) -> Field[String]
+pub fn EndEvent::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn EndEvent::not_equal(Self, Self) -> Bool
+pub fn EndEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EndEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn EndEvent::to_repr(Self) -> @debug.Repr
+
+pub struct EndPoint {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn EndPoint::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn EndPoint::equal(Self, Self) -> Bool
+pub fn EndPoint::extension_elements(Self) -> Field[ExtensionElements]
+pub fn EndPoint::from_element(Element) -> Self?
+pub fn EndPoint::id(Self) -> Field[String]
+pub fn EndPoint::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn EndPoint::not_equal(Self, Self) -> Bool
+pub fn EndPoint::to_repr(Self) -> @debug.Repr
+
+pub struct ErrorEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ErrorEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ErrorEventDefinition::equal(Self, Self) -> Bool
+pub fn ErrorEventDefinition::error_ref(Self) -> Field[Reference]
+pub fn ErrorEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ErrorEventDefinition::from_element(Element) -> Self?
+pub fn ErrorEventDefinition::id(Self) -> Field[String]
+pub fn ErrorEventDefinition::new(id? : String, error_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ErrorEventDefinition::not_equal(Self, Self) -> Bool
+pub fn ErrorEventDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct Escalation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Escalation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Escalation::equal(Self, Self) -> Bool
+pub fn Escalation::escalation_code(Self) -> Field[String]
+pub fn Escalation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Escalation::from_element(Element) -> Self?
+pub fn Escalation::id(Self) -> Field[String]
+pub fn Escalation::name(Self) -> Field[String]
+pub fn Escalation::new(id? : String, name? : String, escalation_code? : String, structure_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Escalation::not_equal(Self, Self) -> Bool
+pub fn Escalation::structure_ref(Self) -> Field[Reference]
+pub fn Escalation::to_repr(Self) -> @debug.Repr
+
+pub struct EscalationEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn EscalationEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn EscalationEventDefinition::equal(Self, Self) -> Bool
+pub fn EscalationEventDefinition::escalation_ref(Self) -> Field[Reference]
+pub fn EscalationEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn EscalationEventDefinition::from_element(Element) -> Self?
+pub fn EscalationEventDefinition::id(Self) -> Field[String]
+pub fn EscalationEventDefinition::new(id? : String, escalation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn EscalationEventDefinition::not_equal(Self, Self) -> Bool
+pub fn EscalationEventDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct Event {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Event::auditing(Self) -> Field[Auditing]
+pub fn Event::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Event::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Event::equal(Self, Self) -> Bool
+pub fn Event::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Event::from_element(Element) -> Self?
+pub fn Event::id(Self) -> Field[String]
+pub fn Event::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Event::monitoring(Self) -> Field[Monitoring]
+pub fn Event::name(Self) -> Field[String]
+pub fn Event::not_equal(Self, Self) -> Bool
+pub fn Event::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Event::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn Event::to_repr(Self) -> @debug.Repr
+
+pub struct EventBasedGateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn EventBasedGateway::auditing(Self) -> Field[Auditing]
+pub fn EventBasedGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EventBasedGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn EventBasedGateway::equal(Self, Self) -> Bool
+pub fn EventBasedGateway::event_gateway_type(Self) -> Field[EventBasedGatewayType]
+pub fn EventBasedGateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn EventBasedGateway::from_element(Element) -> Self?
+pub fn EventBasedGateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn EventBasedGateway::id(Self) -> Field[String]
+pub fn EventBasedGateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EventBasedGateway::instantiate(Self) -> Field[Bool]
+pub fn EventBasedGateway::monitoring(Self) -> Field[Monitoring]
+pub fn EventBasedGateway::name(Self) -> Field[String]
+pub fn EventBasedGateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, instantiate? : Bool, event_gateway_type? : EventBasedGatewayType, contents? : ArrayView[Content]) -> Self
+pub fn EventBasedGateway::not_equal(Self, Self) -> Bool
+pub fn EventBasedGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn EventBasedGateway::to_repr(Self) -> @debug.Repr
+
 pub(all) enum EventBasedGatewayType {
   Exclusive
   Parallel
@@ -266,6 +1021,17 @@ pub fn EventBasedGatewayType::not_equal(Self, Self) -> Bool
 pub fn EventBasedGatewayType::parse(String) -> Self?
 pub fn EventBasedGatewayType::to_repr(Self) -> @debug.Repr
 pub fn EventBasedGatewayType::token(Self) -> String
+
+pub struct EventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn EventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn EventDefinition::equal(Self, Self) -> Bool
+pub fn EventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn EventDefinition::from_element(Element) -> Self?
+pub fn EventDefinition::id(Self) -> Field[String]
+pub fn EventDefinition::not_equal(Self, Self) -> Bool
+pub fn EventDefinition::to_repr(Self) -> @debug.Repr
 
 pub struct ExactInteger {
   token : String
@@ -284,6 +1050,26 @@ pub fn ExactNumber::not_equal(Self, Self) -> Bool
 pub fn ExactNumber::parse(String) -> Self?
 pub fn ExactNumber::to_repr(Self) -> @debug.Repr
 
+pub struct ExclusiveGateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ExclusiveGateway::auditing(Self) -> Field[Auditing]
+pub fn ExclusiveGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ExclusiveGateway::default_(Self) -> Field[Reference]
+pub fn ExclusiveGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ExclusiveGateway::equal(Self, Self) -> Bool
+pub fn ExclusiveGateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ExclusiveGateway::from_element(Element) -> Self?
+pub fn ExclusiveGateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn ExclusiveGateway::id(Self) -> Field[String]
+pub fn ExclusiveGateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ExclusiveGateway::monitoring(Self) -> Field[Monitoring]
+pub fn ExclusiveGateway::name(Self) -> Field[String]
+pub fn ExclusiveGateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, default_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ExclusiveGateway::not_equal(Self, Self) -> Bool
+pub fn ExclusiveGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ExclusiveGateway::to_repr(Self) -> @debug.Repr
+
 pub struct ExpandedName {
   namespace_uri : String
   local_name : String
@@ -292,6 +1078,39 @@ pub fn ExpandedName::equal(Self, Self) -> Bool
 pub fn ExpandedName::new(String, String) -> Self
 pub fn ExpandedName::not_equal(Self, Self) -> Bool
 pub fn ExpandedName::to_repr(Self) -> @debug.Repr
+
+pub struct Expression {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Expression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Expression::equal(Self, Self) -> Bool
+pub fn Expression::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Expression::from_element(Element) -> Self?
+pub fn Expression::id(Self) -> Field[String]
+pub fn Expression::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn Expression::not_equal(Self, Self) -> Bool
+pub fn Expression::to_repr(Self) -> @debug.Repr
+
+pub struct Extension {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Extension::definition(Self) -> Field[Reference]
+pub fn Extension::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Extension::equal(Self, Self) -> Bool
+pub fn Extension::from_element(Element) -> Self?
+pub fn Extension::must_understand(Self) -> Field[Bool]
+pub fn Extension::new(definition? : Reference, must_understand? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn Extension::not_equal(Self, Self) -> Bool
+pub fn Extension::to_repr(Self) -> @debug.Repr
+
+pub struct ExtensionElements {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ExtensionElements::equal(Self, Self) -> Bool
+pub fn ExtensionElements::from_element(Element) -> Self?
+pub fn ExtensionElements::new(contents? : ArrayView[Content]) -> Self
+pub fn ExtensionElements::not_equal(Self, Self) -> Bool
+pub fn ExtensionElements::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Field[T] {
   Absent
@@ -302,6 +1121,71 @@ pub fn[T : Eq] Field::equal(Self[T], Self[T]) -> Bool
 pub fn[T : Eq] Field::not_equal(Self[T], Self[T]) -> Bool
 pub fn[T : @debug.Debug] Field::to_repr(Self[T]) -> @debug.Repr
 pub fn[T] Field::value(Self[T]) -> T?
+
+pub struct FlowElement {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn FlowElement::auditing(Self) -> Field[Auditing]
+pub fn FlowElement::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn FlowElement::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn FlowElement::equal(Self, Self) -> Bool
+pub fn FlowElement::extension_elements(Self) -> Field[ExtensionElements]
+pub fn FlowElement::from_element(Element) -> Self?
+pub fn FlowElement::id(Self) -> Field[String]
+pub fn FlowElement::monitoring(Self) -> Field[Monitoring]
+pub fn FlowElement::name(Self) -> Field[String]
+pub fn FlowElement::not_equal(Self, Self) -> Bool
+pub fn FlowElement::to_repr(Self) -> @debug.Repr
+
+pub struct FlowNode {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn FlowNode::auditing(Self) -> Field[Auditing]
+pub fn FlowNode::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn FlowNode::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn FlowNode::equal(Self, Self) -> Bool
+pub fn FlowNode::extension_elements(Self) -> Field[ExtensionElements]
+pub fn FlowNode::from_element(Element) -> Self?
+pub fn FlowNode::id(Self) -> Field[String]
+pub fn FlowNode::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn FlowNode::monitoring(Self) -> Field[Monitoring]
+pub fn FlowNode::name(Self) -> Field[String]
+pub fn FlowNode::not_equal(Self, Self) -> Bool
+pub fn FlowNode::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn FlowNode::to_repr(Self) -> @debug.Repr
+
+pub struct FormalExpression {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn FormalExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn FormalExpression::equal(Self, Self) -> Bool
+pub fn FormalExpression::evaluates_to_type_ref(Self) -> Field[Reference]
+pub fn FormalExpression::extension_elements(Self) -> Field[ExtensionElements]
+pub fn FormalExpression::from_element(Element) -> Self?
+pub fn FormalExpression::id(Self) -> Field[String]
+pub fn FormalExpression::language(Self) -> Field[String]
+pub fn FormalExpression::new(id? : String, language? : String, evaluates_to_type_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn FormalExpression::not_equal(Self, Self) -> Bool
+pub fn FormalExpression::to_repr(Self) -> @debug.Repr
+
+pub struct Gateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Gateway::auditing(Self) -> Field[Auditing]
+pub fn Gateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Gateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Gateway::equal(Self, Self) -> Bool
+pub fn Gateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Gateway::from_element(Element) -> Self?
+pub fn Gateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn Gateway::id(Self) -> Field[String]
+pub fn Gateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Gateway::monitoring(Self) -> Field[Monitoring]
+pub fn Gateway::name(Self) -> Field[String]
+pub fn Gateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, contents? : ArrayView[Content]) -> Self
+pub fn Gateway::not_equal(Self, Self) -> Bool
+pub fn Gateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Gateway::to_repr(Self) -> @debug.Repr
 
 pub(all) enum GatewayDirection {
   Unspecified
@@ -315,6 +1199,125 @@ pub fn GatewayDirection::parse(String) -> Self?
 pub fn GatewayDirection::to_repr(Self) -> @debug.Repr
 pub fn GatewayDirection::token(Self) -> String
 
+pub struct GlobalBusinessRuleTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalBusinessRuleTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalBusinessRuleTask::equal(Self, Self) -> Bool
+pub fn GlobalBusinessRuleTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalBusinessRuleTask::from_element(Element) -> Self?
+pub fn GlobalBusinessRuleTask::id(Self) -> Field[String]
+pub fn GlobalBusinessRuleTask::implementation(Self) -> Field[Implementation]
+pub fn GlobalBusinessRuleTask::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn GlobalBusinessRuleTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn GlobalBusinessRuleTask::name(Self) -> Field[String]
+pub fn GlobalBusinessRuleTask::new(id? : String, name? : String, implementation? : Implementation, contents? : ArrayView[Content]) -> Self
+pub fn GlobalBusinessRuleTask::not_equal(Self, Self) -> Bool
+pub fn GlobalBusinessRuleTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn GlobalBusinessRuleTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalBusinessRuleTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalManualTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalManualTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalManualTask::equal(Self, Self) -> Bool
+pub fn GlobalManualTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalManualTask::from_element(Element) -> Self?
+pub fn GlobalManualTask::id(Self) -> Field[String]
+pub fn GlobalManualTask::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn GlobalManualTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn GlobalManualTask::name(Self) -> Field[String]
+pub fn GlobalManualTask::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn GlobalManualTask::not_equal(Self, Self) -> Bool
+pub fn GlobalManualTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn GlobalManualTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalManualTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalScriptTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalScriptTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalScriptTask::equal(Self, Self) -> Bool
+pub fn GlobalScriptTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalScriptTask::from_element(Element) -> Self?
+pub fn GlobalScriptTask::id(Self) -> Field[String]
+pub fn GlobalScriptTask::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn GlobalScriptTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn GlobalScriptTask::name(Self) -> Field[String]
+pub fn GlobalScriptTask::new(id? : String, name? : String, script_language? : String, contents? : ArrayView[Content]) -> Self
+pub fn GlobalScriptTask::not_equal(Self, Self) -> Bool
+pub fn GlobalScriptTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn GlobalScriptTask::script(Self) -> Field[Script]
+pub fn GlobalScriptTask::script_language(Self) -> Field[String]
+pub fn GlobalScriptTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalScriptTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalTask::equal(Self, Self) -> Bool
+pub fn GlobalTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalTask::from_element(Element) -> Self?
+pub fn GlobalTask::id(Self) -> Field[String]
+pub fn GlobalTask::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn GlobalTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn GlobalTask::name(Self) -> Field[String]
+pub fn GlobalTask::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn GlobalTask::not_equal(Self, Self) -> Bool
+pub fn GlobalTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn GlobalTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalTask::to_repr(Self) -> @debug.Repr
+
+pub struct GlobalUserTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn GlobalUserTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn GlobalUserTask::equal(Self, Self) -> Bool
+pub fn GlobalUserTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn GlobalUserTask::from_element(Element) -> Self?
+pub fn GlobalUserTask::id(Self) -> Field[String]
+pub fn GlobalUserTask::implementation(Self) -> Field[Implementation]
+pub fn GlobalUserTask::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn GlobalUserTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn GlobalUserTask::name(Self) -> Field[String]
+pub fn GlobalUserTask::new(id? : String, name? : String, implementation? : Implementation, contents? : ArrayView[Content]) -> Self
+pub fn GlobalUserTask::not_equal(Self, Self) -> Bool
+pub fn GlobalUserTask::rendering(Self) -> Field[ReadOnlyArray[Rendering]]
+pub fn GlobalUserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn GlobalUserTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn GlobalUserTask::to_repr(Self) -> @debug.Repr
+
+pub struct Group {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Group::category_value_ref(Self) -> Field[Reference]
+pub fn Group::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Group::equal(Self, Self) -> Bool
+pub fn Group::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Group::from_element(Element) -> Self?
+pub fn Group::id(Self) -> Field[String]
+pub fn Group::new(id? : String, category_value_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Group::not_equal(Self, Self) -> Bool
+pub fn Group::to_repr(Self) -> @debug.Repr
+
+pub struct HumanPerformer {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn HumanPerformer::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn HumanPerformer::equal(Self, Self) -> Bool
+pub fn HumanPerformer::extension_elements(Self) -> Field[ExtensionElements]
+pub fn HumanPerformer::from_element(Element) -> Self?
+pub fn HumanPerformer::id(Self) -> Field[String]
+pub fn HumanPerformer::name(Self) -> Field[String]
+pub fn HumanPerformer::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn HumanPerformer::not_equal(Self, Self) -> Bool
+pub fn HumanPerformer::resource_assignment_expression(Self) -> Field[ResourceAssignmentExpression]
+pub fn HumanPerformer::resource_parameter_binding(Self) -> Field[ReadOnlyArray[ResourceParameterBinding]]
+pub fn HumanPerformer::resource_ref(Self) -> Field[Reference]
+pub fn HumanPerformer::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Implementation {
   Unspecified
   WebService
@@ -325,6 +1328,30 @@ pub fn Implementation::not_equal(Self, Self) -> Bool
 pub fn Implementation::parse(String) -> Self?
 pub fn Implementation::to_repr(Self) -> @debug.Repr
 pub fn Implementation::token(Self) -> String
+
+pub struct ImplicitThrowEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ImplicitThrowEvent::auditing(Self) -> Field[Auditing]
+pub fn ImplicitThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ImplicitThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
+pub fn ImplicitThrowEvent::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ImplicitThrowEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ImplicitThrowEvent::equal(Self, Self) -> Bool
+pub fn ImplicitThrowEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn ImplicitThrowEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ImplicitThrowEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ImplicitThrowEvent::from_element(Element) -> Self?
+pub fn ImplicitThrowEvent::id(Self) -> Field[String]
+pub fn ImplicitThrowEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ImplicitThrowEvent::input_set(Self) -> Field[InputSet]
+pub fn ImplicitThrowEvent::monitoring(Self) -> Field[Monitoring]
+pub fn ImplicitThrowEvent::name(Self) -> Field[String]
+pub fn ImplicitThrowEvent::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn ImplicitThrowEvent::not_equal(Self, Self) -> Bool
+pub fn ImplicitThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ImplicitThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ImplicitThrowEvent::to_repr(Self) -> @debug.Repr
 
 pub struct Import {
   element : Element
@@ -337,6 +1364,153 @@ pub fn Import::namespace_uri(Self) -> Field[String]
 pub fn Import::new(String, String, String) -> Self
 pub fn Import::not_equal(Self, Self) -> Bool
 pub fn Import::to_repr(Self) -> @debug.Repr
+
+pub struct InclusiveGateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn InclusiveGateway::auditing(Self) -> Field[Auditing]
+pub fn InclusiveGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InclusiveGateway::default_(Self) -> Field[Reference]
+pub fn InclusiveGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn InclusiveGateway::equal(Self, Self) -> Bool
+pub fn InclusiveGateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn InclusiveGateway::from_element(Element) -> Self?
+pub fn InclusiveGateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn InclusiveGateway::id(Self) -> Field[String]
+pub fn InclusiveGateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InclusiveGateway::monitoring(Self) -> Field[Monitoring]
+pub fn InclusiveGateway::name(Self) -> Field[String]
+pub fn InclusiveGateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, default_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn InclusiveGateway::not_equal(Self, Self) -> Bool
+pub fn InclusiveGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InclusiveGateway::to_repr(Self) -> @debug.Repr
+
+pub struct InputOutputBinding {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn InputOutputBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn InputOutputBinding::equal(Self, Self) -> Bool
+pub fn InputOutputBinding::extension_elements(Self) -> Field[ExtensionElements]
+pub fn InputOutputBinding::from_element(Element) -> Self?
+pub fn InputOutputBinding::id(Self) -> Field[String]
+pub fn InputOutputBinding::input_data_ref(Self) -> Field[Reference]
+pub fn InputOutputBinding::new(id? : String, operation_ref? : Reference, input_data_ref? : Reference, output_data_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn InputOutputBinding::not_equal(Self, Self) -> Bool
+pub fn InputOutputBinding::operation_ref(Self) -> Field[Reference]
+pub fn InputOutputBinding::output_data_ref(Self) -> Field[Reference]
+pub fn InputOutputBinding::to_repr(Self) -> @debug.Repr
+
+pub struct InputOutputSpecification {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn InputOutputSpecification::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
+pub fn InputOutputSpecification::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
+pub fn InputOutputSpecification::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn InputOutputSpecification::equal(Self, Self) -> Bool
+pub fn InputOutputSpecification::extension_elements(Self) -> Field[ExtensionElements]
+pub fn InputOutputSpecification::from_element(Element) -> Self?
+pub fn InputOutputSpecification::id(Self) -> Field[String]
+pub fn InputOutputSpecification::input_set(Self) -> Field[ReadOnlyArray[InputSet]]
+pub fn InputOutputSpecification::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn InputOutputSpecification::not_equal(Self, Self) -> Bool
+pub fn InputOutputSpecification::output_set(Self) -> Field[ReadOnlyArray[OutputSet]]
+pub fn InputOutputSpecification::to_repr(Self) -> @debug.Repr
+
+pub struct InputSet {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn InputSet::data_input_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InputSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn InputSet::equal(Self, Self) -> Bool
+pub fn InputSet::extension_elements(Self) -> Field[ExtensionElements]
+pub fn InputSet::from_element(Element) -> Self?
+pub fn InputSet::id(Self) -> Field[String]
+pub fn InputSet::name(Self) -> Field[String]
+pub fn InputSet::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn InputSet::not_equal(Self, Self) -> Bool
+pub fn InputSet::optional_input_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InputSet::output_set_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn InputSet::to_repr(Self) -> @debug.Repr
+pub fn InputSet::while_executing_input_refs(Self) -> Field[ReadOnlyArray[Reference]]
+
+pub struct Interface {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Interface::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Interface::equal(Self, Self) -> Bool
+pub fn Interface::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Interface::from_element(Element) -> Self?
+pub fn Interface::id(Self) -> Field[String]
+pub fn Interface::implementation_ref(Self) -> Field[Reference]
+pub fn Interface::name(Self) -> Field[String]
+pub fn Interface::new(id? : String, name? : String, implementation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Interface::not_equal(Self, Self) -> Bool
+pub fn Interface::operation(Self) -> Field[ReadOnlyArray[Operation]]
+pub fn Interface::to_repr(Self) -> @debug.Repr
+
+pub struct IntermediateCatchEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn IntermediateCatchEvent::auditing(Self) -> Field[Auditing]
+pub fn IntermediateCatchEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateCatchEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
+pub fn IntermediateCatchEvent::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn IntermediateCatchEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn IntermediateCatchEvent::equal(Self, Self) -> Bool
+pub fn IntermediateCatchEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn IntermediateCatchEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateCatchEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn IntermediateCatchEvent::from_element(Element) -> Self?
+pub fn IntermediateCatchEvent::id(Self) -> Field[String]
+pub fn IntermediateCatchEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateCatchEvent::monitoring(Self) -> Field[Monitoring]
+pub fn IntermediateCatchEvent::name(Self) -> Field[String]
+pub fn IntermediateCatchEvent::new(id? : String, name? : String, parallel_multiple? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn IntermediateCatchEvent::not_equal(Self, Self) -> Bool
+pub fn IntermediateCatchEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateCatchEvent::output_set(Self) -> Field[OutputSet]
+pub fn IntermediateCatchEvent::parallel_multiple(Self) -> Field[Bool]
+pub fn IntermediateCatchEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn IntermediateCatchEvent::to_repr(Self) -> @debug.Repr
+
+pub struct IntermediateThrowEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn IntermediateThrowEvent::auditing(Self) -> Field[Auditing]
+pub fn IntermediateThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
+pub fn IntermediateThrowEvent::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn IntermediateThrowEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn IntermediateThrowEvent::equal(Self, Self) -> Bool
+pub fn IntermediateThrowEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn IntermediateThrowEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateThrowEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn IntermediateThrowEvent::from_element(Element) -> Self?
+pub fn IntermediateThrowEvent::id(Self) -> Field[String]
+pub fn IntermediateThrowEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateThrowEvent::input_set(Self) -> Field[InputSet]
+pub fn IntermediateThrowEvent::monitoring(Self) -> Field[Monitoring]
+pub fn IntermediateThrowEvent::name(Self) -> Field[String]
+pub fn IntermediateThrowEvent::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn IntermediateThrowEvent::not_equal(Self, Self) -> Bool
+pub fn IntermediateThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn IntermediateThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn IntermediateThrowEvent::to_repr(Self) -> @debug.Repr
+
+pub struct ItemDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ItemDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ItemDefinition::equal(Self, Self) -> Bool
+pub fn ItemDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ItemDefinition::from_element(Element) -> Self?
+pub fn ItemDefinition::id(Self) -> Field[String]
+pub fn ItemDefinition::is_collection(Self) -> Field[Bool]
+pub fn ItemDefinition::item_kind(Self) -> Field[ItemKind]
+pub fn ItemDefinition::new(id? : String, structure_ref? : Reference, is_collection? : Bool, item_kind? : ItemKind, contents? : ArrayView[Content]) -> Self
+pub fn ItemDefinition::not_equal(Self, Self) -> Bool
+pub fn ItemDefinition::structure_ref(Self) -> Field[Reference]
+pub fn ItemDefinition::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ItemKind {
   Information
@@ -569,6 +1743,37 @@ pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::substitutes(Self, ExpandedName) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+pub struct Lane {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Lane::child_lane_set(Self) -> Field[LaneSet]
+pub fn Lane::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Lane::equal(Self, Self) -> Bool
+pub fn Lane::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Lane::flow_node_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Lane::from_element(Element) -> Self?
+pub fn Lane::id(Self) -> Field[String]
+pub fn Lane::name(Self) -> Field[String]
+pub fn Lane::new(id? : String, name? : String, partition_element_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Lane::not_equal(Self, Self) -> Bool
+pub fn Lane::partition_element(Self) -> Field[BaseElement]
+pub fn Lane::partition_element_ref(Self) -> Field[Reference]
+pub fn Lane::to_repr(Self) -> @debug.Repr
+
+pub struct LaneSet {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn LaneSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn LaneSet::equal(Self, Self) -> Bool
+pub fn LaneSet::extension_elements(Self) -> Field[ExtensionElements]
+pub fn LaneSet::from_element(Element) -> Self?
+pub fn LaneSet::id(Self) -> Field[String]
+pub fn LaneSet::lane(Self) -> Field[ReadOnlyArray[Lane]]
+pub fn LaneSet::name(Self) -> Field[String]
+pub fn LaneSet::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn LaneSet::not_equal(Self, Self) -> Bool
+pub fn LaneSet::to_repr(Self) -> @debug.Repr
+
 pub struct Limits {
   source_units : Int32
   output_units : Int32
@@ -582,6 +1787,21 @@ pub fn Limits::new(source_units? : Int32, output_units? : Int32, nodes? : Int32,
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+pub struct LinkEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn LinkEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn LinkEventDefinition::equal(Self, Self) -> Bool
+pub fn LinkEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn LinkEventDefinition::from_element(Element) -> Self?
+pub fn LinkEventDefinition::id(Self) -> Field[String]
+pub fn LinkEventDefinition::name(Self) -> Field[String]
+pub fn LinkEventDefinition::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn LinkEventDefinition::not_equal(Self, Self) -> Bool
+pub fn LinkEventDefinition::source(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn LinkEventDefinition::target(Self) -> Field[Reference]
+pub fn LinkEventDefinition::to_repr(Self) -> @debug.Repr
+
 pub struct Location {
   source_id : String?
   start : Position
@@ -590,6 +1810,115 @@ pub struct Location {
 pub fn Location::equal(Self, Self) -> Bool
 pub fn Location::not_equal(Self, Self) -> Bool
 pub fn Location::to_repr(Self) -> @debug.Repr
+
+pub struct LoopCharacteristics {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn LoopCharacteristics::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn LoopCharacteristics::equal(Self, Self) -> Bool
+pub fn LoopCharacteristics::extension_elements(Self) -> Field[ExtensionElements]
+pub fn LoopCharacteristics::from_element(Element) -> Self?
+pub fn LoopCharacteristics::id(Self) -> Field[String]
+pub fn LoopCharacteristics::not_equal(Self, Self) -> Bool
+pub fn LoopCharacteristics::to_repr(Self) -> @debug.Repr
+
+pub struct ManualTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ManualTask::auditing(Self) -> Field[Auditing]
+pub fn ManualTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ManualTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn ManualTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ManualTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn ManualTask::default_(Self) -> Field[Reference]
+pub fn ManualTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ManualTask::equal(Self, Self) -> Bool
+pub fn ManualTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ManualTask::from_element(Element) -> Self?
+pub fn ManualTask::id(Self) -> Field[String]
+pub fn ManualTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ManualTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn ManualTask::is_for_compensation(Self) -> Field[Bool]
+pub fn ManualTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn ManualTask::monitoring(Self) -> Field[Monitoring]
+pub fn ManualTask::name(Self) -> Field[String]
+pub fn ManualTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ManualTask::not_equal(Self, Self) -> Bool
+pub fn ManualTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ManualTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ManualTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn ManualTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn ManualTask::to_repr(Self) -> @debug.Repr
+
+pub struct Message {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Message::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Message::equal(Self, Self) -> Bool
+pub fn Message::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Message::from_element(Element) -> Self?
+pub fn Message::id(Self) -> Field[String]
+pub fn Message::item_ref(Self) -> Field[Reference]
+pub fn Message::name(Self) -> Field[String]
+pub fn Message::new(id? : String, name? : String, item_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Message::not_equal(Self, Self) -> Bool
+pub fn Message::to_repr(Self) -> @debug.Repr
+
+pub struct MessageEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn MessageEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn MessageEventDefinition::equal(Self, Self) -> Bool
+pub fn MessageEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn MessageEventDefinition::from_element(Element) -> Self?
+pub fn MessageEventDefinition::id(Self) -> Field[String]
+pub fn MessageEventDefinition::message_ref(Self) -> Field[Reference]
+pub fn MessageEventDefinition::new(id? : String, message_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn MessageEventDefinition::not_equal(Self, Self) -> Bool
+pub fn MessageEventDefinition::operation_ref(Self) -> Field[Reference]
+pub fn MessageEventDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct MessageFlow {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn MessageFlow::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn MessageFlow::equal(Self, Self) -> Bool
+pub fn MessageFlow::extension_elements(Self) -> Field[ExtensionElements]
+pub fn MessageFlow::from_element(Element) -> Self?
+pub fn MessageFlow::id(Self) -> Field[String]
+pub fn MessageFlow::message_ref(Self) -> Field[Reference]
+pub fn MessageFlow::name(Self) -> Field[String]
+pub fn MessageFlow::new(id? : String, name? : String, source_ref? : Reference, target_ref? : Reference, message_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn MessageFlow::not_equal(Self, Self) -> Bool
+pub fn MessageFlow::source_ref(Self) -> Field[Reference]
+pub fn MessageFlow::target_ref(Self) -> Field[Reference]
+pub fn MessageFlow::to_repr(Self) -> @debug.Repr
+
+pub struct MessageFlowAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn MessageFlowAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn MessageFlowAssociation::equal(Self, Self) -> Bool
+pub fn MessageFlowAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn MessageFlowAssociation::from_element(Element) -> Self?
+pub fn MessageFlowAssociation::id(Self) -> Field[String]
+pub fn MessageFlowAssociation::inner_message_flow_ref(Self) -> Field[Reference]
+pub fn MessageFlowAssociation::new(id? : String, inner_message_flow_ref? : Reference, outer_message_flow_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn MessageFlowAssociation::not_equal(Self, Self) -> Bool
+pub fn MessageFlowAssociation::outer_message_flow_ref(Self) -> Field[Reference]
+pub fn MessageFlowAssociation::to_repr(Self) -> @debug.Repr
+
+pub struct Monitoring {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Monitoring::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Monitoring::equal(Self, Self) -> Bool
+pub fn Monitoring::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Monitoring::from_element(Element) -> Self?
+pub fn Monitoring::id(Self) -> Field[String]
+pub fn Monitoring::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn Monitoring::not_equal(Self, Self) -> Bool
+pub fn Monitoring::to_repr(Self) -> @debug.Repr
 
 pub(all) enum MultiInstanceFlowCondition {
   None
@@ -603,6 +1932,171 @@ pub fn MultiInstanceFlowCondition::parse(String) -> Self?
 pub fn MultiInstanceFlowCondition::to_repr(Self) -> @debug.Repr
 pub fn MultiInstanceFlowCondition::token(Self) -> String
 
+pub struct MultiInstanceLoopCharacteristics {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn MultiInstanceLoopCharacteristics::behavior(Self) -> Field[MultiInstanceFlowCondition]
+pub fn MultiInstanceLoopCharacteristics::completion_condition(Self) -> Field[Expression]
+pub fn MultiInstanceLoopCharacteristics::complex_behavior_definition(Self) -> Field[ReadOnlyArray[ComplexBehaviorDefinition]]
+pub fn MultiInstanceLoopCharacteristics::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn MultiInstanceLoopCharacteristics::equal(Self, Self) -> Bool
+pub fn MultiInstanceLoopCharacteristics::extension_elements(Self) -> Field[ExtensionElements]
+pub fn MultiInstanceLoopCharacteristics::from_element(Element) -> Self?
+pub fn MultiInstanceLoopCharacteristics::id(Self) -> Field[String]
+pub fn MultiInstanceLoopCharacteristics::input_data_item(Self) -> Field[DataInput]
+pub fn MultiInstanceLoopCharacteristics::is_sequential(Self) -> Field[Bool]
+pub fn MultiInstanceLoopCharacteristics::loop_cardinality(Self) -> Field[Expression]
+pub fn MultiInstanceLoopCharacteristics::loop_data_input_ref(Self) -> Field[Reference]
+pub fn MultiInstanceLoopCharacteristics::loop_data_output_ref(Self) -> Field[Reference]
+pub fn MultiInstanceLoopCharacteristics::new(id? : String, is_sequential? : Bool, behavior? : MultiInstanceFlowCondition, one_behavior_event_ref? : Reference, none_behavior_event_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn MultiInstanceLoopCharacteristics::none_behavior_event_ref(Self) -> Field[Reference]
+pub fn MultiInstanceLoopCharacteristics::not_equal(Self, Self) -> Bool
+pub fn MultiInstanceLoopCharacteristics::one_behavior_event_ref(Self) -> Field[Reference]
+pub fn MultiInstanceLoopCharacteristics::output_data_item(Self) -> Field[DataOutput]
+pub fn MultiInstanceLoopCharacteristics::to_repr(Self) -> @debug.Repr
+
+pub struct Operation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Operation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Operation::equal(Self, Self) -> Bool
+pub fn Operation::error_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Operation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Operation::from_element(Element) -> Self?
+pub fn Operation::id(Self) -> Field[String]
+pub fn Operation::implementation_ref(Self) -> Field[Reference]
+pub fn Operation::in_message_ref(Self) -> Field[Reference]
+pub fn Operation::name(Self) -> Field[String]
+pub fn Operation::new(id? : String, name? : String, implementation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Operation::not_equal(Self, Self) -> Bool
+pub fn Operation::out_message_ref(Self) -> Field[Reference]
+pub fn Operation::to_repr(Self) -> @debug.Repr
+
+pub struct OutputSet {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn OutputSet::data_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn OutputSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn OutputSet::equal(Self, Self) -> Bool
+pub fn OutputSet::extension_elements(Self) -> Field[ExtensionElements]
+pub fn OutputSet::from_element(Element) -> Self?
+pub fn OutputSet::id(Self) -> Field[String]
+pub fn OutputSet::input_set_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn OutputSet::name(Self) -> Field[String]
+pub fn OutputSet::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn OutputSet::not_equal(Self, Self) -> Bool
+pub fn OutputSet::optional_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn OutputSet::to_repr(Self) -> @debug.Repr
+pub fn OutputSet::while_executing_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
+
+pub struct ParallelGateway {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ParallelGateway::auditing(Self) -> Field[Auditing]
+pub fn ParallelGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ParallelGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ParallelGateway::equal(Self, Self) -> Bool
+pub fn ParallelGateway::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ParallelGateway::from_element(Element) -> Self?
+pub fn ParallelGateway::gateway_direction(Self) -> Field[GatewayDirection]
+pub fn ParallelGateway::id(Self) -> Field[String]
+pub fn ParallelGateway::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ParallelGateway::monitoring(Self) -> Field[Monitoring]
+pub fn ParallelGateway::name(Self) -> Field[String]
+pub fn ParallelGateway::new(id? : String, name? : String, gateway_direction? : GatewayDirection, contents? : ArrayView[Content]) -> Self
+pub fn ParallelGateway::not_equal(Self, Self) -> Bool
+pub fn ParallelGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ParallelGateway::to_repr(Self) -> @debug.Repr
+
+pub struct Participant {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Participant::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Participant::end_point_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Participant::equal(Self, Self) -> Bool
+pub fn Participant::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Participant::from_element(Element) -> Self?
+pub fn Participant::id(Self) -> Field[String]
+pub fn Participant::interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Participant::name(Self) -> Field[String]
+pub fn Participant::new(id? : String, name? : String, process_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Participant::not_equal(Self, Self) -> Bool
+pub fn Participant::participant_multiplicity(Self) -> Field[ParticipantMultiplicity]
+pub fn Participant::process_ref(Self) -> Field[Reference]
+pub fn Participant::to_repr(Self) -> @debug.Repr
+
+pub struct ParticipantAssociation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ParticipantAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ParticipantAssociation::equal(Self, Self) -> Bool
+pub fn ParticipantAssociation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ParticipantAssociation::from_element(Element) -> Self?
+pub fn ParticipantAssociation::id(Self) -> Field[String]
+pub fn ParticipantAssociation::inner_participant_ref(Self) -> Field[Reference]
+pub fn ParticipantAssociation::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn ParticipantAssociation::not_equal(Self, Self) -> Bool
+pub fn ParticipantAssociation::outer_participant_ref(Self) -> Field[Reference]
+pub fn ParticipantAssociation::to_repr(Self) -> @debug.Repr
+
+pub struct ParticipantMultiplicity {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ParticipantMultiplicity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ParticipantMultiplicity::equal(Self, Self) -> Bool
+pub fn ParticipantMultiplicity::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ParticipantMultiplicity::from_element(Element) -> Self?
+pub fn ParticipantMultiplicity::id(Self) -> Field[String]
+pub fn ParticipantMultiplicity::maximum(Self) -> Field[ExactInteger]
+pub fn ParticipantMultiplicity::minimum(Self) -> Field[ExactInteger]
+pub fn ParticipantMultiplicity::new(id? : String, minimum? : ExactInteger, maximum? : ExactInteger, contents? : ArrayView[Content]) -> Self
+pub fn ParticipantMultiplicity::not_equal(Self, Self) -> Bool
+pub fn ParticipantMultiplicity::to_repr(Self) -> @debug.Repr
+
+pub struct PartnerEntity {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn PartnerEntity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn PartnerEntity::equal(Self, Self) -> Bool
+pub fn PartnerEntity::extension_elements(Self) -> Field[ExtensionElements]
+pub fn PartnerEntity::from_element(Element) -> Self?
+pub fn PartnerEntity::id(Self) -> Field[String]
+pub fn PartnerEntity::name(Self) -> Field[String]
+pub fn PartnerEntity::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn PartnerEntity::not_equal(Self, Self) -> Bool
+pub fn PartnerEntity::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn PartnerEntity::to_repr(Self) -> @debug.Repr
+
+pub struct PartnerRole {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn PartnerRole::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn PartnerRole::equal(Self, Self) -> Bool
+pub fn PartnerRole::extension_elements(Self) -> Field[ExtensionElements]
+pub fn PartnerRole::from_element(Element) -> Self?
+pub fn PartnerRole::id(Self) -> Field[String]
+pub fn PartnerRole::name(Self) -> Field[String]
+pub fn PartnerRole::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn PartnerRole::not_equal(Self, Self) -> Bool
+pub fn PartnerRole::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn PartnerRole::to_repr(Self) -> @debug.Repr
+
+pub struct Performer {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Performer::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Performer::equal(Self, Self) -> Bool
+pub fn Performer::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Performer::from_element(Element) -> Self?
+pub fn Performer::id(Self) -> Field[String]
+pub fn Performer::name(Self) -> Field[String]
+pub fn Performer::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn Performer::not_equal(Self, Self) -> Bool
+pub fn Performer::resource_assignment_expression(Self) -> Field[ResourceAssignmentExpression]
+pub fn Performer::resource_parameter_binding(Self) -> Field[ReadOnlyArray[ResourceParameterBinding]]
+pub fn Performer::resource_ref(Self) -> Field[Reference]
+pub fn Performer::to_repr(Self) -> @debug.Repr
+
 pub struct Position {
   offset : Int32
   line : Int32
@@ -611,6 +2105,51 @@ pub struct Position {
 pub fn Position::equal(Self, Self) -> Bool
 pub fn Position::not_equal(Self, Self) -> Bool
 pub fn Position::to_repr(Self) -> @debug.Repr
+
+pub struct PotentialOwner {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn PotentialOwner::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn PotentialOwner::equal(Self, Self) -> Bool
+pub fn PotentialOwner::extension_elements(Self) -> Field[ExtensionElements]
+pub fn PotentialOwner::from_element(Element) -> Self?
+pub fn PotentialOwner::id(Self) -> Field[String]
+pub fn PotentialOwner::name(Self) -> Field[String]
+pub fn PotentialOwner::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn PotentialOwner::not_equal(Self, Self) -> Bool
+pub fn PotentialOwner::resource_assignment_expression(Self) -> Field[ResourceAssignmentExpression]
+pub fn PotentialOwner::resource_parameter_binding(Self) -> Field[ReadOnlyArray[ResourceParameterBinding]]
+pub fn PotentialOwner::resource_ref(Self) -> Field[Reference]
+pub fn PotentialOwner::to_repr(Self) -> @debug.Repr
+
+pub struct Process {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Process::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn Process::auditing(Self) -> Field[Auditing]
+pub fn Process::correlation_subscription(Self) -> Field[ReadOnlyArray[CorrelationSubscription]]
+pub fn Process::definitional_collaboration_ref(Self) -> Field[Reference]
+pub fn Process::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Process::equal(Self, Self) -> Bool
+pub fn Process::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Process::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn Process::from_element(Element) -> Self?
+pub fn Process::id(Self) -> Field[String]
+pub fn Process::io_binding(Self) -> Field[ReadOnlyArray[InputOutputBinding]]
+pub fn Process::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn Process::is_closed(Self) -> Field[Bool]
+pub fn Process::is_executable(Self) -> Field[Bool]
+pub fn Process::lane_set(Self) -> Field[ReadOnlyArray[LaneSet]]
+pub fn Process::monitoring(Self) -> Field[Monitoring]
+pub fn Process::name(Self) -> Field[String]
+pub fn Process::new(id? : String, name? : String, process_type? : ProcessType, is_closed? : Bool, is_executable? : Bool, definitional_collaboration_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Process::not_equal(Self, Self) -> Bool
+pub fn Process::process_type(Self) -> Field[ProcessType]
+pub fn Process::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn Process::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn Process::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Process::supports(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Process::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ProcessType {
   None
@@ -623,6 +2162,21 @@ pub fn ProcessType::parse(String) -> Self?
 pub fn ProcessType::to_repr(Self) -> @debug.Repr
 pub fn ProcessType::token(Self) -> String
 
+pub struct Property {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Property::data_state(Self) -> Field[DataState]
+pub fn Property::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Property::equal(Self, Self) -> Bool
+pub fn Property::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Property::from_element(Element) -> Self?
+pub fn Property::id(Self) -> Field[String]
+pub fn Property::item_subject_ref(Self) -> Field[Reference]
+pub fn Property::name(Self) -> Field[String]
+pub fn Property::new(id? : String, name? : String, item_subject_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Property::not_equal(Self, Self) -> Bool
+pub fn Property::to_repr(Self) -> @debug.Repr
+
 pub struct ReadResult {
   tree : Cst
   document : Document?
@@ -632,6 +2186,38 @@ pub struct ReadResult {
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr
+
+pub struct ReceiveTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ReceiveTask::auditing(Self) -> Field[Auditing]
+pub fn ReceiveTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ReceiveTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn ReceiveTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ReceiveTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn ReceiveTask::default_(Self) -> Field[Reference]
+pub fn ReceiveTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ReceiveTask::equal(Self, Self) -> Bool
+pub fn ReceiveTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ReceiveTask::from_element(Element) -> Self?
+pub fn ReceiveTask::id(Self) -> Field[String]
+pub fn ReceiveTask::implementation(Self) -> Field[Implementation]
+pub fn ReceiveTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ReceiveTask::instantiate(Self) -> Field[Bool]
+pub fn ReceiveTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn ReceiveTask::is_for_compensation(Self) -> Field[Bool]
+pub fn ReceiveTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn ReceiveTask::message_ref(Self) -> Field[Reference]
+pub fn ReceiveTask::monitoring(Self) -> Field[Monitoring]
+pub fn ReceiveTask::name(Self) -> Field[String]
+pub fn ReceiveTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, implementation? : Implementation, instantiate? : Bool, message_ref? : Reference, operation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ReceiveTask::not_equal(Self, Self) -> Bool
+pub fn ReceiveTask::operation_ref(Self) -> Field[Reference]
+pub fn ReceiveTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ReceiveTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ReceiveTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn ReceiveTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn ReceiveTask::to_repr(Self) -> @debug.Repr
 
 pub struct Reference {
   kind : ReferenceKind
@@ -653,6 +2239,22 @@ pub fn ReferenceKind::equal(Self, Self) -> Bool
 pub fn ReferenceKind::not_equal(Self, Self) -> Bool
 pub fn ReferenceKind::to_repr(Self) -> @debug.Repr
 
+pub struct Relationship {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Relationship::direction(Self) -> Field[RelationshipDirection]
+pub fn Relationship::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Relationship::equal(Self, Self) -> Bool
+pub fn Relationship::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Relationship::from_element(Element) -> Self?
+pub fn Relationship::id(Self) -> Field[String]
+pub fn Relationship::new(id? : String, type_? : String, direction? : RelationshipDirection, contents? : ArrayView[Content]) -> Self
+pub fn Relationship::not_equal(Self, Self) -> Bool
+pub fn Relationship::source(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Relationship::target(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Relationship::to_repr(Self) -> @debug.Repr
+pub fn Relationship::type_(Self) -> Field[String]
+
 pub(all) enum RelationshipDirection {
   None
   Forward
@@ -664,6 +2266,90 @@ pub fn RelationshipDirection::not_equal(Self, Self) -> Bool
 pub fn RelationshipDirection::parse(String) -> Self?
 pub fn RelationshipDirection::to_repr(Self) -> @debug.Repr
 pub fn RelationshipDirection::token(Self) -> String
+
+pub struct Rendering {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Rendering::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Rendering::equal(Self, Self) -> Bool
+pub fn Rendering::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Rendering::from_element(Element) -> Self?
+pub fn Rendering::id(Self) -> Field[String]
+pub fn Rendering::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn Rendering::not_equal(Self, Self) -> Bool
+pub fn Rendering::to_repr(Self) -> @debug.Repr
+
+pub struct Resource {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Resource::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Resource::equal(Self, Self) -> Bool
+pub fn Resource::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Resource::from_element(Element) -> Self?
+pub fn Resource::id(Self) -> Field[String]
+pub fn Resource::name(Self) -> Field[String]
+pub fn Resource::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn Resource::not_equal(Self, Self) -> Bool
+pub fn Resource::resource_parameter(Self) -> Field[ReadOnlyArray[ResourceParameter]]
+pub fn Resource::to_repr(Self) -> @debug.Repr
+
+pub struct ResourceAssignmentExpression {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ResourceAssignmentExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ResourceAssignmentExpression::equal(Self, Self) -> Bool
+pub fn ResourceAssignmentExpression::expression(Self) -> Field[Expression]
+pub fn ResourceAssignmentExpression::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ResourceAssignmentExpression::from_element(Element) -> Self?
+pub fn ResourceAssignmentExpression::id(Self) -> Field[String]
+pub fn ResourceAssignmentExpression::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn ResourceAssignmentExpression::not_equal(Self, Self) -> Bool
+pub fn ResourceAssignmentExpression::to_repr(Self) -> @debug.Repr
+
+pub struct ResourceParameter {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ResourceParameter::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ResourceParameter::equal(Self, Self) -> Bool
+pub fn ResourceParameter::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ResourceParameter::from_element(Element) -> Self?
+pub fn ResourceParameter::id(Self) -> Field[String]
+pub fn ResourceParameter::is_required(Self) -> Field[Bool]
+pub fn ResourceParameter::name(Self) -> Field[String]
+pub fn ResourceParameter::new(id? : String, name? : String, type_? : Reference, is_required? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn ResourceParameter::not_equal(Self, Self) -> Bool
+pub fn ResourceParameter::to_repr(Self) -> @debug.Repr
+pub fn ResourceParameter::type_(Self) -> Field[Reference]
+
+pub struct ResourceParameterBinding {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ResourceParameterBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ResourceParameterBinding::equal(Self, Self) -> Bool
+pub fn ResourceParameterBinding::expression(Self) -> Field[Expression]
+pub fn ResourceParameterBinding::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ResourceParameterBinding::from_element(Element) -> Self?
+pub fn ResourceParameterBinding::id(Self) -> Field[String]
+pub fn ResourceParameterBinding::new(id? : String, parameter_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ResourceParameterBinding::not_equal(Self, Self) -> Bool
+pub fn ResourceParameterBinding::parameter_ref(Self) -> Field[Reference]
+pub fn ResourceParameterBinding::to_repr(Self) -> @debug.Repr
+
+pub struct ResourceRole {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ResourceRole::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ResourceRole::equal(Self, Self) -> Bool
+pub fn ResourceRole::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ResourceRole::from_element(Element) -> Self?
+pub fn ResourceRole::id(Self) -> Field[String]
+pub fn ResourceRole::name(Self) -> Field[String]
+pub fn ResourceRole::new(id? : String, name? : String, contents? : ArrayView[Content]) -> Self
+pub fn ResourceRole::not_equal(Self, Self) -> Bool
+pub fn ResourceRole::resource_assignment_expression(Self) -> Field[ResourceAssignmentExpression]
+pub fn ResourceRole::resource_parameter_binding(Self) -> Field[ReadOnlyArray[ResourceParameterBinding]]
+pub fn ResourceRole::resource_ref(Self) -> Field[Reference]
+pub fn ResourceRole::to_repr(Self) -> @debug.Repr
 
 pub struct RootElement {
   element : Element
@@ -758,6 +2444,126 @@ pub fn SchemaType::is_subtype_of(Self, ExpandedName) -> Bool
 pub fn SchemaType::not_equal(Self, Self) -> Bool
 pub fn SchemaType::to_repr(Self) -> @debug.Repr
 
+pub struct Script {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Script::equal(Self, Self) -> Bool
+pub fn Script::from_element(Element) -> Self?
+pub fn Script::new(contents? : ArrayView[Content]) -> Self
+pub fn Script::not_equal(Self, Self) -> Bool
+pub fn Script::to_repr(Self) -> @debug.Repr
+
+pub struct ScriptTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ScriptTask::auditing(Self) -> Field[Auditing]
+pub fn ScriptTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ScriptTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn ScriptTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ScriptTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn ScriptTask::default_(Self) -> Field[Reference]
+pub fn ScriptTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ScriptTask::equal(Self, Self) -> Bool
+pub fn ScriptTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ScriptTask::from_element(Element) -> Self?
+pub fn ScriptTask::id(Self) -> Field[String]
+pub fn ScriptTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ScriptTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn ScriptTask::is_for_compensation(Self) -> Field[Bool]
+pub fn ScriptTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn ScriptTask::monitoring(Self) -> Field[Monitoring]
+pub fn ScriptTask::name(Self) -> Field[String]
+pub fn ScriptTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, script_format? : String, contents? : ArrayView[Content]) -> Self
+pub fn ScriptTask::not_equal(Self, Self) -> Bool
+pub fn ScriptTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ScriptTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ScriptTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn ScriptTask::script(Self) -> Field[Script]
+pub fn ScriptTask::script_format(Self) -> Field[String]
+pub fn ScriptTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn ScriptTask::to_repr(Self) -> @debug.Repr
+
+pub struct SendTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SendTask::auditing(Self) -> Field[Auditing]
+pub fn SendTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SendTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn SendTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn SendTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn SendTask::default_(Self) -> Field[Reference]
+pub fn SendTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SendTask::equal(Self, Self) -> Bool
+pub fn SendTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SendTask::from_element(Element) -> Self?
+pub fn SendTask::id(Self) -> Field[String]
+pub fn SendTask::implementation(Self) -> Field[Implementation]
+pub fn SendTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SendTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn SendTask::is_for_compensation(Self) -> Field[Bool]
+pub fn SendTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn SendTask::message_ref(Self) -> Field[Reference]
+pub fn SendTask::monitoring(Self) -> Field[Monitoring]
+pub fn SendTask::name(Self) -> Field[String]
+pub fn SendTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, implementation? : Implementation, message_ref? : Reference, operation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn SendTask::not_equal(Self, Self) -> Bool
+pub fn SendTask::operation_ref(Self) -> Field[Reference]
+pub fn SendTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SendTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn SendTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn SendTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn SendTask::to_repr(Self) -> @debug.Repr
+
+pub struct SequenceFlow {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SequenceFlow::auditing(Self) -> Field[Auditing]
+pub fn SequenceFlow::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SequenceFlow::condition_expression(Self) -> Field[Expression]
+pub fn SequenceFlow::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SequenceFlow::equal(Self, Self) -> Bool
+pub fn SequenceFlow::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SequenceFlow::from_element(Element) -> Self?
+pub fn SequenceFlow::id(Self) -> Field[String]
+pub fn SequenceFlow::is_immediate(Self) -> Field[Bool]
+pub fn SequenceFlow::monitoring(Self) -> Field[Monitoring]
+pub fn SequenceFlow::name(Self) -> Field[String]
+pub fn SequenceFlow::new(id? : String, name? : String, source_ref? : Reference, target_ref? : Reference, is_immediate? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn SequenceFlow::not_equal(Self, Self) -> Bool
+pub fn SequenceFlow::source_ref(Self) -> Field[Reference]
+pub fn SequenceFlow::target_ref(Self) -> Field[Reference]
+pub fn SequenceFlow::to_repr(Self) -> @debug.Repr
+
+pub struct ServiceTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ServiceTask::auditing(Self) -> Field[Auditing]
+pub fn ServiceTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ServiceTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn ServiceTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ServiceTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn ServiceTask::default_(Self) -> Field[Reference]
+pub fn ServiceTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ServiceTask::equal(Self, Self) -> Bool
+pub fn ServiceTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ServiceTask::from_element(Element) -> Self?
+pub fn ServiceTask::id(Self) -> Field[String]
+pub fn ServiceTask::implementation(Self) -> Field[Implementation]
+pub fn ServiceTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ServiceTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn ServiceTask::is_for_compensation(Self) -> Field[Bool]
+pub fn ServiceTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn ServiceTask::monitoring(Self) -> Field[Monitoring]
+pub fn ServiceTask::name(Self) -> Field[String]
+pub fn ServiceTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, implementation? : Implementation, operation_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn ServiceTask::not_equal(Self, Self) -> Bool
+pub fn ServiceTask::operation_ref(Self) -> Field[Reference]
+pub fn ServiceTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ServiceTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ServiceTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn ServiceTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn ServiceTask::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Severity {
   Error
   Warning
@@ -765,6 +2571,33 @@ pub(all) enum Severity {
 pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::not_equal(Self, Self) -> Bool
 pub fn Severity::to_repr(Self) -> @debug.Repr
+
+pub struct Signal {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Signal::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Signal::equal(Self, Self) -> Bool
+pub fn Signal::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Signal::from_element(Element) -> Self?
+pub fn Signal::id(Self) -> Field[String]
+pub fn Signal::name(Self) -> Field[String]
+pub fn Signal::new(id? : String, name? : String, structure_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Signal::not_equal(Self, Self) -> Bool
+pub fn Signal::structure_ref(Self) -> Field[Reference]
+pub fn Signal::to_repr(Self) -> @debug.Repr
+
+pub struct SignalEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SignalEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SignalEventDefinition::equal(Self, Self) -> Bool
+pub fn SignalEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SignalEventDefinition::from_element(Element) -> Self?
+pub fn SignalEventDefinition::id(Self) -> Field[String]
+pub fn SignalEventDefinition::new(id? : String, signal_ref? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn SignalEventDefinition::not_equal(Self, Self) -> Bool
+pub fn SignalEventDefinition::signal_ref(Self) -> Field[Reference]
+pub fn SignalEventDefinition::to_repr(Self) -> @debug.Repr
 
 pub struct SourceMap {
   source_id : String?
@@ -784,6 +2617,180 @@ pub struct Span {
 pub fn Span::equal(Self, Self) -> Bool
 pub fn Span::not_equal(Self, Self) -> Bool
 pub fn Span::to_repr(Self) -> @debug.Repr
+
+pub struct StandardLoopCharacteristics {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn StandardLoopCharacteristics::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn StandardLoopCharacteristics::equal(Self, Self) -> Bool
+pub fn StandardLoopCharacteristics::extension_elements(Self) -> Field[ExtensionElements]
+pub fn StandardLoopCharacteristics::from_element(Element) -> Self?
+pub fn StandardLoopCharacteristics::id(Self) -> Field[String]
+pub fn StandardLoopCharacteristics::loop_condition(Self) -> Field[Expression]
+pub fn StandardLoopCharacteristics::loop_maximum(Self) -> Field[ExactInteger]
+pub fn StandardLoopCharacteristics::new(id? : String, test_before? : Bool, loop_maximum? : ExactInteger, contents? : ArrayView[Content]) -> Self
+pub fn StandardLoopCharacteristics::not_equal(Self, Self) -> Bool
+pub fn StandardLoopCharacteristics::test_before(Self) -> Field[Bool]
+pub fn StandardLoopCharacteristics::to_repr(Self) -> @debug.Repr
+
+pub struct StartEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn StartEvent::auditing(Self) -> Field[Auditing]
+pub fn StartEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn StartEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
+pub fn StartEvent::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn StartEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn StartEvent::equal(Self, Self) -> Bool
+pub fn StartEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn StartEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn StartEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn StartEvent::from_element(Element) -> Self?
+pub fn StartEvent::id(Self) -> Field[String]
+pub fn StartEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn StartEvent::is_interrupting(Self) -> Field[Bool]
+pub fn StartEvent::monitoring(Self) -> Field[Monitoring]
+pub fn StartEvent::name(Self) -> Field[String]
+pub fn StartEvent::new(id? : String, name? : String, parallel_multiple? : Bool, is_interrupting? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn StartEvent::not_equal(Self, Self) -> Bool
+pub fn StartEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn StartEvent::output_set(Self) -> Field[OutputSet]
+pub fn StartEvent::parallel_multiple(Self) -> Field[Bool]
+pub fn StartEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn StartEvent::to_repr(Self) -> @debug.Repr
+
+pub struct SubProcess {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn SubProcess::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn SubProcess::auditing(Self) -> Field[Auditing]
+pub fn SubProcess::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubProcess::completion_quantity(Self) -> Field[ExactInteger]
+pub fn SubProcess::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn SubProcess::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn SubProcess::default_(Self) -> Field[Reference]
+pub fn SubProcess::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn SubProcess::equal(Self, Self) -> Bool
+pub fn SubProcess::extension_elements(Self) -> Field[ExtensionElements]
+pub fn SubProcess::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn SubProcess::from_element(Element) -> Self?
+pub fn SubProcess::id(Self) -> Field[String]
+pub fn SubProcess::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubProcess::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn SubProcess::is_for_compensation(Self) -> Field[Bool]
+pub fn SubProcess::lane_set(Self) -> Field[ReadOnlyArray[LaneSet]]
+pub fn SubProcess::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn SubProcess::monitoring(Self) -> Field[Monitoring]
+pub fn SubProcess::name(Self) -> Field[String]
+pub fn SubProcess::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, triggered_by_event? : Bool, contents? : ArrayView[Content]) -> Self
+pub fn SubProcess::not_equal(Self, Self) -> Bool
+pub fn SubProcess::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn SubProcess::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn SubProcess::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn SubProcess::start_quantity(Self) -> Field[ExactInteger]
+pub fn SubProcess::to_repr(Self) -> @debug.Repr
+pub fn SubProcess::triggered_by_event(Self) -> Field[Bool]
+
+pub struct Task {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Task::auditing(Self) -> Field[Auditing]
+pub fn Task::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Task::completion_quantity(Self) -> Field[ExactInteger]
+pub fn Task::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn Task::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn Task::default_(Self) -> Field[Reference]
+pub fn Task::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Task::equal(Self, Self) -> Bool
+pub fn Task::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Task::from_element(Element) -> Self?
+pub fn Task::id(Self) -> Field[String]
+pub fn Task::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Task::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn Task::is_for_compensation(Self) -> Field[Bool]
+pub fn Task::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn Task::monitoring(Self) -> Field[Monitoring]
+pub fn Task::name(Self) -> Field[String]
+pub fn Task::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, contents? : ArrayView[Content]) -> Self
+pub fn Task::not_equal(Self, Self) -> Bool
+pub fn Task::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Task::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn Task::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn Task::start_quantity(Self) -> Field[ExactInteger]
+pub fn Task::to_repr(Self) -> @debug.Repr
+
+pub struct TerminateEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn TerminateEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn TerminateEventDefinition::equal(Self, Self) -> Bool
+pub fn TerminateEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn TerminateEventDefinition::from_element(Element) -> Self?
+pub fn TerminateEventDefinition::id(Self) -> Field[String]
+pub fn TerminateEventDefinition::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn TerminateEventDefinition::not_equal(Self, Self) -> Bool
+pub fn TerminateEventDefinition::to_repr(Self) -> @debug.Repr
+
+pub struct Text {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Text::equal(Self, Self) -> Bool
+pub fn Text::from_element(Element) -> Self?
+pub fn Text::new(contents? : ArrayView[Content]) -> Self
+pub fn Text::not_equal(Self, Self) -> Bool
+pub fn Text::to_repr(Self) -> @debug.Repr
+
+pub struct TextAnnotation {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn TextAnnotation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn TextAnnotation::equal(Self, Self) -> Bool
+pub fn TextAnnotation::extension_elements(Self) -> Field[ExtensionElements]
+pub fn TextAnnotation::from_element(Element) -> Self?
+pub fn TextAnnotation::id(Self) -> Field[String]
+pub fn TextAnnotation::new(id? : String, text_format? : String, contents? : ArrayView[Content]) -> Self
+pub fn TextAnnotation::not_equal(Self, Self) -> Bool
+pub fn TextAnnotation::text(Self) -> Field[Text]
+pub fn TextAnnotation::text_format(Self) -> Field[String]
+pub fn TextAnnotation::to_repr(Self) -> @debug.Repr
+
+pub struct ThrowEvent {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn ThrowEvent::auditing(Self) -> Field[Auditing]
+pub fn ThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
+pub fn ThrowEvent::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn ThrowEvent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn ThrowEvent::equal(Self, Self) -> Bool
+pub fn ThrowEvent::event_definition(Self) -> Field[ReadOnlyArray[EventDefinition]]
+pub fn ThrowEvent::event_definition_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ThrowEvent::extension_elements(Self) -> Field[ExtensionElements]
+pub fn ThrowEvent::from_element(Element) -> Self?
+pub fn ThrowEvent::id(Self) -> Field[String]
+pub fn ThrowEvent::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ThrowEvent::input_set(Self) -> Field[InputSet]
+pub fn ThrowEvent::monitoring(Self) -> Field[Monitoring]
+pub fn ThrowEvent::name(Self) -> Field[String]
+pub fn ThrowEvent::not_equal(Self, Self) -> Bool
+pub fn ThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn ThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn ThrowEvent::to_repr(Self) -> @debug.Repr
+
+pub struct TimerEventDefinition {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn TimerEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn TimerEventDefinition::equal(Self, Self) -> Bool
+pub fn TimerEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
+pub fn TimerEventDefinition::from_element(Element) -> Self?
+pub fn TimerEventDefinition::id(Self) -> Field[String]
+pub fn TimerEventDefinition::new(id? : String, contents? : ArrayView[Content]) -> Self
+pub fn TimerEventDefinition::not_equal(Self, Self) -> Bool
+pub fn TimerEventDefinition::time_cycle(Self) -> Field[Expression]
+pub fn TimerEventDefinition::time_date(Self) -> Field[Expression]
+pub fn TimerEventDefinition::time_duration(Self) -> Field[Expression]
+pub fn TimerEventDefinition::to_repr(Self) -> @debug.Repr
 
 pub struct Token {
   kind : TokenKind
@@ -815,6 +2822,39 @@ pub(all) enum TokenKind {
 pub fn TokenKind::equal(Self, Self) -> Bool
 pub fn TokenKind::not_equal(Self, Self) -> Bool
 pub fn TokenKind::to_repr(Self) -> @debug.Repr
+
+pub struct Transaction {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn Transaction::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
+pub fn Transaction::auditing(Self) -> Field[Auditing]
+pub fn Transaction::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Transaction::completion_quantity(Self) -> Field[ExactInteger]
+pub fn Transaction::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn Transaction::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn Transaction::default_(Self) -> Field[Reference]
+pub fn Transaction::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn Transaction::equal(Self, Self) -> Bool
+pub fn Transaction::extension_elements(Self) -> Field[ExtensionElements]
+pub fn Transaction::flow_element(Self) -> Field[ReadOnlyArray[FlowElement]]
+pub fn Transaction::from_element(Element) -> Self?
+pub fn Transaction::id(Self) -> Field[String]
+pub fn Transaction::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Transaction::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn Transaction::is_for_compensation(Self) -> Field[Bool]
+pub fn Transaction::lane_set(Self) -> Field[ReadOnlyArray[LaneSet]]
+pub fn Transaction::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn Transaction::method_(Self) -> Field[TransactionMethod]
+pub fn Transaction::monitoring(Self) -> Field[Monitoring]
+pub fn Transaction::name(Self) -> Field[String]
+pub fn Transaction::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, triggered_by_event? : Bool, method_? : TransactionMethod, contents? : ArrayView[Content]) -> Self
+pub fn Transaction::not_equal(Self, Self) -> Bool
+pub fn Transaction::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn Transaction::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn Transaction::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn Transaction::start_quantity(Self) -> Field[ExactInteger]
+pub fn Transaction::to_repr(Self) -> @debug.Repr
+pub fn Transaction::triggered_by_event(Self) -> Field[Bool]
 
 pub(all) enum TransactionMethod {
   Compensate
@@ -1004,6 +3044,36 @@ pub fn TypeId::equal(Self, Self) -> Bool
 pub fn TypeId::name(Self) -> ExpandedName
 pub fn TypeId::not_equal(Self, Self) -> Bool
 pub fn TypeId::to_repr(Self) -> @debug.Repr
+
+pub struct UserTask {
+  element : Element
+} derive(Eq, @debug.Debug)
+pub fn UserTask::auditing(Self) -> Field[Auditing]
+pub fn UserTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn UserTask::completion_quantity(Self) -> Field[ExactInteger]
+pub fn UserTask::data_input_association(Self) -> Field[ReadOnlyArray[DataInputAssociation]]
+pub fn UserTask::data_output_association(Self) -> Field[ReadOnlyArray[DataOutputAssociation]]
+pub fn UserTask::default_(Self) -> Field[Reference]
+pub fn UserTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
+pub fn UserTask::equal(Self, Self) -> Bool
+pub fn UserTask::extension_elements(Self) -> Field[ExtensionElements]
+pub fn UserTask::from_element(Element) -> Self?
+pub fn UserTask::id(Self) -> Field[String]
+pub fn UserTask::implementation(Self) -> Field[Implementation]
+pub fn UserTask::incoming(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn UserTask::io_specification(Self) -> Field[InputOutputSpecification]
+pub fn UserTask::is_for_compensation(Self) -> Field[Bool]
+pub fn UserTask::loop_characteristics(Self) -> Field[LoopCharacteristics]
+pub fn UserTask::monitoring(Self) -> Field[Monitoring]
+pub fn UserTask::name(Self) -> Field[String]
+pub fn UserTask::new(id? : String, name? : String, is_for_compensation? : Bool, start_quantity? : ExactInteger, completion_quantity? : ExactInteger, default_? : Reference, implementation? : Implementation, contents? : ArrayView[Content]) -> Self
+pub fn UserTask::not_equal(Self, Self) -> Bool
+pub fn UserTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
+pub fn UserTask::property(Self) -> Field[ReadOnlyArray[Property]]
+pub fn UserTask::rendering(Self) -> Field[ReadOnlyArray[Rendering]]
+pub fn UserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
+pub fn UserTask::start_quantity(Self) -> Field[ExactInteger]
+pub fn UserTask::to_repr(Self) -> @debug.Repr
 
 pub(all) enum WriteFormat {
   Compact

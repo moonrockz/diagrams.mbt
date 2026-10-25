@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Activities" targetNamespace="urn:activities">
+  <bpmn:itemDefinition id="Item" structureRef="xsi:type" isCollection="false" itemKind="Information"/>
+  <bpmn:message id="Message" name="Request" itemRef="Item"/>
+  <bpmn:error id="Error" name="Failure" errorCode="E1" structureRef="Item"/>
+  <bpmn:escalation id="Escalation" escalationCode="S1" structureRef="Item"/>
+  <bpmn:signal id="Signal" name="Ready" structureRef="Item"/>
+  <bpmn:interface id="Interface" name="Service" implementationRef="Item"><bpmn:operation id="Operation" name="Invoke"><bpmn:inMessageRef>Message</bpmn:inMessageRef><bpmn:outMessageRef>Message</bpmn:outMessageRef><bpmn:errorRef>Error</bpmn:errorRef></bpmn:operation></bpmn:interface>
+  <bpmn:globalTask id="GlobalTask" name="Reusable"/>
+  <bpmn:globalUserTask id="GlobalUser" name="Reusable review" implementation="##unspecified"/>
+  <bpmn:globalBusinessRuleTask id="GlobalRule" implementation="##unspecified"/>
+  <bpmn:globalManualTask id="GlobalManual"/>
+  <bpmn:globalScriptTask id="GlobalScript" scriptLanguage="urn:inert"><bpmn:script>describe-only()</bpmn:script></bpmn:globalScriptTask>
+  <bpmn:process id="P" name="Activity inventory" processType="Private" isClosed="false" isExecutable="false">
+    <bpmn:documentation id="Doc">Review &amp; approve 😀</bpmn:documentation>
+    <bpmn:auditing id="Audit"/><bpmn:monitoring id="Monitor"/>
+    <bpmn:property id="Property" name="Request" itemSubjectRef="Item"/>
+    <bpmn:task id="Task" name="Generic" isForCompensation="false" startQuantity="1" completionQuantity="2"/>
+    <bpmn:userTask id="User" name="Review" implementation="##unspecified"><bpmn:rendering id="Rendering"/></bpmn:userTask>
+    <bpmn:serviceTask id="Service" implementation="##WebService" operationRef="Operation"/>
+    <bpmn:scriptTask id="Script" scriptFormat="urn:inert"><bpmn:script>neverExecute(&lt;request&gt;)</bpmn:script></bpmn:scriptTask>
+    <bpmn:businessRuleTask id="Rule" implementation="urn:rules"/>
+    <bpmn:manualTask id="Manual"/>
+    <bpmn:sendTask id="Send" implementation="##WebService" messageRef="Message" operationRef="Operation"/>
+    <bpmn:receiveTask id="Receive" implementation="##WebService" instantiate="false" messageRef="Message" operationRef="Operation"/>
+    <bpmn:callActivity id="Call" calledElement="GlobalTask"/>
+    <bpmn:subProcess id="Sub" triggeredByEvent="false"><bpmn:startEvent id="SubStart"/><bpmn:task id="SubTask"/><bpmn:endEvent id="SubEnd"/><bpmn:sequenceFlow id="SubFlow1" sourceRef="SubStart" targetRef="SubTask"/><bpmn:sequenceFlow id="SubFlow2" sourceRef="SubTask" targetRef="SubEnd"/></bpmn:subProcess>
+    <bpmn:adHocSubProcess id="AdHoc" ordering="Parallel" cancelRemainingInstances="true"><bpmn:task id="AdHocTask"/><bpmn:completionCondition xsi:type="bpmn:tFormalExpression" language="urn:inert">done == true</bpmn:completionCondition></bpmn:adHocSubProcess>
+    <bpmn:transaction id="Transaction" method="##Compensate"><bpmn:task id="TransactionTask"/></bpmn:transaction>
+    <bpmn:task id="StandardLoop"><bpmn:standardLoopCharacteristics id="Loop" testBefore="true" loopMaximum="999999999999999999999999"><bpmn:loopCondition xsi:type="bpmn:tFormalExpression">retry &lt; 3</bpmn:loopCondition></bpmn:standardLoopCharacteristics></bpmn:task>
+    <bpmn:task id="MultiLoop"><bpmn:multiInstanceLoopCharacteristics id="Multi" isSequential="false" behavior="Complex">
+      <bpmn:loopCardinality xsi:type="bpmn:tFormalExpression">3</bpmn:loopCardinality>
+      <bpmn:loopDataInputRef>Property</bpmn:loopDataInputRef><bpmn:loopDataOutputRef>Property</bpmn:loopDataOutputRef>
+      <bpmn:inputDataItem id="InputItem" name="row" itemSubjectRef="Item" isCollection="false"/>
+      <bpmn:outputDataItem id="OutputItem" name="result" itemSubjectRef="Item" isCollection="false"/>
+      <bpmn:complexBehaviorDefinition id="Behavior"><bpmn:condition>count &gt; 1</bpmn:condition><bpmn:event id="Implicit"/></bpmn:complexBehaviorDefinition>
+      <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">allDone</bpmn:completionCondition>
+    </bpmn:multiInstanceLoopCharacteristics></bpmn:task>
+  </bpmn:process>
+</bpmn:definitions>
