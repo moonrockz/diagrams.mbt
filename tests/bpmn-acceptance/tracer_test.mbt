@@ -38,7 +38,7 @@ test "first BPMN static output uses the renderer contract and frozen bytes" {
   let d = diagram()
   let rendered = @svg.SvgRenderer::new().render(d)
   assert_eq(rendered.media_type, "image/svg+xml")
-  assert_eq(rendered.diagnostics.length(), 0)
+  assert_eq(rendered.diagnostics.length(), 0,msg=@debug.to_string(rendered.diagnostics))
   let svg = rendered.output.unwrap()
   assert_false(svg.contains("<script"))
   assert_true(svg.contains("data-source-id=\"Review\""))
@@ -52,7 +52,7 @@ test "first BPMN animated output has frozen HTML bytes on every target" {
   let d = diagram()
   let animated = @animated.AnimatedRenderer::new().render(d)
   assert_eq(animated.media_type, "text/html")
-  assert_eq(animated.diagnostics.length(), 0)
+  assert_eq(animated.diagnostics.length(), 0,msg=@debug.to_string(animated.diagnostics))
   let t = @test.Test("bpmn-animation")
   t.write(animated.output.unwrap()); t.snapshot(filename="minimal.html")
 }
@@ -100,11 +100,11 @@ test "markup-like labels remain SVG text and never enter script context" {
 }
 
 ///|
-test "unsupported task markers are diagnosed instead of silently drawn as plain tasks" {
+test "compensation markers are painted instead of downgraded to plain tasks" {
   let source = fixture().replace(old="id=\"Review\" name=", new="id=\"Review\" isForCompensation=\"true\" name=")
   let result = @adapter.render_svg(source)
-  assert_eq(result.output, None)
-  assert_eq(result.diagnostics[0].code, "bpmn/unsupported-view")
+  assert_true(result.output.unwrap().contains("M12 2 L1 12 L12 22 Z M23 2 L12 12 L23 22 Z"))
+  assert_false(result.diagnostics.iter().any(d => d.code == "bpmn/unsupported-view"))
 }
 
 ///|

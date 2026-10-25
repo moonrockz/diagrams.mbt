@@ -26,10 +26,12 @@ test "construct a pure first-flow plan and render HTML" {
 Save the returned string as an HTML file and open it in a browser. The button is
 keyboard-operable. Reduced-motion preference allows explicit quarter-step
 inspection; hidden pages suspend frames; print hides controls and overlays.
-Only validated integer geometry enters JavaScript. Source labels stay escaped
+Only validated numeric path geometry enters JavaScript; exact supplied waypoints
+and generated geometry use the same translated viewport as the static SVG. Source labels stay escaped
 SVG text. Neither planning nor rendering reads a clock or DOM.
 
 This first slice supports BPMN only and one repeating connection, chosen by a
-`MotionPlan` or the first flow. Full finite scenarios, concurrency, sequence
+`MotionPlan` or the first visible connection. A plan for a hidden connection is
+rejected rather than binding to another element. Full finite scenarios, concurrency, sequence
 occurrences, structural routes, seek/speed/step controls, canonical downloads and
 scene bindings follow in groups 11–12. It does not claim those APIs yet.

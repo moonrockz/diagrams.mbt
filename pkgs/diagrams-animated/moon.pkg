@@ -3,6 +3,7 @@ import {
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/bpmn-layout" @bpmn_layout,
 }
 
 import {

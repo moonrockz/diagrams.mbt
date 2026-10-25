@@ -150,6 +150,15 @@ pub fn Font::new(name? : String, size? : Number, bold? : Bool, italic? : Bool, u
 pub fn Font::not_equal(Self, Self) -> Bool
 pub fn Font::to_repr(Self) -> @debug.Repr
 
+pub(all) enum GeometryPolicy {
+  PreferDi
+  RequireDi
+  Automatic
+} derive(Eq, @debug.Debug)
+pub fn GeometryPolicy::equal(Self, Self) -> Bool
+pub fn GeometryPolicy::not_equal(Self, Self) -> Bool
+pub fn GeometryPolicy::to_repr(Self) -> @debug.Repr
+
 pub struct LabelGeometry {
   bounds : ExactBounds?
   style : SourceIdentity?

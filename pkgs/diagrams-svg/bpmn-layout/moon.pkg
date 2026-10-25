@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/string",
+  "moonbit-community/metrics",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/bpmn" @model,
+  "moonrockz/diagrams-svg/theme",
+}
+
+import {
+  "moonrockz/diagrams-svg/bpmn-layout" @layout,
+  "moonrockz/diagrams/bpmn" @model,
+  "moonrockz/diagrams-svg/theme",
+} for "test"

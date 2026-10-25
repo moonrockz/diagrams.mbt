@@ -166,6 +166,45 @@ test {
 }
 ```
 
+## BPMN processes and collaborations
+
+`SvgRenderer` also accepts `Diagram::Bpmn`. Its `bpmn_policy` is `PreferDi` by
+default: complete selected DI is painted as supplied; missing or partial DI
+computes the whole view with a warning. `RequireDi` requires every visible shape
+and connection to have geometry. `Automatic` computes the whole view explicitly.
+Invalid supplied coordinates return an error under the first two policies.
+Source conversion and selection are provided by `moonrockz/diagrams-bpmn`.
+Choreography and conversation rendering remain deferred.
+
+The separate `bpmn-layout` package retains exact decimal/exponent tokens for
+shape bounds, label bounds and edge waypoints. Every element shares one viewport
+translation, including pools, lanes, expanded subprocesses and boundary events.
+The painter covers task icons, event definitions, gateway forms, activity and
+collection markers, data, groups, annotations and all connection kinds. Collapsed
+scopes hide their contents; message connections can anchor to a visible scope
+without changing their semantic endpoints. Pools and expanded containers paint
+behind their contents. Fonts and selected display flags come from typed DI.
+
+BPMN uses the shared theme's hues with text shades checked at 4.5:1 against its
+painted backgrounds. Adaptive and fixed modes, accessibility title/description,
+caller ID prefixes and inert render metadata work for both diagram kinds.
+`bpmn-layout.check` reports overlaps, text fit, 11 px minimum size, contrast,
+containment, boundary attachment and endpoint attachment. It allows intentional
+container and artifact overlap. Findings never rearrange supplied geometry.
+
+`bpmn_limits` bounds nodes, connections, geometry work and output units. Numeric
+coordinates must be finite, have positive shape extents and absolute magnitude
+at most one billion. Exhaustion returns diagnostics with no partial output.
+Generated coordinates use deterministic three-decimal formatting; supplied
+coordinate tokens stay unchanged. Forbidden XML characters produce an error.
+
+The rendering corpus under `tests/corpus/bpmn-render` provides complete supplied
+process and collaboration examples. Portable snapshots cover all 38 standard
+graphical kinds, the ten event definitions, activity and gateway markers, theme
+modes, escaping and ID isolation. `mise run test:svg` also checks those snapshots
+in Chromium, including both system preferences, contrast, translated coordinates
+and offline playback. Existing sequence SVG snapshots remain byte-identical.
+
 ## Notice
 
 The colour values, shapes, monospace font stack and spacing of the classic

@@ -15,7 +15,7 @@ priv struct Selected { resource : Int; node : Int; plane : Int? }
 
 ///|
 priv struct Converter {
-  sources : Array[Source]; dependencies : Map[(Int,Int),Bool]; resources : @bpmn.ResourceSet; limits : @bpmn.Limits
+  ignore_di : Bool; sources : Array[Source]; dependencies : Map[(Int,Int),Bool]; resources : @bpmn.ResourceSet; limits : @bpmn.Limits
   diagnostics : Array[@diagrams.Diagnostic]; mut failed : Bool; mut work : Int
 }
 
@@ -186,6 +186,7 @@ fn Converter::select(self : Converter, selector : ViewSelector) -> Selected? {
     Collaboration(_) if actual(e) != Some(Collaboration) => { self.add("bpmn/unsupported-view","Selected identity is not a supported collaboration",e~); return None }
     _ => ()
   }
+  if self.ignore_di { return Some({resource:0,node:chosen,plane:None}) }
   let matching=[]
   for p in planes {
     let references=self.sources[0].references.references.filter(r => r.source.ordinal == p.ordinal && r.field.local_name == "bpmnElement")

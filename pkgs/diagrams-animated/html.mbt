@@ -9,19 +9,20 @@ pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan) -> AnimatedRenderer 
 ///|
 pub impl @render.Renderer for AnimatedRenderer with render(self, diagram) {
   guard diagram is Bpmn(view) else { return @render.Rendered::unsupported("text/html", diagram) }
-  guard !view.flows.is_empty() else { return @render.Rendered::failed("text/html", [@diagrams.Diagnostic::error("animation/no-flow", "A flow is required for playback")]) }
-  let plan = self.plan.unwrap_or_else(() => @animation.MotionPlan::new(view.id, view.flows[0].id).unwrap())
-  guard plan.view_id == view.id && view.flows.iter().filter(f => f.id == plan.flow_id).count() == 1 else {
-    return @render.Rendered::failed("text/html", [@diagrams.Diagnostic::error("animation/plan-mismatch", "Plan does not name this view and one of its flows")])
-  }
   let rendered = @svg.SvgRenderer::new().render(diagram)
   guard rendered.output is Some(svg) else { return @render.Rendered::failed("text/html", rendered.diagnostics) }
-  let flow = view.flows.iter().find_first(f => f.id == plan.flow_id).unwrap()
-  // Only validated integer geometry and duration enter JavaScript context.
+  let geometry=@bpmn_layout.layout(view).geometry.unwrap()
+  guard !geometry.connections.is_empty() else { return @render.Rendered::failed("text/html", [@diagrams.Diagnostic::error("animation/no-flow", "A visible connection is required for playback")]) }
+  let plan=self.plan.unwrap_or_else(() => @animation.MotionPlan::new(view.id,geometry.connections[0].flow.id).unwrap())
+  let matches=geometry.connections.filter(edge => edge.flow.id == plan.flow_id)
+  guard plan.view_id == view.id && matches.length() == 1 else {
+    return @render.Rendered::failed("text/html", [@diagrams.Diagnostic::error("animation/plan-mismatch", "Plan must name this view and one visible connection")])
+  }
+  // Only validated finite numeric path tokens and duration enter script context.
   // Source labels remain escaped SVG text, outside the script element.
-  let path = @svg.bpmn_path(flow)
+  let path=@svg.bpmn_geometry_path(matches[0]).unwrap()
   let runtime = runtime_source()
-  let html = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>BPMN flow illustration</title><style>body{margin:2rem;font:16px system-ui;background:#f4f5f7;color:#0f172a}main{max-width:70rem;margin:auto}svg{width:100%;height:auto}button{font:inherit;padding:.5rem 1rem}button:focus-visible{outline:3px solid #2563eb}.motion-overlay{pointer-events:none}@media print{button,.motion-overlay{display:none}}</style></head><body><main aria-label=\"BPMN flow viewer\"><p>Illustrative flow. Conditions, events and gateway synchronization are not evaluated.</p><button type=\"button\" aria-pressed=\"false\">Play</button><p role=\"status\" aria-live=\"polite\">Paused</p>\n\{svg}<script>\n(() => {\nconst duration = \{plan.duration_ms};\nconst pathData = '\{path}';\n\{runtime}\n})();\n</script></main></body></html>\n"
+  let html = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>BPMN flow illustration</title><style>body{margin:2rem;font:16px system-ui;background:#f4f5f7;color:#0f172a}main{max-width:70rem;margin:auto}main>svg{width:100%;height:auto}button{font:inherit;padding:.5rem 1rem}button:focus-visible{outline:3px solid #2563eb}.motion-overlay{pointer-events:none}@media print{button,.motion-overlay{display:none}}</style></head><body><main aria-label=\"BPMN flow viewer\"><p>Illustrative flow. Conditions, events and gateway synchronization are not evaluated.</p><button type=\"button\" aria-pressed=\"false\">Play</button><p role=\"status\" aria-live=\"polite\">Paused</p>\n\{svg}<script>\n(() => {\nconst duration = \{plan.duration_ms};\nconst pathData = '\{path}';\n\{runtime}\n})();\n</script></main></body></html>\n"
   @render.Rendered::ok(html, "text/html", diagnostics=rendered.diagnostics)
 }
 
@@ -51,7 +52,7 @@ fn runtime_source() -> String {
   #|dot.setAttribute('fill', '#2563eb');
   #|overlay.append(path, dot);
   #|overlay.style.display = 'none';
-  #|svg.append(overlay);
+  #|(svg.querySelector('.bpmn-viewport') || svg).append(overlay);
   #|const length = path.getTotalLength();
   #|const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   #|let playing = false, elapsed = 0, previous = null, frame = null;

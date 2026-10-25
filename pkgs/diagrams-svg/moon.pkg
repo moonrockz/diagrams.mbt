@@ -5,6 +5,7 @@ import {
   "moonrockz/diagrams/bpmn" @bpmn,
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg/layout",
+  "moonrockz/diagrams-svg/bpmn-layout" @bpmn_layout,
   "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams-svg/writer",
 }

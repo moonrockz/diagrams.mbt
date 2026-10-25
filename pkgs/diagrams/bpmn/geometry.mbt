@@ -117,3 +117,13 @@ pub extend EdgeGeometry with Eq::{equal, not_equal}
 
 ///|
 pub extend EdgeGeometry with @debug.Debug::{to_repr}
+
+///|
+/// Use one complete coordinate system for a selected BPMN view.
+pub(all) enum GeometryPolicy { PreferDi; RequireDi; Automatic } derive(Eq, Debug)
+
+///|
+pub extend GeometryPolicy with Eq::{equal,not_equal}
+
+///|
+pub extend GeometryPolicy with @debug.Debug::{to_repr}

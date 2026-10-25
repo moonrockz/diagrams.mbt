@@ -40,11 +40,25 @@ test "select a semantic process without requiring DI during conversion" {
 }
 ```
 
-The model conversion is complete before the painter's implementation. The current
-thin painter accepts the original plain task/start/end complete-integer-DI example.
-It explicitly refuses newly converted kinds and markers until the supplied-DI
-painting story lands. Semantic-only conversion succeeds. SVG geometry-policy and
-automatic layout are the next two task groups.
+## Render supplied geometry
+
+`render_svg(source, geometry_policy=RequireDi)` paints complete process and
+collaboration DI, including the standard graphical kinds and their markers.
+The default `PreferDi` uses all supplied geometry when complete; missing or
+partial DI gives `bpmn/incomplete-di` and computes the whole view. `RequireDi`
+returns no output when required bounds or waypoints are missing. Invalid supplied
+geometry is an error under either policy. Legibility warnings preserve authored
+positions rather than moving individual elements.
+
+`Automatic` explicitly ignores DI during conversion and geometry generation,
+including DI endpoint overrides. It can render semantic input with broken DI.
+With an explicit process selector, it does not require choosing between that
+process's planes. The current fallback places complete containment scopes and
+orthogonal connections; topology-aware ranking and routing follow in group 10.
+
+Static SVG stays script-free. Labels are escaped text; source IDs, resource keys,
+containment paths, visual endpoints and render properties are inert metadata.
+See `moonrockz/diagrams-svg/bpmn-layout` for the pure geometry and legibility APIs.
 
 ## Source identities and geometry
 
