@@ -66,10 +66,10 @@ Depends on: group 4.
 Bead: diagrams-u42.6.
 Depends on: group 5.
 
-- [ ] 6.1 Add per-document ID indexes and typed structural/containment validation; verify duplicate IDs, absent required fields, incorrect target kinds, boundary attachments and illegal cross-scope sequence flows.
-- [ ] 6.2 Resolve QName and imported-document references against an explicit resource set; verify namespace collisions, ambiguous targets, unresolved imports and no filesystem/network fallback.
-- [ ] 6.3 Keep syntax, structure and reference finding stages distinct, with source-backed and constructed locations; verify unaffected valid documents remain inspectable and unrelated unresolved imports do not block a selected self-contained view.
-- [ ] 6.4 Document validator coverage, codes and reference-resource inputs; verify runnable valid/invalid examples and the diagnostic inventory.
+- [x] 6.1 Add per-document ID indexes and typed structural/containment validation; verify duplicate IDs, absent required fields, incorrect target kinds, boundary attachments and illegal cross-scope sequence flows.
+- [x] 6.2 Resolve QName and imported-document references against an explicit resource set; verify namespace collisions, ambiguous targets, unresolved imports and no filesystem/network fallback.
+- [x] 6.3 Keep syntax, structure and reference finding stages distinct, with source-backed and constructed locations; verify unaffected valid documents remain inspectable and unrelated unresolved imports do not block a selected self-contained view.
+- [x] 6.4 Document validator coverage, codes and reference-resource inputs; verify runnable valid/invalid examples and the diagnostic inventory.
 
 ## 7. Complete document traversal and bounded graph queries
 

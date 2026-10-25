@@ -15,6 +15,6 @@ pub fn read(source : String, source_id? : String, limits? : Limits = Limits::new
   }
   let map = source_map(source, source_id)
   let (tree, diagnostics) = parse_xml(source, map, limits)
-  let document = if tree.complete { lower_minimal(tree, map, diagnostics, limits.diagnostics) } else { None }
+  let document = if tree.complete { lower_minimal(tree, map, diagnostics, limits.diagnostics, source) } else { None }
   { tree, document, source_map: Some(map), diagnostics: ReadOnlyArray::from_array(diagnostics) }
 }

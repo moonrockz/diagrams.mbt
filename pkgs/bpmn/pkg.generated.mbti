@@ -10,6 +10,10 @@ pub fn kind_from_name(ExpandedName) -> Kind?
 
 pub fn read(String, source_id? : String, limits? : Limits) -> ReadResult
 
+pub let reference_rules : ReadOnlyArray[ReferenceRule]
+
+pub fn resolve_references(DocumentIndex, resources? : ResourceSet, resource_id? : String, limits? : Limits) -> ReferenceResult
+
 pub let schema_elements : ReadOnlyArray[SchemaElement]
 
 pub let schema_fields : ReadOnlyArray[SchemaField]
@@ -27,6 +31,14 @@ pub fn try_write(Document, format? : WriteFormat, limits? : Limits) -> WriteResu
 pub let typed_model_fields : ReadOnlyArray[(TypeId, SchemaFieldKind, ExpandedName)]
 
 pub let typed_model_types : ReadOnlyArray[TypeId]
+
+pub fn validate(Document, resources? : ResourceSet, resource_id? : String, limits? : Limits) -> ValidationResult
+
+pub fn validate_read(ReadResult, resources? : ResourceSet, resource_id? : String, limits? : Limits) -> ValidationResult
+
+pub fn validate_structure(Document, resource_id? : String, limits? : Limits) -> StructureResult
+
+pub let validation_diagnostic_codes : ReadOnlyArray[String]
 
 pub fn write(Document, format? : WriteFormat, limits? : Limits) -> String raise WriteError
 
@@ -190,8 +202,10 @@ pub struct Attribute {
   raw_name : String
   value : Scalar
   span : Span?
+  // private fields
 } derive(Eq, @debug.Debug)
 pub fn Attribute::equal(Self, Self) -> Bool
+pub fn Attribute::location(Self) -> Location?
 pub fn Attribute::new(ExpandedName, Scalar) -> Self
 pub fn Attribute::not_equal(Self, Self) -> Bool
 pub fn Attribute::to_repr(Self) -> @debug.Repr
@@ -1268,6 +1282,24 @@ pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::walk(Self, (Element) -> Unit) -> Unit
 
+pub struct DocumentIndex {
+  document : Document
+  nodes : ReadOnlyArray[IndexedElement]
+  complete : Bool
+  // private fields
+} derive(@debug.Debug)
+pub fn DocumentIndex::lookup(Self, String) -> IdLookup
+pub fn DocumentIndex::to_repr(Self) -> @debug.Repr
+
+pub struct DocumentResource {
+  location : String
+  document : Document
+} derive(Eq, @debug.Debug)
+pub fn DocumentResource::equal(Self, Self) -> Bool
+pub fn DocumentResource::new(String, Document) -> Self
+pub fn DocumentResource::not_equal(Self, Self) -> Bool
+pub fn DocumentResource::to_repr(Self) -> @debug.Repr
+
 pub struct Documentation {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -1298,6 +1330,7 @@ pub fn Element::enumeration(Self, String) -> Field[BpmnEnum]
 pub fn Element::equal(Self, Self) -> Bool
 pub fn Element::from_values(Kind, values? : ArrayView[Attribute], contents? : ArrayView[Content], bindings? : ArrayView[(String, String)], value_type? : ExpandedName, text_value? : Scalar) -> Self
 pub fn Element::integer(Self, String) -> Field[ExactInteger]
+pub fn Element::location(Self) -> Location?
 pub fn Element::namespace_binding(Self, String) -> String?
 pub fn Element::new(Kind, attributes? : ArrayView[(String, String)], children? : ArrayView[Self], content? : String, bindings? : ArrayView[(String, String)], value_type? : ExpandedName) -> Self
 pub fn Element::not_equal(Self, Self) -> Bool
@@ -1528,6 +1561,17 @@ pub fn ExtensionElements::from_element(Element) -> Self?
 pub fn ExtensionElements::new(contents? : ArrayView[Content]) -> Self
 pub fn ExtensionElements::not_equal(Self, Self) -> Bool
 pub fn ExtensionElements::to_repr(Self) -> @debug.Repr
+
+pub struct ExternalResource {
+  location : String
+  namespace_uri : String
+  import_type : String
+  symbols : ReadOnlyArray[String]
+} derive(Eq, @debug.Debug)
+pub fn ExternalResource::equal(Self, Self) -> Bool
+pub fn ExternalResource::new(String, String, String, ArrayView[String]) -> Self
+pub fn ExternalResource::not_equal(Self, Self) -> Bool
+pub fn ExternalResource::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Field[T] {
   Absent
@@ -1785,6 +1829,16 @@ pub fn HumanPerformer::resource_parameter_binding(Self) -> Field[ReadOnlyArray[R
 pub fn HumanPerformer::resource_ref(Self) -> Field[Reference]
 pub fn HumanPerformer::to_repr(Self) -> @debug.Repr
 
+pub(all) enum IdLookup {
+  Found(IndexedElement)
+  Ambiguous(ReadOnlyArray[IndexedElement])
+  Missing
+  Incomplete
+} derive(Eq, @debug.Debug)
+pub fn IdLookup::equal(Self, Self) -> Bool
+pub fn IdLookup::not_equal(Self, Self) -> Bool
+pub fn IdLookup::to_repr(Self) -> @debug.Repr
+
 pub(all) enum Implementation {
   Unspecified
   WebService
@@ -1851,6 +1905,20 @@ pub fn InclusiveGateway::new(id? : String, name? : String, gateway_direction? : 
 pub fn InclusiveGateway::not_equal(Self, Self) -> Bool
 pub fn InclusiveGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn InclusiveGateway::to_repr(Self) -> @debug.Repr
+
+pub struct IndexedElement {
+  ordinal : Int32
+  element : Element
+  parent : Int32?
+  child_index : Int32
+  children : ReadOnlyArray[Int32]
+  depth : Int32
+  scope : Int32?
+  payload : Bool
+} derive(Eq, @debug.Debug)
+pub fn IndexedElement::equal(Self, Self) -> Bool
+pub fn IndexedElement::not_equal(Self, Self) -> Bool
+pub fn IndexedElement::to_repr(Self) -> @debug.Repr
 
 pub struct InputOutputBinding {
   element : Element
@@ -2706,6 +2774,50 @@ pub fn ReferenceKind::equal(Self, Self) -> Bool
 pub fn ReferenceKind::not_equal(Self, Self) -> Bool
 pub fn ReferenceKind::to_repr(Self) -> @debug.Repr
 
+pub(all) enum ReferenceResolution {
+  Found(ResolvedElement)
+  External(ResolvedSymbol)
+  Ambiguous(ReadOnlyArray[ResolvedElement], ReadOnlyArray[ResolvedSymbol])
+  Unresolved
+  Invalid
+  Limit
+} derive(Eq, @debug.Debug)
+pub fn ReferenceResolution::equal(Self, Self) -> Bool
+pub fn ReferenceResolution::not_equal(Self, Self) -> Bool
+pub fn ReferenceResolution::to_repr(Self) -> @debug.Repr
+
+pub struct ReferenceResult {
+  index : DocumentIndex
+  references : ReadOnlyArray[ResolvedReference]
+  findings : ReadOnlyArray[ValidationFinding]
+  complete : Bool
+  // private fields
+} derive(@debug.Debug)
+pub fn ReferenceResult::resolve(Self, Reference) -> ReferenceResolution
+pub fn ReferenceResult::to_repr(Self) -> @debug.Repr
+
+pub struct ReferenceRule {
+  owner : TypeId
+  field : ExpandedName
+  kind : SchemaFieldKind
+  target : ReferenceTarget
+} derive(Eq, @debug.Debug)
+pub fn ReferenceRule::equal(Self, Self) -> Bool
+pub fn ReferenceRule::not_equal(Self, Self) -> Bool
+pub fn ReferenceRule::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ReferenceTarget {
+  Bpmn(TypeId)
+  AnyElement
+  InteractionNode
+  ItemAwareElement
+  Plane
+  External
+} derive(Eq, @debug.Debug)
+pub fn ReferenceTarget::equal(Self, Self) -> Bool
+pub fn ReferenceTarget::not_equal(Self, Self) -> Bool
+pub fn ReferenceTarget::to_repr(Self) -> @debug.Repr
+
 pub struct Relationship {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -2745,6 +2857,33 @@ pub fn Rendering::id(Self) -> Field[String]
 pub fn Rendering::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn Rendering::not_equal(Self, Self) -> Bool
 pub fn Rendering::to_repr(Self) -> @debug.Repr
+
+pub struct ResolvedElement {
+  resource_id : String?
+  node : IndexedElement
+} derive(Eq, @debug.Debug)
+pub fn ResolvedElement::equal(Self, Self) -> Bool
+pub fn ResolvedElement::not_equal(Self, Self) -> Bool
+pub fn ResolvedElement::to_repr(Self) -> @debug.Repr
+
+pub struct ResolvedReference {
+  source : IndexedElement
+  field : ExpandedName
+  value : Reference
+  target : ReferenceTarget
+  resolution : ReferenceResolution
+} derive(Eq, @debug.Debug)
+pub fn ResolvedReference::equal(Self, Self) -> Bool
+pub fn ResolvedReference::not_equal(Self, Self) -> Bool
+pub fn ResolvedReference::to_repr(Self) -> @debug.Repr
+
+pub struct ResolvedSymbol {
+  resource_id : String
+  name : ExpandedName
+} derive(Eq, @debug.Debug)
+pub fn ResolvedSymbol::equal(Self, Self) -> Bool
+pub fn ResolvedSymbol::not_equal(Self, Self) -> Bool
+pub fn ResolvedSymbol::to_repr(Self) -> @debug.Repr
 
 pub struct Resource {
   element : Element
@@ -2817,6 +2956,15 @@ pub fn ResourceRole::resource_assignment_expression(Self) -> Field[ResourceAssig
 pub fn ResourceRole::resource_parameter_binding(Self) -> Field[ReadOnlyArray[ResourceParameterBinding]]
 pub fn ResourceRole::resource_ref(Self) -> Field[Reference]
 pub fn ResourceRole::to_repr(Self) -> @debug.Repr
+
+pub struct ResourceSet {
+  documents : ReadOnlyArray[DocumentResource]
+  external : ReadOnlyArray[ExternalResource]
+} derive(Eq, @debug.Debug)
+pub fn ResourceSet::equal(Self, Self) -> Bool
+pub fn ResourceSet::new(documents? : ArrayView[DocumentResource], external? : ArrayView[ExternalResource]) -> Self
+pub fn ResourceSet::not_equal(Self, Self) -> Bool
+pub fn ResourceSet::to_repr(Self) -> @debug.Repr
 
 pub struct RootElement {
   element : Element
@@ -3125,6 +3273,13 @@ pub fn StartEvent::output_set(Self) -> Field[OutputSet]
 pub fn StartEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn StartEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn StartEvent::to_repr(Self) -> @debug.Repr
+
+pub struct StructureResult {
+  index : DocumentIndex
+  findings : ReadOnlyArray[ValidationFinding]
+  complete : Bool
+} derive(@debug.Debug)
+pub fn StructureResult::to_repr(Self) -> @debug.Repr
 
 pub struct SubChoreography {
   element : Element
@@ -3582,6 +3737,36 @@ pub fn UserTask::rendering(Self) -> Field[ReadOnlyArray[Rendering]]
 pub fn UserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn UserTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn UserTask::to_repr(Self) -> @debug.Repr
+
+pub struct ValidationFinding {
+  stage : ValidationStage
+  diagnostic : Diagnostic
+  resource_id : String?
+  node : Int32?
+  element_id : String?
+  field : ExpandedName?
+} derive(Eq, @debug.Debug)
+pub fn ValidationFinding::equal(Self, Self) -> Bool
+pub fn ValidationFinding::not_equal(Self, Self) -> Bool
+pub fn ValidationFinding::to_repr(Self) -> @debug.Repr
+
+pub struct ValidationResult {
+  document : Document?
+  index : DocumentIndex?
+  references : ReadOnlyArray[ResolvedReference]
+  findings : ReadOnlyArray[ValidationFinding]
+  complete : Bool
+} derive(@debug.Debug)
+pub fn ValidationResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ValidationStage {
+  Syntax
+  Structure
+  References
+} derive(Eq, @debug.Debug)
+pub fn ValidationStage::equal(Self, Self) -> Bool
+pub fn ValidationStage::not_equal(Self, Self) -> Bool
+pub fn ValidationStage::to_repr(Self) -> @debug.Repr
 
 pub(all) enum WriteFormat {
   Compact

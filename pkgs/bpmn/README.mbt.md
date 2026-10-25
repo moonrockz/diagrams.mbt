@@ -1,7 +1,8 @@
 # moonrockz/bpmn
 
 Portable BPMN document values, a lossless namespace-aware XML CST, source maps,
-writing and containment walking. The module imports only MoonBit core. It reads
+writing, structural validation, explicit reference resolution and containment
+walking. The module imports only MoonBit core. It reads
 decoded strings without filesystem, network, clock or environment access.
 
 ## Reading stages
@@ -542,3 +543,147 @@ The provisional group-4 API returned raw `Element` values from collaboration
 conversation-node, conversation-link and conversation-association accessors.
 These accessors now return their respective typed views. Use `.element` when
 an existing caller needs the underlying element.
+
+## Structural validation and explicit reference resources
+
+`validate_structure(document, resource_id?, limits?)` returns an immutable
+source-order `DocumentIndex` and structural findings. It checks required fields,
+occurrences, sequence order, schema choices, abstract declarations, scalar
+alternatives and containment types across every generated schema family. IDs
+come from declared ID fields. IDs inside opaque XML do not become BPMN targets.
+`index.lookup(id)` returns `Found`, `Ambiguous`, `Missing` or `Incomplete`.
+Duplicate occurrences retain their source order.
+
+`resolve_references(index, resources?, resource_id?, limits?)` checks all 114
+declared QName/IDREF fields against `reference_rules`. The semantic target table
+supplements XSD primitive types with the
+[BPMN 2.0.2 metamodel](https://www.omg.org/spec/BPMN/2.0.2/PDF), including its
+[normative CMOF](https://www.omg.org/spec/BPMN/20100501/BPMN20.cmof).
+Checks include target kinds, boundary attachments, sequence-flow scope,
+default/incoming/outgoing endpoints and lane membership. DI plane references
+must name one of the allowed process, collaboration or choreography containers.
+This does not validate execution, expressions, vendor semantics or every BPMN
+modeling constraint. It never simulates tokens or evaluates conditions.
+
+`validate(document, ...)` combines both stages. `validate_read(read_result, ...)`
+also retains earlier findings with explicit `Syntax`, `Structure` or `References`
+stages. `complete` means processing finished within bounds. A complete result can
+have error findings and still retain the original inspectable document.
+
+```mbt check
+///|
+test "validate a valid process and inspect incomplete authored fields" {
+  let task=@bpmn.Task::new(id="T")
+  let process=@bpmn.Process::new(id="P",contents=[Element(task.element)])
+  let document=@bpmn.Definitions::new("urn:example",children=[process.element]).document()
+  let valid=@bpmn.validate(document)
+  assert_true(valid.complete)
+  assert_eq(valid.findings,[])
+  assert_true(valid.index.unwrap().lookup("T") is Found(_))
+  let bad=@bpmn.SequenceFlow::new(id="MissingEndpoints")
+  let document=@bpmn.Definitions::new("urn:example",children=[@bpmn.Process::new(contents=[Element(bad.element)]).element]).document()
+  let invalid=@bpmn.validate(document)
+  assert_true(invalid.complete)
+  assert_eq(invalid.document,Some(document))
+  assert_true(invalid.findings.iter().any(f => f.diagnostic.code == "bpmn/required-field" && f.element_id == Some("MissingEndpoints")))
+  assert_true(invalid.findings.iter().all(f => f.diagnostic.location == None))
+}
+```
+
+`ResourceSet::new(documents?, external?)` copies caller arrays. A
+`DocumentResource` has a literal location key and a typed document. Import lookup
+uses exactly that key, declared namespace and import type. The caller handles
+relative paths or URLs before supplying the set. A supplied resource becomes
+visible only through the root's direct or transitive imports. Cycles stop at
+already visited resources. Two keys can supply documents with the same target
+namespace; duplicate target IDs then produce ambiguity. Duplicate location keys
+produce an ambiguous-import finding. No candidate wins by array order.
+
+An `ExternalResource` supplies a location, namespace, import type and explicit
+NCName symbol identities for another language. This is a symbol table supplied
+by the caller, not a parser or validator for XML Schema, WSDL or vendor content.
+External symbols can satisfy generic language references, and cannot satisfy a
+reference that requires a BPMN process, task or other specific BPMN type.
+
+```mbt check
+///|
+test "resolve an imported process using only explicit resources" {
+  let model="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  let imported=@bpmn.Definitions::new("urn:imported",children=[@bpmn.Process::new(id="Reusable").element]).document()
+  let reference=@bpmn.Reference::new(@bpmn.ExpandedName::new("urn:imported","Reusable"))
+  let participant=@bpmn.Participant::new(id="Pool",process_ref=reference)
+  let document=@bpmn.Definitions::new("urn:main",children=[@bpmn.Import::new("urn:imported","reusable.bpmn",model).element,@bpmn.Collaboration::new(contents=[Element(participant.element)]).element]).document()
+  let resources=@bpmn.ResourceSet::new(documents=[@bpmn.DocumentResource::new("reusable.bpmn",imported)])
+  let index=@bpmn.validate_structure(document).index
+  let result=@bpmn.resolve_references(index,resources~)
+  assert_eq(result.findings,[])
+  assert_true(result.resolve(reference) is Found(found) && found.resource_id == Some("reusable.bpmn"))
+  let missing=@bpmn.resolve_references(index)
+  assert_true(missing.complete)
+  assert_true(missing.findings.iter().any(f => f.diagnostic.code == "bpmn/unresolved-import"))
+}
+```
+
+IDREF and empty-namespace QName values are document-local. Every nonempty QName
+namespace matches a definitions target namespace literally. XML default
+namespaces apply to QName values too. A model-vocabulary namespace is not an
+alias for the current target namespace. Bind a prefix to the intended target
+namespace when needed. This policy preserves expanded identity through writing
+and prevents a qualified reference from falling back to a same-named local ID.
+Missing unrelated imports remain findings while local queries still work.
+`resolve` returns `Found`, `External`, `Ambiguous`, `Unresolved`, `Invalid` or
+`Limit`; the original reference value always remains available.
+
+Source-backed elements and attributes retain their own immutable source origin.
+`location()` stays correct when they are copied between documents. New or edited
+element values have no element span. Unchanged copied attributes can still have
+their original locations. Findings identify the owner ID and field without
+inventing locations for constructed values. Source provenance is excluded from
+document semantic equality.
+
+Validation uses `Limits`. Structure counts document, element, content, attribute
+and namespace records; depth and token bounds are inclusive. An index built
+after limit exhaustion cannot answer a lookup as missing. Reference resources
+share the node budget across imported documents and external symbols. Candidate
+visits and matched target occurrences consume a separate query-work budget of
+`limits.nodes` across field resolution, and each explicit `resolve` call gets
+that budget independently. Namespace and ID indexes avoid scanning unrelated
+resources. Diagnostic overflow replaces the final slot with the limit finding.
+
+The exported diagnostic inventory below is checked by this runnable example.
+All listed codes have error severity.
+
+```mbt check
+///|
+test "document the complete structural and reference diagnostic inventory" {
+  let codes : ReadOnlyArray[String] = [
+    "bpmn/validation-invalid-limits", // A bound is not positive.
+    "bpmn/validation-node-limit", // Structure record budget exhausted.
+    "bpmn/validation-depth-limit", // Containment depth exhausted.
+    "bpmn/validation-token-limit", // One value exceeds its token bound.
+    "bpmn/validation-diagnostic-limit", // Finding budget exhausted.
+    "bpmn/duplicate-id", // Multiple declared IDs have the same value.
+    "bpmn/required-field", // Required field or selected branch is absent.
+    "bpmn/field-cardinality", // Too many occurrences of one field.
+    "bpmn/invalid-containment", // Wrong root, child or text containment.
+    "bpmn/child-order", // Child is outside schema sequence order.
+    "bpmn/choice-conflict", // Multiple choice branches are present.
+    "bpmn/abstract-element", // Abstract declaration was instantiated.
+    "bpmn/invalid-field", // Undeclared field or invalid scalar alternative.
+    "bpmn/invalid-type", // Incompatible actual or containment type.
+    "bpmn/unresolved-reference", // No identity in the explicit import closure.
+    "bpmn/ambiguous-reference", // Several identities match.
+    "bpmn/invalid-reference", // Invalid/unbound QName, IDREF or external symbol.
+    "bpmn/wrong-reference-kind", // Identity exists with an incorrect type.
+    "bpmn/sequence-flow-scope", // Flow endpoint crosses its flow scope.
+    "bpmn/boundary-attachment", // Attachment is outside the owning flow scope.
+    "bpmn/reference-endpoint", // Default, lane, incoming/outgoing inconsistency.
+    "bpmn/unresolved-import", // Location key was not supplied.
+    "bpmn/ambiguous-import", // Several resources have the same location key.
+    "bpmn/import-namespace", // Import and supplied namespace differ.
+    "bpmn/import-type", // Import and supplied resource type differ.
+    "bpmn/resource-limit", // Resource or lookup-work budget exhausted.
+  ]
+  assert_eq(@bpmn.validation_diagnostic_codes,codes)
+}
+```
