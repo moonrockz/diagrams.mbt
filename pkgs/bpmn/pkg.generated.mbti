@@ -2087,6 +2087,13 @@ pub fn IndexedElement::equal(Self, Self) -> Bool
 pub fn IndexedElement::not_equal(Self, Self) -> Bool
 pub fn IndexedElement::to_repr(Self) -> @debug.Repr
 
+pub struct IndexedResource {
+  resource_id : String?
+  index : DocumentIndex
+  records : Int32
+} derive(@debug.Debug)
+pub fn IndexedResource::to_repr(Self) -> @debug.Repr
+
 pub struct InputOutputBinding {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -3095,6 +3102,7 @@ pub struct ReferenceResult {
   complete : Bool
   // private fields
 } derive(@debug.Debug)
+pub fn ReferenceResult::indexed_resources(Self) -> ReadOnlyArray[IndexedResource]
 pub fn ReferenceResult::resolve(Self, Reference) -> ReferenceResolution
 pub fn ReferenceResult::to_repr(Self) -> @debug.Repr
 

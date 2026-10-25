@@ -1,32 +1,142 @@
 # moonrockz/diagrams-bpmn
 
-This adapter converts independent `moonrockz/bpmn` documents to
-`Diagram::Bpmn` and offers `render_svg(source)`. The result uses the existing
-renderer contract: optional output, media type and diagnostics.
+This pure adapter converts `moonrockz/bpmn` documents into the independent
+`moonrockz/diagrams/bpmn` visual model. `to_diagram` returns an optional
+`Diagram::Bpmn` and ordered diagnostics. `render_svg` reads, converts and calls
+the SVG renderer. Neither operation reads files, fetches imports or changes XML.
 
-The first implementation requires one process, one matching DI plane, unique
-IDs, generic tasks, plain start/end events and sequence flows with complete
-integer DI. It does not compute layout. Unsupported views, absent/invalid DI
-and invalid endpoints return no diagram. Collaborations, markers, labels on
-flows, view selectors, decimal render geometry and automatic layout follow in
-later task groups. Choreography and conversation rendering stay deferred by the
-full change; their document types follow separately.
+The converter covers process and collaboration graphical kinds, including typed
+tasks, events and their definitions, gateways, subprocesses, expanded process
+calls, pools, nested lanes, data, groups, annotations and connections. It dispatches
+on the effective schema type, including `xsi:type`. BPMN-looking elements inside
+opaque vendor payloads remain inert. Choreography and conversation documents
+retain their typed reader/writer/traversal support; selecting them returns
+`bpmn/unsupported-view`. They never become generic tasks.
+
+## Select a view
+
+Use `ViewSelector::Process(id)`, `Collaboration(id)` or `Plane(id)`. A plane
+selector accepts its plane ID or its parent diagram ID. `View(id)` selects an
+identity first and diagnoses a deferred or invalid kind explicitly.
+
+Automatic selection examines planes first, then collaborations, then processes.
+The first nonempty tier must contain exactly one candidate. One plane and its
+referenced process count as one view. A collaboration includes its participant
+processes, rather than competing with them. Multiple matching planes need an
+explicit plane selector, even when they refer to the same process.
 
 ```mbt check
 ///|
-test "a semantic-only document needs DI in the first slice" {
-  let result = @adapter.render_svg("<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" targetNamespace=\"urn:example\"><process id=\"P\"><task id=\"T\"/></process></definitions>")
-  assert_eq(result.media_type, "image/svg+xml")
-  assert_eq(result.output, None)
-  assert_eq(result.diagnostics[0].code, "bpmn/unsupported-view")
+test "select a semantic process without requiring DI during conversion" {
+  let source = "<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:userTask id='T' name='Review'/></b:process><b:process id='Other'/></b:definitions>"
+  let document = @bpmn.read(source).document.unwrap()
+  let ambiguous = @adapter.to_diagram(document)
+  assert_eq(ambiguous.diagnostics[0].code, "bpmn/ambiguous-view")
+  let selected = @adapter.to_diagram(document, selector=Process("P"))
+  guard selected.diagram is Some(Bpmn(view)) else { fail("missing process") }
+  assert_eq(view.source.source_id, Some("P"))
+  assert_eq(view.nodes[0].kind, UserTask)
+  assert_eq(view.nodes[0].geometry, None)
 }
 ```
 
-The complete DI example and its SVG/HTML snapshots are in
-`tests/corpus/bpmn-2.0.2/minimal.bpmn` and `tests/bpmn-acceptance/__snapshot__/`.
-The adapter does not change source documents or insert DI into them.
+The model conversion is complete before the painter's implementation. The current
+thin painter accepts the original plain task/start/end complete-integer-DI example.
+It explicitly refuses newly converted kinds and markers until the supplied-DI
+painting story lands. Semantic-only conversion succeeds. SVG geometry-policy and
+automatic layout are the next two task groups.
+
+## Source identities and geometry
+
+`SourceIdentity` keeps the caller's resource key, optional original XML ID and
+source-order containment path. Node `id` and flow `id` are unique render IDs.
+An uninstanced root element with an XML ID keeps that spelling. Imported elements,
+participant instances and anonymous elements use length-prefixed generated IDs.
+The original ID stays in `source.source_id` or `identity.source_id`. These IDs are
+never written into the document. Multiple input documents may reuse local IDs.
+
+Nodes keep pool/lane/subprocess ownership and boundary attachment. Markers keep
+loop mode, compensation, event-subprocess/interrupting flags, collection status,
+called activity kind/identity and event definitions. Expressions and timer text
+remain descriptions. Group labels resolve category values; data references keep
+their referenced name and collection marker. Connections distinguish sequence,
+message, association and data-input/output kinds. A many-source data association
+has one visual connection per source with a shared original identity. A valid
+source-less association has `has_source=false` and no semantic source identity.
+No transition or execution outcome is invented.
+
+Flow `semantic_source` and `semantic_target` retain actual document endpoints.
+Visual `source`/`target` may identify an owning activity, or a selected DI
+`sourceElement`/`targetElement`, for example the boundary of a black-box pool.
+A shared process can have distinct participant instances. A reference with several
+possible visual instances needs an unambiguous selected DI endpoint; the adapter
+returns an ambiguity diagnostic instead of choosing an arbitrary instance.
+
+Selected DI retains exact finite decimal/exponent tokens in `Number`, shape and
+label bounds, waypoints, fonts, display flags and endpoint-shape identities.
+`bounds`/`points` remain the original integer convenience inputs. Fractional DI
+is retained in `geometry`, without rounding it into those convenience fields.
+Absence or partial geometry remains explicit for the renderer's whole-view policy.
+Multiple DI occurrences for an otherwise identical projected identity return
+`bpmn/ambiguous-di`, rather than assigning coordinates by source order.
+
+The core model also accepts caller-supplied `RenderProperties` and `Link` values
+through immutable constructors and `with_properties`. Vendor extensions never
+supply active styles, markup or links. The model has no dependency on `bpmn`.
+
+```mbt check
+///|
+test "conversion retains an anonymous node without editing the source" {
+  let document = @bpmn.read("<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:task/></b:process></b:definitions>").document.unwrap()
+  let before = @bpmn.write(document)
+  guard @adapter.to_diagram(document).diagram is Some(Bpmn(view)) else { fail("missing process") }
+  assert_eq(view.nodes[0].source.source_id, None)
+  assert_eq(view.nodes[0].source.path, [0, 0, 0])
+  assert_eq(@bpmn.write(document), before)
+}
+```
+
+## References, findings and limits
+
+Supply `ResourceSet` and optional root `resource_id` explicitly. Import location
+keys and target namespaces follow the standalone module's strict QName rules.
+Each imported process resolves references using its own import closure. Reused
+immutable indexes avoid reparsing XML. No local-ID fallback crosses namespaces.
+
+Malformed or ambiguous selected references prevent a diagram. Findings outside
+the selected view remain warnings; an unrelated unresolved import does not block
+a self-contained process. `map_diagnostic` preserves diagnostic code/severity
+and the source's half-open UTF-16 offsets with one-based lines/columns. CRLF and
+non-BMP characters use the same positions as the source reader. Constructed
+values have no invented spans. Conversion-specific findings use the affected
+element's source location when available.
+
+`Limits` bounds validation, source tokens, depth, diagnostics and conversion
+work. Conversion charges index scans, identity paths and reference scans against
+`nodes`. Imported re-resolution charges the existing resource closure's record
+count before rebuilding its resolver. Exhaustion returns no partial diagram.
+`bpmn/conversion-limit` differs from unresolved or unsupported input.
+
+Conversion adds these codes to the standalone module's validation codes:
+
+- `bpmn/view-not-found`, `bpmn/missing-plane`, `bpmn/ambiguous-view`,
+  `bpmn/ambiguous-plane`, `bpmn/unsupported-view` and `bpmn/unsupported-element`.
+- `bpmn/invalid-reference`, `bpmn/ambiguous-endpoint`, `bpmn/ambiguous-di`,
+  `bpmn/duplicate-id`, `bpmn/invalid-geometry` and `bpmn/conversion-limit`.
+
+The checked graphical coverage manifest is
+`tests/corpus/bpmn-model/graphical-coverage.json`. Its embedded copy is checked
+against the converter inventory and a concrete assertion for each of the 39
+standard graphical kinds. Additional assertions cover all ten event-definition
+symbols, ownership, markers, imports, exact DI and deferred views. Base
+`tDataAssociation` has no standalone global element; an invalid `xsi:type`
+downcast is diagnosed, while its two concrete association declarations convert.
+
+## Match and constructor migration
 
 Adding `Bpmn` to the public `moonrockz/diagrams/render.Diagram` enum changes source
-compatibility for exhaustive matches. Add a `Bpmn(view)` case or use the renderer's
-unsupported-kind result. Existing sequence SVG bytes remain unchanged. No release
-version change or publication is part of this slice.
+compatibility for exhaustive matches. Add a `Bpmn(view)` case or return an
+unsupported-kind renderer result. Existing sequence constructors and SVG bytes
+remain unchanged. In the provisional BPMN constructors, pass integer convenience
+geometry as `bounds=` or `points=`; use `geometry=` for exact selected DI.
+No version change, release or module publication is part of this change.

@@ -74,3 +74,12 @@ Opaque vendor XML has separate portable tests for mixed content, inherited and
 unused bindings, shadowing, copied scopes, unbound prefixes, unknown standard
 elements/types and namespace limits. These tests do not delegate vendor
 semantics to the reference library.
+
+## Graphical conversion coverage
+
+`graphical-coverage.json` maps 39 concrete process/collaboration graphical kinds
+to the acceptance conversion assertions. It is a project-authored manifest,
+separate from the pinned input/reference digests. The corpus task checks its
+portable embedding; tests require exact agreement with the converter inventory
+and one concrete conversion assertion per entry. Event definitions, markers,
+references, exact geometry and explicitly deferred views have further assertions.

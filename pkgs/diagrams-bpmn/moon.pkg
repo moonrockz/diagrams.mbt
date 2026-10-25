@@ -10,4 +10,5 @@ import {
 
 import {
   "moonrockz/diagrams-bpmn" @adapter,
+  "moonrockz/bpmn",
 } for "test"
