@@ -1,0 +1,17 @@
+[
+  {
+    "source": "extensions/nested-yaml.mmd",
+    "errorNameContains": "YAML",
+    "reason": "The pinned native shape-data lexer ends at the first unquoted closing brace; valid nested flow-style YAML maps are not valid native Mermaid 12.2.0 shape-data statements."
+  },
+  {
+    "source": "extensions/shape-true.mmd",
+    "errorNameContains": "TypeError",
+    "reason": "Truthy non-string shape values are rejected by FlowDb before shape lookup."
+  },
+  {
+    "source": "extensions/shape-number.mmd",
+    "errorNameContains": "TypeError",
+    "reason": "Truthy non-string shape values are rejected by FlowDb before shape lookup."
+  }
+]

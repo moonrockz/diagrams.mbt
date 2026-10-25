@@ -2,10 +2,15 @@
 package "moonrockz/diagrams-mermaid"
 
 import {
+  "moonbitlang/core/debug",
   "moonrockz/diagrams",
   "moonrockz/diagrams-mermaid/ast",
   "moonrockz/diagrams-mermaid/cst",
   "moonrockz/diagrams-mermaid/sequence",
+  "moonrockz/diagrams-mermaid/swimlane",
+  "moonrockz/diagrams-mermaid/swimlane-ast",
+  "moonrockz/diagrams-mermaid/swimlane-cst",
+  "moonrockz/diagrams-mermaid/swimlane-syntax",
   "moonrockz/diagrams/render",
 }
 
@@ -16,15 +21,60 @@ pub let diagnostic_codes : ReadOnlyArray[String]
 
 pub fn print(@ast.Diagram) -> String
 
+pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits) -> DiagramPrintResult
+
 pub fn read(String) -> ReadResult
+
+pub fn read_diagram(String, limits? : @swimlane-syntax.Limits) -> DiagramReadResult
 
 pub fn render_svg(String) -> @render.Rendered
 
+pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String]
+
+pub let swimlane_diagnostic_codes : ReadOnlyArray[String]
+
 pub fn to_sequence(@ast.Diagram) -> @sequence.Conversion
+
+pub fn to_swimlane(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> @swimlane.Conversion
 
 // Errors
 
 // Types and methods
+pub struct DiagramPrintResult {
+  output : String?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn DiagramPrintResult::equal(Self, Self) -> Bool
+pub fn DiagramPrintResult::not_equal(Self, Self) -> Bool
+pub fn DiagramPrintResult::to_repr(Self) -> @debug.Repr
+
+pub struct DiagramReadResult {
+  tree : DiagramTree
+  ast : ParsedDiagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn DiagramReadResult::equal(Self, Self) -> Bool
+pub fn DiagramReadResult::not_equal(Self, Self) -> Bool
+pub fn DiagramReadResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum DiagramTree {
+  Sequence(@cst.Node)
+  Swimlane(@swimlane-cst.Node)
+  Unsupported(String)
+} derive(Eq, @debug.Debug)
+pub fn DiagramTree::equal(Self, Self) -> Bool
+pub fn DiagramTree::not_equal(Self, Self) -> Bool
+pub fn DiagramTree::text(Self) -> String
+pub fn DiagramTree::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ParsedDiagram {
+  Sequence(@ast.Diagram)
+  Swimlane(@swimlane-ast.Diagram)
+} derive(Eq, @debug.Debug)
+pub fn ParsedDiagram::equal(Self, Self) -> Bool
+pub fn ParsedDiagram::not_equal(Self, Self) -> Bool
+pub fn ParsedDiagram::to_repr(Self) -> @debug.Repr
+
 pub struct ReadResult {
   tree : @cst.Node
   ast : @ast.Diagram?

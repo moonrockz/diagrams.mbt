@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/swimlane-cst"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Node {
+  children : ReadOnlyArray[Token]
+} derive(Eq, @debug.Debug)
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::new(ArrayView[Token]) -> Self
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::text(Self) -> String
+pub fn Node::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Token {
+  kind : TokenKind
+  text : String
+  offset : Int32
+} derive(Eq, @debug.Debug)
+pub fn Token::equal(Self, Self) -> Bool
+pub fn Token::not_equal(Self, Self) -> Bool
+pub fn Token::span(Self, String) -> @diagrams.Span
+pub fn Token::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TokenKind {
+  Header
+  Statement
+  Comment
+  Directive
+  FrontMatter
+  Whitespace
+  Separator
+  Error
+} derive(Eq, @debug.Debug)
+pub fn TokenKind::equal(Self, Self) -> Bool
+pub fn TokenKind::not_equal(Self, Self) -> Bool
+pub fn TokenKind::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

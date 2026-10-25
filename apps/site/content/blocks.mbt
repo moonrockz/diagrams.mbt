@@ -13,7 +13,7 @@ let quote_open : String = "<blockquote>\n<p>"
 
 ///|
 /// The index of the `</blockquote>` that closes the block quote whose content starts at 0 of `text`.
-fn quote_end(text : StringView) -> Int? {
+fn quote_end(text : StringView) -> Int32? {
   let mut depth = 1
   let mut i = 0
   while i < text.length() {
@@ -42,7 +42,9 @@ pub fn render_callouts(html : String) -> String {
   let mut rest = html[:]
   while rest.find(quote_open) is Some(start) {
     let inner = rest[start + quote_open.length():]
-    let kind = callout_kinds.iter().find_first(k => inner.has_prefix("[!\{k.0}]"))
+    let kind = callout_kinds
+      .iter()
+      .find_first(k => inner.has_prefix("[!\{k.0}]"))
     guard kind is Some((name, label)) && quote_end(inner) is Some(end) else {
       out.write_view(rest[:start + quote_open.length()])
       rest = inner
@@ -117,13 +119,13 @@ pub fn render_layers(file : String, html : String) -> LayersPass {
     rest = body[end + "</code></pre>".length():]
   }
   out.write_view(rest)
-  { html: out.to_string(), problems }
+  { html: out.to_string(), problems, }
 }
 
 ///|
 /// The length of a list item marker at the start of `text`, such as `- `, `* `, `+ `, `1. ` or `1) `,
 /// or 0.
-fn list_marker(text : String) -> Int {
+fn list_marker(text : String) -> Int32 {
   if text.has_prefix("- ") || text.has_prefix("* ") || text.has_prefix("+ ") {
     return 2
   }
@@ -166,7 +168,7 @@ fn without_containers(line : String) -> String {
 pub fn check_moonbit_fences(
   file : String,
   source : String,
-  first_line~ : Int = 1,
+  first_line~ : Int32 = 1,
 ) -> Array[@model.Problem] {
   let problems = []
   let mut fence : String? = None

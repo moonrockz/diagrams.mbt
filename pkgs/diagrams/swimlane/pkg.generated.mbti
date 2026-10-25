@@ -1,0 +1,156 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/swimlane"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+pub let built_in_shapes : ReadOnlyArray[String]
+
+pub fn canonical_shape(String) -> String
+
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn direction(String) -> Direction?
+
+pub fn validate(Swimlane, nodes_limit? : Int32, edges_limit? : Int32, depth_limit? : Int32, work_limit? : Int32) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+// Errors
+
+// Types and methods
+pub struct Connection {
+  id : String
+  source : String
+  target : String
+  label : String
+  label_kind : LabelKind
+  style : LineStyle
+  source_marker : Marker
+  target_marker : Marker
+  min_length : Int32
+  direction : FlowDirection
+} derive(Eq, @debug.Debug)
+pub fn Connection::equal(Self, Self) -> Bool
+pub fn Connection::new(String, String, String, label? : String, label_kind? : LabelKind, style? : LineStyle, source_marker? : Marker, target_marker? : Marker, min_length? : Int32) -> Self
+pub fn Connection::not_equal(Self, Self) -> Bool
+pub fn Connection::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Direction {
+  TB
+  BT
+  LR
+  RL
+} derive(Eq, @debug.Debug)
+pub fn Direction::equal(Self, Self) -> Bool
+pub fn Direction::not_equal(Self, Self) -> Bool
+pub fn Direction::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FlowDirection {
+  Forward
+  Backward
+  Both
+  Undirected
+  Invisible
+} derive(Eq, @debug.Debug)
+pub fn FlowDirection::equal(Self, Self) -> Bool
+pub fn FlowDirection::not_equal(Self, Self) -> Bool
+pub fn FlowDirection::to_repr(Self) -> @debug.Repr
+
+pub struct Group {
+  id : String
+  label : String
+  parent : String?
+  lane : String?
+  direction : Direction?
+  expanded : Bool
+} derive(Eq, @debug.Debug)
+pub fn Group::equal(Self, Self) -> Bool
+pub fn Group::new(String, label? : String, parent? : String, lane? : String, direction? : Direction, expanded? : Bool) -> Self
+pub fn Group::not_equal(Self, Self) -> Bool
+pub fn Group::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LabelKind {
+  Text
+  Markdown
+  Html
+} derive(Eq, @debug.Debug)
+pub fn LabelKind::equal(Self, Self) -> Bool
+pub fn LabelKind::not_equal(Self, Self) -> Bool
+pub fn LabelKind::to_repr(Self) -> @debug.Repr
+
+pub struct Lane {
+  id : String
+  label : String
+  direction : Direction?
+  expanded : Bool
+} derive(Eq, @debug.Debug)
+pub fn Lane::equal(Self, Self) -> Bool
+pub fn Lane::new(String, label? : String, direction? : Direction, expanded? : Bool) -> Self
+pub fn Lane::not_equal(Self, Self) -> Bool
+pub fn Lane::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LineStyle {
+  Solid
+  Dotted
+  Thick
+  Invisible
+} derive(Eq, @debug.Debug)
+pub fn LineStyle::equal(Self, Self) -> Bool
+pub fn LineStyle::not_equal(Self, Self) -> Bool
+pub fn LineStyle::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Marker {
+  None
+  Arrow
+  Circle
+  Cross
+} derive(Eq, @debug.Debug)
+pub fn Marker::equal(Self, Self) -> Bool
+pub fn Marker::not_equal(Self, Self) -> Bool
+pub fn Marker::to_repr(Self) -> @debug.Repr
+
+pub struct Node {
+  id : String
+  label : String
+  label_kind : LabelKind
+  shape : String
+  metadata : ReadOnlyArray[(String, String)]
+  lane : String?
+  groups : ReadOnlyArray[String]
+  properties : RenderProperties?
+} derive(Eq, @debug.Debug)
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::new(String, label? : String, label_kind? : LabelKind, shape? : String, metadata? : ArrayView[(String, String)], lane? : String, groups? : ArrayView[String], properties? : RenderProperties) -> Self
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::to_repr(Self) -> @debug.Repr
+
+pub struct RenderProperties {
+  link : String?
+  metadata : ReadOnlyArray[(String, String)]
+} derive(Eq, @debug.Debug)
+pub fn RenderProperties::equal(Self, Self) -> Bool
+pub fn RenderProperties::new(link? : String, metadata? : ArrayView[(String, String)]) -> Self
+pub fn RenderProperties::not_equal(Self, Self) -> Bool
+pub fn RenderProperties::to_repr(Self) -> @debug.Repr
+
+pub struct Swimlane {
+  id : String
+  direction : Direction
+  lanes : ReadOnlyArray[Lane]
+  groups : ReadOnlyArray[Group]
+  nodes : ReadOnlyArray[Node]
+  connections : ReadOnlyArray[Connection]
+  title : String?
+  accessibility_title : String?
+  accessibility_description : String?
+} derive(Eq, @debug.Debug)
+pub fn Swimlane::equal(Self, Self) -> Bool
+pub fn Swimlane::new(String, ArrayView[Node], ArrayView[Connection], direction? : Direction, lanes? : ArrayView[Lane], groups? : ArrayView[Group], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
+pub fn Swimlane::not_equal(Self, Self) -> Bool
+pub fn Swimlane::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

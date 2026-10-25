@@ -1,5 +1,11 @@
 import {
+  "moonrockz/diagrams-mermaid/swimlane-ast" @swimlane_ast,
+  "moonrockz/diagrams-mermaid/swimlane-cst" @swimlane_cst,
+  "moonrockz/diagrams-mermaid/swimlane-syntax" @swimlane_syntax,
+  "moonrockz/diagrams-mermaid/swimlane-printer" @swimlane_printer,
+  "moonrockz/diagrams-mermaid/swimlane" @swimlane_conversion,
   "moonrockz/diagrams",
+  "moonbitlang/core/debug",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams-mermaid/ast",
   "moonrockz/diagrams-mermaid/cst",

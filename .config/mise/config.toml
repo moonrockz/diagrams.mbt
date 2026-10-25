@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -236,3 +236,15 @@ run = "moonx scripts/gallery.mbtx --existing-output --site-assets --site-assets-
 [tasks."test:bpmn-consumer"]
 description = "Qualify a fresh reader-only BPMN consumer on all four targets"
 run = "moonx scripts/test-bpmn-consumer.mbtx"
+
+[tasks."validate:swimlane-corpus"]
+description = "Check pinned Mermaid swimlane source digests and portable oracle fixtures"
+run = "moonx scripts/swimlane-corpus.mbtx check"
+
+[tasks."swimlane-corpus:generate"]
+description = "Embed frozen Mermaid swimlane reference fixtures for portable tests"
+run = "moonx scripts/swimlane-corpus.mbtx generate"
+
+[tasks."swimlane-corpus:reference"]
+description = "Qualify native swimlanes against locked test-only Mermaid 12.2.0 in Chromium"
+run = "moonx scripts/swimlane-reference.mbtx"

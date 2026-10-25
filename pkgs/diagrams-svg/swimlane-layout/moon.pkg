@@ -1,0 +1,15 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/math",
+  "moonbitlang/core/priority_queue",
+  "moonbit-community/metrics",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/swimlane" @model,
+  "moonrockz/diagrams-svg/theme",
+}
+
+import {
+  "moonrockz/diagrams-svg/swimlane-layout" @layout,
+  "moonrockz/diagrams/swimlane" @model,
+  "moonrockz/diagrams-svg/theme",
+} for "test"

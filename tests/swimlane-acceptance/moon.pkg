@@ -1,0 +1,14 @@
+import {
+ "moonrockz/diagrams-tests/swimlane-acceptance" @corpus,
+ "moonbitlang/core/json",
+ "moonbitlang/core/test",
+ "moonrockz/diagrams-svg" @svg,
+ "moonrockz/diagrams-svg/swimlane-layout" @layout,
+ "moonrockz/diagrams-svg/theme" @theme,
+ "moonrockz/diagrams/render" @render,
+ "moonrockz/diagrams/swimlane" @model,
+ "moonrockz/diagrams-mermaid" @mermaid,
+ "moonrockz/diagrams-mermaid/swimlane-syntax" @syntax,
+ "moonrockz/diagrams-mermaid/swimlane-printer" @printer,
+ "moonrockz/diagrams-mermaid/swimlane" @conversion,
+} for "test"

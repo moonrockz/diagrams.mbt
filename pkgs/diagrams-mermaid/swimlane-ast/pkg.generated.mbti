@@ -1,0 +1,93 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/swimlane-ast"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+pub fn canonical_json(Json, depth_limit? : Int32, work_limit? : Int32, output_limit? : Int32) -> String?
+
+pub fn canonical_yaml(Json, depth_limit? : Int32, work_limit? : Int32, output_limit? : Int32) -> String?
+
+// Errors
+
+// Types and methods
+pub(all) struct Chain {
+  endpoints : ReadOnlyArray[ReadOnlyArray[NodeDecl]]
+  links : ReadOnlyArray[Link]
+} derive(Eq, @debug.Debug)
+pub fn Chain::equal(Self, Self) -> Bool
+pub fn Chain::not_equal(Self, Self) -> Bool
+pub fn Chain::to_repr(Self) -> @debug.Repr
+
+pub struct Diagram {
+  direction : String?
+  front_matter : String?
+  directives : ReadOnlyArray[String]
+  statements : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::new(ArrayView[Statement], direction? : String, front_matter? : String, directives? : ArrayView[String]) -> Self
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Link {
+  spelling : String
+  label : String
+  label_kind : String
+  id : String?
+  source_marker : String
+  target_marker : String
+  style : String
+  length : Int32
+} derive(@debug.Debug)
+pub fn Link::equal(Self, Self) -> Bool
+pub fn Link::not_equal(Self, Self) -> Bool
+pub fn Link::to_repr(Self) -> @debug.Repr
+pub impl Eq for Link
+
+pub(all) struct NodeDecl {
+  id : String
+  label : String?
+  label_kind : String
+  shape : String?
+  metadata : ReadOnlyArray[(String, Json)]
+  classes : ReadOnlyArray[String]
+  spelling : String
+} derive(@debug.Debug)
+pub fn NodeDecl::equal(Self, Self) -> Bool
+pub fn NodeDecl::not_equal(Self, Self) -> Bool
+pub fn NodeDecl::to_repr(Self) -> @debug.Repr
+pub impl Eq for NodeDecl
+
+pub(all) struct Statement {
+  kind : StatementKind
+  spelling : String
+  span : @diagrams.Span
+} derive(@debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+pub impl Eq for Statement
+
+pub(all) enum StatementKind {
+  Nodes(ReadOnlyArray[NodeDecl])
+  Edges(Chain)
+  Subgraph(id~ : String, label~ : String)
+  End
+  Direction(String)
+  Title(String)
+  AccTitle(String)
+  AccDescription(String)
+  Metadata(keyword~ : String, text~ : String)
+  Comment(String)
+} derive(Eq, @debug.Debug)
+pub fn StatementKind::equal(Self, Self) -> Bool
+pub fn StatementKind::not_equal(Self, Self) -> Bool
+pub fn StatementKind::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

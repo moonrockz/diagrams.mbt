@@ -7,6 +7,7 @@ import {
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/swimlane",
 }
 
 // Values
@@ -21,6 +22,7 @@ pub struct Active {
   numerator : Int64
   denominator : Int64
   concurrent_groups : ReadOnlyArray[Int32]
+  reversed : Bool
 } derive(Eq, @debug.Debug)
 pub fn Active::equal(Self, Self) -> Bool
 pub fn Active::not_equal(Self, Self) -> Bool
@@ -36,9 +38,11 @@ pub struct Catalog {
   // private fields
 }
 pub fn Catalog::bpmn(@bpmn.Bpmn, limits? : Limits) -> CatalogResult
+pub fn Catalog::connection(Self, String) -> Occurrence?
 pub fn Catalog::flow(Self, String) -> Occurrence?
 pub fn Catalog::occurrence(Self, String) -> Occurrence?
 pub fn Catalog::sequence(@sequence.Sequence, view_id? : String, limits? : Limits) -> CatalogResult
+pub fn Catalog::swimlane(@swimlane.Swimlane, limits? : Limits) -> CatalogResult
 
 pub struct CatalogResult {
   catalog : Catalog?
@@ -75,6 +79,8 @@ pub(all) enum EdgeKind {
   SequenceFlow
   MessageFlow
   Order
+  SwimlaneFlow
+  Undirected
 } derive(Eq, @debug.Debug)
 pub fn EdgeKind::equal(Self, Self) -> Bool
 pub fn EdgeKind::not_equal(Self, Self) -> Bool
@@ -105,6 +111,7 @@ pub struct GraphEdge {
   source : String
   target : String
   occurrence : String?
+  reversed : Bool
 } derive(Eq, @debug.Debug)
 pub fn GraphEdge::equal(Self, Self) -> Bool
 pub fn GraphEdge::not_equal(Self, Self) -> Bool
@@ -116,6 +123,7 @@ pub struct GraphNode {
   kind : NodeKind
   occurrence : String?
   source_node : @bpmn.Node?
+  swimlane_node : @swimlane.Node?
 } derive(Eq, @debug.Debug)
 pub fn GraphNode::equal(Self, Self) -> Bool
 pub fn GraphNode::not_equal(Self, Self) -> Bool
@@ -149,6 +157,7 @@ pub fn Limits::valid(Self) -> Bool
 
 pub(all) enum Motion {
   Step(String, Int64)
+  OrientedStep(String, Int64, Bool)
   Serial(ReadOnlyArray[Motion])
   Parallel(ReadOnlyArray[Motion])
 } derive(Eq, @debug.Debug)
@@ -176,6 +185,9 @@ pub(all) enum NodeKind {
   FrameExit
   Start
   End
+  SwimlaneNode
+  SwimlaneGroup
+  SwimlaneLane
 } derive(Eq, @debug.Debug)
 pub fn NodeKind::equal(Self, Self) -> Bool
 pub fn NodeKind::not_equal(Self, Self) -> Bool
@@ -189,6 +201,7 @@ pub struct Occurrence {
   source : @bpmn.SourceIdentity?
   flow : @bpmn.Flow?
   message : @sequence.Message?
+  swimlane_connection : @swimlane.Connection?
 } derive(Eq, @debug.Debug)
 pub fn Occurrence::equal(Self, Self) -> Bool
 pub fn Occurrence::not_equal(Self, Self) -> Bool
@@ -197,6 +210,7 @@ pub fn Occurrence::to_repr(Self) -> @debug.Repr
 pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
+  Swimlane(@swimlane.FlowDirection)
 } derive(Eq, @debug.Debug)
 pub fn OccurrenceKind::equal(Self, Self) -> Bool
 pub fn OccurrenceKind::not_equal(Self, Self) -> Bool
@@ -256,6 +270,7 @@ pub struct Route {
   direction : Direction
   nodes : ReadOnlyArray[GraphNode]
   edges : ReadOnlyArray[GraphEdge]
+  reversed : ReadOnlyArray[Bool]
   // private fields
 } derive(Eq, @debug.Debug)
 pub fn Route::equal(Self, Self) -> Bool
@@ -287,6 +302,7 @@ pub struct ScheduledStep {
   start_ms : Int64
   duration_ms : Int64
   concurrent_groups : ReadOnlyArray[Int32]
+  reversed : Bool
 } derive(Eq, @debug.Debug)
 pub fn ScheduledStep::equal(Self, Self) -> Bool
 pub fn ScheduledStep::not_equal(Self, Self) -> Bool

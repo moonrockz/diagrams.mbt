@@ -1,0 +1,26 @@
+swimlane-beta
+subgraph A [First outer]
+direction LR
+direction TB
+X
+subgraph N [Nested first]
+Y
+end
+end
+subgraph B [Second]
+X
+subgraph N [Ignored nested]
+Z
+end
+end
+subgraph Self [Outer duplicate]
+subgraph Self [First completed duplicate]
+Q
+end
+R
+end
+subgraph "Anonymous outer"
+subgraph "Anonymous inner"
+U
+end
+end

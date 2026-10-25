@@ -1,8 +1,9 @@
 # diagrams.mbt
 
-diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence
-syntax and BPMN XML, renders script-free standalone SVG, and generates offline
-HTML with illustrative flow playback and bounded structural exploration.
+diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence and
+native `swimlane-beta` diagrams alongside BPMN XML. It renders script-free SVG
+and generates offline HTML with illustrative playback and bounded structural
+exploration.
 PlantUML, Draw.io and Graphviz DOT are planned. The library has no UI framework.
 
 `moonrockz/bpmn` is an independent portable document reader, writer, validator
@@ -60,9 +61,10 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
 | `mise run test:bpmn-consumer` | Verify a fresh reader-only BPMN consumer on all four targets |
-| `mise run test:animation` | Qualify stored offline BPMN/sequence players without a workspace/site rebuild |
+| `mise run test:animation` | Qualify stored offline BPMN/sequence/swimlane players without a workspace/site rebuild |
+| `mise run swimlane-corpus:reference` | Verify native syntax and semantics against locked test-only Mermaid 12.2.0 |
 | `mise run test:svg` | Check standalone SVG and adaptive themes in Chromium |
-| `mise run gallery` | Verify the renderer snapshots and write sequence/BPMN views, XML and offline players to `_gallery/index.html` |
+| `mise run gallery` | Verify the renderer snapshots and write sequence/BPMN/swimlane views, sources and offline players to `_gallery/index.html` |
 | `mise run build -- js --release` | Build a selected target in release mode |
 | `mise run test -- native` | Test a selected target |
 | `mise run format` | Format the workspace |
@@ -85,9 +87,9 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
 - `pkgs/diagrams-animated/` emits standalone HTML over pure motion plans and SVG scenes.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
-  as `@diagrams`, immutable sequence/BPMN models, motion/exploration and the renderer contract.
-- `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence diagrams.
-- `pkgs/diagrams-svg/` lays out sequence/BPMN models and writes standalone SVG and scene bindings.
+  as `@diagrams`, immutable sequence/BPMN/swimlane models, motion/exploration and the renderer contract.
+- `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence and swimlane diagrams.
+- `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane models and writes standalone SVG and scene bindings.
 - `tests/` contains the unpublished acceptance suites and frozen Mermaid/BPMN corpora.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
@@ -102,16 +104,17 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 ## Review the integrated output
 
 Run `mise run gallery`, then open `_gallery/index.html`. It includes source XML,
-supplied-DI and automatic BPMN views, fixed dark/light players and all 38 sequence
-examples. After qualification, `mise run gallery -- --existing-output` regenerates
+supplied-DI and automatic BPMN views, native swimlanes in all four directions,
+fixed dark/light players and all 38 sequence examples. After qualification, `mise run gallery -- --existing-output` regenerates
 from stored snapshots without compiling. `--check` compares existing artifacts;
 `--qualify` runs browser and link checks.
 `--site-assets` also refreshes the selected examples used by the docs site.
 Run `mise run test:animation` for offline player qualification.
 
 Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`
-case. Existing sequence SVG bytes remain unchanged. See the tested module guides
-and [BPMN and animation guide](docs/guides/bpmn-and-animation.md).
+and `Swimlane` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
+See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
+and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 
 ## Releases
 

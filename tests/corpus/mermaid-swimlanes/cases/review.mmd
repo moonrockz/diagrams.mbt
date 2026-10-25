@@ -1,0 +1,13 @@
+swimlane-beta LR
+subgraph Customer [Customer requests and corrections]
+ A([Request])
+end
+subgraph Support [Support review]
+ B{Review}
+ C((Complete))
+end
+A AB@<-->|review or return| B
+B BC@-->|approve| C
+C CA@---|related| A
+A parallel@-.->|expedite| B
+A constraint@~~~ C

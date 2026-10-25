@@ -25,17 +25,56 @@ pub fn render_mermaid_blocks(file : String, html : String) -> MermaidPass {
     guard body.find(mermaid_close) is Some(end) else { break }
     index += 1
     out.write_view(rest[:start])
-    let svg = @mermaid.render_mermaid(unescape(body[:end].to_owned())) catch {
-      error => {
+    let source = unescape(body[:end].to_owned())
+    let parsed = @native_mermaid.read_diagram(source)
+    let svg = if parsed.ast is Some(Swimlane(ast)) {
+      let converted = @native_mermaid.to_swimlane(ast)
+      let errors = parsed.diagnostics
+        .iter()
+        .concat(converted.diagnostics.iter())
+        .filter(d => d.severity == Error)
+        .to_array()
+      if !errors.is_empty() || converted.swimlane == None {
         problems.push(
-          @model.problem(file, "Mermaid diagram \{index} does not render: \{error}"),
+          @model.problem(
+            file,
+            "Mermaid diagram \{index} does not render: \{errors.iter().map(d => d.code+": "+d.message).to_array().join("; ")}",
+          ),
         )
         ""
+      } else {
+        let rendered = @svg.SvgRenderer::new(
+          id_prefix="site-swimlane-" + index.to_string(),
+        ).render(Swimlane(converted.swimlane.unwrap()))
+        match rendered.output {
+          Some(svg) => svg
+          None => {
+            problems.push(
+              @model.problem(
+                file,
+                "Mermaid diagram \{index} does not render: \{rendered.diagnostics.iter().map(d => d.code+": "+d.message).to_array().join("; ")}",
+              ),
+            )
+            ""
+          }
+        }
+      }
+    } else {
+      @mermaid.render_mermaid(source) catch {
+        error => {
+          problems.push(
+            @model.problem(
+              file,
+              "Mermaid diagram \{index} does not render: \{error}",
+            ),
+          )
+          ""
+        }
       }
     }
     out.write_string("<figure class=\"diagram\">\{svg}</figure>")
     rest = body[end + mermaid_close.length():]
   }
   out.write_view(rest)
-  { html: out.to_string(), problems }
+  { html: out.to_string(), problems, }
 }

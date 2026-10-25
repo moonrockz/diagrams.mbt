@@ -47,7 +47,8 @@ One authored sequence message at a particular position within nested frames.
 Repeated participants do not make occurrences identical.
 
 **Structural route**:
-A bounded directed path over selected drawn connections. Conditions and event
+A bounded path over selected drawn connections with an explicit traversal
+orientation for each connection. Conditions and event
 triggers do not establish whether a business process can follow that path.
 _Avoid_: execution path
 
@@ -62,3 +63,28 @@ and durations.
 **Canonical SVG**:
 The complete static SVG without motion, selection effects or viewer controls.
 A display scene preserves its geometry and adds separate motion bindings.
+
+
+**Swimlane**:
+A responsibility diagram with ordered lanes, steps and explicit connections.
+It describes ownership and interactions without asserting process execution.
+
+**Lane**:
+A named responsibility band. A top-level group in native Mermaid swimlane syntax
+is a lane; a group inside it remains a nested group.
+
+**Unowned step**:
+A step outside every responsibility lane. Its ownership is absent rather than
+assigned to a generated actor.
+
+**Connection occurrence**:
+One authored, identifiable connection. Parallel connections have different
+occurrences even when they share endpoints.
+
+**Traversal orientation**:
+The direction in which a structural route uses a connection's drawn path.
+Reversing traversal does not move or replace its endpoint markers.
+
+**Display anchor**:
+The visible outline used for an endpoint hidden by a collapsed group or lane.
+It does not replace the endpoint's identity in structural route queries.

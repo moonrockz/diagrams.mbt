@@ -10,6 +10,9 @@ that kind read into it and write from it. The packages are:
 | --- | --- |
 | `moonrockz/diagrams` | `Diagnostic`, `Severity`, `Span` and `Position`, which all modules use |
 | `moonrockz/diagrams/sequence` | The immutable `Sequence` model, links, render properties and link resolution |
+| `moonrockz/diagrams/bpmn` | Immutable process/collaboration views, graphical markers and ownership |
+| `moonrockz/diagrams/swimlane` | Immutable responsibility lanes, groups, shapes, connections and validation |
+| `moonrockz/diagrams/animation` | Source-bound catalogs, oriented routes and explicit-time motion |
 | `moonrockz/diagrams/render` | The `Renderer` trait, the `Diagram` enum and the `Rendered` result |
 
 `moonrockz/diagrams-mermaid` reads Mermaid into these models, and
@@ -46,7 +49,25 @@ contract. The Smithy and OpenRPC adapters belong to later changes.
 
 `Diagram` now includes `Bpmn(view)`. Callers with exhaustive enum matches must
 handle this case. The immutable visual values are in `moonrockz/diagrams/bpmn`;
-first-slice explicit-time motion plans are in `moonrockz/diagrams/animation`.
+source-bound motion plans and structural queries are in
+`moonrockz/diagrams/animation`.
 The independent BPMN document module does not depend on these packages. The
-BPMN implementation is in progress; module guides state each slice's coverage.
+module guides describe document coverage, view selection and rendering policies.
 Existing sequence models and static SVG bytes keep their current behavior.
+
+
+## Swimlane compatibility
+
+`Diagram::Swimlane(view)` adds responsibility-based diagrams alongside sequence
+and BPMN. Callers with exhaustive `Diagram` matches must add this case. The
+swimlane model depends on neither Mermaid spelling nor BPMN documents.
+Constructors copy ordered collections. Global direction is independent of each
+lane/group's local direction, and never reverses a connection's source/target.
+Nodes can be unowned; nested groups do not create extra lanes. Asset-dependent
+shape identities remain values and fail SVG rendering explicitly.
+
+The animation package adds typed swimlane occurrences and endpoint kinds.
+`Route.reversed` and `Motion::OrientedStep` retain traversal orientation while
+ordinary `Motion::Step` retains its forward-path meaning. Headless connections
+require `EdgeKind::Undirected` in structural route selection. Lane membership
+never adds a path. Existing sequence-specific Mermaid APIs remain unchanged.

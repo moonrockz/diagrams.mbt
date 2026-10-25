@@ -3,7 +3,9 @@ import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/animation",
-  "moonrockz/diagrams/bpmn" @bpmn,
+  "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams-svg/swimlane-layout" @swimlane_layout,
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg/layout",
   "moonrockz/diagrams-svg/bpmn-layout" @bpmn_layout,
@@ -18,4 +20,7 @@ import {
   "moonrockz/diagrams-svg" @svg,
   "moonrockz/diagrams-svg/layout",
   "moonrockz/diagrams-svg/theme",
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams-svg/swimlane-layout" @swimlane_layout,
 } for "test"

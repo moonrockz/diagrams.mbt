@@ -1,0 +1,201 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 571 453" width="571" height="453" role="img" data-diagram="swimlane" id="sl-ceed502fc59b63d0-diagram">
+  <title>Review</title>
+  <desc>Swimlane diagram with 2 responsibility lanes and 5 structural connections. Playback illustrates structure and does not execute a process.</desc>
+  <defs>
+    <style>
+svg#sl-ceed502fc59b63d0-diagram {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+@media (prefers-color-scheme: light) {
+  svg#sl-ceed502fc59b63d0-diagram {
+    --bg: #f4f5f7;
+    --text: #111827;
+    --muted: #5b6474;
+    --mask: #ffffff;
+    --arrow: #64748b;
+    --frontend-fill: rgba(34, 211, 238, 0.15);
+    --frontend-stroke: #0891b2;
+    --frontend-ink: #07718b;
+    --backend-fill: rgba(52, 211, 153, 0.18);
+    --backend-stroke: #059669;
+    --backend-ink: #047351;
+    --database-fill: rgba(167, 139, 250, 0.2);
+    --database-stroke: #7c3aed;
+    --database-ink: #7935ed;
+    --cloud-fill: rgba(251, 191, 36, 0.18);
+    --cloud-stroke: #d97706;
+    --cloud-ink: #9d5705;
+    --security-fill: rgba(251, 113, 133, 0.15);
+    --security-stroke: #e11d48;
+    --security-ink: #c61a3f;
+    --messagebus-fill: rgba(251, 146, 60, 0.15);
+    --messagebus-stroke: #ea580c;
+    --messagebus-ink: #b44409;
+    --external-fill: rgba(148, 163, 184, 0.18);
+    --external-stroke: #64748b;
+    --external-ink: #5a687c;
+  }
+}
+svg#sl-ceed502fc59b63d0-diagram[data-theme="dark"] {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+svg#sl-ceed502fc59b63d0-diagram[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #111827;
+  --muted: #5b6474;
+  --mask: #ffffff;
+  --arrow: #64748b;
+  --frontend-fill: rgba(34, 211, 238, 0.15);
+  --frontend-stroke: #0891b2;
+  --frontend-ink: #07718b;
+  --backend-fill: rgba(52, 211, 153, 0.18);
+  --backend-stroke: #059669;
+  --backend-ink: #047351;
+  --database-fill: rgba(167, 139, 250, 0.2);
+  --database-stroke: #7c3aed;
+  --database-ink: #7935ed;
+  --cloud-fill: rgba(251, 191, 36, 0.18);
+  --cloud-stroke: #d97706;
+  --cloud-ink: #9d5705;
+  --security-fill: rgba(251, 113, 133, 0.15);
+  --security-stroke: #e11d48;
+  --security-ink: #c61a3f;
+  --messagebus-fill: rgba(251, 146, 60, 0.15);
+  --messagebus-stroke: #ea580c;
+  --messagebus-ink: #b44409;
+  --external-fill: rgba(148, 163, 184, 0.18);
+  --external-stroke: #64748b;
+  --external-ink: #5a687c;
+}
+</style>
+    <marker id="sl-ceed502fc59b63d0-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-ceed502fc59b63d0-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-ceed502fc59b63d0-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="571" height="453" fill="var(--bg)"/>
+  <g class="swimlane-backgrounds">
+    <g class="swimlane-lane" data-swimlane-id="Support" data-shape="rect" data-expanded="true" data-lane="Support">
+      <rect class="swimlane-bounds" x="32" y="217" width="506.219" height="203.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 217 L538.219 217 L538.219 420.219 L32 420.219 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Support" x="104" y="242" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="104" y="242">Support review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-lane" data-swimlane-id="Customer" data-shape="rect" data-expanded="true" data-lane="Customer">
+      <rect class="swimlane-bounds" x="32" y="32" width="506.219" height="153" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 32 L538.219 32 L538.219 185 L32 185 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Customer" x="180" y="57" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="180" y="57">Customer requests and corrections</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-connections">
+    <g class="swimlane-connection" data-swimlane-id="AB" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M108.8 153 L108.8 165 L166 165 L166 262 L121.6 262 L121.6 281.4" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-start="url(#sl-ceed502fc59b63d0-sl-arrow)" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="98" y="184.5" width="136" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="AB" x="166" y="199.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="166" y="199.5">review or return</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="BC" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path d="M208 311 L380 311 L380 313.977 L394.658 313.977" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="262" y="282" width="64" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="BC" x="294" y="297" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="294" y="297">approve</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="CA" data-source="C" data-target="A" data-display-source="C" data-display-target="A">
+      <path d="M392 331.11 L380 331.11 L380 114.6 L175.337 114.6" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+      <rect x="348" y="193.855" width="64" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="CA" x="380" y="208.855" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="380" y="208.855">related</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="parallel" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M131.2 153 L131.2 165 L96 165 L96 223 L166 223 L166 262 L150.4 262 L150.4 281.4" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="185" y="212.5" width="72" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="parallel" x="221" y="227.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="221" y="227.5">expedite</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-nodes">
+    <g class="swimlane-node" data-swimlane-id="A" data-shape="stadium" data-expanded="true" data-lane="Customer" data-parent="Customer">
+      <rect class="swimlane-bounds" x="64" y="89" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M144 89 L150.243 89.615 L156.246 91.436 L161.778 94.393 L166.627 98.373 L170.607 103.222 L173.564 108.754 L175.385 114.757 L176 121 L176 121 L175.385 127.243 L173.564 133.246 L170.607 138.778 L166.627 143.627 L161.778 147.607 L156.246 150.564 L150.243 152.385 L144 153 L96 153 L89.757 152.385 L83.754 150.564 L78.222 147.607 L73.373 143.627 L69.393 138.778 L66.436 133.246 L64.615 127.243 L64 121 L64 121 L64.615 114.757 L66.436 108.754 L69.393 103.222 L73.373 98.373 L78.222 94.393 L83.754 91.436 L89.757 89.615 L96 89 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="A" x="120" y="125.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="120" y="125.5">Request</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="B" data-shape="diamond" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="64" y="274" width="144" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M136 274 L208 311 L136 348 L64 311 Z" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="B" x="136" y="315.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--cloud-ink)">
+        <tspan x="136" y="315.5">Review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="C" data-shape="circle" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="392" y="274" width="114.219" height="114.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M506.219 331.11 L505.944 336.707 L505.122 342.251 L503.76 347.688 L501.872 352.965 L499.476 358.031 L496.595 362.838 L493.256 367.34 L489.492 371.492 L485.34 375.256 L480.838 378.595 L476.031 381.476 L470.965 383.872 L465.688 385.76 L460.251 387.122 L454.707 387.944 L449.11 388.219 L443.512 387.944 L437.968 387.122 L432.532 385.76 L427.255 383.872 L422.188 381.476 L417.381 378.595 L412.88 375.256 L408.727 371.492 L404.963 367.34 L401.625 362.838 L398.743 358.031 L396.347 352.965 L394.459 347.688 L393.097 342.251 L392.275 336.707 L392 331.11 L392.275 325.512 L393.097 319.968 L394.459 314.532 L396.347 309.255 L398.743 304.188 L401.625 299.381 L404.963 294.88 L408.727 290.727 L412.88 286.963 L417.381 283.625 L422.188 280.743 L427.255 278.347 L432.532 276.459 L437.968 275.097 L443.512 274.275 L449.11 274 L454.707 274.275 L460.251 275.097 L465.688 276.459 L470.965 278.347 L476.031 280.743 L480.838 283.625 L485.34 286.963 L489.492 290.727 L493.256 294.88 L496.595 299.381 L499.476 304.188 L501.872 309.255 L503.76 314.532 L505.122 319.968 L505.944 325.512 L506.219 331.11 Z" fill="var(--messagebus-fill)" stroke="var(--messagebus-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="C" x="449.11" y="335.61" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--messagebus-ink)">
+        <tspan x="449.11" y="335.61">Complete</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 571 453" width="571" height="453" role="img" data-diagram="swimlane" id="sl-21eb688e1da779c5-diagram">
+  <title>Review</title>
+  <desc>Swimlane diagram with 2 responsibility lanes and 5 structural connections. Playback illustrates structure and does not execute a process.</desc>
+  <defs>
+    <marker id="sl-21eb688e1da779c5-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-21eb688e1da779c5-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-21eb688e1da779c5-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="571" height="453" fill="#f4f5f7"/>
+  <g class="swimlane-backgrounds">
+    <g class="swimlane-lane" data-swimlane-id="Support" data-shape="rect" data-expanded="true" data-lane="Support">
+      <rect class="swimlane-bounds" x="32" y="217" width="506.219" height="203.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 217 L538.219 217 L538.219 420.219 L32 420.219 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Support" x="104" y="242" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="104" y="242">Support review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-lane" data-swimlane-id="Customer" data-shape="rect" data-expanded="true" data-lane="Customer">
+      <rect class="swimlane-bounds" x="32" y="32" width="506.219" height="153" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 32 L538.219 32 L538.219 185 L32 185 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Customer" x="180" y="57" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="180" y="57">Customer requests and corrections</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-connections">
+    <g class="swimlane-connection" data-swimlane-id="AB" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M108.8 153 L108.8 165 L166 165 L166 262 L121.6 262 L121.6 281.4" fill="none" stroke="#64748b" stroke-width="1.5" marker-start="url(#sl-21eb688e1da779c5-sl-arrow)" marker-end="url(#sl-21eb688e1da779c5-sl-arrow)"/>
+      <rect x="98" y="184.5" width="136" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="swimlane-label" data-label-owner="AB" x="166" y="199.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="166" y="199.5">review or return</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="BC" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path d="M208 311 L380 311 L380 313.977 L394.658 313.977" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-21eb688e1da779c5-sl-arrow)"/>
+      <rect x="262" y="282" width="64" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="swimlane-label" data-label-owner="BC" x="294" y="297" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="294" y="297">approve</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="CA" data-source="C" data-target="A" data-display-source="C" data-display-target="A">
+      <path d="M392 331.11 L380 331.11 L380 114.6 L175.337 114.6" fill="none" stroke="#64748b" stroke-width="1.5"/>
+      <rect x="348" y="193.855" width="64" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="swimlane-label" data-label-owner="CA" x="380" y="208.855" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="380" y="208.855">related</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="parallel" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M131.2 153 L131.2 165 L96 165 L96 223 L166 223 L166 262 L150.4 262 L150.4 281.4" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sl-21eb688e1da779c5-sl-arrow)"/>
+      <rect x="185" y="212.5" width="72" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="swimlane-label" data-label-owner="parallel" x="221" y="227.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="221" y="227.5">expedite</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-nodes">
+    <g class="swimlane-node" data-swimlane-id="A" data-shape="stadium" data-expanded="true" data-lane="Customer" data-parent="Customer">
+      <rect class="swimlane-bounds" x="64" y="89" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M144 89 L150.243 89.615 L156.246 91.436 L161.778 94.393 L166.627 98.373 L170.607 103.222 L173.564 108.754 L175.385 114.757 L176 121 L176 121 L175.385 127.243 L173.564 133.246 L170.607 138.778 L166.627 143.627 L161.778 147.607 L156.246 150.564 L150.243 152.385 L144 153 L96 153 L89.757 152.385 L83.754 150.564 L78.222 147.607 L73.373 143.627 L69.393 138.778 L66.436 133.246 L64.615 127.243 L64 121 L64 121 L64.615 114.757 L66.436 108.754 L69.393 103.222 L73.373 98.373 L78.222 94.393 L83.754 91.436 L89.757 89.615 L96 89 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="A" x="120" y="125.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="120" y="125.5">Request</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="B" data-shape="diamond" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="64" y="274" width="144" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M136 274 L208 311 L136 348 L64 311 Z" fill="rgba(251, 191, 36, 0.18)" stroke="#d97706" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="B" x="136" y="315.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#9d5705">
+        <tspan x="136" y="315.5">Review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="C" data-shape="circle" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="392" y="274" width="114.219" height="114.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M506.219 331.11 L505.944 336.707 L505.122 342.251 L503.76 347.688 L501.872 352.965 L499.476 358.031 L496.595 362.838 L493.256 367.34 L489.492 371.492 L485.34 375.256 L480.838 378.595 L476.031 381.476 L470.965 383.872 L465.688 385.76 L460.251 387.122 L454.707 387.944 L449.11 388.219 L443.512 387.944 L437.968 387.122 L432.532 385.76 L427.255 383.872 L422.188 381.476 L417.381 378.595 L412.88 375.256 L408.727 371.492 L404.963 367.34 L401.625 362.838 L398.743 358.031 L396.347 352.965 L394.459 347.688 L393.097 342.251 L392.275 336.707 L392 331.11 L392.275 325.512 L393.097 319.968 L394.459 314.532 L396.347 309.255 L398.743 304.188 L401.625 299.381 L404.963 294.88 L408.727 290.727 L412.88 286.963 L417.381 283.625 L422.188 280.743 L427.255 278.347 L432.532 276.459 L437.968 275.097 L443.512 274.275 L449.11 274 L454.707 274.275 L460.251 275.097 L465.688 276.459 L470.965 278.347 L476.031 280.743 L480.838 283.625 L485.34 286.963 L489.492 290.727 L493.256 294.88 L496.595 299.381 L499.476 304.188 L501.872 309.255 L503.76 314.532 L505.122 319.968 L505.944 325.512 L506.219 331.11 Z" fill="rgba(251, 146, 60, 0.15)" stroke="#ea580c" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="C" x="449.11" y="335.61" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#b44409">
+        <tspan x="449.11" y="335.61">Complete</tspan>
+      </text>
+    </g>
+  </g>
+</svg>
