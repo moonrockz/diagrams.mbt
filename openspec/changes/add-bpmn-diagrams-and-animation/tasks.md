@@ -76,10 +76,10 @@ Depends on: group 5.
 Bead: diagrams-u42.7.
 Depends on: group 6.
 
-- [ ] 7.1 Add read-only node fields/children/paths and revision-bound handles across every document family and preserved XML; verify source order, optional locations and rejection of handles from another revision.
-- [ ] 7.2 Implement walk/fold/reduce/pruned reduction, typed visitors, pull/push events and cursor navigation using per-call stacks; verify normalized event equality, pruning/stop laws, reentrant walks and 10,000-level constructed documents.
-- [ ] 7.3 Add edge-kind/direction selection, bounded reachability and shortest directed routes; verify cycles, deterministic equal-length ties, disconnected targets, invalid endpoints and limit results distinct from unreachable.
-- [ ] 7.4 Document each traversal style and the containment/reference distinction; verify examples produce the same counts, identities and event order on all four targets.
+- [x] 7.1 Add read-only node fields/children/paths and revision-bound handles across every document family and preserved XML; verify source order, optional locations and rejection of handles from another revision.
+- [x] 7.2 Implement walk/fold/reduce/pruned reduction, typed visitors, pull/push events and cursor navigation using per-call stacks; verify normalized event equality, pruning/stop laws, reentrant walks and 10,000-level constructed documents.
+- [x] 7.3 Add edge-kind/direction selection, bounded reachability and shortest directed routes; verify cycles, deterministic equal-length ties, disconnected targets, invalid endpoints and limit results distinct from unreachable.
+- [x] 7.4 Document each traversal style and the containment/reference distinction; verify examples produce the same counts, identities and event order on all four targets.
 
 ## 8. Complete BPMN view conversion and the diagram model
 

@@ -192,7 +192,7 @@ pub fn validate_structure(document : Document, resource_id? : String, limits? : 
     }
     if !complete || stack.length() > remaining || element.children.length() > remaining-stack.length() { log.add(Structure,"bpmn/validation-node-limit","Validation node/attribute limit exceeded",Some(node),None); complete=false; break }
     records=limits.nodes-remaining
-    if element.kind.local_name().length() > limits.token_units || element.kind.namespace_uri().length() > limits.token_units || element.values.iter().any(a => a.raw_name.length() > limits.token_units || a.value.token().length() > limits.token_units) || element.contents.iter().any(c => match c { Text(s) | Comment(s) => s.length() > limits.token_units; ProcessingInstruction(target~,data~) => target.length() > limits.token_units || data.length() > limits.token_units; _ => false }) || element.bindings.iter().any(b => b.0.length() > limits.token_units || b.1.length() > limits.token_units) {
+    if !element_tokens_within(element,limits.token_units) || element.contents.iter().any(c => match c { Text(s) | Comment(s) => s.length() > limits.token_units; ProcessingInstruction(target~,data~) => target.length() > limits.token_units || data.length() > limits.token_units; _ => false }) {
       log.add(Structure,"bpmn/validation-token-limit","Validation token limit exceeded",Some(node),None); complete=false; break
     }
     nodes.push(node)

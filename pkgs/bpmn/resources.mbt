@@ -69,6 +69,9 @@ pub extend ResolvedSymbol with Eq::{equal, not_equal}
 pub extend ResolvedSymbol with @debug.Debug::{to_repr}
 
 ///|
+pub fn ResolvedSymbol::new(resource_id : String, name : ExpandedName) -> ResolvedSymbol { {resource_id,name} }
+
+///|
 pub(all) enum ReferenceResolution {
   Found(ResolvedElement)
   External(ResolvedSymbol)
@@ -120,6 +123,7 @@ priv struct ReferenceResolver {
   complete : Bool
   query_limit : Int
   token_limit : Int
+  external_resources : ReadOnlyArray[ExternalResource]
   namespaces : @namespaces.HashMap[String,ReadOnlyArray[Int]]
   symbols : @namespaces.HashMap[(String,String),ReadOnlyArray[ResolvedSymbol]]
 } derive(Debug)
@@ -166,7 +170,7 @@ fn make_resolver(documents : Array[AvailableDocument], external : Array[External
   let symbols : Map[(String,String),Array[ResolvedSymbol]] = Map([])
   for i in 0..<documents.length() { let uri=documents[i].namespace_uri; match namespaces.get(uri) { Some(xs) => xs.push(i); None => namespaces[uri]=[i] } }
   for r in external { for symbol in r.symbols { let key=(r.namespace_uri,symbol); let value=ResolvedSymbol::{resource_id:r.location,name:ExpandedName::new(r.namespace_uri,symbol)}; match symbols.get(key) { Some(xs) => xs.push(value); None => symbols[key]=[value] } } }
-  {documents:ReadOnlyArray::from_array(documents),complete,query_limit,token_limit,namespaces:@namespaces.HashMap::from_iter(namespaces.iter().map(p => (p.0,ReadOnlyArray::from_array(p.1)))),symbols:@namespaces.HashMap::from_iter(symbols.iter().map(p => (p.0,ReadOnlyArray::from_array(p.1))))}
+  {documents:ReadOnlyArray::from_array(documents),complete,query_limit,token_limit,external_resources:ReadOnlyArray::from_array(external),namespaces:@namespaces.HashMap::from_iter(namespaces.iter().map(p => (p.0,ReadOnlyArray::from_array(p.1)))),symbols:@namespaces.HashMap::from_iter(symbols.iter().map(p => (p.0,ReadOnlyArray::from_array(p.1))))}
 }
 
 ///|

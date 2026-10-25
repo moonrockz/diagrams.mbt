@@ -33,6 +33,7 @@ pub struct Element {
   priv context_parent : @namespaces.HashMap[String,String]?
   priv raw_name : String?
   priv origin : SourceOrigin?
+  priv content_spans : ReadOnlyArray[Span?]
 } derive(Debug)
 
 ///|
@@ -70,7 +71,7 @@ fn ordered_contents(contents : ArrayView[Content]) -> Array[Content] {
 }
 
 ///|
-fn make_element(kind : Kind, values : ArrayView[Attribute], contents : ArrayView[Content], bindings : ArrayView[(String,String)], value_type : ExpandedName?, text_value : Scalar?, span : Span?, context? : @namespaces.HashMap[String,String], captured_context? : Bool = false, parent_context? : @namespaces.HashMap[String,String], raw_name? : String, origin? : SourceOrigin) -> Element {
+fn make_element(kind : Kind, values : ArrayView[Attribute], contents : ArrayView[Content], bindings : ArrayView[(String,String)], value_type : ExpandedName?, text_value : Scalar?, span : Span?, context? : @namespaces.HashMap[String,String], captured_context? : Bool = false, parent_context? : @namespaces.HashMap[String,String], raw_name? : String, origin? : SourceOrigin, content_spans? : ArrayView[Span?] = []) -> Element {
   let context = context.unwrap_or_else(() => @namespaces.HashMap::from_iter(bindings.iter()))
   let contents = ordered_contents(contents)
   let children : Array[Element] = []
@@ -82,7 +83,7 @@ fn make_element(kind : Kind, values : ArrayView[Attribute], contents : ArrayView
   {
     kind, attributes: ReadOnlyArray::from_array(values.map(a => (a.raw_name,a.value.token()))),
     values: ReadOnlyArray::from_array(values), children: ReadOnlyArray::from_array(children),
-    contents: ReadOnlyArray::from_array(contents), content, bindings: ReadOnlyArray::from_array(bindings), value_type, text_value, span, context, captured_context, context_parent: parent_context, raw_name, origin,
+    contents: ReadOnlyArray::from_array(contents), content, bindings: ReadOnlyArray::from_array(bindings), value_type, text_value, span, context, captured_context, context_parent: parent_context, raw_name, origin, content_spans: if content_spans.length() == contents.length() { ReadOnlyArray::from_array(content_spans) } else { [] },
   }
 }
 
@@ -131,7 +132,7 @@ pub fn Element::scalar(self : Element, name : ExpandedName) -> Scalar? { self.va
 pub fn Element::with_attribute(self : Element, attribute : Attribute) -> Element {
   let values = self.values.iter().filter(a => if attribute.name is Some(n) { a.name != Some(n) } else { a.raw_name != attribute.raw_name }).to_array()
   values.push(attribute)
-  make_element(self.kind,values,self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context,captured_context=self.captured_context,parent_context?=self.context_parent,raw_name?=self.raw_name,origin?=self.origin)
+  make_element(self.kind,values,self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context,captured_context=self.captured_context,parent_context?=self.context_parent,raw_name?=self.raw_name,origin?=self.origin,content_spans=self.content_spans)
 }
 
 ///|
@@ -144,7 +145,7 @@ pub fn Element::with_contents(self : Element, contents : ArrayView[Content]) -> 
 
 ///|
 pub fn Element::with_kind(self : Element, kind : Kind) -> Element {
-  make_element(kind,annotated_values(kind,self.values,self.value_type),self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context,captured_context=self.captured_context,parent_context?=self.context_parent,raw_name?=self.raw_name,origin?=self.origin)
+  make_element(kind,annotated_values(kind,self.values,self.value_type),self.contents,self.bindings,self.value_type,self.text_value,None,context=self.context,captured_context=self.captured_context,parent_context?=self.context_parent,raw_name?=self.raw_name,origin?=self.origin,content_spans=self.content_spans)
 }
 
 ///|
@@ -231,7 +232,10 @@ pub extend Element with Eq::{equal, not_equal}
 ///|
 /// The typed document owns its root and ordered prolog/epilog data. Source maps
 /// remain separate from semantic equality and are absent on constructed values.
-pub struct Document { root : Element; prolog : ReadOnlyArray[Content]; epilog : ReadOnlyArray[Content] } derive(Eq, Debug)
+pub struct Document { root : Element; prolog : ReadOnlyArray[Content]; epilog : ReadOnlyArray[Content]; priv origin : SourceOrigin?; priv prolog_spans : ReadOnlyArray[Span?]; priv epilog_spans : ReadOnlyArray[Span?] } derive(Debug)
+
+///|
+pub impl Eq for Document with equal(a,b) { a.root == b.root && a.prolog == b.prolog && a.epilog == b.epilog }
 
 ///|
 pub extend Document with Eq::{equal, not_equal}
@@ -241,7 +245,7 @@ pub extend Document with @debug.Debug::{to_repr}
 
 ///|
 pub fn Document::new(root : Element, prolog? : ArrayView[Content] = [], epilog? : ArrayView[Content] = []) -> Document {
-  { root, prolog: ReadOnlyArray::from_array(prolog.filter(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => true })), epilog: ReadOnlyArray::from_array(epilog.filter(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => true })) }
+  { root, origin:None, prolog_spans:[],epilog_spans:[], prolog: ReadOnlyArray::from_array(prolog.filter(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => true })), epilog: ReadOnlyArray::from_array(epilog.filter(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => true })) }
 }
 
 ///|
