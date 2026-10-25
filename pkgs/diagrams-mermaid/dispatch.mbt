@@ -53,21 +53,36 @@ pub fn read_diagram(
   let mut front = false
   let mut directive = false
   for line in source.split("\n") {
-    let text = @swimlane_syntax.trim_space(line.to_owned())
-    if text == "---" {
-      front = !front
-      continue
+    let mut text = @swimlane_syntax.trim_space(line.to_owned())
+    if !directive {
+      if text == "---" {
+        front = !front
+        continue
+      }
+      if front || text.is_empty() {
+        continue
+      }
     }
-    if front || text.is_empty() {
-      continue
-    }
-    if text.has_prefix("%%{") {
+    // A directive consumes only through its closing delimiter. Keep scanning
+    // the suffix, which may contain another directive or the diagram header.
+    let mut remainder = text[:]
+    while directive || remainder.has_prefix("%%{") {
       directive = true
+      guard remainder.find("}%%") is Some(close) else { break }
+      directive = false
+      remainder = remainder[close + 3:]
+      let mut whitespace = 0
+      while whitespace < remainder.length() &&
+        @swimlane_syntax.is_space(remainder.at(whitespace).to_int()) {
+        whitespace += 1
+      }
+      remainder = remainder[whitespace:]
     }
     if directive {
-      if text.contains("}%%") {
-        directive = false
-      }
+      continue
+    }
+    text = remainder.to_owned()
+    if text.is_empty() {
       continue
     }
     if text.has_prefix("%%") {

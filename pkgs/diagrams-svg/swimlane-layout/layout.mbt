@@ -284,7 +284,9 @@ pub fn layout(
     let b = anchor(edge.target)
     // A hidden internal edge has no visible occurrence. Boundary handoffs retain
     // their logical endpoints in the connection, with a separate display anchor.
-    if !visible[a] || !visible[b] || (a == b && edge.source != edge.target) {
+    if !visible[a] ||
+      !visible[b] ||
+      (a == b && (!visible[ids[edge.source]] || !visible[ids[edge.target]])) {
       continue
     }
     selected.push((i, a, b))

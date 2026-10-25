@@ -338,3 +338,79 @@ test "text projection preserves operators and quote-aware HTML remains inert" {
   assert_eq(placed(g, "B").label.unwrap().text, "x < y > z")
   assert_eq(g.connections[0].label.unwrap().text, "1 < 2 ** 3")
 }
+
+///|
+test "hidden self loops stay inside collapsed groups and lanes" {
+  for direction in [@model.Direction::TB, BT, LR, RL] {
+    let group = @model.Swimlane::new(
+      "hidden group loop",
+      [@model.Node::new("Hidden", lane="L", groups=["G"])],
+      [@model.Connection::new("hidden-loop", "Hidden", "Hidden")],
+      lanes=[@model.Lane::new("L")],
+      groups=[@model.Group::new("G", lane="L", expanded=false)],
+      direction~,
+    )
+    let lane = @model.Swimlane::new(
+      "hidden lane loops",
+      [@model.Node::new("Hidden", lane="L", groups=["G"])],
+      [
+        @model.Connection::new("hidden-node-loop", "Hidden", "Hidden"),
+        @model.Connection::new("hidden-group-loop", "G", "G"),
+      ],
+      lanes=[@model.Lane::new("L", expanded=false)],
+      groups=[@model.Group::new("G", lane="L")],
+      direction~,
+    )
+    for view in [group, lane] {
+      let geometry = clean(view)
+      assert_eq(geometry.connections.length(), 0, msg=view.id)
+      assert_false(geometry.shapes.iter().any(s => s.id == "Hidden"))
+    }
+  }
+}
+
+///|
+test "visible node and collapsed boundary self loops remain source declared" {
+  for direction in [@model.Direction::TB, BT, LR, RL] {
+    let view = @model.Swimlane::new(
+      "visible loops and boundary handoff",
+      [
+        @model.Node::new("Hidden", lane="L", groups=["G"]),
+        @model.Node::new("Visible", lane="L"),
+      ],
+      [
+        @model.Connection::new("hidden-loop", "Hidden", "Hidden"),
+        @model.Connection::new("group-loop", "G", "G"),
+        @model.Connection::new("visible-loop", "Visible", "Visible"),
+        @model.Connection::new("handoff", "Hidden", "Visible"),
+      ],
+      lanes=[@model.Lane::new("L")],
+      groups=[@model.Group::new("G", lane="L", expanded=false)],
+      direction~,
+    )
+    let geometry = clean(view)
+    assert_eq(geometry.connections.map(edge => edge.connection.id), [
+      "group-loop", "visible-loop", "handoff",
+    ])
+    assert_eq(geometry.connections[0].source, "G")
+    assert_eq(geometry.connections[0].target, "G")
+    assert_eq(geometry.connections[1].source, "Visible")
+    assert_eq(geometry.connections[1].target, "Visible")
+    assert_eq(geometry.connections[2].source, "G")
+    assert_eq(geometry.connections[2].connection.source, "Hidden")
+    assert_eq(geometry.connections[2].target, "Visible")
+  }
+  let lane = @model.Swimlane::new(
+    "visible collapsed lane loop",
+    [@model.Node::new("Hidden", lane="L")],
+    [
+      @model.Connection::new("hidden-loop", "Hidden", "Hidden"),
+      @model.Connection::new("lane-loop", "L", "L"),
+    ],
+    lanes=[@model.Lane::new("L", expanded=false)],
+  )
+  let geometry = clean(lane)
+  assert_eq(geometry.connections.map(edge => edge.connection.id), ["lane-loop"])
+  assert_eq(geometry.connections[0].source, "L")
+  assert_eq(geometry.connections[0].target, "L")
+}
