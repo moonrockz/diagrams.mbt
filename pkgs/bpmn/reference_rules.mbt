@@ -1,0 +1,141 @@
+///|
+/// Semantic reference targets supplement the frozen XSD's QName/IDREF fields.
+/// Targets follow the BPMN 2.0.2 metamodel; external language symbols are supplied
+/// explicitly and are never parsed or executed by this module.
+pub(all) enum ReferenceTarget { Bpmn(TypeId); AnyElement; InteractionNode; ItemAwareElement; Plane; External } derive(Eq, Debug)
+
+///|
+pub extend ReferenceTarget with Eq::{equal, not_equal}
+
+///|
+pub extend ReferenceTarget with @debug.Debug::{to_repr}
+
+///|
+pub struct ReferenceRule { owner : TypeId; field : ExpandedName; kind : SchemaFieldKind; target : ReferenceTarget } derive(Eq, Debug)
+
+///|
+pub extend ReferenceRule with Eq::{equal, not_equal}
+
+///|
+pub extend ReferenceRule with @debug.Debug::{to_repr}
+
+///|
+let model_namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL"
+
+///|
+pub let reference_rules : ReadOnlyArray[ReferenceRule] = [
+  {owner:TypeId::Activity,field:ExpandedName::new("","default"),kind:Attribute,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::Association,field:ExpandedName::new("","sourceRef"),kind:Attribute,target:Bpmn(TypeId::BaseElement)},
+  {owner:TypeId::Association,field:ExpandedName::new("","targetRef"),kind:Attribute,target:Bpmn(TypeId::BaseElement)},
+  {owner:TypeId::BoundaryEvent,field:ExpandedName::new("","attachedToRef"),kind:Attribute,target:Bpmn(TypeId::Activity)},
+  {owner:TypeId::CallableElement,field:ExpandedName::new(model_namespace,"supportedInterfaceRef"),kind:Child,target:Bpmn(TypeId::Interface)},
+  {owner:TypeId::CallActivity,field:ExpandedName::new("","calledElement"),kind:Attribute,target:Bpmn(TypeId::CallableElement)},
+  {owner:TypeId::CallChoreography,field:ExpandedName::new("","calledChoreographyRef"),kind:Attribute,target:Bpmn(TypeId::Choreography)},
+  {owner:TypeId::CallConversation,field:ExpandedName::new("","calledCollaborationRef"),kind:Attribute,target:Bpmn(TypeId::Collaboration)},
+  {owner:TypeId::CatchEvent,field:ExpandedName::new(model_namespace,"eventDefinitionRef"),kind:Child,target:Bpmn(TypeId::EventDefinition)},
+  {owner:TypeId::ChoreographyActivity,field:ExpandedName::new(model_namespace,"participantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::ChoreographyActivity,field:ExpandedName::new("","initiatingParticipantRef"),kind:Attribute,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::ChoreographyTask,field:ExpandedName::new(model_namespace,"messageFlowRef"),kind:Child,target:Bpmn(TypeId::MessageFlow)},
+  {owner:TypeId::Collaboration,field:ExpandedName::new(model_namespace,"choreographyRef"),kind:Child,target:Bpmn(TypeId::Choreography)},
+  {owner:TypeId::CompensateEventDefinition,field:ExpandedName::new("","activityRef"),kind:Attribute,target:Bpmn(TypeId::Activity)},
+  {owner:TypeId::ComplexGateway,field:ExpandedName::new("","default"),kind:Attribute,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::ConversationAssociation,field:ExpandedName::new("","innerConversationNodeRef"),kind:Attribute,target:Bpmn(TypeId::ConversationNode)},
+  {owner:TypeId::ConversationAssociation,field:ExpandedName::new("","outerConversationNodeRef"),kind:Attribute,target:Bpmn(TypeId::ConversationNode)},
+  {owner:TypeId::ConversationLink,field:ExpandedName::new("","sourceRef"),kind:Attribute,target:InteractionNode},
+  {owner:TypeId::ConversationLink,field:ExpandedName::new("","targetRef"),kind:Attribute,target:InteractionNode},
+  {owner:TypeId::ConversationNode,field:ExpandedName::new(model_namespace,"participantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::ConversationNode,field:ExpandedName::new(model_namespace,"messageFlowRef"),kind:Child,target:Bpmn(TypeId::MessageFlow)},
+  {owner:TypeId::CorrelationKey,field:ExpandedName::new(model_namespace,"correlationPropertyRef"),kind:Child,target:Bpmn(TypeId::CorrelationProperty)},
+  {owner:TypeId::CorrelationProperty,field:ExpandedName::new("","type"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::CorrelationPropertyBinding,field:ExpandedName::new("","correlationPropertyRef"),kind:Attribute,target:Bpmn(TypeId::CorrelationProperty)},
+  {owner:TypeId::CorrelationPropertyRetrievalExpression,field:ExpandedName::new("","messageRef"),kind:Attribute,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::CorrelationSubscription,field:ExpandedName::new("","correlationKeyRef"),kind:Attribute,target:Bpmn(TypeId::CorrelationKey)},
+  {owner:TypeId::DataAssociation,field:ExpandedName::new(model_namespace,"sourceRef"),kind:Child,target:ItemAwareElement},
+  {owner:TypeId::DataAssociation,field:ExpandedName::new(model_namespace,"targetRef"),kind:Child,target:ItemAwareElement},
+  {owner:TypeId::DataInput,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataObject,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataObjectReference,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataObjectReference,field:ExpandedName::new("","dataObjectRef"),kind:Attribute,target:Bpmn(TypeId::DataObject)},
+  {owner:TypeId::DataOutput,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataStore,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataStoreReference,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::DataStoreReference,field:ExpandedName::new("","dataStoreRef"),kind:Attribute,target:Bpmn(TypeId::DataStore)},
+  {owner:TypeId::Error,field:ExpandedName::new("","structureRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::ErrorEventDefinition,field:ExpandedName::new("","errorRef"),kind:Attribute,target:Bpmn(TypeId::Error)},
+  {owner:TypeId::Escalation,field:ExpandedName::new("","structureRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::EscalationEventDefinition,field:ExpandedName::new("","escalationRef"),kind:Attribute,target:Bpmn(TypeId::Escalation)},
+  {owner:TypeId::ExclusiveGateway,field:ExpandedName::new("","default"),kind:Attribute,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::Extension,field:ExpandedName::new("","definition"),kind:Attribute,target:External},
+  {owner:TypeId::FlowElement,field:ExpandedName::new(model_namespace,"categoryValueRef"),kind:Child,target:Bpmn(TypeId::CategoryValue)},
+  {owner:TypeId::FlowNode,field:ExpandedName::new(model_namespace,"incoming"),kind:Child,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::FlowNode,field:ExpandedName::new(model_namespace,"outgoing"),kind:Child,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::FormalExpression,field:ExpandedName::new("","evaluatesToTypeRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::GlobalChoreographyTask,field:ExpandedName::new("","initiatingParticipantRef"),kind:Attribute,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::Group,field:ExpandedName::new("","categoryValueRef"),kind:Attribute,target:Bpmn(TypeId::CategoryValue)},
+  {owner:TypeId::InclusiveGateway,field:ExpandedName::new("","default"),kind:Attribute,target:Bpmn(TypeId::SequenceFlow)},
+  {owner:TypeId::InputSet,field:ExpandedName::new(model_namespace,"dataInputRefs"),kind:Child,target:Bpmn(TypeId::DataInput)},
+  {owner:TypeId::InputSet,field:ExpandedName::new(model_namespace,"optionalInputRefs"),kind:Child,target:Bpmn(TypeId::DataInput)},
+  {owner:TypeId::InputSet,field:ExpandedName::new(model_namespace,"whileExecutingInputRefs"),kind:Child,target:Bpmn(TypeId::DataInput)},
+  {owner:TypeId::InputSet,field:ExpandedName::new(model_namespace,"outputSetRefs"),kind:Child,target:Bpmn(TypeId::OutputSet)},
+  {owner:TypeId::Interface,field:ExpandedName::new("","implementationRef"),kind:Attribute,target:AnyElement},
+  {owner:TypeId::InputOutputBinding,field:ExpandedName::new("","operationRef"),kind:Attribute,target:Bpmn(TypeId::Operation)},
+  {owner:TypeId::InputOutputBinding,field:ExpandedName::new("","inputDataRef"),kind:Attribute,target:Bpmn(TypeId::InputSet)},
+  {owner:TypeId::InputOutputBinding,field:ExpandedName::new("","outputDataRef"),kind:Attribute,target:Bpmn(TypeId::OutputSet)},
+  {owner:TypeId::ItemDefinition,field:ExpandedName::new("","structureRef"),kind:Attribute,target:AnyElement},
+  {owner:TypeId::Lane,field:ExpandedName::new(model_namespace,"flowNodeRef"),kind:Child,target:Bpmn(TypeId::FlowNode)},
+  {owner:TypeId::Lane,field:ExpandedName::new("","partitionElementRef"),kind:Attribute,target:Bpmn(TypeId::BaseElement)},
+  {owner:TypeId::LinkEventDefinition,field:ExpandedName::new(model_namespace,"source"),kind:Child,target:Bpmn(TypeId::LinkEventDefinition)},
+  {owner:TypeId::LinkEventDefinition,field:ExpandedName::new(model_namespace,"target"),kind:Child,target:Bpmn(TypeId::LinkEventDefinition)},
+  {owner:TypeId::Message,field:ExpandedName::new("","itemRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::MessageEventDefinition,field:ExpandedName::new(model_namespace,"operationRef"),kind:Child,target:Bpmn(TypeId::Operation)},
+  {owner:TypeId::MessageEventDefinition,field:ExpandedName::new("","messageRef"),kind:Attribute,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::MessageFlow,field:ExpandedName::new("","sourceRef"),kind:Attribute,target:InteractionNode},
+  {owner:TypeId::MessageFlow,field:ExpandedName::new("","targetRef"),kind:Attribute,target:InteractionNode},
+  {owner:TypeId::MessageFlow,field:ExpandedName::new("","messageRef"),kind:Attribute,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::MessageFlowAssociation,field:ExpandedName::new("","innerMessageFlowRef"),kind:Attribute,target:Bpmn(TypeId::MessageFlow)},
+  {owner:TypeId::MessageFlowAssociation,field:ExpandedName::new("","outerMessageFlowRef"),kind:Attribute,target:Bpmn(TypeId::MessageFlow)},
+  {owner:TypeId::MultiInstanceLoopCharacteristics,field:ExpandedName::new(model_namespace,"loopDataInputRef"),kind:Child,target:ItemAwareElement},
+  {owner:TypeId::MultiInstanceLoopCharacteristics,field:ExpandedName::new(model_namespace,"loopDataOutputRef"),kind:Child,target:ItemAwareElement},
+  {owner:TypeId::MultiInstanceLoopCharacteristics,field:ExpandedName::new("","oneBehaviorEventRef"),kind:Attribute,target:Bpmn(TypeId::EventDefinition)},
+  {owner:TypeId::MultiInstanceLoopCharacteristics,field:ExpandedName::new("","noneBehaviorEventRef"),kind:Attribute,target:Bpmn(TypeId::EventDefinition)},
+  {owner:TypeId::Operation,field:ExpandedName::new(model_namespace,"inMessageRef"),kind:Child,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::Operation,field:ExpandedName::new(model_namespace,"outMessageRef"),kind:Child,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::Operation,field:ExpandedName::new(model_namespace,"errorRef"),kind:Child,target:Bpmn(TypeId::Error)},
+  {owner:TypeId::Operation,field:ExpandedName::new("","implementationRef"),kind:Attribute,target:AnyElement},
+  {owner:TypeId::OutputSet,field:ExpandedName::new(model_namespace,"dataOutputRefs"),kind:Child,target:Bpmn(TypeId::DataOutput)},
+  {owner:TypeId::OutputSet,field:ExpandedName::new(model_namespace,"optionalOutputRefs"),kind:Child,target:Bpmn(TypeId::DataOutput)},
+  {owner:TypeId::OutputSet,field:ExpandedName::new(model_namespace,"whileExecutingOutputRefs"),kind:Child,target:Bpmn(TypeId::DataOutput)},
+  {owner:TypeId::OutputSet,field:ExpandedName::new(model_namespace,"inputSetRefs"),kind:Child,target:Bpmn(TypeId::InputSet)},
+  {owner:TypeId::Participant,field:ExpandedName::new(model_namespace,"interfaceRef"),kind:Child,target:Bpmn(TypeId::Interface)},
+  {owner:TypeId::Participant,field:ExpandedName::new(model_namespace,"endPointRef"),kind:Child,target:Bpmn(TypeId::EndPoint)},
+  {owner:TypeId::Participant,field:ExpandedName::new("","processRef"),kind:Attribute,target:Bpmn(TypeId::Process)},
+  {owner:TypeId::ParticipantAssociation,field:ExpandedName::new(model_namespace,"innerParticipantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::ParticipantAssociation,field:ExpandedName::new(model_namespace,"outerParticipantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::PartnerEntity,field:ExpandedName::new(model_namespace,"participantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::PartnerRole,field:ExpandedName::new(model_namespace,"participantRef"),kind:Child,target:Bpmn(TypeId::Participant)},
+  {owner:TypeId::Process,field:ExpandedName::new(model_namespace,"supports"),kind:Child,target:Bpmn(TypeId::Process)},
+  {owner:TypeId::Process,field:ExpandedName::new("","definitionalCollaborationRef"),kind:Attribute,target:Bpmn(TypeId::Collaboration)},
+  {owner:TypeId::Property,field:ExpandedName::new("","itemSubjectRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::ReceiveTask,field:ExpandedName::new("","messageRef"),kind:Attribute,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::ReceiveTask,field:ExpandedName::new("","operationRef"),kind:Attribute,target:Bpmn(TypeId::Operation)},
+  {owner:TypeId::Relationship,field:ExpandedName::new(model_namespace,"source"),kind:Child,target:AnyElement},
+  {owner:TypeId::Relationship,field:ExpandedName::new(model_namespace,"target"),kind:Child,target:AnyElement},
+  {owner:TypeId::ResourceParameter,field:ExpandedName::new("","type"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::ResourceParameterBinding,field:ExpandedName::new("","parameterRef"),kind:Attribute,target:Bpmn(TypeId::ResourceParameter)},
+  {owner:TypeId::ResourceRole,field:ExpandedName::new(model_namespace,"resourceRef"),kind:Child,target:Bpmn(TypeId::Resource)},
+  {owner:TypeId::SendTask,field:ExpandedName::new("","messageRef"),kind:Attribute,target:Bpmn(TypeId::Message)},
+  {owner:TypeId::SendTask,field:ExpandedName::new("","operationRef"),kind:Attribute,target:Bpmn(TypeId::Operation)},
+  {owner:TypeId::SequenceFlow,field:ExpandedName::new("","sourceRef"),kind:Attribute,target:Bpmn(TypeId::FlowNode)},
+  {owner:TypeId::SequenceFlow,field:ExpandedName::new("","targetRef"),kind:Attribute,target:Bpmn(TypeId::FlowNode)},
+  {owner:TypeId::ServiceTask,field:ExpandedName::new("","operationRef"),kind:Attribute,target:Bpmn(TypeId::Operation)},
+  {owner:TypeId::Signal,field:ExpandedName::new("","structureRef"),kind:Attribute,target:Bpmn(TypeId::ItemDefinition)},
+  {owner:TypeId::SignalEventDefinition,field:ExpandedName::new("","signalRef"),kind:Attribute,target:Bpmn(TypeId::Signal)},
+  {owner:TypeId::ThrowEvent,field:ExpandedName::new(model_namespace,"eventDefinitionRef"),kind:Child,target:Bpmn(TypeId::EventDefinition)},
+  {owner:TypeId::BpmnBPMNPlane,field:ExpandedName::new("","bpmnElement"),kind:Attribute,target:Plane},
+  {owner:TypeId::BpmnBPMNEdge,field:ExpandedName::new("","bpmnElement"),kind:Attribute,target:Bpmn(TypeId::BaseElement)},
+  {owner:TypeId::BpmnBPMNEdge,field:ExpandedName::new("","sourceElement"),kind:Attribute,target:Bpmn(TypeId::DiDiagramElement)},
+  {owner:TypeId::BpmnBPMNEdge,field:ExpandedName::new("","targetElement"),kind:Attribute,target:Bpmn(TypeId::DiDiagramElement)},
+  {owner:TypeId::BpmnBPMNShape,field:ExpandedName::new("","bpmnElement"),kind:Attribute,target:Bpmn(TypeId::BaseElement)},
+  {owner:TypeId::BpmnBPMNShape,field:ExpandedName::new("","choreographyActivityShape"),kind:Attribute,target:Bpmn(TypeId::BpmnBPMNShape)},
+  {owner:TypeId::BpmnBPMNLabel,field:ExpandedName::new("","labelStyle"),kind:Attribute,target:Bpmn(TypeId::BpmnBPMNLabelStyle)},
+]

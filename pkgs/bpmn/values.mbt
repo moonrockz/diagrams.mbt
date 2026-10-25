@@ -164,6 +164,7 @@ pub struct Attribute {
   raw_name : String
   value : Scalar
   span : Span?
+  priv origin : SourceOrigin?
 } derive(Eq, Debug)
 
 ///|
@@ -175,7 +176,7 @@ pub extend Attribute with @debug.Debug::{to_repr}
 ///|
 pub fn Attribute::new(name : ExpandedName, value : Scalar) -> Attribute {
   let prefix = namespace_prefix(name.namespace_uri)
-  { name: Some(name), raw_name: if prefix == "" { name.local_name } else { prefix+":"+name.local_name }, value, span: None }
+  { name: Some(name), raw_name: if prefix == "" { name.local_name } else { prefix+":"+name.local_name }, value, span: None, origin: None }
 }
 
 ///|

@@ -622,30 +622,8 @@
         }
       },
       "children": [
-        "#Owner/bpmn:ResourceAssignmentExpression[0]",
         "#Owner/bpmn:ResourceParameterBinding[0]"
       ]
-    },
-    {
-      "key": "#Owner/bpmn:ResourceAssignmentExpression[0]",
-      "parent": "#Owner",
-      "type": "bpmn:ResourceAssignmentExpression",
-      "fields": {},
-      "children": [
-        "#Owner/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]"
-      ]
-    },
-    {
-      "key": "#Owner/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]",
-      "parent": "#Owner/bpmn:ResourceAssignmentExpression[0]",
-      "type": "bpmn:FormalExpression",
-      "fields": {
-        "@body": {
-          "kind": "string",
-          "value": "reviewers"
-        }
-      },
-      "children": []
     },
     {
       "key": "#Owner/bpmn:ResourceParameterBinding[0]",
@@ -671,6 +649,45 @@
         "@body": {
           "kind": "string",
           "value": "team"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#OwnerAssignment",
+      "parent": "#Review",
+      "type": "bpmn:PotentialOwner",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "OwnerAssignment"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Assigned reviewers"
+        }
+      },
+      "children": [
+        "#OwnerAssignment/bpmn:ResourceAssignmentExpression[0]"
+      ]
+    },
+    {
+      "key": "#OwnerAssignment/bpmn:ResourceAssignmentExpression[0]",
+      "parent": "#OwnerAssignment",
+      "type": "bpmn:ResourceAssignmentExpression",
+      "fields": {},
+      "children": [
+        "#OwnerAssignment/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#OwnerAssignment/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]",
+      "parent": "#OwnerAssignment/bpmn:ResourceAssignmentExpression[0]",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "reviewers"
         }
       },
       "children": []
@@ -815,7 +832,8 @@
         "#DataIn",
         "#DataOut",
         "#IO",
-        "#Owner"
+        "#Owner",
+        "#OwnerAssignment"
       ]
     },
     {
@@ -993,5 +1011,5 @@
       "children": []
     }
   ],
-  "source_sha256": "3d3426d921b29050838d02f5679258da24848cfecf58cf76ae9a638a962d5feb"
+  "source_sha256": "9ba8f83c8d12668f0bcaa56adf2761e3e19c7fa17773b753ad9d81d985467230"
 }

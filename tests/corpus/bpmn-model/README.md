@@ -3,6 +3,9 @@
 These project-authored BPMN documents and their reference JSON are unpublished
 test inputs under the repository's Apache-2.0 license. They are not OMG examples.
 The normative inputs remain the five unchanged OMG schemas in `../bpmn-2.0.2`.
+All six BPMN fixtures, including the original minimal document, pass those XSDs
+and the portable structural validator. Resource-role coverage uses separate
+owners for the resource-reference and assignment-expression choice branches.
 
 - `activities.bpmn` exercises generic and specialized tasks, global tasks,
   subprocesses, ad-hoc and transaction scopes, calls, standard/multi-instance

@@ -42,7 +42,8 @@ priv struct PreparedElement {
 }
 
 ///|
-fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], maximum : Int) -> Document? {
+fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], maximum : Int, source : String) -> Document? {
+  let origin=SourceOrigin::{ source, map }
   let prepared : Array[PreparedElement?] = Array::make(tree.nodes.length(),None)
   let lowered : Array[Element?] = Array::make(tree.nodes.length(),None)
   let mut exhausted = false
@@ -106,7 +107,7 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
           report("bpmn/unsupported-attribute","Unknown standard attribute is retained",attr.span)
         }
       }
-      values.push({ name:Some(attr.name),raw_name:attr.raw_name,value,span:Some(attr.span) })
+      values.push({ name:Some(attr.name),raw_name:attr.raw_name,value,span:Some(attr.span),origin:Some(origin) })
       if attr.name.namespace_uri == "http://www.w3.org/XML/1998/namespace" && attr.name.local_name == "space" {
         if attr.value == "preserve" { preserve_space=true } else if attr.value == "default" { preserve_space=false }
       }
@@ -143,7 +144,7 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
       } }
     }
     flush()
-    lowered[i]=Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span),context=p.context,captured_context=true,parent_context?=p.context_parent,raw_name=node.raw_name))
+    lowered[i]=Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span),context=p.context,captured_context=true,parent_context?=p.context_parent,raw_name=node.raw_name,origin~))
   }
   let roots=tree.nodes[0].children.filter(i => tree.nodes[i].kind == Element).iter().to_array()
   guard roots.length() == 1 && lowered[roots[0]] is Some(root) && root.kind.name() == Kind::Definitions.name() else {
