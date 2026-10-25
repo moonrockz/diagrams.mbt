@@ -138,3 +138,27 @@ test "combined graph diagnostics cannot overflow while exposing a complete graph
   assert_true(result.graph is None)
   assert_eq(result.diagnostics[0].code,"bpmn/validation-diagnostic-limit")
 }
+
+///|
+test "invalid child reference representations remain graph failures on their owner" {
+  let parsed=validation_document("<b:process><b:task id='A'><b:incoming>F</b:incoming></b:task><b:task id='B'/><b:sequenceFlow id='F' sourceRef='B' targetRef='A'/></b:process>")
+  let incoming=parsed.root.children[0].children[0].children[0]
+  let invalid=@bpmn.Element::from_values(Incoming,contents=[Text("F")],text_value=Text("F"))
+  let malformed=incoming.with_contents([Text("F"),Element(@bpmn.Task::new().element)])
+  for child in [invalid,malformed] {
+    let process=parsed.root.children[0]
+    let task=process.children[0].with_contents([Element(child)])
+    let doc=@bpmn.Document::new(parsed.root.with_contents([Element(process.with_contents([Element(task),Element(process.children[1]),Element(process.children[2])]))]))
+    let result=@bpmn.DocumentGraph::new(doc)
+    assert_true(result.diagnostics.iter().any(d => d.code == "bpmn/invalid-field" || d.code == "bpmn/invalid-containment"))
+    assert_true(result.graph.unwrap().reachable(Id("A"),kinds=[Reference]) is Failed(InvalidReference(_)))
+  }
+  let bad_source=@bpmn.Element::from_values(SourceRef,contents=[Text("Data")],text_value=Text("Data"))
+  let io=@bpmn.InputOutputSpecification::new(contents=[Element(@bpmn.DataInput::new(id="Input").element),Element(@bpmn.InputSet::new().element),Element(@bpmn.OutputSet::new().element)])
+  let association=@bpmn.DataInputAssociation::new(id="DA",contents=[Element(bad_source),Element(@bpmn.Element::new(TargetRef,content="Input"))])
+  let user=@bpmn.UserTask::new(contents=[Element(io.element),Element(association.element)])
+  let doc=@bpmn.Definitions::new("urn:t",children=[@bpmn.Process::new(contents=[Element(@bpmn.DataObject::new(id="Data").element),Element(user.element)]).element]).document()
+  let graph=@bpmn.DocumentGraph::new(doc).graph.unwrap()
+  assert_true(graph.reachable(Id("DA"),kinds=[Reference]) is Failed(InvalidReference(_)))
+  assert_true(graph.reachable(Id("DA"),kinds=[DataAssociation]) is Failed(InvalidReference(_)))
+}

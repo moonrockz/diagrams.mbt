@@ -113,8 +113,31 @@ fn connection_kind(element : Element) -> GraphEdgeKind? {
 }
 
 ///|
+fn invalid_reference_fields(index : DocumentIndex, findings : ReadOnlyArray[ValidationFinding]) -> Map[(Int,String,String),Bool] {
+  let invalid : Map[(Int,String,String),Bool] = Map([])
+  fn mark(owner : IndexedElement, name : ExpandedName) -> Unit {
+    if owner.payload { return }
+    if owner.element.value_type is Some(t) && schema_type(t) is Some(schema) && schema.fields().iter().any(f => f.name == Some(name) && reference_rule(owner.element,f) != None) { invalid[(owner.ordinal,name.namespace_uri,name.local_name)]=true }
+  }
+  for finding in findings {
+    guard finding.node is Some(ordinal) && index.nodes.get(ordinal) is Some(node) else { continue }
+    if finding.field is Some(name) { mark(node,name) }
+    // Simple-content errors belong to the reference child and may have no
+    // field of their own. Retain the failure on the parent's declared field.
+    guard node.parent is Some(parent_ordinal) && index.nodes.get(parent_ordinal) is Some(parent) && !node.payload else { continue }
+    if parent.element.value_type is Some(t) && schema_type(t) is Some(schema) {
+      for field in schema.fields() {
+        if field.kind == Child && field_matches(field,node.element,schema.name) && field.name is Some(name) && reference_rule(parent.element,field) != None { mark(parent,name) }
+      }
+    }
+  }
+  invalid
+}
+
+///|
 fn GraphBuilder::references(self : GraphBuilder, result : ReferenceResult, tree_index : Int, structure_findings : ReadOnlyArray[ValidationFinding]) -> Unit {
   let tree=self.trees[tree_index]; let offset=self.offsets[tree_index]
+  let invalid_fields=invalid_reference_fields(result.index,structure_findings)
   let grouped : Map[Int,Array[ResolvedReference]] = Map([])
   for reference in result.references { match grouped.get(reference.source.ordinal) { Some(xs) => xs.push(reference); None => grouped[reference.source.ordinal]=[reference] } }
   for source in result.index.nodes {
@@ -126,21 +149,27 @@ fn GraphBuilder::references(self : GraphBuilder, result : ReferenceResult, tree_
       if self.stopped { return }
       let candidates=self.candidates(reference.resolution)
       if !self.charge(1) || !self.charge(candidates.length()) { return }
-      match self.reference_failure(result,reference,owner,candidates) {
+      let failure=if invalid_fields.contains((source.ordinal,reference.field.namespace_uri,reference.field.local_name)) { Some(GraphFailure::InvalidReference(owner.handle())) } else { self.reference_failure(result,reference,owner,candidates) }
+      match failure {
         Some(failure) => self.broken(Reference,[owner_id],candidates,failure,owner_id)
         None => self.edge(Reference,owner_id,candidates[0],Some(owner),owner_id)
       }
     }
-    for finding in structure_findings {
-      if self.stopped { return }
-      if finding.node != Some(source.ordinal) || finding.field == None || refs.iter().any(r => Some(r.field) == finding.field) { continue }
-      if source.element.value_type is Some(t) && schema_type(t) is Some(schema) && schema.fields().iter().any(f => f.name == finding.field && reference_rule(source.element,f) != None) { self.broken(Reference,[owner_id],[],InvalidReference(owner.handle()),owner_id) }
+    if source.element.value_type is Some(t) && schema_type(t) is Some(schema) {
+      for field in schema.fields() {
+        if self.stopped { return }
+        guard field.name is Some(name) else { continue }
+        if invalid_fields.contains((source.ordinal,name.namespace_uri,name.local_name)) && !refs.iter().any(r => r.field == name) { self.broken(Reference,[owner_id],[],InvalidReference(owner.handle()),owner_id) }
+      }
     }
     guard connection_kind(source.element) is Some(kind) else { continue }
     let sources=refs.filter(r => r.field.local_name == "sourceRef")
     let targets=refs.filter(r => r.field.local_name == "targetRef")
     let source_nodes : Array[Int] = []; let target_nodes : Array[Int] = []
     let mut failure : GraphFailure? = None
+    for local_name in ["sourceRef","targetRef"] {
+      if invalid_fields.contains((source.ordinal,"",local_name)) || invalid_fields.contains((source.ordinal,model_namespace,local_name)) { failure=Some(InvalidReference(owner.handle())) }
+    }
     for reference in sources { let candidates=self.candidates(reference.resolution); source_nodes.append(candidates); if failure == None { failure=self.reference_failure(result,reference,owner,candidates) } }
     for reference in targets { let candidates=self.candidates(reference.resolution); target_nodes.append(candidates); if failure == None { failure=self.reference_failure(result,reference,owner,candidates) } }
     // Source-less assignment associations are valid model data. Their target
