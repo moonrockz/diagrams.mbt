@@ -3,13 +3,160 @@ package "moonrockz/diagrams/animation"
 
 import {
   "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/sequence",
 }
 
 // Values
+pub let max_duration_ms : Int64
 
 // Errors
 
 // Types and methods
+pub struct Active {
+  ordinal : Int32
+  key : String
+  numerator : Int64
+  denominator : Int64
+  concurrent_groups : ReadOnlyArray[Int32]
+} derive(Eq, @debug.Debug)
+pub fn Active::equal(Self, Self) -> Bool
+pub fn Active::not_equal(Self, Self) -> Bool
+pub fn Active::to_repr(Self) -> @debug.Repr
+
+pub struct Catalog {
+  view_id : String
+  source : @render.Diagram
+  occurrences : ReadOnlyArray[Occurrence]
+  frames : ReadOnlyArray[FrameInfo]
+  controls : ReadOnlyArray[Control]
+  graph : Graph
+  // private fields
+}
+pub fn Catalog::bpmn(@bpmn.Bpmn, limits? : Limits) -> CatalogResult
+pub fn Catalog::flow(Self, String) -> Occurrence?
+pub fn Catalog::occurrence(Self, String) -> Occurrence?
+pub fn Catalog::sequence(@sequence.Sequence, view_id? : String, limits? : Limits) -> CatalogResult
+
+pub struct CatalogResult {
+  catalog : Catalog?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Choice {
+  Alternative(Int32)
+  Repetitions(Int32)
+  Optional(Bool)
+} derive(Eq, @debug.Debug)
+pub fn Choice::equal(Self, Self) -> Bool
+pub fn Choice::not_equal(Self, Self) -> Bool
+pub fn Choice::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Control {
+  Message(Int32)
+  Frame(Int32)
+} derive(Eq, @debug.Debug)
+pub fn Control::equal(Self, Self) -> Bool
+pub fn Control::not_equal(Self, Self) -> Bool
+pub fn Control::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Direction {
+  Forward
+  Reverse
+  Both
+} derive(Eq, @debug.Debug)
+pub fn Direction::equal(Self, Self) -> Bool
+pub fn Direction::not_equal(Self, Self) -> Bool
+pub fn Direction::to_repr(Self) -> @debug.Repr
+
+pub(all) enum EdgeKind {
+  SequenceFlow
+  MessageFlow
+  Order
+} derive(Eq, @debug.Debug)
+pub fn EdgeKind::equal(Self, Self) -> Bool
+pub fn EdgeKind::not_equal(Self, Self) -> Bool
+pub fn EdgeKind::to_repr(Self) -> @debug.Repr
+
+pub struct FrameInfo {
+  key : String
+  path : ReadOnlyArray[Int32]
+  kind : @sequence.FrameKind
+  sections : ReadOnlyArray[SectionInfo]
+} derive(Eq, @debug.Debug)
+pub fn FrameInfo::equal(Self, Self) -> Bool
+pub fn FrameInfo::not_equal(Self, Self) -> Bool
+pub fn FrameInfo::to_repr(Self) -> @debug.Repr
+
+pub struct Graph {
+  view_id : String
+  nodes : ReadOnlyArray[GraphNode]
+  edges : ReadOnlyArray[GraphEdge]
+  // private fields
+}
+pub fn Graph::lookup(Self, String, limits? : Limits) -> Result[GraphNode, QueryFailure]
+pub fn Graph::reachable(Self, String, kinds? : ArrayView[EdgeKind], direction? : Direction, limits? : Limits) -> ReachabilityResult
+pub fn Graph::route(Self, String, String, kinds? : ArrayView[EdgeKind], direction? : Direction, limits? : Limits) -> RouteResult
+
+pub struct GraphEdge {
+  kind : EdgeKind
+  source : String
+  target : String
+  occurrence : String?
+} derive(Eq, @debug.Debug)
+pub fn GraphEdge::equal(Self, Self) -> Bool
+pub fn GraphEdge::not_equal(Self, Self) -> Bool
+pub fn GraphEdge::to_repr(Self) -> @debug.Repr
+
+pub struct GraphNode {
+  id : String
+  label : String
+  kind : NodeKind
+  occurrence : String?
+  source_node : @bpmn.Node?
+} derive(Eq, @debug.Debug)
+pub fn GraphNode::equal(Self, Self) -> Bool
+pub fn GraphNode::not_equal(Self, Self) -> Bool
+pub fn GraphNode::to_repr(Self) -> @debug.Repr
+
+pub(all) enum LimitKind {
+  Nodes
+  Edges
+  Results
+  Work
+  Steps
+  Depth
+} derive(Eq, @debug.Debug)
+pub fn LimitKind::equal(Self, Self) -> Bool
+pub fn LimitKind::not_equal(Self, Self) -> Bool
+pub fn LimitKind::to_repr(Self) -> @debug.Repr
+
+pub struct Limits {
+  nodes : Int32
+  edges : Int32
+  steps : Int32
+  results : Int32
+  work : Int32
+  depth : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(nodes? : Int32, edges? : Int32, steps? : Int32, results? : Int32, work? : Int32, depth? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Motion {
+  Step(String, Int64)
+  Serial(ReadOnlyArray[Motion])
+  Parallel(ReadOnlyArray[Motion])
+} derive(Eq, @debug.Debug)
+pub fn Motion::equal(Self, Self) -> Bool
+pub fn Motion::not_equal(Self, Self) -> Bool
+pub fn Motion::parallel(ArrayView[Self]) -> Self
+pub fn Motion::serial(ArrayView[Self]) -> Self
+pub fn Motion::to_repr(Self) -> @debug.Repr
+
 pub struct MotionPlan {
   view_id : String
   flow_id : String
@@ -20,6 +167,145 @@ pub fn MotionPlan::new(String, String, duration_ms? : Int32) -> Self?
 pub fn MotionPlan::not_equal(Self, Self) -> Bool
 pub fn MotionPlan::sample(Self, Int32) -> (Int32, Int32)
 pub fn MotionPlan::to_repr(Self) -> @debug.Repr
+
+pub(all) enum NodeKind {
+  Bpmn(@bpmn.NodeKind)
+  Message
+  FrameEnter
+  FrameExit
+  Start
+  End
+} derive(Eq, @debug.Debug)
+pub fn NodeKind::equal(Self, Self) -> Bool
+pub fn NodeKind::not_equal(Self, Self) -> Bool
+pub fn NodeKind::to_repr(Self) -> @debug.Repr
+
+pub struct Occurrence {
+  key : String
+  index : Int32
+  kind : OccurrenceKind
+  path : ReadOnlyArray[Int32]
+  source : @bpmn.SourceIdentity?
+  flow : @bpmn.Flow?
+  message : @sequence.Message?
+} derive(Eq, @debug.Debug)
+pub fn Occurrence::equal(Self, Self) -> Bool
+pub fn Occurrence::not_equal(Self, Self) -> Bool
+pub fn Occurrence::to_repr(Self) -> @debug.Repr
+
+pub(all) enum OccurrenceKind {
+  Bpmn(@bpmn.ConnectionKind)
+  SequenceMessage
+} derive(Eq, @debug.Debug)
+pub fn OccurrenceKind::equal(Self, Self) -> Bool
+pub fn OccurrenceKind::not_equal(Self, Self) -> Bool
+pub fn OccurrenceKind::to_repr(Self) -> @debug.Repr
+
+pub struct PlanResult {
+  plan : PlaybackPlan?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum PlaybackMode {
+  Finite
+  Illustrative
+} derive(Eq, @debug.Debug)
+pub fn PlaybackMode::equal(Self, Self) -> Bool
+pub fn PlaybackMode::not_equal(Self, Self) -> Bool
+pub fn PlaybackMode::to_repr(Self) -> @debug.Repr
+
+pub struct PlaybackPlan {
+  view_id : String
+  mode : PlaybackMode
+  duration_ms : Int64
+  steps : ReadOnlyArray[ScheduledStep]
+  // private fields
+} derive(Eq, @debug.Debug)
+pub fn PlaybackPlan::equal(Self, Self) -> Bool
+pub fn PlaybackPlan::illustrative(Catalog, duration_ms? : Int64, kinds? : ArrayView[@bpmn.ConnectionKind], limits? : Limits) -> PlanResult
+pub fn PlaybackPlan::matches(Self, Catalog) -> Bool
+pub fn PlaybackPlan::not_equal(Self, Self) -> Bool
+pub fn PlaybackPlan::route(Catalog, Route, duration_ms? : Int64, limits? : Limits) -> PlanResult
+pub fn PlaybackPlan::sample_at(Self, Int64) -> Sample
+pub fn PlaybackPlan::scenario(Catalog, Motion, limits? : Limits) -> PlanResult
+pub fn PlaybackPlan::sequence(Catalog, selections? : ArrayView[Selection], duration_ms? : Int64, limits? : Limits) -> PlanResult
+pub fn PlaybackPlan::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QueryFailure {
+  InvalidEndpoint(String)
+  OutsideView(String)
+  InvalidLimits
+  Limit(LimitKind)
+} derive(Eq, @debug.Debug)
+pub fn QueryFailure::equal(Self, Self) -> Bool
+pub fn QueryFailure::not_equal(Self, Self) -> Bool
+pub fn QueryFailure::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ReachabilityResult {
+  Complete(ReadOnlyArray[GraphNode])
+  Failed(QueryFailure)
+} derive(Eq, @debug.Debug)
+pub fn ReachabilityResult::equal(Self, Self) -> Bool
+pub fn ReachabilityResult::not_equal(Self, Self) -> Bool
+pub fn ReachabilityResult::to_repr(Self) -> @debug.Repr
+
+pub struct Route {
+  view_id : String
+  direction : Direction
+  nodes : ReadOnlyArray[GraphNode]
+  edges : ReadOnlyArray[GraphEdge]
+  // private fields
+} derive(Eq, @debug.Debug)
+pub fn Route::equal(Self, Self) -> Bool
+pub fn Route::not_equal(Self, Self) -> Bool
+pub fn Route::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RouteResult {
+  Found(Route)
+  Unreachable
+  Failed(QueryFailure)
+} derive(Eq, @debug.Debug)
+pub fn RouteResult::equal(Self, Self) -> Bool
+pub fn RouteResult::not_equal(Self, Self) -> Bool
+pub fn RouteResult::to_repr(Self) -> @debug.Repr
+
+pub struct Sample {
+  elapsed_ms : Int64
+  duration_ms : Int64
+  finished : Bool
+  active : ReadOnlyArray[Active]
+} derive(Eq, @debug.Debug)
+pub fn Sample::equal(Self, Self) -> Bool
+pub fn Sample::not_equal(Self, Self) -> Bool
+pub fn Sample::to_repr(Self) -> @debug.Repr
+
+pub struct ScheduledStep {
+  ordinal : Int32
+  occurrence : Occurrence
+  start_ms : Int64
+  duration_ms : Int64
+  concurrent_groups : ReadOnlyArray[Int32]
+} derive(Eq, @debug.Debug)
+pub fn ScheduledStep::equal(Self, Self) -> Bool
+pub fn ScheduledStep::not_equal(Self, Self) -> Bool
+pub fn ScheduledStep::to_repr(Self) -> @debug.Repr
+
+pub struct SectionInfo {
+  label : String?
+  controls : ReadOnlyArray[Control]
+} derive(Eq, @debug.Debug)
+pub fn SectionInfo::equal(Self, Self) -> Bool
+pub fn SectionInfo::not_equal(Self, Self) -> Bool
+pub fn SectionInfo::to_repr(Self) -> @debug.Repr
+
+pub struct Selection {
+  frame_key : String
+  choice : Choice
+} derive(Eq, @debug.Debug)
+pub fn Selection::equal(Self, Self) -> Bool
+pub fn Selection::new(String, Choice) -> Self
+pub fn Selection::not_equal(Self, Self) -> Bool
+pub fn Selection::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 

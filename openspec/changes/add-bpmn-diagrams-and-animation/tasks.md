@@ -116,10 +116,10 @@ Depends on: group 9.
 Bead: diagrams-u42.11.
 Depends on: groups 7 and 10.
 
-- [ ] 11.1 Add immutable motion steps, concurrent groups, source identity, finite scenarios and explicit-time sampling; verify deterministic samples, repeated occurrences, duration/size limits and plan mismatch rejection on all four targets.
-- [ ] 11.2 Project BPMN connections and sequence message occurrences/frames into exploration and motion values; verify self-messages, alt choices, bounded loop repetitions, parallel groups and no artificial participant cycles.
-- [ ] 11.3 Add diagram route/reachability selection with explicit connection kinds and visible-scope rules; verify agreement with document graph queries, shortest-route ties, cycles, collapsed scopes and distinct limit/unreachable results.
-- [ ] 11.4 Document illustrative flow, structural routes and explicit scenarios; verify examples keep gateway conditions/event descriptions without evaluating them or reporting execution outcomes.
+- [x] 11.1 Add immutable motion steps, concurrent groups, source identity, finite scenarios and explicit-time sampling; verify deterministic samples, repeated occurrences, duration/size limits and plan mismatch rejection on all four targets.
+- [x] 11.2 Project BPMN connections and sequence message occurrences/frames into exploration and motion values; verify self-messages, alt choices, bounded loop repetitions, parallel groups and no artificial participant cycles.
+- [x] 11.3 Add diagram route/reachability selection with explicit connection kinds and visible-scope rules; verify agreement with document graph queries, shortest-route ties, cycles, collapsed scopes and distinct limit/unreachable results.
+- [x] 11.4 Document illustrative flow, structural routes and explicit scenarios; verify examples keep gateway conditions/event descriptions without evaluating them or reporting execution outcomes.
 
 ## 12. Complete standalone HTML playback and browser qualification
 

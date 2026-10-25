@@ -32,6 +32,7 @@ SVG text. Neither planning nor rendering reads a clock or DOM.
 
 This first slice supports BPMN only and one repeating connection, chosen by a
 `MotionPlan` or the first visible connection. A plan for a hidden connection is
-rejected rather than binding to another element. Full finite scenarios, concurrency, sequence
-occurrences, structural routes, seek/speed/step controls, canonical downloads and
-scene bindings follow in groups 11–12. It does not claim those APIs yet.
+rejected rather than binding to another element. Pure finite scenarios, concurrency, sequence occurrences and bounded structural
+routes are available in `moonrockz/diagrams/animation`. Their HTML integration,
+seek/speed/step controls, canonical downloads and scene bindings follow in group
+12. This tracer does not claim those runtime controls yet.

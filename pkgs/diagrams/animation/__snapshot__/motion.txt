@@ -1,0 +1,89 @@
+[
+  {
+    elapsed_ms: 0,
+    duration_ms: 2000,
+    finished: false,
+    active: <ReadOnlyArray:
+      [
+        {
+          ordinal: 0,
+          key: "bpmn:1:P:2:AB",
+          numerator: 0,
+          denominator: 1000,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+        {
+          ordinal: 1,
+          key: "bpmn:1:P:2:BA",
+          numerator: 0,
+          denominator: 500,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+      ]>,
+  },
+  {
+    elapsed_ms: 250,
+    duration_ms: 2000,
+    finished: false,
+    active: <ReadOnlyArray:
+      [
+        {
+          ordinal: 0,
+          key: "bpmn:1:P:2:AB",
+          numerator: 250,
+          denominator: 1000,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+        {
+          ordinal: 1,
+          key: "bpmn:1:P:2:BA",
+          numerator: 250,
+          denominator: 500,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+      ]>,
+  },
+  {
+    elapsed_ms: 750,
+    duration_ms: 2000,
+    finished: false,
+    active: <ReadOnlyArray:
+      [
+        {
+          ordinal: 0,
+          key: "bpmn:1:P:2:AB",
+          numerator: 750,
+          denominator: 1000,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+        {
+          ordinal: 2,
+          key: "bpmn:1:P:2:AB",
+          numerator: 250,
+          denominator: 500,
+          concurrent_groups: <ReadOnlyArray: [1]>,
+        },
+      ]>,
+  },
+  {
+    elapsed_ms: 1000,
+    duration_ms: 2000,
+    finished: false,
+    active: <ReadOnlyArray:
+      [
+        {
+          ordinal: 3,
+          key: "bpmn:1:P:2:AB",
+          numerator: 0,
+          denominator: 1000,
+          concurrent_groups: <ReadOnlyArray: []>,
+        },
+      ]>,
+  },
+  {
+    elapsed_ms: 2000,
+    duration_ms: 2000,
+    finished: true,
+    active: <ReadOnlyArray: []>,
+  },
+]

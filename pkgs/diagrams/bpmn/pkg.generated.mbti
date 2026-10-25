@@ -3,6 +3,7 @@ package "moonrockz/diagrams/bpmn"
 
 import {
   "moonbitlang/core/debug",
+  "moonrockz/diagrams",
 }
 
 // Values
@@ -41,6 +42,7 @@ pub struct Bpmn {
 pub fn Bpmn::equal(Self, Self) -> Bool
 pub fn Bpmn::new(String, ArrayView[Node], ArrayView[Flow], label? : String, source? : SourceIdentity, kind? : ViewKind, plane? : SourceIdentity) -> Self
 pub fn Bpmn::not_equal(Self, Self) -> Bool
+pub fn Bpmn::scope(Self, limits? : ScopeLimits) -> ScopeResult
 pub fn Bpmn::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ConnectionKind {
@@ -310,6 +312,29 @@ pub fn RenderProperties::equal(Self, Self) -> Bool
 pub fn RenderProperties::new(description? : String, sublabel? : String, link? : Link) -> Self
 pub fn RenderProperties::not_equal(Self, Self) -> Bool
 pub fn RenderProperties::to_repr(Self) -> @debug.Repr
+
+pub struct Scope {
+  view : Bpmn
+  visible : ReadOnlyArray[Bool]
+  containers : ReadOnlyArray[Int32?]
+  work : Int32
+  // private fields
+}
+pub fn Scope::node_index(Self, String) -> Int32?
+
+pub struct ScopeLimits {
+  nodes : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn ScopeLimits::equal(Self, Self) -> Bool
+pub fn ScopeLimits::new(nodes? : Int32, work? : Int32) -> Self
+pub fn ScopeLimits::not_equal(Self, Self) -> Bool
+pub fn ScopeLimits::to_repr(Self) -> @debug.Repr
+
+pub struct ScopeResult {
+  scope : Scope?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
 
 pub struct ShapeGeometry {
   identity : SourceIdentity
