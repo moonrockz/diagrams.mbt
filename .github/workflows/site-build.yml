@@ -44,6 +44,9 @@ jobs:
           key: site-playwright-${{ runner.os }}-${{ hashFiles('apps/site/bun.lock') }}
       - name: Test site
         run: mise run test:site -- --tree next
+      # Consume current-commit portable snapshots; reuse the locked browser and cache above.
+      - name: Qualify standalone animation
+        run: mise run test:animation
       # gh reads the releases and downloads their site assets with the read-only token of this job.
       - name: Assemble the versioned site
         if: inputs.pages
