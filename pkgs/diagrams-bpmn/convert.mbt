@@ -160,6 +160,14 @@ fn Projection::ownership(self : Projection) -> Unit {
   for instance in self.instances {
     let index=c.sources[instance.resource].index
     let lane_members : Map[Int,Array[String]]=Map([])
+    let category_groups : Map[(Int,Int),Array[String]]=Map([])
+    for (resource,ordinal,tag) in self.visual_order {
+      let node=self.nodes[self.visuals[(resource,ordinal,tag)]]
+      if resource != instance.resource || tag != instance.tag || node.kind != Group { continue }
+      for key in c.resolve_field(resource,ordinal,"categoryValueRef") {
+        match category_groups.get(key) { Some(groups) => groups.push(node.id); None => category_groups[key]=[node.id] }
+      }
+    }
     for n in index.nodes {
       if !instance.members.contains(n.ordinal) || actual(n.element) != Some(Lane) { continue }
       let mut lanes=[c.render_id(instance.resource,n.ordinal,instance.tag)]
@@ -186,7 +194,13 @@ fn Projection::ownership(self : Projection) -> Unit {
       }
       if subprocess == None { subprocess=instance.container }
       let attached=c.resolve_field(resource,ordinal,"attachedToRef").get(0).bind(key => self.visual(key,tag,n.element)).map(i => self.nodes[i].id)
-      self.nodes[i]=node.with_ownership(@model.Ownership::new(pool?=instance.pool,lanes~,subprocess?,attached_to?=attached))
+      let groups : Array[String]=[]
+      if node.kind != Group {
+        for key in c.resolve_field(resource,ordinal,"categoryValueRef") {
+          for group in category_groups.get(key).unwrap_or([]) { if !groups.contains(group) { groups.push(group) } }
+        }
+      }
+      self.nodes[i]=node.with_ownership(@model.Ownership::new(pool?=instance.pool,lanes~,subprocess?,attached_to?=attached,groups~))
     }
   }
 }
@@ -235,6 +249,7 @@ pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automati
   if limits.nodes <= 0 || limits.depth <= 0 || limits.diagnostics <= 0 || limits.token_units <= 0 || limits.source_units <= 0 || limits.output_units <= 0 { return {diagram:None,diagnostics:[@diagrams.Diagnostic::error("bpmn/conversion-limit","All limits must be positive")]} }
   let root=make_source(document,resource_id,resources,limits)
   c.sources.push(root)
+  if !c.charge(root.references.references.length()) { return result(None) }
   if !root.index.complete || !root.references.complete { c.add("bpmn/conversion-limit","View validation exceeded its limits"); return result(None) }
   guard c.select(selector) is Some(selected) else { return result(None) }
   let view=c.sources[selected.resource].index.nodes[selected.node].element

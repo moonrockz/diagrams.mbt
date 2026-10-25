@@ -1,6 +1,7 @@
 import {
   "moonbitlang/core/debug",
   "moonbitlang/core/string",
+  "moonbitlang/core/priority_queue",
   "moonbit-community/metrics",
   "moonrockz/diagrams",
   "moonrockz/diagrams/bpmn" @model,
@@ -8,6 +9,7 @@ import {
 }
 
 import {
+  "moonbitlang/core/debug",
   "moonrockz/diagrams-svg/bpmn-layout" @layout,
   "moonrockz/diagrams/bpmn" @model,
   "moonrockz/diagrams-svg/theme",

@@ -96,10 +96,10 @@ pub struct RenderProperties { description : String?; sublabel : String?; link : 
 pub fn RenderProperties::new(description? : String, sublabel? : String, link? : Link) -> RenderProperties { {description,sublabel,link} }
 
 ///|
-pub struct Ownership { pool : String?; lanes : ReadOnlyArray[String]; subprocess : String?; attached_to : String? } derive(Eq, Debug)
+pub struct Ownership { pool : String?; lanes : ReadOnlyArray[String]; subprocess : String?; attached_to : String?; groups : ReadOnlyArray[String] } derive(Eq, Debug)
 
 ///|
-pub fn Ownership::new(pool? : String, lanes? : ArrayView[String] = [], subprocess? : String, attached_to? : String) -> Ownership { {pool,lanes:ReadOnlyArray::from_array(lanes),subprocess,attached_to} }
+pub fn Ownership::new(pool? : String, lanes? : ArrayView[String] = [], subprocess? : String, attached_to? : String, groups? : ArrayView[String] = []) -> Ownership { {pool,lanes:ReadOnlyArray::from_array(lanes),subprocess,attached_to,groups:ReadOnlyArray::from_array(groups)} }
 
 ///|
 pub struct Node {

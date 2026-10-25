@@ -53,12 +53,26 @@ positions rather than moving individual elements.
 `Automatic` explicitly ignores DI during conversion and geometry generation,
 including DI endpoint overrides. It can render semantic input with broken DI.
 With an explicit process selector, it does not require choosing between that
-process's planes. The current fallback places complete containment scopes and
-orthogonal connections; topology-aware ranking and routing follow in group 10.
+process's planes. Automatic layout measures labels, ranks each scope after cycle condensation,
+packs lane/group bands and routes orthogonal connections around shapes and labels.
+Bounded search failure returns a layout-limit diagnostic without partial output.
 
 Static SVG stays script-free. Labels are escaped text; source IDs, resource keys,
 containment paths, visual endpoints and render properties are inert metadata.
 See `moonrockz/diagrams-svg/bpmn-layout` for the pure geometry and legibility APIs.
+
+```mbt check
+///|
+test "render semantic input or require supplied DI explicitly" {
+  let source="<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:userTask id='T' name='Review'/></b:process></b:definitions>"
+  let automatic=@adapter.render_svg(source,geometry_policy=Automatic)
+  assert_true(automatic.output != None)
+  assert_eq(automatic.diagnostics,[])
+  let required=@adapter.render_svg(source,geometry_policy=RequireDi)
+  assert_eq(required.output,None)
+  assert_eq(required.diagnostics[0].code,"bpmn/incomplete-di")
+}
+```
 
 ## Source identities and geometry
 
@@ -72,7 +86,8 @@ never written into the document. Multiple input documents may reuse local IDs.
 Nodes keep pool/lane/subprocess ownership and boundary attachment. Markers keep
 loop mode, compensation, event-subprocess/interrupting flags, collection status,
 called activity kind/identity and event definitions. Expressions and timer text
-remain descriptions. Group labels resolve category values; data references keep
+remain descriptions. Group labels resolve category values; category membership is retained in
+`Ownership.groups` for automatic group bounds. Data references keep
 their referenced name and collection marker. Connections distinguish sequence,
 message, association and data-input/output kinds. A many-source data association
 has one visual connection per source with a shared original identity. A valid
@@ -126,8 +141,9 @@ values have no invented spans. Conversion-specific findings use the affected
 element's source location when available.
 
 `Limits` bounds validation, source tokens, depth, diagnostics and conversion
-work. Conversion charges index scans, identity paths and reference scans against
-`nodes`. Imported re-resolution charges the existing resource closure's record
+work. Conversion charges index construction, identity paths and indexed field lookups
+against `nodes`. Reference fields are indexed once instead of rescanning every
+reference for every node. Imported re-resolution charges the existing resource closure's record
 count before rebuilding its resolver. Exhaustion returns no partial diagram.
 `bpmn/conversion-limit` differs from unresolved or unsupported input.
 

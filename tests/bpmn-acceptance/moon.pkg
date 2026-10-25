@@ -9,6 +9,7 @@ import {
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg" @svg,
   "moonrockz/diagrams-svg/bpmn-layout" @bpmn_layout,
+  "moonrockz/diagrams-svg/theme",
   "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
   "moonbitlang/core/test",
   "moonbitlang/core/json",
