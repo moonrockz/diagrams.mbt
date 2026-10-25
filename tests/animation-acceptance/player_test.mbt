@@ -65,6 +65,10 @@ test "standalone HTML scenes and validated plans have exact portable bytes" {
   let chain_catalog=@animation.Catalog::bpmn(chain_view).catalog.unwrap()
   let one_step=@animation.PlaybackPlan::scenario(chain_catalog,Step(chain_catalog.flow("AB").unwrap().key,1000L)).plan.unwrap()
   for (name,diagram,renderer) in [
+    ("bpmn-collaboration-dark",supplied("collaboration-di.bpmn"),@animated.AnimatedRenderer::new(svg=@svg.SvgRenderer::new(mode=Fixed(Dark)))),
+    ("bpmn-collaboration-light",supplied("collaboration-di.bpmn"),@animated.AnimatedRenderer::new(svg=@svg.SvgRenderer::new(mode=Fixed(Light)))),
+    ("sequence-scenario-dark",Sequence(finite),@animated.AnimatedRenderer::new(playback~,svg=@svg.SvgRenderer::new(mode=Fixed(Dark)))),
+    ("sequence-scenario-light",Sequence(finite),@animated.AnimatedRenderer::new(playback~,svg=@svg.SvgRenderer::new(mode=Fixed(Light)))),
     ("bpmn-default",minimal(),@animated.AnimatedRenderer::new()),
     ("bpmn-cyclic",cyclic(),@animated.AnimatedRenderer::new()),
     ("bpmn-concurrent",bpmn_diagram,@animated.AnimatedRenderer::new(playback=concurrent)),

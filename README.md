@@ -1,11 +1,16 @@
 # diagrams.mbt
 
 diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence
-diagrams and renders standalone SVG. Other diagram kinds and formats, such as
-PlantUML, Draw.io and Graphviz DOT, are planned. It has no user interface. The BPMN change is in progress: the first slice reads a
-minimal BPMN process with DI, renders script-free SVG, and emits standalone HTML
-with illustrative flow playback. See the module guides under `pkgs/bpmn`,
-`pkgs/diagrams-bpmn` and `pkgs/diagrams-animated` for current limits.
+syntax and BPMN XML, renders script-free standalone SVG, and generates offline
+HTML with illustrative flow playback and bounded structural exploration.
+PlantUML, Draw.io and Graphviz DOT are planned. The library has no UI framework.
+
+`moonrockz/bpmn` is an independent portable document reader, writer, validator
+and reference/traversal module. It retains processes, collaborations,
+choreography, conversations, diagram interchange and vendor extensions.
+Rendering currently supports processes and collaborations; choreography and
+conversation rendering is deferred. Playback describes drawn structure and
+explicit scenarios. It does not execute BPMN or simulate tokens.
 
 This project shares the setup, the design principles and the release pipelines of
 the other moonrockz projects, such as
@@ -54,8 +59,10 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run check` | Lint, validate, test the library and task scripts, and build |
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
+| `mise run test:bpmn-consumer` | Verify a fresh reader-only BPMN consumer on all four targets |
+| `mise run test:animation` | Qualify stored offline BPMN/sequence players without a workspace/site rebuild |
 | `mise run test:svg` | Check standalone SVG and adaptive themes in Chromium |
-| `mise run gallery` | Verify the renderer snapshots and write all corpus diagrams in dark and light to `_gallery/index.html` |
+| `mise run gallery` | Verify the renderer snapshots and write sequence/BPMN views, XML and offline players to `_gallery/index.html` |
 | `mise run build -- js --release` | Build a selected target in release mode |
 | `mise run test -- native` | Test a selected target |
 | `mise run format` | Format the workspace |
@@ -74,11 +81,14 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 
 - `moon.mod` holds the shared version, currently `0.1.0`.
 - `moon.work` lists the workspace members.
+- `pkgs/bpmn/` is the independent BPMN document module, with MoonBit core dependencies only.
+- `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
+- `pkgs/diagrams-animated/` emits standalone HTML over pure motion plans and SVG scenes.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
-  as `@diagrams`, the immutable sequence model and the renderer contract.
+  as `@diagrams`, immutable sequence/BPMN models, motion/exploration and the renderer contract.
 - `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence diagrams.
-- `pkgs/diagrams-svg/` lays out sequence models and writes standalone SVG.
-- `tests/` contains the unpublished acceptance suites and frozen Mermaid corpus.
+- `pkgs/diagrams-svg/` lays out sequence/BPMN models and writes standalone SVG and scene bindings.
+- `tests/` contains the unpublished acceptance suites and frozen Mermaid/BPMN corpora.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
 - `docs/` and `site/` hold the content of the docs site.
@@ -88,6 +98,20 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `.config/mise/config.toml` pins the tools and declares tasks.
 - `.github/workflows/` holds the CI, release and site workflows. The `ci-ok` job
   is the aggregate check for branch protection.
+
+## Review the integrated output
+
+Run `mise run gallery`, then open `_gallery/index.html`. It includes source XML,
+supplied-DI and automatic BPMN views, fixed dark/light players and all 38 sequence
+examples. After qualification, `mise run gallery -- --existing-output` regenerates
+from stored snapshots without compiling. `--check` compares existing artifacts;
+`--qualify` runs browser and link checks.
+`--site-assets` also refreshes the selected examples used by the docs site.
+Run `mise run test:animation` for offline player qualification.
+
+Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`
+case. Existing sequence SVG bytes remain unchanged. See the tested module guides
+and [BPMN and animation guide](docs/guides/bpmn-and-animation.md).
 
 ## Releases
 

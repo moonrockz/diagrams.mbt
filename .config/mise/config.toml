@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -143,7 +143,7 @@ description = "Verify standalone SVG snapshots and adaptive themes in Chromium"
 run = "moonx scripts/test-svg.mbtx"
 
 [tasks.gallery]
-description = "Verify the renderer snapshots and write the dark/light corpus gallery to _gallery/index.html"
+description = "Verify snapshots and write the sequence/BPMN/XML/player review gallery"
 run = "moonx scripts/gallery.mbtx"
 
 [tasks."test:native-zig"]
@@ -228,3 +228,11 @@ run = "moonx scripts/animation-assets.mbtx check"
 [tasks."test:animation"]
 description = "Qualify stored standalone animation artifacts in Chromium without rebuilding the workspace/site"
 run = "moonx scripts/test-animation.mbtx"
+
+[tasks."validate:examples"]
+description = "Check generated site examples against stored canonical/HTML snapshots"
+run = "moonx scripts/gallery.mbtx --existing-output --site-assets --site-assets-only --check"
+
+[tasks."test:bpmn-consumer"]
+description = "Qualify a fresh reader-only BPMN consumer on all four targets"
+run = "moonx scripts/test-bpmn-consumer.mbtx"

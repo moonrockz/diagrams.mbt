@@ -96,6 +96,14 @@ jobs:
         run: mise run check
       - name: Check that every version is ${{ needs.plan.outputs.version }}
         run: moonx scripts/versions.mbtx check ${{ needs.plan.outputs.version }}
+      # Qualify the same candidate before publish can start. PR runs are dry runs.
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: site-playwright-${{ runner.os }}-${{ hashFiles('apps/site/bun.lock') }}
+      - name: Qualify standalone animation
+        run: mise run test:animation
 
   publish:
     name: Publish to mooncakes.io

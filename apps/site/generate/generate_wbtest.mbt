@@ -8,11 +8,14 @@ async test "generate the fixture site" {
   }
   let warnings = generate("fixtures/content", out, "assets", true)
   assert_eq(warnings, [])
-  assert_eq(list_files(out), [
-    "articles/atom.xml", "articles/first/index.html", "articles/index.html", "assets/site.css",
+  let expected = [
+    "articles/atom.xml", "articles/first/index.html", "articles/index.html",
     "docs/diagram/index.html", "docs/guide/index.html", "docs/index.html", "index.html",
     "search-index.json",
-  ])
+  ]
+  for asset in list_files("assets") { expected.push("assets/"+asset) }
+  expected.sort_by(compare_units)
+  assert_eq(list_files(out), expected)
   let guide = @fs.read_file("\{out}/docs/guide/index.html").text()
   assert_true(guide.contains("<h2 id=\"install\">Install</h2>"))
   assert_true(guide.contains("class=\"language-moonbit\""))

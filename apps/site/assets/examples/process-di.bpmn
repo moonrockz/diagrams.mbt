@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bd="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="urn:render:process">
+  <b:category id="Category"><b:categoryValue id="ReviewCategory" value="Review"/></b:category>
+  <b:process id="Delivery" name="Review delivery" isExecutable="false">
+    <b:laneSet id="Lanes"><b:lane id="Intake" name="Intake"><b:flowNodeRef>Start</b:flowNodeRef><b:flowNodeRef>Review</b:flowNodeRef><b:flowNodeRef>Decision</b:flowNodeRef><b:flowNodeRef>Declined</b:flowNodeRef></b:lane><b:lane id="Dispatch" name="Delivery"><b:flowNodeRef>Send</b:flowNodeRef><b:flowNodeRef>Reminder</b:flowNodeRef><b:flowNodeRef>Notify</b:flowNodeRef><b:flowNodeRef>Sent</b:flowNodeRef><b:flowNodeRef>Notified</b:flowNodeRef></b:lane></b:laneSet>
+    <b:startEvent id="Start" name="Start"/>
+    <b:userTask id="Review" name="Review"><b:categoryValueRef>ReviewCategory</b:categoryValueRef><b:ioSpecification><b:dataInput id="RequestInput"/><b:inputSet/><b:outputSet/></b:ioSpecification><b:dataInputAssociation id="ReadRequest"><b:sourceRef>Requests</b:sourceRef><b:targetRef>RequestInput</b:targetRef></b:dataInputAssociation></b:userTask>
+    <b:exclusiveGateway id="Decision" name="Approved?" default="Reject"><b:categoryValueRef>ReviewCategory</b:categoryValueRef></b:exclusiveGateway>
+    <b:endEvent id="Declined" name="Declined"/>
+    <b:serviceTask id="Send" name="Dispatch"/>
+    <b:boundaryEvent id="Reminder" name="Reminder" attachedToRef="Send" cancelActivity="false"><b:timerEventDefinition><b:timeCycle>R/PT24H</b:timeCycle></b:timerEventDefinition></b:boundaryEvent>
+    <b:userTask id="Notify" name="Notify owner"/>
+    <b:endEvent id="Sent" name="Sent"/>
+    <b:endEvent id="Notified" name="Notified"/>
+    <b:dataObject id="RequestData" name="Requests" isCollection="true"/>
+    <b:dataObjectReference id="Requests" dataObjectRef="RequestData"><b:categoryValueRef>ReviewCategory</b:categoryValueRef></b:dataObjectReference>
+    <b:sequenceFlow id="Receive" sourceRef="Start" targetRef="Review" name="request"/>
+    <b:sequenceFlow id="Check" sourceRef="Review" targetRef="Decision"/>
+    <b:sequenceFlow id="Accept" sourceRef="Decision" targetRef="Send" name="approved"><b:conditionExpression>approved</b:conditionExpression></b:sequenceFlow>
+    <b:sequenceFlow id="Reject" sourceRef="Decision" targetRef="Declined" name="rejected"/>
+    <b:sequenceFlow id="Deliver" sourceRef="Send" targetRef="Sent"/>
+    <b:sequenceFlow id="Remind" sourceRef="Reminder" targetRef="Notify" name="remind"/>
+    <b:sequenceFlow id="FinishNotice" sourceRef="Notify" targetRef="Notified"/>
+    <b:group id="ReviewGroup" categoryValueRef="ReviewCategory"/>
+    <b:textAnnotation id="Audit"><b:text>Recorded for audit</b:text></b:textAnnotation>
+    <b:association id="AuditLink" sourceRef="Review" targetRef="Audit"/>
+  </b:process>
+  <bd:BPMNDiagram id="DeliveryDiagram"><bd:BPMNPlane id="DeliveryPlane" bpmnElement="Delivery">
+    <bd:BPMNShape id="IntakeShape" bpmnElement="Intake" isHorizontal="true"><dc:Bounds x="20" y="20" width="900" height="250"/></bd:BPMNShape>
+    <bd:BPMNShape id="DispatchShape" bpmnElement="Dispatch" isHorizontal="true"><dc:Bounds x="20" y="270" width="900" height="230"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Start"><dc:Bounds x="100" y="120" width="36" height="36"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Review"><dc:Bounds x="200" y="100" width="120" height="80"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Decision" isMarkerVisible="true"><dc:Bounds x="380" y="120" width="40" height="40"/><bd:BPMNLabel><dc:Bounds x="360" y="86" width="90" height="18"/></bd:BPMNLabel></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Declined"><dc:Bounds x="740" y="122" width="36" height="36"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Send"><dc:Bounds x="500" y="320" width="140" height="80"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Reminder"><dc:Bounds x="560" y="380" width="40" height="40"/><bd:BPMNLabel><dc:Bounds x="620" y="410" width="80" height="18"/></bd:BPMNLabel></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Notify"><dc:Bounds x="100" y="340" width="140" height="80"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Sent"><dc:Bounds x="740" y="342" width="36" height="36"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Notified"><dc:Bounds x="300" y="342" width="36" height="36"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Requests"><dc:Bounds x="270" y="190" width="36" height="48"/><bd:BPMNLabel><dc:Bounds x="315" y="210" width="75" height="18"/></bd:BPMNLabel></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="ReviewGroup"><dc:Bounds x="180" y="75" width="270" height="195"/></bd:BPMNShape>
+    <bd:BPMNShape bpmnElement="Audit"><dc:Bounds x="500" y="200" width="180" height="48"/></bd:BPMNShape>
+    <bd:BPMNEdge bpmnElement="Receive"><di:waypoint x="136" y="138"/><di:waypoint x="168" y="138"/><di:waypoint x="168" y="140"/><di:waypoint x="200" y="140"/><bd:BPMNLabel><dc:Bounds x="120" y="90" width="58" height="18"/></bd:BPMNLabel></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="Check"><di:waypoint x="320" y="140"/><di:waypoint x="380" y="140"/></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="Accept"><di:waypoint x="400" y="160"/><di:waypoint x="400" y="360"/><di:waypoint x="500" y="360"/><bd:BPMNLabel><dc:Bounds x="425" y="285" width="75" height="18"/></bd:BPMNLabel></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="Reject"><di:waypoint x="420" y="140"/><di:waypoint x="740" y="140"/><bd:BPMNLabel><dc:Bounds x="550" y="112" width="70" height="18"/></bd:BPMNLabel></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="Deliver"><di:waypoint x="640" y="360"/><di:waypoint x="740" y="360"/></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="Remind"><di:waypoint x="580" y="420"/><di:waypoint x="580" y="470"/><di:waypoint x="60" y="470"/><di:waypoint x="60" y="380"/><di:waypoint x="100" y="380"/><bd:BPMNLabel><dc:Bounds x="300" y="475" width="100" height="18"/></bd:BPMNLabel></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="FinishNotice"><di:waypoint x="240" y="380"/><di:waypoint x="270" y="380"/><di:waypoint x="270" y="360"/><di:waypoint x="300" y="360"/></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="ReadRequest"><di:waypoint x="288" y="238"/><di:waypoint x="288" y="252"/><di:waypoint x="410" y="252"/><di:waypoint x="410" y="190"/><di:waypoint x="260" y="190"/><di:waypoint x="260" y="180"/></bd:BPMNEdge>
+    <bd:BPMNEdge bpmnElement="AuditLink"><di:waypoint x="320" y="160"/><di:waypoint x="345" y="160"/><di:waypoint x="345" y="185"/><di:waypoint x="480" y="185"/><di:waypoint x="480" y="224"/><di:waypoint x="500" y="224"/></bd:BPMNEdge>
+  </bd:BPMNPlane></bd:BPMNDiagram>
+</b:definitions>

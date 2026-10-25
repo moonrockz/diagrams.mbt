@@ -4,13 +4,49 @@
   "base_path": "/diagrams.mbt/",
   "site_url": "https://moonrockz.github.io/diagrams.mbt/",
   "repo_url": "https://github.com/moonrockz/diagrams.mbt",
-  "versions": { "since": "0.1" },
-  "packages": ["diagrams", "diagrams-svg", "diagrams-mermaid"],
-  "api": ["pkgs/diagrams", "pkgs/diagrams-svg", "pkgs/diagrams-mermaid"],
+  "versions": {
+    "since": "0.1"
+  },
+  "packages": [
+    "bpmn",
+    "diagrams",
+    "diagrams-svg",
+    "diagrams-mermaid",
+    "diagrams-bpmn",
+    "diagrams-animated"
+  ],
+  "api": [
+    "pkgs/bpmn",
+    "pkgs/diagrams",
+    "pkgs/diagrams-svg",
+    "pkgs/diagrams-mermaid",
+    "pkgs/diagrams-bpmn",
+    "pkgs/diagrams-animated"
+  ],
   "nav": [
-    { "group": "Guides", "items": ["guides/"] },
-    { "group": "Design", "items": ["design/"] },
-    { "group": "Packages", "items": ["packages/"] },
-    { "group": "Contribute", "items": ["WRITING_FOR_THE_SITE.md"] }
+    {
+      "group": "Guides",
+      "items": [
+        "guides/"
+      ]
+    },
+    {
+      "group": "Design",
+      "items": [
+        "design/"
+      ]
+    },
+    {
+      "group": "Packages",
+      "items": [
+        "packages/"
+      ]
+    },
+    {
+      "group": "Contribute",
+      "items": [
+        "WRITING_FOR_THE_SITE.md"
+      ]
+    }
   ]
 }

@@ -1,65 +1,81 @@
 ---
 title: Design overview
-summary: How diagrams.mbt reads syntax, builds models and renders diagrams.
+summary: Portable documents, immutable diagram models, static SVG and offline flow illustration.
 order: 1
 ---
 # Design overview
 
-diagrams.mbt reads Mermaid sequence diagrams and renders standalone SVG. The
-library has one format-independent model for each diagram kind. Sequence is
-the first kind. Other kinds and formats need separate changes.
+diagrams.mbt reads Mermaid sequence syntax and BPMN XML. Format-specific readers
+produce immutable diagram models. SVG rendering and pure motion planning share
+those models. Host adapters own process, filesystem and browser access.
 
-## One diagram, start to finish
+## From source to output
 
 ```mermaid
 graph TD
-  A[Mermaid source text] --> B[Lossless syntax tree and diagnostics]
-  B --> C[Typed Mermaid AST]
-  C --> D[Sequence model and diagnostics]
-  D --> E[Layout geometry and legibility checks]
-  E --> F[Standalone SVG]
+  A[Mermaid source] --> B[Lossless CST and typed AST]
+  B --> C[Sequence model]
+  D[BPMN XML] --> E[Independent typed BPMN document]
+  E --> F[Selected process or collaboration view]
+  F --> G[BPMN model]
+  C --> H[Measured geometry and static SVG]
+  G --> H
+  C --> I[Pure occurrences, motion plans and structural queries]
+  G --> I
+  H --> J[Display scene and canonical SVG]
+  I --> K[Offline standalone HTML]
+  J --> K
 ```
 
-| Step | Contract |
-| --- | --- |
-| Read | Keep every source character in a lossless syntax tree. Report errors with UTF-16 spans and continue reading. |
-| Print | Write canonical Mermaid from the typed AST. Reading it again gives an equal AST. |
-| Convert | Build an immutable sequence model with participants and ordered events. Report semantic errors. |
-| Lay out | Measure labels and place participants, messages, notes, frames and activations. Check fit, overlap, text size and contrast. |
-| Render | Write deterministic standalone SVG with adaptive or fixed dark and light colours. |
+A BPMN document retains processes, collaborations, choreography, conversations,
+diagram interchange and vendor extensions. Its reader, writer, validation,
+references and traversal work independently of diagrams and rendering. Resource
+resolution accepts explicit inputs and performs no implicit I/O.
+
+The BPMN adapter selects one view and preserves source identities and ownership.
+Processes and collaborations render first. Choreography and conversation
+rendering is explicitly deferred. Supplied DI keeps its exact coordinate tokens;
+automatic layout uses bounded routing and reports exhausted limits.
 
 ## One model per diagram kind
 
-A sequence diagram needs message order, participant lifetimes, activations and
-nested frame sections. A generic nodes-and-edges model would lose those facts.
-Later sequence formats will produce the same `Sequence` model. A later
-flowchart format will need its own model.
+Sequence diagrams retain message occurrence order, participant lifetimes and
+nested frames. BPMN views retain typed nodes, connections, markers and scope.
+A generic graph would lose those distinctions. `Renderer` takes the public
+`Diagram::Sequence` or `Diagram::Bpmn` case and returns output, media type and
+diagnostics. Adding `Bpmn` requires callers with exhaustive matches to add a case.
 
-The format AST stays separate from the model. It keeps Mermaid spelling for the
-canonical printer. The sequence model keeps the meaning that renderers need.
-The `Renderer` trait takes a `Diagram` value and returns output, a media type
-and diagnostics. Its current diagram case is `Sequence`.
+Links identify represented items, such as Smithy shapes or OpenRPC methods.
+Render properties hold presentation metadata separately. Link resolution is pure;
+the built-in Smithy and OpenRPC resolvers remain future work.
 
-## Links and render properties
+## Static and animated output
 
-A participant or message can link to a represented item through a scheme and
-target. The model stores a Smithy shape in its normal `namespace#Shape` form.
-Mermaid text uses `namespace/Shape`, because `#` starts a Mermaid comment.
-Render properties hold presentation information such as a kind, sublabel and
-description. Link resolution is a separate pure operation. The built-in Smithy
-and OpenRPC resolvers are future work.
+Ordinary SVG is complete, deterministic and script-free. Existing sequence SVG
+bytes remain unchanged. A separate display scene uses the same measured geometry
+and adds invisible scoped path bindings. Canonical SVG export excludes those
+bindings, motion and selection state.
 
-## Packages and boundaries
+Motion plans are immutable values over explicit durations, order, repetitions
+and concurrency. Sampling takes elapsed time as an argument. Only the generated
+browser runtime reads a clock or DOM. Its offline controls respect reduced motion,
+hidden pages and print output. Structural routes and illustrative flow do not
+evaluate conditions, schedule timers, synchronize gateways or simulate tokens.
+
+## Modules and boundaries
 
 | Module | Responsibility |
 | --- | --- |
-| `moonrockz/diagrams` | Immutable models, diagnostics, link contracts and the renderer trait |
-| `moonrockz/diagrams-mermaid` | Syntax tree, AST, canonical printer, model conversion and the SVG convenience call |
-| `moonrockz/diagrams-svg` | Layout geometry, legibility checks and standalone SVG painting |
+| `moonrockz/bpmn` | Independent XML CST, typed documents, writing, validation, explicit references and traversal; MoonBit core only |
+| `moonrockz/diagrams` | Immutable sequence/BPMN models, diagnostics, links, renderer contract and pure motion/exploration |
+| `moonrockz/diagrams-mermaid` | Mermaid CST/AST, canonical printing, sequence conversion and SVG convenience call |
+| `moonrockz/diagrams-bpmn` | BPMN view selection, document conversion and SVG convenience call |
+| `moonrockz/diagrams-svg` | Geometry, bounded layout/routing, legibility, static painting and scene bindings |
+| `moonrockz/diagrams-animated` | Pure standalone HTML construction with reproducibly embedded browser assets |
 
-Library code is pure over explicit inputs and builds on `wasm`, `wasm-gc`, `js`
-and `native`. Process and filesystem access stay in host adapters. The published
-modules have no user interface.
+All libraries build and test on `wasm`, `wasm-gc`, `js` and `native`. They have no
+UI framework. Only the unpublished docs site tool may use Rabbita. Publication
+and release require separate owner approval.
 
-See [Mermaid sequence diagrams](../guides/mermaid-sequence.md) for a rendered
-example and the tested package guides for the API.
+See [Mermaid sequence diagrams](../guides/mermaid-sequence.md),
+[BPMN and animation](../guides/bpmn-and-animation.md), and the tested package guides.

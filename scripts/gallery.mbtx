@@ -6,6 +6,8 @@ import {
   "moonbitlang/async@0.22.5/process",
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
 }
 
 ///|
@@ -18,17 +20,70 @@ fn escape(text : String) -> String {
 }
 
 ///|
-async fn main {
-  let code = @process.run(
-    "moon",
-    ["test", "--target", "js", "-p", "moonrockz/diagrams-tests/acceptance"],
-    stdout=@stdio.stdout,
-    stderr=@stdio.stderr,
-  )
-  if code != 0 {
-    @sys.exit(if code > 0 { code } else { 1 })
+fn string(value : Json) -> String raise Failure {
+  guard value is String(text) else { raise Failure("Expected snapshot string") }
+  text
+}
+
+///|
+async fn rows(path : String) -> Array[Array[Json]] {
+  guard @json.parse(@fs.read_file(path).text()) is Array(values) else {
+    raise Failure("Expected snapshot rows")
   }
-  if !@fs.exists("_gallery") {
+  let result = []
+  for value in values {
+    guard value is Array(row) else { raise Failure("Expected snapshot row") }
+    result.push(row)
+  }
+  result
+}
+
+///|
+async fn save(name : String, text : String, check : Bool, site : Bool) -> Unit {
+  let paths = []
+  if !@env.args().contains("--site-assets-only") {
+    paths.push("_gallery/" + name)
+  }
+  if site {
+    paths.push("apps/site/assets/examples/" + name)
+  }
+  for path in paths {
+    if check {
+      if !@fs.exists(path) || @fs.read_file(path).text() != text {
+        raise Failure("Stale or missing gallery artifact: " + path)
+      }
+    } else {
+      @fs.write_file(path, text)
+    }
+  }
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  let check = args.contains("--check")
+  let site_assets = args.contains("--site-assets")
+  if !args.contains("--existing-output") && !check {
+    for
+      package_name in [
+        "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
+        "moonrockz/diagrams-tests/animation-acceptance",
+      ] {
+      let code = @process.run(
+        "moon",
+        ["test", "--target", "js", "-p", package_name],
+        stdout=@stdio.stdout,
+        stderr=@stdio.stderr,
+      )
+      if code != 0 {
+        @sys.exit(if code > 0 { code } else { 1 })
+      }
+    }
+  }
+  if site_assets && !@fs.exists("apps/site/assets/examples") {
+    @fs.mkdir("apps/site/assets/examples", recursive=true)
+  }
+  if !args.contains("--site-assets-only") && !@fs.exists("_gallery") {
     @fs.mkdir("_gallery", recursive=true)
   }
   let html = StringBuilder()
@@ -36,7 +91,7 @@ async fn main {
     (
       #|<!doctype html>
       #|<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-      #|<title>Mermaid sequence gallery</title>
+      #|<title>Diagram review gallery</title>
       #|<style>
       #|body{margin:2rem;background:#e2e8f0;color:#0f172a;font:16px system-ui}h1{font-size:1.8rem}
       #|article{margin:2rem 0}h2 a{color:inherit}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
@@ -44,8 +99,11 @@ async fn main {
       #|.dark{background:#020617;color:#e2e8f0}.light{background:#f4f5f7}img{display:block;max-width:none}
       #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
       #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
-      #|</style><h1>Mermaid sequence gallery</h1>
-      #|<p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
+      #|</style><h1>Diagram review gallery</h1>
+      #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#sequence">Sequence corpus</a></nav>
+      #|<p>Processes and collaborations render with supplied or automatic geometry. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
+      #|<p>Players illustrate drawn connections. Conditions, timer triggers and gateway synchronization are not evaluated. No tokens or process execution are simulated.</p>
+      #|<h2 id="sequence">Sequence corpus</h2><p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
       #|The task verifies these SVG bytes against the current renderer before writing this page.
       #|Each diagram scrolls at its natural size. Expand the source to compare syntax.</p>
       #|
@@ -66,9 +124,9 @@ async fn main {
     for variant in ["dark", "light"] {
       let file = "\{name}-\{variant}.svg"
       let svg = @fs.read_file("tests/acceptance/__snapshot__/svg/\{file}")
-      @fs.write_file("_gallery/\{file}", svg)
+      save(file, svg.text(), check, false)
       html.write_string(
-        "<figure class=\"\{variant}\"><figcaption>\{variant}</figcaption><img src=\"\{file}\" alt=\"Example \{name}, \{variant} theme\" loading=\"lazy\"></figure>",
+        "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"Example \{name}, \{variant} theme\" loading=\"lazy\"></figure>",
       )
     }
     let source = escape(@fs.read_file("\{base}/\{path}").text())
@@ -76,7 +134,110 @@ async fn main {
       "</div><details><summary>Mermaid source</summary><pre><code>\{source}</code></pre></details></article>\n",
     )
   }
+  html.write_string(
+    "<h2 id=\"bpmn\">BPMN process and collaboration views</h2><p>Project-authored Apache-2.0 fixtures retain their XML and exact supplied DI. Automatic views deliberately ignore DI.</p>",
+  )
+  let images : Map[String, String] = Map([])
+  for row in rows("tests/bpmn-acceptance/__snapshot__/scenes.json") {
+    images[string(row[0]) + "/" + string(row[1])] = string(row[2])
+  }
+  for source_name in ["process-di.bpmn", "collaboration-di.bpmn"] {
+    let xml = @fs.read_file("tests/corpus/bpmn-render/" + source_name).text()
+    save(source_name, xml, check, site_assets)
+    for policy in ["supplied", "automatic"] {
+      let name = source_name + "/" + policy
+      let id = "bpmn-" +
+        source_name.replace_all(old=".bpmn", new="") +
+        "-" +
+        policy
+      html.write_string(
+        "<article id=\"\{id}\"><h3>\{escape(name)}</h3><p><a href=\"\{source_name}\">BPMN XML</a></p><div class=\"pair\">",
+      )
+      for variant in ["dark", "light"] {
+        let file = id + "-" + variant + ".svg"
+        save(file, images[name + "/" + variant], check, site_assets)
+        html.write_string(
+          "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"\{escape(name)} \{variant}\" loading=\"lazy\"></figure>",
+        )
+      }
+      html.write_string(
+        "</div><details><summary>BPMN XML source</summary><pre><code>\{escape(xml)}</code></pre></details></article>",
+      )
+    }
+  }
+  html.write_string(
+    "<details><summary>Typed document coverage, including deferred views</summary><p>These process, collaboration, choreography and conversation inputs are document fixtures. Rendering choreography/conversations is explicitly deferred.</p><ul>",
+  )
+  for
+    name in [
+      "activities", "events", "collaboration", "di-views", "choreography-conversation",
+    ] {
+    let file = "document-" + name + ".bpmn"
+    save(
+      file,
+      @fs.read_file("tests/corpus/bpmn-model/" + name + ".bpmn").text(),
+      check,
+      false,
+    )
+    html.write_string("<li><a href=\"\{file}\">\{name} XML</a></li>")
+  }
+  html.write_string(
+    "</ul></details><h2 id=\"animation\">Standalone offline players</h2><p>Open either fixed SVG theme. Use Play, Step and Position; choose structural routes or reachability; download the exact static SVG. The player controls follow the browser preference.</p>",
+  )
+  let players : Map[String, String] = Map([])
+  for row in rows("tests/animation-acceptance/__snapshot__/players.json") {
+    players[string(row[0])] = string(row[1])
+  }
+  for
+    (kind, title) in [
+      ("bpmn-collaboration", "BPMN collaboration"),
+      (
+        "sequence-scenario", "Finite sequence scenario: alternative, repeated loop and parallel branches",
+      ),
+    ] {
+    html.write_string("<article id=\"\{kind}\"><h3>\{title}</h3><ul>")
+    for variant in ["dark", "light"] {
+      let file = kind + "-" + variant + ".html"
+      save(file, players[kind + "-" + variant], check, site_assets)
+      html.write_string(
+        "<li><a href=\"\{file}\">Open \{variant} player</a></li>",
+      )
+    }
+    html.write_string("</ul></article>")
+  }
+  for
+    (name, title) in [
+      ("bpmn-automatic", "Automatic BPMN process"),
+      (
+        "bpmn-concurrent", "Finite BPMN scenario with repeated concurrent occurrences",
+      ),
+    ] {
+    let file = name + ".html"
+    save(file, players[name], check, site_assets)
+    html.write_string("<p><a href=\"\{file}\">\{title}</a></p>")
+  }
   html.write_string("</html>\n")
-  @fs.write_file("_gallery/index.html", html.to_string())
+  save("index.html", html.to_string(), check, false)
+  if args.contains("--qualify") {
+    for
+      (command, arguments) in [
+        ("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"]),
+        (
+          "node",
+          ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
+        ),
+        ("node", ["apps/site/scripts/gallery-test.ts"]),
+      ] {
+      let code = @process.run(
+        command,
+        arguments,
+        stdout=@stdio.stdout,
+        stderr=@stdio.stderr,
+      )
+      if code != 0 {
+        @sys.exit(if code > 0 { code } else { 1 })
+      }
+    }
+  }
   println("Gallery: _gallery/index.html")
 }

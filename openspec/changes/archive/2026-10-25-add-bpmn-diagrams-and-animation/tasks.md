@@ -137,10 +137,10 @@ Depends on: group 11.
 Bead: diagrams-u42.13.
 Depends on: group 12.
 
-- [ ] 13.1 Extend the gallery with BPMN XML, selected static views and animated BPMN/sequence examples; verify its generation, light/dark output and all links from an existing-output rerun.
-- [ ] 13.2 Add the new modules to publication tooling in dependency order without publishing or changing the version; verify publication-script tests, root-version checks and a fresh reader-only `bpmn` consumer on all four targets.
-- [ ] 13.3 Update the glossary, architecture overview and site navigation to the tested module guides and static/animated examples; verify `mise run build:site`, `mise run check:site` and `mise run test:site`.
-- [ ] 13.4 Run the full acceptance, reference, gallery and animation qualification against the final candidate and obtain owner gallery review; record the results and approval in the PR.
+- [x] 13.1 Extend the gallery with BPMN XML, selected static views and animated BPMN/sequence examples; verify its generation, light/dark output and all links from an existing-output rerun.
+- [x] 13.2 Add the new modules to publication tooling in dependency order without publishing or changing the version; verify publication-script tests, root-version checks and a fresh reader-only `bpmn` consumer on all four targets.
+- [x] 13.3 Update the glossary, architecture overview and site navigation to the tested module guides and static/animated examples; verify `mise run build:site`, `mise run check:site` and `mise run test:site`.
+- [x] 13.4 Run the full acceptance, reference, gallery and animation qualification against the final candidate and obtain owner gallery review; record the results and approval in the PR.
 
 ## Workflow follow-up
 
