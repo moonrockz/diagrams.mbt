@@ -56,10 +56,10 @@ Depends on: group 3.
 Bead: diagrams-u42.5.
 Depends on: group 4.
 
-- [ ] 5.1 Complete choreography task/sub-choreography/call values and conversation nodes/links/associations; verify typed inspection, construction and document round trips while rendering remains explicitly unsupported.
-- [ ] 5.2 Complete BPMNDI, DI and DC shapes, labels, planes, waypoints and display fields; verify multi-plane documents and exact decimal values against the reference fixtures.
-- [ ] 5.3 Preserve foreign attributes/elements, mixed content and opaque QName-sensitive bindings, and diagnose unknown standard elements; verify prefix shadowing, vendor round trips and no silent standard-type omissions in the coverage manifest.
-- [ ] 5.4 Add independent-module examples for choreography, conversation, DI and extensions; verify all examples and schema inventory completeness on all four targets.
+- [x] 5.1 Complete choreography task/sub-choreography/call values and conversation nodes/links/associations; verify typed inspection, construction and document round trips while rendering remains explicitly unsupported.
+- [x] 5.2 Complete BPMNDI, DI and DC shapes, labels, planes, waypoints and display fields; verify multi-plane documents and exact decimal values against the reference fixtures.
+- [x] 5.3 Preserve foreign attributes/elements, mixed content and opaque QName-sensitive bindings, and diagnose unknown standard elements; verify prefix shadowing, vendor round trips and no silent standard-type omissions in the coverage manifest.
+- [x] 5.4 Add independent-module examples for choreography, conversation, DI and extensions; verify all examples and schema inventory completeness on all four targets.
 
 ## 6. Validate structure and resolve explicit document references
 

@@ -16,10 +16,9 @@ fn by_id(doc : @bpmn.Document, id : String) -> @bpmn.Element {
 }
 
 ///|
-test "all process and collaboration schema fields have generated typed accessors" {
-  let deferred=["tChoreography","tChoreographyActivity","tChoreographyTask","tSubChoreography","tCallChoreography","tGlobalChoreographyTask","tConversationNode","tConversation","tSubConversation","tCallConversation","tGlobalConversation","tConversationLink","tConversationAssociation"]
+test "all complex schema types have generated typed accessors" {
   let manual=["tDefinitions","tImport","tBaseElement","tRootElement","tDocumentation"]
-  let expected=@bpmn.schema_types.iter().filter(t => t.name.namespace_uri == model_uri && !t.simple && !deferred.contains(t.name.local_name)).to_array()
+  let expected=@bpmn.schema_types.iter().filter(t => !t.simple).to_array()
   assert_eq(@bpmn.typed_model_types.length(),expected.length())
   for t in expected {
     assert_true(@bpmn.typed_model_types.iter().any(id => id == t.id),msg=t.name.local_name)

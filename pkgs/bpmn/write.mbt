@@ -31,6 +31,7 @@ priv struct XmlOutput {
   limits : Limits
   diagnostics : Array[Diagnostic]
   uris : Map[String, String]
+  reserved : Map[String,Bool]
   mut size : Int
   mut input_records : Int
   mut output_records : Int
@@ -146,32 +147,31 @@ fn XmlOutput::content_valid(self : XmlOutput, content : Content, outside : Bool,
 }
 
 ///|
-priv struct WalkFrame { node : Element; depth : Int; mut entered : Bool; mut next : Int; preserve : Bool; expected_type : ExpandedName? }
+priv struct WalkFrame { node : Element; depth : Int; mut entered : Bool; mut next : Int; preserve : Bool; expected_type : ExpandedName?; parent_payload : Bool; scope : @namespaces.HashMap[String,String] }
 
 ///|
 fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
-  if document.root.kind != Kind::Definitions { self.fail("bpmn/definitions-required","A BPMN document needs a definitions root",document.root.span); return }
+  if document.root.kind.name() != Kind::Definitions.name() { self.fail("bpmn/definitions-required","A BPMN document needs a definitions root",document.root.span); return }
   self.records(1,false,None)
   for c in document.prolog { self.content_valid(c,true,None) }
   for c in document.epilog { self.content_valid(c,true,None) }
-  let stack = [WalkFrame::{ node: document.root, depth: 0, entered: false, next: 0, preserve: false, expected_type: Kind::Definitions.declared_type() }]
+  let stack=[WalkFrame::{node:document.root,depth:0,entered:false,next:0,preserve:false,expected_type:Kind::Definitions.declared_type(),parent_payload:false,scope:@namespaces.HashMap::new()}]
   while !stack.is_empty() && !self.stopped {
-    let f = stack[stack.length()-1]
-    let node=f.node
+    let f=stack[stack.length()-1]; let node=f.node
+    let scope=namespace_context(node,f.scope)
+    let payload=opaque_kind(node.kind)
     if !f.entered {
-      f.entered = true
-      self.records(1,false,node.span)
-      self.records(node.values.length(),false,node.span)
-      self.records(node.bindings.length(),false,node.span)
+      f.entered=true; self.records(1,false,node.span); self.records(node.values.length(),false,node.span); self.records(node.bindings.length(),false,node.span)
       if self.stopped { break }
       if f.depth >= self.limits.depth { self.fail("bpmn/write-depth-limit","Writer element depth limit exceeded",node.span); break }
-      match node.kind { Foreign(_) | Unknown(_) => { self.fail("bpmn/unsupported-element","Opaque/unknown element writing follows in the extension story",node.span); break }; _ => () }
-      if node.value_type is Some(t) && t.namespace_uri != "http://www.w3.org/2001/XMLSchema" && schema_type(t) == None {
-        self.fail("bpmn/unsupported-type","Constructed type is outside the pinned schema",node.span); break
-      }
-      let type_name=ExpandedName::new("http://www.w3.org/2001/XMLSchema-instance","type")
-      if node.value_type != f.expected_type && !node.values.iter().any(a => a.name == Some(type_name)) {
-        self.fail("bpmn/type-conflict","Constructed type differs from its containment type without an explicit xsi:type",node.span); break
+      if f.parent_payload && !payload { self.fail("bpmn/invalid-content","Preserved XML children use XmlElement values",node.span); break }
+      if payload {
+        if node.value_type != None || node.text_value != None { self.fail("bpmn/type-conflict","Preserved XML cannot claim a typed schema scalar",node.span); break }
+        if !f.parent_payload && kind_from_name(node.kind.name()) != None && !opaque_unknown_type(node,scope) { self.fail("bpmn/type-conflict","A known standard element outside a payload needs its typed model representation",node.span); break }
+      } else {
+        if node.value_type is Some(t) && t.namespace_uri != "http://www.w3.org/2001/XMLSchema" && schema_type(t) == None { self.fail("bpmn/unsupported-type","Unknown typed values must use preserved XML",node.span); break }
+        let type_name=ExpandedName::new("http://www.w3.org/2001/XMLSchema-instance","type")
+        if node.value_type != f.expected_type && !node.values.iter().any(a => a.name == Some(type_name)) { self.fail("bpmn/type-conflict","Constructed type differs from its containment type without an explicit xsi:type",node.span); break }
       }
       self.name_valid(node.kind.name(),node.span) |> ignore
       self.binding_valid(node.bindings,node.span)
@@ -179,17 +179,22 @@ fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
       for attr in node.values {
         if self.stopped { break }
         guard attr.name is Some(name) else { self.fail("bpmn/invalid-name","Attribute has an unbound prefix or invalid name",attr.span); break }
-        if name.namespace_uri != "" && name.namespace_uri != "http://www.w3.org/XML/1998/namespace" && name.namespace_uri != "http://www.w3.org/2001/XMLSchema-instance" {
-          self.fail("bpmn/unsupported-attribute","Foreign attribute writing follows in the extension story",attr.span); break
-        }
         if name.namespace_uri == "" && name.local_name == "xmlns" { self.fail("bpmn/namespace-conflict","Namespace declarations belong in bindings, not model attributes",attr.span); break }
         self.name_valid(name,attr.span) |> ignore
         if seen.contains((name.namespace_uri,name.local_name)) { self.fail("bpmn/duplicate-attribute","Duplicate expanded attribute name",attr.span); break }
-        seen[(name.namespace_uri,name.local_name)] = true
-        self.scalar_valid(attr.value,Some(field_type(node.value_type,name)),attr.span) |> ignore
-        if name.namespace_uri == "http://www.w3.org/2001/XMLSchema-instance" && name.local_name == "type" {
-          match attr.value { Reference(r) if r.name != node.value_type => self.fail("bpmn/type-conflict","xsi:type does not match the model's type identity",attr.span); _ => () }
+        seen[(name.namespace_uri,name.local_name)]=true
+        if opaque_attribute(node,name) {
+          if !(attr.value is Text(_)) { self.fail("bpmn/scalar-type-mismatch","Opaque XML attributes are string values",attr.span); break }
+          self.scalar_valid(attr.value,None,attr.span) |> ignore
+        } else {
+          self.scalar_valid(attr.value,Some(field_type(node.value_type,name)),attr.span) |> ignore
+          if name.namespace_uri == "http://www.w3.org/2001/XMLSchema-instance" && name.local_name == "type" {
+            match attr.value { Reference(r) if r.name != node.value_type => self.fail("bpmn/type-conflict","xsi:type does not match the model's type identity",attr.span); _ => () }
+          }
         }
+      }
+      for text in opaque_strings(node) {
+        for prefix in text_prefixes(text) { if namespace_uri(scope,prefix) == None { self.reserved[prefix]=true } }
       }
       if node.text_value is Some(value) {
         if !simple_type(node.value_type) { self.fail("bpmn/invalid-content","Typed scalar content needs a simple schema type",node.span); break }
@@ -198,22 +203,27 @@ fn XmlOutput::inspect(self : XmlOutput, document : Document) -> Unit {
       }
     }
     if f.next >= node.contents.length() { stack.pop() |> ignore; continue }
-    let part=node.contents[f.next]; f.next += 1
+    let part=node.contents[f.next]; f.next+=1
     match part {
       Element(child) => {
         if self.input_records >= self.limits.nodes { self.fail("bpmn/write-node-limit","Writer node limit exceeded",child.span); break }
         if f.depth >= self.limits.depth-1 { self.fail("bpmn/write-depth-limit","Writer element depth limit exceeded",child.span); break }
-        stack.push({ node: child, depth: f.depth+1, entered: false, next: 0, preserve: space_policy(node,f.preserve), expected_type: child_type(node.value_type,child.kind) })
+        stack.push({node:child,depth:f.depth+1,entered:false,next:0,preserve:space_policy(node,f.preserve),expected_type:child_type(node.value_type,child.kind),parent_payload:payload,scope})
       }
       _ => self.content_valid(part,false,node.span)
     }
   }
   if self.stopped { return }
-  let uris = self.uris.keys().to_array(); uris.sort()
-  let mut next = 1
+  let uris=self.uris.keys().to_array(); uris.sort_by((a,b) => a.lexical_compare(b))
+  let used : Map[String,Bool] = Map([])
+  let mut next=1
   for uri in uris {
-    let fixed = namespace_prefix(uri)
-    self.uris[uri] = if fixed == "" { let p="ns\{next}"; next += 1; p } else { fixed }
+    let preferred=namespace_prefix(uri)
+    let prefix=if preferred != "" && !self.reserved.contains(preferred) { preferred } else {
+      while self.reserved.contains("ns\{next}") || used.contains("ns\{next}") { next+=1 }
+      let prefix="ns\{next}"; next+=1; prefix
+    }
+    self.uris[uri]=prefix; used[prefix]=true
   }
 }
 
@@ -229,28 +239,6 @@ fn XmlOutput::escaped(self : XmlOutput, text : String, attribute : Bool) -> Unit
     }
     if escaped.length() > self.limits.token_units-units { self.fail("bpmn/write-token-limit","Escaped XML token exceeds its limit",None); break }
     units += escaped.length(); self.chunk(escaped)
-  }
-}
-
-///|
-fn XmlOutput::prefix(self : XmlOutput, uri : String) -> String {
-  if uri == "" { "" } else if uri == "http://www.w3.org/XML/1998/namespace" { "xml" } else { self.uris.get(uri).unwrap() }
-}
-
-///|
-fn XmlOutput::qualified(self : XmlOutput, name : ExpandedName) -> Unit {
-  let prefix=self.prefix(name.namespace_uri)
-  let extra = if prefix == "" { 0 } else { prefix.length()+1 }
-  if extra > self.limits.token_units || name.local_name.length() > self.limits.token_units-extra { self.fail("bpmn/write-token-limit","Qualified name exceeds its token limit",None); return }
-  if prefix != "" { self.chunk(prefix); self.chunk(":") }
-  self.chunk(name.local_name)
-}
-
-///|
-fn XmlOutput::scalar(self : XmlOutput, value : Scalar, attribute : Bool) -> Unit {
-  match value {
-    Reference(r) => self.qualified(r.name.unwrap())
-    _ => self.escaped(value.token(),attribute)
   }
 }
 
@@ -273,51 +261,45 @@ fn XmlOutput::inert_content(self : XmlOutput, content : Content) -> Unit {
 }
 
 ///|
-priv struct EmitFrame { node : Element; depth : Int; preserve : Bool; mut entered : Bool; mut next : Int; mut block : Bool; mut any : Bool }
+priv struct EmitFrame { node : Element; depth : Int; preserve : Bool; parent_scope : @namespaces.HashMap[String,String]; parent_names : XmlNames?; mut names : XmlNames?; mut entered : Bool; mut next : Int; mut block : Bool; mut any : Bool }
 
 ///|
 fn XmlOutput::emit_document(self : XmlOutput, document : Document, format : WriteFormat) -> Unit {
   self.records(1,true,None)
   for part in document.prolog { self.inert_content(part); if format == Pretty { self.line(0) } }
-  let stack = [EmitFrame::{ node: document.root, depth: 0, preserve: false, entered: false, next: 0, block: false, any: false }]
+  let base=@namespaces.HashMap::new().add("xml","http://www.w3.org/XML/1998/namespace").add("","")
+  let stack=[EmitFrame::{node:document.root,depth:0,preserve:false,parent_scope:base,parent_names:None,names:None,entered:false,next:0,block:false,any:false}]
   while !stack.is_empty() && !self.stopped {
     let f=stack[stack.length()-1]; let node=f.node
     let preserve=space_policy(node,f.preserve)
-    let mixed=match node.value_type { Some(t) => schema_type(t).map(t => t.has_mixed_content()).unwrap_or(false); None => false }
+    let mixed=opaque_kind(node.kind) || (match node.value_type { Some(t) => schema_type(t).map(t => t.has_mixed_content()).unwrap_or(false); None => false })
     if !f.entered {
       f.entered=true; self.records(1,true,node.span)
-      self.chunk("<"); self.qualified(node.kind.name())
-      if f.depth == 0 {
-        let uris=self.uris.keys().to_array(); uris.sort_by((a,b) => self.prefix(a).compare(self.prefix(b)))
-        for uri in uris {
-          self.records(1,true,None); self.chunk(" xmlns:"); self.chunk(self.prefix(uri)); self.chunk("=\""); self.escaped(uri,true); self.chunk("\"")
-        }
-      }
+      let names=self.names_for(node,f.parent_scope,f.parent_names,f.depth == 0)
+      if self.stopped { break }; f.names=Some(names)
+      self.chunk("<"); self.qualified_names(names,node.kind.name(),false)
+      self.namespace_declarations(names,f.parent_scope)
       let values=node.values.iter().to_array()
-      values.sort_by((a,b) => { let a=a.name.unwrap(); let b=b.name.unwrap(); let order=a.namespace_uri.compare(b.namespace_uri); if order == 0 { a.local_name.compare(b.local_name) } else { order } })
-      for attr in values {
-        self.records(1,true,attr.span); self.chunk(" "); self.qualified(attr.name.unwrap()); self.chunk("=\""); self.scalar(attr.value,true); self.chunk("\"")
-      }
-      let has_non_text=node.contents.iter().any(c => match c { Text(s) => node.text_value == None && (mixed || preserve || !s.iter().all(c => space(c.to_int()))); _ => true })
+      values.sort_by((a,b) => { let a=a.name.unwrap(); let b=b.name.unwrap(); let order=a.namespace_uri.lexical_compare(b.namespace_uri); if order == 0 { a.local_name.lexical_compare(b.local_name) } else { order } })
+      for attr in values { self.records(1,true,attr.span); self.chunk(" "); self.qualified_names(names,attr.name.unwrap(),true); self.chunk("=\""); self.scalar_names(names,attr.value,true); self.chunk("\"") }
+      let has_content=node.contents.iter().any(c => match c { Text(s) => node.text_value == None && (mixed || preserve || !s.iter().all(c => space(c.to_int()))); _ => true })
       let has_scalar=node.text_value.map(v => !v.token().is_empty()).unwrap_or(false)
-      if !has_non_text && !has_scalar { self.chunk("/>"); stack.pop() |> ignore; continue }
+      if !has_content && !has_scalar { self.chunk("/>"); stack.pop() |> ignore; continue }
       self.chunk(">")
-      f.block = format == Pretty && !mixed && !preserve && node.text_value == None && !node.contents.iter().any(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => false })
-      if node.text_value is Some(value) { self.records(1,true,node.span); self.scalar(value,false) }
+      f.block=format == Pretty && !mixed && !preserve && node.text_value == None && !node.contents.iter().any(c => match c { Text(s) => !s.iter().all(c => space(c.to_int())); _ => false })
+      if node.text_value is Some(value) { self.records(1,true,node.span); self.scalar_names(names,value,false) }
     }
+    let names=f.names.unwrap()
     if f.next >= node.contents.length() {
       if f.block && f.any { self.line(f.depth) }
-      self.chunk("</"); self.qualified(node.kind.name()); self.chunk(">")
+      self.chunk("</"); self.qualified_names(names,node.kind.name(),false); self.chunk(">")
       stack.pop() |> ignore; continue
     }
-    let part=node.contents[f.next]; f.next += 1
-    if part is Text(text) {
-      if node.text_value != None || (!mixed && !preserve && text.iter().all(c => space(c.to_int()))) { continue }
-    }
-    if f.block { self.line(f.depth+1) }
-    f.any=true
+    let part=node.contents[f.next]; f.next+=1
+    if part is Text(text) { if node.text_value != None || (!mixed && !preserve && text.iter().all(c => space(c.to_int()))) { continue } }
+    if f.block { self.line(f.depth+1) }; f.any=true
     match part {
-      Element(child) => stack.push({ node: child, depth: f.depth+1, preserve, entered: false, next: 0, block: false, any: false })
+      Element(child) => stack.push({node:child,depth:f.depth+1,preserve,parent_scope:names.scope,parent_names:Some(names),names:None,entered:false,next:0,block:false,any:false})
       _ => self.inert_content(part)
     }
   }
@@ -329,7 +311,7 @@ fn XmlOutput::emit_document(self : XmlOutput, document : Document, format : Writ
 /// Canonical XML with deterministic namespaces and expanded-name attribute order.
 /// A failed result never exposes the partially assembled buffer as output.
 pub fn try_write(document : Document, format? : WriteFormat = Compact, limits? : Limits = Limits::new()) -> WriteResult {
-  let output = XmlOutput::{ buffer: StringBuilder(),limits,diagnostics:[],uris:Map([]),size:0,input_records:0,output_records:0,stopped:false }
+  let output = XmlOutput::{ buffer: StringBuilder(),limits,diagnostics:[],uris:Map([]),reserved:Map([]),size:0,input_records:0,output_records:0,stopped:false }
   if limits.source_units <= 0 || limits.output_units <= 0 || limits.nodes <= 0 || limits.depth <= 0 || limits.token_units <= 0 || limits.diagnostics <= 0 { output.fail("bpmn/write-invalid-limits","All processing limits must be positive",None) }
   if !output.stopped { output.inspect(document) }
   if !output.stopped { output.emit_document(document,format) }

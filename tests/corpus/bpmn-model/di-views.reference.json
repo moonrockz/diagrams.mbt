@@ -1,0 +1,759 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately"
+  ],
+  "nodes": [
+    {
+      "key": "#A",
+      "parent": "#C",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "A"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#B",
+      "parent": "#C",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "B"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#BandA",
+      "parent": "#Plane2",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "choreographyActivityShape": {
+          "kind": "reference",
+          "value": [
+            "CS"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "BandA"
+        },
+        "isHorizontal": {
+          "kind": "boolean",
+          "value": true
+        },
+        "participantBandKind": {
+          "kind": "string",
+          "value": "top_initiating"
+        }
+      },
+      "children": [
+        "#BandA/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#BandA/dc:Bounds[0]",
+      "parent": "#BandA",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 20
+        },
+        "width": {
+          "kind": "number",
+          "value": 160
+        },
+        "x": {
+          "kind": "number",
+          "value": 0
+        },
+        "y": {
+          "kind": "number",
+          "value": 0
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#BandB",
+      "parent": "#Plane2",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "B"
+          ]
+        },
+        "choreographyActivityShape": {
+          "kind": "reference",
+          "value": [
+            "CS"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "BandB"
+        },
+        "participantBandKind": {
+          "kind": "string",
+          "value": "bottom_non_initiating"
+        }
+      },
+      "children": [
+        "#BandB/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#BandB/dc:Bounds[0]",
+      "parent": "#BandB",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 20
+        },
+        "width": {
+          "kind": "number",
+          "value": 160
+        },
+        "x": {
+          "kind": "number",
+          "value": 0
+        },
+        "y": {
+          "kind": "number",
+          "value": 100
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#C",
+      "parent": "#DiViews",
+      "type": "bpmn:Choreography",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "C"
+        }
+      },
+      "children": [
+        "#A",
+        "#B",
+        "#CTask",
+        "#M"
+      ]
+    },
+    {
+      "key": "#CS",
+      "parent": "#Plane2",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "CTask"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "CS"
+        },
+        "isExpanded": {
+          "kind": "boolean",
+          "value": false
+        },
+        "isMessageVisible": {
+          "kind": "boolean",
+          "value": true
+        }
+      },
+      "children": [
+        "#CS/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#CS/dc:Bounds[0]",
+      "parent": "#CS",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 120
+        },
+        "width": {
+          "kind": "number",
+          "value": 160
+        },
+        "x": {
+          "kind": "number",
+          "value": 0
+        },
+        "y": {
+          "kind": "number",
+          "value": 0
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CTask",
+      "parent": "#C",
+      "type": "bpmn:ChoreographyTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CTask"
+        },
+        "initiatingParticipantRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "messageFlowRef": {
+          "kind": "reference",
+          "value": [
+            "M"
+          ]
+        },
+        "participantRef": {
+          "kind": "reference",
+          "value": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#D1",
+      "parent": "#DiViews",
+      "type": "bpmndi:BPMNDiagram",
+      "fields": {
+        "documentation": {
+          "kind": "string",
+          "value": "Exact supplied geometry"
+        },
+        "id": {
+          "kind": "string",
+          "value": "D1"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Process"
+        },
+        "resolution": {
+          "kind": "number",
+          "value": 96
+        }
+      },
+      "children": [
+        "#Plane1",
+        "#Style1"
+      ]
+    },
+    {
+      "key": "#D2",
+      "parent": "#DiViews",
+      "type": "bpmndi:BPMNDiagram",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "D2"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Choreography"
+        }
+      },
+      "children": [
+        "#Plane2"
+      ]
+    },
+    {
+      "key": "#DiViews",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "DiViews"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "urn:di"
+        }
+      },
+      "children": [
+        "#C",
+        "#D1",
+        "#D2",
+        "#P"
+      ]
+    },
+    {
+      "key": "#EdgeF",
+      "parent": "#Plane1",
+      "type": "bpmndi:BPMNEdge",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "F"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "EdgeF"
+        },
+        "messageVisibleKind": {
+          "kind": "string",
+          "value": "initiating"
+        },
+        "sourceElement": {
+          "kind": "reference",
+          "value": [
+            "S1"
+          ]
+        },
+        "targetElement": {
+          "kind": "reference",
+          "value": [
+            "S2"
+          ]
+        }
+      },
+      "children": [
+        "#EdgeF/dc:Point[0]",
+        "#EdgeF/dc:Point[1]",
+        "#LabelF"
+      ]
+    },
+    {
+      "key": "#EdgeF/dc:Point[0]",
+      "parent": "#EdgeF",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 123.45678901234568
+        },
+        "y": {
+          "kind": "number",
+          "value": 50
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#EdgeF/dc:Point[1]",
+      "parent": "#EdgeF",
+      "type": "dc:Point",
+      "fields": {
+        "x": {
+          "kind": "number",
+          "value": 300
+        },
+        "y": {
+          "kind": "number",
+          "value": 50
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#F",
+      "parent": "#P",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "F"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "T"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "U"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#LabelF",
+      "parent": "#EdgeF",
+      "type": "bpmndi:BPMNLabel",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LabelF"
+        },
+        "labelStyle": {
+          "kind": "reference",
+          "value": [
+            "Style1"
+          ]
+        }
+      },
+      "children": [
+        "#LabelF/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#LabelF/dc:Bounds[0]",
+      "parent": "#LabelF",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 15
+        },
+        "width": {
+          "kind": "number",
+          "value": 40
+        },
+        "x": {
+          "kind": "number",
+          "value": 180
+        },
+        "y": {
+          "kind": "number",
+          "value": 30
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#LabelT",
+      "parent": "#S1",
+      "type": "bpmndi:BPMNLabel",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LabelT"
+        },
+        "labelStyle": {
+          "kind": "reference",
+          "value": [
+            "Style1"
+          ]
+        }
+      },
+      "children": [
+        "#LabelT/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#LabelT/dc:Bounds[0]",
+      "parent": "#LabelT",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 15
+        },
+        "width": {
+          "kind": "number",
+          "value": 45
+        },
+        "x": {
+          "kind": "number",
+          "value": 123.45678901234568
+        },
+        "y": {
+          "kind": "number",
+          "value": 94
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#M",
+      "parent": "#C",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "M"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "A"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "B"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#P",
+      "parent": "#DiViews",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "P"
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": [
+        "#F",
+        "#T",
+        "#U"
+      ]
+    },
+    {
+      "key": "#Plane1",
+      "parent": "#D1",
+      "type": "bpmndi:BPMNPlane",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "P"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Plane1"
+        }
+      },
+      "children": [
+        "#EdgeF",
+        "#S1",
+        "#S2"
+      ]
+    },
+    {
+      "key": "#Plane2",
+      "parent": "#D2",
+      "type": "bpmndi:BPMNPlane",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "C"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Plane2"
+        }
+      },
+      "children": [
+        "#BandA",
+        "#BandB",
+        "#CS"
+      ]
+    },
+    {
+      "key": "#S1",
+      "parent": "#Plane1",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "T"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "S1"
+        },
+        "isExpanded": {
+          "kind": "boolean",
+          "value": true
+        },
+        "isMarkerVisible": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": [
+        "#LabelT",
+        "#S1/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#S1/dc:Bounds[0]",
+      "parent": "#S1",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 80
+        },
+        "width": {
+          "kind": "number",
+          "value": 100
+        },
+        "x": {
+          "kind": "number",
+          "value": -12.345678901234567
+        },
+        "y": {
+          "kind": "number",
+          "value": 10
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#S2",
+      "parent": "#Plane1",
+      "type": "bpmndi:BPMNShape",
+      "fields": {
+        "bpmnElement": {
+          "kind": "reference",
+          "value": [
+            "U"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "S2"
+        }
+      },
+      "children": [
+        "#S2/dc:Bounds[0]"
+      ]
+    },
+    {
+      "key": "#S2/dc:Bounds[0]",
+      "parent": "#S2",
+      "type": "dc:Bounds",
+      "fields": {
+        "height": {
+          "kind": "number",
+          "value": 80
+        },
+        "width": {
+          "kind": "number",
+          "value": 100
+        },
+        "x": {
+          "kind": "number",
+          "value": 300
+        },
+        "y": {
+          "kind": "number",
+          "value": 10
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Style1",
+      "parent": "#D1",
+      "type": "bpmndi:BPMNLabelStyle",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Style1"
+        }
+      },
+      "children": [
+        "#Style1/dc:Font[0]"
+      ]
+    },
+    {
+      "key": "#Style1/dc:Font[0]",
+      "parent": "#Style1",
+      "type": "dc:Font",
+      "fields": {
+        "isBold": {
+          "kind": "boolean",
+          "value": true
+        },
+        "isItalic": {
+          "kind": "boolean",
+          "value": false
+        },
+        "isStrikeThrough": {
+          "kind": "boolean",
+          "value": false
+        },
+        "isUnderline": {
+          "kind": "boolean",
+          "value": true
+        },
+        "name": {
+          "kind": "string",
+          "value": "Example font"
+        },
+        "size": {
+          "kind": "number",
+          "value": 12
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#T",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "T"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Review"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#U",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "U"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Approve"
+        }
+      },
+      "children": []
+    }
+  ],
+  "source_sha256": "8762890ccf7236fe2a0a100729440d826abdf9111630f2d5c18c38332a53fa67"
+}

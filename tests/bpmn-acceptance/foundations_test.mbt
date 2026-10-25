@@ -77,7 +77,7 @@ test "foundation constructors own ordered values and preserve absent defaults" {
 
 ///|
 test "typed booleans enums references integers and exact DI numbers" {
-  let doc=foundation_doc("<b:process id='P' isExecutable='0' processType='Public'><b:task id='T' implementation='##unspecified'/><b:messageFlow id='F' sourceRef='q:T' targetRef='q:U'/></b:process><d:Bounds x='-0.000000000000000000000000001' y='1.2345678901234567890123456789E+250' width='INF' height='NaN'/>")
+  let doc=foundation_doc("<b:process id='P' isExecutable='0' processType='Public'><b:userTask id='T' implementation='##unspecified'/><b:messageFlow id='F' sourceRef='q:T' targetRef='q:U'/></b:process><d:Bounds x='-0.000000000000000000000000001' y='1.2345678901234567890123456789E+250' width='INF' height='NaN'/>")
   let process=doc.root.children[0]
   assert_eq(process.boolean("isExecutable"),Present(false))
   assert_eq(process.enumeration("processType"),Present(@bpmn.BpmnEnum::ProcessType(Public)))

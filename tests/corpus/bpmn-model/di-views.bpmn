@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" id="DiViews" targetNamespace="urn:di">
+  <bpmn:process id="P" isExecutable="false"><bpmn:task id="T" name="Review"/><bpmn:task id="U" name="Approve"/><bpmn:sequenceFlow id="F" sourceRef="T" targetRef="U"/></bpmn:process>
+  <bpmn:choreography id="C"><bpmn:participant id="A"/><bpmn:participant id="B"/><bpmn:messageFlow id="M" sourceRef="A" targetRef="B"/><bpmn:choreographyTask id="CTask" initiatingParticipantRef="A"><bpmn:participantRef>A</bpmn:participantRef><bpmn:participantRef>B</bpmn:participantRef><bpmn:messageFlowRef>M</bpmn:messageFlowRef></bpmn:choreographyTask></bpmn:choreography>
+  <bpmndi:BPMNDiagram id="D1" name="Process" documentation="Exact supplied geometry" resolution="96.000">
+    <bpmndi:BPMNPlane id="Plane1" bpmnElement="P">
+      <bpmndi:BPMNShape id="S1" bpmnElement="T" isExpanded="true" isMarkerVisible="false"><dc:Bounds x="-12.345678901234567890123456789" y="10.000" width="100.00000000000000001" height="80.000"/><bpmndi:BPMNLabel id="LabelT" labelStyle="Style1"><dc:Bounds x="1.234567890123456789E+2" y="94" width="45" height="15"/></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="S2" bpmnElement="U"><dc:Bounds x="300" y="10" width="100" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="EdgeF" bpmnElement="F" sourceElement="S1" targetElement="S2" messageVisibleKind="initiating"><di:waypoint x="123.45678901234567890123456789" y="50"/><di:waypoint x="300" y="50"/><bpmndi:BPMNLabel id="LabelF" labelStyle="Style1"><dc:Bounds x="180" y="30" width="40" height="15"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+    <bpmndi:BPMNLabelStyle id="Style1"><dc:Font name="Example font" size="1.200000000000000000000001E+1" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false"/></bpmndi:BPMNLabelStyle>
+  </bpmndi:BPMNDiagram>
+  <bpmndi:BPMNDiagram id="D2" name="Choreography">
+    <bpmndi:BPMNPlane id="Plane2" bpmnElement="C">
+      <bpmndi:BPMNShape id="CS" bpmnElement="CTask" isExpanded="false" isMessageVisible="true"><dc:Bounds x="0" y="0" width="160" height="120"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BandA" bpmnElement="A" isHorizontal="true" participantBandKind="top_initiating" choreographyActivityShape="CS"><dc:Bounds x="0" y="0" width="160" height="20"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BandB" bpmnElement="B" participantBandKind="bottom_non_initiating" choreographyActivityShape="CS"><dc:Bounds x="0" y="100" width="160" height="20"/></bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

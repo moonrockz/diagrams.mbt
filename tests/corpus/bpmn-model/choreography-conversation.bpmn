@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" id="ChoreographyConversations" targetNamespace="urn:choreography">
+  <bpmn:message id="Message" name="Request"/>
+  <bpmn:choreography id="Reusable" name="Reusable exchange"><bpmn:participant id="RA"/><bpmn:participant id="RB"/><bpmn:messageFlow id="RM" sourceRef="RA" targetRef="RB" messageRef="Message"/></bpmn:choreography>
+  <bpmn:globalChoreographyTask id="GlobalChoreography" initiatingParticipantRef="GA"><bpmn:participant id="GA"/><bpmn:participant id="GB"/></bpmn:globalChoreographyTask>
+  <bpmn:choreography id="Choreography" name="Exchange">
+    <bpmn:participant id="A" name="Buyer"/><bpmn:participant id="B" name="Seller"/>
+    <bpmn:messageFlow id="MF" sourceRef="A" targetRef="B" messageRef="Message"/>
+    <bpmn:startEvent id="Start"/>
+    <bpmn:choreographyTask id="CT" name="Request" initiatingParticipantRef="A" loopType="MultiInstanceSequential"><bpmn:participantRef>A</bpmn:participantRef><bpmn:participantRef>B</bpmn:participantRef><bpmn:messageFlowRef>MF</bpmn:messageFlowRef></bpmn:choreographyTask>
+    <bpmn:subChoreography id="SubCT" name="Nested" initiatingParticipantRef="B"><bpmn:participantRef>A</bpmn:participantRef><bpmn:participantRef>B</bpmn:participantRef><bpmn:choreographyTask id="NestedCT" initiatingParticipantRef="A"><bpmn:participantRef>A</bpmn:participantRef><bpmn:participantRef>B</bpmn:participantRef><bpmn:messageFlowRef>MF</bpmn:messageFlowRef></bpmn:choreographyTask></bpmn:subChoreography>
+    <bpmn:callChoreography id="CallCT" initiatingParticipantRef="A" calledChoreographyRef="Reusable"><bpmn:participantRef>A</bpmn:participantRef><bpmn:participantRef>B</bpmn:participantRef><bpmn:participantAssociation id="CPA"><bpmn:innerParticipantRef>RA</bpmn:innerParticipantRef><bpmn:outerParticipantRef>A</bpmn:outerParticipantRef></bpmn:participantAssociation></bpmn:callChoreography>
+    <bpmn:endEvent id="End"/>
+    <bpmn:sequenceFlow id="CF1" sourceRef="Start" targetRef="CT"/><bpmn:sequenceFlow id="CF2" sourceRef="CT" targetRef="SubCT"/><bpmn:sequenceFlow id="CF3" sourceRef="SubCT" targetRef="CallCT"/><bpmn:sequenceFlow id="CF4" sourceRef="CallCT" targetRef="End"/>
+  </bpmn:choreography>
+  <bpmn:globalConversation id="GlobalConversation" name="Reusable conversation"><bpmn:participant id="RCA"/><bpmn:participant id="RCB"/><bpmn:messageFlow id="RCM" sourceRef="RCA" targetRef="RCB" messageRef="Message"/></bpmn:globalConversation>
+  <bpmn:collaboration id="Conversations" name="Conversation view">
+    <bpmn:participant id="CA" name="Buyer"/><bpmn:participant id="CB" name="Seller"/><bpmn:messageFlow id="CM" sourceRef="CA" targetRef="CB" messageRef="Message"/>
+    <bpmn:conversation id="Conversation" name="Order"><bpmn:participantRef>CA</bpmn:participantRef><bpmn:participantRef>CB</bpmn:participantRef><bpmn:messageFlowRef>CM</bpmn:messageFlowRef></bpmn:conversation>
+    <bpmn:subConversation id="SubConversation" name="Details"><bpmn:participantRef>CA</bpmn:participantRef><bpmn:conversation id="NestedConversation" name="Line items"><bpmn:participantRef>CA</bpmn:participantRef><bpmn:participantRef>CB</bpmn:participantRef></bpmn:conversation></bpmn:subConversation>
+    <bpmn:callConversation id="CallConversation" calledCollaborationRef="GlobalConversation"><bpmn:participantRef>CA</bpmn:participantRef><bpmn:participantAssociation id="CallParticipant"><bpmn:innerParticipantRef>RCA</bpmn:innerParticipantRef><bpmn:outerParticipantRef>CA</bpmn:outerParticipantRef></bpmn:participantAssociation></bpmn:callConversation>
+    <bpmn:conversationAssociation id="ConversationAssociation" innerConversationNodeRef="NestedConversation" outerConversationNodeRef="Conversation"/>
+    <bpmn:participantAssociation id="ParticipantAssociation"><bpmn:innerParticipantRef>RCA</bpmn:innerParticipantRef><bpmn:outerParticipantRef>CA</bpmn:outerParticipantRef></bpmn:participantAssociation>
+    <bpmn:messageFlowAssociation id="MessageAssociation" innerMessageFlowRef="RCM" outerMessageFlowRef="CM"/>
+    <bpmn:choreographyRef>Choreography</bpmn:choreographyRef>
+    <bpmn:conversationLink id="ConversationLinkA" name="Buyer link" sourceRef="CA" targetRef="Conversation"/><bpmn:conversationLink id="ConversationLinkB" sourceRef="Conversation" targetRef="CB"/>
+  </bpmn:collaboration>
+</bpmn:definitions>

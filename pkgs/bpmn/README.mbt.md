@@ -182,14 +182,17 @@ Outside-root whitespace is source trivia and is omitted from document values.
 
 `Definitions`, `Import`, `BaseElement`, `RootElement` and `Documentation` give
 typed foundation construction or inspection. Abstract base/root views require
-a concrete element whose schema type derives from that base. Process/collaboration wrappers cover activities, subprocesses, calls, loop and
+a concrete element whose schema type derives from that base. Process and
+collaboration wrappers cover activities, subprocesses, calls, loop and
 multi-instance values, events/definitions, gateways, flows, pools/participants,
 lanes, data, artifacts, resources and shared definitions. The generated
 `typed_model_types` and `typed_model_fields` inventories let qualification
-check every selected schema type and inherited field. Complete choreography,
-conversation, DI and opaque vendor data qualification follow in group 5.
-Unknown elements or foreign attributes still give an unsupported finding and
-prevent typed projection in this slice. Their XML CST remains available.
+check every selected schema type and inherited field. Choreography,
+conversation, BPMNDI/DI/DC and preserved vendor XML are also
+qualified. Every complex type in the five frozen schemas has a typed view,
+including the anonymous DI extension container. Unknown standard elements or
+unknown types give findings and remain available as preserved XML inside the
+document. Foreign namespace content does not require a vendor plugin.
 Structure validation, reference-resource resolution and full traversal follow
 in later groups. Reading or writing does not validate all BPMN constraints.
 
@@ -266,11 +269,14 @@ and containment order. Pretty output adds no whitespace inside mixed content,
 scalar elements or an inherited `xml:space='preserve'` scope.
 
 Canonical namespaces use `bpmn`, `bpmndi`, `dc`, `di`, `xml` and `xsi` for known
-URIs, and `ns1`, `ns2`, ... for other used QName identities in sorted URI order.
-Used bindings are declared at the root. Unused aliases disappear. Attributes
+URIs, and `ns1`, `ns2`, ... for other used QName identities in sorted lexical URI order.
+Known bindings are declared at the root. Unused aliases on ordinary known
+values disappear. Attributes
 sort by namespace URI, then local name. Namespace names are literal strings;
 they do not trigger I/O. Known QName tokens are rewritten with matching
-bindings. Opaque vendor subtree namespace preservation is completed in group 5.
+bindings. Preserved XML and opaque attributes retain their effective bindings in local
+scopes. Their source prefixes are retained when valid, and canonical parent
+prefixes cannot rebind opaque values.
 
 ```mbt check
 ///|
@@ -330,9 +336,10 @@ Writer codes are `bpmn/output-limit`, `bpmn/write-node-limit`,
 `bpmn/invalid-scalar`, `bpmn/scalar-type-mismatch`, `bpmn/unbound-qname`,
 `bpmn/type-conflict`, `bpmn/duplicate-attribute`, `bpmn/invalid-content`,
 `bpmn/invalid-comment`, `bpmn/invalid-pi`, `bpmn/outside-root`,
-`bpmn/definitions-required`, `bpmn/unsupported-element`, `bpmn/unsupported-type`
-and `bpmn/unsupported-attribute`. Lowering also uses `bpmn/invalid-scalar`,
-`bpmn/unbound-qname`, the unsupported codes and `bpmn/definitions-required`.
+`bpmn/definitions-required` and `bpmn/unsupported-type`. Lowering uses
+`bpmn/unsupported-element`, `bpmn/unsupported-type`,
+`bpmn/unsupported-attribute`, `bpmn/invalid-scalar`,
+`bpmn/unbound-qname` and `bpmn/definitions-required`.
 These findings do not change the XML CST's completeness. A simple `walk` visits
 containment in preorder and never follows reference attributes.
 
@@ -415,3 +422,123 @@ See `tests/corpus/bpmn-model/README.md` for normalization rules and the explicit
 GlobalScriptTask schema/reference difference. Exact numeric preservation and
 source order have separate four-target laws, beyond the reference's numeric
 and property-order conventions.
+
+## Choreography, conversation and DI values
+
+`Choreography`, `GlobalChoreographyTask`, `ChoreographyTask`, `SubChoreography`
+and `CallChoreography` retain participant/message references, nested flow
+content, associations and loop descriptions. `Conversation`, `SubConversation`,
+`CallConversation`, `GlobalConversation`, links and associations have their own
+typed views. These are document values. Choreography/conversation rendering is
+explicitly deferred, and the adapter returns `bpmn/unsupported-view` for those
+views. They are not converted into generic tasks.
+
+```mbt check
+///|
+test "construct a choreography document without rendering it" {
+  let task = @bpmn.ChoreographyTask::new(id="Exchange", initiating_participant_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A")), contents=[
+    Element(@bpmn.Element::new(ParticipantRef, content="A")),
+    Element(@bpmn.Element::new(ParticipantRef, content="B")),
+    Element(@bpmn.Element::new(MessageFlowRef, content="M")),
+  ])
+  let flow = @bpmn.MessageFlow::new(id="M", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B")))
+  let choreography = @bpmn.Choreography::new(id="C", contents=[Element(@bpmn.Participant::new(id="A").element), Element(@bpmn.Participant::new(id="B").element), Element(flow.element), Element(task.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[choreography.element]).document()
+  assert_eq(task.loop_type(), Absent)
+  assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
+}
+```
+
+```mbt check
+///|
+test "construct a conversation and its participant links" {
+  let conversation = @bpmn.Conversation::new(id="Order", name="Order details", contents=[Element(@bpmn.Element::new(ParticipantRef, content="Buyer")), Element(@bpmn.Element::new(ParticipantRef, content="Seller"))])
+  let link = @bpmn.ConversationLink::new(id="BuyerLink", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Order")))
+  let collaboration = @bpmn.Collaboration::new(id="C", contents=[Element(@bpmn.Participant::new(id="Buyer").element), Element(@bpmn.Participant::new(id="Seller").element), Element(conversation.element), Element(link.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[collaboration.element]).document()
+  assert_eq(collaboration.conversation_node().value().unwrap().length(), 1)
+  assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
+}
+```
+
+`BpmnDiagram`, `BpmnPlane`, `BpmnShape`, `BpmnEdge`, `BpmnLabel` and
+`BpmnLabelStyle` expose the BPMNDI fields. `Di*` views expose their DI bases;
+`DcBounds`, `DcPoint` and `DcFont` retain exact numeric tokens and display flags.
+A document can have multiple diagrams/planes or no DI. Diagram-element IDs,
+label styles, waypoints and participant-band references remain distinct fields.
+
+```mbt check
+///|
+test "construct exact DI bounds and a plane" {
+  let bounds = @bpmn.DcBounds::new(x=@bpmn.ExactNumber::parse("123.456789012345678901").unwrap(), y=@bpmn.ExactNumber::parse("0").unwrap(), width=@bpmn.ExactNumber::parse("100").unwrap(), height=@bpmn.ExactNumber::parse("80").unwrap())
+  let shape = @bpmn.BpmnShape::new(id="Shape", bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "T")), is_expanded=false, contents=[Element(bounds.element)])
+  let plane = @bpmn.BpmnPlane::new(id="Plane", bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "P")), contents=[Element(shape.element)])
+  let diagram = @bpmn.BpmnDiagram::new(id="Diagram", contents=[Element(plane.element)])
+  let process = @bpmn.Process::new(id="P", contents=[Element(@bpmn.Task::new(id="T").element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[process.element, diagram.element]).document()
+  assert_eq(shape.bounds().value().unwrap().x().value().unwrap().token, "123.456789012345678901")
+  assert_eq(@bpmn.read(@bpmn.write(document, format=Pretty)).document, Some(document))
+}
+```
+
+## Preserved XML and opaque namespace scopes
+
+`XmlElement` and `XmlContent` construct preserved XML from expanded names,
+string-valued attributes, ordered text/elements/comments/instructions and
+explicit namespace bindings. Insert its `element` under an extension container.
+`element.xml()` inspects foreign or unsupported standard XML. A known BPMN name
+inside an opaque payload stays XML payload data, with no inferred BPMN meaning.
+`opaque_attributes()` exposes uninterpreted fields on an otherwise typed node.
+
+Parsed payloads keep their complete effective namespace context in shared
+immutable maps, including inherited and unused bindings. `namespace_binding`
+on either `Element` or `XmlElement` queries this captured scope. Constructed standalone values expose their explicit
+bindings; a constructed tree inherits bindings from its containing values.
+Copying a parsed payload keeps its captured context. Prefix shadowing is kept
+locally, including when a vendor uses `bpmn` for another URI. Names use source
+prefixes inside preserved scopes and fresh aliases when required. No existing
+binding is silently reassigned to change an opaque value.
+
+```mbt check
+///|
+test "construct a mixed vendor extension with a QName-sensitive value" {
+  let payload = @bpmn.XmlElement::new(@bpmn.ExpandedName::new("urn:vendor", "payload"), attributes=[(@bpmn.ExpandedName::new("", "ref"), "q:Target")], contents=[Text("before "), Comment("inert"), Text(" after")], bindings=[("q", "urn:target"), ("unused", "urn:retained")])
+  let extensions = @bpmn.ExtensionElements::new(contents=[Element(payload.element)])
+  let process = @bpmn.Process::new(id="P", contents=[Element(extensions.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
+  let copy = @bpmn.read(@bpmn.write(document)).document.unwrap()
+  let retained = copy.root.children[0].children[0].children[0].xml().unwrap()
+  assert_eq(retained.namespace_binding("q"), Some("urn:target"))
+  assert_eq(retained.namespace_binding("unused"), Some("urn:retained"))
+  assert_eq(copy, document)
+}
+```
+
+Unknown standard elements give `bpmn/unsupported-element`. Unknown `xsi:type`
+values give `bpmn/unsupported-type`; the affected subtree remains opaque XML.
+Unknown standard attributes give `bpmn/unsupported-attribute` and retain their
+value. These findings can coexist with an inspectable, writable document. Its
+CST still reproduces the original text. A root with an unknown type can have no
+`Definitions` view, while its preserved root remains inspectable. A syntax error
+or processing-limit failure still prevents a successful complete document.
+
+Opaque equality compares expanded names, raw values, ordered content, the
+default namespace and bindings used by QName-looking tokens. It does not claim
+to understand vendor semantics. The writer separately retains every original
+binding, including bindings whose use is unknown. Prefixes that were unbound in
+opaque tokens are kept unbound; canonical prefix allocation avoids those names.
+If a copied closed scope would require undeclaring an inherited nonempty prefix,
+XML Namespaces 1.0 cannot represent it, so writing returns
+`bpmn/namespace-conflict`. An empty-namespace identity conflicting with a
+preserved default namespace also returns that error. No partial XML is exposed.
+
+Namespace output uses only changed declarations. Source contexts and changes
+share immutable data across siblings; the acceptance suite exercises wide
+scopes with 1,000 bindings and 2,000 shadowing children. Preserved declarations,
+names and escaped values obey the same node, token and output limits as known
+BPMN data. No vendor text, URI or expression triggers I/O or execution.
+
+The provisional group-4 API returned raw `Element` values from collaboration
+conversation-node, conversation-link and conversation-association accessors.
+These accessors now return their respective typed views. Use `.element` when
+an existing caller needs the underlying element.

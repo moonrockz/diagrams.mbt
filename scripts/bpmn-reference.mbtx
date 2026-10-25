@@ -24,6 +24,17 @@ let reference_adapter : String =
   #|  source = source.replace(normative, '<bpmn:globalScriptTask id="GlobalScript" scriptLanguage="urn:inert" script="describe-only()"/>');
   #|  normalizations.push('GlobalScriptTask.script: normative child projected to reference attribute; original source remains frozen');
   #|}
+  #|const conversationRef = '<bpmn:messageFlowRef>CM</bpmn:messageFlowRef>';
+  #|if (source.includes(conversationRef)) {
+  #|  source = source.replace(conversationRef, '<bpmn:messageFlowRefs>CM</bpmn:messageFlowRefs>');
+  #|  normalizations.push('ConversationNode.messageFlowRef: normative singular tag projected to reference messageFlowRefs; output field normalized back');
+  #|}
+  #|let participantProjection = 0;
+  #|source = source.replace(/<bpmn:participantAssociation id="([A-Za-z_][A-Za-z0-9_.-]*)"><bpmn:innerParticipantRef>([A-Za-z_][A-Za-z0-9_.-]*)<\/bpmn:innerParticipantRef><bpmn:outerParticipantRef>([A-Za-z_][A-Za-z0-9_.-]*)<\/bpmn:outerParticipantRef><\/bpmn:participantAssociation>/g, (_, id, inner, outer) => {
+  #|  participantProjection++;
+  #|  return `<bpmn:participantAssociation id="${id}" innerParticipantRef="${inner}" outerParticipantRef="${outer}"/>`;
+  #|});
+  #|if (participantProjection) normalizations.push('ParticipantAssociation inner/outer references: normative child elements projected to reference attributes');
   #|const { rootElement, warnings } = await new BpmnModdle().fromXML(source);
   #|if (warnings.length) throw new Error(warnings.map(w => w.message).join('\n'));
   #|const compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
@@ -46,7 +57,7 @@ let reference_adapter : String =
   #|        if (!t.id) throw new Error('Reference target has no ID');
   #|        return t.id;
   #|      });
-  #|      fields[p.name] = { kind: 'reference', value: targets };
+  #|      fields[p.name === 'messageFlowRefs' ? 'messageFlowRef' : p.name] = { kind: 'reference', value: targets };
   #|    } else if (typeof v !== 'object') {
   #|      fields[p.isBody ? '@body' : p.name] = { kind: typeof v, value: v };
   #|    } else {
@@ -84,6 +95,8 @@ async fn main {
       ("activities", dir + "/activities.bpmn"),
       ("events", dir + "/events.bpmn"),
       ("collaboration", dir + "/collaboration.bpmn"),
+      ("choreography-conversation", dir + "/choreography-conversation.bpmn"),
+      ("di-views", dir + "/di-views.bpmn"),
     ] {
     let source = @fs.read_file(path).text()
     let input = @process.redirect_from_file(path)
@@ -109,8 +122,9 @@ async fn main {
     println("Wrote bpmn-moddle reference " + name)
   }
   let files = [
-    "activities.bpmn", "events.bpmn", "collaboration.bpmn", "minimal.reference.json",
-    "activities.reference.json", "events.reference.json", "collaboration.reference.json",
+    "activities.bpmn", "events.bpmn", "collaboration.bpmn", "choreography-conversation.bpmn",
+    "di-views.bpmn", "minimal.reference.json", "activities.reference.json", "events.reference.json",
+    "collaboration.reference.json", "choreography-conversation.reference.json", "di-views.reference.json",
   ]
   let sums = StringBuilder()
   for file in files {

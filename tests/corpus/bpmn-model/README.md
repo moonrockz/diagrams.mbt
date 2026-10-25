@@ -11,6 +11,11 @@ The normative inputs remain the five unchanged OMG schemas in `../bpmn-2.0.2`.
   all concrete event-definition families, gateways and conditional flows.
 - `collaboration.bpmn` exercises pools, participants, nested lanes, message/data
   connections, I/O sets, resources/roles, artifacts and an explicit import.
+- `choreography-conversation.bpmn` exercises choreography tasks, sub/call/global
+  forms, participant associations, conversations, nested/call/global forms and
+  links. Their rendering is explicitly deferred.
+- `di-views.bpmn` exercises two planes, shape/label bounds, edge waypoints, fonts,
+  display flags and choreography bands with exact decimal/exponent tokens.
 - `minimal.reference.json` qualifies the original frozen complete-DI fixture.
 
 Run `mise run validate:bpmn-corpus` to verify exact digests and portable test
@@ -52,3 +57,17 @@ trips verify that our module keeps its child form and exact script text.
 
 Sources: [normative Semantic.xsd](https://www.omg.org/spec/BPMN/20100501/Semantic.xsd),
 [reference model](https://github.com/bpmn-io/bpmn-moddle/blob/v10.3.1/resources/bpmn/json/bpmn.json).
+
+Two additional reference-model differences apply to the choreography fixture.
+The normative ConversationNode `messageFlowRef` child is named `messageFlowRefs`
+in bpmn-moddle. The adapter projects the one fixture tag for reference parsing
+and normalizes the reference field name back. Normative ParticipantAssociation
+inner/outer references are children; bpmn-moddle models attributes. The adapter
+projects those simple fixture references to attributes. Each projection is
+recorded in the reference JSON. Portable typed assertions and round trips use
+the original normative child forms, so the reference does not narrow coverage.
+
+Opaque vendor XML has separate portable tests for mixed content, inherited and
+unused bindings, shadowing, copied scopes, unbound prefixes, unknown standard
+elements/types and namespace limits. These tests do not delegate vendor
+semantics to the reference library.
