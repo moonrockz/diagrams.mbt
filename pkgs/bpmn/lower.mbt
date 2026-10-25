@@ -127,34 +127,38 @@ fn lower_minimal(tree : Cst, map : SourceMap, diagnostics : Array[Diagnostic], m
     guard prepared[i] is Some(p) else { continue }
     let node=tree.nodes[i]
     let contents : Array[Content] = []
+    let spans : Array[Span?] = []
+    let mut text_span : Span? = None
     let mut text=StringBuilder()
     fn flush() -> Unit {
       let value=text.to_string()
-      if !value.is_empty() && (p.text_value != None || p.mixed || p.preserve_space || !value.iter().all(c => space(c.to_int()))) { contents.push(Text(value)) }
-      text=StringBuilder()
+      if !value.is_empty() && (p.text_value != None || p.mixed || p.preserve_space || !value.iter().all(c => space(c.to_int()))) { contents.push(Text(value)); spans.push(text_span) }
+      text=StringBuilder(); text_span=None
     }
     for child in node.children {
       let c=tree.nodes[child]
-      if lowered[child] is Some(element) { flush(); contents.push(Element(element)) }
+      if lowered[child] is Some(element) { flush(); contents.push(Element(element)); spans.push(element.span) }
       else { match c.kind {
-        Text | CData => text.write_string(c.value)
-        Comment => { flush(); contents.push(Comment(c.value)) }
-        ProcessingInstruction => { flush(); contents.push(ProcessingInstruction(target=c.raw_name,data=c.value)) }
+        Text | CData => { text.write_string(c.value); text_span=Some({start:text_span.map(s => s.start).unwrap_or(c.span.start),end:c.span.end}) }
+        Comment => { flush(); contents.push(Comment(c.value)); spans.push(Some(c.span)) }
+        ProcessingInstruction => { flush(); contents.push(ProcessingInstruction(target=c.raw_name,data=c.value)); spans.push(Some(c.span)) }
         _ => ()
       } }
     }
     flush()
-    lowered[i]=Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span),context=p.context,captured_context=true,parent_context?=p.context_parent,raw_name=node.raw_name,origin~))
+    lowered[i]=Some(make_element(p.kind,p.values,contents,node.bindings,p.value_type,p.text_value,Some(node.span),context=p.context,captured_context=true,parent_context?=p.context_parent,raw_name=node.raw_name,origin~,content_spans=spans))
   }
   let roots=tree.nodes[0].children.filter(i => tree.nodes[i].kind == Element).iter().to_array()
   guard roots.length() == 1 && lowered[roots[0]] is Some(root) && root.kind.name() == Kind::Definitions.name() else {
     report("bpmn/definitions-required","One BPMN definitions root is required",tree.nodes[0].span); return None
   }
   let prolog : Array[Content] = []; let epilog : Array[Content] = []
+  let prolog_spans : Array[Span?] = []; let epilog_spans : Array[Span?] = []
   for child in tree.nodes[0].children {
     let node=tree.nodes[child]
     let target=if child < roots[0] { prolog } else { epilog }
-    match node.kind { Comment => target.push(Comment(node.value)); ProcessingInstruction => target.push(ProcessingInstruction(target=node.raw_name,data=node.value)); _ => () }
+    let spans=if child < roots[0] { prolog_spans } else { epilog_spans }
+    match node.kind { Comment => { target.push(Comment(node.value)); spans.push(Some(node.span)) }; ProcessingInstruction => { target.push(ProcessingInstruction(target=node.raw_name,data=node.value)); spans.push(Some(node.span)) }; _ => () }
   }
-  Some(Document::new(root,prolog~,epilog~))
+  Some(Document::{root,prolog:ReadOnlyArray::from_array(prolog),epilog:ReadOnlyArray::from_array(epilog),origin:Some(origin),prolog_spans:ReadOnlyArray::from_array(prolog_spans),epilog_spans:ReadOnlyArray::from_array(epilog_spans)})
 }

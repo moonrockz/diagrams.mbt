@@ -39,6 +39,7 @@ test "inspect XML namespaces and mixed content without a renderer" {
 }
 ```
 
+
 The CST has flat, immutable `nodes` and lexical `tokens`. Node zero is the
 document; child and parent indexes refer to that CST. Element nodes expose raw
 and expanded names, ordered attributes, local namespace declarations, child
@@ -687,3 +688,182 @@ test "document the complete structural and reference diagnostic inventory" {
   assert_eq(@bpmn.validation_diagnostic_codes,codes)
 }
 ```
+
+## Read-only traversal
+
+`DocumentTree::new(document, resource_id?, limits?)` builds an immutable index
+over the existing document values. It does not require semantic validity and
+does not resolve references. Its document root contains prolog content, the
+definitions element and epilog content. Element children include retained text,
+comments and processing instructions, with vendor XML in original model order.
+XML formatting trivia omitted during typed lowering stays in the lossless CST.
+
+`NodeRef` exposes `value`, `category`, XML `kind`, declared `id`, `attributes`,
+`scalar`, `fields`, `children`, `parent`, `step`, `depth`, `span`, `location`,
+`resource_id`, `path` and `handle`. A `NodeField` groups present attributes and
+children without adding defaults. Known containment uses schema field names,
+including substitution heads such as `flowElement`; opaque children use their
+expanded XML names. `PathField` distinguishes named fields, text, comments, PI,
+root, prolog and epilog. `PathStep` records the index within that field and the
+absolute ordered-content index. Unbound attribute names remain inspectable via
+`attributes`, without an invented expanded identity.
+
+A `NodePath` is a constant-size view; `steps()` allocates the requested path.
+Depth and paths are relative to the document root, including when a traversal
+starts at a subtree. Source-backed content has optional source locations.
+Constructed or replaced content has no invented span. Copied elements keep
+their own origins. Replacing contents preserves child-element origins, and
+clears source spans for newly supplied text/comment/PI values.
+
+`tree.lookup(handle)` and `path.resolve(tree)` return `Found`, `DocumentMismatch`
+or `InvalidHandle`. Revision checks compare resource identity, complete source
+identity and constructed values, including unused bindings and lexical
+metadata. Semantic document equality alone is insufficient. Two trees built
+from the same immutable revision can exchange handles. Canonical writing and
+reading creates a new source revision. There is no global allocation counter or
+hash-only ownership test.
+
+```mbt check
+///|
+test "locate a nested task and reject a handle from another revision" {
+  let task=@bpmn.Task::new(id="T")
+  let sub=@bpmn.SubProcess::new(id="Sub",contents=[Element(task.element)])
+  let doc=@bpmn.Definitions::new("urn:t",children=[@bpmn.Process::new(id="P",contents=[Element(sub.element)]).element]).document()
+  let tree=@bpmn.DocumentTree::new(doc).tree.unwrap()
+  let tasks=[]
+  @bpmn.walk(tree.root(),n => { if n.id() == Some("T") { tasks.push(n) }; Continue })
+  let node=tasks[0]
+  assert_eq(node.parent().unwrap().id(),Some("Sub"))
+  assert_eq(node.path().steps().last().unwrap().field,Named(@bpmn.Kind::FlowElement.name()))
+  assert_eq(node.location(),None)
+  assert_true(node.path().resolve(tree) is Found(found) && found == node)
+  let changed=@bpmn.Definitions::new("urn:changed").document()
+  assert_true(@bpmn.DocumentTree::new(changed).tree.unwrap().lookup(node.handle()) is DocumentMismatch)
+}
+```
+
+`walk` takes an enter callback and an optional `leave` callback. Enter returns
+`Continue`, `SkipChildren` or `Stop`. A skipped node still receives leave; stop
+emits no later enter or leave callbacks. `fold` threads an accumulator through
+the same order. `reduce` combines child results bottom up; `reduce_pruned`
+also takes enter control, supplies an empty child-result view for skipped
+children, and returns `None` after stop.
+
+`EventReader::new(root)` exposes the same order as pull `TraversalEvent::Enter`
+and `Leave` values. Each event contains its `NodeRef`, including path and source
+identity. `skip_children()` acts immediately after enter; elsewhere it does
+nothing. `stop()` makes subsequent reads return `None`. `EventSource` permits
+other event producers, and `push_events` drives them with the same controls.
+
+```mbt check
+///|
+test "walking folding reduction and pull events count the same nodes" {
+  let doc=@bpmn.Definitions::new("urn:t",children=[@bpmn.Process::new(contents=[Element(@bpmn.Task::new(id="T").element)]).element]).document()
+  let root=@bpmn.DocumentTree::new(doc).tree.unwrap().root()
+  let mut entered=0
+  @bpmn.walk(root,_ => { entered+=1; Continue })
+  let folded=@bpmn.fold(root,0,(count,_) => (count+1,Continue))
+  let reduced=@bpmn.reduce(root,(_ : @bpmn.NodeRef,children : ArrayView[Int]) => 1+children.iter().fold(init=0,(sum,n) => sum+n))
+  let reader=@bpmn.EventReader::new(root)
+  assert_eq(reader.iter().count(),entered*2)
+  assert_eq(folded,entered); assert_eq(reduced,entered)
+  let cursor=@bpmn.TreeCursor::new(root)
+  assert_true(cursor.goto_first_child())
+  assert_eq(cursor.node().category(),Definitions)
+  assert_true(cursor.goto_parent()); assert_eq(cursor.node(),root)
+}
+```
+
+`Visitor` has default methods, so implement only the categories you need.
+Its optional `enter(NodeRef)` runs first; if it returns `Continue`, a typed
+family method runs next. Typed methods cover definitions, processes, activities,
+events, gateways, sequence flows, collaborations, participants, lanes,
+choreography, choreography activities, conversations, links and opaque XML.
+`visit_diagram_interchange` and `visit_other` expose other families through their
+read-only node views and typed element projections. Text, comment, PI and the
+document have their own methods. `leave` runs for every completed visited node.
+`accept(root, visitor)` uses the common traversal engine.
+
+`TreeCursor` supports parent, first/last child and adjacent siblings. A failed
+move preserves its position. It stays within its chosen start subtree; `depth`
+is relative to that start while `path` remains document-relative. Each walk,
+reader, reduction and cursor owns its state. Nested walks are independent.
+Explicit heap stacks handle 10,000 nested constructed elements on all targets
+when the configured element-depth bound allows them. The older
+`Document::walk(Element -> Unit)` remains an element-only convenience.
+
+## Structural graph queries
+
+`DocumentGraph::new(document, resources?, resource_id?, limits?, graph_limits?)`
+indexes the explicit document/import closure. It retains validation findings,
+and checks each imported document against that document's own import visibility.
+`GraphNode::Document` holds a revision-bound `NodeRef`. `External` holds an
+explicit external-language symbol and its occurrence, as a leaf. No URL or
+filesystem lookup occurs. An invalid reference becomes a query failure when
+the selected search encounters it; an unrelated disconnected component can
+still be queried. Processing exhaustion returns no apparently complete graph.
+
+`GraphEdgeKind` distinguishes containment, sequence flow, message flow,
+association, data association, conversation links and general references.
+General references run from the owning element to its target. A sequence-flow
+edge runs between its authored endpoints and retains the flow as `connection`.
+Data associations with several sources have one edge per source. Valid
+source-less data assignments retain their target as a general reference; no
+visual source is inferred. DI coordinates, labels and XML adjacency never
+create connections.
+
+`GraphEndpoint` selects a root-document `Id`, a namespace-aware `Qualified`
+identity, a revision-bound `Node` handle, or an explicit external `Symbol`.
+`lookup` returns the selected graph node or a typed failure. Root ID lookup does
+not select an imported element with a same-named ID.
+
+`reachable` includes the start once. `route` returns one shortest directed route,
+with authored connection order breaking ties. Both default to sequence flow in
+the forward direction; callers explicitly select edge kinds and `Forward`,
+`Reverse` or `Both`. A reverse route keeps each edge's authored source and
+target. Returned nodes and connection owners preserve source identities. These
+are structural routes, not execution paths or token simulations.
+
+```mbt check
+///|
+test "query a bounded structural route without executing a process" {
+  let source="<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:t'><b:process><b:task id='A'/><b:task id='B'/><b:task id='C'/><b:sequenceFlow id='AB' sourceRef='A' targetRef='B'/><b:sequenceFlow id='BC' sourceRef='B' targetRef='C'/></b:process></b:definitions>"
+  let graph=@bpmn.DocumentGraph::new(@bpmn.read(source).document.unwrap()).graph.unwrap()
+  guard graph.route(Id("A"),Id("C")) is Found(route) else { fail("route missing") }
+  assert_eq(route.nodes.iter().map(n => n.id()).to_array(),[Some("A"),Some("B"),Some("C")])
+  assert_eq(route.edges[0].connection.unwrap().id(),Some("AB"))
+  assert_true(graph.route(Id("C"),Id("A")) is Unreachable)
+  assert_true(graph.route(Id("A"),Id("C"),limits=@bpmn.GraphLimits::new(nodes=1)) is Failed(Limit(Nodes)))
+}
+```
+
+`ReachabilityResult` is `Complete` or `Failed`; `RouteResult` is `Found`,
+`Unreachable` or `Failed`. `GraphFailure` distinguishes `InvalidEndpoint`,
+`DocumentMismatch`, `InvalidReference` with its owner handle, `Ambiguous` with
+candidate nodes, `Limit` and `InvalidLimits`. A limit never reports unreachable
+or returns a partial result as complete. `GraphLimits` has positive inclusive
+node, edge, result and work bounds. Defaults are 100,000 nodes, 200,000 edges,
+100,000 results and 1,000,000 work units.
+
+During graph construction, the edge bound counts indexed adjacency entries,
+including reverse entries and broken-edge markers. Work includes indexed
+resource records, reference candidates and conservative resource-record charges
+before imported resolution. Query edge bounds count selected adjacency entries
+inspected; work counts selection processing, expanded nodes and inspected
+entries. Selection is deduplicated once. Node/result bounds are checked before
+allocation; route results count path nodes. Each query has fresh state and its
+own budget. Document validation and traversal bounds also apply while building.
+
+```mbt check
+///|
+test "document traversal and graph construction code inventories" {
+  assert_eq(@bpmn.traversal_diagnostic_codes,["bpmn/traversal-invalid-limits","bpmn/traversal-node-limit","bpmn/traversal-depth-limit","bpmn/traversal-token-limit"])
+  assert_eq(@bpmn.graph_diagnostic_codes,["bpmn/graph-invalid-limits","bpmn/graph-work-limit","bpmn/graph-node-limit","bpmn/graph-edge-limit"])
+}
+```
+
+Traversal diagnostics identify invalid limits, arena/metadata exhaustion,
+element-depth exhaustion or oversized names/values. Graph construction adds
+invalid-limit, work, node and adjacency-entry findings. It can also propagate
+the validation and traversal inventories documented above. All have error
+severity. Query failures use the typed alternatives described here.

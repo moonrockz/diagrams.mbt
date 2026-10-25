@@ -6,9 +6,21 @@ import {
 }
 
 // Values
+pub fn[V : Visitor] accept(NodeRef, V) -> Unit
+
+pub fn[A] fold(NodeRef, A, (A, NodeRef) -> (A, Control), leave? : (A, NodeRef) -> A) -> A
+
+pub let graph_diagnostic_codes : ReadOnlyArray[String]
+
 pub fn kind_from_name(ExpandedName) -> Kind?
 
+pub fn[S : EventSource] push_events(S, (NodeRef) -> Control, leave? : (NodeRef) -> Unit) -> Unit
+
 pub fn read(String, source_id? : String, limits? : Limits) -> ReadResult
+
+pub fn[R] reduce(NodeRef, (NodeRef, ArrayView[R]) -> R) -> R
+
+pub fn[R] reduce_pruned(NodeRef, (NodeRef) -> Control, (NodeRef, ArrayView[R]) -> R) -> R?
 
 pub let reference_rules : ReadOnlyArray[ReferenceRule]
 
@@ -26,6 +38,8 @@ pub let schema_types : ReadOnlyArray[SchemaType]
 
 pub let standard_kinds : ReadOnlyArray[Kind]
 
+pub let traversal_diagnostic_codes : ReadOnlyArray[String]
+
 pub fn try_write(Document, format? : WriteFormat, limits? : Limits) -> WriteResult
 
 pub let typed_model_fields : ReadOnlyArray[(TypeId, SchemaFieldKind, ExpandedName)]
@@ -39,6 +53,8 @@ pub fn validate_read(ReadResult, resources? : ResourceSet, resource_id? : String
 pub fn validate_structure(Document, resource_id? : String, limits? : Limits) -> StructureResult
 
 pub let validation_diagnostic_codes : ReadOnlyArray[String]
+
+pub fn walk(NodeRef, (NodeRef) -> Control, leave? : (NodeRef) -> Unit) -> Unit
 
 pub fn write(Document, format? : WriteFormat, limits? : Limits) -> String raise WriteError
 
@@ -778,6 +794,15 @@ pub fn Content::equal(Self, Self) -> Bool
 pub fn Content::not_equal(Self, Self) -> Bool
 pub fn Content::to_repr(Self) -> @debug.Repr
 
+pub(all) enum Control {
+  Continue
+  SkipChildren
+  Stop
+} derive(Eq, @debug.Debug)
+pub fn Control::equal(Self, Self) -> Bool
+pub fn Control::not_equal(Self, Self) -> Bool
+pub fn Control::to_repr(Self) -> @debug.Repr
+
 pub struct Conversation {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -1274,13 +1299,27 @@ pub struct Document {
   root : Element
   prolog : ReadOnlyArray[Content]
   epilog : ReadOnlyArray[Content]
-} derive(Eq, @debug.Debug)
+  // private fields
+} derive(@debug.Debug)
 pub fn Document::definitions(Self) -> Definitions?
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::new(Element, prolog? : ArrayView[Content], epilog? : ArrayView[Content]) -> Self
 pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::walk(Self, (Element) -> Unit) -> Unit
+pub impl Eq for Document
+
+pub struct DocumentGraph {
+  nodes : ReadOnlyArray[GraphNode]
+  edges : ReadOnlyArray[GraphEdge]
+  // private fields
+}
+pub fn DocumentGraph::lookup(Self, GraphEndpoint, limits? : GraphLimits) -> Result[GraphNode, GraphFailure]
+pub fn DocumentGraph::new(Document, resources? : ResourceSet, resource_id? : String, limits? : Limits, graph_limits? : GraphLimits) -> GraphBuildResult
+pub fn DocumentGraph::reachable(Self, GraphEndpoint, kinds? : ArrayView[GraphEdgeKind], direction? : GraphDirection, limits? : GraphLimits) -> ReachabilityResult
+pub fn DocumentGraph::route(Self, GraphEndpoint, GraphEndpoint, kinds? : ArrayView[GraphEdgeKind], direction? : GraphDirection, limits? : GraphLimits) -> RouteResult
+pub fn DocumentGraph::to_repr(Self) -> @debug.Repr
+pub impl @debug.Debug for DocumentGraph
 
 pub struct DocumentIndex {
   document : Document
@@ -1299,6 +1338,18 @@ pub fn DocumentResource::equal(Self, Self) -> Bool
 pub fn DocumentResource::new(String, Document) -> Self
 pub fn DocumentResource::not_equal(Self, Self) -> Bool
 pub fn DocumentResource::to_repr(Self) -> @debug.Repr
+
+pub struct DocumentTree {
+  document : Document
+  // private fields
+}
+pub fn DocumentTree::length(Self) -> Int32
+pub fn DocumentTree::lookup(Self, NodeHandle) -> NodeLookup
+pub fn DocumentTree::new(Document, resource_id? : String, limits? : Limits) -> TreeBuildResult
+pub fn DocumentTree::resource_id(Self) -> String?
+pub fn DocumentTree::root(Self) -> NodeRef
+pub fn DocumentTree::to_repr(Self) -> @debug.Repr
+pub impl @debug.Debug for DocumentTree
 
 pub struct Documentation {
   element : Element
@@ -1483,6 +1534,16 @@ pub fn EventDefinition::id(Self) -> Field[String]
 pub fn EventDefinition::not_equal(Self, Self) -> Bool
 pub fn EventDefinition::to_repr(Self) -> @debug.Repr
 
+pub struct EventReader {
+  // private fields
+}
+pub fn EventReader::iter(Self) -> Iter[TraversalEvent]
+pub fn EventReader::new(NodeRef) -> Self
+pub fn EventReader::next(Self) -> TraversalEvent?
+pub fn EventReader::skip_children(Self) -> Unit
+pub fn EventReader::stop(Self) -> Unit
+pub impl EventSource for EventReader
+
 pub struct ExactInteger {
   token : String
 } derive(Eq, @debug.Debug)
@@ -1561,6 +1622,14 @@ pub fn ExtensionElements::from_element(Element) -> Self?
 pub fn ExtensionElements::new(contents? : ArrayView[Content]) -> Self
 pub fn ExtensionElements::not_equal(Self, Self) -> Bool
 pub fn ExtensionElements::to_repr(Self) -> @debug.Repr
+
+pub struct ExternalNode {
+  symbol : ResolvedSymbol
+  occurrence : Int32
+} derive(Eq, @debug.Debug)
+pub fn ExternalNode::equal(Self, Self) -> Bool
+pub fn ExternalNode::not_equal(Self, Self) -> Bool
+pub fn ExternalNode::to_repr(Self) -> @debug.Repr
 
 pub struct ExternalResource {
   location : String
@@ -1799,6 +1868,104 @@ pub fn GlobalUserTask::rendering(Self) -> Field[ReadOnlyArray[Rendering]]
 pub fn GlobalUserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn GlobalUserTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalUserTask::to_repr(Self) -> @debug.Repr
+
+pub struct GraphBuildResult {
+  graph : DocumentGraph?
+  diagnostics : ReadOnlyArray[Diagnostic]
+} derive(@debug.Debug)
+pub fn GraphBuildResult::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphDirection {
+  Forward
+  Reverse
+  Both
+} derive(Eq, @debug.Debug)
+pub fn GraphDirection::equal(Self, Self) -> Bool
+pub fn GraphDirection::not_equal(Self, Self) -> Bool
+pub fn GraphDirection::to_repr(Self) -> @debug.Repr
+
+pub struct GraphEdge {
+  kind : GraphEdgeKind
+  source : GraphNode
+  target : GraphNode
+  connection : NodeRef?
+} derive(Eq, @debug.Debug)
+pub fn GraphEdge::equal(Self, Self) -> Bool
+pub fn GraphEdge::not_equal(Self, Self) -> Bool
+pub fn GraphEdge::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphEdgeKind {
+  Containment
+  SequenceFlow
+  MessageFlow
+  Association
+  DataAssociation
+  ConversationLink
+  Reference
+} derive(Eq, @debug.Debug)
+pub fn GraphEdgeKind::equal(Self, Self) -> Bool
+pub fn GraphEdgeKind::not_equal(Self, Self) -> Bool
+pub fn GraphEdgeKind::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphEndpoint {
+  Node(NodeHandle)
+  Id(String)
+  Qualified(ExpandedName)
+  Symbol(ResolvedSymbol)
+} derive(Eq, @debug.Debug)
+pub fn GraphEndpoint::equal(Self, Self) -> Bool
+pub fn GraphEndpoint::not_equal(Self, Self) -> Bool
+pub fn GraphEndpoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphFailure {
+  InvalidEndpoint
+  DocumentMismatch
+  InvalidReference(NodeHandle)
+  Ambiguous(ReadOnlyArray[GraphNode])
+  Limit(GraphLimit)
+  InvalidLimits
+} derive(Eq, @debug.Debug)
+pub fn GraphFailure::equal(Self, Self) -> Bool
+pub fn GraphFailure::not_equal(Self, Self) -> Bool
+pub fn GraphFailure::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphLimit {
+  Nodes
+  Edges
+  Results
+  Work
+} derive(Eq, @debug.Debug)
+pub fn GraphLimit::equal(Self, Self) -> Bool
+pub fn GraphLimit::not_equal(Self, Self) -> Bool
+pub fn GraphLimit::to_repr(Self) -> @debug.Repr
+
+pub struct GraphLimits {
+  nodes : Int32
+  edges : Int32
+  results : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn GraphLimits::equal(Self, Self) -> Bool
+pub fn GraphLimits::new(nodes? : Int32, edges? : Int32, results? : Int32, work? : Int32) -> Self
+pub fn GraphLimits::not_equal(Self, Self) -> Bool
+pub fn GraphLimits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum GraphNode {
+  Document(NodeRef)
+  External(ExternalNode)
+} derive(Eq, @debug.Debug)
+pub fn GraphNode::equal(Self, Self) -> Bool
+pub fn GraphNode::id(Self) -> String?
+pub fn GraphNode::not_equal(Self, Self) -> Bool
+pub fn GraphNode::to_repr(Self) -> @debug.Repr
+
+pub struct GraphRoute {
+  nodes : ReadOnlyArray[GraphNode]
+  edges : ReadOnlyArray[GraphEdge]
+} derive(Eq, @debug.Debug)
+pub fn GraphRoute::equal(Self, Self) -> Bool
+pub fn GraphRoute::not_equal(Self, Self) -> Bool
+pub fn GraphRoute::to_repr(Self) -> @debug.Repr
 
 pub struct Group {
   element : Element
@@ -2490,6 +2657,111 @@ pub fn MultiInstanceLoopCharacteristics::one_behavior_event_ref(Self) -> Field[R
 pub fn MultiInstanceLoopCharacteristics::output_data_item(Self) -> Field[DataOutput]
 pub fn MultiInstanceLoopCharacteristics::to_repr(Self) -> @debug.Repr
 
+pub(all) enum NodeCategory {
+  Document
+  Definitions
+  Process
+  Activity
+  Event
+  Gateway
+  SequenceFlow
+  Collaboration
+  Participant
+  Lane
+  Choreography
+  ChoreographyActivity
+  Conversation
+  ConversationLink
+  DiagramInterchange
+  Extension
+  Other
+  Text
+  Comment
+  ProcessingInstruction
+} derive(Eq, @debug.Debug)
+pub fn NodeCategory::equal(Self, Self) -> Bool
+pub fn NodeCategory::not_equal(Self, Self) -> Bool
+pub fn NodeCategory::to_repr(Self) -> @debug.Repr
+
+pub struct NodeField {
+  field : PathField
+  attributes : ReadOnlyArray[Attribute]
+  children : ReadOnlyArray[NodeRef]
+} derive(Eq, @debug.Debug)
+pub fn NodeField::equal(Self, Self) -> Bool
+pub fn NodeField::not_equal(Self, Self) -> Bool
+pub fn NodeField::to_repr(Self) -> @debug.Repr
+
+pub struct NodeHandle {
+  ordinal : Int32
+  // private fields
+}
+pub fn NodeHandle::equal(Self, Self) -> Bool
+pub fn NodeHandle::not_equal(Self, Self) -> Bool
+pub fn NodeHandle::resource_id(Self) -> String?
+pub fn NodeHandle::to_repr(Self) -> @debug.Repr
+pub impl Eq for NodeHandle
+pub impl @debug.Debug for NodeHandle
+
+pub(all) enum NodeLookup {
+  Found(NodeRef)
+  DocumentMismatch
+  InvalidHandle
+} derive(Eq, @debug.Debug)
+pub fn NodeLookup::equal(Self, Self) -> Bool
+pub fn NodeLookup::not_equal(Self, Self) -> Bool
+pub fn NodeLookup::to_repr(Self) -> @debug.Repr
+
+pub struct NodePath {
+  // private fields
+}
+pub fn NodePath::depth(Self) -> Int32
+pub fn NodePath::equal(Self, Self) -> Bool
+pub fn NodePath::not_equal(Self, Self) -> Bool
+pub fn NodePath::resolve(Self, DocumentTree) -> NodeLookup
+pub fn NodePath::steps(Self) -> ReadOnlyArray[PathStep]
+pub fn NodePath::to_repr(Self) -> @debug.Repr
+pub impl Eq for NodePath
+pub impl @debug.Debug for NodePath
+
+pub struct NodeRef {
+  // private fields
+}
+pub fn NodeRef::attributes(Self) -> ReadOnlyArray[Attribute]
+pub fn NodeRef::category(Self) -> NodeCategory
+pub fn NodeRef::children(Self) -> ReadOnlyArray[Self]
+pub fn NodeRef::depth(Self) -> Int32
+pub fn NodeRef::element(Self) -> Element?
+pub fn NodeRef::equal(Self, Self) -> Bool
+pub fn NodeRef::field(Self, PathField) -> NodeField?
+pub fn NodeRef::fields(Self) -> ReadOnlyArray[NodeField]
+pub fn NodeRef::handle(Self) -> NodeHandle
+pub fn NodeRef::id(Self) -> String?
+pub fn NodeRef::kind(Self) -> Kind?
+pub fn NodeRef::location(Self) -> Location?
+pub fn NodeRef::not_equal(Self, Self) -> Bool
+pub fn NodeRef::parent(Self) -> Self?
+pub fn NodeRef::path(Self) -> NodePath
+pub fn NodeRef::resource_id(Self) -> String?
+pub fn NodeRef::scalar(Self, ExpandedName) -> Scalar?
+pub fn NodeRef::span(Self) -> Span?
+pub fn NodeRef::step(Self) -> PathStep?
+pub fn NodeRef::to_repr(Self) -> @debug.Repr
+pub fn NodeRef::value(Self) -> NodeValue
+pub impl Eq for NodeRef
+pub impl @debug.Debug for NodeRef
+
+pub(all) enum NodeValue {
+  Document
+  Element(Element)
+  Text(String)
+  Comment(String)
+  ProcessingInstruction(target~ : String, data~ : String)
+} derive(Eq, @debug.Debug)
+pub fn NodeValue::equal(Self, Self) -> Bool
+pub fn NodeValue::not_equal(Self, Self) -> Bool
+pub fn NodeValue::to_repr(Self) -> @debug.Repr
+
 pub struct Operation {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -2616,6 +2888,28 @@ pub fn PartnerRole::not_equal(Self, Self) -> Bool
 pub fn PartnerRole::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn PartnerRole::to_repr(Self) -> @debug.Repr
 
+pub(all) enum PathField {
+  Named(ExpandedName)
+  Text
+  Comment
+  ProcessingInstruction
+  Root
+  Prolog
+  Epilog
+} derive(Eq, @debug.Debug)
+pub fn PathField::equal(Self, Self) -> Bool
+pub fn PathField::not_equal(Self, Self) -> Bool
+pub fn PathField::to_repr(Self) -> @debug.Repr
+
+pub struct PathStep {
+  field : PathField
+  index : Int32
+  content_index : Int32
+} derive(Eq, @debug.Debug)
+pub fn PathStep::equal(Self, Self) -> Bool
+pub fn PathStep::not_equal(Self, Self) -> Bool
+pub fn PathStep::to_repr(Self) -> @debug.Repr
+
 pub struct Performer {
   element : Element
 } derive(Eq, @debug.Debug)
@@ -2711,6 +3005,14 @@ pub fn Property::name(Self) -> Field[String]
 pub fn Property::new(id? : String, name? : String, item_subject_ref? : Reference, contents? : ArrayView[Content]) -> Self
 pub fn Property::not_equal(Self, Self) -> Bool
 pub fn Property::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ReachabilityResult {
+  Complete(ReadOnlyArray[GraphNode])
+  Failed(GraphFailure)
+} derive(Eq, @debug.Debug)
+pub fn ReachabilityResult::equal(Self, Self) -> Bool
+pub fn ReachabilityResult::not_equal(Self, Self) -> Bool
+pub fn ReachabilityResult::to_repr(Self) -> @debug.Repr
 
 pub struct ReadResult {
   tree : Cst
@@ -2882,6 +3184,7 @@ pub struct ResolvedSymbol {
   name : ExpandedName
 } derive(Eq, @debug.Debug)
 pub fn ResolvedSymbol::equal(Self, Self) -> Bool
+pub fn ResolvedSymbol::new(String, ExpandedName) -> Self
 pub fn ResolvedSymbol::not_equal(Self, Self) -> Bool
 pub fn ResolvedSymbol::to_repr(Self) -> @debug.Repr
 
@@ -2974,6 +3277,15 @@ pub fn RootElement::equal(Self, Self) -> Bool
 pub fn RootElement::from_element(Element) -> Self?
 pub fn RootElement::not_equal(Self, Self) -> Bool
 pub fn RootElement::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RouteResult {
+  Found(GraphRoute)
+  Unreachable
+  Failed(GraphFailure)
+} derive(Eq, @debug.Debug)
+pub fn RouteResult::equal(Self, Self) -> Bool
+pub fn RouteResult::not_equal(Self, Self) -> Bool
+pub fn RouteResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Scalar {
   Text(String)
@@ -3531,6 +3843,33 @@ pub fn TransactionMethod::parse(String) -> Self?
 pub fn TransactionMethod::to_repr(Self) -> @debug.Repr
 pub fn TransactionMethod::token(Self) -> String
 
+pub(all) enum TraversalEvent {
+  Enter(NodeRef)
+  Leave(NodeRef)
+} derive(Eq, @debug.Debug)
+pub fn TraversalEvent::equal(Self, Self) -> Bool
+pub fn TraversalEvent::not_equal(Self, Self) -> Bool
+pub fn TraversalEvent::to_repr(Self) -> @debug.Repr
+
+pub struct TreeBuildResult {
+  tree : DocumentTree?
+  diagnostics : ReadOnlyArray[Diagnostic]
+} derive(@debug.Debug)
+pub fn TreeBuildResult::to_repr(Self) -> @debug.Repr
+
+pub struct TreeCursor {
+  // private fields
+}
+pub fn TreeCursor::depth(Self) -> Int32
+pub fn TreeCursor::goto_first_child(Self) -> Bool
+pub fn TreeCursor::goto_last_child(Self) -> Bool
+pub fn TreeCursor::goto_next_sibling(Self) -> Bool
+pub fn TreeCursor::goto_parent(Self) -> Bool
+pub fn TreeCursor::goto_previous_sibling(Self) -> Bool
+pub fn TreeCursor::new(NodeRef) -> Self
+pub fn TreeCursor::node(Self) -> NodeRef
+pub fn TreeCursor::path(Self) -> NodePath
+
 pub(all) enum TypeId {
   Definitions
   Import
@@ -3853,3 +4192,33 @@ pub fn XmlNodeKind::to_repr(Self) -> @debug.Repr
 // Type aliases
 
 // Traits
+pub(open) trait EventSource {
+  fn next(Self) -> TraversalEvent?
+  fn skip_children(Self) -> Unit
+  fn stop(Self) -> Unit
+}
+
+pub(open) trait Visitor {
+  fn enter(Self, NodeRef) -> Control = _
+  fn visit_definitions(Self, Definitions, NodeRef) -> Control = _
+  fn visit_process(Self, Process, NodeRef) -> Control = _
+  fn visit_activity(Self, Activity, NodeRef) -> Control = _
+  fn visit_event(Self, Event, NodeRef) -> Control = _
+  fn visit_gateway(Self, Gateway, NodeRef) -> Control = _
+  fn visit_sequence_flow(Self, SequenceFlow, NodeRef) -> Control = _
+  fn visit_collaboration(Self, Collaboration, NodeRef) -> Control = _
+  fn visit_participant(Self, Participant, NodeRef) -> Control = _
+  fn visit_lane(Self, Lane, NodeRef) -> Control = _
+  fn visit_choreography(Self, Choreography, NodeRef) -> Control = _
+  fn visit_choreography_activity(Self, ChoreographyActivity, NodeRef) -> Control = _
+  fn visit_conversation(Self, ConversationNode, NodeRef) -> Control = _
+  fn visit_conversation_link(Self, ConversationLink, NodeRef) -> Control = _
+  fn visit_extension(Self, XmlElement, NodeRef) -> Control = _
+  fn visit_document(Self, NodeRef) -> Control = _
+  fn visit_diagram_interchange(Self, NodeRef) -> Control = _
+  fn visit_text(Self, NodeRef) -> Control = _
+  fn visit_comment(Self, NodeRef) -> Control = _
+  fn visit_processing_instruction(Self, NodeRef) -> Control = _
+  fn visit_other(Self, NodeRef) -> Control = _
+  fn leave(Self, NodeRef) -> Unit = _
+}
