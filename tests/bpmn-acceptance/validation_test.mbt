@@ -298,3 +298,13 @@ test "an import in invalid containment cannot make a supplied resource visible" 
   let result=@bpmn.resolve_references(structure.index,resources~)
   assert_eq(validation_codes(result.findings),["bpmn/unresolved-reference"])
 }
+
+///|
+test "simple schema content rejects undeclared attributes" {
+  let doc=validation_document("<b:process><b:task id='T'><b:incoming bogus='x'>F</b:incoming></b:task><b:sequenceFlow id='F' sourceRef='T' targetRef='T'/></b:process>")
+  assert_true(validation_codes(@bpmn.validate_structure(doc).findings).contains("bpmn/invalid-field"))
+  let invalid=@bpmn.read("<b:definitions xmlns:b='\{model_uri}' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xsi:type='xs:string'/>").document.unwrap()
+  assert_true(validation_codes(@bpmn.validate_structure(invalid).findings).contains("bpmn/invalid-type"))
+  let valid=validation_document("<b:process><b:task id='T'><b:incoming xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:nil='false'>F</b:incoming></b:task><b:sequenceFlow id='F' sourceRef='T' targetRef='T'/></b:process>")
+  assert_eq(@bpmn.validate_structure(valid).findings,[])
+}

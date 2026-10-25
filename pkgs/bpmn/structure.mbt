@@ -19,6 +19,11 @@ fn scalar_conforms(value : Scalar, expected : ExpandedName) -> Bool {
 }
 
 ///|
+fn value_subtype(actual : ExpandedName, expected : ExpandedName) -> Bool {
+  actual == expected || schema_type(actual).map(t => t.is_subtype_of(expected)).unwrap_or(false)
+}
+
+///|
 fn field_matches(field : SchemaField, child : Element, owner : ExpandedName) -> Bool {
   match field.kind {
     Child => field.name.map(name => typed_child_matches(child,name,field.reference_element != None)).unwrap_or(false)
@@ -71,9 +76,18 @@ fn ValidationLog::structure_node(self : ValidationLog, node : IndexedElement) ->
   guard element.value_type is Some(type_name) else {
     self.add(Structure,"bpmn/invalid-type","Element has no declared schema type",Some(node),None); return
   }
+  if element.kind.declared_type() is Some(declared) && !value_subtype(type_name,declared) {
+    self.add(Structure,"bpmn/invalid-type","Actual type is not derived from the element declaration",Some(node),None)
+  }
   if simple_type(element.value_type) {
     if !element.children.is_empty() { self.add(Structure,"bpmn/invalid-containment","Simple content cannot contain child elements",Some(node),None) }
     if !element.text_value.map(value => scalar_conforms(value,type_name)).unwrap_or(false) { self.add(Structure,"bpmn/invalid-field","Invalid simple content",Some(node),None) }
+    for attr in element.values {
+      let allowed=attr.name.map(name => name.namespace_uri == "http://www.w3.org/2001/XMLSchema-instance" && ["type","nil","schemaLocation","noNamespaceSchemaLocation"].contains(name.local_name)).unwrap_or(false)
+      if !allowed { self.add(Structure,"bpmn/invalid-field","Simple content does not declare this attribute",Some(node),attr.name,attribute=attr) }
+      if attr.name == Some(ExpandedName::new("http://www.w3.org/2001/XMLSchema-instance","type")) && (match attr.value { Reference(r) => r.name != element.value_type; _ => true }) { self.add(Structure,"bpmn/invalid-type","xsi:type differs from the actual simple type",Some(node),attr.name,attribute=attr) }
+      if attr.name == Some(ExpandedName::new("http://www.w3.org/2001/XMLSchema-instance","nil")) && !["false","0"].contains(collapse_space(attr.value.token())) { self.add(Structure,"bpmn/invalid-field","This declaration is not nillable",Some(node),attr.name,attribute=attr) }
+    }
     return
   }
   guard schema_type(type_name) is Some(schema) else {
@@ -81,9 +95,6 @@ fn ValidationLog::structure_node(self : ValidationLog, node : IndexedElement) ->
   }
   if schema.abstract_type || schema_elements.iter().any(e => e.name == element.kind.name() && e.abstract_element) {
     self.add(Structure,"bpmn/abstract-element","An abstract schema element or type cannot be instantiated",Some(node),None)
-  }
-  if element.kind.declared_type() is Some(declared) && !schema.is_subtype_of(declared) {
-    self.add(Structure,"bpmn/invalid-type","Actual type is not derived from the element declaration",Some(node),None)
   }
   let fields=schema.fields(); let counts=Array::make(fields.length(),0)
   let mut previous = -1
@@ -102,7 +113,7 @@ fn ValidationLog::structure_node(self : ValidationLog, node : IndexedElement) ->
     previous=i
     if field.kind == Child && !opaque_kind(child.kind) && field.value_type is Some(expected) {
       let expected=if field.reference_element != None { child.kind.declared_type().unwrap_or(expected) } else { expected }
-      let valid=match child.value_type { Some(actual) => actual == expected || schema_type(actual).map(t => t.is_subtype_of(expected)).unwrap_or(false); None => false }
+      let valid=match child.value_type { Some(actual) => value_subtype(actual,expected); None => false }
       if !valid { self.add(Structure,"bpmn/invalid-type","Child has an incompatible schema type",Some(node),field.name) }
     }
   }
