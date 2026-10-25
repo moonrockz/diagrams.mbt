@@ -177,6 +177,16 @@ fn automatic(view : @model.Bpmn, input : Input, budget : Budget) -> (Array[Shape
     bands.sort_by((a,b) => a.compare(b))
     let mut bottom=top
     for band in bands {
+      // A frame and its caption precede the first member, so their measured
+      // height belongs to the band rather than the preceding scope's padding.
+      let mut caption_height=0.0
+      for i in grouped[band] {
+        for id in view.nodes[i].ownership.groups {
+          if !budget.charge(1) { return ([],[]) }
+          if input.nodes.get(id) is Some(group) { caption_height=Double::max(caption_height,captions[group].1) }
+        }
+      }
+      if caption_height > 0.0 { top+=caption_height+28.0 }
       rows.clear()
       let mut next_top=top
       for i in grouped[band] {

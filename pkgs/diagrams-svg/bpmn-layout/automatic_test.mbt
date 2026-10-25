@@ -83,3 +83,17 @@ test "ten thousand disconnected nodes fit the default visible bound and excess i
   let edges=@layout.layout(view,policy=Automatic,limits=@layout.Limits::new(edges=1))
   assert_eq(edges.geometry,None); assert_eq(edges.diagnostics[0].code,"bpmn/layout-limit")
 }
+
+///|
+test "successive group bands reserve multiline caption height" {
+  let view=@model.Bpmn::new("P",[
+    @model.Node::new("A",Task,label="First",ownership=@model.Ownership::new(groups=["G1"])),
+    @model.Node::new("B",Task,label="Second",ownership=@model.Ownership::new(groups=["G2"])),
+    @model.Node::new("G1",Group,label="First group"),
+    @model.Node::new("G2",Group,label="One\nTwo\nThree\nFour\nFive\nSix"),
+  ],[])
+  let geometry=automatic(view)
+  let caption=placed(geometry,"G2").label.unwrap().box
+  assert_false(caption.overlaps(placed(geometry,"A").box))
+  assert_false(caption.overlaps(placed(geometry,"G1").box))
+}
