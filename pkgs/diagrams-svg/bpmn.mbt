@@ -8,6 +8,11 @@ pub fn bpmn_path(flow : @bpmn.Flow) -> String {
 
 ///|
 fn paint_bpmn(view : @bpmn.Bpmn, theme : @theme.Theme, mode : Mode, id_prefix : String?) -> @render.Rendered {
+  // The full painter is the next story. Never downgrade a converted kind or
+  // marker to the original generic task/event notation.
+  if view.nodes.iter().any(n => (n.kind != Task && n.kind != StartEvent && n.kind != EndEvent) || (n.markers.called_kind != None || n.markers.loop_kind != None || n.markers.compensation || n.markers.event_subprocess || !n.markers.interrupting || n.markers.parallel_multiple || n.markers.collection || n.markers.instantiate || !n.markers.events.is_empty()) || n.ownership != @bpmn.Ownership::new()) || view.flows.iter().any(f => f.kind != SequenceFlow || !f.label.is_empty() || f.condition != None || f.is_default) {
+    return @render.Rendered::failed("image/svg+xml", [@diagrams.Diagnostic::error("bpmn/unsupported-view", "This view needs the complete BPMN painter")])
+  }
   let paint = Paint::{ theme, mode }
   let mut width = 1
   let mut height = 1

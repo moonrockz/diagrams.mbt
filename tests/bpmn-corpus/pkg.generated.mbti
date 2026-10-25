@@ -6,6 +6,8 @@ import {
 }
 
 // Values
+pub let graphical_coverage : String
+
 pub let inputs : ReadOnlyArray[Input]
 
 pub let model_inputs : ReadOnlyArray[Input]

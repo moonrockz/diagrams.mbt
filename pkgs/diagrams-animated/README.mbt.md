@@ -10,10 +10,10 @@ simulation, condition evaluation or event scheduling.
 ///|
 test "construct a pure first-flow plan and render HTML" {
   let nodes = [
-    @model.Node::new("A", StartEvent, { x: 20, y: 20, width: 36, height: 36 }),
-    @model.Node::new("B", EndEvent, { x: 120, y: 20, width: 36, height: 36 }),
+    @model.Node::new("A", StartEvent, bounds={ x: 20, y: 20, width: 36, height: 36 }),
+    @model.Node::new("B", EndEvent, bounds={ x: 120, y: 20, width: 36, height: 36 }),
   ]
-  let flow = @model.Flow::new("F", "A", "B", [{ x: 56, y: 38 }, { x: 120, y: 38 }])
+  let flow = @model.Flow::new("F", "A", "B", points=[{ x: 56, y: 38 }, { x: 120, y: 38 }])
   let view = @model.Bpmn::new("P", nodes, [flow])
   let plan = @animation.MotionPlan::new("P", "F").unwrap()
   assert_eq(plan.sample(250), (250, 1000))

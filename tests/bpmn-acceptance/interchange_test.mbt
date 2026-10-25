@@ -26,7 +26,7 @@ test "choreography and conversation families retain typed containment and refere
   assert_eq(@bpmn.ConversationLink::from_element(by_id(doc,"ConversationLinkA")).unwrap().source_ref().value().unwrap().name,Some(@bpmn.ExpandedName::new("","CA")))
   assert_eq(@bpmn.ConversationAssociation::from_element(by_id(doc,"ConversationAssociation")).unwrap().outer_conversation_node_ref().value().unwrap().name,Some(@bpmn.ExpandedName::new("","Conversation")))
   roundtrip(doc)
-  let conversion=@adapter.to_diagram(doc)
+  let conversion=@adapter.to_diagram(doc,selector=View("Choreography"))
   assert_eq(conversion.diagram,None)
   assert_eq(conversion.diagnostics[0].code,"bpmn/unsupported-view")
 }

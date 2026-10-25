@@ -867,3 +867,9 @@ element-depth exhaustion or oversized names/values. Graph construction adds
 invalid-limit, work, node and adjacency-entry findings. It can also propagate
 the validation and traversal inventories documented above. All have error
 severity. Query failures use the typed alternatives described here.
+
+`ReferenceResult.indexed_resources()` exposes the immutable indexes in the
+explicit import closure. Each `IndexedResource` keeps its resource ID, document
+index and bounded record count. Adapters can reuse these indexes without
+reparsing or fetching resources. The record count includes attributes, content
+and namespace bindings, so repeated processing can be charged before allocation.

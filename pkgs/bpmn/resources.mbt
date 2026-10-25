@@ -189,3 +189,17 @@ fn reference_target_matches(target : ReferenceTarget, element : Element) -> Bool
     External => false
   }
 }
+
+///|
+/// One immutable document index in the resolver's explicit import closure.
+/// `records` counts the bounded element/attribute/content/namespace work, not
+/// only elements. Hosts can reuse an index without fetching or reparsing XML.
+pub struct IndexedResource { resource_id : String?; index : DocumentIndex; records : Int } derive(Debug)
+
+///|
+pub extend IndexedResource with @debug.Debug::{to_repr}
+
+///|
+pub fn ReferenceResult::indexed_resources(self : ReferenceResult) -> ReadOnlyArray[IndexedResource] {
+  self.resolver.documents.map(d => IndexedResource::{resource_id:d.resource_id,index:d.index,records:d.index.records})
+}

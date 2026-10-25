@@ -86,10 +86,10 @@ Depends on: group 6.
 Bead: diagrams-u42.8.
 Depends on: groups 6 and 7.
 
-- [ ] 8.1 Complete the core BPMN diagram values for standard graphical kinds, ownership, labels, markers, flow endpoints, links/render properties and selected geometry; verify immutability and source-ID preservation without importing `bpmn` into `diagrams`.
-- [ ] 8.2 Add process/collaboration/plane selectors and unambiguous inference; verify multiple views, unsupported choreography/conversation, missing planes and invalid selected references return the specified diagnostics.
-- [ ] 8.3 Complete conversion for process/collaboration graphical elements and map diagnostics without losing spans; verify the coverage manifest has a conversion assertion for every graphical kind and no element is silently dropped.
-- [ ] 8.4 Document view selection, source/generated IDs and `Diagram` match migration; verify adapter examples and unchanged sequence behavior.
+- [x] 8.1 Complete the core BPMN diagram values for standard graphical kinds, ownership, labels, markers, flow endpoints, links/render properties and selected geometry; verify immutability and source-ID preservation without importing `bpmn` into `diagrams`.
+- [x] 8.2 Add process/collaboration/plane selectors and unambiguous inference; verify multiple views, unsupported choreography/conversation, missing planes and invalid selected references return the specified diagnostics.
+- [x] 8.3 Complete conversion for process/collaboration graphical elements and map diagnostics without losing spans; verify the coverage manifest has a conversion assertion for every graphical kind and no element is silently dropped.
+- [x] 8.4 Document view selection, source/generated IDs and `Diagram` match migration; verify adapter examples and unchanged sequence behavior.
 
 ## 9. Render complete supplied BPMN diagram geometry
 

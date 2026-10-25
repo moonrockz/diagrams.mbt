@@ -1,0 +1,196 @@
+{
+  "version": "BPMN 2.0.2",
+  "scope": "process and collaboration graphical kinds",
+  "entries": [
+    {
+      "schemaType": "tStartEvent",
+      "tag": "startEvent",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tEndEvent",
+      "tag": "endEvent",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tIntermediateCatchEvent",
+      "tag": "intermediateCatchEvent",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tIntermediateThrowEvent",
+      "tag": "intermediateThrowEvent",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tBoundaryEvent",
+      "tag": "boundaryEvent",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tTask",
+      "tag": "task",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tUserTask",
+      "tag": "userTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tServiceTask",
+      "tag": "serviceTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tSendTask",
+      "tag": "sendTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tReceiveTask",
+      "tag": "receiveTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tManualTask",
+      "tag": "manualTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tBusinessRuleTask",
+      "tag": "businessRuleTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tScriptTask",
+      "tag": "scriptTask",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tSubProcess",
+      "tag": "subProcess",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tAdHocSubProcess",
+      "tag": "adHocSubProcess",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tTransaction",
+      "tag": "transaction",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tCallActivity",
+      "tag": "callActivity",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tExclusiveGateway",
+      "tag": "exclusiveGateway",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tInclusiveGateway",
+      "tag": "inclusiveGateway",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tParallelGateway",
+      "tag": "parallelGateway",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tComplexGateway",
+      "tag": "complexGateway",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tEventBasedGateway",
+      "tag": "eventBasedGateway",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tParticipant",
+      "tag": "participant",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tLane",
+      "tag": "lane",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataObject",
+      "tag": "dataObject",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataObjectReference",
+      "tag": "dataObjectReference",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataStore",
+      "tag": "dataStore",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataStoreReference",
+      "tag": "dataStoreReference",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataInput",
+      "tag": "dataInput",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataOutput",
+      "tag": "dataOutput",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tGroup",
+      "tag": "group",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tTextAnnotation",
+      "tag": "textAnnotation",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tMessage",
+      "tag": "message",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tSequenceFlow",
+      "tag": "sequenceFlow",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tMessageFlow",
+      "tag": "messageFlow",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tAssociation",
+      "tag": "association",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataInputAssociation",
+      "tag": "dataInputAssociation",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    },
+    {
+      "schemaType": "tDataOutputAssociation",
+      "tag": "dataOutputAssociation",
+      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
+    }
+  ]
+}
