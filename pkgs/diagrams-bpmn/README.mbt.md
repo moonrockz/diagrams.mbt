@@ -126,9 +126,11 @@ Conversion adds these codes to the standalone module's validation codes:
 
 The checked graphical coverage manifest is
 `tests/corpus/bpmn-model/graphical-coverage.json`. Its embedded copy is checked
-against the converter inventory and a concrete assertion for each of the 39
+against the converter inventory and a concrete assertion for each of the 38
 standard graphical kinds. Additional assertions cover all ten event-definition
-symbols, ownership, markers, imports, exact DI and deferred views. Base
+symbols, ownership, markers, imports, exact DI and deferred views. Non-graphical
+implicit throw events remain in multi-instance descriptions, without invented
+visible event shapes. Base
 `tDataAssociation` has no standalone global element; an invalid `xsi:type`
 downcast is diagnosed, while its two concrete association declarations convert.
 

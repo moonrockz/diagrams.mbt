@@ -2,7 +2,7 @@
 /// Checked conversion inventory. Each entry has a concrete conversion assertion
 /// in the unpublished acceptance suite; no abstract kind becomes a generic task.
 pub let graphical_types : ReadOnlyArray[@bpmn.TypeId] = [
-StartEvent, EndEvent, IntermediateCatchEvent, IntermediateThrowEvent, BoundaryEvent, ImplicitThrowEvent, Task, UserTask, ServiceTask, SendTask, ReceiveTask, ManualTask, BusinessRuleTask, ScriptTask, SubProcess, AdHocSubProcess, Transaction, CallActivity, ExclusiveGateway, InclusiveGateway, ParallelGateway, ComplexGateway, EventBasedGateway, Participant, Lane, DataObject, DataObjectReference, DataStore, DataStoreReference, DataInput, DataOutput, Group, TextAnnotation, Message, SequenceFlow, MessageFlow, Association, DataInputAssociation, DataOutputAssociation]
+StartEvent, EndEvent, IntermediateCatchEvent, IntermediateThrowEvent, BoundaryEvent, Task, UserTask, ServiceTask, SendTask, ReceiveTask, ManualTask, BusinessRuleTask, ScriptTask, SubProcess, AdHocSubProcess, Transaction, CallActivity, ExclusiveGateway, InclusiveGateway, ParallelGateway, ComplexGateway, EventBasedGateway, Participant, Lane, DataObject, DataObjectReference, DataStore, DataStoreReference, DataInput, DataOutput, Group, TextAnnotation, Message, SequenceFlow, MessageFlow, Association, DataInputAssociation, DataOutputAssociation]
 
 ///|
 fn node_kind(e : @bpmn.Element) -> @model.NodeKind? {
@@ -12,7 +12,6 @@ fn node_kind(e : @bpmn.Element) -> @model.NodeKind? {
     Some(IntermediateCatchEvent) => Some(IntermediateCatchEvent)
     Some(IntermediateThrowEvent) => Some(IntermediateThrowEvent)
     Some(BoundaryEvent) => Some(BoundaryEvent)
-    Some(ImplicitThrowEvent) => Some(ImplicitThrowEvent)
     Some(Task) => Some(Task)
     Some(UserTask) => Some(UserTask)
     Some(ServiceTask) => Some(ServiceTask)

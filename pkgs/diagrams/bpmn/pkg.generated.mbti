@@ -231,7 +231,6 @@ pub(all) enum NodeKind {
   IntermediateCatchEvent
   IntermediateThrowEvent
   BoundaryEvent
-  ImplicitThrowEvent
   Task
   UserTask
   ServiceTask

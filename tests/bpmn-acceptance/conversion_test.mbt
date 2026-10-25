@@ -37,7 +37,7 @@ test "view selection uses nonempty tiers and explicit process collaboration and 
 test "graphical inventory converts every standard process and collaboration kind" {
   let asserted : Array[@bpmn.TypeId]=[]
   for (tag,kind) in [
-    ("startEvent",@model.NodeKind::StartEvent),("endEvent",EndEvent),("intermediateCatchEvent",IntermediateCatchEvent),("intermediateThrowEvent",IntermediateThrowEvent),("implicitThrowEvent",ImplicitThrowEvent),
+    ("startEvent",@model.NodeKind::StartEvent),("endEvent",EndEvent),("intermediateCatchEvent",IntermediateCatchEvent),("intermediateThrowEvent",IntermediateThrowEvent),
     ("task",Task),("userTask",UserTask),("serviceTask",ServiceTask),("sendTask",SendTask),("receiveTask",ReceiveTask),("manualTask",ManualTask),("businessRuleTask",BusinessRuleTask),("scriptTask",ScriptTask),
     ("subProcess",SubProcess),("adHocSubProcess",AdHocSubProcess),("transaction",Transaction),("callActivity",CallActivity),
     ("exclusiveGateway",ExclusiveGateway),("inclusiveGateway",InclusiveGateway),("parallelGateway",ParallelGateway),("complexGateway",ComplexGateway),("eventBasedGateway",EventBasedGateway),
@@ -263,4 +263,43 @@ test "black box message endpoints fall back to the pool shape when DI omits the 
   let source="<b:definitions xmlns:b='\{model_uri}' xmlns:bd='http://www.omg.org/spec/BPMN/20100524/DI' xmlns:dc='http://www.omg.org/spec/DD/20100524/DC' xmlns:di='http://www.omg.org/spec/DD/20100524/DI' targetNamespace='urn:x'><b:process id='P'><b:task id='Hidden'/></b:process><b:collaboration id='C'><b:participant id='Pool' processRef='P'/><b:participant id='Other'/><b:messageFlow id='M' sourceRef='Other' targetRef='Hidden'/></b:collaboration><bd:BPMNDiagram><bd:BPMNPlane bpmnElement='C'><bd:BPMNShape bpmnElement='Pool'><dc:Bounds x='0' y='0' width='300' height='100'/></bd:BPMNShape><bd:BPMNShape bpmnElement='Other'><dc:Bounds x='0' y='200' width='300' height='100'/></bd:BPMNShape><bd:BPMNEdge bpmnElement='M'><di:waypoint x='100' y='200'/><di:waypoint x='100' y='100'/></bd:BPMNEdge></bd:BPMNPlane></bd:BPMNDiagram></b:definitions>"
   let view=converted(@bpmn.read(source).document.unwrap())
   assert_eq(view.flows[0].target,"Pool"); assert_eq(view.flows[0].semantic_target.source_id,Some("Hidden"))
+}
+
+///|
+test "conversion budget exhaustion before the root collaboration instance never panics" {
+  let participants=StringBuilder(); let shapes=StringBuilder()
+  for i in 0..<24 {
+    participants.write_string("<b:participant id='Pool\{i}'/>")
+    shapes.write_string("<bd:BPMNShape bpmnElement='Pool\{i}'><dc:Bounds x='\{i*200}' y='0' width='100' height='80'/></bd:BPMNShape>")
+  }
+  let doc=validation_document("<b:collaboration id='C'>\{participants.to_string()}</b:collaboration><bd:BPMNDiagram><bd:BPMNPlane bpmnElement='C'>\{shapes.to_string()}</bd:BPMNPlane></bd:BPMNDiagram>",extra="xmlns:bd='http://www.omg.org/spec/BPMN/20100524/DI' xmlns:dc='http://www.omg.org/spec/DD/20100524/DC'")
+  for nodes in [512,700] {
+  let limits=@bpmn.Limits::new(nodes~)
+  let structure=@bpmn.validate_structure(doc,limits~)
+  assert_true(structure.complete); assert_eq(structure.findings,[])
+  let references=@bpmn.resolve_references(structure.index,limits~)
+  assert_true(references.complete); assert_eq(references.findings,[])
+  let result=@adapter.to_diagram(doc,limits~)
+  assert_eq(result.diagram,None)
+  assert_true(result.diagnostics.iter().any(d => d.code == "bpmn/conversion-limit"))
+  }
+}
+
+///|
+test "non-graphical implicit throws stay in multi-instance descriptions without invented event shapes" {
+  let doc=process_view("<b:task id='T'><b:multiInstanceLoopCharacteristics><b:complexBehaviorDefinition><b:condition>count &gt; 2</b:condition><b:event id='Implicit'><b:messageEventDefinition/></b:event></b:complexBehaviorDefinition></b:multiInstanceLoopCharacteristics></b:task>")
+  let view=converted(doc)
+  assert_eq(view.nodes.length(),1)
+  assert_eq(view.nodes[0].kind,Task); assert_eq(view.nodes[0].markers.loop_kind,Parallel)
+  assert_true(view.nodes[0].markers.details.iter().any(p => p.1 == "count > 2"))
+  assert_true(@bpmn.ImplicitThrowEvent::from_element(by_id(doc,"Implicit")) != None)
+}
+
+///|
+test "activity local IO remains semantic endpoints and cannot gain nonstandard DI shapes" {
+  let process="<b:process id='P'><b:task id='T'><b:ioSpecification><b:dataInput id='I'/><b:inputSet/><b:outputSet/></b:ioSpecification></b:task></b:process>"
+  assert_eq(converted(validation_document(process)).nodes.length(),1)
+  let doc=validation_document(process+"<bd:BPMNDiagram><bd:BPMNPlane bpmnElement='P'><bd:BPMNShape bpmnElement='I'><dc:Bounds x='0' y='0' width='50' height='60'/></bd:BPMNShape></bd:BPMNPlane></bd:BPMNDiagram>",extra="xmlns:bd='http://www.omg.org/spec/BPMN/20100524/DI' xmlns:dc='http://www.omg.org/spec/DD/20100524/DC'")
+  let result=@adapter.to_diagram(doc)
+  assert_eq(result.diagram,None); assert_eq(result.diagnostics[0].code,"bpmn/unsupported-element")
 }

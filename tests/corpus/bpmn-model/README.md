@@ -77,7 +77,7 @@ semantics to the reference library.
 
 ## Graphical conversion coverage
 
-`graphical-coverage.json` maps 39 concrete process/collaboration graphical kinds
+`graphical-coverage.json` maps 38 concrete process/collaboration graphical kinds
 to the acceptance conversion assertions. It is a project-authored manifest,
 separate from the pinned input/reference digests. The corpus task checks its
 portable embedding; tests require exact agreement with the converter inventory

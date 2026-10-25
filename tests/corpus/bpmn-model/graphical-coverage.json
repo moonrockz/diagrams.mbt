@@ -28,11 +28,6 @@
       "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
     },
     {
-      "schemaType": "tImplicitThrowEvent",
-      "tag": "implicitThrowEvent",
-      "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"
-    },
-    {
       "schemaType": "tTask",
       "tag": "task",
       "conversionAssertion": "tests/bpmn-acceptance/conversion_test.mbt: graphical inventory converts every standard process and collaboration kind"

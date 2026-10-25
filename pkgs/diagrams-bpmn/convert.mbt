@@ -91,18 +91,25 @@ fn Projection::collect(self : Projection, instance : Instance) -> Unit {
     let e=n.element
     if e.kind is Unknown(_) { c.add("bpmn/unsupported-element","Selected standard element is unknown",e~); continue }
     if n.payload { continue }
+    if actual(e) == Some(ImplicitThrowEvent) {
+      if self.di.contains((instance.resource,n.ordinal)) { c.add("bpmn/unsupported-element","Implicit throw events are non-graphical",e~) }
+      continue
+    }
     if is_type(e,ChoreographyActivity) || is_type(e,ConversationNode) || actual(e) == Some(ConversationLink) || actual(e) == Some(ConversationAssociation) {
       c.add("bpmn/unsupported-view","Choreography and conversation rendering is deferred; the document remains intact",e~); continue
     }
     if node_kind(e) is Some(kind) {
       let has_shape=self.di.contains((instance.resource,n.ordinal))
-      // Definitions and activity-local IO have graphical representations only
-      // when selected DI asks for them. References carry the normal data symbol.
+      // Data definitions can have explicit depictions; references carry the usual
+      // data symbol. Activity-local IO stays a semantic endpoint, never a shape.
       if kind == DataObject && referenced_data.contains((instance.resource,n.ordinal)) && !has_shape { continue }
-      if (kind == DataInput || kind == DataOutput) && !has_shape {
+      if kind == DataInput || kind == DataOutput {
         let parent=n.parent.map(p => index.nodes[p])
         let process_io=parent.bind(p => p.parent).map(p => p == instance.root && actual(index.nodes[p].element) == Some(Process)).unwrap_or(false)
-        if !process_io { continue }
+        if !process_io {
+          if has_shape { c.add("bpmn/unsupported-element","Only process data inputs and outputs have graphical depictions",e~) }
+          continue
+        }
       }
       self.add_node(instance,n.ordinal,kind)
     } else if connection_kind(e) == None && (e.kind is Unknown(_) || is_type(e,FlowNode) || is_type(e,Artifact)) {
@@ -234,10 +241,14 @@ pub fn to_diagram(document : @bpmn.Document, selector? : ViewSelector = Automati
   if actual(view) != Some(Process) && !is_type(view,SubProcess) && actual(view) != Some(Collaboration) { c.add("bpmn/unsupported-view","Choreography and conversation rendering is deferred",e=view); return result(None) }
   let p=Projection::{converter:c,instances:[],nodes:[],flows:[],visuals:Map([]),selected:Map([]),di:Map([]),di_order:[],used_di:Map([]),shapes:Map([]),visual_order:[]}
   p.selected_di(selected)
+  if c.failed { return result(None) }
   p.include_scope(selected.resource,selected.node,"",None)
+  if c.failed { return result(None) }
+  guard p.instances.get(0) is Some(root_instance) else {
+    c.add("bpmn/conversion-limit","Root view scope was not completed"); return result(None)
+  }
   if actual(view) == Some(Collaboration) {
     let index=c.sources[selected.resource].index
-    let root_instance=p.instances[0]
     for n in index.nodes {
       if !root_instance.members.contains(n.ordinal) || actual(n.element) != Some(Participant) { continue }
       let pool=c.render_id(selected.resource,n.ordinal,"")

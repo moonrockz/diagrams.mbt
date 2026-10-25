@@ -2,7 +2,7 @@
 /// Standard process/collaboration graphical kinds. Choreography and conversation
 /// remain document values and are explicitly deferred by the adapter.
 pub(all) enum NodeKind {
-  StartEvent; EndEvent; IntermediateCatchEvent; IntermediateThrowEvent; BoundaryEvent; ImplicitThrowEvent
+  StartEvent; EndEvent; IntermediateCatchEvent; IntermediateThrowEvent; BoundaryEvent
   Task; UserTask; ServiceTask; SendTask; ReceiveTask; ManualTask; BusinessRuleTask; ScriptTask
   SubProcess; AdHocSubProcess; Transaction; CallActivity
   ExclusiveGateway; InclusiveGateway; ParallelGateway; ComplexGateway; EventBasedGateway
