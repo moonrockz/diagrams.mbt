@@ -1,0 +1,937 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately"
+  ],
+  "nodes": [
+    {
+      "key": "#Begin",
+      "parent": "#P",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Begin"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Start"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Boundary",
+      "parent": "#P",
+      "type": "bpmn:BoundaryEvent",
+      "fields": {
+        "attachedToRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        },
+        "cancelActivity": {
+          "kind": "boolean",
+          "value": true
+        },
+        "id": {
+          "kind": "string",
+          "value": "Boundary"
+        }
+      },
+      "children": [
+        "#BoundaryError"
+      ]
+    },
+    {
+      "key": "#BoundaryError",
+      "parent": "#Boundary",
+      "type": "bpmn:ErrorEventDefinition",
+      "fields": {
+        "errorRef": {
+          "kind": "reference",
+          "value": [
+            "Error"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "BoundaryError"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Cancel",
+      "parent": "#CancelBoundary",
+      "type": "bpmn:CancelEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Cancel"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CancelBoundary",
+      "parent": "#P",
+      "type": "bpmn:BoundaryEvent",
+      "fields": {
+        "attachedToRef": {
+          "kind": "reference",
+          "value": [
+            "Transaction"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "CancelBoundary"
+        }
+      },
+      "children": [
+        "#Cancel"
+      ]
+    },
+    {
+      "key": "#Compensate",
+      "parent": "#CompensateThrow",
+      "type": "bpmn:CompensateEventDefinition",
+      "fields": {
+        "activityRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Compensate"
+        },
+        "waitForCompletion": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CompensateBoundary",
+      "parent": "#P",
+      "type": "bpmn:BoundaryEvent",
+      "fields": {
+        "attachedToRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        },
+        "cancelActivity": {
+          "kind": "boolean",
+          "value": false
+        },
+        "id": {
+          "kind": "string",
+          "value": "CompensateBoundary"
+        }
+      },
+      "children": [
+        "#CompensateCatch"
+      ]
+    },
+    {
+      "key": "#CompensateCatch",
+      "parent": "#CompensateBoundary",
+      "type": "bpmn:CompensateEventDefinition",
+      "fields": {
+        "activityRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "CompensateCatch"
+        },
+        "waitForCompletion": {
+          "kind": "boolean",
+          "value": true
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#CompensateThrow",
+      "parent": "#P",
+      "type": "bpmn:IntermediateThrowEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CompensateThrow"
+        }
+      },
+      "children": [
+        "#Compensate"
+      ]
+    },
+    {
+      "key": "#Complex",
+      "parent": "#P",
+      "type": "bpmn:ComplexGateway",
+      "fields": {
+        "gatewayDirection": {
+          "kind": "string",
+          "value": "Diverging"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Complex"
+        }
+      },
+      "children": [
+        "#Complex/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Complex/bpmn:FormalExpression[0]",
+      "parent": "#Complex",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "ready"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Condition",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Condition"
+        }
+      },
+      "children": [
+        "#Conditional"
+      ]
+    },
+    {
+      "key": "#Conditional",
+      "parent": "#Condition",
+      "type": "bpmn:ConditionalEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Conditional"
+        }
+      },
+      "children": [
+        "#Conditional/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Conditional/bpmn:FormalExpression[0]",
+      "parent": "#Conditional",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "amount > 10"
+        },
+        "language": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ConditionalFlow",
+      "parent": "#P",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ConditionalFlow"
+        },
+        "isImmediate": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "approved"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Exclusive"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "End"
+          ]
+        }
+      },
+      "children": [
+        "#ConditionalFlow/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#ConditionalFlow/bpmn:FormalExpression[0]",
+      "parent": "#ConditionalFlow",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "amount > 10 && ready"
+        },
+        "language": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Cycle",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Cycle"
+        }
+      },
+      "children": [
+        "#CycleDefinition"
+      ]
+    },
+    {
+      "key": "#CycleDefinition",
+      "parent": "#Cycle",
+      "type": "bpmn:TimerEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CycleDefinition"
+        }
+      },
+      "children": [
+        "#CycleDefinition/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#CycleDefinition/bpmn:FormalExpression[0]",
+      "parent": "#CycleDefinition",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "R3/PT1H"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Date",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Date"
+        }
+      },
+      "children": [
+        "#DateDefinition"
+      ]
+    },
+    {
+      "key": "#DateDefinition",
+      "parent": "#Date",
+      "type": "bpmn:TimerEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "DateDefinition"
+        }
+      },
+      "children": [
+        "#DateDefinition/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#DateDefinition/bpmn:FormalExpression[0]",
+      "parent": "#DateDefinition",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "2030-01-01T00:00:00Z"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Duration",
+      "parent": "#Timer",
+      "type": "bpmn:TimerEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Duration"
+        }
+      },
+      "children": [
+        "#Duration/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Duration/bpmn:FormalExpression[0]",
+      "parent": "#Duration",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "PT5M"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#End",
+      "parent": "#P",
+      "type": "bpmn:EndEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "End"
+        }
+      },
+      "children": [
+        "#Terminate"
+      ]
+    },
+    {
+      "key": "#Error",
+      "parent": "#Events",
+      "type": "bpmn:Error",
+      "fields": {
+        "errorCode": {
+          "kind": "string",
+          "value": "E"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Error"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Escalate",
+      "parent": "#EscalationThrow",
+      "type": "bpmn:EscalationEventDefinition",
+      "fields": {
+        "escalationRef": {
+          "kind": "reference",
+          "value": [
+            "Escalation"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Escalate"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Escalation",
+      "parent": "#Events",
+      "type": "bpmn:Escalation",
+      "fields": {
+        "escalationCode": {
+          "kind": "string",
+          "value": "S"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Escalation"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#EscalationThrow",
+      "parent": "#P",
+      "type": "bpmn:IntermediateThrowEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "EscalationThrow"
+        }
+      },
+      "children": [
+        "#Escalate"
+      ]
+    },
+    {
+      "key": "#EventBased",
+      "parent": "#P",
+      "type": "bpmn:EventBasedGateway",
+      "fields": {
+        "eventGatewayType": {
+          "kind": "string",
+          "value": "Exclusive"
+        },
+        "gatewayDirection": {
+          "kind": "string",
+          "value": "Diverging"
+        },
+        "id": {
+          "kind": "string",
+          "value": "EventBased"
+        },
+        "instantiate": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Events",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Events"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "urn:events"
+        }
+      },
+      "children": [
+        "#Error",
+        "#Escalation",
+        "#Message",
+        "#P",
+        "#ReusableTimer",
+        "#Signal"
+      ]
+    },
+    {
+      "key": "#Exclusive",
+      "parent": "#P",
+      "type": "bpmn:ExclusiveGateway",
+      "fields": {
+        "default": {
+          "kind": "reference",
+          "value": [
+            "Fallback"
+          ]
+        },
+        "gatewayDirection": {
+          "kind": "string",
+          "value": "Diverging"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Exclusive"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Fallback",
+      "parent": "#P",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Fallback"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Exclusive"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Task"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Inclusive",
+      "parent": "#P",
+      "type": "bpmn:InclusiveGateway",
+      "fields": {
+        "gatewayDirection": {
+          "kind": "string",
+          "value": "Converging"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Inclusive"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#LinkCatch",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LinkCatch"
+        }
+      },
+      "children": [
+        "#LinkTarget"
+      ]
+    },
+    {
+      "key": "#LinkSource",
+      "parent": "#LinkThrow",
+      "type": "bpmn:LinkEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LinkSource"
+        },
+        "name": {
+          "kind": "string",
+          "value": "resume"
+        },
+        "target": {
+          "kind": "reference",
+          "value": [
+            "LinkTarget"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#LinkTarget",
+      "parent": "#LinkCatch",
+      "type": "bpmn:LinkEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LinkTarget"
+        },
+        "name": {
+          "kind": "string",
+          "value": "resume"
+        },
+        "source": {
+          "kind": "reference",
+          "value": [
+            "LinkSource"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#LinkThrow",
+      "parent": "#P",
+      "type": "bpmn:IntermediateThrowEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "LinkThrow"
+        }
+      },
+      "children": [
+        "#LinkSource"
+      ]
+    },
+    {
+      "key": "#Message",
+      "parent": "#Events",
+      "type": "bpmn:Message",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Message"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#P",
+      "parent": "#Events",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "P"
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": [
+        "#Begin",
+        "#Boundary",
+        "#CancelBoundary",
+        "#CompensateBoundary",
+        "#CompensateThrow",
+        "#Complex",
+        "#Condition",
+        "#ConditionalFlow",
+        "#Cycle",
+        "#Date",
+        "#End",
+        "#EscalationThrow",
+        "#EventBased",
+        "#Exclusive",
+        "#Fallback",
+        "#Inclusive",
+        "#LinkCatch",
+        "#LinkThrow",
+        "#Parallel",
+        "#ReferencedTimer",
+        "#SignalCatch",
+        "#Start",
+        "#Task",
+        "#Timer",
+        "#Transaction"
+      ]
+    },
+    {
+      "key": "#Parallel",
+      "parent": "#P",
+      "type": "bpmn:ParallelGateway",
+      "fields": {
+        "gatewayDirection": {
+          "kind": "string",
+          "value": "Mixed"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Parallel"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ReferencedTimer",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "eventDefinitionRef": {
+          "kind": "reference",
+          "value": [
+            "ReusableTimer"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "ReferencedTimer"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#ReusableTimer",
+      "parent": "#Events",
+      "type": "bpmn:TimerEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "ReusableTimer"
+        }
+      },
+      "children": [
+        "#ReusableTimer/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#ReusableTimer/bpmn:FormalExpression[0]",
+      "parent": "#ReusableTimer",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "PT5M"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Signal",
+      "parent": "#Events",
+      "type": "bpmn:Signal",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Signal"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Ready"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#SignalCatch",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SignalCatch"
+        }
+      },
+      "children": [
+        "#SignalDefinition"
+      ]
+    },
+    {
+      "key": "#SignalDefinition",
+      "parent": "#SignalCatch",
+      "type": "bpmn:SignalEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SignalDefinition"
+        },
+        "signalRef": {
+          "kind": "reference",
+          "value": [
+            "Signal"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Start",
+      "parent": "#P",
+      "type": "bpmn:StartEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Start"
+        },
+        "isInterrupting": {
+          "kind": "boolean",
+          "value": true
+        },
+        "parallelMultiple": {
+          "kind": "boolean",
+          "value": false
+        }
+      },
+      "children": [
+        "#StartMessage"
+      ]
+    },
+    {
+      "key": "#StartMessage",
+      "parent": "#Start",
+      "type": "bpmn:MessageEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "StartMessage"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Message"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Task",
+      "parent": "#P",
+      "type": "bpmn:Task",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Task"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Terminate",
+      "parent": "#End",
+      "type": "bpmn:TerminateEventDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Terminate"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Timer",
+      "parent": "#P",
+      "type": "bpmn:IntermediateCatchEvent",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Timer"
+        }
+      },
+      "children": [
+        "#Duration"
+      ]
+    },
+    {
+      "key": "#Transaction",
+      "parent": "#P",
+      "type": "bpmn:Transaction",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Transaction"
+        },
+        "method": {
+          "kind": "string",
+          "value": "##Compensate"
+        }
+      },
+      "children": []
+    }
+  ],
+  "source_sha256": "df1c87920e3f7d832d10573f65dd159cf5b15d43d6fa7556b86389aadd95a270"
+}

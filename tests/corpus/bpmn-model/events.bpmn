@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Events" targetNamespace="urn:events">
+  <bpmn:message id="Message"/><bpmn:error id="Error" errorCode="E"/><bpmn:signal id="Signal" name="Ready"/><bpmn:escalation id="Escalation" escalationCode="S"/>
+  <bpmn:timerEventDefinition id="ReusableTimer"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration></bpmn:timerEventDefinition>
+  <bpmn:process id="P" isExecutable="false">
+    <bpmn:startEvent id="Start" isInterrupting="true" parallelMultiple="false"><bpmn:messageEventDefinition id="StartMessage" messageRef="Message"/></bpmn:startEvent>
+    <bpmn:task id="Task"/><bpmn:transaction id="Transaction" method="##Compensate"/>
+    <bpmn:boundaryEvent id="Boundary" attachedToRef="Task" cancelActivity="true"><bpmn:errorEventDefinition id="BoundaryError" errorRef="Error"/></bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="CancelBoundary" attachedToRef="Transaction"><bpmn:cancelEventDefinition id="Cancel"/></bpmn:boundaryEvent>
+    <bpmn:boundaryEvent id="CompensateBoundary" attachedToRef="Task" cancelActivity="false"><bpmn:compensateEventDefinition id="CompensateCatch" waitForCompletion="true" activityRef="Task"/></bpmn:boundaryEvent>
+    <bpmn:intermediateCatchEvent id="Timer"><bpmn:timerEventDefinition id="Duration"><bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Date"><bpmn:timerEventDefinition id="DateDefinition"><bpmn:timeDate xsi:type="bpmn:tFormalExpression">2030-01-01T00:00:00Z</bpmn:timeDate></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Cycle"><bpmn:timerEventDefinition id="CycleDefinition"><bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R3/PT1H</bpmn:timeCycle></bpmn:timerEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Condition"><bpmn:conditionalEventDefinition id="Conditional"><bpmn:condition xsi:type="bpmn:tFormalExpression" language="urn:inert">amount &gt; 10</bpmn:condition></bpmn:conditionalEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="SignalCatch"><bpmn:signalEventDefinition id="SignalDefinition" signalRef="Signal"/></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="LinkCatch"><bpmn:linkEventDefinition id="LinkTarget" name="resume"><bpmn:source>LinkSource</bpmn:source></bpmn:linkEventDefinition></bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="LinkThrow"><bpmn:linkEventDefinition id="LinkSource" name="resume"><bpmn:target>LinkTarget</bpmn:target></bpmn:linkEventDefinition></bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="EscalationThrow"><bpmn:escalationEventDefinition id="Escalate" escalationRef="Escalation"/></bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="CompensateThrow"><bpmn:compensateEventDefinition id="Compensate" activityRef="Task" waitForCompletion="false"/></bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="ReferencedTimer"><bpmn:eventDefinitionRef>ReusableTimer</bpmn:eventDefinitionRef></bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="Exclusive" gatewayDirection="Diverging" default="Fallback"/>
+    <bpmn:inclusiveGateway id="Inclusive" gatewayDirection="Converging"/>
+    <bpmn:parallelGateway id="Parallel" gatewayDirection="Mixed"/>
+    <bpmn:complexGateway id="Complex" gatewayDirection="Diverging"><bpmn:activationCondition xsi:type="bpmn:tFormalExpression">ready</bpmn:activationCondition></bpmn:complexGateway>
+    <bpmn:eventBasedGateway id="EventBased" gatewayDirection="Diverging" eventGatewayType="Exclusive" instantiate="false"/>
+    <bpmn:endEvent id="End"><bpmn:terminateEventDefinition id="Terminate"/></bpmn:endEvent>
+    <bpmn:sequenceFlow id="Begin" sourceRef="Start" targetRef="Task"/>
+    <bpmn:sequenceFlow id="ConditionalFlow" name="approved" sourceRef="Exclusive" targetRef="End" isImmediate="false"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="urn:inert">amount &gt; 10 &amp;&amp; ready</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Fallback" sourceRef="Exclusive" targetRef="Task"/>
+  </bpmn:process>
+</bpmn:definitions>

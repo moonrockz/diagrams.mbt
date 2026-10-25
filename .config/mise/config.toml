@@ -212,3 +212,7 @@ run = "moonx scripts/bpmn-schema.mbtx generate"
 [tasks."validate:bpmn-schema"]
 description = "Check pinned schema metadata and declaration coverage regeneration"
 run = "moonx scripts/bpmn-schema.mbtx check"
+
+[tasks."bpmn-corpus:reference"]
+description = "Refresh semantic BPMN fixtures with test-only pinned bpmn-moddle"
+run = "moonx scripts/bpmn-reference.mbtx"

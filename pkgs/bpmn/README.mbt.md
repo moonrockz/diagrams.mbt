@@ -182,8 +182,11 @@ Outside-root whitespace is source trivia and is omitted from document values.
 
 `Definitions`, `Import`, `BaseElement`, `RootElement` and `Documentation` give
 typed foundation construction or inspection. Abstract base/root views require
-a concrete element whose schema type derives from that base. Family-specific
-process/collaboration APIs follow in group 4; complete choreography,
+a concrete element whose schema type derives from that base. Process/collaboration wrappers cover activities, subprocesses, calls, loop and
+multi-instance values, events/definitions, gateways, flows, pools/participants,
+lanes, data, artifacts, resources and shared definitions. The generated
+`typed_model_types` and `typed_model_fields` inventories let qualification
+check every selected schema type and inherited field. Complete choreography,
 conversation, DI and opaque vendor data qualification follow in group 5.
 Unknown elements or foreign attributes still give an unsupported finding and
 prevent typed projection in this slice. Their XML CST remains available.
@@ -332,3 +335,83 @@ and `bpmn/unsupported-attribute`. Lowering also uses `bpmn/invalid-scalar`,
 `bpmn/unbound-qname`, the unsupported codes and `bpmn/definitions-required`.
 These findings do not change the XML CST's completeness. A simple `walk` visits
 containment in preorder and never follows reference attributes.
+
+## Typed process and collaboration APIs
+
+Named wrappers expose their immutable `element` and schema-typed accessors.
+`UserTask::from_element`, for example, checks type derivation before returning a
+view. `FlowElement`, `Activity`, `CatchEvent` and other abstract wrappers can
+inspect their concrete subtypes. `new` constructors exist for concrete global
+elements. Constructor arguments include inherited attributes with their scalar,
+reference or named enum type. Child order is explicit in `contents`.
+
+Single child accessors return `Field[T]`. Repeated children return
+`Field[ReadOnlyArray[T]]`; no children gives `Absent`. A mismatched scalar or
+child type gives `InvalidValue`, and a duplicate singleton child is invalid.
+The original ordered elements remain available on `element.children`.
+Names use snake case; reserved words gain `_`, as in `default_` and `method_`.
+The BPMN Error wrapper is `BpmnError` because `Error` is reserved by MoonBit.
+
+```mbt check
+///|
+test "construct and inspect a typed process" {
+  let task = @bpmn.UserTask::new(id="Review", name="Review request", implementation=Unspecified)
+  let process = @bpmn.Process::new(id="P", is_executable=false, contents=[Element(task.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
+  assert_eq(task.is_for_compensation(), Absent)
+  assert_eq(process.flow_element().value().unwrap()[0].element.kind, UserTask)
+  let reread = @bpmn.read(@bpmn.write(document)).document.unwrap()
+  let view = @bpmn.Process::from_element(reread.root.children[0]).unwrap()
+  assert_eq(view.is_executable(), Present(false))
+  assert_eq(@bpmn.UserTask::from_element(view.flow_element().value().unwrap()[0].element).unwrap().name(), Present("Review request"))
+}
+```
+
+References keep their schema distinction. A sequence-flow endpoint is an ID
+reference; message-flow endpoints and participant process references are
+QNames. Use `kind=Id` when constructing an ID reference. The writer reports a
+mismatch rather than changing one alternative into another. Formal expressions
+remain inert text. To put one under a property name such as
+`conditionExpression`, use `with_kind`; its explicit type identity is retained
+through `xsi:type`.
+
+```mbt check
+///|
+test "construct descriptive conditions and ID references" {
+  let condition = @bpmn.FormalExpression::new(language="urn:description", contents=[Text("approved == true")]).element.with_kind(ConditionExpression)
+  let flow = @bpmn.SequenceFlow::new(id="F", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A"), kind=Id), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B"), kind=Id), contents=[Element(condition)])
+  let process = @bpmn.Process::new(id="P", contents=[Element(@bpmn.Task::new(id="A").element), Element(@bpmn.Task::new(id="B").element), Element(flow.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
+  assert_eq(flow.condition_expression().value().unwrap().element.content, "approved == true")
+  assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
+}
+```
+
+```mbt check
+///|
+test "construct a collaboration independently of rendering" {
+  let buyer = @bpmn.Process::new(id="Buyer", contents=[Element(@bpmn.SendTask::new(id="Send").element)])
+  let seller = @bpmn.Process::new(id="Seller", contents=[Element(@bpmn.ReceiveTask::new(id="Receive").element)])
+  let buyer_pool = @bpmn.Participant::new(id="BuyerPool", process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")))
+  let seller_pool = @bpmn.Participant::new(id="SellerPool", process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Seller")))
+  let message = @bpmn.MessageFlow::new(id="Request", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Send")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Receive")))
+  let collaboration = @bpmn.Collaboration::new(id="Exchange", contents=[Element(buyer_pool.element), Element(seller_pool.element), Element(message.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[buyer.element, seller.element, collaboration.element]).document()
+  assert_eq(collaboration.participant().value().unwrap().length(), 2)
+  assert_eq(@bpmn.read(@bpmn.write(document, format=Pretty)).document, Some(document))
+}
+```
+
+Construction can represent an incomplete intermediate value. The writer checks
+XML/scalar representability and type identity; required-field and structural
+validation are completed in group 6. These document APIs do not expand the
+current renderer's coverage or execute conditions, events, loops or scripts.
+
+The unpublished corpus compares core identities, containment, references and
+minimal DI with `bpmn-moddle@10.3.1`. `mise run bpmn-corpus:reference` refreshes
+those frozen JSON fixtures using its private lockfile. Ordinary module tests
+use the committed data, without JavaScript dependencies or resource access.
+See `tests/corpus/bpmn-model/README.md` for normalization rules and the explicit
+GlobalScriptTask schema/reference difference. Exact numeric preservation and
+source order have separate four-target laws, beyond the reference's numeric
+and property-order conventions.

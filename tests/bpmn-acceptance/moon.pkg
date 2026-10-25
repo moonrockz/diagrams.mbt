@@ -8,4 +8,5 @@ import {
   "moonrockz/diagrams-svg" @svg,
   "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
   "moonbitlang/core/test",
+  "moonbitlang/core/json",
 } for "test"

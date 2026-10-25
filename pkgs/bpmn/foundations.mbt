@@ -139,3 +139,24 @@ pub fn Element::integer(self : Element, name : String) -> Field[ExactInteger] {
 
 ///|
 pub fn Document::definitions(self : Document) -> Definitions? { Definitions::from_element(self.root) }
+
+///|
+pub fn Definitions::id(self : Definitions) -> Field[String] { self.element.string("id") }
+
+///|
+pub fn Definitions::name(self : Definitions) -> Field[String] { self.element.string("name") }
+
+///|
+pub fn Definitions::expression_language(self : Definitions) -> Field[String] { self.element.string("expressionLanguage") }
+
+///|
+pub fn Definitions::type_language(self : Definitions) -> Field[String] { self.element.string("typeLanguage") }
+
+///|
+pub fn Definitions::exporter(self : Definitions) -> Field[String] { self.element.string("exporter") }
+
+///|
+pub fn Definitions::exporter_version(self : Definitions) -> Field[String] { self.element.string("exporterVersion") }
+
+///|
+pub fn Documentation::id(self : Documentation) -> Field[String] { self.element.string("id") }

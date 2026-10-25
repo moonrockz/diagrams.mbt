@@ -1,0 +1,997 @@
+{
+  "reference": "bpmn-moddle@10.3.1",
+  "normalizations": [
+    "explicit own properties only; schema defaults omitted",
+    "reference targets use local IDs",
+    "numeric comparison uses the reference IEEE-754 Number; exact tokens tested separately",
+    "containment is compared by parent and sorted child identities; source order tested separately"
+  ],
+  "nodes": [
+    {
+      "key": "#Assignment",
+      "parent": "#DataIn",
+      "type": "bpmn:Assignment",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Assignment"
+        }
+      },
+      "children": [
+        "#Assignment/bpmn:FormalExpression[0]",
+        "#Assignment/bpmn:FormalExpression[1]"
+      ]
+    },
+    {
+      "key": "#Assignment/bpmn:FormalExpression[0]",
+      "parent": "#Assignment",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Assignment/bpmn:FormalExpression[1]",
+      "parent": "#Assignment",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "input"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Association",
+      "parent": "#Buyer",
+      "type": "bpmn:Association",
+      "fields": {
+        "associationDirection": {
+          "kind": "string",
+          "value": "One"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Association"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Note"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Buyer",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Buyer"
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Buyer"
+        }
+      },
+      "children": [
+        "#Association",
+        "#BuyerFlow",
+        "#Group",
+        "#Lanes",
+        "#Note",
+        "#Object",
+        "#ObjectRef",
+        "#Review",
+        "#Send",
+        "#StoreRef"
+      ]
+    },
+    {
+      "key": "#BuyerFlow",
+      "parent": "#Buyer",
+      "type": "bpmn:SequenceFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "BuyerFlow"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Send"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#BuyerPool",
+      "parent": "#Collaboration",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "BuyerPool"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Buyer"
+        },
+        "processRef": {
+          "kind": "reference",
+          "value": [
+            "Buyer"
+          ]
+        }
+      },
+      "children": [
+        "#Multiplicity"
+      ]
+    },
+    {
+      "key": "#Category",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Category",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Category"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Department"
+        }
+      },
+      "children": [
+        "#CategoryValue"
+      ]
+    },
+    {
+      "key": "#CategoryValue",
+      "parent": "#Category",
+      "type": "bpmn:CategoryValue",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CategoryValue"
+        },
+        "value": {
+          "kind": "string",
+          "value": "Operations"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Collaboration",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Collaboration",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Collaboration"
+        },
+        "isClosed": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request exchange"
+        }
+      },
+      "children": [
+        "#BuyerPool",
+        "#RequestFlow",
+        "#SellerPool"
+      ]
+    },
+    {
+      "key": "#CollaborationDefinitions",
+      "parent": null,
+      "type": "bpmn:Definitions",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "CollaborationDefinitions"
+        },
+        "targetNamespace": {
+          "kind": "string",
+          "value": "urn:collaboration"
+        }
+      },
+      "children": [
+        "#Buyer",
+        "#Category",
+        "#Collaboration",
+        "#CollaborationDefinitions/bpmn:Import[0]",
+        "#Item",
+        "#Request",
+        "#Resource",
+        "#Seller",
+        "#Store"
+      ]
+    },
+    {
+      "key": "#CollaborationDefinitions/bpmn:Import[0]",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Import",
+      "fields": {
+        "importType": {
+          "kind": "string",
+          "value": "http://www.omg.org/spec/BPMN/20100524/MODEL"
+        },
+        "location": {
+          "kind": "string",
+          "value": "https://invalid.example/not-fetched"
+        },
+        "namespace": {
+          "kind": "string",
+          "value": "urn:optional"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#DataIn",
+      "parent": "#Review",
+      "type": "bpmn:DataInputAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "DataIn"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "ObjectRef"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Input"
+          ]
+        }
+      },
+      "children": [
+        "#Assignment",
+        "#Transform"
+      ]
+    },
+    {
+      "key": "#DataOut",
+      "parent": "#Review",
+      "type": "bpmn:DataOutputAssociation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "DataOut"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Output"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "StoreRef"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Group",
+      "parent": "#Buyer",
+      "type": "bpmn:Group",
+      "fields": {
+        "categoryValueRef": {
+          "kind": "reference",
+          "value": [
+            "CategoryValue"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Group"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#IO",
+      "parent": "#Review",
+      "type": "bpmn:InputOutputSpecification",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "IO"
+        }
+      },
+      "children": [
+        "#Input",
+        "#InputSet",
+        "#Output",
+        "#OutputSet"
+      ]
+    },
+    {
+      "key": "#Input",
+      "parent": "#IO",
+      "type": "bpmn:DataInput",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Input"
+        },
+        "isCollection": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#InputSet",
+      "parent": "#IO",
+      "type": "bpmn:InputSet",
+      "fields": {
+        "dataInputRefs": {
+          "kind": "reference",
+          "value": [
+            "Input"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "InputSet"
+        },
+        "optionalInputRefs": {
+          "kind": "reference",
+          "value": [
+            "Input"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Item",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:ItemDefinition",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Item"
+        },
+        "structureRef": {
+          "kind": "string",
+          "value": "xsi:type"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Lanes",
+      "parent": "#Buyer",
+      "type": "bpmn:LaneSet",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Lanes"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Teams"
+        }
+      },
+      "children": [
+        "#Operations"
+      ]
+    },
+    {
+      "key": "#Multiplicity",
+      "parent": "#BuyerPool",
+      "type": "bpmn:ParticipantMultiplicity",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Multiplicity"
+        },
+        "maximum": {
+          "kind": "number",
+          "value": 3
+        },
+        "minimum": {
+          "kind": "number",
+          "value": 1
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#NestedLanes",
+      "parent": "#Operations",
+      "type": "bpmn:LaneSet",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "NestedLanes"
+        }
+      },
+      "children": [
+        "#Reviewers"
+      ]
+    },
+    {
+      "key": "#Note",
+      "parent": "#Buyer",
+      "type": "bpmn:TextAnnotation",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Note"
+        },
+        "text": {
+          "kind": "string",
+          "value": "Illustrative document; no execution."
+        },
+        "textFormat": {
+          "kind": "string",
+          "value": "text/plain"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Object",
+      "parent": "#Buyer",
+      "type": "bpmn:DataObject",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Object"
+        },
+        "isCollection": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request data"
+        }
+      },
+      "children": [
+        "#State"
+      ]
+    },
+    {
+      "key": "#ObjectRef",
+      "parent": "#Buyer",
+      "type": "bpmn:DataObjectReference",
+      "fields": {
+        "dataObjectRef": {
+          "kind": "reference",
+          "value": [
+            "Object"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "ObjectRef"
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Operations",
+      "parent": "#Lanes",
+      "type": "bpmn:Lane",
+      "fields": {
+        "flowNodeRef": {
+          "kind": "reference",
+          "value": [
+            "Send"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Operations"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Operations"
+        }
+      },
+      "children": [
+        "#NestedLanes"
+      ]
+    },
+    {
+      "key": "#Output",
+      "parent": "#IO",
+      "type": "bpmn:DataOutput",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Output"
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "decision"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#OutputSet",
+      "parent": "#IO",
+      "type": "bpmn:OutputSet",
+      "fields": {
+        "dataOutputRefs": {
+          "kind": "reference",
+          "value": [
+            "Output"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "OutputSet"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Owner",
+      "parent": "#Review",
+      "type": "bpmn:PotentialOwner",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Owner"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reviewers"
+        },
+        "resourceRef": {
+          "kind": "reference",
+          "value": [
+            "Resource"
+          ]
+        }
+      },
+      "children": [
+        "#Owner/bpmn:ResourceAssignmentExpression[0]",
+        "#Owner/bpmn:ResourceParameterBinding[0]"
+      ]
+    },
+    {
+      "key": "#Owner/bpmn:ResourceAssignmentExpression[0]",
+      "parent": "#Owner",
+      "type": "bpmn:ResourceAssignmentExpression",
+      "fields": {},
+      "children": [
+        "#Owner/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Owner/bpmn:ResourceAssignmentExpression[0]/bpmn:FormalExpression[0]",
+      "parent": "#Owner/bpmn:ResourceAssignmentExpression[0]",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "reviewers"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Owner/bpmn:ResourceParameterBinding[0]",
+      "parent": "#Owner",
+      "type": "bpmn:ResourceParameterBinding",
+      "fields": {
+        "parameterRef": {
+          "kind": "reference",
+          "value": [
+            "Parameter"
+          ]
+        }
+      },
+      "children": [
+        "#Owner/bpmn:ResourceParameterBinding[0]/bpmn:FormalExpression[0]"
+      ]
+    },
+    {
+      "key": "#Owner/bpmn:ResourceParameterBinding[0]/bpmn:FormalExpression[0]",
+      "parent": "#Owner/bpmn:ResourceParameterBinding[0]",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "team"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Parameter",
+      "parent": "#Resource",
+      "type": "bpmn:ResourceParameter",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Parameter"
+        },
+        "isRequired": {
+          "kind": "boolean",
+          "value": true
+        },
+        "name": {
+          "kind": "string",
+          "value": "team"
+        },
+        "type": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Receive",
+      "parent": "#Seller",
+      "type": "bpmn:ReceiveTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Receive"
+        },
+        "instantiate": {
+          "kind": "boolean",
+          "value": false
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Request"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Request",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Message",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Request"
+        },
+        "itemRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#RequestFlow",
+      "parent": "#Collaboration",
+      "type": "bpmn:MessageFlow",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "RequestFlow"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Request"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Request"
+        },
+        "sourceRef": {
+          "kind": "reference",
+          "value": [
+            "Send"
+          ]
+        },
+        "targetRef": {
+          "kind": "reference",
+          "value": [
+            "Receive"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Resource",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Resource",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Resource"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reviewer"
+        }
+      },
+      "children": [
+        "#Parameter"
+      ]
+    },
+    {
+      "key": "#Review",
+      "parent": "#Buyer",
+      "type": "bpmn:UserTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Review"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Review & approve"
+        }
+      },
+      "children": [
+        "#DataIn",
+        "#DataOut",
+        "#IO",
+        "#Owner"
+      ]
+    },
+    {
+      "key": "#Reviewers",
+      "parent": "#NestedLanes",
+      "type": "bpmn:Lane",
+      "fields": {
+        "flowNodeRef": {
+          "kind": "reference",
+          "value": [
+            "Review"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "Reviewers"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Reviewers"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Seller",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:Process",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Seller"
+        },
+        "isExecutable": {
+          "kind": "boolean",
+          "value": false
+        },
+        "name": {
+          "kind": "string",
+          "value": "Seller"
+        }
+      },
+      "children": [
+        "#Receive"
+      ]
+    },
+    {
+      "key": "#SellerPool",
+      "parent": "#Collaboration",
+      "type": "bpmn:Participant",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "SellerPool"
+        },
+        "name": {
+          "kind": "string",
+          "value": "Seller"
+        },
+        "processRef": {
+          "kind": "reference",
+          "value": [
+            "Seller"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Send",
+      "parent": "#Buyer",
+      "type": "bpmn:SendTask",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "Send"
+        },
+        "messageRef": {
+          "kind": "reference",
+          "value": [
+            "Request"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#State",
+      "parent": "#Object",
+      "type": "bpmn:DataState",
+      "fields": {
+        "id": {
+          "kind": "string",
+          "value": "State"
+        },
+        "name": {
+          "kind": "string",
+          "value": "draft"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Store",
+      "parent": "#CollaborationDefinitions",
+      "type": "bpmn:DataStore",
+      "fields": {
+        "capacity": {
+          "kind": "number",
+          "value": 1e+22
+        },
+        "id": {
+          "kind": "string",
+          "value": "Store"
+        },
+        "isUnlimited": {
+          "kind": "boolean",
+          "value": false
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        },
+        "name": {
+          "kind": "string",
+          "value": "Archive"
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#StoreRef",
+      "parent": "#Buyer",
+      "type": "bpmn:DataStoreReference",
+      "fields": {
+        "dataStoreRef": {
+          "kind": "reference",
+          "value": [
+            "Store"
+          ]
+        },
+        "id": {
+          "kind": "string",
+          "value": "StoreRef"
+        },
+        "itemSubjectRef": {
+          "kind": "reference",
+          "value": [
+            "Item"
+          ]
+        }
+      },
+      "children": []
+    },
+    {
+      "key": "#Transform",
+      "parent": "#DataIn",
+      "type": "bpmn:FormalExpression",
+      "fields": {
+        "@body": {
+          "kind": "string",
+          "value": "copy(input)"
+        },
+        "id": {
+          "kind": "string",
+          "value": "Transform"
+        },
+        "language": {
+          "kind": "string",
+          "value": "urn:inert"
+        }
+      },
+      "children": []
+    }
+  ],
+  "source_sha256": "3d3426d921b29050838d02f5679258da24848cfecf58cf76ae9a638a962d5feb"
+}

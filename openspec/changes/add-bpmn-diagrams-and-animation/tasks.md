@@ -46,10 +46,10 @@ Depends on: group 2.
 Bead: diagrams-u42.4.
 Depends on: group 3.
 
-- [ ] 4.1 Complete process, activity, subprocess, call, loop and multi-instance document fields; verify schema-inventory coverage and typed read/construct/write fixtures for each family.
-- [ ] 4.2 Complete events/event definitions, gateways and sequence-flow document fields; verify boundary attachment, expressions and catch/throw variants without executing their content.
-- [ ] 4.3 Complete collaborations, participants, nested lanes, message/data flows, artifacts, resources and shared definitions; verify references, child order and document round trips for each family.
-- [ ] 4.4 Add a pinned test-only bpmn-moddle reference fixture task and record its version and normalizations; verify core identities, containment, references and DI against the reference, and add tested process/collaboration examples.
+- [x] 4.1 Complete process, activity, subprocess, call, loop and multi-instance document fields; verify schema-inventory coverage and typed read/construct/write fixtures for each family.
+- [x] 4.2 Complete events/event definitions, gateways and sequence-flow document fields; verify boundary attachment, expressions and catch/throw variants without executing their content.
+- [x] 4.3 Complete collaborations, participants, nested lanes, message/data flows, artifacts, resources and shared definitions; verify references, child order and document round trips for each family.
+- [x] 4.4 Add a pinned test-only bpmn-moddle reference fixture task and record its version and normalizations; verify core identities, containment, references and DI against the reference, and add tested process/collaboration examples.
 
 ## 5. Complete choreography, conversation, DI and extension documents
 
