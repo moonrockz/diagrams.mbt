@@ -6,8 +6,8 @@ network. A sample takes explicit integer milliseconds and returns active
 occurrence keys, playback ordinals and integer progress fractions.
 
 `PlaybackPlan` is the full API. The earlier `MotionPlan` constructor and its
-single-flow `sample` remain available for the initial HTML tracer. Full scene and
-HTML integration of `PlaybackPlan` follows in group 12.
+single-flow `sample` remain available for the initial HTML tracer. `moonrockz/diagrams-svg` scenes and `moonrockz/diagrams-animated` HTML consume
+`PlaybackPlan` with the same source checks.
 
 ## Explicit scenarios
 
@@ -52,7 +52,7 @@ No plan evaluates conditions, schedules timers or reports execution outcomes.
 
 `matches(catalog)` compares the view identity and immutable source diagram.
 A route supplied to another source produces `animation/plan-mismatch`, even if
-local element IDs happen to match. The HTML integration must make the same check.
+local element IDs happen to match. The HTML renderer makes the same check before emitting output.
 
 ## Sequence frames and choices
 

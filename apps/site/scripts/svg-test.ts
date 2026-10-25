@@ -263,7 +263,7 @@ try {
   const dot = page.locator('.motion-overlay circle');
   const before = await dot.getAttribute('cx');
   await page.waitForFunction(x => document.querySelector('.motion-overlay circle')?.getAttribute('cx') !== x, before);
-  assert.equal(await page.locator('.motion-overlay').evaluate(node => node.parentElement?.classList.contains('bpmn-viewport')), true, 'overlay shares the translated viewport');
+  assert.equal(await page.locator('.motion-overlay').evaluate(node => node.closest('.bpmn-viewport') !== null), true, 'overlay shares the translated viewport');
   const geometry = await page.locator('.motion-overlay path').getAttribute('d');
   assert.equal(geometry, 'M76 80 L140 80');
   await page.getByRole('button', { name: 'Pause', exact: true }).click();

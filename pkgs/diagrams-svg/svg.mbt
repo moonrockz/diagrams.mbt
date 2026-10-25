@@ -164,8 +164,8 @@ fn description(s : @sequence.Sequence, m : Int) -> String {
 }
 
 ///|
-fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode, id_prefix : String?) -> (String, Array[@diagrams.Diagnostic]) {
-  let g = @layout.layout(sequence)
+fn paint(sequence : @sequence.Sequence, theme : @theme.Theme, mode : Mode, id_prefix : String?, geometry? : @layout.Geometry) -> (String, Array[@diagrams.Diagnostic]) {
+  let g = geometry.unwrap_or_else(() => @layout.layout(sequence))
   let p = Paint::{ theme, mode }
   let diagnostics : Array[@diagrams.Diagnostic] = []
   let defs : Array[@writer.Node] = []

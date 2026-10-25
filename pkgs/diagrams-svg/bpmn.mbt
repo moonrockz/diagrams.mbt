@@ -67,9 +67,9 @@ fn bpmn_prefix(root : @writer.Node, raw : String?, paint : BpmnPaint) -> String?
 }
 
 ///|
-fn paint_bpmn(view : @bpmn.Bpmn, theme : @theme.Theme, mode : Mode, id_prefix : String?, policy : @bpmn.GeometryPolicy, limits : @bpmn_layout.Limits) -> @render.Rendered {
+fn paint_bpmn(view : @bpmn.Bpmn, theme : @theme.Theme, mode : Mode, id_prefix : String?, policy : @bpmn.GeometryPolicy, limits : @bpmn_layout.Limits, precomputed? : @bpmn_layout.Result) -> @render.Rendered {
   let theme=@theme.Theme::{dark:@bpmn_layout.bpmn_palette(theme.dark),light:@bpmn_layout.bpmn_palette(theme.light)}
-  let result=@bpmn_layout.layout(view,policy~,limits~)
+  let result=precomputed.unwrap_or_else(() => @bpmn_layout.layout(view,policy~,limits~))
   let diagnostics=result.diagnostics.iter().to_array()
   guard result.geometry is Some(geometry) else { return @render.Rendered::failed("image/svg+xml",diagnostics) }
   let c=BpmnPaint::{paint:Paint::{theme,mode},limit:limits.output_units,diagnostics,used:0,failed:false,work:0,work_limit:limits.work}

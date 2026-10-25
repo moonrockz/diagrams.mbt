@@ -73,7 +73,7 @@ test "pure plan samples exact progress and rejects invalid durations and binding
   }
   let result = @animated.AnimatedRenderer::new().render(Sequence(@sequence.Sequence::new([], [])))
   assert_eq(result.output, None)
-  assert_eq(result.diagnostics[0].code, "render/unsupported-diagram")
+  assert_eq(result.diagnostics[0].code, "animation/no-flow")
 }
 
 ///|
@@ -96,7 +96,7 @@ test "markup-like labels remain SVG text and never enter script context" {
   let html = @animated.AnimatedRenderer::new().render(d).output.unwrap()
   assert_false(html.contains("<img"))
   assert_true(html.contains("&lt;/script&gt;"))
-  assert_eq(html.split("</script>").count(), 2)
+  assert_eq(html.split("</script>").count(), 3)
 }
 
 ///|

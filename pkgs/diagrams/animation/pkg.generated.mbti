@@ -145,6 +145,7 @@ pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, edges? : Int32, steps? : Int32, results? : Int32, work? : Int32, depth? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
+pub fn Limits::valid(Self) -> Bool
 
 pub(all) enum Motion {
   Step(String, Int64)
@@ -225,6 +226,7 @@ pub fn PlaybackPlan::equal(Self, Self) -> Bool
 pub fn PlaybackPlan::illustrative(Catalog, duration_ms? : Int64, kinds? : ArrayView[@bpmn.ConnectionKind], limits? : Limits) -> PlanResult
 pub fn PlaybackPlan::matches(Self, Catalog) -> Bool
 pub fn PlaybackPlan::not_equal(Self, Self) -> Bool
+pub fn PlaybackPlan::repeating(Self) -> PlanResult
 pub fn PlaybackPlan::route(Catalog, Route, duration_ms? : Int64, limits? : Limits) -> PlanResult
 pub fn PlaybackPlan::sample_at(Self, Int64) -> Sample
 pub fn PlaybackPlan::scenario(Catalog, Motion, limits? : Limits) -> PlanResult

@@ -126,11 +126,11 @@ Depends on: groups 7 and 10.
 Bead: diagrams-u42.12.
 Depends on: group 11.
 
-- [ ] 12.1 Add render-scene bindings and reproducibly embedded browser assets without changing ordinary SVG output; verify display/canonical geometry equality and unchanged existing sequence bytes.
-- [ ] 12.2 Implement offline overlays, play/pause/restart/step/speed/seek and route/reach controls with safe data encoding; verify real path motion, keyboard operation, selected-route replacement and hostile label fixtures in a browser.
-- [ ] 12.3 Add still startup, reduced motion, visibility suspension, print output and byte-exact canonical SVG download; verify these behaviors for BPMN and sequence fixtures and that export preserves current viewer state.
-- [ ] 12.4 Add `mise run test:animation` through a MoonBit task and the existing Site build CI job, reusing locked Playwright/Chromium and current-commit stored snapshots; verify offline browser qualification without rebuilding the workspace/site, and that `ci-ok` requires this job's success.
-- [ ] 12.5 Document standalone HTML generation and browser requirements; verify runnable examples, four-target HTML byte identity and no network requests or console errors during qualification.
+- [x] 12.1 Add render-scene bindings and reproducibly embedded browser assets without changing ordinary SVG output; verify display/canonical geometry equality and unchanged existing sequence bytes.
+- [x] 12.2 Implement offline overlays, play/pause/restart/step/speed/seek and route/reach controls with safe data encoding; verify real path motion, keyboard operation, selected-route replacement and hostile label fixtures in a browser.
+- [x] 12.3 Add still startup, reduced motion, visibility suspension, print output and byte-exact canonical SVG download; verify these behaviors for BPMN and sequence fixtures and that export preserves current viewer state.
+- [x] 12.4 Add `mise run test:animation` through a MoonBit task and the existing Site build CI job, reusing locked Playwright/Chromium and current-commit stored snapshots; verify offline browser qualification without rebuilding the workspace/site, and that `ci-ok` requires this job's success.
+- [x] 12.5 Document standalone HTML generation and browser requirements; verify runnable examples, four-target HTML byte identity and no network requests or console errors during qualification.
 
 ## 13. Review the integrated result and prepare the new modules
 

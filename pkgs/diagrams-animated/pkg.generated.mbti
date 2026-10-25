@@ -2,6 +2,7 @@
 package "moonrockz/diagrams-animated"
 
 import {
+  "moonrockz/diagrams-svg",
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/render",
 }
@@ -13,8 +14,14 @@ import {
 // Types and methods
 pub struct AnimatedRenderer {
   plan : @animation.MotionPlan?
+  playback : @animation.PlaybackPlan?
+  svg : @diagrams-svg.SvgRenderer
+  limits : @animation.Limits
+  query_limits : @animation.Limits
+  sequence_view_id : String?
+  output_units : Int32
 }
-pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan) -> Self
+pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan, playback? : @animation.PlaybackPlan, svg? : @diagrams-svg.SvgRenderer, limits? : @animation.Limits, query_limits? : @animation.Limits, sequence_view_id? : String, output_units? : Int32) -> Self
 pub fn AnimatedRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub impl @render.Renderer for AnimatedRenderer
 

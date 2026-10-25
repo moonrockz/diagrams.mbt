@@ -216,3 +216,33 @@ theme come from archify v3.2 by tt-a1i, under the MIT licence. The painter and
 layout are implemented in MoonBit for this library. In the light theme, six
 text colours are darker shades of archify's colours, so that text has at least
 4.5:1 contrast.
+
+## Motion scenes
+
+`SvgRenderer::scene` returns the ordinary canonical SVG, a script-free display
+copy, a source catalog and immutable path/node bindings. Both copies use one
+measured geometry. Only the display copy gains invisible scoped numeric paths;
+existing symbols, labels, styles, arrowheads and coordinates are unchanged.
+BPMN bindings inherit the common viewport translation. Sequence bindings retain
+message containment paths, including self-loops and nested frame occurrences.
+
+```mbt check
+///|
+test "canonical scene SVG equals the ordinary static renderer" {
+  let sequence=@sequence.Sequence::new([
+    @sequence.Participant::new("A"),@sequence.Participant::new("B"),
+  ],[Message(@sequence.Message::new("A","B","hello"))])
+  let renderer=@svg.SvgRenderer::new()
+  let scene=renderer.scene(Sequence(sequence)).scene.unwrap()
+  assert_eq(scene.canonical_svg,@svg.render_sequence(sequence))
+  assert_false(scene.canonical_svg.contains("data-motion-paths"))
+  assert_true(scene.display_svg.contains("data-motion-paths"))
+  assert_eq(scene.paths.length(),1)
+}
+```
+
+Scenes accept separate catalog/search limits and a conservative total output
+bound. Sequence scene input also bounds visible participants and text work before
+layout. Invalid bindings or exhaustion return no partial scene. `id_prefix`
+continues to isolate adjacent copies. Standalone playback and canonical download
+are provided by `moonrockz/diagrams-animated`.
