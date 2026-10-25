@@ -12,7 +12,7 @@ const sequenceScenes = JSON.parse(await readFile('tests/acceptance/__snapshot__/
 const bpmnScenes = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/scenes.json', 'utf8')) as [string, string, string, string][];
 const runtime = await readFile('pkgs/diagrams-animated/assets/player.js', 'utf8');
 const stylesheet = await readFile('pkgs/diagrams-animated/assets/player.css', 'utf8');
-assert.equal(players.length, 13); assert.equal(sequenceScenes.length, 114); assert.equal(bpmnScenes.length, 12);
+assert.equal(players.length, 17); assert.equal(sequenceScenes.length, 114); assert.equal(bpmnScenes.length, 12);
 const browser = await chromium.launch();
 const errors: string[] = [], requests: string[] = [];
 async function page(html: string, preference: 'light' | 'dark' = 'light', reducedMotion: 'reduce' | 'no-preference' = 'no-preference') {

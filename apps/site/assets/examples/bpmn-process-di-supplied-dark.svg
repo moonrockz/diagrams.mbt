@@ -1,0 +1,310 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 964 544" width="964" height="544" role="img" data-diagram="bpmn" id="bpmn-7be92db32405c4de-diagram">
+  <title>Review delivery</title>
+  <desc>BPMN view with 14 visible shapes and 9 connections. Structural flow is illustrative. Conditions, timers and execution outcomes are not evaluated.</desc>
+  <defs>
+    <marker id="bpmn-7be92db32405c4de-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-10 -5 L0 0 L-10 5 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-7be92db32405c4de-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-10 -5 L0 0 L-10 5" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-7be92db32405c4de-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <circle cx="0" cy="0" r="3.5" fill="#020617" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="bpmn-7be92db32405c4de-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0 L6 -4 L12 0 L6 4 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-7be92db32405c4de-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M4 -5 L10 5" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="964" height="544" fill="#020617"/>
+  <g transform="translate(12 12)" class="bpmn-viewport">
+    <g class="bpmn-backgrounds">
+      <g data-id="Intake" data-source-id="Intake" data-source-path="0/1/0/0" id="bpmn-7be92db32405c4de-node-0" class="bpmn-shape" data-kind="lane" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="20" y="20" width="900" height="250" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(20 20) scale(900 250)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="0" fill="#020617" stroke="#94a3b8" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(20 20)" class="bpmn-markers">
+          <path d="M30 0 V250" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g data-id="Dispatch" data-source-id="Dispatch" data-source-path="0/1/0/1" id="bpmn-7be92db32405c4de-node-1" class="bpmn-shape" data-kind="lane" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="20" y="270" width="900" height="230" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(20 270) scale(900 230)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="0" fill="#020617" stroke="#94a3b8" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(20 270)" class="bpmn-markers">
+          <path d="M30 0 V230" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+        </g>
+      </g>
+      <g data-id="ReviewGroup" data-source-id="ReviewGroup" data-source-path="0/1/19" id="bpmn-7be92db32405c4de-node-12" class="bpmn-shape" data-kind="group" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="180" y="75" width="270" height="195" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(180 75) scale(270 195)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3 1 3" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(180 75)" class="bpmn-markers"/>
+      </g>
+    </g>
+    <g class="bpmn-connections">
+      <g data-id="ReadRequest" data-source-id="ReadRequest" data-source-path="0/1/2/2" id="bpmn-7be92db32405c4de-flow-0" class="bpmn-flow" data-kind="dataInputAssociation" data-from="Requests" data-to="Review">
+        <path d="M288 238 L288 252 L410 252 L410 190 L260 190 L260 180" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="1 4" stroke-linecap="round" marker-end="url(#bpmn-7be92db32405c4de-open-head)"/>
+      </g>
+      <g data-id="Receive" data-source-id="Receive" data-source-path="0/1/12" id="bpmn-7be92db32405c4de-flow-1" class="bpmn-flow" data-kind="sequenceFlow" data-from="Start" data-to="Review">
+        <path d="M136 138 L168 138 L168 140 L200 140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="Check" data-source-id="Check" data-source-path="0/1/13" id="bpmn-7be92db32405c4de-flow-2" class="bpmn-flow" data-kind="sequenceFlow" data-from="Review" data-to="Decision">
+        <path d="M320 140 L380 140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="Accept" data-source-id="Accept" data-source-path="0/1/14" id="bpmn-7be92db32405c4de-flow-3" class="bpmn-flow" data-kind="sequenceFlow" data-from="Decision" data-to="Send" data-condition="approved">
+        <path d="M400 160 L400 360 L500 360" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="Reject" data-source-id="Reject" data-source-path="0/1/15" id="bpmn-7be92db32405c4de-flow-4" class="bpmn-flow" data-kind="sequenceFlow" data-from="Decision" data-to="Declined">
+        <path d="M420 140 L740 140" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)" marker-start="url(#bpmn-7be92db32405c4de-default-tail)"/>
+      </g>
+      <g data-id="Deliver" data-source-id="Deliver" data-source-path="0/1/16" id="bpmn-7be92db32405c4de-flow-5" class="bpmn-flow" data-kind="sequenceFlow" data-from="Send" data-to="Sent">
+        <path d="M640 360 L740 360" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="Remind" data-source-id="Remind" data-source-path="0/1/17" id="bpmn-7be92db32405c4de-flow-6" class="bpmn-flow" data-kind="sequenceFlow" data-from="Reminder" data-to="Notify">
+        <path d="M580 420 L580 470 L60 470 L60 380 L100 380" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="FinishNotice" data-source-id="FinishNotice" data-source-path="0/1/18" id="bpmn-7be92db32405c4de-flow-7" class="bpmn-flow" data-kind="sequenceFlow" data-from="Notify" data-to="Notified">
+        <path d="M240 380 L270 380 L270 360 L300 360" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-7be92db32405c4de-sequence-head)"/>
+      </g>
+      <g data-id="AuditLink" data-source-id="AuditLink" data-source-path="0/1/21" id="bpmn-7be92db32405c4de-flow-8" class="bpmn-flow" data-kind="association" data-from="Review" data-to="Audit">
+        <path d="M320 160 L345 160 L345 185 L480 185 L480 224 L500 224" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="1 4" stroke-linecap="round"/>
+      </g>
+    </g>
+    <g class="bpmn-nodes">
+      <g data-id="Start" data-source-id="Start" data-source-path="0/1/1" id="bpmn-7be92db32405c4de-node-2" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="100" y="120" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(100 120) scale(36 36)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(100 120)" class="bpmn-markers">
+          <g transform="translate(8.1 8.1) scale(0.825)"/>
+        </g>
+      </g>
+      <g data-id="Review" data-source-id="Review" data-source-path="0/1/2" id="bpmn-7be92db32405c4de-node-3" class="bpmn-shape" data-kind="userTask" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="200" y="100" width="120" height="80" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(200 100) scale(120 80)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="#020617" stroke="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(200 100)" class="bpmn-markers">
+          <g transform="translate(10 8) scale(0.8)">
+            <circle cx="12" cy="5" r="4" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+            <path d="M4 23 V18 Q4 12 12 12 Q20 12 20 18 V23 M8 16 V23 M16 16 V23" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Decision" data-source-id="Decision" data-source-path="0/1/3" id="bpmn-7be92db32405c4de-node-4" class="bpmn-shape" data-kind="exclusiveGateway" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="380" y="120" width="40" height="40" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(380 120) scale(40 40)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <path d="M50 0 L100 50 L50 100 L0 50 Z" fill="#020617" stroke="#fbbf24" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(380 120)" class="bpmn-markers">
+          <g transform="translate(9 9) scale(0.917)">
+            <path d="M3 3 L21 21 M21 3 L3 21" fill="none" stroke="#fbbf24" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Declined" data-source-id="Declined" data-source-path="0/1/4" id="bpmn-7be92db32405c4de-node-5" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="740" y="122" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(740 122) scale(36 36)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="4" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(740 122)" class="bpmn-markers">
+          <g transform="translate(8.1 8.1) scale(0.825)"/>
+        </g>
+      </g>
+      <g data-id="Send" data-source-id="Send" data-source-path="0/1/5" id="bpmn-7be92db32405c4de-node-6" class="bpmn-shape" data-kind="serviceTask" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="500" y="320" width="140" height="80" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(500 320) scale(140 80)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="#020617" stroke="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(500 320)" class="bpmn-markers">
+          <g transform="translate(10 8) scale(0.8)">
+            <path d="M9 1 H15 L16 5 L19 7 L23 7 L24 13 L20 15 L19 18 L19 22 L13 24 L10 20 L7 19 L3 20 L1 14 L5 11 L5 8 L4 4 Z" fill="#020617" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="4" fill="none" stroke="#34d399" stroke-width="1.5"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Reminder" data-source-id="Reminder" data-source-path="0/1/6" id="bpmn-7be92db32405c4de-node-7" class="bpmn-shape" data-kind="boundaryEvent" data-expanded="false" data-black-box="false" data-attached-to="Send" data-events="timer">
+        <rect class="bpmn-bounds" x="560" y="380" width="40" height="40" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(560 380) scale(40 40)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4 3" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(560 380)" class="bpmn-markers">
+          <g transform="translate(9 9) scale(0.917)">
+            <circle cx="12" cy="12" r="10.5" fill="none" stroke="#fb923c" stroke-width="1.5"/>
+            <path d="M12 5 V12 L17 15" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M12 2 L12 4" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M12 20 L12 22" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M2 12 L4 12" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M20 12 L22 12" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M5 5 L6 6" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18 18 L19 19" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M5 19 L6 18" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18 6 L19 5" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Notify" data-source-id="Notify" data-source-path="0/1/7" id="bpmn-7be92db32405c4de-node-8" class="bpmn-shape" data-kind="userTask" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="100" y="340" width="140" height="80" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(100 340) scale(140 80)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="#020617" stroke="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(100 340)" class="bpmn-markers">
+          <g transform="translate(10 8) scale(0.8)">
+            <circle cx="12" cy="5" r="4" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
+            <path d="M4 23 V18 Q4 12 12 12 Q20 12 20 18 V23 M8 16 V23 M16 16 V23" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Sent" data-source-id="Sent" data-source-path="0/1/8" id="bpmn-7be92db32405c4de-node-9" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="740" y="342" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(740 342) scale(36 36)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="4" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(740 342)" class="bpmn-markers">
+          <g transform="translate(8.1 8.1) scale(0.825)"/>
+        </g>
+      </g>
+      <g data-id="Notified" data-source-id="Notified" data-source-path="0/1/9" id="bpmn-7be92db32405c4de-node-10" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="300" y="342" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(300 342) scale(36 36)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="4" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(300 342)" class="bpmn-markers">
+          <g transform="translate(8.1 8.1) scale(0.825)"/>
+        </g>
+      </g>
+      <g data-id="Requests" data-source-id="Requests" data-source-path="0/1/11" id="bpmn-7be92db32405c4de-node-11" class="bpmn-shape" data-kind="dataObjectReference" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="270" y="190" width="36" height="48" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(270 190) scale(36 48)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <path d="M0 0 H75 L100 20 V80 H0 Z M75 0 V20 H100" fill="#020617" stroke="#a78bfa" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(270 190)" class="bpmn-markers">
+          <g transform="translate(10 31) scale(0.6)">
+            <path d="M5 3 V21 M12 3 V21 M19 3 V21" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="Audit" data-source-id="Audit" data-source-path="0/1/20" id="bpmn-7be92db32405c4de-node-13" class="bpmn-shape" data-kind="textAnnotation" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="500" y="200" width="180" height="48" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(500 200) scale(180 48)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <path d="M12 0 H0 V80 H12" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(500 200)" class="bpmn-markers"/>
+      </g>
+    </g>
+    <g class="bpmn-labels">
+      <g class="bpmn-label" data-owner="Intake">
+        <rect x="26" y="121" width="17" height="48" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <g transform="rotate(-90 34.5 145)">
+          <text x="34.5" y="149.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#94a3b8">Intake</text>
+        </g>
+      </g>
+      <g class="bpmn-label" data-owner="Dispatch">
+        <rect x="26" y="353" width="17" height="64" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <g transform="rotate(-90 34.5 385)">
+          <text x="34.5" y="389.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#94a3b8">Delivery</text>
+        </g>
+      </g>
+      <g class="bpmn-label" data-owner="Start">
+        <rect x="98" y="164" width="40" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="118" y="177" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">Start</text>
+      </g>
+      <g class="bpmn-label" data-owner="Review">
+        <text x="260" y="144.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#22d3ee">Review</text>
+      </g>
+      <g class="bpmn-label" data-owner="Decision">
+        <rect x="360" y="86" width="90" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="405" y="99.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fbbf24">Approved?</text>
+      </g>
+      <g class="bpmn-label" data-owner="Declined">
+        <rect x="726" y="166" width="64" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="758" y="179" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">Declined</text>
+      </g>
+      <g class="bpmn-label" data-owner="Send">
+        <text x="570" y="364.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">Dispatch</text>
+      </g>
+      <g class="bpmn-label" data-owner="Reminder">
+        <rect x="620" y="410" width="80" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="660" y="423.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">Reminder</text>
+      </g>
+      <g class="bpmn-label" data-owner="Notify">
+        <text x="170" y="384.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#22d3ee">Notify owner</text>
+      </g>
+      <g class="bpmn-label" data-owner="Sent">
+        <rect x="742" y="386" width="32" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="758" y="399" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">Sent</text>
+      </g>
+      <g class="bpmn-label" data-owner="Notified">
+        <rect x="286" y="386" width="64" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="318" y="399" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">Notified</text>
+      </g>
+      <g class="bpmn-label" data-owner="Requests">
+        <rect x="315" y="210" width="75" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="352.5" y="223.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#a78bfa">Requests</text>
+      </g>
+      <g class="bpmn-label" data-owner="ReviewGroup">
+        <rect x="192" y="50" width="48" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="216" y="63" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#94a3b8">Review</text>
+      </g>
+      <g class="bpmn-label" data-owner="Audit">
+        <rect x="518" y="215.5" width="144" height="17" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="590" y="228.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#94a3b8">Recorded for audit</text>
+      </g>
+      <g class="bpmn-label" data-owner="Receive">
+        <rect x="120" y="90" width="58" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="149" y="103.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">request</text>
+      </g>
+      <g class="bpmn-label" data-owner="Accept">
+        <rect x="425" y="285" width="75" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="462.5" y="298.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">approved</text>
+      </g>
+      <g class="bpmn-label" data-owner="Reject">
+        <rect x="550" y="112" width="70" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="585" y="125.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">rejected</text>
+      </g>
+      <g class="bpmn-label" data-owner="Remind">
+        <rect x="300" y="475" width="100" height="18" rx="0" fill="#020617" stroke="none" stroke-width="1.5"/>
+        <text x="350" y="488.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">remind</text>
+      </g>
+    </g>
+  </g>
+</svg>

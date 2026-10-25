@@ -1,0 +1,54 @@
+///|
+/// Verify a fresh workspace whose only library dependency is moonrockz/bpmn.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+async fn main {
+  let reader = @fs.realpath("pkgs/bpmn")
+  let dir = @fs.tmpdir(prefix="bpmn-reader-consumer")
+  defer @fs.rmdir(dir, recursive=true)
+  @fs.write_file(
+    "\{dir}/moon.mod",
+    "name = \"qualification/bpmn-reader\"\nversion = \"0.0.0\"\nimport { \"moonrockz/bpmn@0.1.0\" }\n",
+  )
+  @fs.write_file("\{dir}/moon.work", "members = [\".\", \"\{reader}\"]\n")
+  @fs.write_file(
+    "\{dir}/moon.pkg",
+    "import { \"moonrockz/bpmn\" } for \"test\"\n",
+  )
+  @fs.write_file(
+    "\{dir}/reader_test.mbt",
+    (
+      #|test "read, validate and reproduce a document without diagram dependencies" {
+      #|  let source="<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" targetNamespace=\"urn:consumer\"><process id=\"P\"><startEvent id=\"S\"/><task id=\"T\"/><sequenceFlow id=\"F\" sourceRef=\"S\" targetRef=\"T\"/></process></definitions>"
+      #|  let result=@bpmn.read(source)
+      #|  assert_true(result.document != None)
+      #|  assert_eq(result.diagnostics,[])
+      #|  let document=result.document.unwrap()
+      #|  assert_eq(result.tree.text(),source)
+      #|  assert_eq(@bpmn.validate(document).findings,[])
+      #|  let written=@bpmn.write(document)
+      #|  assert_true(@bpmn.read(written).document != None)
+      #|}
+    ),
+  )
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let code = @process.run(
+      "moon",
+      ["test", "--target", target],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    println("Reader-only fresh consumer passed: \{target}")
+  }
+}
