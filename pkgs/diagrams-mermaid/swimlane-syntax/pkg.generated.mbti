@@ -1,0 +1,54 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/swimlane-syntax"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/swimlane-ast",
+  "moonrockz/diagrams-mermaid/swimlane-cst",
+}
+
+// Values
+pub fn decode_content(String) -> String
+
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn is_space(Int32) -> Bool
+
+pub let max_metadata_depth : Int32
+
+pub fn read(String, limits? : Limits) -> ReadResult
+
+pub fn trim_space(String) -> String
+
+// Errors
+
+// Types and methods
+pub struct Limits {
+  source : Int32
+  output : Int32
+  nodes : Int32
+  edges : Int32
+  depth : Int32
+  work : Int32
+  diagnostics : Int32
+  metadata_depth : Int32
+  metadata_work : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(source? : Int32, output? : Int32, nodes? : Int32, edges? : Int32, depth? : Int32, work? : Int32, diagnostics? : Int32, metadata_depth? : Int32, metadata_work? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  tree : @swimlane-cst.Node
+  ast : @swimlane-ast.Diagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn ReadResult::equal(Self, Self) -> Bool
+pub fn ReadResult::not_equal(Self, Self) -> Bool
+pub fn ReadResult::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

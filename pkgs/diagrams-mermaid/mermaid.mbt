@@ -13,7 +13,11 @@ pub struct ReadResult {
 /// `source`.
 pub fn read(source : String) -> ReadResult {
   let parsed = @syntax.parse(source)
-  { tree: parsed.tree, ast: @ast.lower(parsed.tree), diagnostics: parsed.diagnostics }
+  {
+    tree: parsed.tree,
+    ast: @ast.lower(parsed.tree),
+    diagnostics: parsed.diagnostics,
+  }
 }
 
 ///|
@@ -33,20 +37,53 @@ pub fn to_sequence(diagram : @ast.Diagram) -> @sequence.Conversion {
 /// The result has the diagnostics of reading, converting and rendering. A
 /// source without a diagram gives no output.
 pub fn render_svg(source : String) -> @render.Rendered {
-  let r = read(source)
+  let r = read_diagram(source)
+  if r.ast == None &&
+    r.diagnostics.iter().any(d => d.code == "mermaid/unsupported-diagram") {
+    let legacy = read(source)
+    if !legacy.diagnostics.is_empty() &&
+      legacy.diagnostics.iter().all(d => d.code != "mermaid/unknown-statement") {
+      return @render.Rendered::failed("image/svg+xml", legacy.diagnostics[:])
+    }
+  }
   let diagnostics = r.diagnostics.iter().to_array()
+  if diagnostics.iter().any(d => d.severity == @diagrams.Severity::Error) {
+    return @render.Rendered::failed("image/svg+xml", diagnostics[:])
+  }
   guard r.ast is Some(ast) else {
-    return @render.Rendered::failed("image/svg+xml", diagnostics)
+    return @render.Rendered::failed("image/svg+xml", diagnostics[:])
   }
-  let c = to_sequence(ast)
-  for d in c.diagnostics {
-    diagnostics.push(d)
+  let model = match ast {
+    Sequence(ast) => {
+      let converted = to_sequence(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      Some(@render.Diagram::Sequence(converted.sequence))
+    }
+    Swimlane(ast) => {
+      let converted = to_swimlane(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      converted.swimlane.map(model => @render.Diagram::Swimlane(model))
+    }
   }
-  let rendered = @render.Renderer::render(@svg.SvgRenderer::new(), Sequence(c.sequence))
+  guard model is Some(model) else {
+    return @render.Rendered::failed("image/svg+xml", diagnostics[:])
+  }
+  if diagnostics.iter().any(d => d.severity == @diagrams.Severity::Error) {
+    return @render.Rendered::failed("image/svg+xml", diagnostics[:])
+  }
+  let rendered = @render.Renderer::render(@svg.SvgRenderer::new(), model)
   for d in rendered.diagnostics {
     diagnostics.push(d)
   }
-  @render.Rendered::ok(rendered.output.unwrap_or(""), "image/svg+xml", diagnostics~)
+  match rendered.output {
+    Some(output) =>
+      @render.Rendered::ok(output, "image/svg+xml", diagnostics=diagnostics[:])
+    None => @render.Rendered::failed("image/svg+xml", diagnostics[:])
+  }
 }
 
 ///|

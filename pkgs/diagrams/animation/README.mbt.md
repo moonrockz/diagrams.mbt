@@ -1,7 +1,7 @@
 # Pure motion and structural exploration
 
 `moonrockz/diagrams/animation` builds immutable catalogs and finite or illustrative
-plans over BPMN and sequence models. It reads no clock, DOM, environment or
+plans over BPMN, sequence and swimlane models. It reads no clock, DOM, environment or
 network. A sample takes explicit integer milliseconds and returns active
 occurrence keys, playback ordinals and integer progress fractions.
 
@@ -24,21 +24,30 @@ Constructors copy input arrays. A completed finite plan has no active occurrence
 ```mbt check
 ///|
 test "sample an explicit concurrent scenario" {
-  let view=@bpmn.Bpmn::new("P",[
-    @bpmn.Node::new("A",Task),@bpmn.Node::new("B",Task),
-  ],[@bpmn.Flow::new("AB","A","B",condition="amount > 0"),@bpmn.Flow::new("BA","B","A")])
-  let catalog=@animation.Catalog::bpmn(view).catalog.unwrap()
-  let a=catalog.flow("AB").unwrap().key
-  let b=catalog.flow("BA").unwrap().key
-  let motion=@animation.Motion::serial([
-    @animation.Motion::parallel([Step(a,1000L),Step(b,500L)]),Step(a,1000L),
+  let view = @bpmn.Bpmn::new(
+    "P",
+    [@bpmn.Node::new("A", Task), @bpmn.Node::new("B", Task)],
+    [
+      @bpmn.Flow::new("AB", "A", "B", condition="amount > 0"),
+      @bpmn.Flow::new("BA", "B", "A"),
+    ],
+  )
+  let catalog = @animation.Catalog::bpmn(view).catalog.unwrap()
+  let a = catalog.flow("AB").unwrap().key
+  let b = catalog.flow("BA").unwrap().key
+  let motion = @animation.Motion::serial([
+    @animation.Motion::parallel([Step(a, 1000L), Step(b, 500L)]),
+    Step(a, 1000L),
   ])
-  let plan=@animation.PlaybackPlan::scenario(catalog,motion).plan.unwrap()
-  assert_eq(plan.duration_ms,2000L)
-  assert_eq(plan.sample_at(250L).active.length(),2)
-  assert_eq(plan.sample_at(1000L).active[0].ordinal,2)
+  let plan = @animation.PlaybackPlan::scenario(catalog, motion).plan.unwrap()
+  assert_eq(plan.duration_ms, 2000L)
+  assert_eq(plan.sample_at(250L).active.length(), 2)
+  assert_eq(plan.sample_at(1000L).active[0].ordinal, 2)
   assert_true(plan.sample_at(2000L).finished)
-  assert_eq(catalog.flow("AB").unwrap().flow.unwrap().condition,Some("amount > 0"))
+  assert_eq(
+    catalog.flow("AB").unwrap().flow.unwrap().condition,
+    Some("amount > 0"),
+  )
 }
 ```
 
@@ -71,17 +80,27 @@ cancellation or locking.
 ```mbt check
 ///|
 test "choose a bounded sequence loop" {
-  let message=@sequence.Event::Message(@sequence.Message::new("A","A","retry"))
-  let sequence=@sequence.Sequence::new([@sequence.Participant::new("A")],[
-    Frame(@sequence.Frame::new(Loop,@sequence.Section::new([message],label="retry condition"))),
+  let message = @sequence.Event::Message(
+    @sequence.Message::new("A", "A", "retry"),
+  )
+  let sequence = @sequence.Sequence::new([@sequence.Participant::new("A")], [
+    Frame(
+      @sequence.Frame::new(
+        Loop,
+        @sequence.Section::new([message], label="retry condition"),
+      ),
+    ),
   ])
-  let catalog=@animation.Catalog::sequence(sequence,view_id="Retry").catalog.unwrap()
-  let selection=@animation.Selection::new(catalog.frames[0].key,Repetitions(2))
-  let plan=@animation.PlaybackPlan::sequence(catalog,selections=[selection]).plan.unwrap()
-  assert_eq(plan.steps.length(),2)
-  assert_eq(plan.steps[0].occurrence.path,[0,0,0])
-  assert_eq(plan.steps[0].occurrence.key,plan.steps[1].occurrence.key)
-  assert_eq(plan.steps[1].ordinal,1)
+  let catalog = @animation.Catalog::sequence(sequence, view_id="Retry").catalog.unwrap()
+  let selection = @animation.Selection::new(
+    catalog.frames[0].key,
+    Repetitions(2),
+  )
+  let plan = @animation.PlaybackPlan::sequence(catalog, selections=[selection]).plan.unwrap()
+  assert_eq(plan.steps.length(), 2)
+  assert_eq(plan.steps[0].occurrence.path, [0, 0, 0])
+  assert_eq(plan.steps[0].occurrence.key, plan.steps[1].occurrence.key)
+  assert_eq(plan.steps[1].ordinal, 1)
 }
 ```
 
@@ -131,3 +150,39 @@ category groups never hide their members. A boundary follows its attached
 activity's visibility, while a boundary on a visible collapsed subprocess stays
 visible outside that subprocess. The standalone XML module has no dependency on
 this package or SVG.
+
+
+## Swimlane connections and traversal orientation
+
+`Catalog::swimlane` retains typed node and connection sources without BPMN
+substitutes. Lanes and visible groups are selectable endpoints, but containment
+creates no graph arcs. Collapsed descendants report `OutsideView`; a visible
+handoff to their display anchor can still be played independently.
+
+Directed connections use `SwimlaneFlow`, included in default route/reachability
+selection. Bidirectional connections provide both oriented arcs. Headless
+connections require explicit `Undirected` route/reachability selection. The
+illustrative plan can show every visible connection independently, including a
+headless line, without asserting a directed route. Invisible layout constraints
+provide no occurrence or arc. `Route.reversed` records whether each traversal
+runs backward along the rendered connection, independently of global `RL` or
+`BT` layout. `Motion::OrientedStep(key,duration,reversed)` retains this value in
+scheduled steps and samples. Existing `Motion::Step` remains forward.
+
+```mbt check
+///|
+test "play a bidirectional swimlane return" {
+  let view = @swimlane.Swimlane::new(
+    "Review",
+    [@swimlane.Node::new("A"), @swimlane.Node::new("B")],
+    [@swimlane.Connection::new("AB", "A", "B", source_marker=Arrow)],
+  )
+  let catalog = @animation.Catalog::swimlane(view).catalog.unwrap()
+  guard catalog.graph.route("B", "A") is Found(route) else {
+    fail("missing return")
+  }
+  assert_eq(route.reversed, [true])
+  let plan = @animation.PlaybackPlan::route(catalog, route).plan.unwrap()
+  assert_true(plan.sample_at(250L).active[0].reversed)
+}
+```

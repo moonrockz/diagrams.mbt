@@ -9,5 +9,6 @@ import {
 import {
   "moonrockz/diagrams-animated" @animated,
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams/bpmn" @model,
 } for "test"

@@ -239,6 +239,101 @@ try {
   }), true, 'BPMN caller prefixes isolate IDs, markers and root theme overrides');
   assert.deepEqual(requests, [], 'BPMN SVG qualification remains offline');
   console.log(`Verified ${symbolFrames.length + markerFrames.length + viewFrames.length + automaticFrames.length + 1} BPMN SVG outputs in both preferences, including geometry, root overrides and contrast.`);
+  // Swimlane qualification consumes the same current-renderer snapshots tested
+  // on all backends. Measure browser text and real outline strokes independently.
+  const swimlaneFrames = (await Promise.all(['shapes', 'directions', 'markers'].map(async name =>
+    JSON.parse(await readFile(`pkgs/diagrams-svg/__snapshot__/swimlane-${name}.json`, 'utf8')) as [string, string, string][]))).flat();
+  const registry = JSON.parse(await readFile('tests/corpus/mermaid-swimlanes/shape-coverage.json', 'utf8')) as { shortName: string; asset: boolean }[];
+  assert.equal(swimlaneFrames.filter(([, mode]) => mode === 'dark').length, registry.filter(s => !s.asset).length + 5, 'every documented/legacy vector plus ellipse and four flow directions');
+  for (const [name, mode, source] of swimlaneFrames) {
+    for (const preference of ['dark', 'light'] as const) {
+      await page.emulateMedia({ colorScheme: preference });
+      await page.setContent('');
+      await page.evaluate(({ source, mode, preference }) => {
+        const xml = new DOMParser().parseFromString(source, 'image/svg+xml');
+        if (xml.querySelector('parsererror')) throw new Error('Malformed swimlane XML');
+        const svg = document.importNode(xml.documentElement, true) as unknown as SVGSVGElement;
+        document.body.append(svg);
+        if (svg.dataset.diagram !== 'swimlane' || !svg.querySelector('title') || !svg.querySelector('desc')) throw new Error('Missing swimlane accessibility');
+        const roots = [svg.id, ...Array.from(svg.querySelectorAll('[id]'), n => n.id)];
+        if (new Set(roots).size !== roots.length) throw new Error('Duplicate swimlane IDs');
+        for (const element of svg.querySelectorAll('*')) {
+          if (['script', 'foreignObject', 'image', 'use', 'a', 'iframe'].includes(element.localName)) throw new Error(`Active swimlane element ${element.localName}`);
+          for (const attr of element.attributes) {
+            if (/^on/i.test(attr.name) || /href$/i.test(attr.name)) throw new Error('Active swimlane attribute');
+            for (const match of attr.value.matchAll(/url\(([^)]+)\)/g)) {
+              if (!match[1].startsWith('#') || !svg.querySelector(`[id="${match[1].slice(1)}"]`)) throw new Error('Broken swimlane local marker');
+            }
+          }
+        }
+        const bg = svg.querySelector<SVGRectElement>(':scope > .bg')!;
+        const expected = (['dark', 'light'].includes(mode) ? mode : preference) === 'light' ? 'rgb(244, 245, 247)' : 'rgb(2, 6, 23)';
+        if (getComputedStyle(bg).fill !== expected) throw new Error('Wrong swimlane palette');
+        if (mode !== 'adaptive' && (svg.querySelector('style') || /var\(|@media/.test(source))) throw new Error('Fixed swimlane includes adaptive CSS');
+        if (mode === 'adaptive') {
+          for (const theme of ['dark', 'light']) {
+            svg.dataset.theme = theme;
+            if (getComputedStyle(bg).fill !== (theme === 'dark' ? 'rgb(2, 6, 23)' : 'rgb(244, 245, 247)')) throw new Error('Swimlane root override ignored');
+          }
+          delete svg.dataset.theme;
+        }
+        const color = (value: string) => {
+          const channels = value.match(/[\d.]+/g)?.map(Number);
+          if (!channels || channels.length < 3) throw new Error(`Unresolved paint ${value}`);
+          return [...channels.slice(0, 3), channels[3] ?? 1];
+        };
+        const over = (top: number[], bottom: number[]) => top.slice(0, 3).map((v, i) => v * top[3] + bottom[i] * (1 - top[3])).concat(1);
+        const luminance = (c: number[]) => c.slice(0, 3).map(v => { const x = v / 255; return x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }).reduce((a, x, i) => a + x * [.2126, .7152, .0722][i], 0);
+        const texts = [...svg.querySelectorAll<SVGTextElement>('text')];
+        for (const text of texts) {
+          const style = getComputedStyle(text), box = text.getBBox();
+          if (parseFloat(style.fontSize) < 11) throw new Error('Swimlane text below 11 px');
+          const point = new DOMPoint(box.x + box.width / 2, box.y + box.height / 2);
+          let behind = color(getComputedStyle(bg).fill);
+          for (const node of svg.querySelectorAll<SVGGeometryElement>('path, rect, ellipse, circle')) {
+            if (node.closest('defs') || !(node.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+            const fill = getComputedStyle(node).fill;
+            if (fill !== 'none' && node.isPointInFill(point)) behind = over(color(fill), behind);
+          }
+          const ink = over(color(style.fill), behind), a = luminance(ink), b = luminance(behind);
+          if ((Math.max(a, b) + .05) / (Math.min(a, b) + .05) < 4.5) throw new Error(`Swimlane text contrast ${text.textContent}`);
+          const owner = text.closest<SVGGElement>('.swimlane-node,.swimlane-group,.swimlane-lane');
+          if (owner) {
+            const boundary = owner.querySelector<SVGRectElement>(':scope > .swimlane-bounds')!.getBBox();
+            // Person and braces have labels in reserved space next to their glyph.
+            if (!['person', 'brace', 'brace-r'].includes(owner.dataset.shape!) && (box.x < boundary.x - 1 || box.y < boundary.y - 1 || box.x + box.width > boundary.x + boundary.width + 1 || box.y + box.height > boundary.y + boundary.height + 1)) throw new Error(`Swimlane label overflow ${text.textContent}`);
+          }
+        }
+        const shape = (id: string) => [...svg.querySelectorAll<SVGGElement>('.swimlane-node,.swimlane-group,.swimlane-lane')].find(n => n.dataset.swimlaneId === id)!;
+        for (const group of svg.querySelectorAll<SVGGElement>('.swimlane-connection')) {
+          const path = group.querySelector<SVGPathElement>(':scope > path')!, length = path.getTotalLength();
+          for (const [field, t] of [['displaySource', 0], ['displayTarget', length]] as const) {
+            const endpoint = shape(group.dataset[field]!)!, outline = endpoint.querySelector<SVGPathElement>(':scope > .swimlane-outline')!;
+            if (!outline.isPointInStroke(path.getPointAtLength(t))) throw new Error(`Swimlane route misses actual ${field} outline ${group.dataset.swimlaneId}`);
+          }
+          for (const text of texts) {
+            const owner = text.dataset.labelOwner;
+            if (group.dataset.swimlaneId === owner) continue;
+            const box = text.getBBox();
+            for (let t = 0; t <= length; t += 1) {
+              const p = path.getPointAtLength(t);
+              if (p.x > box.x - 1 && p.x < box.x + box.width + 1 && p.y > box.y - 1 && p.y < box.y + box.height + 1) throw new Error(`Swimlane route ${group.dataset.swimlaneId} intersects actual label ${owner}`);
+            }
+          }
+        }
+      }, { source, mode, preference }).catch(error => { throw new Error(`Swimlane ${name}/${mode}/${preference}: ${error.message}`); });
+    }
+  }
+  const inlineSwimlanes = JSON.parse(await readFile('pkgs/diagrams-svg/__snapshot__/swimlane-inline.json', 'utf8')) as string[];
+  await page.setContent(inlineSwimlanes.join(''));
+  assert.equal(await page.evaluate(() => {
+    const ids = [...document.querySelectorAll('[id]')].map(n => n.id);
+    const roots = document.querySelectorAll<SVGSVGElement>('svg');
+    roots[0].dataset.theme = 'dark'; roots[1].dataset.theme = 'light';
+    return new Set(ids).size === ids.length && getComputedStyle(roots[0].querySelector('.bg')!).fill === 'rgb(2, 6, 23)' && getComputedStyle(roots[1].querySelector('.bg')!).fill === 'rgb(244, 245, 247)';
+  }), true, 'swimlane prefixes and custom root overrides stay isolated');
+  assert.deepEqual(requests, [], 'all swimlane SVG qualification remains offline');
+  console.log(`Verified ${swimlaneFrames.length} swimlane SVGs in both preferences, including actual outline attachment, header clearance, inline isolation and contrast.`);
   // Group 1 BPMN tracer: offline path overlay, paused startup and keyboard play/pause.
   const bpmnSvg = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
   assert.equal(await page.evaluate(source => {

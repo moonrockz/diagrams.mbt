@@ -10,5 +10,7 @@ import {
   "moonrockz/diagrams/bpmn" @model,
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams-mermaid" @mermaid,
   "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
 } for "test"

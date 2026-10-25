@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Diagram flow illustration</title><style>body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 system-ui, sans-serif; }
+[data-diagram-viewer] { --viewer-bg: #f4f5f7; --viewer-ink: #0f172a; --viewer-border: #64748b; max-width: 90rem; margin: auto; }
+[data-diagram-viewer] .diagram-canvas { overflow: auto; border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] .diagram-canvas > svg { display: block; max-width: 100%; height: auto; }
+[data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
+[data-diagram-viewer] fieldset { border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] button, [data-diagram-viewer] select, [data-diagram-viewer] input { font: inherit; }
+[data-diagram-viewer] button, [data-diagram-viewer] select { padding: .35rem .6rem; border: 1px solid var(--viewer-border); border-radius: .3rem; background: var(--viewer-bg); color: var(--viewer-ink); }
+[data-diagram-viewer] [hidden] { display: none !important; }
+[data-diagram-viewer] label { display: inline-flex; align-items: center; gap: .35rem; }
+[data-diagram-viewer] select { max-width: 20rem; }
+[data-diagram-viewer] [data-control="seek"] { width: min(22rem, 60vw); }
+[data-diagram-viewer] :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+[data-diagram-viewer] [data-control="status"] { min-height: 1.5em; }
+[data-diagram-viewer] .motion-overlay { pointer-events: none; }
+@media screen {
+  [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
+}
+@media (prefers-color-scheme: dark) {
+  body { background: #10131a; color: #e2e8f0; }
+  [data-diagram-viewer] { --viewer-bg: #10131a; --viewer-ink: #e2e8f0; --viewer-border: #94a3b8; }
+}
+@media print {
+  body { margin: 0; background: white; }
+  [data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset, [data-diagram-viewer] [data-control="status"], [data-diagram-viewer] .motion-overlay { display: none !important; }
+  [data-diagram-viewer] .diagram-canvas { overflow: visible; border: none; }
+}
+</style></head><body>
+<main data-diagram-viewer aria-label="Diagram flow viewer">
+<p>Explicit scenario. Selected connections illustrate the supplied order; no process execution is inferred.</p>
+<section class="motion-controls" aria-label="Playback controls">
+<button type="button" data-control="play" aria-pressed="false">Play</button>
+<button type="button" data-control="restart">Restart</button>
+<button type="button" data-control="step">Step</button>
+<label>Speed <select data-control="speed" aria-label="Playback speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+<label>Position <input data-control="seek" aria-label="Playback position" type="range" min="0" max="1750" value="0" step="1"></label>
+<output data-control="position">0 / 1750 ms</output>
+<button type="button" data-control="download">Download SVG</button>
+</section>
+<fieldset><legend>Structural exploration</legend>
+<label>From <select data-control="from" aria-label="Route from"></select></label>
+<label>To <select data-control="to" aria-label="Route to"></select></label>
+<label><input data-control="messages" type="checkbox">Include message flows</label>
+<label><input data-control="undirected" type="checkbox">Include unheaded connections</label>
+<button type="button" data-control="route">Show route</button>
+<label>Connection <select data-control="connection" aria-label="Select a swimlane connection"></select></label>
+<button type="button" data-control="show-connection">Show connection</button>
+<label>Direction <select data-control="direction" aria-label="Reachability direction"><option value="forward">Downstream</option><option value="reverse">Upstream</option><option value="both">Both directions</option></select></label>
+<button type="button" data-control="reach">Show reachability</button>
+<button type="button" data-control="clear">Reset view</button>
+</fieldset>
+<p data-control="status" role="status" aria-live="polite">Paused</p>
+<div class="diagram-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 571 453" width="571" height="453" role="img" data-diagram="swimlane" id="sl-ceed502fc59b63d0-diagram">
+  <title>Review</title>
+  <desc>Swimlane diagram with 2 responsibility lanes and 5 structural connections. Playback illustrates structure and does not execute a process.</desc>
+  <defs>
+    <style>
+svg#sl-ceed502fc59b63d0-diagram {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+@media (prefers-color-scheme: light) {
+  svg#sl-ceed502fc59b63d0-diagram {
+    --bg: #f4f5f7;
+    --text: #111827;
+    --muted: #5b6474;
+    --mask: #ffffff;
+    --arrow: #64748b;
+    --frontend-fill: rgba(34, 211, 238, 0.15);
+    --frontend-stroke: #0891b2;
+    --frontend-ink: #07718b;
+    --backend-fill: rgba(52, 211, 153, 0.18);
+    --backend-stroke: #059669;
+    --backend-ink: #047351;
+    --database-fill: rgba(167, 139, 250, 0.2);
+    --database-stroke: #7c3aed;
+    --database-ink: #7935ed;
+    --cloud-fill: rgba(251, 191, 36, 0.18);
+    --cloud-stroke: #d97706;
+    --cloud-ink: #9d5705;
+    --security-fill: rgba(251, 113, 133, 0.15);
+    --security-stroke: #e11d48;
+    --security-ink: #c61a3f;
+    --messagebus-fill: rgba(251, 146, 60, 0.15);
+    --messagebus-stroke: #ea580c;
+    --messagebus-ink: #b44409;
+    --external-fill: rgba(148, 163, 184, 0.18);
+    --external-stroke: #64748b;
+    --external-ink: #5a687c;
+  }
+}
+svg#sl-ceed502fc59b63d0-diagram[data-theme="dark"] {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+svg#sl-ceed502fc59b63d0-diagram[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #111827;
+  --muted: #5b6474;
+  --mask: #ffffff;
+  --arrow: #64748b;
+  --frontend-fill: rgba(34, 211, 238, 0.15);
+  --frontend-stroke: #0891b2;
+  --frontend-ink: #07718b;
+  --backend-fill: rgba(52, 211, 153, 0.18);
+  --backend-stroke: #059669;
+  --backend-ink: #047351;
+  --database-fill: rgba(167, 139, 250, 0.2);
+  --database-stroke: #7c3aed;
+  --database-ink: #7935ed;
+  --cloud-fill: rgba(251, 191, 36, 0.18);
+  --cloud-stroke: #d97706;
+  --cloud-ink: #9d5705;
+  --security-fill: rgba(251, 113, 133, 0.15);
+  --security-stroke: #e11d48;
+  --security-ink: #c61a3f;
+  --messagebus-fill: rgba(251, 146, 60, 0.15);
+  --messagebus-stroke: #ea580c;
+  --messagebus-ink: #b44409;
+  --external-fill: rgba(148, 163, 184, 0.18);
+  --external-stroke: #64748b;
+  --external-ink: #5a687c;
+}
+</style>
+    <marker id="sl-ceed502fc59b63d0-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-ceed502fc59b63d0-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-ceed502fc59b63d0-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="571" height="453" fill="var(--bg)"/>
+  <g class="swimlane-backgrounds">
+    <g class="swimlane-lane" data-swimlane-id="Support" data-shape="rect" data-expanded="true" data-lane="Support">
+      <rect class="swimlane-bounds" x="32" y="217" width="506.219" height="203.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 217 L538.219 217 L538.219 420.219 L32 420.219 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Support" x="104" y="242" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="104" y="242">Support review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-lane" data-swimlane-id="Customer" data-shape="rect" data-expanded="true" data-lane="Customer">
+      <rect class="swimlane-bounds" x="32" y="32" width="506.219" height="153" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 32 L538.219 32 L538.219 185 L32 185 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Customer" x="180" y="57" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="180" y="57">Customer requests and corrections</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-connections">
+    <g class="swimlane-connection" data-swimlane-id="AB" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M108.8 153 L108.8 165 L166 165 L166 262 L121.6 262 L121.6 281.4" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-start="url(#sl-ceed502fc59b63d0-sl-arrow)" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="98" y="184.5" width="136" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="AB" x="166" y="199.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="166" y="199.5">review or return</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="BC" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path d="M208 311 L380 311 L380 313.977 L394.658 313.977" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="262" y="282" width="64" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="BC" x="294" y="297" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="294" y="297">approve</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="CA" data-source="C" data-target="A" data-display-source="C" data-display-target="A">
+      <path d="M392 331.11 L380 331.11 L380 114.6 L175.337 114.6" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+      <rect x="348" y="193.855" width="64" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="CA" x="380" y="208.855" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="380" y="208.855">related</tspan>
+      </text>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="parallel" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path d="M131.2 153 L131.2 165 L96 165 L96 223 L166 223 L166 262 L150.4 262 L150.4 281.4" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sl-ceed502fc59b63d0-sl-arrow)"/>
+      <rect x="185" y="212.5" width="72" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="parallel" x="221" y="227.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="221" y="227.5">expedite</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-nodes">
+    <g class="swimlane-node" data-swimlane-id="A" data-shape="stadium" data-expanded="true" data-lane="Customer" data-parent="Customer">
+      <rect class="swimlane-bounds" x="64" y="89" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M144 89 L150.243 89.615 L156.246 91.436 L161.778 94.393 L166.627 98.373 L170.607 103.222 L173.564 108.754 L175.385 114.757 L176 121 L176 121 L175.385 127.243 L173.564 133.246 L170.607 138.778 L166.627 143.627 L161.778 147.607 L156.246 150.564 L150.243 152.385 L144 153 L96 153 L89.757 152.385 L83.754 150.564 L78.222 147.607 L73.373 143.627 L69.393 138.778 L66.436 133.246 L64.615 127.243 L64 121 L64 121 L64.615 114.757 L66.436 108.754 L69.393 103.222 L73.373 98.373 L78.222 94.393 L83.754 91.436 L89.757 89.615 L96 89 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="A" x="120" y="125.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="120" y="125.5">Request</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="B" data-shape="diamond" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="64" y="274" width="144" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M136 274 L208 311 L136 348 L64 311 Z" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="B" x="136" y="315.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--cloud-ink)">
+        <tspan x="136" y="315.5">Review</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="C" data-shape="circle" data-expanded="true" data-lane="Support" data-parent="Support">
+      <rect class="swimlane-bounds" x="392" y="274" width="114.219" height="114.219" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M506.219 331.11 L505.944 336.707 L505.122 342.251 L503.76 347.688 L501.872 352.965 L499.476 358.031 L496.595 362.838 L493.256 367.34 L489.492 371.492 L485.34 375.256 L480.838 378.595 L476.031 381.476 L470.965 383.872 L465.688 385.76 L460.251 387.122 L454.707 387.944 L449.11 388.219 L443.512 387.944 L437.968 387.122 L432.532 385.76 L427.255 383.872 L422.188 381.476 L417.381 378.595 L412.88 375.256 L408.727 371.492 L404.963 367.34 L401.625 362.838 L398.743 358.031 L396.347 352.965 L394.459 347.688 L393.097 342.251 L392.275 336.707 L392 331.11 L392.275 325.512 L393.097 319.968 L394.459 314.532 L396.347 309.255 L398.743 304.188 L401.625 299.381 L404.963 294.88 L408.727 290.727 L412.88 286.963 L417.381 283.625 L422.188 280.743 L427.255 278.347 L432.532 276.459 L437.968 275.097 L443.512 274.275 L449.11 274 L454.707 274.275 L460.251 275.097 L465.688 276.459 L470.965 278.347 L476.031 280.743 L480.838 283.625 L485.34 286.963 L489.492 290.727 L493.256 294.88 L496.595 299.381 L499.476 304.188 L501.872 309.255 L503.76 314.532 L505.122 319.968 L505.944 325.512 L506.219 331.11 Z" fill="var(--messagebus-fill)" stroke="var(--messagebus-stroke)" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="C" x="449.11" y="335.61" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--messagebus-ink)">
+        <tspan x="449.11" y="335.61">Complete</tspan>
+      </text>
+    </g>
+  </g>
+<g data-motion-paths="true" aria-hidden="true">
+  <path id="motion-7db8181d4c205219-0" d="M108.8 153 L108.8 165 L166 165 L166 262 L121.6 262 L121.6 281.4" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-7db8181d4c205219-1" d="M208 311 L380 311 L380 313.977 L394.658 313.977" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-7db8181d4c205219-2" d="M392 331.11 L380 331.11 L380 114.6 L175.337 114.6" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-7db8181d4c205219-3" d="M131.2 153 L131.2 165 L96 165 L96 223 L166 223 L166 262 L150.4 262 L150.4 281.4" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+</g>
+</svg>
+</div>
+<script type="application/json" data-motion-data>{"version":1,"step_limit":100000,"view_id":"Review","kind":"swimlane","canonical":"\u003csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 571 453\" width=\"571\" height=\"453\" role=\"img\" data-diagram=\"swimlane\" id=\"sl-ceed502fc59b63d0-diagram\"\u003e\n  \u003ctitle\u003eReview\u003c/title\u003e\n  \u003cdesc\u003eSwimlane diagram with 2 responsibility lanes and 5 structural connections. Playback illustrates structure and does not execute a process.\u003c/desc\u003e\n  \u003cdefs\u003e\n    \u003cstyle\u003e\nsvg#sl-ceed502fc59b63d0-diagram {\n  --bg: #020617;\n  --text: #ffffff;\n  --muted: #94a3b8;\n  --mask: #0f172a;\n  --arrow: #94a3b8;\n  --frontend-fill: rgba(8, 51, 68, 0.4);\n  --frontend-stroke: #22d3ee;\n  --frontend-ink: #22d3ee;\n  --backend-fill: rgba(6, 78, 59, 0.4);\n  --backend-stroke: #34d399;\n  --backend-ink: #34d399;\n  --database-fill: rgba(76, 29, 149, 0.4);\n  --database-stroke: #a78bfa;\n  --database-ink: #a78bfa;\n  --cloud-fill: rgba(120, 53, 15, 0.3);\n  --cloud-stroke: #fbbf24;\n  --cloud-ink: #fbbf24;\n  --security-fill: rgba(136, 19, 55, 0.4);\n  --security-stroke: #fb7185;\n  --security-ink: #fb7185;\n  --messagebus-fill: rgba(251, 146, 60, 0.3);\n  --messagebus-stroke: #fb923c;\n  --messagebus-ink: #fb923c;\n  --external-fill: rgba(30, 41, 59, 0.5);\n  --external-stroke: #94a3b8;\n  --external-ink: #94a3b8;\n}\n@media (prefers-color-scheme: light) {\n  svg#sl-ceed502fc59b63d0-diagram {\n    --bg: #f4f5f7;\n    --text: #111827;\n    --muted: #5b6474;\n    --mask: #ffffff;\n    --arrow: #64748b;\n    --frontend-fill: rgba(34, 211, 238, 0.15);\n    --frontend-stroke: #0891b2;\n    --frontend-ink: #07718b;\n    --backend-fill: rgba(52, 211, 153, 0.18);\n    --backend-stroke: #059669;\n    --backend-ink: #047351;\n    --database-fill: rgba(167, 139, 250, 0.2);\n    --database-stroke: #7c3aed;\n    --database-ink: #7935ed;\n    --cloud-fill: rgba(251, 191, 36, 0.18);\n    --cloud-stroke: #d97706;\n    --cloud-ink: #9d5705;\n    --security-fill: rgba(251, 113, 133, 0.15);\n    --security-stroke: #e11d48;\n    --security-ink: #c61a3f;\n    --messagebus-fill: rgba(251, 146, 60, 0.15);\n    --messagebus-stroke: #ea580c;\n    --messagebus-ink: #b44409;\n    --external-fill: rgba(148, 163, 184, 0.18);\n    --external-stroke: #64748b;\n    --external-ink: #5a687c;\n  }\n}\nsvg#sl-ceed502fc59b63d0-diagram[data-theme=\"dark\"] {\n  --bg: #020617;\n  --text: #ffffff;\n  --muted: #94a3b8;\n  --mask: #0f172a;\n  --arrow: #94a3b8;\n  --frontend-fill: rgba(8, 51, 68, 0.4);\n  --frontend-stroke: #22d3ee;\n  --frontend-ink: #22d3ee;\n  --backend-fill: rgba(6, 78, 59, 0.4);\n  --backend-stroke: #34d399;\n  --backend-ink: #34d399;\n  --database-fill: rgba(76, 29, 149, 0.4);\n  --database-stroke: #a78bfa;\n  --database-ink: #a78bfa;\n  --cloud-fill: rgba(120, 53, 15, 0.3);\n  --cloud-stroke: #fbbf24;\n  --cloud-ink: #fbbf24;\n  --security-fill: rgba(136, 19, 55, 0.4);\n  --security-stroke: #fb7185;\n  --security-ink: #fb7185;\n  --messagebus-fill: rgba(251, 146, 60, 0.3);\n  --messagebus-stroke: #fb923c;\n  --messagebus-ink: #fb923c;\n  --external-fill: rgba(30, 41, 59, 0.5);\n  --external-stroke: #94a3b8;\n  --external-ink: #94a3b8;\n}\nsvg#sl-ceed502fc59b63d0-diagram[data-theme=\"light\"] {\n  --bg: #f4f5f7;\n  --text: #111827;\n  --muted: #5b6474;\n  --mask: #ffffff;\n  --arrow: #64748b;\n  --frontend-fill: rgba(34, 211, 238, 0.15);\n  --frontend-stroke: #0891b2;\n  --frontend-ink: #07718b;\n  --backend-fill: rgba(52, 211, 153, 0.18);\n  --backend-stroke: #059669;\n  --backend-ink: #047351;\n  --database-fill: rgba(167, 139, 250, 0.2);\n  --database-stroke: #7c3aed;\n  --database-ink: #7935ed;\n  --cloud-fill: rgba(251, 191, 36, 0.18);\n  --cloud-stroke: #d97706;\n  --cloud-ink: #9d5705;\n  --security-fill: rgba(251, 113, 133, 0.15);\n  --security-stroke: #e11d48;\n  --security-ink: #c61a3f;\n  --messagebus-fill: rgba(251, 146, 60, 0.15);\n  --messagebus-stroke: #ea580c;\n  --messagebus-ink: #b44409;\n  --external-fill: rgba(148, 163, 184, 0.18);\n  --external-stroke: #64748b;\n  --external-ink: #5a687c;\n}\n\u003c/style\u003e\n    \u003cmarker id=\"sl-ceed502fc59b63d0-sl-arrow\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9 -4 L0 0 L-9 4 Z\" fill=\"var(--arrow)\" stroke=\"var(--arrow)\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"sl-ceed502fc59b63d0-sl-circle\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z\" fill=\"var(--arrow)\" stroke=\"var(--arrow)\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"sl-ceed502fc59b63d0-sl-cross\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-4 -4 L4 4 M-4 4 L4 -4\" fill=\"none\" stroke=\"var(--arrow)\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n  \u003c/defs\u003e\n  \u003crect class=\"bg\" x=\"0\" y=\"0\" width=\"571\" height=\"453\" fill=\"var(--bg)\"/\u003e\n  \u003cg class=\"swimlane-backgrounds\"\u003e\n    \u003cg class=\"swimlane-lane\" data-swimlane-id=\"Support\" data-shape=\"rect\" data-expanded=\"true\" data-lane=\"Support\"\u003e\n      \u003crect class=\"swimlane-bounds\" x=\"32\" y=\"217\" width=\"506.219\" height=\"203.219\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"swimlane-outline\" d=\"M32 217 L538.219 217 L538.219 420.219 L32 420.219 Z\" fill=\"var(--bg)\" stroke=\"var(--muted)\" stroke-width=\"2\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"Support\" x=\"104\" y=\"242\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"700\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"104\" y=\"242\"\u003eSupport review\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-lane\" data-swimlane-id=\"Customer\" data-shape=\"rect\" data-expanded=\"true\" data-lane=\"Customer\"\u003e\n      \u003crect class=\"swimlane-bounds\" x=\"32\" y=\"32\" width=\"506.219\" height=\"153\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"swimlane-outline\" d=\"M32 32 L538.219 32 L538.219 185 L32 185 Z\" fill=\"var(--bg)\" stroke=\"var(--muted)\" stroke-width=\"2\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"Customer\" x=\"180\" y=\"57\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"700\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"180\" y=\"57\"\u003eCustomer requests and corrections\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"swimlane-connections\"\u003e\n    \u003cg class=\"swimlane-connection\" data-swimlane-id=\"AB\" data-source=\"A\" data-target=\"B\" data-display-source=\"A\" data-display-target=\"B\"\u003e\n      \u003cpath d=\"M108.8 153 L108.8 165 L166 165 L166 262 L121.6 262 L121.6 281.4\" fill=\"none\" stroke=\"var(--arrow)\" stroke-width=\"1.5\" marker-start=\"url(#sl-ceed502fc59b63d0-sl-arrow)\" marker-end=\"url(#sl-ceed502fc59b63d0-sl-arrow)\"/\u003e\n      \u003crect x=\"98\" y=\"184.5\" width=\"136\" height=\"21\" rx=\"3\" fill=\"var(--bg)\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"AB\" x=\"166\" y=\"199.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"166\" y=\"199.5\"\u003ereview or return\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-connection\" data-swimlane-id=\"BC\" data-source=\"B\" data-target=\"C\" data-display-source=\"B\" data-display-target=\"C\"\u003e\n      \u003cpath d=\"M208 311 L380 311 L380 313.977 L394.658 313.977\" fill=\"none\" stroke=\"var(--arrow)\" stroke-width=\"1.5\" marker-end=\"url(#sl-ceed502fc59b63d0-sl-arrow)\"/\u003e\n      \u003crect x=\"262\" y=\"282\" width=\"64\" height=\"21\" rx=\"3\" fill=\"var(--bg)\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"BC\" x=\"294\" y=\"297\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"294\" y=\"297\"\u003eapprove\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-connection\" data-swimlane-id=\"CA\" data-source=\"C\" data-target=\"A\" data-display-source=\"C\" data-display-target=\"A\"\u003e\n      \u003cpath d=\"M392 331.11 L380 331.11 L380 114.6 L175.337 114.6\" fill=\"none\" stroke=\"var(--arrow)\" stroke-width=\"1.5\"/\u003e\n      \u003crect x=\"348\" y=\"193.855\" width=\"64\" height=\"21\" rx=\"3\" fill=\"var(--bg)\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"CA\" x=\"380\" y=\"208.855\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"380\" y=\"208.855\"\u003erelated\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-connection\" data-swimlane-id=\"parallel\" data-source=\"A\" data-target=\"B\" data-display-source=\"A\" data-display-target=\"B\"\u003e\n      \u003cpath d=\"M131.2 153 L131.2 165 L96 165 L96 223 L166 223 L166 262 L150.4 262 L150.4 281.4\" fill=\"none\" stroke=\"var(--arrow)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\" marker-end=\"url(#sl-ceed502fc59b63d0-sl-arrow)\"/\u003e\n      \u003crect x=\"185\" y=\"212.5\" width=\"72\" height=\"21\" rx=\"3\" fill=\"var(--bg)\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"parallel\" x=\"221\" y=\"227.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--text)\"\u003e\n        \u003ctspan x=\"221\" y=\"227.5\"\u003eexpedite\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"swimlane-nodes\"\u003e\n    \u003cg class=\"swimlane-node\" data-swimlane-id=\"A\" data-shape=\"stadium\" data-expanded=\"true\" data-lane=\"Customer\" data-parent=\"Customer\"\u003e\n      \u003crect class=\"swimlane-bounds\" x=\"64\" y=\"89\" width=\"112\" height=\"64\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"swimlane-outline\" d=\"M144 89 L150.243 89.615 L156.246 91.436 L161.778 94.393 L166.627 98.373 L170.607 103.222 L173.564 108.754 L175.385 114.757 L176 121 L176 121 L175.385 127.243 L173.564 133.246 L170.607 138.778 L166.627 143.627 L161.778 147.607 L156.246 150.564 L150.243 152.385 L144 153 L96 153 L89.757 152.385 L83.754 150.564 L78.222 147.607 L73.373 143.627 L69.393 138.778 L66.436 133.246 L64.615 127.243 L64 121 L64 121 L64.615 114.757 L66.436 108.754 L69.393 103.222 L73.373 98.373 L78.222 94.393 L83.754 91.436 L89.757 89.615 L96 89 Z\" fill=\"var(--backend-fill)\" stroke=\"var(--backend-stroke)\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"A\" x=\"120\" y=\"125.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--backend-ink)\"\u003e\n        \u003ctspan x=\"120\" y=\"125.5\"\u003eRequest\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-node\" data-swimlane-id=\"B\" data-shape=\"diamond\" data-expanded=\"true\" data-lane=\"Support\" data-parent=\"Support\"\u003e\n      \u003crect class=\"swimlane-bounds\" x=\"64\" y=\"274\" width=\"144\" height=\"74\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"swimlane-outline\" d=\"M136 274 L208 311 L136 348 L64 311 Z\" fill=\"var(--cloud-fill)\" stroke=\"var(--cloud-stroke)\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"B\" x=\"136\" y=\"315.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--cloud-ink)\"\u003e\n        \u003ctspan x=\"136\" y=\"315.5\"\u003eReview\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"swimlane-node\" data-swimlane-id=\"C\" data-shape=\"circle\" data-expanded=\"true\" data-lane=\"Support\" data-parent=\"Support\"\u003e\n      \u003crect class=\"swimlane-bounds\" x=\"392\" y=\"274\" width=\"114.219\" height=\"114.219\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"swimlane-outline\" d=\"M506.219 331.11 L505.944 336.707 L505.122 342.251 L503.76 347.688 L501.872 352.965 L499.476 358.031 L496.595 362.838 L493.256 367.34 L489.492 371.492 L485.34 375.256 L480.838 378.595 L476.031 381.476 L470.965 383.872 L465.688 385.76 L460.251 387.122 L454.707 387.944 L449.11 388.219 L443.512 387.944 L437.968 387.122 L432.532 385.76 L427.255 383.872 L422.188 381.476 L417.381 378.595 L412.88 375.256 L408.727 371.492 L404.963 367.34 L401.625 362.838 L398.743 358.031 L396.347 352.965 L394.459 347.688 L393.097 342.251 L392.275 336.707 L392 331.11 L392.275 325.512 L393.097 319.968 L394.459 314.532 L396.347 309.255 L398.743 304.188 L401.625 299.381 L404.963 294.88 L408.727 290.727 L412.88 286.963 L417.381 283.625 L422.188 280.743 L427.255 278.347 L432.532 276.459 L437.968 275.097 L443.512 274.275 L449.11 274 L454.707 274.275 L460.251 275.097 L465.688 276.459 L470.965 278.347 L476.031 280.743 L480.838 283.625 L485.34 286.963 L489.492 290.727 L493.256 294.88 L496.595 299.381 L499.476 304.188 L501.872 309.255 L503.76 314.532 L505.122 319.968 L505.944 325.512 L506.219 331.11 Z\" fill=\"var(--messagebus-fill)\" stroke=\"var(--messagebus-stroke)\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"swimlane-label\" data-label-owner=\"C\" x=\"449.11\" y=\"335.61\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"var(--messagebus-ink)\"\u003e\n        \u003ctspan x=\"449.11\" y=\"335.61\"\u003eComplete\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n\u003c/svg\u003e\n","accent":"#2563eb","plan":{"mode":"finite","duration_ms":"1750","steps":[{"reversed":false,"ordinal":0,"key":"swimlane:6:Review:2:AB","start_ms":"0","duration_ms":"1000","groups":[1]},{"reversed":true,"ordinal":1,"key":"swimlane:6:Review:2:AB","start_ms":"0","duration_ms":"1000","groups":[1]},{"reversed":false,"ordinal":2,"key":"swimlane:6:Review:2:BC","start_ms":"1000","duration_ms":"750","groups":[]}]},"paths":[{"label":"review or return","reversed":false,"key":"swimlane:6:Review:2:AB","id":"motion-7db8181d4c205219-0","index":0,"kind":"swimlane","connection":"AB"},{"label":"approve","reversed":false,"key":"swimlane:6:Review:2:BC","id":"motion-7db8181d4c205219-1","index":1,"kind":"swimlane","connection":"BC"},{"label":"related","reversed":false,"key":"swimlane:6:Review:2:CA","id":"motion-7db8181d4c205219-2","index":2,"kind":"swimlane","connection":"CA"},{"label":"expedite","reversed":false,"key":"swimlane:6:Review:8:parallel","id":"motion-7db8181d4c205219-3","index":3,"kind":"swimlane","connection":"parallel"}],"node_bindings":[{"endpoint":"Customer","kind":"swimlane","id":"Customer"},{"endpoint":"Support","kind":"swimlane","id":"Support"},{"endpoint":"A","kind":"swimlane","id":"A"},{"endpoint":"B","kind":"swimlane","id":"B"},{"endpoint":"C","kind":"swimlane","id":"C"}],"outside":[],"graph":{"nodes":[{"primary":false,"id":"Customer","label":"Customer requests and corrections","kind":"swimlane","occurrence":null,"description":""},{"primary":false,"id":"Support","label":"Support review","kind":"swimlane","occurrence":null,"description":""},{"primary":true,"id":"A","label":"Request","kind":"swimlane","occurrence":null,"description":""},{"primary":true,"id":"B","label":"Review","kind":"swimlane","occurrence":null,"description":""},{"primary":true,"id":"C","label":"Complete","kind":"swimlane","occurrence":null,"description":""}],"edges":[{"reversed":false,"kind":"swimlane","source":"A","target":"B","occurrence":"swimlane:6:Review:2:AB"},{"reversed":true,"kind":"swimlane","source":"B","target":"A","occurrence":"swimlane:6:Review:2:AB"},{"reversed":false,"kind":"swimlane","source":"B","target":"C","occurrence":"swimlane:6:Review:2:BC"},{"reversed":false,"kind":"undirected","source":"C","target":"A","occurrence":"swimlane:6:Review:2:CA"},{"reversed":true,"kind":"undirected","source":"A","target":"C","occurrence":"swimlane:6:Review:2:CA"},{"reversed":false,"kind":"swimlane","source":"A","target":"B","occurrence":"swimlane:6:Review:8:parallel"}]},"query_limits":{"nodes":10000,"edges":50000,"results":10000,"work":1000000}}</script>
+<script>(() => {
+  'use strict';
+  const root = document.currentScript.closest('[data-diagram-viewer]');
+  if (!root || root.dataset.motionReady) return;
+  root.dataset.motionReady = 'true';
+  const data = JSON.parse(root.querySelector('script[data-motion-data]').textContent);
+  const svg = root.querySelector('svg');
+  const control = name => root.querySelector(`[data-control="${name}"]`);
+  const play = control('play'), restart = control('restart'), step = control('step');
+  const speedControl = control('speed'), seek = control('seek'), positionLabel = control('position');
+  const status = control('status'), from = control('from'), to = control('to');
+  const connectionControl=control('connection'), showConnection=control('show-connection');
+  const undirectedKinds = control('undirected');
+  const messageKinds = control('messages'), direction = control('direction');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const ns = 'http://www.w3.org/2000/svg';
+  const elements = new Map([...svg.querySelectorAll('path[id]')].map(path => [path.id, path]));
+  const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
+  const nodeElements = new Map();
+  const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'),element]));
+  const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
+  const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
+  const frameElements = [...svg.querySelectorAll('rect.frame')];
+  for (const binding of data.node_bindings) {
+    const element = binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : frameElements[binding.index];
+    if (element) nodeElements.set(binding.endpoint, element);
+  }
+  function decode(plan) {
+    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed) })) };
+  }
+  const authored = decode(data.plan);
+  let plan = authored, position = 0, speed = 1, playing = false, previous = null, frame = null;
+  const overlays = new Map(), highlights = new Set();
+  function clearHighlights() { for (const element of highlights) element.classList.remove('motion-selected'); highlights.clear(); }
+  function highlight(ids) { clearHighlights(); for (const id of ids) { const element = nodeElements.get(id); if (element) { element.classList.add('motion-selected'); highlights.add(element); } } }
+  function clearOverlays() { for (const overlay of overlays.values()) overlay.group.remove(); overlays.clear(); }
+  function normalize(time) {
+    if (plan.duration === 0) return 0;
+    return plan.mode === 'illustrative' ? Math.max(0, time) % plan.duration : Math.max(0, Math.min(time, plan.duration));
+  }
+  function stopFrame() { if (frame !== null) cancelAnimationFrame(frame); frame = null; previous = null; }
+  function state(message) {
+    root.dataset.playing = String(playing);
+    play.textContent = playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(playing));
+    play.disabled = plan.duration === 0; restart.disabled = plan.duration === 0; step.disabled = plan.duration === 0; seek.disabled = plan.duration === 0;
+    status.textContent = message || (playing ? (plan.mode === 'finite' ? 'Playing explicit scenario' : 'Playing illustrative flow') : plan.mode === 'finite' && position >= plan.duration ? 'Finished' : reduced.matches ? 'Paused. Reduced motion: use Step or Position.' : 'Paused');
+  }
+  function makeOverlay(item) {
+    const binding = bindings.get(item.key);
+    if (!binding || !binding.element) throw new Error('Missing validated motion binding');
+    if (binding.length === null) binding.length = binding.element.getTotalLength();
+    const group = document.createElementNS(ns, 'g');
+    group.setAttribute('class', 'motion-overlay'); group.setAttribute('aria-hidden', 'true'); group.dataset.ordinal = String(item.ordinal); group.dataset.key = item.key;
+    const path = document.createElementNS(ns, 'path'); path.setAttribute('d', binding.element.getAttribute('d'));
+    path.setAttribute('fill', 'none'); path.setAttribute('stroke', data.accent); path.setAttribute('stroke-width', '3'); path.setAttribute('stroke-opacity', '.5'); path.setAttribute('stroke-dasharray', '12 8');
+    const dot = document.createElementNS(ns, 'circle'); dot.setAttribute('r', '4'); dot.setAttribute('fill', data.accent);
+    group.append(path, dot); binding.element.parentElement.append(group);
+    const overlay = { key: item.key, group, path, dot, binding };
+    overlays.set(item.ordinal, overlay); return overlay;
+  }
+  function draw() {
+    const logical = Math.floor(normalize(position)); const active = new Set(); const keys = [];
+    for (const item of plan.steps) {
+      if (logical < item.start || logical >= item.start + item.duration) continue;
+      active.add(item.ordinal); keys.push(item.key);
+      const overlay = overlays.get(item.ordinal) || makeOverlay(item);
+      const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+      const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
+      overlay.dot.setAttribute('cx', String(point.x)); overlay.dot.setAttribute('cy', String(point.y));
+      overlay.path.setAttribute('stroke-dashoffset', String(-overlay.binding.length * progress));
+      overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
+    }
+    for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }
+    // Still startup keeps the complete static diagram without an overlay.
+    if (!playing && position === 0 && !root.dataset.inspected) clearOverlays();
+    root.dataset.position = String(logical); root.dataset.active = JSON.stringify(keys); root.dataset.finished = String(plan.mode === 'finite' && logical >= plan.duration);
+    seek.max = String(plan.duration); seek.value = String(logical);
+    positionLabel.textContent = `${logical} / ${plan.duration} ms`;
+  }
+  function advance(now) {
+    if (previous !== null) position = normalize(position + Math.max(0, now - previous) * speed);
+    previous = now;
+    if (plan.mode === 'finite' && position >= plan.duration) { playing = false; stopFrame(); state('Finished'); }
+  }
+  function tick(now) {
+    frame = null;
+    if (!playing || document.hidden || reduced.matches) { previous = null; return; }
+    advance(now); draw();
+    if (playing) frame = requestAnimationFrame(tick);
+  }
+  function schedule() { stopFrame(); if (playing && !document.hidden && !reduced.matches) frame = requestAnimationFrame(tick); }
+  function inspect(time) {
+    playing = false; stopFrame(); position = Math.max(0, Math.min(time, plan.duration)); root.dataset.inspected = 'true'; draw(); state();
+  }
+  function nextStep() {
+    const logical = Math.floor(normalize(position));
+    let next = plan.duration;
+    for (const item of plan.steps) if (item.start > logical && item.start < next) next = item.start;
+    if (plan.mode === 'illustrative' && next >= plan.duration) inspect(0); else inspect(next);
+  }
+  play.addEventListener('click', () => {
+    if (reduced.matches) { nextStep(); return; }
+    if (!playing && plan.mode === 'finite' && position >= plan.duration) position = 0;
+    const requested = !playing;
+    if (playing && previous !== null) advance(performance.now());
+    playing = requested; root.dataset.inspected = 'true'; state(); draw(); schedule();
+  });
+  restart.addEventListener('click', () => inspect(0));
+  step.addEventListener('click', nextStep);
+  speedControl.addEventListener('change', () => {
+    if (playing && previous !== null) advance(performance.now());
+    const selected = Number(speedControl.value); if ([.25, .5, 1, 1.5, 2, 4].includes(selected)) speed = selected;
+    root.dataset.speed = String(speed); previous = null; draw(); schedule();
+  });
+  seek.addEventListener('input', () => { position = Math.max(0, Math.min(Number(seek.value), plan.duration)); previous = null; root.dataset.inspected = 'true'; draw(); state(); });
+  document.addEventListener('visibilitychange', () => { schedule(); });
+  reduced.addEventListener('change', () => { if (reduced.matches) playing = false; state(); schedule(); });
+  control('download').addEventListener('click', () => {
+    const url = URL.createObjectURL(new Blob([data.canonical], { type: 'image/svg+xml;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = `${data.view_id.replace(/[^a-z0-9._-]/gi, '_') || 'diagram'}.svg`;
+    root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0);
+  });
+
+  const outside = new Set(data.outside || []);
+  const nodeIndex = new Map(data.graph.nodes.map((node, index) => [node.id, index]));
+  const outgoing = new Map(), incoming = new Map();
+  function add(table, node, kind, arc) { let kinds = table.get(node); if (!kinds) table.set(node, kinds = new Map()); let arcs = kinds.get(kind); if (!arcs) kinds.set(kind, arcs = []); arcs.push(arc); }
+  data.graph.edges.forEach((edge, index) => { const a = nodeIndex.get(edge.source), b = nodeIndex.get(edge.target); add(outgoing, a, edge.kind, [b, index]); add(incoming, b, edge.kind, [a, index]); });
+  function* arcs(node, kinds, selectedDirection) {
+    const streams = [];
+    for (const kind of kinds) {
+      if (selectedDirection !== 'reverse') { const items = outgoing.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+      if (selectedDirection !== 'forward') { const items = incoming.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+    }
+    let last = -1;
+    for (;;) {
+      let chosen = null;
+      for (const stream of streams) if (stream.next < stream.items.length && (!chosen || stream.items[stream.next][1] < chosen.items[chosen.next][1])) chosen = stream;
+      if (!chosen) return;
+      const arc = chosen.items[chosen.next++]; if (arc[1] === last) continue; last = arc[1]; yield arc;
+    }
+  }
+  function search(startId, targetId, selectedDirection, reach) {
+    const limits = data.query_limits;
+    const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
+    if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
+    const kinds = ['sequence', 'order', 'swimlane']; if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
+    if (!reach && start === target) return { nodes: [start], edges: [] };
+    while (at < queue.length) {
+      if (++work > limits.work) return { failure: 'Search limit exceeded: work' };
+      const current = queue[at++];
+      for (const [next, edge] of arcs(current, kinds, selectedDirection)) {
+        if (++work > limits.work || ++count > limits.edges) return { failure: 'Search limit exceeded' };
+        if (seen.has(next)) continue;
+        if (queue.length >= limits.nodes || (reach && queue.length >= limits.results)) return { failure: 'Search limit exceeded: nodes/results' };
+        seen.add(next); previous.set(next, [current, edge]); queue.push(next);
+        if (!reach && next === target) {
+          const nodes = [target], edges = []; let cursor = target;
+          while (cursor !== start) { if (nodes.length >= limits.results) return { failure: 'Search limit exceeded: results' }; const [parent, selected] = previous.get(cursor); nodes.push(parent); edges.push(selected); cursor = parent; }
+          return { nodes: nodes.reverse(), edges: edges.reverse() };
+        }
+      }
+    }
+    return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
+  }
+  for (const node of data.graph.nodes) {
+    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane') continue;
+    for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
+  }
+  if (data.kind === 'swimlane') { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
+  if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
+  messageKinds.closest('label').hidden = data.kind !== 'bpmn';
+  undirectedKinds.closest('label').hidden = data.kind !== 'swimlane';
+  connectionControl.closest('label').hidden = data.kind !== 'swimlane'; showConnection.hidden = data.kind !== 'swimlane';
+  for (const binding of data.paths) {
+    if (binding.kind !== 'swimlane') continue;
+    const option=document.createElement('option'); option.value=binding.key;
+    option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
+  }
+  showConnection.disabled=connectionControl.options.length===0;
+  control('route').disabled = from.options.length === 0; control('reach').disabled = from.options.length === 0;
+  function replace(next, message) { playing = false; stopFrame(); clearOverlays(); plan = next; position = 0; root.dataset.inspected = 'true'; draw(); state(message); }
+  showConnection.addEventListener('click', () => {
+    const binding=data.paths.find(binding => binding.key===connectionControl.value);
+    if (!binding) return;
+    replace({mode:'finite',duration:1000,steps:[{ordinal:0,key:binding.key,start:0,duration:1000,groups:[],reversed:Boolean(binding.reversed)}]},'Selected connection: '+binding.connection);
+    clearHighlights(); const element=connectionElements.get(binding.connection);
+    if(element) { element.classList.add('motion-selected'); highlights.add(element); }
+    root.dataset.connection=binding.connection; root.dataset.route=JSON.stringify([binding.key]);
+  });
+  control('route').addEventListener('click', () => {
+    delete root.dataset.connection;
+    const result = search(from.value, to.value, data.kind === 'swimlane' ? direction.value : 'forward', false);
+    if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
+    const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
+    if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+    const steps = keys.map((key, ordinal) => {
+      const edge = data.graph.edges[result.edges[ordinal]];
+      const reversed = data.kind === 'swimlane' && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
+    });
+    replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);
+    highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(keys);
+  });
+  control('reach').addEventListener('click', () => {
+    const result = search(from.value, null, direction.value, true);
+    playing = false; stopFrame(); clearOverlays();
+    if (result.failure) { clearHighlights(); state(result.failure); root.dataset.reachable = '[]'; return; }
+    const ids = result.nodes.map(index => data.graph.nodes[index].id); highlight(ids); root.dataset.reachable = JSON.stringify(ids);
+    const visible = new Set(ids.map(id => nodeElements.get(id)).filter(Boolean));
+    state(`Structural reachability: ${visible.size} diagram elements. Conditions and event triggers are not evaluated.`);
+  });
+  control('clear').addEventListener('click', () => { clearHighlights(); delete root.dataset.route; delete root.dataset.connection; delete root.dataset.reachable; replace(authored, 'Paused'); delete root.dataset.inspected; draw(); });
+  root.dataset.speed = '1'; draw(); state();
+})();
+</script>
+</main></body></html>

@@ -5,7 +5,7 @@ order: 1
 ---
 # Design overview
 
-diagrams.mbt reads Mermaid sequence syntax and BPMN XML. Format-specific readers
+diagrams.mbt reads Mermaid sequence and native swimlane syntax and BPMN XML. Format-specific readers
 produce immutable diagram models. SVG rendering and pure motion planning share
 those models. Host adapters own process, filesystem and browser access.
 
@@ -15,6 +15,9 @@ those models. Host adapters own process, filesystem and browser access.
 graph TD
   A[Mermaid source] --> B[Lossless CST and typed AST]
   B --> C[Sequence model]
+  B --> S[Swimlane model]
+  S --> H
+  S --> I
   D[BPMN XML] --> E[Independent typed BPMN document]
   E --> F[Selected process or collaboration view]
   F --> G[BPMN model]
@@ -41,9 +44,11 @@ automatic layout uses bounded routing and reports exhausted limits.
 
 Sequence diagrams retain message occurrence order, participant lifetimes and
 nested frames. BPMN views retain typed nodes, connections, markers and scope.
+Swimlanes retain ordered responsibility bands, nested groups, shapes and explicit
+connections. Unowned steps stay outside lanes; containment never creates a path.
 A generic graph would lose those distinctions. `Renderer` takes the public
-`Diagram::Sequence` or `Diagram::Bpmn` case and returns output, media type and
-diagnostics. Adding `Bpmn` requires callers with exhaustive matches to add a case.
+`Diagram::Sequence`, `Diagram::Bpmn` or `Diagram::Swimlane` case and returns output, media type and
+diagnostics. Adding a kind requires callers with exhaustive matches to add a case.
 
 Links identify represented items, such as Smithy shapes or OpenRPC methods.
 Render properties hold presentation metadata separately. Link resolution is pure;
@@ -67,8 +72,8 @@ evaluate conditions, schedule timers, synchronize gateways or simulate tokens.
 | Module | Responsibility |
 | --- | --- |
 | `moonrockz/bpmn` | Independent XML CST, typed documents, writing, validation, explicit references and traversal; MoonBit core only |
-| `moonrockz/diagrams` | Immutable sequence/BPMN models, diagnostics, links, renderer contract and pure motion/exploration |
-| `moonrockz/diagrams-mermaid` | Mermaid CST/AST, canonical printing, sequence conversion and SVG convenience call |
+| `moonrockz/diagrams` | Immutable sequence/BPMN/swimlane models, diagnostics, links, renderer contract and pure motion/exploration |
+| `moonrockz/diagrams-mermaid` | Mermaid CST/AST, canonical printing, sequence/swimlane conversion and SVG convenience call |
 | `moonrockz/diagrams-bpmn` | BPMN view selection, document conversion and SVG convenience call |
 | `moonrockz/diagrams-svg` | Geometry, bounded layout/routing, legibility, static painting and scene bindings |
 | `moonrockz/diagrams-animated` | Pure standalone HTML construction with reproducibly embedded browser assets |
@@ -78,4 +83,5 @@ UI framework. Only the unpublished docs site tool may use Rabbita. Publication
 and release require separate owner approval.
 
 See [Mermaid sequence diagrams](../guides/mermaid-sequence.md),
+[Mermaid swimlanes](../guides/mermaid-swimlanes.md),
 [BPMN and animation](../guides/bpmn-and-animation.md), and the tested package guides.

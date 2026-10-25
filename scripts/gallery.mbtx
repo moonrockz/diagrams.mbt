@@ -185,8 +185,12 @@ async fn main {
     "</ul></details><h2 id=\"animation\">Standalone offline players</h2><p>Open either fixed SVG theme. Use Play, Step and Position; choose structural routes or reachability; download the exact static SVG. The player controls follow the browser preference.</p>",
   )
   let players : Map[String, String] = Map([])
+  let swimlane_svgs : Map[String, String] = Map([])
   for row in rows("tests/animation-acceptance/__snapshot__/players.json") {
     players[string(row[0])] = string(row[1])
+    if string(row[0]).has_prefix("swimlane-") {
+      swimlane_svgs[string(row[0])] = string(row[2])
+    }
   }
   for
     (kind, title) in [
@@ -215,6 +219,36 @@ async fn main {
     let file = name + ".html"
     save(file, players[name], check, site_assets)
     html.write_string("<p><a href=\"\{file}\">\{title}</a></p>")
+  }
+  html.write_string(
+    "<h2 id=\"swimlanes\">Native Mermaid swimlanes</h2><p>Ordered responsibility bands retain explicit directed interactions. The examples include bidirectional review/return, parallel edges and opt-in unheaded connections.</p>",
+  )
+  let swimlane_source = @fs.read_file(
+    "tests/corpus/mermaid-swimlanes/cases/review.mmd",
+  ).text()
+  save("swimlane-review.mmd", swimlane_source, check, site_assets)
+  html.write_string(
+    "<p><a href=\"swimlane-review.mmd\">Native Mermaid source</a></p><details><summary>Review source</summary><pre><code>\{escape(swimlane_source)}</code></pre></details>",
+  )
+  for variant in ["dark", "light"] {
+    let name = "swimlane-review-" + variant
+    save(name + ".svg", swimlane_svgs[name], check, site_assets)
+    save(name + ".html", players[name], check, site_assets)
+    html.write_string(
+      "<figure class=\"\{variant}\"><figcaption><a href=\"\{name}.html\">Open \{variant} review player</a> · <a href=\"\{name}.svg\">static SVG</a></figcaption><img src=\"\{name}.svg\" alt=\"Customer and Support review in \{variant}\"></figure>",
+    )
+  }
+  for direction in ["tb", "bt", "lr", "rl"] {
+    let name = "swimlane-" + direction
+    save(name + ".svg", swimlane_svgs[name], check, site_assets)
+    save(name + ".html", players[name], check, site_assets)
+    html.write_string(
+      "<p><a href=\"\{name}.html\">\{direction.to_upper()} flow player</a> · <a href=\"\{name}.svg\">static SVG</a></p>",
+    )
+  }
+  for name in ["swimlane-reverse", "swimlane-scenario", "swimlane-collapsed"] {
+    save(name + ".html", players[name], check, site_assets)
+    html.write_string("<p><a href=\"\{name}.html\">\{name}</a></p>")
   }
   html.write_string("</html>\n")
   save("index.html", html.to_string(), check, false)

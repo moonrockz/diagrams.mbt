@@ -229,15 +229,16 @@ message containment paths, including self-loops and nested frame occurrences.
 ```mbt check
 ///|
 test "canonical scene SVG equals the ordinary static renderer" {
-  let sequence=@sequence.Sequence::new([
-    @sequence.Participant::new("A"),@sequence.Participant::new("B"),
-  ],[Message(@sequence.Message::new("A","B","hello"))])
-  let renderer=@svg.SvgRenderer::new()
-  let scene=renderer.scene(Sequence(sequence)).scene.unwrap()
-  assert_eq(scene.canonical_svg,@svg.render_sequence(sequence))
+  let sequence = @sequence.Sequence::new(
+    [@sequence.Participant::new("A"), @sequence.Participant::new("B")],
+    [Message(@sequence.Message::new("A", "B", "hello"))],
+  )
+  let renderer = @svg.SvgRenderer::new()
+  let scene = renderer.scene(Sequence(sequence)).scene.unwrap()
+  assert_eq(scene.canonical_svg, @svg.render_sequence(sequence))
   assert_false(scene.canonical_svg.contains("data-motion-paths"))
   assert_true(scene.display_svg.contains("data-motion-paths"))
-  assert_eq(scene.paths.length(),1)
+  assert_eq(scene.paths.length(), 1)
 }
 ```
 
@@ -246,3 +247,61 @@ bound. Sequence scene input also bounds visible participants and text work befor
 layout. Invalid bindings or exhaustion return no partial scene. `id_prefix`
 continues to isolate adjacent copies. Standalone playback and canonical download
 are provided by `moonrockz/diagrams-animated`.
+
+## Native Mermaid swimlanes
+
+`Diagram::Swimlane` and `render_swimlane` use the independent immutable
+`diagrams/swimlane` model. Mermaid source conversion is in the Mermaid module.
+Swimlane geometry imports no BPMN model or document types. Existing sequence
+and BPMN static SVG bytes remain unchanged.
+
+```mbt check
+///|
+test "swimlane SVG and scene share one actual handoff path" {
+  let view = @swimlane.Swimlane::new(
+    "Request",
+    [
+      @swimlane.Node::new("Ask", lane="Customer", shape="stadium"),
+      @swimlane.Node::new("Review", lane="Support", shape="diamond"),
+    ],
+    [@swimlane.Connection::new("handoff", "Ask", "Review", label="request")],
+    lanes=[@swimlane.Lane::new("Customer"), @swimlane.Lane::new("Support")],
+    direction=LR,
+  )
+  let renderer = @svg.SvgRenderer::new(id_prefix="request")
+  let result = renderer.render(Swimlane(view))
+  assert_eq(result.diagnostics, [])
+  let scene = renderer.scene(Swimlane(view)).scene.unwrap()
+  assert_eq(scene.canonical_svg, result.output.unwrap())
+  assert_eq(scene.paths.length(), 1)
+  assert_true(scene.canonical_svg.contains("d=\"" + scene.paths[0].path + "\""))
+}
+```
+
+All four flow directions retain lane order across the flow axis. Local lane and
+group directions use their own scope. Empty lanes and unowned nodes remain
+visible. Nested groups reserve header text; collapsed groups hide descendants.
+Cross-boundary handoffs retain logical endpoints and attach to the visible
+collapsed ancestor. Internal hidden connections have no visible occurrence.
+
+The painter supports the pinned Mermaid 12.2.0 vector registry and legacy
+ellipse form. It keeps distinct shapes, dotted/thick lines and arrow, circle and
+cross markers. Unknown shapes and image/icon assets return an error with no
+output. The library never fetches assets. HTML and Markdown labels use an inert
+text projection and give a warning. Author CSS and callbacks remain source data;
+links are escaped `data-link` values without active navigation.
+
+`swimlane_limits` bounds visible/input elements, connections, nesting, geometry
+work and output size. A failed layout, unsupported shape, forbidden XML character
+or exhausted output budget returns diagnostics with no SVG. Explicit `id_prefix`
+values isolate marker IDs and adaptive styles for adjacent inline copies.
+Adaptive and fixed dark/light palettes keep the existing theme hues with ink
+checked against canvas and node fills.
+
+`diagrams-svg/swimlane-layout.check` checks ownership, measured fit, minimum
+11 px text, 4.5:1 contrast, unrelated overlaps, labels and real vector endpoints.
+Use `swimlane-layout.palette` for the same ink shades as the painter. Layout
+computes one geometry for both static rendering and motion bindings. It retains
+each parallel connection's identity and excludes invisible constraints from SVG
+and playback. Existing playback and canonical SVG downloads also work for this
+kind through `diagrams-animated`.

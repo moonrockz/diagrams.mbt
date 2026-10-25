@@ -9,3 +9,10 @@ tests/corpus/bpmn-model/*.json -text
 # Embedded standalone player bytes are identical on every checkout.
 pkgs/diagrams-animated/assets/*.js text eol=lf
 pkgs/diagrams-animated/assets/*.css text eol=lf
+
+# Mermaid source/oracle and upstream tables have frozen byte digests.
+tests/corpus/mermaid-swimlanes/** -text
+
+# Generated reference/table source is compared byte-for-byte by its MoonBit task.
+tests/swimlane-acceptance/corpus.generated.mbt text eol=lf
+pkgs/diagrams-mermaid/swimlane-syntax/entities.generated.mbt text eol=lf

@@ -3,6 +3,7 @@
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
+  Swimlane(@swimlane.Swimlane)
 } derive(Eq, Debug)
 
 ///|
@@ -17,6 +18,7 @@ pub fn Diagram::kind_name(self : Diagram) -> String {
   match self {
     Sequence(_) => "sequence"
     Bpmn(_) => "bpmn"
+    Swimlane(_) => "swimlane"
   }
 }
 
@@ -40,7 +42,7 @@ pub extend Rendered with @debug.Debug::{to_repr}
 pub fn Rendered::ok(
   output : String,
   media_type : String,
-  diagnostics? : ArrayView[@diagrams.Diagnostic] = [],
+  diagnostics~ : ArrayView[@diagrams.Diagnostic] = [],
 ) -> Rendered {
   {
     output: Some(output),
@@ -51,7 +53,10 @@ pub fn Rendered::ok(
 
 ///|
 /// The result of a renderer that does not support the kind of `diagram`.
-pub fn Rendered::unsupported(media_type : String, diagram : Diagram) -> Rendered {
+pub fn Rendered::unsupported(
+  media_type : String,
+  diagram : Diagram,
+) -> Rendered {
   {
     output: None,
     media_type,
@@ -67,7 +72,7 @@ pub fn Rendered::unsupported(media_type : String, diagram : Diagram) -> Rendered
 ///|
 /// Turns a diagram into output text, such as SVG.
 pub(open) trait Renderer {
-  render(Self, Diagram) -> Rendered
+  fn render(Self, Diagram) -> Rendered
 }
 
 ///|
@@ -77,5 +82,9 @@ pub fn Rendered::failed(
   media_type : String,
   diagnostics : ArrayView[@diagrams.Diagnostic],
 ) -> Rendered {
-  { output: None, media_type, diagnostics: ReadOnlyArray::from_array(diagnostics) }
+  {
+    output: None,
+    media_type,
+    diagnostics: ReadOnlyArray::from_array(diagnostics),
+  }
 }

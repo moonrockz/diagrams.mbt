@@ -1,0 +1,3510 @@
+{
+  "reference": "mermaid@12.2.0",
+  "configuration": {
+    "securityLevel": "strict",
+    "inheritDir": false,
+    "maxEdges": 50000
+  },
+  "normalizations": [
+    "Node shape aliases are normalized separately by MoonBit.",
+    "Mermaid entity placeholders are decoded through browser entities; HTML line breaks project to newline text.",
+    "CST, canonical whitespace, diagnostics and layout have independent assertions.",
+    "Generated and explicit edge IDs use the pinned database policy, including grouped-endpoint ID placement."
+  ],
+  "fixtures": [
+    {
+      "name": "docs/01.mmd",
+      "source": "swimlane-beta LR\n  subgraph Customer\n    Browse[Browse catalogue]\n    Pay[Pay]\n  end\n  subgraph Warehouse\n    Pick[Pick items]\n    Ship[Ship order]\n  end\n  subgraph Finance\n    Invoice[Raise invoice]\n  end\n  Browse --> Pay\n  Pay --> Pick\n  Pick --> Ship\n  Pay --> Invoice\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "Browse",
+            "label": "Browse catalogue",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Pay",
+            "label": "Pay",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Pick",
+            "label": "Pick items",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Ship",
+            "label": "Ship order",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Invoice",
+            "label": "Raise invoice",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Browse",
+            "target": "Pay",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Browse_Pay_0"
+          },
+          {
+            "source": "Pay",
+            "target": "Pick",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pay_Pick_0"
+          },
+          {
+            "source": "Pick",
+            "target": "Ship",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pick_Ship_0"
+          },
+          {
+            "source": "Pay",
+            "target": "Invoice",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pay_Invoice_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer",
+            "direction": null,
+            "members": [
+              "Browse",
+              "Pay"
+            ]
+          },
+          {
+            "id": "Warehouse",
+            "label": "Warehouse",
+            "direction": null,
+            "members": [
+              "Pick",
+              "Ship"
+            ]
+          },
+          {
+            "id": "Finance",
+            "label": "Finance",
+            "direction": null,
+            "members": [
+              "Invoice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/02.mmd",
+      "source": "---\nconfig:\n  theme: default\n  look: classic\n---\nswimlane-beta LR\n  subgraph Customer\n    Browse[Browse catalogue]\n    Pay[Pay]\n  end\n  subgraph Warehouse\n    Pick[Pick items]\n    Ship[Ship order]\n  end\n  subgraph Finance\n    Invoice[Raise invoice]\n  end\n  Browse --> Pay\n  Pay --> Pick\n  Pick --> Ship\n  Pay --> Invoice\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "Browse",
+            "label": "Browse catalogue",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Pay",
+            "label": "Pay",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Pick",
+            "label": "Pick items",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Ship",
+            "label": "Ship order",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Invoice",
+            "label": "Raise invoice",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Browse",
+            "target": "Pay",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Browse_Pay_0"
+          },
+          {
+            "source": "Pay",
+            "target": "Pick",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pay_Pick_0"
+          },
+          {
+            "source": "Pick",
+            "target": "Ship",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pick_Ship_0"
+          },
+          {
+            "source": "Pay",
+            "target": "Invoice",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Pay_Invoice_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer",
+            "direction": null,
+            "members": [
+              "Browse",
+              "Pay"
+            ]
+          },
+          {
+            "id": "Warehouse",
+            "label": "Warehouse",
+            "direction": null,
+            "members": [
+              "Pick",
+              "Ship"
+            ]
+          },
+          {
+            "id": "Finance",
+            "label": "Finance",
+            "direction": null,
+            "members": [
+              "Invoice"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/03.mmd",
+      "source": "swimlane-beta LR\n  subgraph Customer\n    request[Request service]\n    receive[Receive update]\n  end\n\n  subgraph Support\n    triage[Triage request]\n    answer[Send answer]\n  end\n\n  subgraph Engineering\n    investigate[Investigate issue]\n    fix[Prepare fix]\n  end\n\n  request --> triage\n  triage -->|Known issue| answer\n  triage -->|Needs code change| investigate\n  investigate --> fix --> answer\n  answer --> receive\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "request",
+            "label": "Request service",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "receive",
+            "label": "Receive update",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "triage",
+            "label": "Triage request",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "answer",
+            "label": "Send answer",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "investigate",
+            "label": "Investigate issue",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "fix",
+            "label": "Prepare fix",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "request",
+            "target": "triage",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_request_triage_0"
+          },
+          {
+            "source": "triage",
+            "target": "answer",
+            "label": "Known issue",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_triage_answer_0"
+          },
+          {
+            "source": "triage",
+            "target": "investigate",
+            "label": "Needs code change",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_triage_investigate_0"
+          },
+          {
+            "source": "investigate",
+            "target": "fix",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_investigate_fix_0"
+          },
+          {
+            "source": "fix",
+            "target": "answer",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_fix_answer_0"
+          },
+          {
+            "source": "answer",
+            "target": "receive",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_answer_receive_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer",
+            "direction": null,
+            "members": [
+              "request",
+              "receive"
+            ]
+          },
+          {
+            "id": "Support",
+            "label": "Support",
+            "direction": null,
+            "members": [
+              "triage",
+              "answer"
+            ]
+          },
+          {
+            "id": "Engineering",
+            "label": "Engineering",
+            "direction": null,
+            "members": [
+              "investigate",
+              "fix"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/04.mmd",
+      "source": "swimlane-beta\n  subgraph Sales\n    lead[Qualify lead]\n    quote[Prepare quote]\n  end\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "lead",
+            "label": "Qualify lead",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "quote",
+            "label": "Prepare quote",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [],
+        "groups": [
+          {
+            "id": "Sales",
+            "label": "Sales",
+            "direction": null,
+            "members": [
+              "lead",
+              "quote"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/05.mmd",
+      "source": "swimlane-beta LR\n  subgraph sales [Sales team]\n    lead[Qualify lead]\n    quote[Prepare quote]\n  end\n\n  subgraph finance [Finance team]\n    review[Review terms]\n    approve[Approve quote]\n  end\n\n  lead --> quote --> review --> approve\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "lead",
+            "label": "Qualify lead",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "quote",
+            "label": "Prepare quote",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "review",
+            "label": "Review terms",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "approve",
+            "label": "Approve quote",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "lead",
+            "target": "quote",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_lead_quote_0"
+          },
+          {
+            "source": "quote",
+            "target": "review",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_quote_review_0"
+          },
+          {
+            "source": "review",
+            "target": "approve",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_review_approve_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "sales",
+            "label": "Sales team",
+            "direction": null,
+            "members": [
+              "lead",
+              "quote"
+            ]
+          },
+          {
+            "id": "finance",
+            "label": "Finance team",
+            "direction": null,
+            "members": [
+              "review",
+              "approve"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/06.mmd",
+      "source": "swimlane-beta LR\n  subgraph Intake\n    start([Start])\n    task[Do work]\n    fix[Fix issues]\n  end\n\n  subgraph Review\n    decision{Ready?}\n  end\n\n  subgraph Complete\n    done((Done))\n  end\n\n  start --> task --> decision\n  decision -->|Yes| done\n  decision -->|No| fix\n  fix --> task\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "start",
+            "label": "Start",
+            "shape": "stadium",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "task",
+            "label": "Do work",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "fix",
+            "label": "Fix issues",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "decision",
+            "label": "Ready?",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "done",
+            "label": "Done",
+            "shape": "circle",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "start",
+            "target": "task",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_start_task_0"
+          },
+          {
+            "source": "task",
+            "target": "decision",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_task_decision_0"
+          },
+          {
+            "source": "decision",
+            "target": "done",
+            "label": "Yes",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decision_done_0"
+          },
+          {
+            "source": "decision",
+            "target": "fix",
+            "label": "No",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decision_fix_0"
+          },
+          {
+            "source": "fix",
+            "target": "task",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_fix_task_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Intake",
+            "label": "Intake",
+            "direction": null,
+            "members": [
+              "start",
+              "task",
+              "fix"
+            ]
+          },
+          {
+            "id": "Review",
+            "label": "Review",
+            "direction": null,
+            "members": [
+              "decision"
+            ]
+          },
+          {
+            "id": "Complete",
+            "label": "Complete",
+            "direction": null,
+            "members": [
+              "done"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/07.mmd",
+      "source": "swimlane-beta LR\n  subgraph Buyer\n    choose[Choose product]\n    pay[Pay invoice]\n  end\n\n  subgraph Store\n    reserve[Reserve stock]\n    ship[Ship product]\n  end\n\n  choose --> reserve\n  reserve -->|Invoice ready| pay\n  pay --> ship\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "choose",
+            "label": "Choose product",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "pay",
+            "label": "Pay invoice",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "reserve",
+            "label": "Reserve stock",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "ship",
+            "label": "Ship product",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "choose",
+            "target": "reserve",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_choose_reserve_0"
+          },
+          {
+            "source": "reserve",
+            "target": "pay",
+            "label": "Invoice ready",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_reserve_pay_0"
+          },
+          {
+            "source": "pay",
+            "target": "ship",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_pay_ship_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Buyer",
+            "label": "Buyer",
+            "direction": null,
+            "members": [
+              "choose",
+              "pay"
+            ]
+          },
+          {
+            "id": "Store",
+            "label": "Store",
+            "direction": null,
+            "members": [
+              "reserve",
+              "ship"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/08.mmd",
+      "source": "swimlane-beta LR\n  accTitle: Support escalation\n  accDescr: A request starts with the customer, is triaged by support, and may be escalated to engineering.\n\n  subgraph Customer\n    request[Open request]\n  end\n\n  subgraph Support\n    triage[Triage]\n  end\n\n  subgraph Engineering\n    resolve[Resolve]\n  end\n\n  request --> triage --> resolve\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "request",
+            "label": "Open request",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "triage",
+            "label": "Triage",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "resolve",
+            "label": "Resolve",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "request",
+            "target": "triage",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_request_triage_0"
+          },
+          {
+            "source": "triage",
+            "target": "resolve",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_triage_resolve_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer",
+            "direction": null,
+            "members": [
+              "request"
+            ]
+          },
+          {
+            "id": "Support",
+            "label": "Support",
+            "direction": null,
+            "members": [
+              "triage"
+            ]
+          },
+          {
+            "id": "Engineering",
+            "label": "Engineering",
+            "direction": null,
+            "members": [
+              "resolve"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/09.mmd",
+      "source": "swimlane-beta LR\n  subgraph Customer\n    submit[Submit order]\n    confirm[Confirm delivery]\n  end\n\n  subgraph Store\n    check[Check order]\n    pack[Pack items]\n  end\n\n  subgraph Carrier\n    collect[Collect package]\n    deliver[Deliver package]\n  end\n\n  submit --> check --> pack --> collect --> deliver --> confirm\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "submit",
+            "label": "Submit order",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "confirm",
+            "label": "Confirm delivery",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "check",
+            "label": "Check order",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "pack",
+            "label": "Pack items",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "collect",
+            "label": "Collect package",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "deliver",
+            "label": "Deliver package",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "submit",
+            "target": "check",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_submit_check_0"
+          },
+          {
+            "source": "check",
+            "target": "pack",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_check_pack_0"
+          },
+          {
+            "source": "pack",
+            "target": "collect",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_pack_collect_0"
+          },
+          {
+            "source": "collect",
+            "target": "deliver",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_collect_deliver_0"
+          },
+          {
+            "source": "deliver",
+            "target": "confirm",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_deliver_confirm_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer",
+            "direction": null,
+            "members": [
+              "submit",
+              "confirm"
+            ]
+          },
+          {
+            "id": "Store",
+            "label": "Store",
+            "direction": null,
+            "members": [
+              "check",
+              "pack"
+            ]
+          },
+          {
+            "id": "Carrier",
+            "label": "Carrier",
+            "direction": null,
+            "members": [
+              "collect",
+              "deliver"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/10.mmd",
+      "source": "swimlane-beta LR\n  subgraph Applicant\n    apply[Submit application]\n    sign[Sign agreement]\n  end\n\n  subgraph Reviewer\n    screen[Screen application]\n    decide{Approved?}\n  end\n\n  subgraph System\n    create[Create account]\n    notify[Send welcome email]\n  end\n\n  apply -->|Application received| screen\n  screen --> decide\n  decide -->|Approved| create --> notify --> sign\n  decide -->|Needs changes| apply\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "apply",
+            "label": "Submit application",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "sign",
+            "label": "Sign agreement",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "screen",
+            "label": "Screen application",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "decide",
+            "label": "Approved?",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "create",
+            "label": "Create account",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "notify",
+            "label": "Send welcome email",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "apply",
+            "target": "screen",
+            "label": "Application received",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_apply_screen_0"
+          },
+          {
+            "source": "screen",
+            "target": "decide",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_screen_decide_0"
+          },
+          {
+            "source": "decide",
+            "target": "create",
+            "label": "Approved",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decide_create_0"
+          },
+          {
+            "source": "create",
+            "target": "notify",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_create_notify_0"
+          },
+          {
+            "source": "notify",
+            "target": "sign",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_notify_sign_0"
+          },
+          {
+            "source": "decide",
+            "target": "apply",
+            "label": "Needs changes",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decide_apply_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Applicant",
+            "label": "Applicant",
+            "direction": null,
+            "members": [
+              "apply",
+              "sign"
+            ]
+          },
+          {
+            "id": "Reviewer",
+            "label": "Reviewer",
+            "direction": null,
+            "members": [
+              "screen",
+              "decide"
+            ]
+          },
+          {
+            "id": "System",
+            "label": "System",
+            "direction": null,
+            "members": [
+              "create",
+              "notify"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/11.mmd",
+      "source": "swimlane-beta TB\n  subgraph Intake\n    collect[Collect request]\n    validate[Validate details]\n  end\n\n  subgraph Review\n    review[Review request]\n    decide{Ready?}\n  end\n\n  subgraph Delivery\n    schedule[Schedule work]\n    complete[Complete work]\n  end\n\n  collect --> validate --> review --> decide\n  decide -->|Yes| schedule --> complete\n  decide -->|No| collect\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "collect",
+            "label": "Collect request",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "validate",
+            "label": "Validate details",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "review",
+            "label": "Review request",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "decide",
+            "label": "Ready?",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "schedule",
+            "label": "Schedule work",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "complete",
+            "label": "Complete work",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "collect",
+            "target": "validate",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_collect_validate_0"
+          },
+          {
+            "source": "validate",
+            "target": "review",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_validate_review_0"
+          },
+          {
+            "source": "review",
+            "target": "decide",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_review_decide_0"
+          },
+          {
+            "source": "decide",
+            "target": "schedule",
+            "label": "Yes",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decide_schedule_0"
+          },
+          {
+            "source": "schedule",
+            "target": "complete",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_schedule_complete_0"
+          },
+          {
+            "source": "decide",
+            "target": "collect",
+            "label": "No",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_decide_collect_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Intake",
+            "label": "Intake",
+            "direction": null,
+            "members": [
+              "collect",
+              "validate"
+            ]
+          },
+          {
+            "id": "Review",
+            "label": "Review",
+            "direction": null,
+            "members": [
+              "review",
+              "decide"
+            ]
+          },
+          {
+            "id": "Delivery",
+            "label": "Delivery",
+            "direction": null,
+            "members": [
+              "schedule",
+              "complete"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/12.mmd",
+      "source": "swimlane-beta LR\n  subgraph ops [Operations]\n    intake[Receive request]\n    plan[Plan work]\n  end\n\n  subgraph legal [Legal]\n    review[Review contract]\n  end\n\n  intake --> plan --> review\n\n  classDef attention fill:#fff2cc,stroke:#d6a500,color:#111;\n  class review attention;\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "intake",
+            "label": "Receive request",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "plan",
+            "label": "Plan work",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "review",
+            "label": "Review contract",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "intake",
+            "target": "plan",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_intake_plan_0"
+          },
+          {
+            "source": "plan",
+            "target": "review",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_plan_review_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "ops",
+            "label": "Operations",
+            "direction": null,
+            "members": [
+              "intake",
+              "plan"
+            ]
+          },
+          {
+            "id": "legal",
+            "label": "Legal",
+            "direction": null,
+            "members": [
+              "review"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "docs/13.mmd",
+      "source": "swimlane-beta LR\n  subgraph Support\n    classify{Can support solve it?}\n    respond[Respond to customer]\n  end\n\n  subgraph Product\n    prioritize[Prioritize fix]\n  end\n\n  subgraph Engineering\n    implement[Implement fix]\n  end\n\n  classify -->|Yes| respond\n  classify -->|No| prioritize --> implement --> respond\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "classify",
+            "label": "Can support solve it?",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "respond",
+            "label": "Respond to customer",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "prioritize",
+            "label": "Prioritize fix",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "implement",
+            "label": "Implement fix",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "classify",
+            "target": "respond",
+            "label": "Yes",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_classify_respond_0"
+          },
+          {
+            "source": "classify",
+            "target": "prioritize",
+            "label": "No",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_classify_prioritize_0"
+          },
+          {
+            "source": "prioritize",
+            "target": "implement",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_prioritize_implement_0"
+          },
+          {
+            "source": "implement",
+            "target": "respond",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_implement_respond_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Support",
+            "label": "Support",
+            "direction": null,
+            "members": [
+              "classify",
+              "respond"
+            ]
+          },
+          {
+            "id": "Product",
+            "label": "Product",
+            "direction": null,
+            "members": [
+              "prioritize"
+            ]
+          },
+          {
+            "id": "Engineering",
+            "label": "Engineering",
+            "direction": null,
+            "members": [
+              "implement"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/assets.mmd",
+      "source": "swimlane-beta LR\nImage@{ img: \"https://example.invalid/image.svg\", label: Photo }\nIcon@{ icon: \"fa:home\" }\nExplicit@{ shape: rect, img: \"https://example.invalid/image.svg\", label: Explicit }\nAgain@{ icon: \"fa:home\", label: Earlier }\nAgain@{ shape: diamond, label: Later }\nFalsy@{ shape: rect, img: false, icon: null, label: Vector }\nTruthy@{ img: \"false\", label: String }\nImage --> Icon\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "Image",
+            "label": "Photo",
+            "shape": "image",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Icon",
+            "label": "",
+            "shape": "icon",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Explicit",
+            "label": "Explicit",
+            "shape": "image",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Again",
+            "label": "Later",
+            "shape": "icon",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Falsy",
+            "label": "Vector",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Truthy",
+            "label": "String",
+            "shape": "image",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Image",
+            "target": "Icon",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Image_Icon_0"
+          }
+        ],
+        "groups": []
+      }
+    },
+    {
+      "name": "cases/block-nested-metadata.mmd",
+      "source": "swimlane-beta\nA@{\n  shape: rect\n  label: Request\n  metadata:\n    a: one\n    b: two\n  extra: true\n}\nA --> B\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Request",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": []
+      }
+    },
+    {
+      "name": "cases/direction-bt.mmd",
+      "source": "swimlane-beta BT\nsubgraph First\n A\nend\nsubgraph Second\n B\nend\nA --> B\n",
+      "normalized": {
+        "direction": "BT",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "First",
+            "label": "First",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/direction-lr.mmd",
+      "source": "swimlane-beta LR\nsubgraph First\n A\nend\nsubgraph Second\n B\nend\nA --> B\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "First",
+            "label": "First",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/direction-rl.mmd",
+      "source": "swimlane-beta RL\nsubgraph First\n A\nend\nsubgraph Second\n B\nend\nA --> B\n",
+      "normalized": {
+        "direction": "RL",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "First",
+            "label": "First",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/direction-tb.mmd",
+      "source": "swimlane-beta TB\nsubgraph First\n A\nend\nsubgraph Second\n B\nend\nA --> B\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "First",
+            "label": "First",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/direction-td.mmd",
+      "source": "swimlane-beta TD\nsubgraph First\n A\nend\nsubgraph Second\n B\nend\nA --> B\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "First",
+            "label": "First",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/empty-map-tag.mmd",
+      "source": "swimlane-beta\nA@{\nshape: rect\nlabel: Empty metadata\nmetadata: !!map\n}\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Empty metadata",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [],
+        "groups": []
+      }
+    },
+    {
+      "name": "cases/grammar.mmd",
+      "source": "swimlane-beta TD\naccTitle: Native grammar\naccDescr {\nAll statement classes remain source data.\n}\nsubgraph lane [First lane];\ndirection LR;\nA[\"quoted end --> [brackets] 😀\"]\nB(\"`**Markdown**`\")\nC([Stadium])\nD[[Subprocess]]\nE[(Database)]\nF((Circle))\nG(((Double circle)))\nH{Decision}\nI{{Hexagon}}\nJ>Odd]\nK[/Lean right/]\nL[\\Lean left\\]\nM[/Wide bottom\\]\nN[\\Wide top/]\nO(-Ellipse-)\nA:::critical -->|label| B\nA -- inline label --> C\nA == thick label ==> D\nA -. dotted label .-> E\nA e1@-->|identified| F\nA o--o B\nA x--x B\nA <--> B\nA <==> B\nA <--- B\nA --- B --> C\nA & B --> C & D --> E\nend;\nsubgraph lane [Ignored second label]\nZ\nend\nclassDef critical fill:#fff,stroke:#000,color:#111\nclass A,B critical\nstyle A fill:red,stroke-width:2px\nlinkStyle default interpolate basis stroke:blue\nclick A callback \"Callback retained\"\nclick B \"https://example.com\" \"Link retained\" _blank\n%% comment\nProps[|label:myLabel|Some text]\nProps[Updated classic]@{ shape: doc }\nRepeated@{ label: 'First', }@{ shape: rect }\nRepeated & Props@{ shape: stadium } --> Last@{ label: 'Target' }\ne1@{ animate: true, curve: linear }\nstyle ImplicitStyled fill:red\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "quoted end --> [brackets] 😀",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "**Markdown**",
+            "shape": "round",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "C",
+            "label": "Stadium",
+            "shape": "stadium",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "D",
+            "label": "Subprocess",
+            "shape": "subroutine",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "E",
+            "label": "Database",
+            "shape": "cylinder",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "F",
+            "label": "Circle",
+            "shape": "circle",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "G",
+            "label": "Double circle",
+            "shape": "doublecircle",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "H",
+            "label": "Decision",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "I",
+            "label": "Hexagon",
+            "shape": "hexagon",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "J",
+            "label": "Odd",
+            "shape": "odd",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "K",
+            "label": "Lean right",
+            "shape": "lean_right",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "L",
+            "label": "Lean left",
+            "shape": "lean_left",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "M",
+            "label": "Wide bottom",
+            "shape": "trapezoid",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "N",
+            "label": "Wide top",
+            "shape": "inv_trapezoid",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "O",
+            "label": "Ellipse",
+            "shape": "ellipse",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Z",
+            "label": "Z",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Props",
+            "label": "Updated classic",
+            "shape": "stadium",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Repeated",
+            "label": "First",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Last",
+            "label": "Target",
+            "shape": "square",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "ImplicitStyled",
+            "label": "ImplicitStyled",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "label",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "inline label",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_0"
+          },
+          {
+            "source": "A",
+            "target": "D",
+            "label": "thick label",
+            "type": "arrow_point",
+            "style": "thick",
+            "length": 1,
+            "id": "L_A_D_0"
+          },
+          {
+            "source": "A",
+            "target": "E",
+            "label": "dotted label",
+            "type": "arrow_point",
+            "style": "dotted",
+            "length": 1,
+            "id": "L_A_E_0"
+          },
+          {
+            "source": "A",
+            "target": "F",
+            "label": "identified",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "e1"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "double_arrow_circle",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_2"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "double_arrow_cross",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_3"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "double_arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_4"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "double_arrow_point",
+            "style": "thick",
+            "length": 1,
+            "id": "L_A_B_5"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_open",
+            "style": "normal",
+            "length": 2,
+            "id": "L_A_B_6"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_open",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_7"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_0"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_2"
+          },
+          {
+            "source": "A",
+            "target": "D",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_D_2"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_2"
+          },
+          {
+            "source": "B",
+            "target": "D",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_D_0"
+          },
+          {
+            "source": "C",
+            "target": "E",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_C_E_0"
+          },
+          {
+            "source": "D",
+            "target": "E",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_D_E_0"
+          },
+          {
+            "source": "Repeated",
+            "target": "Last",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Repeated_Last_0"
+          },
+          {
+            "source": "Props",
+            "target": "Last",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Props_Last_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "lane",
+            "label": "First lane",
+            "direction": "LR",
+            "members": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K",
+              "L",
+              "M",
+              "N",
+              "O",
+              "Z"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/labels.mmd",
+      "source": "swimlane-beta RL\nsubgraph \"Quoted title\"\nA[\"#quot;Hello#quot; #amp; #amp; #9829; #x1f600;\"]\nB[\"Line<br>two<br>three\"]\nC[\"Bob's quoted label\"]\nD@{\nshape: rect\nlabel: \"Multiline metadata\"\n}\nE[\"First\nsecond\"]\nend\nA edge@-->|twice #amp; #amp;| B\nedge@{ animate: true, animation: fast }\nA -->|\"`**Markdown edge**`\"| B\nA -- \"`**Inline Markdown**`\" --> C\nM[Multiline\nunquoted]\nN{Multiline\ndecision}\nP@{ label: \"First\n second\", shape: rect }\nQ@{ label: \"C:\\\\\", shape: rect }\naccTitle: A title; with semicolons\n",
+      "normalized": {
+        "direction": "RL",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "\"Hello\" & & ♥ &x1f600;",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "Line\ntwo\nthree",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "html"
+          },
+          {
+            "id": "C",
+            "label": "Bob's quoted label",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "text"
+          },
+          {
+            "id": "D",
+            "label": "Multiline metadata",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "E",
+            "label": "First\nsecond",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "text"
+          },
+          {
+            "id": "M",
+            "label": "Multiline\nunquoted",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "N",
+            "label": "Multiline\ndecision",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "P",
+            "label": "First\nsecond",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "html"
+          },
+          {
+            "id": "Q",
+            "label": "C:\\",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "twice & &",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "edge"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "**Markdown edge**",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_2"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "**Inline Markdown**",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "subGraph0",
+            "label": "Quoted title",
+            "direction": null,
+            "members": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/membership.mmd",
+      "source": "swimlane-beta\nsubgraph A [First outer]\ndirection LR\ndirection TB\nX\nsubgraph N [Nested first]\nY\nend\nend\nsubgraph B [Second]\nX\nsubgraph N [Ignored nested]\nZ\nend\nend\nsubgraph Self [Outer duplicate]\nsubgraph Self [First completed duplicate]\nQ\nend\nR\nend\nsubgraph \"Anonymous outer\"\nsubgraph \"Anonymous inner\"\nU\nend\nend\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "X",
+            "label": "X",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Y",
+            "label": "Y",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Z",
+            "label": "Z",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Q",
+            "label": "Q",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "R",
+            "label": "R",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "U",
+            "label": "U",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [],
+        "groups": [
+          {
+            "id": "N",
+            "label": "Nested first",
+            "direction": null,
+            "members": [
+              "Y",
+              "Z"
+            ]
+          },
+          {
+            "id": "A",
+            "label": "First outer",
+            "direction": "TB",
+            "members": [
+              "X",
+              "N"
+            ]
+          },
+          {
+            "id": "B",
+            "label": "Second",
+            "direction": null,
+            "members": []
+          },
+          {
+            "id": "Self",
+            "label": "First completed duplicate",
+            "direction": null,
+            "members": [
+              "Q",
+              "R"
+            ]
+          },
+          {
+            "id": "subGraph6",
+            "label": "Anonymous inner",
+            "direction": null,
+            "members": [
+              "U"
+            ]
+          },
+          {
+            "id": "subGraph7",
+            "label": "Anonymous outer",
+            "direction": null,
+            "members": [
+              "subGraph6"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/metadata-and-identifiers.mmd",
+      "source": "swimlane-beta LR\ndirection BT\nsubgraph Owner\n style Missing fill:red\n A&B\n 123\n A:B\nend\nA&B --> 123 --> A:B\nclick Missing callback\nclick Missing callback \"tooltip\"\nclick Missing call callback()\nclick Missing call callback(\"x\", 1) \"tooltip\"\nclick Missing href \"https://example.com\"\nclick Missing href \"https://example.com\" \"tooltip\"\nclick Missing href \"https://example.com\" _blank\nclick Missing href \"https://example.com\" \"tooltip\" _self\nclick Missing \"https://example.com\"\nclick Missing \"https://example.com\" \"tooltip\"\nclick Missing \"https://example.com\" _parent\nclick Missing \"https://example.com\" \"tooltip\" _top\nlinkStyle 0 stroke:blue\nlinkStyle default stroke:green\nlinkStyle 0 interpolate basis stroke:blue\nlinkStyle default interpolate linear\nlinkStyle 0 interpolate linear\nclassDef custom fill:#fff,stroke-width:2px,font-size:12px,opacity:50%\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "Missing",
+            "label": "Missing",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "A&B",
+            "label": "A&B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "123",
+            "label": "123",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "A:B",
+            "label": "A:B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A&B",
+            "target": "123",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A&B_123_0"
+          },
+          {
+            "source": "123",
+            "target": "A:B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_123_A:B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Owner",
+            "label": "Owner",
+            "direction": null,
+            "members": [
+              "A&B",
+              "123",
+              "A:B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/modern-labels.mmd",
+      "source": "swimlane-beta BT\nsubgraph outer [\"Outer\"]\nsubgraph \"Anonymous nested work\"\nA@{ shape: rect, label: \"<b>safe</b>\" }\nB@{ shape: diamond, label: \"**Markdown**\", labelType: markdown }\nC@{ shape: circle, label: \"Plain\", labelType: string }\nend\nend\nA -->|handoff| B\nB --> C\n",
+      "normalized": {
+        "direction": "BT",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "<b>safe</b>",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "html"
+          },
+          {
+            "id": "B",
+            "label": "**Markdown**",
+            "shape": "diamond",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "C",
+            "label": "Plain",
+            "shape": "circle",
+            "labelType": "string",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "handoff",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "subGraph0",
+            "label": "Anonymous nested work",
+            "direction": null,
+            "members": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "id": "outer",
+            "label": "Outer",
+            "direction": null,
+            "members": [
+              "subGraph0"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/non-finite.mmd",
+      "source": "swimlane-beta\nNan@{ shape: rect, label: .nan, img: .nan, icon: .nan, custom: .nan }\nInf@{ shape: rect, label: .inf, custom: .inf }\nNegative@{ shape: rect, label: -.inf, custom: -.inf }\nOverflow@{ shape: rect, label: 1e9999, custom: 1e9999 }\nBinary@{ shape: rect, label: 0b101, custom: -0b11 }\nNan --> Inf --> Negative --> Overflow\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "Nan",
+            "label": "Nan",
+            "shape": "rect",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Inf",
+            "label": "Infinity",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Negative",
+            "label": "-Infinity",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Overflow",
+            "label": "1e9999",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Binary",
+            "label": "5",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [
+          {
+            "source": "Nan",
+            "target": "Inf",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Nan_Inf_0"
+          },
+          {
+            "source": "Inf",
+            "target": "Negative",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Inf_Negative_0"
+          },
+          {
+            "source": "Negative",
+            "target": "Overflow",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_Negative_Overflow_0"
+          }
+        ],
+        "groups": []
+      }
+    },
+    {
+      "name": "cases/review.mmd",
+      "source": "swimlane-beta LR\nsubgraph Customer [Customer requests and corrections]\n A([Request])\nend\nsubgraph Support [Support review]\n B{Review}\n C((Complete))\nend\nA AB@<-->|review or return| B\nB BC@-->|approve| C\nC CA@---|related| A\nA parallel@-.->|expedite| B\nA constraint@~~~ C\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Request",
+            "shape": "stadium",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "Review",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "C",
+            "label": "Complete",
+            "shape": "circle",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "review or return",
+            "type": "double_arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "AB"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "approve",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "BC"
+          },
+          {
+            "source": "C",
+            "target": "A",
+            "label": "related",
+            "type": "arrow_open",
+            "style": "normal",
+            "length": 1,
+            "id": "CA"
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "expedite",
+            "type": "arrow_point",
+            "style": "dotted",
+            "length": 1,
+            "id": "parallel"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "",
+            "type": "arrow_open",
+            "style": "invisible",
+            "length": 1,
+            "id": "constraint"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Customer",
+            "label": "Customer requests and corrections",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Support",
+            "label": "Support review",
+            "direction": null,
+            "members": [
+              "B",
+              "C"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/semantics.mmd",
+      "source": "swimlane-beta LR\nsubgraph sales [Sales team]\ndirection TB\nA[Original]\nsubgraph nested [Nested work]\n B{Ready?}\nend\nend\nsubgraph sales [Ignored repeated title]\ndirection RL\n C([Later])\nend\nsubgraph other [Other]\n A\n D\nend\nA[Revised]\nA & B --> C & D --> E\nA -->|parallel| C\nE -.-> A\nD <--> B\nB --- C\nE ~~~ D\nA & B expanded@-->|expanded identified| C & D\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Revised",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "Ready?",
+            "shape": "diamond",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "C",
+            "label": "Later",
+            "shape": "stadium",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "E",
+            "label": "E",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_0"
+          },
+          {
+            "source": "A",
+            "target": "D",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_D_0"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_0"
+          },
+          {
+            "source": "B",
+            "target": "D",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_D_0"
+          },
+          {
+            "source": "C",
+            "target": "E",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_C_E_0"
+          },
+          {
+            "source": "D",
+            "target": "E",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_D_E_0"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "parallel",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_2"
+          },
+          {
+            "source": "E",
+            "target": "A",
+            "label": "",
+            "type": "arrow_point",
+            "style": "dotted",
+            "length": 1,
+            "id": "L_E_A_0"
+          },
+          {
+            "source": "D",
+            "target": "B",
+            "label": "",
+            "type": "double_arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_D_B_0"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_open",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_2"
+          },
+          {
+            "source": "E",
+            "target": "D",
+            "label": "",
+            "type": "arrow_open",
+            "style": "invisible",
+            "length": 1,
+            "id": "L_E_D_0"
+          },
+          {
+            "source": "A",
+            "target": "C",
+            "label": "expanded identified",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_C_3"
+          },
+          {
+            "source": "A",
+            "target": "D",
+            "label": "expanded identified",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_D_2"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "expanded identified",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "expanded"
+          },
+          {
+            "source": "B",
+            "target": "D",
+            "label": "expanded identified",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_D_2"
+          }
+        ],
+        "groups": [
+          {
+            "id": "nested",
+            "label": "Nested work",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          },
+          {
+            "id": "sales",
+            "label": "Sales team",
+            "direction": "TB",
+            "members": [
+              "A",
+              "nested",
+              "C"
+            ]
+          },
+          {
+            "id": "other",
+            "label": "Other",
+            "direction": null,
+            "members": [
+              "D"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/shapes.mmd",
+      "source": "swimlane-beta TB\nN0@{ shape: rect, label: \"rect\" }\nN1@{ shape: rounded, label: \"rounded\" }\nN2@{ shape: stadium, label: \"stadium\" }\nN3@{ shape: fr-rect, label: \"fr-rect\" }\nN4@{ shape: cyl, label: \"cyl\" }\nN5@{ shape: datastore, label: \"datastore\" }\nN6@{ shape: folder, label: \"folder\" }\nN7@{ shape: bucket, label: \"bucket\" }\nN8@{ shape: console, label: \"console\" }\nN9@{ shape: browser, label: \"browser\" }\nN10@{ shape: person, label: \"person\" }\nN11@{ shape: circle, label: \"circle\" }\nN12@{ shape: bang, label: \"bang\" }\nN13@{ shape: cloud, label: \"cloud\" }\nN14@{ shape: diam, label: \"diam\" }\nN15@{ shape: hex, label: \"hex\" }\nN16@{ shape: lean-r, label: \"lean-r\" }\nN17@{ shape: lean-l, label: \"lean-l\" }\nN18@{ shape: trap-b, label: \"trap-b\" }\nN19@{ shape: trap-t, label: \"trap-t\" }\nN20@{ shape: dbl-circ, label: \"dbl-circ\" }\nN21@{ shape: text, label: \"text\" }\nN22@{ shape: notch-rect, label: \"notch-rect\" }\nN23@{ shape: lin-rect, label: \"lin-rect\" }\nN24@{ shape: sm-circ, label: \"sm-circ\" }\nN25@{ shape: fr-circ, label: \"fr-circ\" }\nN26@{ shape: fork, label: \"fork\" }\nN27@{ shape: hourglass, label: \"hourglass\" }\nN28@{ shape: brace, label: \"brace\" }\nN29@{ shape: brace-r, label: \"brace-r\" }\nN30@{ shape: braces, label: \"braces\" }\nN31@{ shape: bolt, label: \"bolt\" }\nN32@{ shape: doc, label: \"doc\" }\nN33@{ shape: delay, label: \"delay\" }\nN34@{ shape: h-cyl, label: \"h-cyl\" }\nN35@{ shape: lin-cyl, label: \"lin-cyl\" }\nN36@{ shape: curv-trap, label: \"curv-trap\" }\nN37@{ shape: div-rect, label: \"div-rect\" }\nN38@{ shape: tri, label: \"tri\" }\nN39@{ shape: win-pane, label: \"win-pane\" }\nN40@{ shape: f-circ, label: \"f-circ\" }\nN41@{ shape: notch-pent, label: \"notch-pent\" }\nN42@{ shape: flip-tri, label: \"flip-tri\" }\nN43@{ shape: sl-rect, label: \"sl-rect\" }\nN44@{ shape: docs, label: \"docs\" }\nN45@{ shape: st-rect, label: \"st-rect\" }\nN46@{ shape: bow-rect, label: \"bow-rect\" }\nN47@{ shape: cross-circ, label: \"cross-circ\" }\nN48@{ shape: tag-doc, label: \"tag-doc\" }\nN49@{ shape: tag-rect, label: \"tag-rect\" }\nN50@{ shape: flag, label: \"flag\" }\nN51@{ shape: odd, label: \"odd\" }\nN52@{ shape: lin-doc, label: \"lin-doc\" }\nN53@{ shape: state, label: \"state\" }\nN54@{ shape: choice, label: \"choice\" }\nN55@{ shape: note, label: \"note\" }\nN56@{ shape: composite, label: \"composite\" }\nN57@{ shape: anchor, label: \"anchor\" }\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "N0",
+            "label": "rect",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N1",
+            "label": "rounded",
+            "shape": "rounded",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N2",
+            "label": "stadium",
+            "shape": "stadium",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N3",
+            "label": "fr-rect",
+            "shape": "fr-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N4",
+            "label": "cyl",
+            "shape": "cyl",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N5",
+            "label": "datastore",
+            "shape": "datastore",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N6",
+            "label": "folder",
+            "shape": "folder",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N7",
+            "label": "bucket",
+            "shape": "bucket",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N8",
+            "label": "console",
+            "shape": "console",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N9",
+            "label": "browser",
+            "shape": "browser",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N10",
+            "label": "person",
+            "shape": "person",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N11",
+            "label": "circle",
+            "shape": "circle",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N12",
+            "label": "bang",
+            "shape": "bang",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N13",
+            "label": "cloud",
+            "shape": "cloud",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N14",
+            "label": "diam",
+            "shape": "diam",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N15",
+            "label": "hex",
+            "shape": "hex",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N16",
+            "label": "lean-r",
+            "shape": "lean-r",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N17",
+            "label": "lean-l",
+            "shape": "lean-l",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N18",
+            "label": "trap-b",
+            "shape": "trap-b",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N19",
+            "label": "trap-t",
+            "shape": "trap-t",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N20",
+            "label": "dbl-circ",
+            "shape": "dbl-circ",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N21",
+            "label": "text",
+            "shape": "text",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N22",
+            "label": "notch-rect",
+            "shape": "notch-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N23",
+            "label": "lin-rect",
+            "shape": "lin-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N24",
+            "label": "sm-circ",
+            "shape": "sm-circ",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N25",
+            "label": "fr-circ",
+            "shape": "fr-circ",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N26",
+            "label": "fork",
+            "shape": "fork",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N27",
+            "label": "hourglass",
+            "shape": "hourglass",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N28",
+            "label": "brace",
+            "shape": "brace",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N29",
+            "label": "brace-r",
+            "shape": "brace-r",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N30",
+            "label": "braces",
+            "shape": "braces",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N31",
+            "label": "bolt",
+            "shape": "bolt",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N32",
+            "label": "doc",
+            "shape": "doc",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N33",
+            "label": "delay",
+            "shape": "delay",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N34",
+            "label": "h-cyl",
+            "shape": "h-cyl",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N35",
+            "label": "lin-cyl",
+            "shape": "lin-cyl",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N36",
+            "label": "curv-trap",
+            "shape": "curv-trap",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N37",
+            "label": "div-rect",
+            "shape": "div-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N38",
+            "label": "tri",
+            "shape": "tri",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N39",
+            "label": "win-pane",
+            "shape": "win-pane",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N40",
+            "label": "f-circ",
+            "shape": "f-circ",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N41",
+            "label": "notch-pent",
+            "shape": "notch-pent",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N42",
+            "label": "flip-tri",
+            "shape": "flip-tri",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N43",
+            "label": "sl-rect",
+            "shape": "sl-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N44",
+            "label": "docs",
+            "shape": "docs",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N45",
+            "label": "st-rect",
+            "shape": "st-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N46",
+            "label": "bow-rect",
+            "shape": "bow-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N47",
+            "label": "cross-circ",
+            "shape": "cross-circ",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N48",
+            "label": "tag-doc",
+            "shape": "tag-doc",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N49",
+            "label": "tag-rect",
+            "shape": "tag-rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N50",
+            "label": "flag",
+            "shape": "flag",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N51",
+            "label": "odd",
+            "shape": "odd",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N52",
+            "label": "lin-doc",
+            "shape": "lin-doc",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N53",
+            "label": "state",
+            "shape": "state",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N54",
+            "label": "choice",
+            "shape": "choice",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N55",
+            "label": "note",
+            "shape": "note",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N56",
+            "label": "composite",
+            "shape": "composite",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "N57",
+            "label": "anchor",
+            "shape": "anchor",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [],
+        "groups": []
+      }
+    },
+    {
+      "name": "cases/tabs.mmd",
+      "source": "swimlane-beta\tTD\nsubgraph\tOwner [Tabbed owner]\ndirection\tLR\nA[\"Tabbed label\"]\nB\nend\nA\t-->\tB\nclassDef\tcustom\tfill:red\nclass\tA\tcustom\nstyle\tB\tfill:blue\n",
+      "normalized": {
+        "direction": "TB",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Tabbed label",
+            "shape": "square",
+            "labelType": "string",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Owner",
+            "label": "Tabbed owner",
+            "direction": "LR",
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/tracer.mmd",
+      "source": "swimlane-beta LR\nsubgraph Handoff\nA\nend\nsubgraph Receiver\nB\nend\nA Handoff@--> B\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "A",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "Handoff"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Handoff",
+            "label": "Handoff",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "Receiver",
+            "label": "Receiver",
+            "direction": null,
+            "members": [
+              "B"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/whitespace.mmd",
+      "source": "﻿swimlane-beta LR\n subgraph Owner [Copied input]\n A[First]\nend\nA --> B\nclassDef custom fill:red\nclass A custom\nstyle B fill:blue\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "First",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "shape": "square",
+            "labelType": "text",
+            "labelKind": "text"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Owner",
+            "label": "Copied input",
+            "direction": null,
+            "members": [
+              "A"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "cases/yaml-metadata.mmd",
+      "source": "swimlane-beta LR\nsubgraph Metadata\nA@{\nshape: rect\nlabel: |-\n  Literal\n  label\n}\nB@{ seed: &shared \"Anchored\", label: *shared, shape: doc }\nC@{\nshape: stadium\nlabel: >-\n  Folded\n  label\n}\nD@{ shape: rect, label: 0 }\nE@{ shape: rect, label: false }\nF@{ shape: rect, label: \"false\" }\nG@{ shape: rect, label: true }\nH@{ shape: rect, label: null }\nI@{ shape: rect, label: \"\" }\nJ@{ shape: rect, label: !!str 123 }\nK@{ shape: circle, custom: [one, two, 42] }\nend\nA --> B --> C\nQuoted@{ label: '\"Hello\"', shape: rect, custom: \"One \\u0022quote\\u007d\" }\nClipped@{\nshape: rect\nlabel: |\n  Clipped line\n}\n",
+      "normalized": {
+        "direction": "LR",
+        "nodes": [
+          {
+            "id": "A",
+            "label": "Literal\nlabel",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "B",
+            "label": "Anchored",
+            "shape": "doc",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "C",
+            "label": "Folded label",
+            "shape": "stadium",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "shape": "rect",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "E",
+            "label": "E",
+            "shape": "rect",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "F",
+            "label": "false",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "G",
+            "label": "true",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "H",
+            "label": "H",
+            "shape": "rect",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "I",
+            "label": "I",
+            "shape": "rect",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "J",
+            "label": "123",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "K",
+            "label": "K",
+            "shape": "circle",
+            "labelType": "text",
+            "labelKind": "text"
+          },
+          {
+            "id": "Quoted",
+            "label": "\"Hello\"",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          },
+          {
+            "id": "Clipped",
+            "label": "Clipped line\n",
+            "shape": "rect",
+            "labelType": "markdown",
+            "labelKind": "markdown"
+          }
+        ],
+        "edges": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_A_B_0"
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": "",
+            "type": "arrow_point",
+            "style": "normal",
+            "length": 1,
+            "id": "L_B_C_0"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Metadata",
+            "label": "Metadata",
+            "direction": null,
+            "members": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "E",
+              "F",
+              "G",
+              "H",
+              "I",
+              "J",
+              "K"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

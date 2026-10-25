@@ -1,9 +1,10 @@
 # moonrockz/diagrams-mermaid
 
-Mermaid for diagrams.mbt. This module reads Mermaid sequence diagrams into a
-lossless syntax tree and a typed AST, prints canonical Mermaid, and converts the
-AST to the format-independent `Sequence` model of `moonrockz/diagrams`.
-`render_svg` renders a source as SVG with `moonrockz/diagrams-svg`.
+Mermaid for diagrams.mbt. This module reads Mermaid sequence and native swimlane
+diagrams into lossless syntax and typed AST values, prints canonical Mermaid,
+and converts them to format-independent models in `moonrockz/diagrams`.
+`render_svg` dispatches both supported kinds to `moonrockz/diagrams-svg`. Existing
+`read`, `print`, `ReadResult` and `to_sequence` remain sequence-specific.
 
 The reader follows the sequence diagram grammar of Mermaid 12.2.0. The syntax
 tree has every statement, every arrow, comments, directives and front matter.
@@ -78,8 +79,7 @@ test {
   let source = "sequenceDiagram\nALT Is sick\n  B ->>- A : Not so good\nELSE is well\nNote Over A , B: fine\nEND\n"
   let printed = @mermaid.print(@mermaid.read(source).ast.unwrap())
   assert_eq(
-    printed,
-    "sequenceDiagram\n  alt Is sick\n    B->>-A: Not so good\n  else is well\n    note over A,B: fine\n  end\n",
+    printed, "sequenceDiagram\n  alt Is sick\n    B->>-A: Not so good\n  else is well\n    note over A,B: fine\n  end\n",
   )
   assert_eq(@mermaid.read(printed).ast, @mermaid.read(source).ast)
 }
@@ -129,9 +129,9 @@ test {
   assert_eq(@mermaid.diagnostic_codes.iter().to_array(), [
     "mermaid/missing-header", "mermaid/unexpected-header", "mermaid/unknown-statement",
     "mermaid/missing-message-text", "mermaid/invalid-message", "mermaid/invalid-participant",
-    "mermaid/invalid-note", "mermaid/invalid-autonumber", "mermaid/invalid-link", "mermaid/invalid-title",
-    "mermaid/missing-end", "mermaid/unexpected-end", "mermaid/misplaced-section", "mermaid/invalid-in-box",
-    "mermaid/unclosed-directive", "mermaid/unclosed-description",
+    "mermaid/invalid-note", "mermaid/invalid-autonumber", "mermaid/invalid-link",
+    "mermaid/invalid-title", "mermaid/missing-end", "mermaid/unexpected-end", "mermaid/misplaced-section",
+    "mermaid/invalid-in-box", "mermaid/unclosed-directive", "mermaid/unclosed-description",
   ])
 }
 ```
@@ -198,7 +198,10 @@ test {
   let source = "sequenceDiagram\nparticipant W\nlink W: shape @ smithy:example.weather/Weather\nC->>W: example.weather/GetForecast\n"
   let converted = @mermaid.to_sequence(@mermaid.read(source).ast.unwrap())
   assert_eq(converted.diagnostics.length(), 0)
-  assert_eq(converted.sequence.participant("W").unwrap().link.unwrap().target, "example.weather#Weather")
+  assert_eq(
+    converted.sequence.participant("W").unwrap().link.unwrap().target,
+    "example.weather#Weather",
+  )
 }
 ```
 
@@ -220,6 +223,156 @@ Run `mise run gallery` to compare all 38 frozen corpus diagrams in both themes.
 test {
   let r = @mermaid.render_svg("sequenceDiagram\nClient->>API: GET /forecast\n")
   assert_eq(r.media_type, "image/svg+xml")
-  assert_true(r.output.unwrap().has_prefix("<svg xmlns=\"http://www.w3.org/2000/svg\""))
+  assert_true(
+    r.output.unwrap().has_prefix("<svg xmlns=\"http://www.w3.org/2000/svg\""),
+  )
 }
 ```
+
+
+## Native swimlane API
+
+The native header is `swimlane-beta`. The compatibility profile is Mermaid
+12.2.0, with global `TB` by default, `TD` as its alias, and `BT`, `LR` and `RL`.
+Top-level subgraphs become ordered responsibility lanes; nested groups keep their
+own ownership. Unowned nodes remain outside lanes. Ordinary `flowchart` and
+`graph` inputs return `mermaid/unsupported-diagram` from the new dispatch API.
+
+`read_diagram` returns a `ParsedDiagram::Sequence` or `ParsedDiagram::Swimlane`
+AST with the corresponding `DiagramTree` and diagnostics. `tree.text()` always
+reproduces the complete source. `print_diagram` returns optional canonical text
+and diagnostics. `to_swimlane` converts the swimlane AST to immutable model values.
+Syntax locations use half-open UTF-16 offsets and one-based line/column values.
+Canonical AST equality ignores positions and incidental source spelling.
+
+The following tracer covers two lanes and one cross-lane connection. The full
+corpus separately covers all grammar productions, shape forms and metadata.
+
+```mbt check
+///|
+test "read print and render a native two-lane swimlane" {
+  let source = "swimlane-beta LR\nsubgraph Customer\nA([Request])\nend\nsubgraph Support\nB{Review}\nend\nA handoff@--> B\n"
+  let result = @mermaid.read_diagram(source)
+  assert_eq(result.tree.text(), source)
+  assert_eq(result.diagnostics, [])
+  guard result.ast is Some(parsed) else { fail("missing AST") }
+  let printed = @mermaid.print_diagram(parsed)
+  assert_eq(@mermaid.read_diagram(printed.output.unwrap()).ast, Some(parsed))
+  guard parsed is Swimlane(ast) else { fail("wrong kind") }
+  let converted = @mermaid.to_swimlane(ast)
+  assert_eq(converted.diagnostics, [])
+  let view = converted.swimlane.unwrap()
+  assert_eq(view.lanes.length(), 2)
+  assert_eq(view.nodes[0].lane, Some("Customer"))
+  assert_eq(view.nodes[1].lane, Some("Support"))
+  assert_eq(view.connections[0].id, "handoff")
+  let rendered = @mermaid.render_svg(source)
+  assert_eq(rendered.media_type, "image/svg+xml")
+  assert_true(rendered.output is Some(_))
+}
+```
+
+### Normalization and retained data
+
+Implicit endpoints appear in reference-defined order. Repeated subgraph IDs
+merge members while retaining the first completed database registration's title,
+direction and position. A nested registration can complete before its outer
+one. Group membership follows the database's accepted closed members rather than
+last textual mention. A style declaration can create an implicit unowned node.
+
+Explicit and generated edge IDs follow the pinned database, including collision
+counters and the one explicit-ID slot in grouped expansion. Parallel edges keep
+distinct IDs. Endpoint markers determine structural traversal independently of
+layout direction: one marked end points toward that end, two marked ends permit
+both directions, and no marked end requires undirected route selection.
+
+Node and edge labels retain Text, Markdown or Html kind. YAML shape data uses
+pinned portable `moonbit-community/yaml@0.0.8` events to check expanded alias weight
+and logical depth before `moonbitstack/moonyaml@0.1.1` resolves values. Both obey
+explicit budgets with Mermaid-compatible JSON-schema behavior. Raw syntax remains in the
+CST; typed values drive canonical printing. Nested metadata stays data.
+
+Classes, style, click callbacks, links and renderer configuration read and print
+without execution or resource loads. Conversion reports unapplied presentation
+behavior. SVG uses explicit library options and safe label projection. Asset
+and unknown shapes retain their identities, then fail rendering explicitly.
+
+```mbt check
+///|
+test "grouped expansion retains one native explicit ID and every occurrence" {
+  let read = @mermaid.read_diagram("swimlane-beta\nA & B e@--> C & D\n")
+  guard read.ast is Some(Swimlane(ast)) else { fail("missing AST") }
+  let view = @mermaid.to_swimlane(ast).swimlane.unwrap()
+  assert_eq(view.nodes.length(), 4)
+  assert_eq(view.connections.length(), 4)
+  assert_eq(view.connections.iter().filter(edge => edge.id == "e").count(), 1)
+}
+```
+
+### Swimlane diagnostics and limits
+
+The existing sequence inventories retain their meanings. New
+`swimlane_diagnostic_codes` and `swimlane_conversion_diagnostic_codes` expose the
+native reader and conversion inventories. Constructed-model validation has a
+separate `diagrams/swimlane.diagnostic_codes` inventory. The low-level
+`swimlane-printer.diagnostic_codes` inventory contains `swimlane/print-limit` and
+`swimlane/invalid-ast`.
+
+| Code | Meaning |
+| --- | --- |
+| `swimlane/source-limit` | Source exceeds its configured UTF-16 limit. |
+| `swimlane/work-limit` | Reading or conversion exhausts its work budget. |
+| `swimlane/depth-limit` | Nesting exceeds the configured bound. |
+| `swimlane/unsupported-header` | The swimlane reader receives another header. |
+| `swimlane/directive` | A source directive is unclosed. |
+| `swimlane/unexpected-end` | No group is open for `end`. |
+| `swimlane/syntax` | A statement or its shape data is malformed. |
+| `swimlane/missing-end` | A group has no closing `end`. |
+| `swimlane/node-limit` | Normalized node count exceeds its bound. |
+| `swimlane/edge-limit` | Expanded connections exceed their bound. |
+| `swimlane/direction` | A declared direction has no supported model value. |
+| `swimlane/ownership-cycle` | Normalized ownership is cyclic. |
+| `swimlane/ownership` | Ownership references a missing group. |
+| `swimlane/invalid-ast` | Typed values are inconsistent or cannot print as an equivalent native AST. |
+| `swimlane/presentation-metadata` | A renderer-only feature remains unapplied source data. |
+| `swimlane/print-limit` | Canonical printing exceeds a configured bound. |
+| `mermaid/unsupported-diagram` | Kind dispatch receives an unsupported header. |
+| `mermaid/print-limit` | Sequence output exceeds the new dispatch printer's bound. |
+
+```mbt check
+///|
+test "documented native diagnostic inventories match exported code" {
+  assert_eq(@mermaid.swimlane_diagnostic_codes, [
+    "swimlane/source-limit", "swimlane/work-limit", "swimlane/depth-limit", "swimlane/unsupported-header",
+    "swimlane/directive", "swimlane/unexpected-end", "swimlane/syntax", "swimlane/missing-end",
+  ])
+  assert_eq(@mermaid.swimlane_conversion_diagnostic_codes, [
+    "swimlane/work-limit", "swimlane/node-limit", "swimlane/edge-limit", "swimlane/depth-limit",
+    "swimlane/direction", "swimlane/ownership-cycle", "swimlane/ownership", "swimlane/invalid-ast",
+    "swimlane/presentation-metadata",
+  ])
+}
+```
+
+`swimlane-syntax.Limits::new` supplies explicit limits to reading, printing and
+conversion. Defaults are 16 Mi UTF-16 source/output units, 10,000 nodes, 50,000
+expanded connections, nesting 256, one million work units and 256 diagnostics.
+Metadata has separate `metadata_depth` and `metadata_work` settings. Metadata
+depth supports 1 through 256 and defaults to 256; unsupported settings fail with
+a depth-limit finding before processing. The positive metadata work budget
+defaults to one million units and also obeys the overall work budget. Diagram
+group depth remains independently configurable. Nested metadata prints in block
+YAML where the pinned native lexer requires it.
+
+Limit exhaustion returns a distinct finding without apparently complete output.
+The renderer propagates failed-stage diagnostics without returning empty text as
+successful SVG.
+
+The test-only reference harness pins Mermaid 12.2.0 and its lockfile. Run
+`mise run swimlane-corpus:reference -- --check` to check normalized nodes, labels, shapes,
+connections, IDs, styles, markers, lengths, directions and ownership against the
+real parser/database. Omit `--check` when intentionally refreshing reference
+fixtures. `mise run validate:swimlane-corpus` verifies source digests
+and portable generated fixtures; `swimlane-corpus:generate` refreshes embeddings.
+The frozen grammar-production and shape manifests describe coverage. Mermaid
+and its JavaScript dependencies are used only by the test oracle.

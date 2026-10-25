@@ -1,0 +1,51 @@
+swimlane-beta TD
+accTitle: Native grammar
+accDescr {
+All statement classes remain source data.
+}
+subgraph lane [First lane];
+direction LR;
+A["quoted end --> [brackets] 😀"]
+B("`**Markdown**`")
+C([Stadium])
+D[[Subprocess]]
+E[(Database)]
+F((Circle))
+G(((Double circle)))
+H{Decision}
+I{{Hexagon}}
+J>Odd]
+K[/Lean right/]
+L[\Lean left\]
+M[/Wide bottom\]
+N[\Wide top/]
+O(-Ellipse-)
+A:::critical -->|label| B
+A -- inline label --> C
+A == thick label ==> D
+A -. dotted label .-> E
+A e1@-->|identified| F
+A o--o B
+A x--x B
+A <--> B
+A <==> B
+A <--- B
+A --- B --> C
+A & B --> C & D --> E
+end;
+subgraph lane [Ignored second label]
+Z
+end
+classDef critical fill:#fff,stroke:#000,color:#111
+class A,B critical
+style A fill:red,stroke-width:2px
+linkStyle default interpolate basis stroke:blue
+click A callback "Callback retained"
+click B "https://example.com" "Link retained" _blank
+%% comment
+Props[|label:myLabel|Some text]
+Props[Updated classic]@{ shape: doc }
+Repeated@{ label: 'First', }@{ shape: rect }
+Repeated & Props@{ shape: stadium } --> Last@{ label: 'Target' }
+e1@{ animate: true, curve: linear }
+style ImplicitStyled fill:red

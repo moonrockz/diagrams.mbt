@@ -6,6 +6,7 @@ import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/swimlane",
 }
 
 // Values
@@ -16,6 +17,7 @@ import {
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
+  Swimlane(@swimlane.Swimlane)
 } derive(Eq, @debug.Debug)
 pub fn Diagram::equal(Self, Self) -> Bool
 pub fn Diagram::kind_name(Self) -> String

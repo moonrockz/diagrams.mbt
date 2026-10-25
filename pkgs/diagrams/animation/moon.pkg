@@ -1,15 +1,17 @@
 import {
   "moonbitlang/core/debug",
-  "moonrockz/diagrams" @diagrams,
-  "moonrockz/diagrams/bpmn" @bpmn,
-  "moonrockz/diagrams/sequence" @sequence,
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/render",
 }
 
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams/animation",
-  "moonrockz/diagrams/bpmn" @bpmn,
-  "moonrockz/diagrams/sequence" @sequence,
+  "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/sequence",
   "moonbitlang/core/test",
 } for "test"

@@ -1,0 +1,519 @@
+[
+  {
+    "shortName": "rect",
+    "aliases": [
+      "rect",
+      "proc",
+      "process",
+      "rectangle",
+      "squareRect"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "rounded",
+    "aliases": [
+      "rounded",
+      "event",
+      "roundedRect"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "stadium",
+    "aliases": [
+      "stadium",
+      "terminal",
+      "pill"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "fr-rect",
+    "aliases": [
+      "fr-rect",
+      "subprocess",
+      "subproc",
+      "framed-rectangle",
+      "subroutine"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "cyl",
+    "aliases": [
+      "cyl",
+      "db",
+      "database",
+      "cylinder"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "datastore",
+    "aliases": [
+      "datastore",
+      "data-store"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "folder",
+    "aliases": [
+      "folder",
+      "directory"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "bucket",
+    "aliases": [
+      "bucket"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "console",
+    "aliases": [
+      "console"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "browser",
+    "aliases": [
+      "browser"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "person",
+    "aliases": [
+      "person"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "circle",
+    "aliases": [
+      "circle",
+      "circ"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "bang",
+    "aliases": [
+      "bang"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "cloud",
+    "aliases": [
+      "cloud"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "diam",
+    "aliases": [
+      "diam",
+      "decision",
+      "diamond",
+      "question"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "hex",
+    "aliases": [
+      "hex",
+      "hexagon",
+      "prepare"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "lean-r",
+    "aliases": [
+      "lean-r",
+      "lean-right",
+      "in-out",
+      "lean_right"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "lean-l",
+    "aliases": [
+      "lean-l",
+      "lean-left",
+      "out-in",
+      "lean_left"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "trap-b",
+    "aliases": [
+      "trap-b",
+      "priority",
+      "trapezoid-bottom",
+      "trapezoid"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "trap-t",
+    "aliases": [
+      "trap-t",
+      "manual",
+      "trapezoid-top",
+      "inv-trapezoid",
+      "inv_trapezoid"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "dbl-circ",
+    "aliases": [
+      "dbl-circ",
+      "double-circle",
+      "doublecircle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "text",
+    "aliases": [
+      "text"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "notch-rect",
+    "aliases": [
+      "notch-rect",
+      "card",
+      "notched-rectangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "lin-rect",
+    "aliases": [
+      "lin-rect",
+      "lined-rectangle",
+      "lined-process",
+      "lin-proc",
+      "shaded-process"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "sm-circ",
+    "aliases": [
+      "sm-circ",
+      "start",
+      "small-circle",
+      "stateStart"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "fr-circ",
+    "aliases": [
+      "fr-circ",
+      "stop",
+      "framed-circle",
+      "stateEnd"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "fork",
+    "aliases": [
+      "fork",
+      "join",
+      "forkJoin"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "hourglass",
+    "aliases": [
+      "hourglass",
+      "collate"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "brace",
+    "aliases": [
+      "brace",
+      "comment",
+      "brace-l"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "brace-r",
+    "aliases": [
+      "brace-r"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "braces",
+    "aliases": [
+      "braces"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "bolt",
+    "aliases": [
+      "bolt",
+      "com-link",
+      "lightning-bolt"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "doc",
+    "aliases": [
+      "doc",
+      "document"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "delay",
+    "aliases": [
+      "delay",
+      "half-rounded-rectangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "h-cyl",
+    "aliases": [
+      "h-cyl",
+      "das",
+      "horizontal-cylinder"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "lin-cyl",
+    "aliases": [
+      "lin-cyl",
+      "disk",
+      "lined-cylinder"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "curv-trap",
+    "aliases": [
+      "curv-trap",
+      "curved-trapezoid",
+      "display"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "div-rect",
+    "aliases": [
+      "div-rect",
+      "div-proc",
+      "divided-rectangle",
+      "divided-process"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "tri",
+    "aliases": [
+      "tri",
+      "extract",
+      "triangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "win-pane",
+    "aliases": [
+      "win-pane",
+      "internal-storage",
+      "window-pane"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "f-circ",
+    "aliases": [
+      "f-circ",
+      "junction",
+      "filled-circle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "notch-pent",
+    "aliases": [
+      "notch-pent",
+      "loop-limit",
+      "notched-pentagon"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "flip-tri",
+    "aliases": [
+      "flip-tri",
+      "manual-file",
+      "flipped-triangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "sl-rect",
+    "aliases": [
+      "sl-rect",
+      "manual-input",
+      "sloped-rectangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "docs",
+    "aliases": [
+      "docs",
+      "documents",
+      "st-doc",
+      "stacked-document"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "st-rect",
+    "aliases": [
+      "st-rect",
+      "procs",
+      "processes",
+      "stacked-rectangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "bow-rect",
+    "aliases": [
+      "bow-rect",
+      "stored-data",
+      "bow-tie-rectangle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "cross-circ",
+    "aliases": [
+      "cross-circ",
+      "summary",
+      "crossed-circle"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "tag-doc",
+    "aliases": [
+      "tag-doc",
+      "tagged-document"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "tag-rect",
+    "aliases": [
+      "tag-rect",
+      "tagged-rectangle",
+      "tag-proc",
+      "tagged-process"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "flag",
+    "aliases": [
+      "flag",
+      "paper-tape"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "odd",
+    "aliases": [
+      "odd",
+      "rect_left_inv_arrow"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "lin-doc",
+    "aliases": [
+      "lin-doc",
+      "lined-document"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "state",
+    "aliases": [
+      "state"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "choice",
+    "aliases": [
+      "choice"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "note",
+    "aliases": [
+      "note"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "composite",
+    "aliases": [
+      "composite"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "anchor",
+    "aliases": [
+      "anchor"
+    ],
+    "asset": false
+  },
+  {
+    "shortName": "icon",
+    "aliases": [
+      "icon"
+    ],
+    "asset": true
+  },
+  {
+    "shortName": "image",
+    "aliases": [
+      "image"
+    ],
+    "asset": true
+  }
+]

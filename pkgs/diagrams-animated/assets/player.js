@@ -9,6 +9,8 @@
   const play = control('play'), restart = control('restart'), step = control('step');
   const speedControl = control('speed'), seek = control('seek'), positionLabel = control('position');
   const status = control('status'), from = control('from'), to = control('to');
+  const connectionControl=control('connection'), showConnection=control('show-connection');
+  const undirectedKinds = control('undirected');
   const messageKinds = control('messages'), direction = control('direction');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const ns = 'http://www.w3.org/2000/svg';
@@ -16,14 +18,16 @@
   const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
   const nodeElements = new Map();
   const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'),element]));
+  const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
   const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
   const frameElements = [...svg.querySelectorAll('rect.frame')];
   for (const binding of data.node_bindings) {
-    const element = binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : frameElements[binding.index];
+    const element = binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : frameElements[binding.index];
     if (element) nodeElements.set(binding.endpoint, element);
   }
   function decode(plan) {
-    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups })) };
+    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed) })) };
   }
   const authored = decode(data.plan);
   let plan = authored, position = 0, speed = 1, playing = false, previous = null, frame = null;
@@ -62,10 +66,10 @@
       active.add(item.ordinal); keys.push(item.key);
       const overlay = overlays.get(item.ordinal) || makeOverlay(item);
       const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
-      const point = overlay.binding.element.getPointAtLength(overlay.binding.length * progress);
+      const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
       overlay.dot.setAttribute('cx', String(point.x)); overlay.dot.setAttribute('cy', String(point.y));
       overlay.path.setAttribute('stroke-dashoffset', String(-overlay.binding.length * progress));
-      overlay.group.dataset.progress = String(progress);
+      overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
     }
     for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }
     // Still startup keeps the complete static diagram without an overlay.
@@ -118,6 +122,7 @@
     root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0);
   });
 
+  const outside = new Set(data.outside || []);
   const nodeIndex = new Map(data.graph.nodes.map((node, index) => [node.id, index]));
   const outgoing = new Map(), incoming = new Map();
   function add(table, node, kind, arc) { let kinds = table.get(node); if (!kinds) table.set(node, kinds = new Map()); let arcs = kinds.get(kind); if (!arcs) kinds.set(kind, arcs = []); arcs.push(arc); }
@@ -139,8 +144,8 @@
   function search(startId, targetId, selectedDirection, reach) {
     const limits = data.query_limits;
     const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
-    if (start === undefined || (!reach && target === undefined)) return { failure: 'Invalid endpoint' };
-    const kinds = ['sequence', 'order']; if (messageKinds.checked) kinds.push('message');
+    if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
+    const kinds = ['sequence', 'order', 'swimlane']; if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
     const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
     if (!reach && start === target) return { nodes: [start], edges: [] };
     while (at < queue.length) {
@@ -161,19 +166,41 @@
     return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
   }
   for (const node of data.graph.nodes) {
-    if (node.kind !== 'bpmn' && node.kind !== 'message') continue;
+    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane') continue;
     for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
   }
+  if (data.kind === 'swimlane') { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
   if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
   messageKinds.closest('label').hidden = data.kind !== 'bpmn';
+  undirectedKinds.closest('label').hidden = data.kind !== 'swimlane';
+  connectionControl.closest('label').hidden = data.kind !== 'swimlane'; showConnection.hidden = data.kind !== 'swimlane';
+  for (const binding of data.paths) {
+    if (binding.kind !== 'swimlane') continue;
+    const option=document.createElement('option'); option.value=binding.key;
+    option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
+  }
+  showConnection.disabled=connectionControl.options.length===0;
   control('route').disabled = from.options.length === 0; control('reach').disabled = from.options.length === 0;
   function replace(next, message) { playing = false; stopFrame(); clearOverlays(); plan = next; position = 0; root.dataset.inspected = 'true'; draw(); state(message); }
+  showConnection.addEventListener('click', () => {
+    const binding=data.paths.find(binding => binding.key===connectionControl.value);
+    if (!binding) return;
+    replace({mode:'finite',duration:1000,steps:[{ordinal:0,key:binding.key,start:0,duration:1000,groups:[],reversed:Boolean(binding.reversed)}]},'Selected connection: '+binding.connection);
+    clearHighlights(); const element=connectionElements.get(binding.connection);
+    if(element) { element.classList.add('motion-selected'); highlights.add(element); }
+    root.dataset.connection=binding.connection; root.dataset.route=JSON.stringify([binding.key]);
+  });
   control('route').addEventListener('click', () => {
-    const result = search(from.value, to.value, 'forward', false);
+    delete root.dataset.connection;
+    const result = search(from.value, to.value, data.kind === 'swimlane' ? direction.value : 'forward', false);
     if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
-    const keys = data.kind === 'bpmn' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
+    const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
     if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
-    const steps = keys.map((key, ordinal) => ({ ordinal, key, start: ordinal * 1000, duration: 1000, groups: [] }));
+    const steps = keys.map((key, ordinal) => {
+      const edge = data.graph.edges[result.edges[ordinal]];
+      const reversed = data.kind === 'swimlane' && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
+    });
     replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);
     highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(keys);
   });
@@ -185,6 +212,6 @@
     const visible = new Set(ids.map(id => nodeElements.get(id)).filter(Boolean));
     state(`Structural reachability: ${visible.size} diagram elements. Conditions and event triggers are not evaluated.`);
   });
-  control('clear').addEventListener('click', () => { clearHighlights(); delete root.dataset.route; delete root.dataset.reachable; replace(authored, 'Paused'); delete root.dataset.inspected; draw(); });
+  control('clear').addEventListener('click', () => { clearHighlights(); delete root.dataset.route; delete root.dataset.connection; delete root.dataset.reachable; replace(authored, 'Paused'); delete root.dataset.inspected; draw(); });
   root.dataset.speed = '1'; draw(); state();
 })();

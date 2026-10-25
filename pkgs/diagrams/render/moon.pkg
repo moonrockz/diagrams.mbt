@@ -2,6 +2,7 @@ import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/swimlane",
   "moonbitlang/core/debug",
 }
 

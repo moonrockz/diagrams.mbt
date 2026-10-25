@@ -1,0 +1,68 @@
+///|
+/// Run the pinned Mermaid parser only as a test oracle.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+  "moonbitlang/core/env",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x@0.5.5/crypto",
+}
+
+///|
+async fn main {
+  for
+    (command, args) in [
+      (
+        "bun",
+        ["install", "--frozen-lockfile", "--cwd", "tests/swimlane-reference"],
+      ),
+      ("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"]),
+      (
+        "node",
+        ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
+      ),
+      ("node", ["tests/swimlane-reference/reference.mjs", ..@env.args()[1:]]),
+    ] {
+    let code = @process.run(
+      command,
+      args,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+  }
+  let check = @env.args().contains("--check")
+  if !check {
+    let dir = "tests/corpus/mermaid-swimlanes"
+    let source = @fs.read_file(dir + "/reference.json").text()
+    let digest = @crypto.bytes_to_hex_string(
+      @crypto.sha256(@utf8.encode(source)),
+    )
+    let sums = StringBuilder()
+    for line in @fs.read_file(dir + "/SHA256SUMS").text().split("\n") {
+      if line.is_empty() {
+        continue
+      }
+      if line.has_suffix("  reference.json") {
+        sums.write_string(digest + "  reference.json\n")
+      } else {
+        sums.write_string(line.to_owned() + "\n")
+      }
+    }
+    @fs.write_file(dir + "/SHA256SUMS", sums.to_string())
+  }
+  let code = @process.run(
+    "moonx",
+    ["scripts/swimlane-corpus.mbtx", if check { "check" } else { "generate" }],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}

@@ -3,7 +3,7 @@
 struct Nothing {}
 
 ///|
-impl @render.Renderer for Nothing with render(_, diagram) {
+impl @render.Renderer for Nothing with fn render(_, diagram) {
   @render.Rendered::unsupported("text/plain", diagram)
 }
 
@@ -12,9 +12,10 @@ impl @render.Renderer for Nothing with render(_, diagram) {
 struct Count {}
 
 ///|
-impl @render.Renderer for Count with render(_, diagram) {
+impl @render.Renderer for Count with fn render(_, diagram) {
   match diagram {
-    Bpmn(_) => @render.Rendered::unsupported("text/plain", diagram)
+    Bpmn(_) | Swimlane(_) =>
+      @render.Rendered::unsupported("text/plain", diagram)
     Sequence(s) =>
       @render.Rendered::ok(s.participants.length().to_string(), "text/plain")
   }
@@ -26,7 +27,7 @@ test "a renderer gives its output and media type" {
     [@sequence.Participant::new("A"), @sequence.Participant::new("B")],
     [],
   )
-  let r = @render.Renderer::render(Count::{  }, @render.Diagram::Sequence(s))
+  let r = @render.Renderer::render(Count::{ }, @render.Diagram::Sequence(s))
   assert_eq(r.output, Some("2"))
   assert_eq(r.media_type, "text/plain")
   assert_eq(r.diagnostics.length(), 0)
@@ -35,7 +36,7 @@ test "a renderer gives its output and media type" {
 ///|
 test "a renderer that does not support a diagram kind gives an error and no output" {
   let s = @sequence.Sequence::new([], [])
-  let r = @render.Renderer::render(Nothing::{  }, @render.Diagram::Sequence(s))
+  let r = @render.Renderer::render(Nothing::{ }, @render.Diagram::Sequence(s))
   assert_eq(r.output, None)
   assert_eq(r.diagnostics.length(), 1)
   assert_eq(r.diagnostics[0].code, "render/unsupported-diagram")

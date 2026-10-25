@@ -12,7 +12,7 @@ const sequenceScenes = JSON.parse(await readFile('tests/acceptance/__snapshot__/
 const bpmnScenes = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/scenes.json', 'utf8')) as [string, string, string, string][];
 const runtime = await readFile('pkgs/diagrams-animated/assets/player.js', 'utf8');
 const stylesheet = await readFile('pkgs/diagrams-animated/assets/player.css', 'utf8');
-assert.equal(players.length, 17); assert.equal(sequenceScenes.length, 114); assert.equal(bpmnScenes.length, 12);
+assert.equal(players.length, 27); assert.equal(sequenceScenes.length, 114); assert.equal(bpmnScenes.length, 12);
 const browser = await chromium.launch();
 const errors: string[] = [], requests: string[] = [];
 async function page(html: string, preference: 'light' | 'dark' = 'light', reducedMotion: 'reduce' | 'no-preference' = 'no-preference') {
@@ -48,7 +48,7 @@ async function expectSamples(page: Page, samples: Sample[]) {
         const binding = config.paths.find((binding: { key: string }) => binding.key === group.dataset.key);
         const path = paths.get(binding.id)!;
         const dot = group.querySelector('circle')!;
-        const p = path.getPointAtLength(path.getTotalLength() * Number(group.dataset.progress));
+        const p = path.getPointAtLength(path.getTotalLength() * (group.dataset.reversed === 'true' ? 1 - Number(group.dataset.progress) : Number(group.dataset.progress)));
         const actual = new DOMPoint(Number(dot.getAttribute('cx')), Number(dot.getAttribute('cy'))).matrixTransform(dot.getScreenCTM()!);
         const expected = new DOMPoint(p.x, p.y).matrixTransform(path.getScreenCTM()!);
         if (Math.abs(actual.x - expected.x) > .1 || Math.abs(actual.y - expected.y) > .1) throw new Error('Motion leaves its bound path/viewport');
@@ -101,10 +101,11 @@ try {
         const svg = root.querySelector('svg')!;
         const paths = new Map([...svg.querySelectorAll<SVGPathElement>('path[id]')].map(path => [path.id, path]));
         const bpmn = new Map([...svg.querySelectorAll<SVGGElement>('.bpmn-flow')].map(group => [group.getAttribute('data-id'), group.querySelector('path')]));
+        const swimlanes = new Map([...svg.querySelectorAll<SVGGElement>('.swimlane-connection[data-swimlane-id]')].map(group => [group.getAttribute('data-swimlane-id'), group.querySelector('path')]));
         const messages = new Map([...svg.querySelectorAll<SVGGElement>('.message[data-index]')].map(group => [Number(group.getAttribute('data-index')), group.querySelector('.m-line')]));
         for (const binding of data.paths) {
           const path = paths.get(binding.id)!;
-          const original = binding.kind === 'bpmn' ? bpmn.get(binding.connection) : messages.get(binding.index);
+          const original = binding.kind === 'swimlane' ? swimlanes.get(binding.connection) : binding.kind === 'bpmn' ? bpmn.get(binding.connection) : messages.get(binding.index);
           if (!original || original.getAttribute('d') !== path.getAttribute('d')) throw new Error('Binding differs from actual rendered connection');
         }
         if ((globalThis as Record<string, unknown>).motionPwned) throw new Error('Source label executed');
@@ -136,11 +137,13 @@ try {
   }
 
   // Physical motion, keyboard pause, seek and speed preserve the current timeline.
-  const moving = await page(player('bpmn-default')[1]);
+  for (const movingName of ['bpmn-default','swimlane-lr']) {
+  const moving = await page(player(movingName)[1]);
   await moving.getByRole('button', { name: 'Play', exact: true }).focus(); await moving.keyboard.press('Space');
   await moving.waitForFunction(() => Number(document.querySelector('[data-diagram-viewer]')!.getAttribute('data-position')) > 100);
-  const p1 = await moving.locator('.motion-overlay circle').first().getAttribute('cx');
-  await moving.waitForTimeout(120); assert.notEqual(await moving.locator('.motion-overlay circle').first().getAttribute('cx'), p1);
+  const point = () => moving.locator('.motion-overlay circle').first().evaluate(dot => [dot.getAttribute('cx'),dot.getAttribute('cy')]);
+  const p1 = await point();
+  await moving.waitForTimeout(120); assert.notDeepEqual(await point(), p1);
   await moving.getByRole('button', { name: 'Pause', exact: true }).click(); const paused = await position(moving);
   await moving.waitForTimeout(100); assert.equal(await position(moving), paused);
   await seek(moving, 250); await moving.locator('[data-control="speed"]').selectOption('2'); assert.equal(await position(moving), 250);
@@ -153,10 +156,14 @@ try {
   await moving.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => false }); document.dispatchEvent(new Event('visibilitychange')); });
   await moving.waitForFunction(old => Number(document.querySelector('[data-diagram-viewer]')!.getAttribute('data-position')) > old, hidden);
   const playingBeforeDownload = await position(moving);
-  const liveDownload = moving.waitForEvent('download'); await moving.getByRole('button', { name: 'Download SVG', exact: true }).click(); await liveDownload;
+  const liveDownload = moving.waitForEvent('download'); await moving.getByRole('button', { name: 'Download SVG', exact: true }).click();
+  const liveStream=await (await liveDownload).createReadStream(), liveChunks:Buffer[]=[];
+  for await (const chunk of liveStream!) liveChunks.push(Buffer.from(chunk));
+  assert.equal(Buffer.concat(liveChunks).toString('utf8'),player(movingName)[2]);
   assert.equal(await moving.locator('[data-diagram-viewer]').getAttribute('data-playing'), 'true');
   assert.ok(await position(moving) >= playingBeforeDownload);
   await moving.close();
+  }
 
   const reduced = await page(player('bpmn-default')[1], 'light', 'reduce');
   await reduced.getByRole('button', { name: 'Step', exact: true }).click(); assert.equal(await position(reduced), 1000);
@@ -190,6 +197,67 @@ try {
   const cycle = await page(player('bpmn-cyclic')[1]);
   await cycle.locator('[data-control="from"]').selectOption('A'); await cycle.getByRole('button', { name: 'Show reachability', exact: true }).click();
   assert.deepEqual(JSON.parse((await cycle.locator('[data-diagram-viewer]').getAttribute('data-reachable'))!), ['A', 'B', 'C', 'D']); await cycle.close();
+
+  // Swimlane routes preserve orientation on the actual shared path, without
+  // changing arrow markers. Unheaded connections remain an explicit choice.
+  const swim = await page(player('swimlane-lr')[1]);
+  await swim.locator('[data-control="from"]').selectOption('B'); await swim.locator('[data-control="to"]').selectOption('A');
+  const markers = await swim.locator('.swimlane-connection').evaluateAll(nodes => nodes.map(node => node.outerHTML));
+  await swim.getByRole('button', { name: 'Show route', exact: true }).click();
+  await seek(swim, 250);
+  assert.equal(await swim.locator('.motion-overlay').getAttribute('data-reversed'), 'true');
+  await swim.locator('.motion-overlay').evaluate(group => {
+    const root=group.closest('[data-diagram-viewer]')!;
+    const data=JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!);
+    const binding=data.paths.find((binding: {key:string}) => binding.key === group.getAttribute('data-key'));
+    const path=root.querySelector<SVGPathElement>(`[id="${binding.id}"]`)!;
+    const expected=path.getPointAtLength(path.getTotalLength()*.75), dot=group.querySelector('circle')!;
+    if (Math.abs(Number(dot.getAttribute('cx'))-expected.x)>.1 || Math.abs(Number(dot.getAttribute('cy'))-expected.y)>.1) throw new Error('Bidirectional return motion is not reversed');
+  });
+  assert.deepEqual(await swim.locator('.swimlane-connection').evaluateAll(nodes => nodes.map(node => node.outerHTML)),markers);
+  await swim.locator('[data-control="from"]').selectOption('C');
+  await swim.getByRole('button', { name: 'Show route', exact: true }).click();
+  assert.match((await swim.locator('[role="status"]').textContent())!,/Unreachable/);
+  await swim.locator('[data-control="undirected"]').check();
+  await swim.getByRole('button', { name: 'Show route', exact: true }).click();
+  assert.equal(JSON.parse((await swim.locator('[data-diagram-viewer]').getAttribute('data-route'))!).length,1);
+  const parallelKey=await swim.locator('[data-diagram-viewer]').evaluate(root => JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!).paths.find((binding:{connection:string}) => binding.connection==='parallel').key);
+  await swim.locator('[data-control="connection"]').selectOption(parallelKey);
+  await swim.getByRole('button',{name:'Show connection',exact:true}).click();
+  await seek(swim,250);
+  assert.equal(await swim.locator('[data-diagram-viewer]').getAttribute('data-connection'),'parallel');
+  assert.deepEqual(await swim.locator('.motion-overlay').evaluateAll(nodes => nodes.map(node => node.getAttribute('data-key'))),[parallelKey]);
+  await swim.getByRole('button',{name:'Play',exact:true}).click();
+  const selectedDownload=swim.waitForEvent('download'); await swim.getByRole('button',{name:'Download SVG',exact:true}).click();
+  const selectedStream=await (await selectedDownload).createReadStream(), selectedChunks:Buffer[]=[];
+  for await (const chunk of selectedStream!) selectedChunks.push(Buffer.from(chunk));
+  assert.equal(Buffer.concat(selectedChunks).toString('utf8'),player('swimlane-lr')[2]);
+  assert.equal(await swim.locator('[data-diagram-viewer]').getAttribute('data-connection'),'parallel');
+  assert.ok(await position(swim)>=250);
+  await swim.close();
+  const identity=await page(player('swimlane-identity')[1]);
+  await identity.locator('[data-control="from"]').selectOption('Handoff');
+  await identity.getByRole('button',{name:'Show reachability',exact:true}).click();
+  assert.equal(await identity.locator('.swimlane-lane.motion-selected').count(),1);
+  assert.equal(await identity.locator('.swimlane-connection.motion-selected').count(),0);
+  await identity.getByRole('button',{name:'Show connection',exact:true}).click();
+  assert.equal(await identity.locator('.swimlane-lane.motion-selected').count(),0);
+  assert.equal(await identity.locator('.swimlane-connection.motion-selected').count(),1);
+  await identity.getByRole('button',{name:'Play',exact:true}).focus(); await identity.keyboard.press('Space');
+  await identity.waitForFunction(() => Number(document.querySelector('[data-diagram-viewer]')!.getAttribute('data-position'))>50);
+  await identity.keyboard.press('Space'); const identityPaused=await position(identity);
+  await identity.waitForTimeout(80); assert.equal(await position(identity),identityPaused);
+  assert.equal(await identity.locator('[data-diagram-viewer]').getAttribute('data-playing'),'false');
+  await identity.close();
+  const collapsed=await page(player('swimlane-collapsed')[1]);
+  assert.equal(await collapsed.locator('[data-control="from"] option[value="Hidden"]').count(),0);
+  await collapsed.locator('[data-control="from"]').evaluate(element => { const option=document.createElement('option'); option.value='Hidden'; option.textContent='Hidden'; element.append(option); });
+  await collapsed.locator('[data-control="from"]').selectOption('Hidden');
+  await collapsed.getByRole('button',{name:'Show route',exact:true}).click();
+  assert.match((await collapsed.locator('[role="status"]').textContent())!,/Outside current view/); await collapsed.close();
+  const swimReduced=await page(player('swimlane-lr')[1],'dark','reduce');
+  await swimReduced.getByRole('button', {name:'Step',exact:true}).click();
+  const swimStill=await position(swimReduced); await swimReduced.waitForTimeout(120); assert.equal(await position(swimReduced),swimStill); await swimReduced.close();
 
   const inline = await page(player('prefix-a')[1] + player('prefix-b')[1]);
   assert.equal(await inline.locator('[data-diagram-viewer]').count(), 2);

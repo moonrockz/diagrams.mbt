@@ -21,13 +21,14 @@ test "warning callout" {
 
 ///|
 test "each alert kind has its label" {
-  for kind in [
-    ("NOTE", "Note"),
-    ("TIP", "Tip"),
-    ("IMPORTANT", "Important"),
-    ("WARNING", "Warning"),
-    ("CAUTION", "Caution"),
-  ] {
+  for
+    kind in [
+      ("NOTE", "Note"),
+      ("TIP", "Tip"),
+      ("IMPORTANT", "Important"),
+      ("WARNING", "Warning"),
+      ("CAUTION", "Caution"),
+    ] {
     let html = render("> [!\{kind.0}]\n> Text.\n")
     assert_true(
       html.contains(

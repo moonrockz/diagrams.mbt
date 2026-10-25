@@ -1,6 +1,6 @@
 # moonrockz/diagrams-animated
 
-`AnimatedRenderer` returns one standalone `text/html` artifact for BPMN or sequence
+`AnimatedRenderer` returns one standalone `text/html` artifact for BPMN, sequence or swimlane
 diagrams. It includes a script-free display SVG, a source-bound pure plan and an
 offline player. It starts paused. Its overlay follows the actual rendered paths;
 removing the overlay leaves the complete static diagram.
@@ -16,15 +16,16 @@ are data. No process execution, token simulation or expression evaluation occurs
 ```mbt check
 ///|
 test "render an offline sequence illustration" {
-  let sequence=@sequence.Sequence::new([
-    @sequence.Participant::new("Client"),@sequence.Participant::new("API"),
-  ],[
-    Message(@sequence.Message::new("Client","API","request")),
-    Message(@sequence.Message::new("API","API","work")),
-    Message(@sequence.Message::new("API","Client","reply")),
-  ])
-  let result=@animated.AnimatedRenderer::new().render(Sequence(sequence))
-  assert_eq(result.media_type,"text/html")
+  let sequence = @sequence.Sequence::new(
+    [@sequence.Participant::new("Client"), @sequence.Participant::new("API")],
+    [
+      Message(@sequence.Message::new("Client", "API", "request")),
+      Message(@sequence.Message::new("API", "API", "work")),
+      Message(@sequence.Message::new("API", "Client", "reply")),
+    ],
+  )
+  let result = @animated.AnimatedRenderer::new().render(Sequence(sequence))
+  assert_eq(result.media_type, "text/html")
   assert_true(result.output.unwrap().contains("data-control=\"seek\""))
   assert_true(result.output.unwrap().contains("Download SVG"))
 }
@@ -46,16 +47,25 @@ with `sequence_view_id=`.
 ```mbt check
 ///|
 test "render a finite concurrent BPMN scenario" {
-  let view=@model.Bpmn::new("P",[
-    @model.Node::new("A",Task,label="Review"),@model.Node::new("B",Task,label="Record"),
-  ],[@model.Flow::new("AB","A","B"),@model.Flow::new("BA","B","A")])
-  let catalog=@animation.Catalog::bpmn(view).catalog.unwrap()
-  let a=catalog.flow("AB").unwrap().key
-  let b=catalog.flow("BA").unwrap().key
-  let playback=@animation.PlaybackPlan::scenario(catalog,
-    @animation.Motion::serial([@animation.Motion::parallel([Step(a,1000L),Step(b,500L)]),Step(a,1000L)]),
+  let view = @model.Bpmn::new(
+    "P",
+    [
+      @model.Node::new("A", Task, label="Review"),
+      @model.Node::new("B", Task, label="Record"),
+    ],
+    [@model.Flow::new("AB", "A", "B"), @model.Flow::new("BA", "B", "A")],
+  )
+  let catalog = @animation.Catalog::bpmn(view).catalog.unwrap()
+  let a = catalog.flow("AB").unwrap().key
+  let b = catalog.flow("BA").unwrap().key
+  let playback = @animation.PlaybackPlan::scenario(
+    catalog,
+    @animation.Motion::serial([
+      @animation.Motion::parallel([Step(a, 1000L), Step(b, 500L)]),
+      Step(a, 1000L),
+    ]),
   ).plan.unwrap()
-  let result=@animated.AnimatedRenderer::new(playback~).render(Bpmn(view))
+  let result = @animated.AnimatedRenderer::new(playback~).render(Bpmn(view))
   assert_true(result.output != None)
   assert_true(result.output.unwrap().contains("Explicit scenario"))
 }
@@ -109,3 +119,34 @@ Trusted runtime sources live in `assets/player.js` and `assets/player.css`.
 After an intentional change run `mise run animation-assets:generate`; normal
 validation rejects stale embedding. No module publication or release is performed
 by these tasks.
+
+
+## Swimlane playback
+
+Swimlane scenes use the same offline controls. Directed and bidirectional routes
+retain traversal orientation. The direction selector also applies to swimlane
+routes; the unheaded-connection option explicitly includes undirected edges.
+Markers and canonical SVG never change as a route travels backward. Lane
+membership never implies a connection and collapsed descendants stay outside
+query scope. Parallel connection IDs remain independently bound to their paths. The Connection
+selector and Show connection button select one exact occurrence independently
+of endpoint-route tie-breaking.
+
+```mbt check
+///|
+test "render a finite reverse swimlane scenario" {
+  let view = @swimlane.Swimlane::new(
+    "Review",
+    [@swimlane.Node::new("A"), @swimlane.Node::new("B")],
+    [@swimlane.Connection::new("AB", "A", "B", source_marker=Arrow)],
+  )
+  let catalog = @animation.Catalog::swimlane(view).catalog.unwrap()
+  guard catalog.graph.route("B", "A") is Found(route) else {
+    fail("missing return")
+  }
+  let playback = @animation.PlaybackPlan::route(catalog, route).plan.unwrap()
+  let output = @animated.AnimatedRenderer::new(playback~).render(Swimlane(view))
+  assert_true(output.output is Some(_))
+  assert_eq(output.media_type, "text/html")
+}
+```
