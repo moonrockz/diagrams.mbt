@@ -14,13 +14,20 @@ pub fn Graph::lookup(self : Graph, id : String, limits? : Limits = Limits::new()
 fn EdgeKind::tag(self : EdgeKind) -> Int { match self { SequenceFlow => 0; MessageFlow => 1; Order => 2 } }
 
 ///|
+fn query_kinds(kinds : ArrayView[EdgeKind]) -> Array[EdgeKind] {
+  let selected=Array::make(3,false); let unique=[]
+  for kind in kinds { let tag=kind.tag(); if !selected[tag] { selected[tag]=true; unique.push(kind) } }
+  unique
+}
+
+///|
 priv struct ArcStream { arcs : Array[(Int,Int)]; mut next : Int }
 
 ///|
 fn Graph::streams(self : Graph, node : Int, kinds : ArrayView[EdgeKind], direction : Direction) -> Array[ArcStream] {
-  let streams=[]; let selected=Array::make(3,false)
+  let streams=[]
   for kind in kinds {
-    let tag=kind.tag(); if selected[tag] { continue }; selected[tag]=true
+    let tag=kind.tag()
     if direction != Reverse && self.outgoing.get((node,tag)) is Some(arcs) { streams.push({arcs,next:0}) }
     if direction != Forward && self.incoming.get((node,tag)) is Some(arcs) { streams.push({arcs,next:0}) }
   }
@@ -44,8 +51,9 @@ fn next_arc(streams : ArrayView[ArcStream]) -> (Int,Int)? {
 pub fn Graph::reachable(self : Graph, start : String, kinds? : ArrayView[EdgeKind] = [SequenceFlow,Order], direction? : Direction = Forward, limits? : Limits = Limits::new()) -> ReachabilityResult {
   if !limits.valid() { return Failed(InvalidLimits) }
   if kinds.length() > limits.work { return Failed(Limit(Work)) }
+  let initial_work=kinds.length(); let kinds=query_kinds(kinds)
   let start=match self.endpoint(start,limits) { Ok(index) => index; Err(failure) => return Failed(failure) }
-  let queue=[start]; let seen=Map([(start,true)]); let mut cursor=0; let mut edges=0; let mut work=kinds.length()
+  let queue=[start]; let seen=Map([(start,true)]); let mut cursor=0; let mut edges=0; let mut work=initial_work
   while cursor < queue.length() {
     if work >= limits.work { return Failed(Limit(Work)) }; work+=1
     let current=queue[cursor]; cursor+=1
@@ -79,11 +87,12 @@ fn Graph::route_value(self : Graph, start : Int, target : Int, previous : Map[In
 pub fn Graph::route(self : Graph, start : String, target : String, kinds? : ArrayView[EdgeKind] = [SequenceFlow,Order], direction? : Direction = Forward, limits? : Limits = Limits::new()) -> RouteResult {
   if !limits.valid() { return Failed(InvalidLimits) }
   if kinds.length() > limits.work { return Failed(Limit(Work)) }
+  let initial_work=kinds.length(); let kinds=query_kinds(kinds)
   let start=match self.endpoint(start,limits) { Ok(index) => index; Err(failure) => return Failed(failure) }
   let target=match self.endpoint(target,limits) { Ok(index) => index; Err(failure) => return Failed(failure) }
   let previous=Map([])
   if start == target { return self.route_value(start,target,previous,direction,limits) }
-  let queue=[start]; let seen=Map([(start,true)]); let mut cursor=0; let mut edges=0; let mut work=kinds.length()
+  let queue=[start]; let seen=Map([(start,true)]); let mut cursor=0; let mut edges=0; let mut work=initial_work
   while cursor < queue.length() {
     if work >= limits.work { return Failed(Limit(Work)) }; work+=1
     let current=queue[cursor]; cursor+=1

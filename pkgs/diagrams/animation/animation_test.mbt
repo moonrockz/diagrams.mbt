@@ -177,3 +177,16 @@ test "kind-indexed searches honor small query budgets on high-degree nodes" {
   guard graph.reachable("A",kinds=[MessageFlow],limits=@animation.Limits::new(edges=1,work=4)) is Complete(nodes) else { fail("selected-kind budget should complete") }
   assert_eq(nodes.iter().map(n => n.id).to_array(),["A","Pool"])
 }
+
+///|
+test "repeated query kinds are normalized before visiting a chain" {
+  let nodes=Array::makei(128,i => @bpmn.Node::new("N\{i}",Task))
+  let flows=Array::makei(127,i => @bpmn.Flow::new("F\{i}","N\{i}","N\{i+1}"))
+  let graph=bpmn_catalog(@bpmn.Bpmn::new("P",nodes,flows)).graph
+  let kinds=Array::make(4096,@animation.EdgeKind::SequenceFlow)
+  let limits=@animation.Limits::new(work=5000)
+  guard graph.reachable("N0",kinds~,limits~) is Complete(nodes) else { fail("kind normalization reachability failed") }
+  assert_eq(nodes.length(),128)
+  guard graph.route("N0","N127",kinds~,limits~) is Found(route) else { fail("kind normalization route failed") }
+  assert_eq(route.edges.length(),127)
+}
