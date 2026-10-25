@@ -15,7 +15,7 @@ async fn main {
   defer @fs.rmdir(dir, recursive=true)
   @fs.write_file(
     "\{dir}/moon.mod",
-    "name = \"qualification/bpmn-reader\"\nversion = \"0.0.0\"\nimport { \"moonrockz/bpmn@0.1.0\" }\n",
+    "name = \"qualification/bpmn-reader\"\nversion = \"0.0.0\"\nimport { \"moonrockz/bpmn@0.2.0\" }\n",
   )
   @fs.write_file("\{dir}/moon.work", "members = [\".\", \"\{reader}\"]\n")
   @fs.write_file(
