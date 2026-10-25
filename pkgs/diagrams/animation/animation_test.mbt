@@ -63,7 +63,9 @@ test "scenario validation bounds duration identities depth and inclusive step si
   assert_eq(maximum.steps.length(),100000); assert_eq(maximum.duration_ms,100000L)
   assert_eq(maximum.sample_at(99999L).active[0].ordinal,99999)
   assert_eq(@animation.PlaybackPlan::scenario(catalog,@animation.Motion::serial(actions),limits=@animation.Limits::new(work=10000000)).plan,None)
-  assert_true(plan(@animation.PlaybackPlan::scenario(catalog,@animation.Motion::serial([]))).sample_at(0L).finished)
+  let empty=plan(@animation.PlaybackPlan::scenario(catalog,@animation.Motion::serial([])))
+  assert_true(empty.sample_at(0L).finished)
+  assert_eq(empty.repeating().plan,None)
 }
 
 ///|

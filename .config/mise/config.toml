@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus", "validate:bpmn-schema"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -216,3 +216,15 @@ run = "moonx scripts/bpmn-schema.mbtx check"
 [tasks."bpmn-corpus:reference"]
 description = "Refresh semantic BPMN fixtures with test-only pinned bpmn-moddle"
 run = "moonx scripts/bpmn-reference.mbtx"
+
+[tasks."animation-assets:generate"]
+description = "Embed trusted standalone animation player assets"
+run = "moonx scripts/animation-assets.mbtx generate"
+
+[tasks."validate:animation-assets"]
+description = "Check reproducible standalone player asset embedding"
+run = "moonx scripts/animation-assets.mbtx check"
+
+[tasks."test:animation"]
+description = "Qualify stored standalone animation artifacts in Chromium without rebuilding the workspace/site"
+run = "moonx scripts/test-animation.mbtx"

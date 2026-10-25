@@ -3,10 +3,11 @@ import {
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams-svg" @svg,
-  "moonrockz/diagrams-svg/bpmn-layout" @bpmn_layout,
+  "moonrockz/diagrams/bpmn" @model,
 }
 
 import {
   "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/bpmn" @model,
 } for "test"

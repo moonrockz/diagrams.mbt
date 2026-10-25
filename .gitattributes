@@ -5,3 +5,7 @@
 # Preserve portable fixture/reference digests on every checkout.
 tests/corpus/bpmn-model/*.bpmn -text
 tests/corpus/bpmn-model/*.json -text
+
+# Embedded standalone player bytes are identical on every checkout.
+pkgs/diagrams-animated/assets/*.js text eol=lf
+pkgs/diagrams-animated/assets/*.css text eol=lf

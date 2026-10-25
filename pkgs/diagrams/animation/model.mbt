@@ -8,7 +8,7 @@ pub struct Limits { nodes : Int; edges : Int; steps : Int; results : Int; work :
 pub fn Limits::new(nodes? : Int = 10000, edges? : Int = 50000, steps? : Int = 100000, results? : Int = 10000, work? : Int = 1000000, depth? : Int = 256) -> Limits { {nodes,edges,steps,results,work,depth} }
 
 ///|
-fn Limits::valid(self : Limits) -> Bool { self.nodes > 0 && self.edges > 0 && self.steps > 0 && self.steps <= 100000 && self.results > 0 && self.work > 0 && self.depth > 0 }
+pub fn Limits::valid(self : Limits) -> Bool { self.nodes > 0 && self.edges > 0 && self.steps > 0 && self.steps <= 100000 && self.results > 0 && self.work > 0 && self.depth > 0 }
 
 ///|
 pub(all) enum OccurrenceKind { Bpmn(@bpmn.ConnectionKind); SequenceMessage } derive(Eq,Debug)

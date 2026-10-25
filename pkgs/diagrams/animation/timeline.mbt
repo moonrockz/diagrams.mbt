@@ -85,3 +85,10 @@ pub fn PlaybackPlan::illustrative(catalog : Catalog, duration_ms? : Int64 = 1000
   let result=PlaybackPlan::scenario(catalog,Motion::serial(actions),limits~)
   {..result,plan:result.plan.map(p => {..p,mode:Illustrative})}
 }
+
+///|
+/// Repeat a validated nonempty plan without changing its source or timing.
+pub fn PlaybackPlan::repeating(self : PlaybackPlan) -> PlanResult {
+  if self.duration_ms <= 0L || self.steps.is_empty() { return {plan:None,diagnostics:[@diagrams.Diagnostic::error("animation/no-flow","A repeating plan needs a connection occurrence")]} }
+  {plan:Some({..self,mode:Illustrative}),diagnostics:[]}
+}

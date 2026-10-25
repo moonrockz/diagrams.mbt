@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/test",
+  "moonbitlang/core/json",
+  "moonbitlang/core/debug",
+  "moonrockz/bpmn",
+  "moonrockz/diagrams-bpmn" @adapter,
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/bpmn" @model,
+  "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
+} for "test"

@@ -2,6 +2,7 @@ import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
+  "moonrockz/diagrams/animation",
   "moonrockz/diagrams/bpmn" @bpmn,
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg/layout",
