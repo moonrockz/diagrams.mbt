@@ -31,4 +31,6 @@ import {
   "moonrockz/diagrams-svg/swimlane-layout" @swimlane_layout,
   "moonrockz/diagrams/data-tree" @data_tree,
   "moonrockz/diagrams-svg/data-tree-layout" @data_tree_layout,
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/railroad-trace" @railroad_trace,
 } for "test"

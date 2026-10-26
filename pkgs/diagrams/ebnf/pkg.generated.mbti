@@ -1,0 +1,131 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/ebnf"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn validate(Grammar, limits? : Limits) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+// Errors
+
+// Types and methods
+pub struct Grammar {
+  id : String
+  items : ReadOnlyArray[Item]
+  nodes : ReadOnlyArray[Node]
+  title : String?
+  accessibility_title : String?
+  accessibility_description : String?
+} derive(Eq, @debug.Debug)
+pub fn Grammar::equal(Self, Self) -> Bool
+pub fn Grammar::new(String, ArrayView[Item], ArrayView[Node], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
+pub fn Grammar::not_equal(Self, Self) -> Bool
+pub fn Grammar::rules(Self) -> Array[Rule]
+pub fn Grammar::to_repr(Self) -> @debug.Repr
+
+pub struct Index {
+  grammar : Grammar
+  order : ReadOnlyArray[String]
+  // private fields
+}
+pub fn Index::build(Grammar, limits? : Limits) -> IndexResult
+pub fn Index::depth(Self, String) -> Int32?
+pub fn Index::node(Self, String) -> Node?
+pub fn Index::owner(Self, String) -> String?
+pub fn Index::parent(Self, String) -> String?
+pub fn Index::resolution(Self, String) -> Resolution?
+pub fn Index::rule(Self, String) -> Rule?
+
+pub struct IndexResult {
+  index : Index?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Item {
+  Rule(Rule)
+  Note(String, String)
+} derive(Eq, @debug.Debug)
+pub fn Item::equal(Self, Self) -> Bool
+pub fn Item::not_equal(Self, Self) -> Bool
+pub fn Item::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Kind {
+  Terminal(String, Quote)
+  Reference(String, String?)
+  Special(String)
+  Empty
+  Sequence(ReadOnlyArray[String])
+  Choice(ReadOnlyArray[String])
+  Optional(String)
+  ZeroOrMore(String)
+  OneOrMore(String)
+  Count(String, String)
+  Exclusion(String, String)
+} derive(Eq, @debug.Debug)
+pub fn Kind::equal(Self, Self) -> Bool
+pub fn Kind::not_equal(Self, Self) -> Bool
+pub fn Kind::to_repr(Self) -> @debug.Repr
+
+pub struct Limits {
+  nodes : Int32
+  depth : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct Node {
+  id : String
+  kind : Kind
+  notes_above : ReadOnlyArray[String]
+  notes_below : ReadOnlyArray[String]
+  source : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Node::children(Self) -> ReadOnlyArray[String]
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::is_leaf(Self) -> Bool
+pub fn Node::label(Self) -> String
+pub fn Node::new(String, Kind, notes_above? : ArrayView[String], notes_below? : ArrayView[String], source? : @diagrams.Span) -> Self
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Quote {
+  Double
+  Single
+} derive(Eq, @debug.Debug)
+pub fn Quote::equal(Self, Self) -> Bool
+pub fn Quote::not_equal(Self, Self) -> Bool
+pub fn Quote::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Resolution {
+  Resolved(String)
+  Unresolved
+  Ambiguous(ReadOnlyArray[String])
+} derive(Eq, @debug.Debug)
+pub fn Resolution::equal(Self, Self) -> Bool
+pub fn Resolution::not_equal(Self, Self) -> Bool
+pub fn Resolution::to_repr(Self) -> @debug.Repr
+
+pub struct Rule {
+  id : String
+  name : String
+  body : String?
+  note_above : String?
+  note_below : String?
+  source : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Rule::equal(Self, Self) -> Bool
+pub fn Rule::new(String, String, body? : String, note_above? : String, note_below? : String, source? : @diagrams.Span) -> Self
+pub fn Rule::not_equal(Self, Self) -> Bool
+pub fn Rule::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

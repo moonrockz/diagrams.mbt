@@ -1,0 +1,118 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/data-tree"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn valid_number(String) -> Bool
+
+pub fn validate(DataTree, limits? : Limits) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+// Errors
+
+// Types and methods
+pub struct DataTree {
+  id : String
+  root : String
+  nodes : ReadOnlyArray[Node]
+  highlights : ReadOnlyArray[Highlight]
+  title : String?
+  accessibility_title : String?
+  accessibility_description : String?
+} derive(Eq, @debug.Debug)
+pub fn DataTree::equal(Self, Self) -> Bool
+pub fn DataTree::new(String, String, ArrayView[Node], highlights? : ArrayView[Highlight], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
+pub fn DataTree::not_equal(Self, Self) -> Bool
+pub fn DataTree::to_repr(Self) -> @debug.Repr
+
+pub struct Highlight {
+  targets : ReadOnlyArray[String]
+  style : String?
+} derive(Eq, @debug.Debug)
+pub fn Highlight::equal(Self, Self) -> Bool
+pub fn Highlight::new(ArrayView[String], style? : String) -> Self
+pub fn Highlight::not_equal(Self, Self) -> Bool
+pub fn Highlight::to_repr(Self) -> @debug.Repr
+
+pub struct Index {
+  tree : DataTree
+  order : ReadOnlyArray[String]
+  // private fields
+}
+pub fn Index::build(DataTree, limits? : Limits) -> IndexResult
+pub fn Index::container(Self, String) -> String?
+pub fn Index::depth(Self, String) -> Int32?
+pub fn Index::find_member(Self, String) -> Member?
+pub fn Index::node(Self, String) -> Node?
+pub fn Index::owner(Self, String) -> Member?
+
+pub struct IndexResult {
+  index : Index?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Key {
+  Name(String)
+  Index(Int32)
+} derive(Eq, @debug.Debug)
+pub fn Key::equal(Self, Self) -> Bool
+pub fn Key::not_equal(Self, Self) -> Bool
+pub fn Key::to_repr(Self) -> @debug.Repr
+
+pub struct Limits {
+  nodes : Int32
+  depth : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct Member {
+  id : String
+  key : Key
+  value : String
+  source : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Member::equal(Self, Self) -> Bool
+pub fn Member::index(String, Int32, String, source? : @diagrams.Span) -> Self
+pub fn Member::named(String, String, String, source? : @diagrams.Span) -> Self
+pub fn Member::not_equal(Self, Self) -> Bool
+pub fn Member::to_repr(Self) -> @debug.Repr
+
+pub struct Node {
+  id : String
+  value : Value
+  source : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Node::array(String, ArrayView[Member], source? : @diagrams.Span) -> Self
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::is_container(Self) -> Bool
+pub fn Node::members(Self) -> ReadOnlyArray[Member]
+pub fn Node::new(String, Value, source? : @diagrams.Span) -> Self
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::object(String, ArrayView[Member], source? : @diagrams.Span) -> Self
+pub fn Node::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Value {
+  Object(ReadOnlyArray[Member])
+  Array(ReadOnlyArray[Member])
+  Text(String)
+  Number(String)
+  Boolean(Bool)
+  Null
+} derive(Eq, @debug.Debug)
+pub fn Value::equal(Self, Self) -> Bool
+pub fn Value::not_equal(Self, Self) -> Bool
+pub fn Value::scalar_text(Self) -> String?
+pub fn Value::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
