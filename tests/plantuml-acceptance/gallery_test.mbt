@@ -312,3 +312,6 @@ test "PlantUML review gallery" (t : @test.Test) {
   t.write(Json(rows).stringify(indent=1))
   t.snapshot(filename="plantuml-gallery.json")
 }
+
+///|
+extend GalleryStub with @trace.RailroadTraceProvider::{trace}

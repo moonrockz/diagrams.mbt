@@ -740,7 +740,7 @@ pub fn read(
     let one : Source = { text: t, offsets: Array::makei(t.length(), k => base + k) }
     match single_rule(t) {
       Some(rule) => {
-        items.push(Rule_(one, rule.name_start, rule.skip, rule.above, rule.below, i))
+        items.push(Rule_(one, rule.name_start, rule.skip, rule.above, rule.below))
         roles[i] = Some(Rule)
         i += 1
         continue
@@ -766,7 +766,7 @@ pub fn read(
             }
             roles[k] = Some(Rule)
           }
-          items.push(Rule_({ text: text.to_string(), offsets }, 0, [], None, None, i))
+          items.push(Rule_({ text: text.to_string(), offsets }, 0, [], None, None))
           i = last + 1
           continue
         }
@@ -785,7 +785,7 @@ pub fn read(
     match item {
       Note_(texts, a, b) =>
         out_items.push(Note(ReadOnlyArray::from_array(texts), Some(scan.span(a, b))))
-      Rule_(source, from, skip, above, below, _) =>
+      Rule_(source, from, skip, above, below) =>
         match build_rule(source, from, skip, above, below, (a, b) => scan.span(a, b), limits) {
           Ok(built) => {
             for w in built.warnings {
@@ -838,5 +838,5 @@ pub fn read(
 ///|
 priv enum Item_ {
   Note_(Array[String], Int, Int)
-  Rule_(Source, Int, Array[(Int, Int)], String?, String?, Int)
+  Rule_(Source, Int, Array[(Int, Int)], String?, String?)
 }

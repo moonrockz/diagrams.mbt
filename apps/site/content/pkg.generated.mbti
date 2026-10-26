@@ -31,6 +31,8 @@ pub fn render_markdown(String, String) -> Document raise @model.Invalid
 
 pub fn render_mermaid_blocks(String, String) -> MermaidPass
 
+pub fn render_plantuml_blocks(String, String) -> PlantumlPass
+
 pub fn slug(String) -> String
 
 pub fn unescape(String) -> String
@@ -79,6 +81,11 @@ pub(all) struct LayersPass {
 }
 
 pub(all) struct MermaidPass {
+  html : String
+  problems : Array[@model.Problem]
+}
+
+pub(all) struct PlantumlPass {
   html : String
   problems : Array[@model.Problem]
 }

@@ -4,12 +4,14 @@ import {
   "bobzhang/beautiful_mermaid" @mermaid,
   "moonrockz/diagrams-mermaid" @native_mermaid,
   "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-plantuml" @plantuml,
   "moonbitlang/core/debug",
 }
 
 import {
   "moonrockz/diagrams-site/content",
   "moonrockz/diagrams-site/model",
+  "moonbitlang/core/debug",
 } for "test"
 
 supported_targets = "native"

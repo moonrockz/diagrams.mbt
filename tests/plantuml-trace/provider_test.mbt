@@ -392,3 +392,6 @@ test "rendering, scenes, playback and export never call a provider" {
   assert_true(html.output.unwrap().contains("rr-trace-failure"))
   assert_eq(stub.calls.val, 1)
 }
+
+///|
+extend RegexStub with @trace.RailroadTraceProvider::{trace}
