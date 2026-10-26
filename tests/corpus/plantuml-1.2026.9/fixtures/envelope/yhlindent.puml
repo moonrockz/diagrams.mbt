@@ -1,0 +1,4 @@
+@startyaml
+  #highlight "a"
+a: b
+@endyaml

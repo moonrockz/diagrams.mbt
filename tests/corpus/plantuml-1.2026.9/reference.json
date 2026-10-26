@@ -2,7 +2,7 @@
  "plantuml": "1.2026.9",
  "jdk": "temurin-21.0.13+9.0.LTS",
  "jar_sha256": "aa4a1d06f8911c4b842beff4828dd955be431692b631a312d04c0e9fab9581de",
- "fixtures_digest": "7b963b156f1f3edcbf3ba687d36b7a7eea5084b944210596d714c2e78bf5f08c",
+ "fixtures_digest": "5a80e544876d6c55bdf0287f0230d4a62458eb5242a06103c02727d79e455b49",
  "fixtures": [
   {
    "name": "ebnf/case-above.puml",
@@ -23263,6 +23263,19 @@
    ]
   },
   {
+   "name": "envelope/jhlindent.puml",
+   "blocks": 1,
+   "class": "JsonDiagram",
+   "status": "accepted",
+   "title": null,
+   "inspection": "data",
+   "data": null,
+   "highlights": [],
+   "texts": [
+    "Your data does not sound like JSON data"
+   ]
+  },
+  {
    "name": "envelope/jskin.puml",
    "blocks": 1,
    "class": "JsonDiagram",
@@ -23501,6 +23514,49 @@
    ]
   },
   {
+   "name": "envelope/yhlindent.puml",
+   "blocks": 1,
+   "class": "JsonDiagram",
+   "status": "accepted",
+   "title": null,
+   "inspection": "data",
+   "data": {
+    "object": [
+     [
+      "a",
+      {
+       "string": "b"
+      }
+     ]
+    ]
+   },
+   "highlights": [],
+   "texts": [
+    "a",
+    "b"
+   ]
+  },
+  {
+   "name": "envelope/yhltitle.puml",
+   "blocks": 1,
+   "class": "JsonDiagram",
+   "status": "accepted",
+   "title": null,
+   "inspection": "data",
+   "data": null,
+   "highlights": [
+    {
+     "path": [
+      "a"
+     ],
+     "stereotype": null
+    }
+   ],
+   "texts": [
+    "Your data does not sound like YAML data"
+   ]
+  },
+  {
    "name": "envelope/yquote.puml",
    "blocks": 1,
    "class": "JsonDiagram",
@@ -23545,6 +23601,37 @@
     "T",
     "a",
     "b"
+   ]
+  },
+  {
+   "name": "envelope/ytitlecolon.puml",
+   "blocks": 1,
+   "class": "JsonDiagram",
+   "status": "accepted",
+   "title": null,
+   "inspection": "data",
+   "data": {
+    "object": [
+     [
+      "title",
+      {
+       "string": "x"
+      }
+     ],
+     [
+      "b",
+      {
+       "string": "c"
+      }
+     ]
+    ]
+   },
+   "highlights": [],
+   "texts": [
+    "title",
+    "x",
+    "b",
+    "c"
    ]
   },
   {
