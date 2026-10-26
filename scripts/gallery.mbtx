@@ -255,7 +255,8 @@ async fn main {
   )
   let plantuml : Map[String, String] = Map([])
   let plantuml_order : Array[String] = []
-  for row in rows("tests/plantuml-acceptance/__snapshot__/plantuml-gallery.json") {
+  for
+    row in rows("tests/plantuml-acceptance/__snapshot__/plantuml-gallery.json") {
     plantuml[string(row[0])] = string(row[2])
     plantuml_order.push(string(row[0]))
   }
@@ -269,18 +270,33 @@ async fn main {
   ]
   for name in plantuml_order {
     if name != "inline.html" {
-      save(name, plantuml[name], check, site_assets && site_examples.contains(name))
+      save(
+        name,
+        plantuml[name],
+        check,
+        site_assets && site_examples.contains(name),
+      )
     }
   }
   for
     pair in [
-      ("regex-date", "Regex: named groups, sets, repetitions and a negative lookahead"),
-      ("regex-constraints", "Regex: anchors, lookbehind, reluctant and nested repeats, backreference"),
+      (
+        "regex-date", "Regex: named groups, sets, repetitions and a negative lookahead",
+      ),
+      (
+        "regex-constraints", "Regex: anchors, lookbehind, reluctant and nested repeats, backreference",
+      ),
       ("regex-long", "Regex: a long pattern continues on new rows"),
       ("ebnf-arithmetic", "EBNF: recursive references and a note"),
-      ("ebnf-constraints", "EBNF: counts, options, exclusions, rule notes and an empty rule"),
-      ("json-order", "JSON: nested collections, exact numbers, empty containers and a highlight"),
-      ("yaml-service", "YAML: native string scalars, flow and block values, lists of maps"),
+      (
+        "ebnf-constraints", "EBNF: counts, options, exclusions, rule notes and an empty rule",
+      ),
+      (
+        "json-order", "JSON: nested collections, exact numbers, empty containers and a highlight",
+      ),
+      (
+        "yaml-service", "YAML: native string scalars, flow and block values, lists of maps",
+      ),
     ] {
     let (name, title) = pair
     html.write_string(

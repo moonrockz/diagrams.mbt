@@ -66,15 +66,21 @@ async fn main {
   let (code, _, err) = @process.collect_output("java", ["-version"])
   if code != 0 || !err.text().contains("\"" + java_version + "\"") {
     fail(
-      "The reference task needs JDK " + jdk + "; run it with mise run plantuml-corpus:reference",
+      "The reference task needs JDK " +
+      jdk +
+      "; run it with mise run plantuml-corpus:reference",
     )
   }
   let raw = dir + "/reference.raw.json"
   let code = @process.run(
     "java",
     [
-      "-Djava.awt.headless=true", "-cp", jar_path, "tests/plantuml-reference/Reference.java",
-      corpus + "/fixtures", raw,
+      "-Djava.awt.headless=true",
+      "-cp",
+      jar_path,
+      "tests/plantuml-reference/Reference.java",
+      corpus + "/fixtures",
+      raw,
     ],
     extra_env={ "PLANTUML_SECURITY_PROFILE": "SANDBOX" },
     stdout=@stdio.stdout,
@@ -83,10 +89,9 @@ async fn main {
   if code != 0 {
     fail("The PlantUML reference driver failed")
   }
-  let (code, out, err) = @process.collect_output(
-    "moonx",
-    ["scripts/plantuml-corpus.mbtx", "digest"],
-  )
+  let (code, out, err) = @process.collect_output("moonx", [
+    "scripts/plantuml-corpus.mbtx", "digest",
+  ])
   if code != 0 {
     eprintln(err.text())
     fail("Could not compute the fixture digest")

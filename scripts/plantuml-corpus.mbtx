@@ -47,7 +47,7 @@ fn literal(text : String) -> String {
 }
 
 ///|
-fn chunks(text : String, size : Int) -> Array[String] {
+fn chunks(text : String, size : Int32) -> Array[String] {
   let out = []
   let mut i = 0
   while i < text.length() {
@@ -217,7 +217,10 @@ async fn main {
   }
   out.write_string("]\n")
   for
-    pair in [("reference", "reference.json"), ("expectations", "expectations.json")] {
+    pair in [
+      ("reference", "reference.json"),
+      ("expectations", "expectations.json"),
+    ] {
     let source = @fs.read_file(corpus + "/" + pair.1).text()
     out.write_string("\n///|\npub let " + pair.0 + " : String = ")
     for i, part in chunks(source, 12000) {
