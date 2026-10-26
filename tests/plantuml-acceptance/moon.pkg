@@ -1,7 +1,18 @@
 import {
   "moonbitlang/core/json",
+  "moonbitlang/core/test",
+  "moonrockz/diagrams/render" @render,
+  "moonrockz/diagrams/animation" @animation,
+  "moonrockz/diagrams/railroad-trace" @trace,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-animated" @animated,
   "moonrockz/diagrams-tests/plantuml-acceptance" @corpus,
   "moonrockz/diagrams/regex" @regex,
   "moonrockz/diagrams/ebnf" @ebnf,
   "moonrockz/diagrams-plantuml" @plantuml,
+  "moonrockz/diagrams-plantuml/json" @pjson,
+  "moonrockz/diagrams-plantuml/yaml" @pyaml,
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams-plantuml/data",
+  "moonrockz/diagrams/data-tree" @data_tree,
 } for "test"

@@ -1,0 +1,3 @@
+@startjson
+{"é": "😀", "x": "<script>alert(1)</script>", "amp": "a & b \" c"}
+@endjson

@@ -1,0 +1,12 @@
+@startyaml
+#highlight "**" / "b"
+#highlight "a" / "*"
+#highlight "l" / "1" <<s1>>
+a:
+  b: 1
+  c:
+    b: 2
+l:
+  - p
+  - q
+@endyaml

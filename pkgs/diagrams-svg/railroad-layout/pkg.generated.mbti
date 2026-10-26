@@ -1,0 +1,206 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/railroad-layout"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/railroad-trace",
+  "moonrockz/diagrams/regex",
+}
+
+// Values
+pub fn channel_color(@theme.Palette, Channel) -> @theme.Color
+
+pub fn check(Geometry, @theme.Palette, work_limit? : Int32, highlight_colors? : ArrayView[@theme.Color]) -> Array[Finding]
+
+pub fn layout(Model, limits? : Limits) -> Result
+
+pub fn svg_number(Double) -> String
+
+pub fn term_colors(@theme.Palette, Shape) -> (@theme.Color, @theme.Color, @theme.Color)
+
+// Errors
+
+// Types and methods
+pub(all) enum Channel {
+  Matched
+  NotMatched
+  Taken
+  Failure
+} derive(Eq, @debug.Debug)
+pub fn Channel::equal(Self, Self) -> Bool
+pub fn Channel::not_equal(Self, Self) -> Bool
+pub fn Channel::to_repr(Self) -> @debug.Repr
+
+pub struct Finding {
+  rule : Rule
+  identities : ReadOnlyArray[String]
+  message : String
+} derive(Eq, @debug.Debug)
+pub fn Finding::equal(Self, Self) -> Bool
+pub fn Finding::not_equal(Self, Self) -> Bool
+pub fn Finding::to_repr(Self) -> @debug.Repr
+
+pub struct Frame {
+  owner : String
+  role : FrameRole
+  rect : Rect
+  label : Label
+} derive(Eq, @debug.Debug)
+pub fn Frame::equal(Self, Self) -> Bool
+pub fn Frame::not_equal(Self, Self) -> Bool
+pub fn Frame::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FrameRole {
+  Group
+  Except
+} derive(Eq, @debug.Debug)
+pub fn FrameRole::equal(Self, Self) -> Bool
+pub fn FrameRole::not_equal(Self, Self) -> Bool
+pub fn FrameRole::to_repr(Self) -> @debug.Repr
+
+pub struct Geometry {
+  topology : @railroad-trace.Topology
+  width : Double
+  height : Double
+  title : Label?
+  tracks : ReadOnlyArray[TrackBox]
+  terms : ReadOnlyArray[TermBox]
+  frames : ReadOnlyArray[Frame]
+  wires : ReadOnlyArray[Wire]
+  notes : ReadOnlyArray[NoteBox]
+  // private fields
+}
+pub fn Geometry::new(@railroad-trace.Topology, Double, Double, ArrayView[TrackBox], ArrayView[TermBox], ArrayView[Frame], ArrayView[Wire], ArrayView[NoteBox], ArrayView[(String, Point)], title? : Label) -> Self
+pub fn Geometry::point(Self, String) -> Point?
+pub fn Geometry::points(Self) -> Array[(String, Point)]
+
+pub struct Label {
+  lines : ReadOnlyArray[String]
+  x : Double
+  size : Double
+  weight : Int32
+  box : Rect
+  owner : String
+} derive(Eq, @debug.Debug)
+pub fn Label::equal(Self, Self) -> Bool
+pub fn Label::not_equal(Self, Self) -> Bool
+pub fn Label::to_repr(Self) -> @debug.Repr
+
+pub struct Limits {
+  nodes : Int32
+  depth : Int32
+  work : Int32
+  width : Int32
+  output_units : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32, width? : Int32, output_units? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Model {
+  Regex(@regex.Regex)
+  Ebnf(@ebnf.Grammar)
+} derive(Eq, @debug.Debug)
+pub fn Model::equal(Self, Self) -> Bool
+pub fn Model::not_equal(Self, Self) -> Bool
+pub fn Model::to_repr(Self) -> @debug.Repr
+
+pub struct NoteBox {
+  id : String
+  rect : Rect
+  label : Label
+} derive(Eq, @debug.Debug)
+pub fn NoteBox::equal(Self, Self) -> Bool
+pub fn NoteBox::not_equal(Self, Self) -> Bool
+pub fn NoteBox::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Point {
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn Point::equal(Self, Self) -> Bool
+pub fn Point::not_equal(Self, Self) -> Bool
+pub fn Point::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Rect {
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+} derive(Eq, @debug.Debug)
+pub fn Rect::contains(Self, Self, tolerance? : Double) -> Bool
+pub fn Rect::equal(Self, Self) -> Bool
+pub fn Rect::not_equal(Self, Self) -> Bool
+pub fn Rect::overlaps(Self, Self) -> Bool
+pub fn Rect::to_repr(Self) -> @debug.Repr
+
+pub struct Result {
+  geometry : Geometry?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Rule {
+  Overlap
+  Fit
+  Contrast
+  Endpoint
+  Length
+  Limit
+} derive(Eq, @debug.Debug)
+pub fn Rule::equal(Self, Self) -> Bool
+pub fn Rule::not_equal(Self, Self) -> Bool
+pub fn Rule::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Shape {
+  Pill
+  Square
+  Class
+  Special
+  Anchor
+  Lookaround
+  Dot
+} derive(Eq, @debug.Debug)
+pub fn Shape::equal(Self, Self) -> Bool
+pub fn Shape::not_equal(Self, Self) -> Bool
+pub fn Shape::to_repr(Self) -> @debug.Repr
+
+pub struct TermBox {
+  term : @railroad-trace.Term
+  shape : Shape
+  rect : Rect
+  label : Label
+  notes : ReadOnlyArray[Label]
+} derive(Eq, @debug.Debug)
+pub fn TermBox::equal(Self, Self) -> Bool
+pub fn TermBox::not_equal(Self, Self) -> Bool
+pub fn TermBox::to_repr(Self) -> @debug.Repr
+
+pub struct TrackBox {
+  track : @railroad-trace.Track
+  label : Label
+  start : Point
+  end : Point
+  notes : ReadOnlyArray[Label]
+} derive(Eq, @debug.Debug)
+pub fn TrackBox::equal(Self, Self) -> Bool
+pub fn TrackBox::not_equal(Self, Self) -> Bool
+pub fn TrackBox::to_repr(Self) -> @debug.Repr
+
+pub struct Wire {
+  connector : @railroad-trace.Connector
+  points : ReadOnlyArray[Point]
+  label : Label?
+} derive(Eq, @debug.Debug)
+pub fn Wire::equal(Self, Self) -> Bool
+pub fn Wire::length(Self) -> Double
+pub fn Wire::not_equal(Self, Self) -> Bool
+pub fn Wire::path(Self, radius? : Double) -> String
+pub fn Wire::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

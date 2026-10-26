@@ -1,0 +1,6 @@
+@startjson
+#highlight "lst" / "0"
+#highlight "x" <<bold>>
+#highlight c / d
+{"lst": [1,2], "x": 3, "c": {"d": 4}}
+@endjson

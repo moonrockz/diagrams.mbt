@@ -29,4 +29,6 @@ import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams-svg/swimlane-layout" @swimlane_layout,
+  "moonrockz/diagrams/data-tree" @data_tree,
+  "moonrockz/diagrams-svg/data-tree-layout" @data_tree_layout,
 } for "test"

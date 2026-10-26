@@ -1,0 +1,8 @@
+@startyaml
+t: |
+  one
+
+  # two
+  three: x
+n: 1
+@endyaml

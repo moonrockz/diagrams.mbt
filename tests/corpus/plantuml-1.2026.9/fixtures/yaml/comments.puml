@@ -1,0 +1,8 @@
+@startyaml
+# comment line
+a: b #trailing
+  # indented comment
+c: "#not" #yes
+d: b#c
+e: #only
+@endyaml

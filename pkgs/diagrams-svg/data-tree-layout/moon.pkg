@@ -5,3 +5,8 @@ import {
   "moonrockz/diagrams/data-tree" @model,
   "moonrockz/diagrams-svg/theme",
 }
+
+import {
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/data-tree" @model,
+} for "wbtest"

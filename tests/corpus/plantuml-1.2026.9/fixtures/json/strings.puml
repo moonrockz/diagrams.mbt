@@ -1,0 +1,3 @@
+@startjson
+{"a":"\u0000x","b":"\ud800","c":"\u00E9\/\b\f\n\r\t","d":"true","e":"\ud83d\ude00"}
+@endjson

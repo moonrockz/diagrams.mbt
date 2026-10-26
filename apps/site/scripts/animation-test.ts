@@ -266,6 +266,77 @@ try {
   assert.equal(await inline.locator('[data-diagram-viewer]').last().getAttribute('data-position'), '0');
   assert.ok(await inline.locator('svg [id]').evaluateAll(nodes => new Set(nodes.map(node => node.id)).size === nodes.length));
   await inline.close();
+  // PlantUML players: path steps on actual connectors, row and term visits
+  // without fake paths, controls, export and preserved trace highlights.
+  const plantuml = JSON.parse(await readFile('tests/plantuml-acceptance/__snapshot__/plantuml-gallery.json', 'utf8')) as [string, string, string][];
+  const plantumlPlayers = plantuml.filter(([, kind]) => kind === 'player');
+  const plantumlSvg = new Map(plantuml.filter(([, kind]) => kind === 'svg').map(([name, , content]) => [name, content]));
+  assert.ok(plantumlPlayers.length >= 10, 'PlantUML review players');
+  for (const [name, , html] of plantumlPlayers) {
+    for (const preference of ['light', 'dark'] as const) {
+      const view = await page(html, preference);
+      assert.equal(await view.locator('.motion-overlay').count(), 0, `${name} starts still`);
+      assert.equal(await view.locator('.motion-visit').count(), 0, `${name} starts without visits`);
+      const canonical = await view.locator('[data-diagram-viewer]').evaluate(root => JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!).canonical as string);
+      const stored = plantumlSvg.get(name.replace(/\.html$/, '.svg'));
+      if (stored) assert.equal(canonical, stored, `${name} canonical equals the direct render`);
+      const plan = await view.locator('[data-diagram-viewer]').evaluate(root => {
+        const data = JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!);
+        const svg = root.querySelector('svg')!;
+        const paths = new Map([...svg.querySelectorAll<SVGPathElement>('path[id]')].map(path => [path.id, path]));
+        for (const binding of data.paths) {
+          const original = svg.querySelector(binding.kind === 'railroad' ? `.rr-connector[data-connector="${CSS.escape(binding.connection)}"]` : `.data-connector[data-member="${CSS.escape(binding.connection)}"]`);
+          if (!original || original.getAttribute('d') !== paths.get(binding.id)!.getAttribute('d')) throw new Error('Binding differs from the drawn connector');
+          if (paths.get(binding.id)!.getTotalLength() <= 0) throw new Error('Zero-length motion path');
+        }
+        return data.plan.steps.map((step: { start_ms: string; duration_ms: string; visit: boolean; key: string }) => [Number(step.start_ms), Number(step.duration_ms), step.visit, step.key]) as [number, number, boolean, string][];
+      });
+      const visit = plan.find(step => step[2]), path = plan.find(step => !step[2]);
+      assert.ok(visit && path, `${name} has visits and connector steps`);
+      await seek(view, visit![0] + Math.floor(visit![1] / 2));
+      assert.equal(await view.locator('.motion-visit').count(), 1, `${name} highlights the visited term or row`);
+      assert.equal(await view.locator('.motion-overlay').count(), 0, `${name} draws no path for a visit`);
+      assert.ok(Math.abs(Number(await view.locator('.motion-visit').getAttribute('data-motion-progress')) - .5) < .01);
+      // Export during a visit returns the canonical bytes and keeps the position.
+      const before = await position(view);
+      const pending = view.waitForEvent('download'); await view.getByRole('button', { name: 'Download SVG', exact: true }).click();
+      const stream = await (await pending).createReadStream(), chunks: Buffer[] = [];
+      for await (const chunk of stream!) chunks.push(Buffer.from(chunk));
+      assert.equal(Buffer.concat(chunks).toString('utf8'), canonical, `${name} downloads canonical bytes`);
+      assert.equal(await position(view), before);
+      await seek(view, path![0] + Math.floor(path![1] / 2));
+      assert.equal(await view.locator('.motion-overlay').count(), 1, `${name} animates the connector path`);
+      assert.equal(await view.locator('.motion-visit').count(), 0);
+      if (canonical.includes('rr-trace')) {
+        assert.ok(await view.locator('.rr-trace').count() === 1, 'configured trace highlights stay in the canonical view');
+        assert.equal(await view.locator('.rr-trace .motion-overlay').count(), 0, 'playback overlays stay separate from trace evidence');
+      }
+      await view.emulateMedia({ media: 'print' });
+      await seek(view, visit![0] + 1);
+      assert.ok(await view.locator('.motion-visit').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).filter === 'none')));
+      await view.close();
+    }
+  }
+  const railroad = await page(plantumlPlayers.find(([name]) => name === 'regex-date-light.html')![2]);
+  await railroad.getByRole('button', { name: 'Play', exact: true }).focus(); await railroad.keyboard.press('Space');
+  await railroad.waitForFunction(() => Number(document.querySelector('[data-diagram-viewer]')!.getAttribute('data-position')) > 100);
+  await railroad.keyboard.press('Space'); const stopped = await position(railroad);
+  await railroad.waitForTimeout(100); assert.equal(await position(railroad), stopped, 'keyboard pause');
+  await railroad.getByRole('button', { name: 'Restart', exact: true }).click(); assert.equal(await position(railroad), 0);
+  await railroad.getByRole('button', { name: 'Step', exact: true }).click(); assert.ok(await position(railroad) > 0);
+  const options = await railroad.locator('[data-control="from"] option').evaluateAll(nodes => nodes.map(node => (node as HTMLOptionElement).value));
+  await railroad.locator('[data-control="from"]').selectOption(options[0]); await railroad.locator('[data-control="to"]').selectOption(options[options.length - 1]);
+  await railroad.getByRole('button', { name: 'Show route', exact: true }).click();
+  assert.match((await railroad.locator('[role="status"]').textContent())!, /Structural route|Unreachable/);
+  await railroad.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
+  await railroad.getByRole('button', { name: 'Play', exact: true }).click(); const hiddenAt = await position(railroad);
+  await railroad.waitForTimeout(120); assert.equal(await position(railroad), hiddenAt, 'hidden pages do not advance');
+  await railroad.close();
+  const reducedRailroad = await page(plantumlPlayers.find(([name]) => name === 'ebnf-arithmetic-dark.html')![2], 'dark', 'reduce');
+  await reducedRailroad.getByRole('button', { name: 'Play', exact: true }).click();
+  assert.equal(await reducedRailroad.locator('[data-diagram-viewer]').getAttribute('data-playing'), 'false');
+  assert.ok(await position(reducedRailroad) > 0, 'reduced motion steps instead of playing');
+  await reducedRailroad.close();
   assert.deepEqual(requests, [], 'standalone artifacts stay offline'); assert.deepEqual(errors, [], 'standalone artifacts have no browser errors');
   console.log(`Verified ${sequenceScenes.length + bpmnScenes.length} canonical/display scene pairs and ${players.length} offline players in both preferences, including pure samples, paths, controls, exploration, print and exact SVG downloads.`);
 } finally { await browser.close(); }

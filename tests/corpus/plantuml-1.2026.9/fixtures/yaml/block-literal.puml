@@ -1,0 +1,6 @@
+@startyaml
+text: |
+  line one
+  line two
+next: x
+@endyaml

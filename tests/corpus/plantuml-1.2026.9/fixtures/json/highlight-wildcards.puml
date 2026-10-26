@@ -1,0 +1,6 @@
+@startjson
+#highlight "**" / "x"
+#highlight "o" / "*"
+#highlight "*" / "y"
+{"o":{"x":1,"y":{"x":2}},"a":{"b":3},"x":4}
+@endjson

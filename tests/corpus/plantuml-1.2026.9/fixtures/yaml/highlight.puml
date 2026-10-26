@@ -1,0 +1,5 @@
+@startyaml
+#highlight "a" / "b"
+a:
+  b: c
+@endyaml

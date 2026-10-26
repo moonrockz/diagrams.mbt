@@ -1,0 +1,6 @@
+@startyaml
+a:
+  b:
+    t1
+  c: 2
+@endyaml

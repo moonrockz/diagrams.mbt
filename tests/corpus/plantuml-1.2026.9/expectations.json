@@ -11,6 +11,26 @@
   "category": "library-refusal",
   "reason": "PlantUML ignores text after the first semicolon of a rule line; this library diagnoses it."
  },
+ "envelope/after.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML ignores text after the end marker; this library diagnoses it."
+ },
+ "envelope/pct.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML evaluates the preprocessor call %version() inside the JSON string; this library does not run preprocessing and refuses the line."
+ },
+ "envelope/two.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML draws only the first block; this library refuses a source with more than one block."
+ },
+ "envelope/wrongend.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML accepts any @end marker; this library requires the end marker that matches the start marker."
+ },
+ "json/divergence-highlight-slash.puml": {
+  "category": "divergence",
+  "reason": "PlantUML splits a highlight path on every '/' before it removes quotes, so \"a/b\" / \"c\" selects nothing; this library keeps '/' inside a quoted segment and selects member c of a/b."
+ },
  "regex/case-commaquant.puml": {
   "category": "library-refusal",
   "reason": "A quantifier with two commas such as {1,2,3} is refused; PlantUML draws it as a labelled loop."
