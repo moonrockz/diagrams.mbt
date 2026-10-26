@@ -103,20 +103,15 @@ async fn consumer(
 ///|
 async fn main {
   consumer(
-    "model",
-    "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"",
-    "\"moonrockz/diagrams/ebnf\", \"moonrockz/diagrams/render\", \"moonrockz/diagrams-svg\" @svg",
+    "model", "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"", "\"moonrockz/diagrams/ebnf\", \"moonrockz/diagrams/render\", \"moonrockz/diagrams-svg\" @svg",
     model_test,
   )
   consumer(
-    "reader",
-    "\"moonrockz/diagrams-plantuml@0.2.0\"",
-    "\"moonrockz/diagrams-plantuml\" @plantuml",
+    "reader", "\"moonrockz/diagrams-plantuml@0.2.0\"", "\"moonrockz/diagrams-plantuml\" @plantuml",
     reader_test,
   )
   consumer(
-    "provider",
-    "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"",
+    "provider", "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"",
     "\"moonrockz/diagrams/regex\", \"moonrockz/diagrams/railroad-trace\" @trace, \"moonrockz/diagrams-svg\" @svg",
     provider_test,
   )
