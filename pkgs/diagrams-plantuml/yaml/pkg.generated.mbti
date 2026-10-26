@@ -1,0 +1,94 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/yaml"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/data",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams/data-tree",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn java_trim(String) -> String
+
+pub fn print_body(Document, limits? : @envelope.Limits) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]]
+
+pub fn read(@envelope.Scan, limits? : @envelope.Limits) -> ReadResult
+
+pub fn to_data_tree(Document, id? : String, limits? : @envelope.Limits) -> Conversion
+
+// Errors
+
+// Types and methods
+pub(all) enum Content {
+  Dash
+  Item(Scalar)
+  Text(Scalar)
+  Pair(Bool, Scalar, Entry)
+} derive(Eq, @debug.Debug)
+pub fn Content::equal(Self, Self) -> Bool
+pub fn Content::not_equal(Self, Self) -> Bool
+pub fn Content::to_repr(Self) -> @debug.Repr
+
+pub struct Conversion {
+  tree : @data-tree.DataTree?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Document {
+  name : String?
+  statements : ReadOnlyArray[@envelope.Statement]
+  highlights : ReadOnlyArray[@data.Selector]
+  lines : ReadOnlyArray[Line]
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::logical_equal(Self, Self) -> Bool
+pub fn Document::new(ArrayView[Line], name? : String, statements? : ArrayView[@envelope.Statement], highlights? : ArrayView[@data.Selector]) -> Self
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Entry {
+  Empty
+  Value(Scalar)
+  Flow(ReadOnlyArray[String])
+  Block(ReadOnlyArray[String])
+  Folded
+} derive(Eq, @debug.Debug)
+pub fn Entry::equal(Self, Self) -> Bool
+pub fn Entry::not_equal(Self, Self) -> Bool
+pub fn Entry::to_repr(Self) -> @debug.Repr
+
+pub struct Line {
+  indent : Int32
+  content : Content
+  span : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Line::equal(Self, Self) -> Bool
+pub fn Line::logical_equal(Self, Self) -> Bool
+pub fn Line::native_indent(Self) -> Int32
+pub fn Line::new(Int32, Content) -> Self
+pub fn Line::not_equal(Self, Self) -> Bool
+pub fn Line::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  nodes : Array[@cst.Node]
+  document : Document?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Scalar {
+  text : String
+  raw : String?
+} derive(Eq, @debug.Debug)
+pub fn Scalar::equal(Self, Self) -> Bool
+pub fn Scalar::new(String) -> Self
+pub fn Scalar::not_equal(Self, Self) -> Bool
+pub fn Scalar::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,7 @@
+@startyaml
+q: "a: b, c"
+s: 'x # y'
+c: v # comment
+empty:
+f: [a, "b,c", 'd']
+@endyaml

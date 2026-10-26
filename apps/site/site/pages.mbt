@@ -83,7 +83,9 @@ fn build_page(
   } else {
     let mermaid = @content.render_mermaid_blocks(path, doc.html)
     problems.append(mermaid.problems)
-    let layers = @content.render_layers(path, mermaid.html)
+    let plantuml = @content.render_plantuml_blocks(path, mermaid.html)
+    problems.append(plantuml.problems)
+    let layers = @content.render_layers(path, plantuml.html)
     problems.append(layers.problems)
     @content.render_callouts(layers.html)
   }

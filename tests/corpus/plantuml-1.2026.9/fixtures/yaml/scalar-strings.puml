@@ -1,0 +1,6 @@
+@startyaml
+flag: true
+nothing: null
+number: 0012
+float: 1.50
+@endyaml

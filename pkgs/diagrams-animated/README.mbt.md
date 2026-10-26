@@ -150,3 +150,34 @@ test "render a finite reverse swimlane scenario" {
   assert_eq(output.media_type, "text/html")
 }
 ```
+
+## Regex, EBNF and data playback
+
+Regex, EBNF and data scenes use the same offline controls. A connector step
+animates the drawn railroad or data connector path. A node visit highlights the
+visited term, row or box with the `motion-visit` class and a
+`data-motion-progress` value; it draws no path. Visits obey the same seeking,
+speed, reduced-motion, hidden-page and print rules as connector steps. The From
+and To lists contain railroad points and data values. A railroad route follows
+drawn connectors and term visits; a hierarchy route visits rows and follows
+connectors only where they are drawn.
+
+Static trace highlights from `SvgRenderer::new(trace=...)` are part of the
+canonical SVG. Playback overlays stay separate from them, and Download SVG
+returns the canonical bytes with the configured highlights. Playback never calls
+a trace provider.
+
+```mbt check
+///|
+test "play a regex railroad with term visits" {
+  let model = @regex.Regex::new("ab", "s", [
+    @regex.Node::new("s", Sequence(["a", "b"])),
+    @regex.Node::new("a", Literal("a")),
+    @regex.Node::new("b", Literal("b")),
+  ])
+  let output = @render.Renderer::render(@animated.AnimatedRenderer::new(), Regex(model))
+  let html = output.output.unwrap()
+  assert_true(html.contains("\"visit\":true"))
+  assert_true(html.contains("no input is matched or parsed"))
+}
+```

@@ -186,3 +186,47 @@ test "play a bidirectional swimlane return" {
   assert_true(plan.sample_at(250L).active[0].reversed)
 }
 ```
+
+## Railroad and data catalogs and node visits
+
+`Catalog::regex`, `Catalog::ebnf` and `Catalog::data_tree` accept the new
+models. A railroad catalog has one `Visit(RailroadTerm(_))` occurrence for each
+visible term and one `Railroad(role)` occurrence for each drawn connector, in the
+drawing-walk order of `diagrams/railroad-trace`. Equal labels never merge
+occurrences. A data catalog has a `Visit(DataBox)` for each container box and
+scalar root, a `Visit(DataRow)` for each member row and a `DataConnector` only
+where a nested container has a drawn connector.
+
+`Motion::Visit(key, duration)` is a timed visit to a visible term, row or box. It
+has no path. Scheduled steps and samples have a `visit` flag. A step that names a
+visit target, or a visit that names a connection, gives
+`animation/invalid-target-kind`. Connection steps and orientation keep their
+meaning. `Catalog::motion` chooses the right motion for an occurrence key.
+
+Railroad graphs use the drawn points as nodes and the connectors and term
+traversals as `EdgeKind::Railroad` edges, so a route follows branch, bypass and
+return connectors in their drawn direction. `Catalog::reference_target` names
+the rule of an EBNF reference; references add no edge between rules. Data graphs
+have only `EdgeKind::Containment` edges from parent to child. A hierarchy route
+visits rows and boxes and follows a connector only where one is drawn. Equal
+values and adjacent rows create no relation. Default illustrations are finite,
+also for unbounded repeats and recursive rules, and they never compute a match
+or a parse.
+
+```mbt check
+///|
+test "visit an inline row halfway" {
+  let tree = @data_tree.DataTree::new("order", "root", [
+    @data_tree.Node::object("root", [@data_tree.Member::named("m0", "id", "v0")]),
+    @data_tree.Node::new("v0", Text("A-1")),
+  ])
+  let catalog = @animation.Catalog::data_tree(tree).catalog.unwrap()
+  let row = @animation.data_key("order", "row", "m0")
+  let plan = @animation.PlaybackPlan::scenario(catalog, Visit(row, 1000L)).plan.unwrap()
+  let sample = plan.sample_at(500L)
+  assert_true(sample.active[0].visit)
+  assert_eq(sample.active[0].numerator, 500L)
+  let wrong = @animation.PlaybackPlan::scenario(catalog, Step(row, 1000L))
+  assert_eq(wrong.diagnostics[0].code, "animation/invalid-target-kind")
+}
+```

@@ -1,0 +1,4 @@
+@startregex
+title rangeRepetition
+ab{1,2}
+@endregex

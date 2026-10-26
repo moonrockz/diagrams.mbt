@@ -1,0 +1,5 @@
+@startyaml
+f: [a, "b,c", 'd']
+g:
+  - h: [x]
+@endyaml

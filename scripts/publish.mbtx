@@ -19,6 +19,7 @@ let publish_list : Array[(String, String)] = [
   ("pkgs/diagrams", "moonrockz/diagrams"),
   ("pkgs/diagrams-svg", "moonrockz/diagrams-svg"),
   ("pkgs/diagrams-mermaid", "moonrockz/diagrams-mermaid"),
+  ("pkgs/diagrams-plantuml", "moonrockz/diagrams-plantuml"),
   ("pkgs/diagrams-bpmn", "moonrockz/diagrams-bpmn"),
   ("pkgs/diagrams-animated", "moonrockz/diagrams-animated"),
 ]
@@ -144,9 +145,11 @@ test "publication includes every public module after its dependencies" {
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-bpmn"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-animated"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-mermaid"),
+    ("moonrockz/diagrams", "moonrockz/diagrams-plantuml"),
+    ("moonrockz/diagrams-svg", "moonrockz/diagrams-plantuml"),
   ]
   let names = publish_list.map(entry => entry.1)
-  assert_eq(names.length(), 6)
+  assert_eq(names.length(), 7)
   for (dependency, consumer) in dependencies {
     assert_true(
       names.search_by(name => name == dependency).unwrap() <

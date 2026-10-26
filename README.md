@@ -1,10 +1,12 @@
 # diagrams.mbt
 
 diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence and
-native `swimlane-beta` diagrams alongside BPMN XML. It renders script-free SVG
-and generates offline HTML with illustrative playback and bounded structural
-exploration.
-PlantUML, Draw.io and Graphviz DOT are planned. The library has no UI framework.
+native `swimlane-beta` diagrams, BPMN XML, and native PlantUML 1.2026.9 regex,
+EBNF, JSON and YAML blocks. It renders script-free SVG and generates offline HTML
+with illustrative playback and bounded structural exploration. Regex and EBNF
+railroads can show match and parse evidence that an external engine supplies.
+Other PlantUML diagrams, Draw.io and Graphviz DOT are planned. The library has
+no UI framework.
 
 `moonrockz/bpmn` is an independent portable document reader, writer, validator
 and reference/traversal module. It retains processes, collaborations,
@@ -61,8 +63,11 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
 | `mise run test:bpmn-consumer` | Verify a fresh reader-only BPMN consumer on all four targets |
+| `mise run test:plantuml-consumer` | Verify fresh model-only, PlantUML-reader and external trace-provider consumers on all four targets |
 | `mise run test:animation` | Qualify stored offline BPMN/sequence/swimlane players without a workspace/site rebuild |
 | `mise run swimlane-corpus:reference` | Verify native syntax and semantics against locked test-only Mermaid 12.2.0 |
+| `mise run plantuml-corpus:reference` | Refresh the PlantUML 1.2026.9 reference with the pinned test-only JAR and JDK (`-- --check` verifies it) |
+| `mise run validate:plantuml-corpus` | Check the PlantUML fixture digests, the reference binding and the portable embedding, without Java |
 | `mise run test:svg` | Check standalone SVG and adaptive themes in Chromium |
 | `mise run gallery` | Verify the renderer snapshots and write sequence/BPMN/swimlane views, sources and offline players to `_gallery/index.html` |
 | `mise run build -- js --release` | Build a selected target in release mode |
@@ -87,9 +92,11 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
 - `pkgs/diagrams-animated/` emits standalone HTML over pure motion plans and SVG scenes.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
-  as `@diagrams`, immutable sequence/BPMN/swimlane models, motion/exploration and the renderer contract.
+  as `@diagrams`, immutable sequence/BPMN/swimlane/regex/EBNF/data-tree models, the trace provider
+  contract, motion/exploration and the renderer contract.
 - `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence and swimlane diagrams.
-- `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane models and writes standalone SVG and scene bindings.
+- `pkgs/diagrams-plantuml/` reads, prints and converts PlantUML regex, EBNF, JSON and YAML blocks.
+- `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane/railroad/data-tree models and writes standalone SVG and scene bindings.
 - `tests/` contains the unpublished acceptance suites and frozen Mermaid/BPMN corpora.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
@@ -111,8 +118,8 @@ from stored snapshots without compiling. `--check` compares existing artifacts;
 `--site-assets` also refreshes the selected examples used by the docs site.
 Run `mise run test:animation` for offline player qualification.
 
-Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`
-and `Swimlane` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
+Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`,
+`Swimlane`, `Regex`, `Ebnf` and `DataTree` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
 See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
 and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 

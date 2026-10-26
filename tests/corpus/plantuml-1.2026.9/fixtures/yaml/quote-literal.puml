@@ -1,0 +1,8 @@
+@startyaml
+a: 'it''s'
+b: "say \"hi\""
+c: "unterminated
+d: x"
+e: x "y" z
+f: "x" y
+@endyaml

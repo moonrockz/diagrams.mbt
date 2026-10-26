@@ -11,6 +11,12 @@ pub(all) enum NodeBindingKind {
   Message(Int32)
   Frame(Int32)
   Swimlane(String)
+  /// A railroad term group, by term identity.
+  RailroadTerm(String)
+  /// A data member row, by member identity.
+  DataRow(String)
+  /// A data container or scalar root box, by node identity.
+  DataBox(String)
 } derive(Eq, Debug)
 
 ///|
@@ -197,6 +203,9 @@ pub fn SvgRenderer::scene(
     Bpmn(view) => @animation.Catalog::bpmn(view, limits~)
     Sequence(sequence) =>
       @animation.Catalog::sequence(sequence, view_id=sequence_view_id, limits~)
+    Regex(model) => @animation.Catalog::regex(model, limits~)
+    Ebnf(grammar) => @animation.Catalog::ebnf(grammar, limits~)
+    DataTree(tree) => @animation.Catalog::data_tree(tree, limits~)
   }
   guard catalog_result.catalog is Some(catalog) else {
     return { scene: None, diagnostics: catalog_result.diagnostics, }
@@ -319,6 +328,24 @@ pub fn SvgRenderer::scene(
         nodes.push({ endpoint: frame.key + ":out", kind: Frame(i), })
       }
       (@render.Rendered::ok(svg, "image/svg+xml", diagnostics~), false)
+    }
+    Regex(_) | Ebnf(_) | DataTree(_) => {
+      let parts = match diagram {
+        DataTree(tree) =>
+          data_tree_scene(self, tree, catalog, output_units)
+        _ => railroad_scene(self, diagram, catalog, output_units)
+      }
+      match parts {
+        Err(diagnostics) => return { scene: None, diagnostics, }
+        Ok((rendered, scene_paths, scene_nodes)) => {
+          guard rendered.output is Some(_) else {
+            return { scene: None, diagnostics: rendered.diagnostics, }
+          }
+          paths.append(scene_paths)
+          nodes.append(scene_nodes)
+          (rendered, false)
+        }
+      }
     }
   }
   let canonical = rendered.output.unwrap()

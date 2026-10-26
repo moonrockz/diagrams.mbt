@@ -1,0 +1,111 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/envelope"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn has_preprocessor_call(String) -> Bool
+
+pub fn java_trim(String) -> String
+
+pub fn kind_of_word(String) -> Kind?
+
+pub fn scan(String, limits? : Limits) -> Scan
+
+pub fn scan_body(Kind, String, limits? : Limits) -> Scan
+
+pub fn trim(String) -> String
+
+// Errors
+
+// Types and methods
+pub(all) enum Kind {
+  Regex
+  Ebnf
+  Json
+  Yaml
+} derive(Eq, @debug.Debug)
+pub fn Kind::equal(Self, Self) -> Bool
+pub fn Kind::not_equal(Self, Self) -> Bool
+pub fn Kind::to_repr(Self) -> @debug.Repr
+pub fn Kind::word(Self) -> String
+
+pub struct Limits {
+  source : Int32
+  output : Int32
+  depth : Int32
+  nodes : Int32
+  work : Int32
+  diagnostics : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(source? : Int32, output? : Int32, depth? : Int32, nodes? : Int32, work? : Int32, diagnostics? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+pub fn Limits::valid(Self) -> Bool
+
+pub struct Line {
+  number : Int32
+  offset : Int32
+  text : String
+  newline : String
+  role : Role
+} derive(Eq, @debug.Debug)
+pub fn Line::equal(Self, Self) -> Bool
+pub fn Line::not_equal(Self, Self) -> Bool
+pub fn Line::to_repr(Self) -> @debug.Repr
+pub fn Line::tokens(Self, @cst.TokenKind) -> Array[@cst.Element]
+
+pub(all) enum Role {
+  Body
+  Statement(@cst.Node)
+  Continuation
+} derive(Eq, @debug.Debug)
+pub fn Role::equal(Self, Self) -> Bool
+pub fn Role::not_equal(Self, Self) -> Bool
+pub fn Role::to_repr(Self) -> @debug.Repr
+
+pub struct Scan {
+  source : String
+  kind : Kind?
+  name : String?
+  head : ReadOnlyArray[@cst.Node]
+  lines : ReadOnlyArray[Line]
+  tail : ReadOnlyArray[@cst.Node]
+  statements : ReadOnlyArray[Statement]
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+  lines_index : @cst.Lines
+}
+pub fn Scan::document(Self, ArrayView[@cst.Node]) -> @cst.Node
+pub fn Scan::line_nodes(Self, (Line) -> @cst.Node?) -> Array[@cst.Node]
+pub fn Scan::span(Self, Int32, Int32) -> @diagrams.Span
+pub fn Scan::title(Self) -> String?
+
+pub(all) enum Statement {
+  Title(String)
+  Caption(String)
+  Header(String)
+  Footer(String)
+  Legend(ReadOnlyArray[String])
+  Skinparam(ReadOnlyArray[String])
+  Style(ReadOnlyArray[String])
+  Skin(String)
+  Scale(String)
+  Hide(String)
+  Pragma(String)
+  Option(String)
+} derive(Eq, @debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::lines(Self) -> Array[String]
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

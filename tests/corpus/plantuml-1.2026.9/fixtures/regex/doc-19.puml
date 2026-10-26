@@ -1,0 +1,4 @@
+@startregex
+title alternation
+a|b
+@endregex

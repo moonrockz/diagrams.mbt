@@ -1,0 +1,7 @@
+@startyaml
+@fruit: Apple
+$size: Large
+&color: Red
+❤: Heart
+‰: Per mille
+@endyaml

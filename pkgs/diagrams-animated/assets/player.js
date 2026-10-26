@@ -22,19 +22,25 @@
   const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
   const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
   const frameElements = [...svg.querySelectorAll('rect.frame')];
+  const byData = (selector, name) => new Map([...svg.querySelectorAll(selector)].map(element => [element.getAttribute(name), element]));
+  const termElements = byData('.rr-term[data-term]', 'data-term'), rowElements = byData('.data-row[data-member]', 'data-member'), boxElements = byData('.data-box[data-node]', 'data-node');
+  const visitKeys = new Set();
   for (const binding of data.node_bindings) {
-    const element = binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : frameElements[binding.index];
+    const element = binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
     if (element) nodeElements.set(binding.endpoint, element);
+    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box') visitKeys.add(binding.endpoint);
   }
+  const structural = data.kind === 'regex' || data.kind === 'ebnf' || data.kind === 'data-tree';
   function decode(plan) {
-    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed) })) };
+    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed), visit: Boolean(item.visit) })) };
   }
   const authored = decode(data.plan);
   let plan = authored, position = 0, speed = 1, playing = false, previous = null, frame = null;
-  const overlays = new Map(), highlights = new Set();
+  const overlays = new Map(), highlights = new Set(), visits = new Map();
+  function clearVisits() { for (const element of visits.values()) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; } visits.clear(); }
   function clearHighlights() { for (const element of highlights) element.classList.remove('motion-selected'); highlights.clear(); }
   function highlight(ids) { clearHighlights(); for (const id of ids) { const element = nodeElements.get(id); if (element) { element.classList.add('motion-selected'); highlights.add(element); } } }
-  function clearOverlays() { for (const overlay of overlays.values()) overlay.group.remove(); overlays.clear(); }
+  function clearOverlays() { for (const overlay of overlays.values()) overlay.group.remove(); overlays.clear(); clearVisits(); }
   function normalize(time) {
     if (plan.duration === 0) return 0;
     return plan.mode === 'illustrative' ? Math.max(0, time) % plan.duration : Math.max(0, Math.min(time, plan.duration));
@@ -64,6 +70,13 @@
     for (const item of plan.steps) {
       if (logical < item.start || logical >= item.start + item.duration) continue;
       active.add(item.ordinal); keys.push(item.key);
+      if (item.visit) {
+        const element = nodeElements.get(item.key);
+        if (!element) throw new Error('Missing validated visit binding');
+        const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+        element.classList.add('motion-visit'); element.dataset.motionProgress = String(progress); visits.set(item.ordinal, element);
+        continue;
+      }
       const overlay = overlays.get(item.ordinal) || makeOverlay(item);
       const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
       const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
@@ -72,6 +85,7 @@
       overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
     }
     for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }
+    for (const [ordinal, element] of visits) if (!active.has(ordinal)) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; visits.delete(ordinal); }
     // Still startup keeps the complete static diagram without an overlay.
     if (!playing && position === 0 && !root.dataset.inspected) clearOverlays();
     root.dataset.position = String(logical); root.dataset.active = JSON.stringify(keys); root.dataset.finished = String(plan.mode === 'finite' && logical >= plan.duration);
@@ -145,7 +159,7 @@
     const limits = data.query_limits;
     const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
     if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
-    const kinds = ['sequence', 'order', 'swimlane']; if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const kinds = ['sequence', 'order', 'swimlane', 'railroad', 'containment']; if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
     const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
     if (!reach && start === target) return { nodes: [start], edges: [] };
     while (at < queue.length) {
@@ -166,7 +180,7 @@
     return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
   }
   for (const node of data.graph.nodes) {
-    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane') continue;
+    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'point' && node.kind !== 'data') continue;
     for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
   }
   if (data.kind === 'swimlane') { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
@@ -194,6 +208,23 @@
     delete root.dataset.connection;
     const result = search(from.value, to.value, data.kind === 'swimlane' ? direction.value : 'forward', false);
     if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
+    if (structural) {
+      // Railroad routes follow drawn connectors and term visits. Hierarchy
+      // routes visit rows and boxes and follow connectors only where drawn.
+      const items = [];
+      if (data.kind === 'data-tree' && data.graph.nodes[result.nodes[0]].occurrence) items.push({ key: data.graph.nodes[result.nodes[0]].occurrence, visit: true });
+      result.edges.forEach((index, ordinal) => {
+        const key = data.graph.edges[index].occurrence;
+        if (key) items.push({ key, visit: visitKeys.has(key) });
+        const next = data.graph.nodes[result.nodes[ordinal + 1]];
+        if (data.kind === 'data-tree' && next && next.occurrence) items.push({ key: next.occurrence, visit: true });
+      });
+      if (items.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+      const steps = items.map((item, ordinal) => ({ ordinal, key: item.key, start: ordinal * 1000, duration: 1000, groups: [], reversed: false, visit: item.visit }));
+      replace({ mode: 'finite', duration: steps.length * 1000, steps }, data.kind === 'data-tree' ? `Hierarchy route: ${steps.length} steps. Containment only; equal values create no relation.` : `Structural route: ${steps.length} steps. No input is matched or parsed.`);
+      highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(items.map(item => item.key));
+      return;
+    }
     const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
     if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
     const steps = keys.map((key, ordinal) => {

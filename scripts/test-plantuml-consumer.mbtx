@@ -1,0 +1,118 @@
+///|
+/// Verify fresh consumers outside the workspace on all four targets: one uses
+/// only the models and renderer, one reads PlantUML, and one implements the
+/// public trace-provider trait. No consumer needs Java, a server or a UI.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let model_test : String =
+  #|test "construct and render a grammar without a PlantUML reader" {
+  #|  let grammar = @ebnf.Grammar::new(
+  #|    "lists",
+  #|    [Rule(@ebnf.Rule::new("r", "list", body="s"))],
+  #|    [
+  #|      @ebnf.Node::new("s", Sequence(["x", "o"])),
+  #|      @ebnf.Node::new("x", Terminal("x", Double)),
+  #|      @ebnf.Node::new("o", ZeroOrMore("again")),
+  #|      @ebnf.Node::new("again", Reference("list", None)),
+  #|    ],
+  #|  )
+  #|  let rendered = @render.Renderer::render(@svg.SvgRenderer::new(), Ebnf(grammar))
+  #|  assert_true(rendered.output.unwrap().contains("data-diagram=\"ebnf\""))
+  #|}
+
+///|
+let reader_test : String =
+  #|test "read and render the four native kinds" {
+  #|  for source in [
+  #|    "@startregex\na(b|c)*\n@endregex\n",
+  #|    "@startebnf\nr = \"a\", { r };\n@endebnf\n",
+  #|    "@startjson\n{\"a\": [1, 2]}\n@endjson\n",
+  #|    "@startyaml\na: b\n@endyaml\n",
+  #|  ] {
+  #|    let read = @plantuml.read(source)
+  #|    assert_eq(read.tree.text(), source)
+  #|    assert_true(@plantuml.render_svg(source).output is Some(_))
+  #|  }
+  #|}
+
+///|
+let provider_test : String =
+  #|struct Stub {}
+  #|
+  #|impl @trace.RailroadTraceProvider for Stub with trace(_, request) {
+  #|  guard request.subject is Regex(_) else { return Unsupported("regex only") }
+  #|  let t = request.topology().topology.unwrap()
+  #|  let start = t.connector_of(t.tracks[0].id, Start).unwrap()
+  #|  NotMatched(
+  #|    @trace.Trace::new(request, "stub", [
+  #|      @trace.Attempt::new("a", NotMatched, [Traverse(start.id, false)],
+  #|        failure=@trace.FailurePoint::new(Terminal(t.terms[0].id), position=0)),
+  #|    ]),
+  #|  )
+  #|}
+  #|
+  #|test "an external provider supplies evidence for rendering" {
+  #|  let model = @regex.Regex::new("r", "p", [@regex.Node::new("p", Literal("ab"))])
+  #|  let result = @svg.SvgRenderer::new().render_traced(Regex(model), Stub::{}, "x")
+  #|  assert_true(result.rendered.output.unwrap().contains("rr-trace-failure"))
+  #|}
+
+///|
+async fn consumer(
+  name : String,
+  imports : String,
+  packages : String,
+  test_source : String,
+) -> Unit {
+  let dir = @fs.tmpdir(prefix="plantuml-" + name)
+  defer @fs.rmdir(dir, recursive=true)
+  let members = StringBuilder()
+  members.write_string("\".\"")
+  for module in ["pkgs/diagrams", "pkgs/diagrams-svg", "pkgs/diagrams-plantuml"] {
+    members.write_string(", \"" + @fs.realpath(module) + "\"")
+  }
+  @fs.write_file(
+    "\{dir}/moon.mod",
+    "name = \"qualification/plantuml-\{name}\"\nversion = \"0.0.0\"\nimport { \{imports} }\n",
+  )
+  @fs.write_file("\{dir}/moon.work", "members = [\{members.to_string()}]\n")
+  @fs.write_file("\{dir}/moon.pkg", "import { \{packages} } for \"test\"\n")
+  @fs.write_file("\{dir}/consumer_test.mbt", test_source)
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let code = @process.run(
+      "moon",
+      ["test", "--target", target, "-p", "qualification/plantuml-\{name}"],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    println("PlantUML \{name} consumer passed: \{target}")
+  }
+}
+
+///|
+async fn main {
+  consumer(
+    "model", "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"", "\"moonrockz/diagrams/ebnf\", \"moonrockz/diagrams/render\", \"moonrockz/diagrams-svg\" @svg",
+    model_test,
+  )
+  consumer(
+    "reader", "\"moonrockz/diagrams-plantuml@0.2.0\"", "\"moonrockz/diagrams-plantuml\" @plantuml",
+    reader_test,
+  )
+  consumer(
+    "provider", "\"moonrockz/diagrams@0.2.0\", \"moonrockz/diagrams-svg@0.2.0\"",
+    "\"moonrockz/diagrams/regex\", \"moonrockz/diagrams/railroad-trace\" @trace, \"moonrockz/diagrams-svg\" @svg",
+    provider_test,
+  )
+}

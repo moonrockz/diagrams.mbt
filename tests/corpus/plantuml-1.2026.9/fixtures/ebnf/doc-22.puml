@@ -1,0 +1,6 @@
+@startebnf
+(* Test of accentuated or Unicode char*)
+alt = été | hiver;
+hiver = 'froid';
+été = 'chaud';
+@endebnf

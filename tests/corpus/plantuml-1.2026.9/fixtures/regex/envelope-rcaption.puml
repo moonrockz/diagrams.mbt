@@ -1,0 +1,9 @@
+@startregex
+caption C
+header H
+footer F
+legend
+L
+endlegend
+ab
+@endregex

@@ -1,0 +1,278 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/railroad-trace"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/regex",
+}
+
+// Values
+pub fn connector_id(String, ConnectorRole) -> String
+
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn point_id(String, String) -> String
+
+pub fn[P : RailroadTraceProvider] run(P, TraceRequest) -> TraceRun
+
+pub fn validate_result(TraceResult, Subject, view_id? : String, limits? : TraceLimits) -> TraceValidation
+
+pub fn validate_trace(Trace, Subject, view_id? : String, limits? : TraceLimits) -> TraceValidation
+
+// Errors
+
+// Types and methods
+pub struct Attempt {
+  id : String
+  status : AttemptStatus
+  steps : ReadOnlyArray[Step]
+  failure : FailurePoint?
+  continuous : Bool
+  label : String?
+} derive(Eq, @debug.Debug)
+pub fn Attempt::equal(Self, Self) -> Bool
+pub fn Attempt::new(String, AttemptStatus, ArrayView[Step], failure? : FailurePoint, continuous? : Bool, label? : String) -> Self
+pub fn Attempt::not_equal(Self, Self) -> Bool
+pub fn Attempt::to_repr(Self) -> @debug.Repr
+
+pub(all) enum AttemptStatus {
+  Matched
+  NotMatched
+} derive(Eq, @debug.Debug)
+pub fn AttemptStatus::equal(Self, Self) -> Bool
+pub fn AttemptStatus::not_equal(Self, Self) -> Bool
+pub fn AttemptStatus::to_repr(Self) -> @debug.Repr
+
+pub struct Connector {
+  id : String
+  owner : String
+  role : ConnectorRole
+  from : String
+  to : String
+  rule : String
+  constraint : Bool
+} derive(Eq, @debug.Debug)
+pub fn Connector::equal(Self, Self) -> Bool
+pub fn Connector::not_equal(Self, Self) -> Bool
+pub fn Connector::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ConnectorRole {
+  Start
+  End
+  Gap
+  Split(Int32)
+  Join(Int32)
+  Enter
+  Leave
+  Bypass
+  Return
+  Empty
+} derive(Eq, @debug.Debug)
+pub fn ConnectorRole::equal(Self, Self) -> Bool
+pub fn ConnectorRole::name(Self) -> String
+pub fn ConnectorRole::not_equal(Self, Self) -> Bool
+pub fn ConnectorRole::to_repr(Self) -> @debug.Repr
+
+pub struct FailurePoint {
+  target : FailureTarget
+  position : Int32?
+  message : String?
+} derive(Eq, @debug.Debug)
+pub fn FailurePoint::equal(Self, Self) -> Bool
+pub fn FailurePoint::new(FailureTarget, position? : Int32, message? : String) -> Self
+pub fn FailurePoint::not_equal(Self, Self) -> Bool
+pub fn FailurePoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FailureTarget {
+  Terminal(String)
+  Assertion(String)
+  Entry(String)
+  Exit(String)
+} derive(Eq, @debug.Debug)
+pub fn FailureTarget::equal(Self, Self) -> Bool
+pub fn FailureTarget::not_equal(Self, Self) -> Bool
+pub fn FailureTarget::to_repr(Self) -> @debug.Repr
+
+pub struct InputSpan {
+  start : Int32
+  end : Int32
+} derive(Eq, @debug.Debug)
+pub fn InputSpan::equal(Self, Self) -> Bool
+pub fn InputSpan::new(Int32, Int32) -> Self
+pub fn InputSpan::not_equal(Self, Self) -> Bool
+pub fn InputSpan::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Step {
+  Visit(String, InputSpan?)
+  Traverse(String, Bool)
+} derive(Eq, @debug.Debug)
+pub fn Step::equal(Self, Self) -> Bool
+pub fn Step::not_equal(Self, Self) -> Bool
+pub fn Step::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Subject {
+  Regex(@regex.Regex)
+  Ebnf(@ebnf.Grammar, String)
+} derive(Eq, @debug.Debug)
+pub fn Subject::equal(Self, Self) -> Bool
+pub fn Subject::fingerprint(Self) -> String
+pub fn Subject::identity(Self, view_id? : String) -> SubjectIdentity
+pub fn Subject::kind(Self) -> SubjectKind
+pub fn Subject::model_id(Self) -> String
+pub fn Subject::not_equal(Self, Self) -> Bool
+pub fn Subject::to_repr(Self) -> @debug.Repr
+
+pub struct SubjectIdentity {
+  kind : SubjectKind
+  model_id : String
+  view_id : String
+  fingerprint : String
+  start_rule : String?
+} derive(Eq, @debug.Debug)
+pub fn SubjectIdentity::equal(Self, Self) -> Bool
+pub fn SubjectIdentity::not_equal(Self, Self) -> Bool
+pub fn SubjectIdentity::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SubjectKind {
+  Regex
+  Ebnf
+} derive(Eq, @debug.Debug)
+pub fn SubjectKind::equal(Self, Self) -> Bool
+pub fn SubjectKind::not_equal(Self, Self) -> Bool
+pub fn SubjectKind::to_repr(Self) -> @debug.Repr
+
+pub struct Term {
+  id : String
+  kind : TermKind
+  label : String
+  rule : String
+  constraint : Bool
+  entry : String
+  exit : String
+} derive(Eq, @debug.Debug)
+pub fn Term::equal(Self, Self) -> Bool
+pub fn Term::not_equal(Self, Self) -> Bool
+pub fn Term::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TermKind {
+  Consumed
+  Reference(@ebnf.Resolution)
+  Anchor
+  Assertion
+  Empty
+} derive(Eq, @debug.Debug)
+pub fn TermKind::equal(Self, Self) -> Bool
+pub fn TermKind::not_equal(Self, Self) -> Bool
+pub fn TermKind::to_repr(Self) -> @debug.Repr
+
+pub struct Topology {
+  kind : SubjectKind
+  model_id : String
+  fingerprint : String
+  tracks : ReadOnlyArray[Track]
+  terms : ReadOnlyArray[Term]
+  connectors : ReadOnlyArray[Connector]
+  walk : ReadOnlyArray[Step]
+  // private fields
+}
+pub fn Topology::connector(Self, String) -> Connector?
+pub fn Topology::connector_between(Self, String, String) -> Connector?
+pub fn Topology::connector_of(Self, String, ConnectorRole) -> Connector?
+pub fn Topology::connectors_from(Self, String) -> Array[Connector]
+pub fn Topology::ebnf(@ebnf.Grammar, limits? : @ebnf.Limits) -> TopologyResult
+pub fn Topology::entry(Self, String) -> String?
+pub fn Topology::exit(Self, String) -> String?
+pub fn Topology::has_point(Self, String) -> Bool
+pub fn Topology::regex(@regex.Regex, limits? : @regex.Limits) -> TopologyResult
+pub fn Topology::term(Self, String) -> Term?
+
+pub struct TopologyResult {
+  topology : Topology?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Trace {
+  subject : SubjectIdentity
+  input : String
+  provider : String
+  attempts : ReadOnlyArray[Attempt]
+} derive(Eq, @debug.Debug)
+pub fn Trace::equal(Self, Self) -> Bool
+pub fn Trace::new(TraceRequest, String, ArrayView[Attempt]) -> Self
+pub fn Trace::not_equal(Self, Self) -> Bool
+pub fn Trace::to_repr(Self) -> @debug.Repr
+
+pub struct TraceLimits {
+  input : Int32
+  attempts : Int32
+  steps : Int32
+  depth : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn TraceLimits::equal(Self, Self) -> Bool
+pub fn TraceLimits::new(input? : Int32, attempts? : Int32, steps? : Int32, depth? : Int32, work? : Int32) -> Self
+pub fn TraceLimits::not_equal(Self, Self) -> Bool
+pub fn TraceLimits::to_repr(Self) -> @debug.Repr
+pub fn TraceLimits::valid(Self) -> Bool
+
+pub struct TraceRequest {
+  subject : Subject
+  view_id : String
+  input : String
+  limits : TraceLimits
+} derive(Eq, @debug.Debug)
+pub fn TraceRequest::ebnf(@ebnf.Grammar, String, String, view_id? : String, limits? : TraceLimits) -> Self
+pub fn TraceRequest::equal(Self, Self) -> Bool
+pub fn TraceRequest::identity(Self) -> SubjectIdentity
+pub fn TraceRequest::not_equal(Self, Self) -> Bool
+pub fn TraceRequest::regex(@regex.Regex, String, view_id? : String, limits? : TraceLimits) -> Self
+pub fn TraceRequest::to_repr(Self) -> @debug.Repr
+pub fn TraceRequest::topology(Self) -> TopologyResult
+pub fn TraceRequest::validate(Self) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+pub(all) enum TraceResult {
+  Matched(Trace)
+  NotMatched(Trace)
+  Unsupported(String)
+  Exhausted(String)
+  ProviderError(String)
+} derive(Eq, @debug.Debug)
+pub fn TraceResult::equal(Self, Self) -> Bool
+pub fn TraceResult::not_equal(Self, Self) -> Bool
+pub fn TraceResult::to_repr(Self) -> @debug.Repr
+
+pub struct TraceRun {
+  result : TraceResult?
+  validated : ValidatedTrace?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+pub fn TraceRun::refused(ArrayView[@diagrams.Diagnostic]) -> Self
+
+pub struct TraceValidation {
+  validated : ValidatedTrace?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Track {
+  id : String
+  name : String
+  start : String
+  end : String
+} derive(Eq, @debug.Debug)
+pub fn Track::equal(Self, Self) -> Bool
+pub fn Track::not_equal(Self, Self) -> Bool
+pub fn Track::to_repr(Self) -> @debug.Repr
+
+pub struct ValidatedTrace {
+  trace : Trace
+  topology : Topology
+}
+
+// Type aliases
+
+// Traits
+pub(open) trait RailroadTraceProvider {
+  fn trace(Self, TraceRequest) -> TraceResult
+}

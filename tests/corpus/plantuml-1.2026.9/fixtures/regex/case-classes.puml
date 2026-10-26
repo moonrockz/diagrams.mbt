@@ -1,0 +1,3 @@
+@startregex
+.\d\w\s\p{Lu}\x{41}\u0041\0101[[:alpha:]][^abc]\.\b\A\Z\z\G\B
+@endregex

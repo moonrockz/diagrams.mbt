@@ -1,0 +1,4 @@
+@startregex
+title litteralCharacterSequence
+\Qfoo\E
+@endregex

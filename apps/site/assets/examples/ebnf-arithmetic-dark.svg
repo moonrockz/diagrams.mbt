@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 838" width="384" height="838" role="img" data-diagram="ebnf" id="rr-98ff4756ee540804-diagram">
+  <title>Arithmetic with recursion</title>
+  <desc>Railroad diagram of a grammar with 5 rules and 19 terms. References are not expanded. It shows structure; it does not parse input.</desc>
+  <defs>
+    <marker id="rr-98ff4756ee540804-rr-return" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-8 -4 L0 0 L-8 4 Z" fill="#94a3b8" stroke="none"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="384" height="838" fill="#020617"/>
+  <g class="rr-title">
+    <text class="rr-title-text" x="192" y="34" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#ffffff">
+      <tspan x="192" y="34">Arithmetic with recursion</tspan>
+    </text>
+  </g>
+  <g class="rr-notes">
+    <g class="rr-note" data-note="item-0">
+      <rect class="rr-note-box" x="20" y="52" width="291" height="42" rx="4" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+      <text class="rr-note-text" x="165.5" y="67" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#ffffff">
+        <tspan x="165.5" y="67">Expressions refer to terms; parentheses </tspan>
+        <tspan x="165.5" y="82">refer back to expressions.</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="rr-frames">
+    <g class="rr-frame rr-except" data-owner="item-5/e.1">
+      <rect class="rr-frame-box" x="50" y="709" width="96" height="109" rx="8" fill="none" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text class="rr-frame-label" x="98" y="720" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#fb7185">
+        <tspan x="98" y="720">except</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="rr-connectors">
+    <path class="rr-connector rr-start" data-connector="c6:item-1:start" data-role="start" data-owner="item-1" d="M30 167.5 L50 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c10:item-1/e.1:gap" data-role="gap" data-owner="item-1/e.1" d="M102 167.5 L122 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-1/e.1:enter" data-role="enter" data-owner="item-1/e.1" d="M122 167.5 L142 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-1/e.1:leave" data-role="leave" data-owner="item-1/e.1" d="M282 167.5 L302 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-bypass" data-connector="c10:item-1/e.1:bypass" data-role="bypass" data-owner="item-1/e.1" d="M122 167.5 L127 167.5 Q132 167.5 132 162.5 L132 150 Q132 142 140 142 L284 142 Q292 142 292 150 L292 162.5 Q292 167.5 297 167.5 L302 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-return" data-connector="c10:item-1/e.1:return" data-role="return" data-owner="item-1/e.1" d="M282 167.5 L287 167.5 Q292 167.5 292 172.5 L292 224 Q292 232 284 232 L140 232 Q132 232 132 224 L132 172.5 Q132 167.5 137 167.5 L142 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-98ff4756ee540804-rr-return)"/>
+    <path class="rr-connector rr-gap" data-connector="c14:item-1/e.1.0.1:gap" data-role="gap" data-owner="item-1/e.1.0.1" d="M210 167.5 L230 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-0" data-connector="c14:item-1/e.1.0.0:split-0" data-role="split-0" data-owner="item-1/e.1.0.0" d="M142 167.5 L162 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-0" data-connector="c14:item-1/e.1.0.0:join-0" data-role="join-0" data-owner="item-1/e.1.0.0" d="M190 167.5 L210 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-1" data-connector="c14:item-1/e.1.0.0:split-1" data-role="split-1" data-owner="item-1/e.1.0.0" d="M142 167.5 L147 167.5 Q152 167.5 152 172.5 L152 201.5 Q152 206.5 157 206.5 L162 206.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-1" data-connector="c14:item-1/e.1.0.0:join-1" data-role="join-1" data-owner="item-1/e.1.0.0" d="M190 206.5 L195 206.5 Q200 206.5 200 201.5 L200 172.5 Q200 167.5 205 167.5 L210 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-1:end" data-role="end" data-owner="item-1" d="M302 167.5 L322 167.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-2:start" data-role="start" data-owner="item-2" d="M30 305.5 L50 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c10:item-2/e.1:gap" data-role="gap" data-owner="item-2/e.1" d="M118 305.5 L138 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-2/e.1:enter" data-role="enter" data-owner="item-2/e.1" d="M138 305.5 L158 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-2/e.1:leave" data-role="leave" data-owner="item-2/e.1" d="M314 305.5 L334 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-bypass" data-connector="c10:item-2/e.1:bypass" data-role="bypass" data-owner="item-2/e.1" d="M138 305.5 L143 305.5 Q148 305.5 148 300.5 L148 288 Q148 280 156 280 L316 280 Q324 280 324 288 L324 300.5 Q324 305.5 329 305.5 L334 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-return" data-connector="c10:item-2/e.1:return" data-role="return" data-owner="item-2/e.1" d="M314 305.5 L319 305.5 Q324 305.5 324 310.5 L324 362 Q324 370 316 370 L156 370 Q148 370 148 362 L148 310.5 Q148 305.5 153 305.5 L158 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-98ff4756ee540804-rr-return)"/>
+    <path class="rr-connector rr-gap" data-connector="c14:item-2/e.1.0.1:gap" data-role="gap" data-owner="item-2/e.1.0.1" d="M226 305.5 L246 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-0" data-connector="c14:item-2/e.1.0.0:split-0" data-role="split-0" data-owner="item-2/e.1.0.0" d="M158 305.5 L178 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-0" data-connector="c14:item-2/e.1.0.0:join-0" data-role="join-0" data-owner="item-2/e.1.0.0" d="M206 305.5 L226 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-1" data-connector="c14:item-2/e.1.0.0:split-1" data-role="split-1" data-owner="item-2/e.1.0.0" d="M158 305.5 L163 305.5 Q168 305.5 168 310.5 L168 339.5 Q168 344.5 173 344.5 L178 344.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-1" data-connector="c14:item-2/e.1.0.0:join-1" data-role="join-1" data-owner="item-2/e.1.0.0" d="M206 344.5 L211 344.5 Q216 344.5 216 339.5 L216 310.5 Q216 305.5 221 305.5 L226 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-2:end" data-role="end" data-owner="item-2" d="M334 305.5 L354 305.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-3:start" data-role="start" data-owner="item-3" d="M30 431.5 L50 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-0" data-connector="c8:item-3/e:split-0" data-role="split-0" data-owner="item-3/e" d="M50 431.5 L70 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-0" data-connector="c8:item-3/e:join-0" data-role="join-0" data-owner="item-3/e" d="M138 431.5 L286 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-1" data-connector="c8:item-3/e:split-1" data-role="split-1" data-owner="item-3/e" d="M50 431.5 L55 431.5 Q60 431.5 60 436.5 L60 465.5 Q60 470.5 65 470.5 L70 470.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-1" data-connector="c8:item-3/e:join-1" data-role="join-1" data-owner="item-3/e" d="M266 470.5 L271 470.5 Q276 470.5 276 465.5 L276 436.5 Q276 431.5 281 431.5 L286 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-2" data-connector="c8:item-3/e:split-2" data-role="split-2" data-owner="item-3/e" d="M50 431.5 L55 431.5 Q60 431.5 60 436.5 L60 504.5 Q60 509.5 65 509.5 L70 509.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-join-2" data-connector="c8:item-3/e:join-2" data-role="join-2" data-owner="item-3/e" d="M186 509.5 L268 509.5 Q276 509.5 276 501.5 L276 436.5 Q276 431.5 281 431.5 L286 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c12:item-3/e.1.1:gap" data-role="gap" data-owner="item-3/e.1.1" d="M98 470.5 L118 470.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c12:item-3/e.1.2:gap" data-role="gap" data-owner="item-3/e.1.2" d="M218 470.5 L238 470.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c12:item-3/e.2.1:gap" data-role="gap" data-owner="item-3/e.2.1" d="M98 509.5 L118 509.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-3:end" data-role="end" data-owner="item-3" d="M286 431.5 L306 431.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-4:start" data-role="start" data-owner="item-4" d="M30 596.5 L50 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-gap" data-connector="c10:item-4/e.1:gap" data-role="gap" data-owner="item-4/e.1" d="M110 596.5 L130 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-4/e.1:enter" data-role="enter" data-owner="item-4/e.1" d="M130 596.5 L150 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-4/e.1:leave" data-role="leave" data-owner="item-4/e.1" d="M210 596.5 L230 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-bypass" data-connector="c10:item-4/e.1:bypass" data-role="bypass" data-owner="item-4/e.1" d="M130 596.5 L135 596.5 Q140 596.5 140 591.5 L140 579 Q140 571 148 571 L212 571 Q220 571 220 579 L220 591.5 Q220 596.5 225 596.5 L230 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-return" data-connector="c10:item-4/e.1:return" data-role="return" data-owner="item-4/e.1" d="M210 596.5 L215 596.5 Q220 596.5 220 601.5 L220 614 Q220 622 212 622 L148 622 Q140 622 140 614 L140 601.5 Q140 596.5 145 596.5 L150 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-98ff4756ee540804-rr-return)"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-4:end" data-role="end" data-owner="item-4" d="M230 596.5 L250 596.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-5:start" data-role="start" data-owner="item-5" d="M30 683.5 L50 683.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-split-0" data-connector="c12:item-5/e.1.0:split-0" data-role="split-0" data-owner="item-5/e.1.0" d="M64 751.5 L84 751.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-join-0" data-connector="c12:item-5/e.1.0:join-0" data-role="join-0" data-owner="item-5/e.1.0" d="M112 751.5 L132 751.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-split-1" data-connector="c12:item-5/e.1.0:split-1" data-role="split-1" data-owner="item-5/e.1.0" d="M64 751.5 L69 751.5 Q74 751.5 74 756.5 L74 785.5 Q74 790.5 79 790.5 L84 790.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-join-1" data-connector="c12:item-5/e.1.0:join-1" data-role="join-1" data-owner="item-5/e.1.0" d="M112 790.5 L117 790.5 Q122 790.5 122 785.5 L122 756.5 Q122 751.5 127 751.5 L132 751.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-5/e.1:enter" data-role="enter" data-owner="item-5/e.1" d="M54 751.5 L64 751.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-5/e.1:leave" data-role="leave" data-owner="item-5/e.1" d="M132 751.5 L142 751.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-5:end" data-role="end" data-owner="item-5" d="M222 683.5 L242 683.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+  </g>
+  <g class="rr-terms">
+    <g class="rr-term rr-reference" data-term="item-1/e.0" data-role="reference" data-rule="item-1" data-target="item-2">
+      <rect class="rr-box" x="50" y="154" width="52" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="76" y="170" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="76" y="170">term</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-1/e.1.0.0.0" data-role="consumed" data-rule="item-1">
+      <rect class="rr-box" x="162" y="154" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="176" y="170" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="176" y="170">+</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-1/e.1.0.0.1" data-role="consumed" data-rule="item-1">
+      <rect class="rr-box" x="162" y="193" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="176" y="209" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="176" y="209">-</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-1/e.1.0.1" data-role="reference" data-rule="item-1" data-target="item-2">
+      <rect class="rr-box" x="230" y="154" width="52" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="256" y="170" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="256" y="170">term</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-2/e.0" data-role="reference" data-rule="item-2" data-target="item-3">
+      <rect class="rr-box" x="50" y="292" width="68" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="84" y="308" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="84" y="308">factor</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-2/e.1.0.0.0" data-role="consumed" data-rule="item-2">
+      <rect class="rr-box" x="178" y="292" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="192" y="308" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="192" y="308">*</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-2/e.1.0.0.1" data-role="consumed" data-rule="item-2">
+      <rect class="rr-box" x="178" y="331" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="192" y="347" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="192" y="347">/</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-2/e.1.0.1" data-role="reference" data-rule="item-2" data-target="item-3">
+      <rect class="rr-box" x="246" y="292" width="68" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="280" y="308" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="280" y="308">factor</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-3/e.0" data-role="reference" data-rule="item-3" data-target="item-4">
+      <rect class="rr-box" x="70" y="418" width="68" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="104" y="434" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="104" y="434">number</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-3/e.1.0" data-role="consumed" data-rule="item-3">
+      <rect class="rr-box" x="70" y="457" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="84" y="473" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="84" y="473">(</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-3/e.1.1" data-role="reference" data-rule="item-3" data-target="item-1">
+      <rect class="rr-box" x="118" y="457" width="100" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="168" y="473" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="168" y="473">expression</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-3/e.1.2" data-role="consumed" data-rule="item-3">
+      <rect class="rr-box" x="238" y="457" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="252" y="473" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="252" y="473">)</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-3/e.2.0" data-role="consumed" data-rule="item-3">
+      <rect class="rr-box" x="70" y="496" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="84" y="512" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="84" y="512">-</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-3/e.2.1" data-role="reference" data-rule="item-3" data-target="item-3">
+      <rect class="rr-box" x="118" y="496" width="68" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="152" y="512" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="152" y="512">factor</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-4/e.0" data-role="reference" data-rule="item-4" data-target="item-5">
+      <rect class="rr-box" x="50" y="583" width="60" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="80" y="599" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="80" y="599">digit</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-reference" data-term="item-4/e.1.0" data-role="reference" data-rule="item-4" data-target="item-5">
+      <rect class="rr-box" x="150" y="583" width="60" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="180" y="599" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="180" y="599">digit</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-special" data-term="item-5/e.0" data-role="consumed" data-rule="item-5">
+      <rect class="rr-box" x="50" y="670" width="172" height="27" rx="6" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="2 3"/>
+      <text class="rr-label" x="136" y="686" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="136" y="686"> any decimal digit </tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-5/e.1.0.0" data-role="consumed" data-rule="item-5" data-constraint="true">
+      <rect class="rr-box" x="84" y="738" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="98" y="754" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="98" y="754">0</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="item-5/e.1.0.1" data-role="consumed" data-rule="item-5" data-constraint="true">
+      <rect class="rr-box" x="84" y="777" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="98" y="793" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="98" y="793">0</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="rr-tracks">
+    <g class="rr-track" data-rule="item-1">
+      <text class="rr-rule-name" x="20" y="130" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="130">expression</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="167.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="328" cy="167.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="328" cy="167.5" r="3" fill="#94a3b8"/>
+    </g>
+    <g class="rr-track" data-rule="item-2">
+      <text class="rr-rule-name" x="20" y="268" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="268">term</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="305.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="360" cy="305.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="360" cy="305.5" r="3" fill="#94a3b8"/>
+    </g>
+    <g class="rr-track" data-rule="item-3">
+      <text class="rr-rule-name" x="20" y="406" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="406">factor</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="431.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="312" cy="431.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="312" cy="431.5" r="3" fill="#94a3b8"/>
+    </g>
+    <g class="rr-track" data-rule="item-4">
+      <text class="rr-rule-name" x="20" y="559" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="559">number</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="596.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="256" cy="596.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="256" cy="596.5" r="3" fill="#94a3b8"/>
+    </g>
+    <g class="rr-track" data-rule="item-5">
+      <text class="rr-rule-name" x="20" y="658" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="658">digit</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="683.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="248" cy="683.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="248" cy="683.5" r="3" fill="#94a3b8"/>
+    </g>
+  </g>
+</svg>

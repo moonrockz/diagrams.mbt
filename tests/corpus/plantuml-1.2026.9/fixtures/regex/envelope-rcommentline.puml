@@ -1,0 +1,4 @@
+@startregex
+  ' only comment
+ab
+@endregex

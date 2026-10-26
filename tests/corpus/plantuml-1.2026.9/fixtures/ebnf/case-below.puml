@@ -1,0 +1,3 @@
+@startebnf
+rule(* below *)= "x";
+@endebnf

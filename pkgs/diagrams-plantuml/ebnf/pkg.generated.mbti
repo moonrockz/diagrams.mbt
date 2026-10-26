@@ -1,0 +1,95 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/ebnf"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/envelope",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub let no_note : Notes
+
+pub fn print_body(Document, limits? : @envelope.Limits) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]]
+
+pub fn read(@envelope.Scan, limits? : @envelope.Limits) -> ReadResult
+
+pub fn to_grammar(Document, id? : String, limits? : @envelope.Limits) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  grammar : @moonrockz/diagrams/ebnf.Grammar?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Document {
+  name : String?
+  statements : ReadOnlyArray[@envelope.Statement]
+  items : ReadOnlyArray[Item]
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::logical_equal(Self, Self) -> Bool
+pub fn Document::new(ArrayView[Item], name? : String, statements? : ArrayView[@envelope.Statement]) -> Self
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+pub fn Document::without_spans(Self) -> Self
+
+pub(all) enum Expr {
+  Terminal(String, @moonrockz/diagrams/ebnf.Quote, Notes, @diagrams.Span?)
+  Name(String, Notes, @diagrams.Span?)
+  Special(String, Notes, @diagrams.Span?)
+  Concat(ReadOnlyArray[Expr])
+  Alt(ReadOnlyArray[Expr])
+  Optional(Expr, @diagrams.Span?)
+  ZeroOrMore(Expr, @diagrams.Span?)
+  OneOrMore(Expr, @diagrams.Span?)
+  Count(String, Expr, @diagrams.Span?)
+  Not(Expr, @diagrams.Span?)
+} derive(Eq, @debug.Debug)
+pub fn Expr::equal(Self, Self) -> Bool
+pub fn Expr::not_equal(Self, Self) -> Bool
+pub fn Expr::to_repr(Self) -> @debug.Repr
+pub fn Expr::without_spans(Self) -> Self
+
+pub(all) enum Item {
+  Rule(Rule)
+  Note(ReadOnlyArray[String], @diagrams.Span?)
+} derive(Eq, @debug.Debug)
+pub fn Item::equal(Self, Self) -> Bool
+pub fn Item::not_equal(Self, Self) -> Bool
+pub fn Item::to_repr(Self) -> @debug.Repr
+
+pub struct Notes {
+  above : String?
+  below : String?
+} derive(Eq, @debug.Debug)
+pub fn Notes::equal(Self, Self) -> Bool
+pub fn Notes::not_equal(Self, Self) -> Bool
+pub fn Notes::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  nodes : Array[@cst.Node]
+  document : Document?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Rule {
+  name : String
+  body : Expr?
+  above : String?
+  below : String?
+  span : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Rule::equal(Self, Self) -> Bool
+pub fn Rule::new(String, body? : Expr, above? : String, below? : String) -> Self
+pub fn Rule::not_equal(Self, Self) -> Bool
+pub fn Rule::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

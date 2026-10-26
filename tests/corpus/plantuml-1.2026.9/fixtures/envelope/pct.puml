@@ -1,0 +1,3 @@
+@startjson
+{"a":"%version()", "b": "$x"}
+@endjson

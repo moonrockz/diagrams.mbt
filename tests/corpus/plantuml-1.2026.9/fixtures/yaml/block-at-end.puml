@@ -1,0 +1,5 @@
+@startyaml
+t: |
+  one
+	tabbed	inside
+@endyaml

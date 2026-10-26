@@ -112,6 +112,7 @@ fn playback_data(
     steps.push(
       budget.object([
         ("reversed", Json(step.reversed)),
+        ("visit", Json(step.visit)),
         ("ordinal", budget.number(step.ordinal)),
         ("key", budget.str(step.occurrence.key)),
         ("start_ms", budget.str(step.start_ms.to_string())),
@@ -153,6 +154,10 @@ fn playback_data(
               "swimlane"
             } else if binding.occurrence.flow is Some(_) {
               "bpmn"
+            } else if binding.occurrence.railroad_connector is Some(_) {
+              "railroad"
+            } else if binding.occurrence.data_member is Some(_) {
+              "data"
             } else {
               "sequence"
             },
@@ -160,13 +165,13 @@ fn playback_data(
         ),
         (
           "connection",
-          binding.occurrence.swimlane_connection
-          .map(c => budget.str(c.id))
-          .unwrap_or_else(() => {
-            binding.occurrence.flow
-            .map(f => budget.str(f.id))
-            .unwrap_or(Json(null))
-          }),
+          match binding.occurrence {
+            { swimlane_connection: Some(c), .. } => budget.str(c.id)
+            { flow: Some(f), .. } => budget.str(f.id)
+            { railroad_connector: Some(c), .. } => budget.str(c.id)
+            { data_member: Some(m), .. } => budget.str(m.id)
+            _ => Json(null)
+          },
         ),
       ]),
     )
@@ -180,6 +185,8 @@ fn playback_data(
       Bpmn(_) => "bpmn"
       SwimlaneNode | SwimlaneGroup | SwimlaneLane => "swimlane"
       Message => "message"
+      RailroadPoint => "point"
+      DataValue => "data"
       _ => "control"
     }
     let detail = node.source_node.map(n => description(n, budget)).unwrap_or("")
@@ -208,6 +215,8 @@ fn playback_data(
       Order => "order"
       SwimlaneFlow => "swimlane"
       Undirected => "undirected"
+      Railroad => "railroad"
+      Containment => "containment"
     }
     edges.push(
       budget.object([
@@ -267,6 +276,24 @@ fn playback_data(
           ("endpoint", budget.str(binding.endpoint)),
           ("kind", budget.str("frame")),
           ("index", budget.number(index)),
+        ])
+      RailroadTerm(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("term")),
+          ("id", budget.str(id)),
+        ])
+      DataRow(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("row")),
+          ("id", budget.str(id)),
+        ])
+      DataBox(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("box")),
+          ("id", budget.str(id)),
         ])
     }
     node_bindings.push(value)

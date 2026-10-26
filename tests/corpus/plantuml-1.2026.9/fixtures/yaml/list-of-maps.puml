@@ -1,0 +1,7 @@
+@startyaml
+- name: x
+  v: 1
+- name: y
+-
+  z: 2
+@endyaml

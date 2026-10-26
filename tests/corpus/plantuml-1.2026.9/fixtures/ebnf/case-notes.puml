@@ -1,0 +1,9 @@
+@startebnf
+(* a note *)
+(* above *) rule (* below *) = "x" (* inner *), y;
+(**
+multi
+line
+**)
+z = "q";
+@endebnf

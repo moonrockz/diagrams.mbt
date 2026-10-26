@@ -135,7 +135,9 @@ fn docstring_html(
   }
   let mermaid = @content.render_mermaid_blocks(file, doc.html)
   problems.append(mermaid.problems)
-  let layers = @content.render_layers(file, mermaid.html)
+  let plantuml = @content.render_plantuml_blocks(file, mermaid.html)
+  problems.append(plantuml.problems)
+  let layers = @content.render_layers(file, plantuml.html)
   problems.append(layers.problems)
   "<div class=\"api-doc\">" + @content.render_callouts(layers.html) + "</div>"
 }

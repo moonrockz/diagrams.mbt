@@ -11,4 +11,6 @@ import {
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams/bpmn" @model,
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/render",
 } for "test"

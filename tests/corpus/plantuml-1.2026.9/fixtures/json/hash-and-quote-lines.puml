@@ -1,0 +1,6 @@
+@startjson
+' plantuml comment
+{"a":
+#hash comment
+1}
+@endjson

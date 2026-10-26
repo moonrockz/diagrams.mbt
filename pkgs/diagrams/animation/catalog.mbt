@@ -370,6 +370,10 @@ pub fn Catalog::bpmn(
       flow: Some(flow),
       message: None,
       swimlane_connection: None,
+      railroad_connector: None,
+      railroad_term: None,
+      data_member: None,
+      data_node: None,
     })
     if flow.kind != SequenceFlow && flow.kind != MessageFlow {
       continue

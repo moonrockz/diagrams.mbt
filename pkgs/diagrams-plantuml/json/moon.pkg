@@ -1,0 +1,16 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/data-tree" @data_tree,
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/data",
+  "moonrockz/diagrams-plantuml/envelope",
+}
+
+import {
+  "moonrockz/diagrams-plantuml/json",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams-plantuml/data",
+  "moonrockz/diagrams/data-tree" @data_tree,
+  "moonrockz/diagrams",
+} for "test"

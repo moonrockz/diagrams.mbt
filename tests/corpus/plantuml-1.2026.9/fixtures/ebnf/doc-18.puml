@@ -1,0 +1,4 @@
+@startebnf
+ArrayInitializer = "{", [VariableInitializerList], [","], "}";
+VariableInitializerList = VariableInitializer, {",", VariableInitializer};
+@endebnf

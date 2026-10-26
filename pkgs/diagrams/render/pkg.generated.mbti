@@ -5,6 +5,9 @@ import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
   "moonrockz/diagrams/bpmn",
+  "moonrockz/diagrams/data-tree",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/regex",
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/swimlane",
 }
@@ -18,6 +21,9 @@ pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
   Swimlane(@swimlane.Swimlane)
+  Regex(@regex.Regex)
+  Ebnf(@ebnf.Grammar)
+  DataTree(@data-tree.DataTree)
 } derive(Eq, @debug.Debug)
 pub fn Diagram::equal(Self, Self) -> Bool
 pub fn Diagram::kind_name(Self) -> String

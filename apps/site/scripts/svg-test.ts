@@ -334,6 +334,113 @@ try {
   }), true, 'swimlane prefixes and custom root overrides stay isolated');
   assert.deepEqual(requests, [], 'all swimlane SVG qualification remains offline');
   console.log(`Verified ${swimlaneFrames.length} swimlane SVGs in both preferences, including actual outline attachment, header clearance, inline isolation and contrast.`);
+  // PlantUML regex, EBNF, JSON and YAML review outputs: standalone XML, local
+  // references, fixed palettes, text contrast, and actual railroad attachment.
+  const plantuml = JSON.parse(await readFile('tests/plantuml-acceptance/__snapshot__/plantuml-gallery.json', 'utf8')) as [string, string, string][];
+  const plantumlSvgs = plantuml.filter(([, kind]) => kind === 'svg');
+  assert.ok(plantumlSvgs.length >= 20, 'PlantUML review SVGs');
+  for (const [name, , source] of plantumlSvgs) {
+    for (const preference of ['dark', 'light'] as const) {
+      await page.emulateMedia({ colorScheme: preference });
+      await page.setContent('');
+      await page.evaluate(({ source, name }) => {
+        const xml = new DOMParser().parseFromString(source, 'image/svg+xml');
+        if (xml.querySelector('parsererror')) throw new Error('Malformed XML');
+        const svg = document.importNode(xml.documentElement, true) as unknown as SVGSVGElement;
+        document.body.append(svg);
+        if (!['regex', 'ebnf', 'data-tree'].includes(svg.dataset.diagram!) || !svg.querySelector('title') || !svg.querySelector('desc')) throw new Error('Missing PlantUML accessibility');
+        const ids = [svg.id, ...Array.from(svg.querySelectorAll('[id]'), n => n.id)];
+        if (new Set(ids).size !== ids.length) throw new Error('Duplicate IDs');
+        for (const element of svg.querySelectorAll('*')) {
+          if (['script', 'foreignObject', 'image', 'use', 'a', 'iframe', 'style'].includes(element.localName)) throw new Error(`Active or adaptive element ${element.localName} in fixed output`);
+          for (const attr of element.attributes) {
+            if (/^on/i.test(attr.name) || /href$/i.test(attr.name)) throw new Error('Active attribute');
+            for (const match of attr.value.matchAll(/url\(([^)]+)\)/g)) {
+              if (!match[1].startsWith('#') || !svg.querySelector(`[id="${match[1].slice(1)}"]`)) throw new Error('Broken local reference');
+            }
+          }
+        }
+        const bg = svg.querySelector<SVGRectElement>(':scope > .bg')!;
+        const expected = name.includes('-dark') ? 'rgb(2, 6, 23)' : 'rgb(244, 245, 247)';
+        if (getComputedStyle(bg).fill !== expected) throw new Error(`Wrong palette ${getComputedStyle(bg).fill}`);
+        const color = (value: string) => {
+          const channels = value.match(/[\d.]+/g)?.map(Number);
+          if (!channels || channels.length < 3) throw new Error(`Unresolved paint ${value}`);
+          return [...channels.slice(0, 3), channels[3] ?? 1];
+        };
+        const over = (top: number[], bottom: number[]) => top.slice(0, 3).map((v, i) => v * top[3] + bottom[i] * (1 - top[3])).concat(1);
+        const luminance = (c: number[]) => c.slice(0, 3).map(v => { const x = v / 255; return x <= .03928 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }).reduce((a, x, i) => a + x * [.2126, .7152, .0722][i], 0);
+        for (const text of svg.querySelectorAll<SVGTextElement>('text')) {
+          const style = getComputedStyle(text), box = text.getBBox();
+          if (parseFloat(style.fontSize) < 11) throw new Error('Text below 11 px');
+          const point = new DOMPoint(box.x + box.width / 2, box.y + box.height / 2);
+          let behind = color(getComputedStyle(bg).fill);
+          for (const node of svg.querySelectorAll<SVGGeometryElement>('rect, path, circle')) {
+            if (node.closest('defs') || !(node.compareDocumentPosition(text) & Node.DOCUMENT_POSITION_FOLLOWING)) continue;
+            const fill = getComputedStyle(node).fill;
+            if (fill !== 'none' && node.isPointInFill(point)) behind = over(color(fill), behind);
+          }
+          const ink = over(color(style.fill), behind), a = luminance(ink), b = luminance(behind);
+          if ((Math.max(a, b) + .05) / (Math.min(a, b) + .05) < 4.5) throw new Error(`Text contrast ${text.textContent}`);
+        }
+        // Railroad connectors attach to a term edge, a start or end marker,
+        // or another connector; none passes through a term label.
+        const connectors = [...svg.querySelectorAll<SVGPathElement>('.rr-connector')];
+        const ends = connectors.flatMap(path => [path.getPointAtLength(0), path.getPointAtLength(path.getTotalLength())]);
+        const terms = [...svg.querySelectorAll<SVGGElement>('.rr-term')];
+        const boxes = terms.map(term => term.querySelector<SVGGraphicsElement>('.rr-box, .rr-dot')!.getBBox());
+        const markers = [...svg.querySelectorAll<SVGCircleElement>('.rr-start, .rr-end')].map(c => c.getBBox());
+        // Constraint regions start and end on the inside of their frame.
+        const regions = [...svg.querySelectorAll<SVGRectElement>('.rr-frame-box, .rr-lookaround > .rr-box')].map(r => r.getBBox());
+        const near = (p: DOMPoint, b: DOMRect) => p.x >= b.x - 1.5 && p.x <= b.x + b.width + 1.5 && p.y >= b.y - 1.5 && p.y <= b.y + b.height + 1.5;
+        for (const path of connectors) {
+          if (path.getTotalLength() <= 0) throw new Error(`Zero-length connector ${path.dataset.connector}`);
+          for (const p of [path.getPointAtLength(0), path.getPointAtLength(path.getTotalLength())]) {
+            const shared = ends.filter(q => Math.abs(q.x - p.x) < .6 && Math.abs(q.y - p.y) < .6).length > 1;
+            if (!shared && !boxes.some(b => near(p, b) && (Math.abs(p.x - b.x) < 1.5 || Math.abs(p.x - b.x - b.width) < 1.5 || path.dataset.constraint === 'true')) && !markers.some(b => near(p, b)) && !(path.dataset.constraint === 'true' && regions.some(b => p.x > b.x && p.x - b.x < 6 || b.x + b.width - p.x < 6 && p.x < b.x + b.width))) throw new Error(`Connector ${path.dataset.connector} is not attached`);
+          }
+          for (const term of terms) {
+            if (term.dataset.role === 'assertion') continue;
+            const label = term.querySelector<SVGTextElement>('.rr-label');
+            if (!label) continue;
+            const b = label.getBBox();
+            for (let t = 0; t <= path.getTotalLength(); t += 2) {
+              const p = path.getPointAtLength(t);
+              if (p.x > b.x + 1 && p.x < b.x + b.width - 1 && p.y > b.y + 1 && p.y < b.y + b.height - 1) throw new Error(`Connector ${path.dataset.connector} crosses label ${label.textContent}`);
+            }
+          }
+        }
+        // Data connectors leave their own row and reach the box of its value.
+        for (const path of svg.querySelectorAll<SVGPathElement>('.data-connector')) {
+          const row = svg.querySelector<SVGGElement>(`.data-row[data-member="${CSS.escape(path.dataset.member!)}"]`);
+          if (!row) throw new Error('Data connector without its row');
+          const box = svg.querySelector<SVGGElement>(`.data-box[data-node="${CSS.escape(row.dataset.node!)}"]`);
+          if (!box) throw new Error('Data connector without its value box');
+          const a = path.getPointAtLength(0), b = path.getPointAtLength(path.getTotalLength());
+          const r = row.querySelector<SVGRectElement>('.data-row-bounds')!.getBBox(), x = box.querySelector<SVGRectElement>(':scope > .data-box-frame')!.getBBox();
+          if (path.getTotalLength() <= 0) throw new Error('Zero-length data connector');
+          if (Math.abs(a.x - (r.x + r.width)) > 2 || a.y < r.y - 1 || a.y > r.y + r.height + 1) throw new Error(`Data connector ${path.dataset.member} does not leave its row`);
+          if (Math.abs(b.x - x.x) > 2 || b.y < x.y - 1 || b.y > x.y + x.height + 1) throw new Error(`Data connector ${path.dataset.member} does not reach its box`);
+        }
+        // Trace overlays use actual connector geometry and never move terms.
+        for (const overlay of svg.querySelectorAll<SVGPathElement>('.rr-trace-path')) {
+          const original = svg.querySelector<SVGPathElement>(`.rr-connector[data-connector="${CSS.escape(overlay.dataset.target!)}"]`);
+          if (!original || original.getAttribute('d') !== overlay.getAttribute('d')) throw new Error('Trace overlay does not follow its connector');
+        }
+      }, { source, name }).catch(error => { throw new Error(`PlantUML ${name}/${preference}: ${error.message}`); });
+    }
+  }
+  const inlinePlantuml = plantuml.find(([name]) => name === 'inline.html')![2];
+  await page.setContent(inlinePlantuml);
+  assert.equal(await page.evaluate(() => {
+    const ids = [...document.querySelectorAll('[id]')].map(n => n.id);
+    const roots = document.querySelectorAll<SVGSVGElement>('svg');
+    roots[0].dataset.theme = 'dark'; roots[1].dataset.theme = 'light';
+    const markersLocal = [...roots].every(svg => [...svg.querySelectorAll('path')].every(path => { const v = path.getAttribute('marker-end'); return !v || document.getElementById(v.slice(5, -1))?.ownerSVGElement === svg; }));
+    return roots.length === 2 && new Set(ids).size === ids.length && markersLocal && getComputedStyle(roots[0].querySelector('.bg')!).fill === 'rgb(2, 6, 23)' && getComputedStyle(roots[1].querySelector('.bg')!).fill === 'rgb(244, 245, 247)';
+  }), true, 'PlantUML prefixes isolate IDs, markers and theme overrides');
+  assert.deepEqual(requests, [], 'PlantUML SVG qualification remains offline');
+  console.log(`Verified ${plantumlSvgs.length} PlantUML SVGs in both preferences, including attachment, label clearance, trace overlay geometry and contrast.`);
   // Group 1 BPMN tracer: offline path overlay, paused startup and keyboard play/pause.
   const bpmnSvg = await readFile('tests/bpmn-acceptance/__snapshot__/minimal.svg', 'utf8');
   assert.equal(await page.evaluate(source => {

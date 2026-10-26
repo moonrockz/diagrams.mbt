@@ -5,7 +5,8 @@ order: 1
 ---
 # Design overview
 
-diagrams.mbt reads Mermaid sequence and native swimlane syntax and BPMN XML. Format-specific readers
+diagrams.mbt reads Mermaid sequence and native swimlane syntax, BPMN XML and native
+PlantUML regex, EBNF, JSON and YAML blocks. Format-specific readers
 produce immutable diagram models. SVG rendering and pure motion planning share
 those models. Host adapters own process, filesystem and browser access.
 
@@ -16,6 +17,14 @@ graph TD
   A[Mermaid source] --> B[Lossless CST and typed AST]
   B --> C[Sequence model]
   B --> S[Swimlane model]
+  P[PlantUML source] --> Q[Lossless CST and typed AST]
+  Q --> R[Regex and EBNF models]
+  Q --> T[Data tree model]
+  R --> H
+  R --> I
+  T --> H
+  T --> I
+  X[External trace provider] -. explicit opt-in .-> R
   S --> H
   S --> I
   D[BPMN XML] --> E[Independent typed BPMN document]
@@ -46,9 +55,19 @@ Sequence diagrams retain message occurrence order, participant lifetimes and
 nested frames. BPMN views retain typed nodes, connections, markers and scope.
 Swimlanes retain ordered responsibility bands, nested groups, shapes and explicit
 connections. Unowned steps stay outside lanes; containment never creates a path.
+Regex and EBNF models keep operators, bounds, assertions, references and
+exclusions as separate concepts; references never expand. Data trees keep member
+order, exact number lexemes and repeated occurrences.
 A generic graph would lose those distinctions. `Renderer` takes the public
-`Diagram::Sequence`, `Diagram::Bpmn` or `Diagram::Swimlane` case and returns output, media type and
+`Diagram::Sequence`, `Diagram::Bpmn`, `Diagram::Swimlane`, `Diagram::Regex`,
+`Diagram::Ebnf` or `Diagram::DataTree` case and returns output, media type and
 diagnostics. Adding a kind requires callers with exhaustive matches to add a case.
+
+The railroad topology in `diagrams/railroad-trace` names every term, point and
+drawn connector. External engines use it to describe their attempts as traces.
+The SVG renderer draws validated traces as independent highlight channels. Only
+an explicit driver calls a provider; rendering, scenes, playback and export
+never do.
 
 Links identify represented items, such as Smithy shapes or OpenRPC methods.
 Render properties hold presentation metadata separately. Link resolution is pure;
@@ -72,8 +91,9 @@ evaluate conditions, schedule timers, synchronize gateways or simulate tokens.
 | Module | Responsibility |
 | --- | --- |
 | `moonrockz/bpmn` | Independent XML CST, typed documents, writing, validation, explicit references and traversal; MoonBit core only |
-| `moonrockz/diagrams` | Immutable sequence/BPMN/swimlane models, diagnostics, links, renderer contract and pure motion/exploration |
+| `moonrockz/diagrams` | Immutable sequence/BPMN/swimlane/regex/EBNF/data-tree models, trace values and the provider trait, diagnostics, links, renderer contract and pure motion/exploration |
 | `moonrockz/diagrams-mermaid` | Mermaid CST/AST, canonical printing, sequence/swimlane conversion and SVG convenience call |
+| `moonrockz/diagrams-plantuml` | PlantUML 1.2026.9 regex, EBNF, JSON and YAML CST/AST, canonical writing, conversion and SVG convenience calls |
 | `moonrockz/diagrams-bpmn` | BPMN view selection, document conversion and SVG convenience call |
 | `moonrockz/diagrams-svg` | Geometry, bounded layout/routing, legibility, static painting and scene bindings |
 | `moonrockz/diagrams-animated` | Pure standalone HTML construction with reproducibly embedded browser assets |
@@ -84,4 +104,5 @@ and release require separate owner approval.
 
 See [Mermaid sequence diagrams](../guides/mermaid-sequence.md),
 [Mermaid swimlanes](../guides/mermaid-swimlanes.md),
+[PlantUML regex, EBNF, JSON and YAML](../guides/plantuml.md),
 [BPMN and animation](../guides/bpmn-and-animation.md), and the tested package guides.

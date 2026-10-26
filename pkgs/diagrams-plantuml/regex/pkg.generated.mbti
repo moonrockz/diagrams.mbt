@@ -1,0 +1,69 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/regex"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/envelope",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn print_body(Document, limits? : @envelope.Limits) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]]
+
+pub fn print_pattern(Expr, limits? : @envelope.Limits) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]]
+
+pub fn read(@envelope.Scan, limits? : @envelope.Limits) -> ReadResult
+
+pub fn to_regex(Document, id? : String, limits? : @envelope.Limits) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  regex : @moonrockz/diagrams/regex.Regex?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Document {
+  name : String?
+  statements : ReadOnlyArray[@envelope.Statement]
+  pattern : Expr
+  text : String
+  span : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::logical_equal(Self, Self) -> Bool
+pub fn Document::new(Expr, name? : String, statements? : ArrayView[@envelope.Statement], text? : String) -> Self
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+pub fn Document::without_spans(Self) -> Self
+
+pub(all) enum Expr {
+  Char(String, Bool, @diagrams.Span?)
+  Class(@moonrockz/diagrams/regex.ClassKind, @diagrams.Span?)
+  Backreference(String, @diagrams.Span?)
+  Set(Bool, ReadOnlyArray[@moonrockz/diagrams/regex.SetItem], @diagrams.Span?)
+  Anchor(@moonrockz/diagrams/regex.AnchorKind, @diagrams.Span?)
+  Concat(ReadOnlyArray[Expr])
+  Alt(ReadOnlyArray[Expr])
+  Group(@moonrockz/diagrams/regex.GroupKind, Expr, @diagrams.Span?)
+  Look(@moonrockz/diagrams/regex.Look, Bool, Expr, @diagrams.Span?)
+  Quantified(Expr, @moonrockz/diagrams/regex.Bounds, @diagrams.Span?)
+} derive(Eq, @debug.Debug)
+pub fn Expr::equal(Self, Self) -> Bool
+pub fn Expr::not_equal(Self, Self) -> Bool
+pub fn Expr::to_repr(Self) -> @debug.Repr
+pub fn Expr::without_spans(Self) -> Self
+
+pub struct ReadResult {
+  nodes : Array[@cst.Node]
+  document : Document?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

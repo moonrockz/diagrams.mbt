@@ -1,0 +1,6 @@
+@startyaml
+a: &anc value
+b: *anc
+c: !!str tagged
+d: *customer
+@endyaml

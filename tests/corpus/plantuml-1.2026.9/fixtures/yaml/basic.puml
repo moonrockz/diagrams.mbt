@@ -1,0 +1,10 @@
+@startyaml
+name: test
+enabled: true
+count: 3
+list:
+  - a
+  - b
+nested:
+  key: value
+@endyaml

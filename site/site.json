@@ -12,6 +12,7 @@
     "diagrams",
     "diagrams-svg",
     "diagrams-mermaid",
+    "diagrams-plantuml",
     "diagrams-bpmn",
     "diagrams-animated"
   ],
@@ -20,6 +21,7 @@
     "pkgs/diagrams",
     "pkgs/diagrams-svg",
     "pkgs/diagrams-mermaid",
+    "pkgs/diagrams-plantuml",
     "pkgs/diagrams-bpmn",
     "pkgs/diagrams-animated"
   ],

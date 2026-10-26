@@ -1,0 +1,6 @@
+@startebnf
+title Grammar
+expr = term, { ("+" | "-"), term };
+term = factor, { ("*" | '/'), factor };
+factor = ? digits ? | "(", expr, ")";
+@endebnf

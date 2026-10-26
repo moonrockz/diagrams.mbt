@@ -1,0 +1,4 @@
+@startregex
+!define X abc
+X
+@endregex

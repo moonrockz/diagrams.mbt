@@ -44,13 +44,26 @@ pub fn PlaybackPlan::scenario(
       timing[parent].children.push(index)
     }
     let children : ReadOnlyArray[Motion] = match action {
-      Step(key, duration) | OrientedStep(key, duration, _) => {
+      Step(key, duration)
+      | OrientedStep(key, duration, _)
+      | Visit(key, duration) => {
         if !budget.charge(key.length()) {
           return fail()
         }
-        if catalog.occurrence(key) == None {
+        guard catalog.occurrence(key) is Some(occurrence) else {
           budget.error(
             "animation/invalid-identity", "Scenario names an occurrence outside its catalog",
+          )
+          return fail()
+        }
+        if occurrence.is_visit() != (action is Visit(_, _)) {
+          budget.error(
+            "animation/invalid-target-kind",
+            if occurrence.is_visit() {
+              "A connection step names a node-visit target; use Visit"
+            } else {
+              "A node visit names a connection occurrence; use Step"
+            },
           )
           return fail()
         }
@@ -93,7 +106,7 @@ pub fn PlaybackPlan::scenario(
     let index = timing.length() - 1 - reversed
     let node = timing[index]
     match node.action {
-      Step(_, _) | OrientedStep(_, _, _) => ()
+      Step(_, _) | OrientedStep(_, _, _) | Visit(_, _) => ()
       Serial(_) => {
         let mut total = 0L
         for child in node.children {
@@ -135,6 +148,7 @@ pub fn PlaybackPlan::scenario(
     let leaf = match node.action {
       Step(key, duration) => Some((key, duration, false))
       OrientedStep(key, duration, reversed) => Some((key, duration, reversed))
+      Visit(key, duration) => Some((key, duration, false))
       _ => None
     }
     if leaf is Some((key, duration, reversed)) {
@@ -145,6 +159,7 @@ pub fn PlaybackPlan::scenario(
         duration_ms: duration,
         concurrent_groups: node.groups,
         reversed,
+        visit: node.action is Visit(_, _),
       })
     }
   }
@@ -200,6 +215,7 @@ pub fn PlaybackPlan::illustrative(
     let selected = match occurrence.kind {
       SequenceMessage => true
       Swimlane(_) => true
+      Railroad(_) | DataConnector | Visit(_) => true
       Bpmn(kind) => selected_kinds.contains(kind)
     }
     if selected {
@@ -210,6 +226,7 @@ pub fn PlaybackPlan::illustrative(
       match occurrence.kind {
         Swimlane(Backward) =>
           actions.push(Motion::OrientedStep(occurrence.key, duration_ms, true))
+        Visit(_) => actions.push(Motion::Visit(occurrence.key, duration_ms))
         _ => actions.push(Motion::Step(occurrence.key, duration_ms))
       }
     }

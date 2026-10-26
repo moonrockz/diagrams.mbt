@@ -1,0 +1,5 @@
+@startjson
+/' block
+comment '/
+{"a":1}
+@endjson

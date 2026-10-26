@@ -1,0 +1,3 @@
+@startyaml
+"<script>": "&amp; <b>bold</b>"
+@endyaml

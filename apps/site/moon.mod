@@ -11,6 +11,7 @@ import {
   "moonrockz/expect@0.6.1",
   "moonrockz/diagrams-mermaid@0.2.0",
   "moonrockz/diagrams-svg@0.2.0",
+  "moonrockz/diagrams-plantuml@0.2.0",
 }
 
 description = "Static docs site generator for diagrams.mbt, excluded from publication"

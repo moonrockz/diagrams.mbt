@@ -1,0 +1,7 @@
+@startyaml
+<style>
+yamlDiagram { node { BackGroundColor yellow } }
+</style>
+skinparam monochrome true
+a: 1
+@endyaml

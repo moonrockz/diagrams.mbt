@@ -1,0 +1,9 @@
+import {
+  "moonrockz/diagrams/render" @render,
+  "moonrockz/diagrams/regex" @regex,
+  "moonrockz/diagrams/ebnf" @ebnf,
+  "moonrockz/diagrams/railroad-trace" @trace,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams-plantuml" @plantuml,
+} for "test"

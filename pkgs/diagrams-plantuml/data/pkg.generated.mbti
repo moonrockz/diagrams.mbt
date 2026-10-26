@@ -1,0 +1,58 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/data"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams/data-tree",
+}
+
+// Values
+pub fn is_highlight_line(String) -> Bool
+
+pub fn member_id(ArrayView[Int32]) -> String
+
+pub fn parse_selector(String) -> Result[Selector, String]
+
+pub fn read_selectors(@envelope.Scan, String) -> (Array[Selector], Array[@diagrams.Diagnostic])
+
+pub fn resolve(@data-tree.DataTree, ArrayView[Selector], String, work_limit? : Int32) -> Resolution
+
+pub fn value_id(ArrayView[Int32]) -> String
+
+// Errors
+
+// Types and methods
+pub struct Resolution {
+  highlights : Array[@data-tree.Highlight]
+  diagnostics : Array[@diagrams.Diagnostic]
+  complete : Bool
+}
+
+pub(all) enum Segment {
+  Name(String)
+  Occurrence(String, Int32)
+  Any
+  Deep
+} derive(Eq, @debug.Debug)
+pub fn Segment::equal(Self, Self) -> Bool
+pub fn Segment::not_equal(Self, Self) -> Bool
+pub fn Segment::to_repr(Self) -> @debug.Repr
+
+pub struct Selector {
+  segments : ReadOnlyArray[Segment]
+  stereotype : String?
+  span : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Selector::equal(Self, Self) -> Bool
+pub fn Selector::is_plain(Self) -> Bool
+pub fn Selector::logical_equal(Self, Self) -> Bool
+pub fn Selector::new(ArrayView[Segment], stereotype? : String, span? : @diagrams.Span) -> Self
+pub fn Selector::not_equal(Self, Self) -> Bool
+pub fn Selector::to_line(Self) -> String
+pub fn Selector::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

@@ -631,6 +631,11 @@ pub struct SvgRenderer {
   bpmn_policy : @bpmn.GeometryPolicy
   bpmn_limits : @bpmn_layout.Limits
   swimlane_limits : @swimlane_layout.Limits
+  railroad_limits : @railroad_layout.Limits
+  data_tree_limits : @data_tree_layout.Limits
+  /// Supplied trace evidence for regex and EBNF static highlights. It is part
+  /// of canonical output; no provider is invoked.
+  trace : TraceHighlight?
 }
 
 ///|
@@ -641,8 +646,21 @@ pub fn SvgRenderer::new(
   bpmn_policy~ : @bpmn.GeometryPolicy = PreferDi,
   bpmn_limits~ : @bpmn_layout.Limits = @bpmn_layout.Limits::new(),
   swimlane_limits~ : @swimlane_layout.Limits = @swimlane_layout.Limits::new(),
+  railroad_limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
+  data_tree_limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
+  trace? : TraceHighlight,
 ) -> SvgRenderer {
-  { theme, mode, id_prefix, bpmn_policy, bpmn_limits, swimlane_limits, }
+  {
+    theme,
+    mode,
+    id_prefix,
+    bpmn_policy,
+    bpmn_limits,
+    swimlane_limits,
+    railroad_limits,
+    data_tree_limits,
+    trace,
+  }
 }
 
 ///|
@@ -669,7 +687,29 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.id_prefix,
         self.swimlane_limits,
       )
+    Regex(_) | Ebnf(_) => paint_railroad(diagram, self).rendered
+    DataTree(tree) =>
+      if self.trace is Some(_) {
+        trace_kind_mismatch()
+      } else {
+        paint_data_tree(
+          tree,
+          self.theme,
+          self.mode,
+          self.id_prefix,
+          self.data_tree_limits,
+        )
+      }
   }
+}
+
+///|
+fn trace_kind_mismatch() -> @render.Rendered {
+  @render.Rendered::failed("image/svg+xml", [
+    @diagrams.Diagnostic::error(
+      "trace/subject-mismatch", "Trace highlights apply only to regex and EBNF diagrams",
+    ),
+  ])
 }
 
 ///|

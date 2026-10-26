@@ -1,0 +1,8 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+import {
+  "moonrockz/diagrams/data-tree" @data_tree,
+} for "test"

@@ -305,3 +305,149 @@ computes one geometry for both static rendering and motion bindings. It retains
 each parallel connection's identity and excludes invisible constraints from SVG
 and playback. Existing playback and canonical SVG downloads also work for this
 kind through `diagrams-animated`.
+
+## Regex and EBNF railroads
+
+`Diagram::Regex` and `Diagram::Ebnf`, and the `render_regex` and `render_ebnf`
+functions, draw railroads from the immutable `diagrams/regex` and
+`diagrams/ebnf` models. Measured fragments place terms on one baseline. Choices
+stack below the main line, optional terms have a bypass above, and repeats have
+a return loop below with its bound label. Each EBNF rule is one labelled track
+in source order. A top-level sequence that is wider than `railroad_limits.width`
+continues on new rows with an explicit continuation path; no text is cut.
+
+Terms keep their semantic roles: terminals and literals are pills, references
+are squares, classes and sets have a third style, special sequences a dotted
+outline and anchors a dashed outline. A lookaround is a dashed frame on the
+route with its pattern inside, as a constraint region. An exclusion draws the
+excluded term in a labelled "except" frame below its left term; it is never an
+alternative route. A reference to a missing rule has a dashed outline and a
+title. A recursive reference stays one term with a `data-target` rule identity.
+
+Each drawn connector has one path in its semantic direction, with the
+`data-connector` identity of `diagrams/railroad-trace`. The SVG contains only
+these paths, so playback and highlights use the drawn geometry.
+
+```mbt check
+///|
+test "a regex railroad has one path for each topology connector" {
+  let model = @regex.Regex::new("digits", "s", [
+    @regex.Node::new("s", Sequence(["a", "r"])),
+    @regex.Node::new("a", Anchor(LineStart)),
+    @regex.Node::new("r", Repeat(@regex.Bounds::new(1), "d")),
+    @regex.Node::new("d", Class(Shorthand('d'))),
+  ])
+  let result = @svg.render_regex(model, mode=Fixed(Light))
+  assert_eq(result.diagnostics, [])
+  let svg = result.output.unwrap()
+  let topology = @railroad_trace.Topology::regex(model).topology.unwrap()
+  assert_eq(
+    svg.split("data-connector=\"").count() - 1,
+    topology.connectors.length(),
+  )
+}
+```
+
+`diagrams-svg/railroad-layout` exposes `layout` and `check`. The checker finds
+connectors that do not start and end at their topology points, zero-length
+connectors, connectors that cross a term or its label, overlapping terms,
+labels without padding and text or highlight colours with low contrast.
+`railroad_limits` bounds nodes, depth, work, width and output. An error gives
+diagnostics and no SVG.
+
+## Static trace highlights
+
+`TraceHighlight` draws evidence that an external engine supplied. It has four
+independent channels, each with its own `ChannelStyle`: matched paths, paths of
+attempts that did not match, the taken path or prefix, and failure points. A
+channel can be shown alone, for example only the failure terminal or only the
+taken prefix. `attempts` selects attempt identities. Only supplied steps are
+highlighted; unvisited branches stay neutral.
+
+Layers have a fixed order and different widths: matched below, not matched
+above it, the taken path on top, and failure markers last. A connector in two
+attempts keeps both classifications, each with a `data-attempts` list and an
+accessible `<title>`. Highlights never move terms or paths, and they never
+change the model or the source. With no highlight the output bytes are the
+ordinary bytes.
+
+The trace must belong to the rendered model: kind, model and view identity and
+the structural fingerprint must agree, and every step must name a drawn term or
+connector. Spans and failure positions must be inside the input. A stale or
+foreign trace gives an error and no SVG; targets are never guessed from labels.
+
+```mbt check
+///|
+test "a failure terminal can be shown without its prefix" {
+  let model = @regex.Regex::new("ab", "s", [
+    @regex.Node::new("s", Sequence(["a", "b"])),
+    @regex.Node::new("a", Literal("a")),
+    @regex.Node::new("b", Class(Shorthand('d'))),
+  ])
+  let request = @railroad_trace.TraceRequest::regex(model, "ax")
+  let topology = request.topology().topology.unwrap()
+  let start = topology.connector_of("ab", Start).unwrap()
+  let trace = @railroad_trace.Trace::new(request, "example", [
+    @railroad_trace.Attempt::new(
+      "a0",
+      NotMatched,
+      [Traverse(start.id, false), Visit("a", Some(@railroad_trace.InputSpan::new(0, 1)))],
+      failure=@railroad_trace.FailurePoint::new(Terminal("b"), position=1),
+    ),
+  ])
+  let only_failure = @svg.TraceHighlight::new(
+    trace,
+    matched=@svg.ChannelStyle::hidden(),
+    not_matched=@svg.ChannelStyle::hidden(),
+  )
+  let svg = @svg.render_regex(model, trace=only_failure).output.unwrap()
+  assert_true(svg.contains("rr-trace-failure"))
+  assert_false(svg.contains("rr-trace-path"))
+  let plain = @svg.render_regex(model).output.unwrap()
+  assert_false(plain.contains("rr-trace"))
+}
+```
+
+`SvgRenderer::render_traced` is the explicit driver: it calls one
+`RailroadTraceProvider` once, validates its result and renders the evidence.
+`Unsupported`, `Exhausted` and `ProviderError` give the diagnostics
+`trace/unsupported`, `trace/exhausted` and `trace/provider-error` and no SVG; a
+completed non-match renders its evidence. `render`, `scene` and the animated
+renderer never call a provider.
+
+## Structured data
+
+`Diagram::DataTree` and `render_data_tree` draw the `diagrams/data-tree` model.
+Each object or array is a box of ordered rows: member rows have a key column and
+array rows a muted `[i]` index column. A nested container is a separate box to
+the right, joined by one drawn connector from its row. A scalar stays in its
+row, without a connector. Empty containers and a scalar root are visible boxes.
+Long values wrap and keep every character.
+
+Scalar kinds stay distinct: text, exact number lexemes, `☑ true`/`☐ false` and
+`␀ null` have different ink and a `data-type` attribute. Resolved highlights use
+theme colours with checked contrast; author styles never become CSS. Rows and
+boxes have `data-member` and `data-node` identities, so playback can visit an
+inline row without a connector path.
+
+```mbt check
+///|
+test "an inline scalar row has no connector" {
+  let tree = @data_tree.DataTree::new("order", "root", [
+    @data_tree.Node::object("root", [
+      @data_tree.Member::named("m0", "id", "v0"),
+      @data_tree.Member::named("m1", "tags", "v1"),
+    ]),
+    @data_tree.Node::new("v0", Number("12345678901234567890")),
+    @data_tree.Node::array("v1", [@data_tree.Member::index("e0", 0, "v2")]),
+    @data_tree.Node::new("v2", Text("gift")),
+  ])
+  let svg = @svg.render_data_tree(tree, mode=Fixed(Dark)).output.unwrap()
+  assert_true(svg.contains("12345678901234567890"))
+  assert_eq(svg.split("class=\"data-connector\"").count() - 1, 1)
+}
+```
+
+`diagrams-svg/data-tree-layout` exposes `layout` and `check` for row bounds,
+label clearance, connector attachment, crossings and contrast.
+`data_tree_limits` bounds nodes, depth, work, width and output.

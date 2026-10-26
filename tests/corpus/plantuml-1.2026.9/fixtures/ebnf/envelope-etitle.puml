@@ -1,0 +1,5 @@
+@startebnf
+title T
+x = "a";
+title U
+@endebnf

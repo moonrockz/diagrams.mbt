@@ -1,0 +1,17 @@
+@startyaml
+title Native YAML keeps scalars as text
+#highlight "service" / "ports"
+service:
+  name: api
+  enabled: true
+  replicas: 3
+  ports: [80, "443"]
+  description: |
+    First line
+    Second line
+clients:
+  - name: web
+    weight: 0.5
+  - name: mobile
+    weight: 0.5
+@endyaml

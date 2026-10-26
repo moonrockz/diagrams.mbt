@@ -88,3 +88,37 @@ Reversing traversal does not move or replace its endpoint markers.
 **Display anchor**:
 The visible outline used for an endpoint hidden by a collapsed group or lane.
 It does not replace the endpoint's identity in structural route queries.
+
+**Railroad**:
+A drawing of a regex pattern or an EBNF grammar. Terms sit on drawn tracks;
+choices, bypasses and return loops are drawn connectors. It shows structure; it
+does not match or parse input.
+
+**Term**:
+One visible railroad occurrence: a literal, class, set, anchor, terminal,
+reference, special sequence or empty term. Equal labels in different positions
+are different terms.
+
+**Constraint region**:
+The inner pattern of a lookaround or the excluded term of an exclusion. It is
+drawn inside its owner and is never an accepting route.
+
+**Trace**:
+Immutable evidence from an external matching or parsing engine: attempts with
+ordered term visits and connector traversals, optional input spans and failure
+points. The library validates and draws a trace; it never computes one.
+
+**Trace provider**:
+An external implementation of `RailroadTraceProvider`. It answers a typed request
+with a matched, non-matched, unsupported, exhausted or error result.
+
+**Highlight channel**:
+One independent static layer of trace evidence: matched paths, non-matched paths,
+the taken path or prefix, or failure points.
+
+**Data tree**:
+An ordered structured-data view from JSON or YAML: containers, member rows and
+typed scalars. Repeated names and equal values have separate identities.
+
+**Node visit**:
+A timed playback step on a visible term, row or box. It has no connection path.

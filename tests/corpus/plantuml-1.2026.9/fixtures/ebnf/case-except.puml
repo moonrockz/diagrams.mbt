@@ -1,0 +1,6 @@
+@startebnf
+a = b - c;
+d = e, f - g | h;
+i = 3 * j;
+k = [ l ], { m }-;
+@endebnf
