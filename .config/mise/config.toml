@@ -285,3 +285,7 @@ run = "moonx scripts/native-mermaid-corpus.mbtx check"
 [tasks."native-mermaid-corpus:reference"]
 description = "Repeat exact pinned test-only ZenUML/architecture oracles and canonical upstream parsing"
 run = "moonx scripts/native-mermaid-reference.mbtx"
+
+[tasks."check:site-compatibility"]
+description = "Compare built public routes and heading anchors with the pre-Telescope baseline"
+run = "moonx scripts/site-compatibility.mbtx"

@@ -99,3 +99,32 @@ The version switcher in the header reads `versions.json`.
 
 The design is in `openspec/changes/archive/2026-10-22-add-docs-site/design.md`,
 and the requirements are in `openspec/specs/docs-site/spec.md`.
+
+## Telescope migration inputs
+
+`site/gallery.json` is a versioned catalogue of checked examples for the Telescope
+site consumer. It contains IDs, family and scope descriptions, source files,
+light and optional dark SVG previews, and optional offline players. File records
+contain paths and media types. The renderer qualification pipeline remains the
+source of truth for the examples.
+
+To change an example, update its tested source or fixture first. Run its renderer
+and player checks, then refresh the selected exports and metadata:
+
+```shell
+mise run gallery -- --site-assets
+mise run gallery -- --existing-output --site-assets --site-assets-only --check
+```
+
+Selection and descriptions are in `site_gallery_examples` in `scripts/gallery.mbtx`.
+Add a stable ID, a source, a preview, an accurate scope description and an optional
+player there. The exporter checks required files and keeps them below
+`apps/site/assets/examples/`. Telescope owns generic manifest validation and gallery
+page rendering; this repo owns all diagram generation and qualification.
+
+The pre-migration route and heading-anchor inventory is
+`fixtures/compatibility/routes.json`, with representative landing, guide and API
+HTML beside it. After building the site, run `mise run check:site-compatibility`.
+The check permits added pages and anchors but rejects removal of a recorded page
+or anchor. `--out <directory>` checks a version tree; `--capture` deliberately
+replaces the inventory and is reserved for establishing a reviewed baseline.

@@ -1,0 +1,155 @@
+///|
+/// Capture or compare legacy public routes and heading anchors before site migration.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/test",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn option(args : Array[String], flag : String, fallback : String) -> String {
+  for i in 0..<(args.length() - 1) {
+    if args[i] == flag {
+      return args[i + 1]
+    }
+  }
+  fallback
+}
+
+///|
+fn attributes(html : String) -> Array[String] {
+  let ids = []
+  for part in html.split(" id=") {
+    if part.has_prefix("\"") || part.has_prefix("'") {
+      let quote = if part.has_prefix("\"") { "\"" } else { "'" }
+      let tail = part[1:]
+      if tail.find(quote) is Some(end) {
+        let id = tail[:end].to_owned()
+        if !ids.contains(id) {
+          ids.push(id)
+        }
+      }
+    }
+  }
+  ids.sort()
+  ids
+}
+
+///|
+async fn inventory(root : String, prefix~ : String = "") -> Map[String, Json] {
+  let pages = Map([])
+  for name in @fs.readdir(root + "/" + prefix, sort=true) {
+    let rel = prefix + name
+    match @fs.kind(root + "/" + rel) {
+      Directory =>
+        if prefix != "" || ["docs", "api", "articles"].contains(name) {
+          for path, ids in inventory(root, prefix=rel + "/") {
+            pages[path] = ids
+          }
+        }
+      Regular =>
+        if rel == "index.html" || rel.has_suffix("/index.html") {
+          let text = @fs.read_file(root + "/" + rel).text()
+          pages[rel] = @json.to_json(attributes(text))
+        }
+      _ => ()
+    }
+  }
+  pages
+}
+
+///|
+fn missing(
+  expected : Map[String, Json],
+  actual : Map[String, Json],
+) -> Array[String] {
+  let problems = []
+  for page, ids in expected {
+    match actual.get(page) {
+      None => problems.push("Missing page: " + page)
+      Some(Array(found)) => {
+        guard ids is Array(required) else {
+          problems.push("Invalid baseline anchors for " + page)
+          continue
+        }
+        for id in required {
+          if !found.contains(id) {
+            problems.push(
+              "Missing anchor: " +
+              page +
+              "#" +
+              (if id is String(text) { text } else { "" }),
+            )
+          }
+        }
+      }
+      _ => problems.push("Invalid current anchors for " + page)
+    }
+  }
+  problems.sort()
+  problems
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  let root = option(args, "--out", "_site")
+  let path = option(
+    args, "--baseline", "apps/site/fixtures/compatibility/routes.json",
+  )
+  let pages = inventory(root)
+  guard !pages.is_empty() else {
+    eprintln("No built pages in " + root + "; run build:site first")
+    @sys.exit(1)
+  }
+  if args.contains("--capture") {
+    let (code, out) = @process.collect_stdout("git", ["rev-parse", "HEAD"])
+    guard code == 0 else { @sys.exit(1) }
+    let baseline : Json = {
+      "schema_version": 1,
+      "source_ref": out.text().trim().to_owned(),
+      "pages": @json.to_json(pages),
+    }
+    @fs.write_file(path, baseline.stringify(indent=2) + "\n")
+    println("Captured \{pages.length()} legacy pages in \{path}")
+  } else {
+    guard @json.parse(@fs.read_file(path).text()) is Object(fields) &&
+      fields.get("pages") is Some(Object(expected)) else {
+      raise Failure("Invalid site compatibility baseline: " + path)
+    }
+    let problems = missing(expected, pages)
+    for problem in problems {
+      eprintln(problem)
+    }
+    if !problems.is_empty() {
+      @sys.exit(1)
+    }
+    println("Retained \{expected.length()} legacy routes and their anchors")
+  }
+}
+
+///|
+test "compatibility permits additions and rejects missing routes or anchors" {
+  let baseline : Map[String, Json] = { "docs/guide/index.html": ["start"] }
+  let added : Map[String, Json] = {
+    "docs/guide/index.html": ["start", "more"],
+    "gallery/index.html": [],
+  }
+  @test.assert_eq(missing(baseline, added).length(), 0)
+  @test.assert_eq(missing(baseline, Map([])).length(), 1)
+  @test.assert_eq(
+    missing(baseline, { "docs/guide/index.html": [] }).length(),
+    1,
+  )
+}
+
+///|
+test "anchor capture accepts both quoting styles" {
+  @test.assert_eq(attributes("<h2 id=\"guide\">Guide</h2><a id='part'>"), [
+    "part", "guide",
+  ])
+}

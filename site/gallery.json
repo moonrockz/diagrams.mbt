@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "root": "apps/site/assets/examples",
+  "entries": [
+    {
+      "id": "sequence-basic",
+      "family": "sequence",
+      "title": "Messages and replies",
+      "status": "implemented",
+      "description": "Mermaid sequence syntax with solid, dashed and open-headed messages.",
+      "scope": "Implemented Mermaid sequence subset; script-free SVG.",
+      "sources": [
+        {
+          "path": "sequence-basic.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "01-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "01-dark.svg",
+        "media_type": "image/svg+xml"
+      }
+    },
+    {
+      "id": "zenuml-symbols",
+      "family": "ZenUML",
+      "title": "Annotated interactions and symbols",
+      "status": "implemented",
+      "description": "Native ZenUML interactions with typed participant symbols and styled messages.",
+      "scope": "Implemented Mermaid ZenUML syntax and illustrative playback, without executing calls.",
+      "sources": [
+        {
+          "path": "zenuml-symbols.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "zenuml-symbols-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "zenuml-symbols-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "zenuml-symbols-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "architecture-cloud",
+      "family": "architecture",
+      "title": "Services, ports and connections",
+      "status": "implemented",
+      "description": "Native architecture-beta with groups, services and authored port connections.",
+      "scope": "Architecture rendering and bounded structural exploration, without deployment execution.",
+      "sources": [
+        {
+          "path": "architecture-cloud.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "architecture-cloud-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "architecture-cloud-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "architecture-cloud-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "bpmn-process",
+      "family": "BPMN",
+      "title": "Process with supplied diagram geometry",
+      "status": "implemented",
+      "description": "A BPMN XML process rendered with its supplied diagram interchange geometry.",
+      "scope": "Process rendering and structural illustration. No token simulation or process execution.",
+      "sources": [
+        {
+          "path": "process-di.bpmn",
+          "media_type": "application/xml"
+        }
+      ],
+      "preview": {
+        "path": "bpmn-process-di-supplied-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "bpmn-process-di-supplied-dark.svg",
+        "media_type": "image/svg+xml"
+      }
+    },
+    {
+      "id": "bpmn-collaboration",
+      "family": "BPMN",
+      "title": "Collaboration and message flows",
+      "status": "implemented",
+      "description": "Pools, participants and message flows with an optional offline player.",
+      "scope": "Collaboration rendering and drawn-structure illustration. Conditions and tokens are not executed.",
+      "sources": [
+        {
+          "path": "collaboration-di.bpmn",
+          "media_type": "application/xml"
+        }
+      ],
+      "preview": {
+        "path": "bpmn-collaboration-di-supplied-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "bpmn-collaboration-di-supplied-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "bpmn-collaboration-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "swimlane-review",
+      "family": "swimlane",
+      "title": "Review across responsibility bands",
+      "status": "implemented",
+      "description": "Native Mermaid swimlane-beta with directed interactions and a return path.",
+      "scope": "Implemented native swimlane syntax and bounded structural exploration.",
+      "sources": [
+        {
+          "path": "swimlane-review.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "swimlane-review-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "swimlane-review-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "swimlane-review-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "regex-date",
+      "family": "regex",
+      "title": "Date pattern railroad",
+      "status": "implemented",
+      "description": "PlantUML regex block with named groups, character sets, repetition and a negative lookahead.",
+      "scope": "Static regex syntax diagram and structural exploration; no embedded regex execution engine.",
+      "sources": [
+        {
+          "path": "regex-date.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "regex-date-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "regex-date-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "regex-date-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "regex-evidence",
+      "family": "regex",
+      "title": "Externally supplied match evidence",
+      "status": "implemented",
+      "description": "The date pattern with a successful trace supplied by the frozen test trace provider.",
+      "scope": "External provider evidence only. The renderer does not execute the regex or infer failure for unvisited paths.",
+      "sources": [
+        {
+          "path": "regex-date.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "regex-date-trace-success.svg",
+        "media_type": "image/svg+xml"
+      }
+    },
+    {
+      "id": "ebnf-arithmetic",
+      "family": "EBNF",
+      "title": "Arithmetic grammar railroad",
+      "status": "implemented",
+      "description": "PlantUML EBNF with recursive rule references and a note.",
+      "scope": "Static grammar diagram and structural exploration; parse evidence requires an external provider.",
+      "sources": [
+        {
+          "path": "ebnf-arithmetic.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "ebnf-arithmetic-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "ebnf-arithmetic-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "ebnf-arithmetic-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "ebnf-evidence",
+      "family": "EBNF",
+      "title": "Externally supplied parse failure",
+      "status": "implemented",
+      "description": "An arithmetic grammar with failure evidence supplied by the frozen test trace provider.",
+      "scope": "External provider evidence only. No parser is executed inside the renderer.",
+      "sources": [
+        {
+          "path": "ebnf-arithmetic.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "ebnf-arithmetic-trace-failure.svg",
+        "media_type": "image/svg+xml"
+      }
+    },
+    {
+      "id": "json-order",
+      "family": "JSON",
+      "title": "Nested order data",
+      "status": "implemented",
+      "description": "PlantUML JSON with nested collections, exact numbers and highlighted data.",
+      "scope": "Implemented native JSON data-tree rendering and structural exploration.",
+      "sources": [
+        {
+          "path": "json-order.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "json-order-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "json-order-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "json-order-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "yaml-service",
+      "family": "YAML",
+      "title": "Service configuration tree",
+      "status": "implemented",
+      "description": "PlantUML YAML with flow and block values and lists of maps.",
+      "scope": "Implemented native YAML string scalars and data-tree rendering; no YAML execution.",
+      "sources": [
+        {
+          "path": "yaml-service.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "yaml-service-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "yaml-service-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "yaml-service-light.html",
+        "media_type": "text/html"
+      }
+    }
+  ]
+}

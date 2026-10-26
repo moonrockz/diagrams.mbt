@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Adopt Telescope for the diagrams site</title>
+<!--
+  Agent document template (.agents/templates/agent-document.html). Specs, plans and reports that a person reviews
+  start from this file: copy it, keep the <head> as it is, and write the content inside <main>.
+  Styles and scripts are files in .agents/templates/assets/, referenced and not embedded. In a copy, change the
+  "assets/" prefix of each href and src to the relative path from the copy to that directory, for example
+  "../../.agents/templates/assets/" from .dev/beads-specs/. See AGENTS.md, "Specs and plans are HTML documents".
+  Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
+  list them in nav.toc.
+-->
+<link rel="stylesheet" href="../../../.agents/templates/assets/agent-document.css">
+<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script defer src="../../../.agents/templates/assets/highlight/highlight.min.js"></script>
+<script defer src="../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
+<script defer src="../../../.agents/templates/assets/agent-document.js"></script>
+</head>
+<body>
+<main>
+
+<h1>Adopt Telescope for the diagrams site</h1>
+<p class="meta">OpenSpec change adopt-telescope-site · 2026-10-26 · Implementation approved · Bead <code>diagrams-3dz</code></p>
+<nav class="toc" aria-label="Contents"><ul>
+<li><a href="#context">Context</a></li><li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li><li><a href="#risks">Risks and trade-offs</a></li>
+<li><a href="#migration">Migration plan</a></li><li><a href="#coordination">Coordination and acceptance</a></li>
+</ul></nav>
+<h2 id="context">Context</h2>
+<p>See <a href="proposal.md">the proposal</a> for motivation and scope. The baseline is diagrams.mbt
+<code>e0a541033c77590d4c51ecfeb7fb2932e5c478c4</code>. This repository already has an unpublished
+<code>moonrockz/diagrams-site</code> tool, rather than an empty site. Its current landing text lags the implemented PlantUML formats.</p>
+<table><thead><tr><th>Observed source</th><th>Current responsibility</th><th>Proposed owner</th></tr></thead><tbody>
+<tr><td><code>apps/site/model</code>, <code>content</code>, <code>views</code>, <code>site</code></td><td>Routes, Markdown/HTML, Rabbita shell, navigation, search, API pages and output</td><td>Telescope shared packages, with consumer adapters where needed</td></tr>
+<tr><td><code>apps/site/generate</code>, <code>check</code>, <code>assemble</code>, <code>islands</code></td><td>Filesystem hosts, tree checking, versions, browser controls</td><td>Telescope tools and optional adapters; thin local entry point</td></tr>
+<tr><td><code>scripts/site.mbtx</code></td><td>moon doc, build, bundle, highlight, check, preview and release asset assembly</td><td>Local orchestration over published Telescope commands</td></tr>
+<tr><td><code>site/site.json</code>, <code>site/pages</code>, <code>docs</code>, package READMEs</td><td>Project identity, navigation and content</td><td>diagrams.mbt</td></tr>
+<tr><td><code>scripts/gallery.mbtx</code>, <code>apps/site/assets/examples</code>, renderer fixtures</td><td>Qualified sources, SVG, traces and offline players</td><td>diagrams.mbt</td></tr>
+</tbody></table>
+<p>The comparison sources are Smithy <code>8c7d9c6ef3a8f2b152497226e6f230a9787ae508</code> and Morphir
+<code>bd3adc52e6b8f6368fdaee50f76535799732f8d6</code>. Smithy has a hydrated shell and dedicated playground
+and tour bundles. Morphir and this repository have a static shell with small browser islands. Telescope's
+proposal records the detailed extraction inventory. This migration does not require the Smithy workbench.</p>
+<p>No <code>docs-site</code> capability exists in the current accepted spec inventory, although
+<code>apps/site/README.md</code> references one. The <a href="specs/project-site/spec.md">project-site</a>
+and <a href="specs/diagram-gallery/spec.md">diagram-gallery</a> deltas therefore establish the site contract
+from the current code and tests. They do not modify diagram library contracts.</p>
+<h2 id="goals">Goals and non-goals</h2>
+<p>Keep one shared implementation for site mechanics. Make the first consumer build reproducible from published
+artifacts, preserve the existing URLs, and keep diagram semantics in their current library modules.
+Use this site as a real integration consumer for Telescope.</p>
+<p>This design does not add a diagram renderer to Telescope, move project examples into Telescope, require a
+runtime service, or standardize Smithy and Morphir workbenches. The scope exclusions are in the proposal.</p>
+<h2 id="decisions">Decisions</h2>
+<h3 id="dep-1">DEP-1. Owner: consume a released Telescope</h3>
+<p>The consumer migration depends on Telescope's <code>extract-project-site-toolkit</code> change and its
+owner-approved publication. Pin the published library and CLI versions. A clean checkout must resolve them
+without the sibling clone, path overrides or a branch ref. Do not guess an initial version in this proposal.
+Use the release's documented compatibility tuple when the library and CLI have different module names.</p>
+<p>A local workspace override would make extraction easier to try but would not prove the requested released
+consumer. It can be used only in a temporary Telescope integration fixture before publication, never as this
+repository's landed site dependency.</p>
+<h3 id="own-1">OWN-1. Call: keep a small consumer adapter</h3>
+<p>Retain <code>apps/site</code> as an unpublished adapter for project configuration, trusted page extensions and
+example providers. Move reusable parsing, shell, search, navigation and asset checks to Telescope. Prefer the
+published API to a copied generator fork. Keep <code>scripts/site.mbtx</code> as the command boundary so existing
+mise tasks and CI can call the same build/check/test/preview interfaces.</p>
+<p>Generic moon doc ingestion and version-tree handling must be available through released optional adapters
+or a small local compatibility adapter before migration. A local adapter may translate project metadata or
+assemble existing artifacts; it must not duplicate a shared content parser, theme or route engine.</p>
+<h3 id="gal-1">GAL-1. Call: export a checked example manifest</h3>
+<p>Extend the existing gallery exporter to write versioned metadata for selected qualified examples. Each entry
+has a stable ID, title, family, source format, supported scope and description; paths for sources
+and SVG previews; and optional player artifacts with an illustration, exploration or supplied-evidence label.
+The manifest schema and typed conversion must match the released Telescope gallery contract.</p>
+<p>Resolve paths under a single allowed artifact root, reject traversal and escaped symlinks, check duplicate
+IDs and required files, then pass the checked artifacts to Telescope. Reuse the SVG/player bytes that the renderer
+pipeline already qualified. Do not render from source a second time inside Telescope.</p>
+<p>The index groups examples by family. Stable detail pages show the source, preview, downloads and an optional
+link to the standalone player. Linking the player avoids loading its scripts on every gallery or docs page.
+Static previews and links remain usable without JavaScript.</p>
+<h3 id="ui-1">UI-1. Call: update the landing page and add gallery navigation</h3>
+<p>Use project-owned content and Telescope components to explain sequence, BPMN, swimlane, regex, EBNF, JSON and
+YAML support. A representative preview links to the gallery; documentation and getting-started links remain
+prominent. Each gallery detail page states its supported scope. A source-format label must not imply support
+for every diagram in that format.</p>
+<p>Use adaptive or checked light/dark SVG previews. Preserve keyboard focus, mobile navigation and the existing
+reduced-motion behavior in players. Keep source examples selectable and downloadable.</p>
+<h3 id="url-1">URL-1. Call: preserve routes and historical artifacts</h3>
+<p>Keep <code>/diagrams.mbt/</code>, the <code>next</code> tree, minor-release trees, <code>latest</code>,
+<code>versions.json</code>, banners and canonical links. Capture a route-and-anchor baseline before removing
+local engine code. Compare docs, API, articles, feeds and asset references against that baseline.
+Previously released site archives remain valid input; never require rebuilding old tags with Telescope.</p>
+<p>A new site without API pages or historical release assembly would be easier to build but would break the
+current publishing contract. A gallery is an added route family, not a replacement for those pages.</p>
+<h3 id="doc-1">DOC-1. Owner: HTML designs with local assets</h3>
+<p>New changes use <code>html-design</code>. The document template and local highlight assets come from
+Morphir with their license and upstream records. This repository stores the template in
+<code>.agents/templates/</code> because its current content scanner publishes HTML below <code>docs/</code>.
+Keep existing changes on their declared schemas, and repair relative asset paths when archiving.</p>
+<h2 id="risks">Risks and trade-offs</h2>
+<table><thead><tr><th>Risk</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>The first Telescope release omits API or version support</td><td>Exercise these paths in an external consumer before owner publication; hold migration until the released contract works</td></tr>
+<tr><td>Extraction changes route or anchor behavior</td><td>Compare a captured pre-migration inventory and keep focused deep-link checks</td></tr>
+<tr><td>Examples get out of sync with source or renderer output</td><td>Generate examples and their manifest through the existing qualification pipeline and reject missing inputs</td></tr>
+<tr><td>A player implies execution that the library does not provide</td><td>Use existing semantic labels and negative assertions in content checks</td></tr>
+<tr><td>Telescope changes conflict with consumer work</td><td>Publish a versioned contract, exchange compatibility results in the shared Orca Run, and pin releases</td></tr>
+</tbody></table>
+<h2 id="migration">Migration plan</h2>
+<ol>
+<li>After plan approval, create one epic and story per task group. Record the Telescope release dependency.</li>
+<li>Wait for an owner-approved Telescope publication. Build one thin landing/docs/gallery path using its real release in an independent checkout.</li>
+<li>Replace the remaining shared site code, retain compatible API/version behavior, and remove copied mechanics only after the compatibility checks pass.</li>
+<li>Export gallery artifacts for each implemented family and update the landing page and navigation. Keep each group's tests and docs with its implementation.</li>
+<li>Run the full repository checks and the site build, link and browser suites. Deploy through the existing GitHub Actions flow after review and merge.</li>
+</ol>
+<p>Rollback is a revert of the consumer migration to the prior local engine and pinned inputs. Keep historical
+site release assets unchanged. No library release is required solely to publish this site migration.</p>
+<h2 id="coordination">Coordination and acceptance</h2>
+<p>The shared Orca Run is <code>run_b3638d9bfa3d</code>. Its coordinator mailbox is
+<code>run:run_b3638d9bfa3d</code>. The Telescope development checkout is
+<code>/Users/damian/orca/workspaces/telescope/telescope-foundation</code>; the ordinary sibling clone is
+<code>/Users/damian/code/github/moonrockz/telescope</code>. These paths support development only and must not
+appear as consumer dependency requirements.</p>
+<table><thead><tr><th>Checkpoint</th><th>Sender</th><th>Evidence</th></tr></thead><tbody>
+<tr><td>Extraction contract ready</td><td>Telescope workspace</td><td>Versioned package/CLI contract and typed gallery manifest definition</td></tr>
+<tr><td>Release candidate qualified</td><td>Telescope workspace</td><td>Clean external consumer results, API/version fixture results and exact revision</td></tr>
+<tr><td>Owner publication complete</td><td>Telescope workspace</td><td>Real published versions and release URL</td></tr>
+<tr><td>Migration ready</td><td>diagrams.mbt workspace</td><td>Clean checkout build, route comparison, gallery qualification and site browser results</td></tr>
+</tbody></table>
+<p>Use attempt-specific Dispatch mailboxes for active workers and the Run mailbox for cross-project blockers.
+A successful send is an enqueue receipt; the recipient must acknowledge the contract or result before work
+depends on it. Restarted workers get fresh Dispatch IDs, while the Run and project proposals retain context.</p>
+
+</main>
+</body>
+</html>

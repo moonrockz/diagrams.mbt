@@ -42,9 +42,25 @@ A change folder has these files:
 | File | Contents |
 | --- | --- |
 | `proposal.md` | Why the change is necessary, what it changes, and what is out of scope |
-| `design.md` | How the change works. Each decision has a label: "Owner" for a maintainer decision, or "Call" for a decision of the author |
+| `design.html` | How the change works. Each decision has a label: "Owner" for a maintainer decision, or "Call" for a decision of the author |
 | `specs/<capability>/spec.md` | Requirement changes under `## ADDED`, `## MODIFIED` or `## REMOVED Requirements` headings. Each `### Requirement:` uses SHALL or MUST and has one or more `#### Scenario:` blocks with **WHEN** and **THEN** lines |
 | `tasks.md` | Task groups. Each group is one story and has a `Bead:` line with its beads ID |
+
+### HTML design documents
+
+New changes use the local `html-design` schema. Start a design from
+`.agents/templates/agent-document.html` and keep its local styles and scripts.
+Use `../../../.agents/templates/assets/` from an active change and
+`../../../../.agents/templates/assets/` from an archived change. Check these links
+when archiving. Existing changes retain their declared schema and `design.md`.
+Templates live under `.agents/` because the current site publishes HTML files
+below `docs/`; the design template is development tooling, not a docs page.
+
+The schema and document template come from `finos/morphir-moonbit` at
+`bd3adc52e6b8f6368fdaee50f76535799732f8d6`, under Apache-2.0.
+The copied highlight.js assets retain their BSD license and upstream record in
+`.agents/templates/assets/highlight/`. Repository tracker and landing rules take
+precedence over the source project's rules.
 
 ### Write a change
 
