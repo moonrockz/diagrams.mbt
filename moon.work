@@ -7,5 +7,6 @@ members = [
   "./pkgs/diagrams-animated",
   "./pkgs/diagrams-mermaid",
   "./pkgs/diagrams-svg",
+  "./pkgs/diagrams-plantuml",
   "./tests",
 ]

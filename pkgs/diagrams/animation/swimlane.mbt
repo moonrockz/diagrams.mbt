@@ -198,6 +198,10 @@ pub fn Catalog::swimlane(
       flow: None,
       message: None,
       swimlane_connection: Some(connection),
+      railroad_connector: None,
+      railroad_term: None,
+      data_member: None,
+      data_node: None,
     })
     // A visible collapsed ancestor is only a display anchor. Its hidden child
     // remains outside the route graph while the connection can still be played.

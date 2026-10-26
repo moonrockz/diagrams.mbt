@@ -39,6 +39,23 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  /// A drawn railroad connector with its structural role.
+  Railroad(@railroad_trace.ConnectorRole)
+  /// A drawn connector from a data row to its nested container.
+  DataConnector
+  /// A visible node or row without a connection path.
+  Visit(VisitKind)
+} derive(Eq, Debug)
+
+///|
+/// The kind of a node-visit target.
+pub(all) enum VisitKind {
+  /// A railroad term: a literal, class, terminal, reference or constraint.
+  RailroadTerm(@railroad_trace.TermKind)
+  /// One member row of a data container.
+  DataRow
+  /// A data container box, or a scalar root box.
+  DataBox
 } derive(Eq, Debug)
 
 ///|
@@ -51,7 +68,17 @@ pub struct Occurrence {
   flow : @bpmn.Flow?
   message : @sequence.Message?
   swimlane_connection : @swimlane.Connection?
+  railroad_connector : @railroad_trace.Connector?
+  railroad_term : @railroad_trace.Term?
+  data_member : @data_tree.Member?
+  data_node : @data_tree.Node?
 } derive(Eq, Debug)
+
+///|
+/// True for a node-visit target, which has no connection path.
+pub fn Occurrence::is_visit(self : Occurrence) -> Bool {
+  self.kind is Visit(_)
+}
 
 ///|
 pub(all) enum Control {
@@ -84,6 +111,10 @@ pub(all) enum NodeKind {
   SwimlaneNode
   SwimlaneGroup
   SwimlaneLane
+  /// An entry, exit or junction point of a railroad.
+  RailroadPoint
+  /// One structured-data value.
+  DataValue
 } derive(Eq, Debug)
 
 ///|
@@ -103,6 +134,10 @@ pub(all) enum EdgeKind {
   Order
   SwimlaneFlow
   Undirected
+  /// A drawn railroad connector or a term traversal, in drawing direction.
+  Railroad
+  /// A data parent/child containment relation.
+  Containment
 } derive(Eq, Debug)
 
 ///|
@@ -163,6 +198,8 @@ pub struct CatalogResult {
 pub(all) enum Motion {
   Step(String, Int64)
   OrientedStep(String, Int64, Bool)
+  /// A timed visit to a visible node or row, without a connection path.
+  Visit(String, Int64)
   Serial(ReadOnlyArray[Motion])
   Parallel(ReadOnlyArray[Motion])
 } derive(Eq, Debug)
@@ -209,6 +246,7 @@ pub struct ScheduledStep {
   duration_ms : Int64
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
+  visit : Bool
 } derive(Eq, Debug)
 
 ///|
@@ -239,6 +277,7 @@ pub struct Active {
   denominator : Int64
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
+  visit : Bool
 } derive(Eq, Debug)
 
 ///|
@@ -270,6 +309,7 @@ pub fn PlaybackPlan::sample_at(
         denominator: step.duration_ms,
         concurrent_groups: step.concurrent_groups,
         reversed: step.reversed,
+        visit: step.visit,
       })
     }
   }
@@ -384,6 +424,12 @@ pub extend OccurrenceKind with Eq::{equal, not_equal}
 
 ///|
 pub extend OccurrenceKind with @debug.Debug::{to_repr}
+
+///|
+pub extend VisitKind with Eq::{equal, not_equal}
+
+///|
+pub extend VisitKind with @debug.Debug::{to_repr}
 
 ///|
 pub extend Occurrence with Eq::{equal, not_equal}

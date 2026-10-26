@@ -1,0 +1,7 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbit-community/metrics",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/data-tree" @model,
+  "moonrockz/diagrams-svg/theme",
+}

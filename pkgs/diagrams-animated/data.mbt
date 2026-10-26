@@ -208,6 +208,8 @@ fn playback_data(
       Order => "order"
       SwimlaneFlow => "swimlane"
       Undirected => "undirected"
+      Railroad => "railroad"
+      Containment => "containment"
     }
     edges.push(
       budget.object([
@@ -267,6 +269,24 @@ fn playback_data(
           ("endpoint", budget.str(binding.endpoint)),
           ("kind", budget.str("frame")),
           ("index", budget.number(index)),
+        ])
+      RailroadTerm(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("term")),
+          ("id", budget.str(id)),
+        ])
+      DataRow(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("row")),
+          ("id", budget.str(id)),
+        ])
+      DataBox(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("box")),
+          ("id", budget.str(id)),
         ])
     }
     node_bindings.push(value)

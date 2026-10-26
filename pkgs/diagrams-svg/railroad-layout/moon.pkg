@@ -1,0 +1,9 @@
+import {
+  "moonbitlang/core/debug",
+  "moonbit-community/metrics",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/railroad-trace" @trace,
+  "moonrockz/diagrams-svg/theme",
+}

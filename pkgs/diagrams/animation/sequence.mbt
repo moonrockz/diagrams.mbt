@@ -132,6 +132,10 @@ pub fn Catalog::sequence(
           flow: None,
           message: Some(message),
           swimlane_connection: None,
+          railroad_connector: None,
+          railroad_term: None,
+          data_member: None,
+          data_node: None,
         })
         build.node({
           id: key,

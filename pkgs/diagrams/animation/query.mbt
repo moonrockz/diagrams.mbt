@@ -38,12 +38,14 @@ fn EdgeKind::tag(self : EdgeKind) -> Int32 {
     Order => 2
     SwimlaneFlow => 3
     Undirected => 4
+    Railroad => 5
+    Containment => 6
   }
 }
 
 ///|
 fn query_kinds(kinds : ArrayView[EdgeKind]) -> Array[EdgeKind] {
-  let selected = Array::make(5, false)
+  let selected = Array::make(7, false)
   let unique = []
   for kind in kinds {
     let tag = kind.tag()
@@ -109,7 +111,7 @@ fn next_arc(streams : ArrayView[ArcStream]) -> (Int32, Int32)? {
 pub fn Graph::reachable(
   self : Graph,
   start : String,
-  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow],
+  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment],
   direction~ : Direction = Forward,
   limits~ : Limits = Limits::new(),
 ) -> ReachabilityResult {
@@ -224,7 +226,7 @@ pub fn Graph::route(
   self : Graph,
   start : String,
   target : String,
-  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow],
+  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment],
   direction~ : Direction = Forward,
   limits~ : Limits = Limits::new(),
 ) -> RouteResult {
@@ -331,6 +333,27 @@ pub fn PlaybackPlan::route(
           actions.push(Motion::Step(key, duration_ms))
         }
       }
+    Regex(_) | Ebnf(_) =>
+      for i, edge in route.edges {
+        if edge.occurrence is Some(key) {
+          actions.push(catalog.motion(key, duration_ms, route.reversed[i]))
+        }
+      }
+    DataTree(_) => {
+      // A hierarchy route visits each value's row or box and follows a drawn
+      // connector only where one exists. Containment has no other relation.
+      if route.nodes.get(0).bind(n => n.occurrence) is Some(key) {
+        actions.push(Motion::Visit(key, duration_ms))
+      }
+      for i, edge in route.edges {
+        if edge.occurrence is Some(key) {
+          actions.push(catalog.motion(key, duration_ms, route.reversed[i]))
+        }
+        if route.nodes.get(i + 1).bind(n => n.occurrence) is Some(key) {
+          actions.push(Motion::Visit(key, duration_ms))
+        }
+      }
+    }
   }
   PlaybackPlan::scenario(catalog, Motion::serial(actions), limits~)
 }

@@ -1,0 +1,6 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/ebnf",
+}
