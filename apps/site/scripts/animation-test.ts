@@ -278,6 +278,15 @@ try {
       assert.equal(await view.locator('.motion-overlay').count(), 0, `${name} starts still`);
       assert.equal(await view.locator('.motion-visit').count(), 0, `${name} starts without visits`);
       const canonical = await view.locator('[data-diagram-viewer]').evaluate(root => JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!).canonical as string);
+      await view.locator('[data-diagram-viewer]').evaluate((root, canonical) => {
+        // The display copy has the canonical structure plus motion paths only.
+        const structure = (node: Element): unknown => [node.localName, [...node.attributes].map(attr => [attr.name, attr.value]),
+          ['text', 'title', 'desc', 'style', 'tspan'].includes(node.localName) ? node.textContent : [...node.children].map(structure)];
+        const a = new DOMParser().parseFromString(canonical, 'image/svg+xml').documentElement;
+        const b = root.querySelector('svg')!.cloneNode(true) as Element;
+        b.querySelectorAll('[data-motion-paths]').forEach(node => node.remove());
+        if (JSON.stringify(structure(a)) !== JSON.stringify(structure(b))) throw new Error('Display copy changes canonical geometry');
+      }, canonical);
       const stored = plantumlSvg.get(name.replace(/\.html$/, '.svg'));
       if (stored) assert.equal(canonical, stored, `${name} canonical equals the direct render`);
       const plan = await view.locator('[data-diagram-viewer]').evaluate(root => {
@@ -337,6 +346,7 @@ try {
   assert.equal(await reducedRailroad.locator('[data-diagram-viewer]').getAttribute('data-playing'), 'false');
   assert.ok(await position(reducedRailroad) > 0, 'reduced motion steps instead of playing');
   await reducedRailroad.close();
+  console.log(`Verified ${plantumlPlayers.length} PlantUML players in both preferences, including canonical/display identity, term and row visits, connector paths, export during a visit, trace preservation and print.`);
   assert.deepEqual(requests, [], 'standalone artifacts stay offline'); assert.deepEqual(errors, [], 'standalone artifacts have no browser errors');
   console.log(`Verified ${sequenceScenes.length + bpmnScenes.length} canonical/display scene pairs and ${players.length} offline players in both preferences, including pure samples, paths, controls, exploration, print and exact SVG downloads.`);
 } finally { await browser.close(); }

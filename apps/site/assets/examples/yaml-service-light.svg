@@ -1,41 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 382" width="600" height="382" role="img" data-diagram="data-tree" id="dt-7033782bb7752a1-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 382" width="600" height="382" role="img" data-diagram="data-tree" id="dt-443eed95f33a64fb-diagram">
   <title>Native YAML keeps scalars as text</title>
   <desc>Structured data diagram with 16 values in 6 containers. Rows show members in source order and arrays show positions; connectors join nested containers.</desc>
   <defs>
-    <marker id="dt-7033782bb7752a1-dt-arrow" viewBox="-10 -6 12 12" refX="0" refY="0" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="dt-443eed95f33a64fb-dt-arrow" viewBox="-10 -6 12 12" refX="0" refY="0" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b"/>
     </marker>
   </defs>
   <rect class="bg" x="0" y="0" width="600" height="382" fill="#f4f5f7"/>
-  <text class="data-title" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#111827">
-    <tspan x="20" y="34">Native YAML keeps scalars as text</tspan>
+  <text class="data-title" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#111827">
+    <tspan x="20" y="34" xml:space="preserve">Native YAML keeps scalars as text</tspan>
   </text>
   <g class="data-connectors">
-    <path class="data-connector" data-member="m/0" data-source="v" data-target="v/0" d="M132 66.5 C160 66.5 160 66.5 188 66.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-7033782bb7752a1-dt-arrow)"/>
-    <path class="data-connector" data-member="m/1" data-source="v" data-target="v/1" d="M132 93.5 C160 93.5 160 251.5 188 251.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-7033782bb7752a1-dt-arrow)"/>
-    <path class="data-connector" data-member="m/0/3" data-source="v/0" data-target="v/0/3" d="M396 147.5 C424 147.5 424 147.5 452 147.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-7033782bb7752a1-dt-arrow)"/>
-    <path class="data-connector" data-member="m/1/0" data-source="v/1" data-target="v/1/0" d="M268 251.5 H396 C424 251.5 424 251.5 452 251.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-7033782bb7752a1-dt-arrow)"/>
-    <path class="data-connector" data-member="m/1/1" data-source="v/1" data-target="v/1/1" d="M268 278.5 H396 C424 278.5 424 321.5 452 321.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-7033782bb7752a1-dt-arrow)"/>
+    <path class="data-connector" data-member="m/0" data-source="v" data-target="v/0" d="M132 66.5 C160 66.5 160 66.5 188 66.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-443eed95f33a64fb-dt-arrow)"/>
+    <path class="data-connector" data-member="m/1" data-source="v" data-target="v/1" d="M132 93.5 C160 93.5 160 251.5 188 251.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-443eed95f33a64fb-dt-arrow)"/>
+    <path class="data-connector" data-member="m/0/3" data-source="v/0" data-target="v/0/3" d="M396 147.5 C424 147.5 424 147.5 452 147.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-443eed95f33a64fb-dt-arrow)"/>
+    <path class="data-connector" data-member="m/1/0" data-source="v/1" data-target="v/1/0" d="M268 251.5 H396 C424 251.5 424 251.5 452 251.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-443eed95f33a64fb-dt-arrow)"/>
+    <path class="data-connector" data-member="m/1/1" data-source="v/1" data-target="v/1/1" d="M268 278.5 H396 C424 278.5 424 321.5 452 321.5" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#dt-443eed95f33a64fb-dt-arrow)"/>
   </g>
   <g class="data-boxes">
     <g class="data-box" data-node="v" data-type="object">
       <rect class="data-box-frame" x="20" y="53" width="112" height="54" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/0" data-node="v/0" data-type="object">
         <rect class="data-row-bounds" x="20" y="53" width="112" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="28" y="69">service</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="28" y="69" xml:space="preserve">service</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="100" y="69">{…}</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="100" y="69" xml:space="preserve">{…}</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/1" data-node="v/1" data-type="array">
         <rect class="data-row-bounds" x="20" y="80" width="112" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="28" y="96">clients</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="28" y="96" xml:space="preserve">clients</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="100" y="96">[…]</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="100" y="96" xml:space="preserve">[…]</tspan>
         </text>
       </g>
       <path class="data-divider" d="M92 53 V107" fill="none" stroke="#64748b" stroke-width="0.75"/>
@@ -44,49 +44,49 @@
       <rect class="data-box-frame" x="188" y="53" width="208" height="169" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/0/0" data-node="v/0/0" data-type="string">
         <rect class="data-row-bounds" x="188" y="53" width="208" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="196" y="69">name</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="196" y="69" xml:space="preserve">name</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="300" y="69">api</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="300" y="69" xml:space="preserve">api</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/0/1" data-node="v/0/1" data-type="string">
         <rect class="data-row-bounds" x="188" y="80" width="208" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="196" y="96">enabled</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="196" y="96" xml:space="preserve">enabled</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="300" y="96">true</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="300" y="96" xml:space="preserve">true</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/0/2" data-node="v/0/2" data-type="string">
         <rect class="data-row-bounds" x="188" y="107" width="208" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="196" y="123">replicas</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="196" y="123" xml:space="preserve">replicas</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="300" y="123">3</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="300" y="123" xml:space="preserve">3</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/0/3" data-node="v/0/3" data-type="array" data-highlight="true">
         <rect class="data-row-bounds" x="188" y="134" width="208" height="27" fill="rgba(251, 191, 36, 0.18)" stroke="#d97706" stroke-width="1.5"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="196" y="150">ports</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="196" y="150" xml:space="preserve">ports</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="300" y="150">[…]</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="300" y="150" xml:space="preserve">[…]</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/0/4" data-node="v/0/4" data-type="string">
         <rect class="data-row-bounds" x="188" y="161" width="208" height="61" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="196" y="177">description</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="196" y="177" xml:space="preserve">description</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="300" y="177">First line</tspan>
-          <tspan x="300" y="194">Second line</tspan>
-          <tspan x="300" y="211"></tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="300" y="177" xml:space="preserve">First line</tspan>
+          <tspan x="300" y="194" xml:space="preserve">Second line</tspan>
+          <tspan x="300" y="211" xml:space="preserve"></tspan>
         </text>
       </g>
       <path class="data-divider" d="M292 53 V222" fill="none" stroke="#64748b" stroke-width="0.75"/>
@@ -95,20 +95,20 @@
       <rect class="data-box-frame" x="452" y="134" width="80" height="54" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/0/3/0" data-node="v/0/3/0" data-type="string">
         <rect class="data-row-bounds" x="452" y="134" width="80" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="460" y="150">[0]</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="460" y="150" xml:space="preserve">[0]</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="500" y="150">80</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="500" y="150" xml:space="preserve">80</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/0/3/1" data-node="v/0/3/1" data-type="string">
         <rect class="data-row-bounds" x="452" y="161" width="80" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="460" y="177">[1]</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="460" y="177" xml:space="preserve">[1]</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="500" y="177">443</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="500" y="177" xml:space="preserve">443</tspan>
         </text>
       </g>
       <path class="data-divider" d="M492 134 V188" fill="none" stroke="#64748b" stroke-width="0.75"/>
@@ -117,20 +117,20 @@
       <rect class="data-box-frame" x="188" y="238" width="80" height="54" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/1/0" data-node="v/1/0" data-type="object">
         <rect class="data-row-bounds" x="188" y="238" width="80" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="196" y="254">[0]</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="196" y="254" xml:space="preserve">[0]</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="236" y="254">{…}</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="236" y="254" xml:space="preserve">{…}</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/1/1" data-node="v/1/1" data-type="object">
         <rect class="data-row-bounds" x="188" y="265" width="80" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="196" y="281">[1]</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="196" y="281" xml:space="preserve">[1]</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
-          <tspan x="236" y="281">{…}</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#5b6474">
+          <tspan x="236" y="281" xml:space="preserve">{…}</tspan>
         </text>
       </g>
       <path class="data-divider" d="M228 238 V292" fill="none" stroke="#64748b" stroke-width="0.75"/>
@@ -139,20 +139,20 @@
       <rect class="data-box-frame" x="452" y="238" width="104" height="54" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/1/0/0" data-node="v/1/0/0" data-type="string">
         <rect class="data-row-bounds" x="452" y="238" width="104" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="460" y="254">name</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="460" y="254" xml:space="preserve">name</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="524" y="254">web</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="524" y="254" xml:space="preserve">web</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/1/0/1" data-node="v/1/0/1" data-type="string">
         <rect class="data-row-bounds" x="452" y="265" width="104" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="460" y="281">weight</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="460" y="281" xml:space="preserve">weight</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="524" y="281">0.5</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="524" y="281" xml:space="preserve">0.5</tspan>
         </text>
       </g>
       <path class="data-divider" d="M516 238 V292" fill="none" stroke="#64748b" stroke-width="0.75"/>
@@ -161,20 +161,20 @@
       <rect class="data-box-frame" x="452" y="308" width="128" height="54" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="1.5"/>
       <g class="data-row" data-member="m/1/1/0" data-node="v/1/1/0" data-type="string">
         <rect class="data-row-bounds" x="452" y="308" width="128" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="460" y="324">name</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="460" y="324" xml:space="preserve">name</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="524" y="324">mobile</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="524" y="324" xml:space="preserve">mobile</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/1/1/1" data-node="v/1/1/1" data-type="string">
         <rect class="data-row-bounds" x="452" y="335" width="128" height="27" fill="#ffffff" stroke="#64748b" stroke-width="0.75"/>
-        <text class="data-key" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
-          <tspan x="460" y="351">weight</tspan>
+        <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+          <tspan x="460" y="351" xml:space="preserve">weight</tspan>
         </text>
-        <text class="data-value" xml:space="preserve" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
-          <tspan x="524" y="351">0.5</tspan>
+        <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047d58">
+          <tspan x="524" y="351" xml:space="preserve">0.5</tspan>
         </text>
       </g>
       <path class="data-divider" d="M516 308 V362" fill="none" stroke="#64748b" stroke-width="0.75"/>

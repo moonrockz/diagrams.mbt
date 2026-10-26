@@ -163,6 +163,8 @@ fn DataPaint::label(
             "y",
             data_number(label.box.y + label.size + i.to_double() * step - 2.0),
           ),
+          // Keep repeated and outer spaces of a value, and only of the value.
+          ("xml:space", "preserve"),
         ],
         children=[self.text(line)],
       ),
@@ -172,7 +174,6 @@ fn DataPaint::label(
     "text",
     attrs=[
       ("class", class),
-      ("xml:space", "preserve"),
       ("font-family", font_stack),
       ("font-size", data_number(label.size)),
       ("font-weight", label.weight.to_string()),

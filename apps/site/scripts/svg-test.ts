@@ -410,6 +410,18 @@ try {
             }
           }
         }
+        // Data connectors leave their own row and reach the box of its value.
+        for (const path of svg.querySelectorAll<SVGPathElement>('.data-connector')) {
+          const row = svg.querySelector<SVGGElement>(`.data-row[data-member="${CSS.escape(path.dataset.member!)}"]`);
+          if (!row) throw new Error('Data connector without its row');
+          const box = svg.querySelector<SVGGElement>(`.data-box[data-node="${CSS.escape(row.dataset.node!)}"]`);
+          if (!box) throw new Error('Data connector without its value box');
+          const a = path.getPointAtLength(0), b = path.getPointAtLength(path.getTotalLength());
+          const r = row.querySelector<SVGRectElement>('.data-row-bounds')!.getBBox(), x = box.querySelector<SVGRectElement>(':scope > .data-box-frame')!.getBBox();
+          if (path.getTotalLength() <= 0) throw new Error('Zero-length data connector');
+          if (Math.abs(a.x - (r.x + r.width)) > 2 || a.y < r.y - 1 || a.y > r.y + r.height + 1) throw new Error(`Data connector ${path.dataset.member} does not leave its row`);
+          if (Math.abs(b.x - x.x) > 2 || b.y < x.y - 1 || b.y > x.y + x.height + 1) throw new Error(`Data connector ${path.dataset.member} does not reach its box`);
+        }
         // Trace overlays use actual connector geometry and never move terms.
         for (const overlay of svg.querySelectorAll<SVGPathElement>('.rr-trace-path')) {
           const original = svg.querySelector<SVGPathElement>(`.rr-connector[data-connector="${CSS.escape(overlay.dataset.target!)}"]`);
