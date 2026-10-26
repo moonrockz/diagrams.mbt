@@ -178,6 +178,7 @@ pub struct TermBox {
 pub fn TermBox::equal(Self, Self) -> Bool
 pub fn TermBox::not_equal(Self, Self) -> Bool
 pub fn TermBox::to_repr(Self) -> @debug.Repr
+pub fn TermBox::with_rect(Self, Rect) -> Self
 
 pub struct TrackBox {
   track : @railroad-trace.Track
@@ -200,6 +201,7 @@ pub fn Wire::length(Self) -> Double
 pub fn Wire::not_equal(Self, Self) -> Bool
 pub fn Wire::path(Self, radius? : Double) -> String
 pub fn Wire::to_repr(Self) -> @debug.Repr
+pub fn Wire::with_points(Self, ArrayView[Point]) -> Self
 
 // Type aliases
 

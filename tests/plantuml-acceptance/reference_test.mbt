@@ -46,7 +46,10 @@ fn seq(items : Array[Norm]) -> Norm {
   let flat : Array[Norm] = []
   for item in items {
     match item {
-      Seq(inner) => for i in inner { flat.push(i) }
+      Seq(inner) =>
+        for i in inner {
+          flat.push(i)
+        }
       _ => flat.push(item)
     }
   }
@@ -72,7 +75,10 @@ fn alt(items : Array[Norm]) -> Norm {
   let flat : Array[Norm] = []
   for item in items {
     match item {
-      Alt(inner) => for i in inner { flat.push(i) }
+      Alt(inner) =>
+        for i in inner {
+          flat.push(i)
+        }
       _ => flat.push(item)
     }
   }
@@ -113,9 +119,11 @@ fn notes(o : Map[String, Json]) -> String {
 ///|
 fn upstream(j : Json, ebnf : Bool) -> Norm {
   guard j is Object(o) else { return Empty }
-  let tiles = () => match field(o, "tiles") {
-    Some(Array(xs)) => xs.map(x => upstream(x, ebnf))
-    _ => []
+  let tiles = () => {
+    match field(o, "tiles") {
+      Some(Array(xs)) => xs.map(x => upstream(x, ebnf))
+      _ => []
+    }
   }
   let orig = () => upstream(field(o, "orig").unwrap_or(Json::null()), ebnf)
   match str(field(o, "tile")) {
@@ -142,7 +150,11 @@ fn upstream(j : Json, ebnf : Bool) -> Norm {
       }
     }
     "ETileRegexGroup" | "ETileRegexGroupAllBut" => {
-      let key = if field(o, "elements2") is Some(_) { "elements2" } else { "elements" }
+      let key = if field(o, "elements2") is Some(_) {
+        "elements2"
+      } else {
+        "elements"
+      }
       let items = match field(o, key) {
         Some(Array(xs)) => xs.map(x => str(Some(x)))
         _ => []
@@ -186,10 +198,12 @@ fn regex_norm(model : @regex.Regex) -> Norm {
           !negated,
           items
           .iter()
-          .map(i => match i {
-            Char(c) => c
-            Range(a, b) => a + "-" + b
-            Escape(e) => e
+          .map(i => {
+            match i {
+              Char(c) => c
+              Range(a, b) => a + "-" + b
+              Escape(e) => e
+            }
           })
           .collect()
           .join(" "),
@@ -258,7 +272,8 @@ priv struct Outcome {
 ///|
 fn reference_entries() -> Map[String, Map[String, Json]] {
   let out = Map([])
-  guard (try Some(@json.parse(@corpus.reference)) catch { _ => None }) is Some(Object(r)) &&
+  guard (Some(@json.parse(@corpus.reference)) catch { _ => None })
+    is Some(Object(r)) &&
     r.get("fixtures") is Some(Array(entries)) else {
     abort("reference")
   }
@@ -271,7 +286,10 @@ fn reference_entries() -> Map[String, Map[String, Json]] {
 
 ///|
 fn expectation(name : String) -> (String, String)? {
-  guard (try Some(@json.parse(@corpus.expectations)) catch { _ => None }) is Some(Object(cases)) else { abort("expectations") }
+  guard (Some(@json.parse(@corpus.expectations)) catch { _ => None })
+    is Some(Object(cases)) else {
+    abort("expectations")
+  }
   match cases.get(name) {
     Some(Object(o)) => Some((str(o.get("category")), str(o.get("reason"))))
     _ => None
@@ -283,7 +301,8 @@ fn expectation(name : String) -> (String, String)? {
 fn compare(fixture : @corpus.Fixture, entry : Map[String, Json]) -> Outcome {
   let status = str(entry.get("status"))
   let native_accept = status == "accepted" &&
-    !(entry.get("data") is Some(Null) && entry.get("inspection") == Some(Json("data")))
+    !(entry.get("data") is Some(Null) &&
+    entry.get("inspection") == Some(Json("data")))
   let read = @plantuml.read(fixture.source)
   let converted = read.document.map(d => @plantuml.to_diagram(d))
   let ours = converted.bind(c => c.diagram)
@@ -303,12 +322,18 @@ fn compare(fixture : @corpus.Fixture, entry : Map[String, Json]) -> Outcome {
     _ => ()
   }
   guard ours is Some(diagram) else {
-    return { name: fixture.name, category, agrees: false, detail: "refused: " + detail }
+    return {
+      name: fixture.name,
+      category,
+      agrees: false,
+      detail: "refused: " + detail,
+    }
   }
   let expected = match diagram {
     Regex(_) =>
       match entry.get("regex") {
-        Some(Array(stack)) if !stack.is_empty() => Some(upstream(stack[0], false).text())
+        Some(Array(stack)) if !stack.is_empty() =>
+          Some(upstream(stack[0], false).text())
         _ => None
       }
     Ebnf(_) =>
@@ -319,7 +344,8 @@ fn compare(fixture : @corpus.Fixture, entry : Map[String, Json]) -> Outcome {
             .map(i => {
               guard i is Object(o) else { return "" }
               match o.get("note") {
-                Some(Array(lines)) => "note " + lines.map(l => str(Some(l))).join("\n")
+                Some(Array(lines)) =>
+                  "note " + lines.map(l => str(Some(l))).join("\n")
                 _ => {
                   let body = match o.get("tile") {
                     Some(Object(_) as tile) => upstream(tile, true).text()
@@ -342,10 +368,12 @@ fn compare(fixture : @corpus.Fixture, entry : Map[String, Json]) -> Outcome {
       Some(
         grammar.items
         .iter()
-        .map(item => match item {
-          Note(_, text) => "note " + text
-          Rule(rule) =>
-            "\{rule.name}{\{rule.note_above.unwrap_or("")}|\{rule.note_below.unwrap_or("")}} = \{rule.body.map(b => ebnf_norm(grammar, index, b).text()).unwrap_or("empty-rule")}"
+        .map(item => {
+          match item {
+            Note(_, text) => "note " + text
+            Rule(rule) =>
+              "\{rule.name}{\{rule.note_above.unwrap_or("")}|\{rule.note_below.unwrap_or("")}} = \{rule.body.map(b => ebnf_norm(grammar, index, b).text()).unwrap_or("empty-rule")}"
+          }
         })
         .collect()
         .join("\n"),
@@ -362,8 +390,15 @@ fn compare(fixture : @corpus.Fixture, entry : Map[String, Json]) -> Outcome {
   {
     name: fixture.name,
     category,
-    agrees: if category == "divergence" { !same } else { same },
-    detail: "expected " + expected.unwrap_or("?") + "\nactual   " + actual.unwrap_or("?"),
+    agrees: if category == "divergence" {
+      !same
+    } else {
+      same
+    },
+    detail: "expected " +
+    expected.unwrap_or("?") +
+    "\nactual   " +
+    actual.unwrap_or("?"),
   }
 }
 
@@ -378,7 +413,10 @@ test "regex, EBNF and envelope fixtures agree with PlantUML 1.2026.9" {
       continue
     }
     let envelope_data = kind == "envelope" &&
-      (fixture.source.contains("@startjson") || fixture.source.contains("@startyaml"))
+      (
+        fixture.source.contains("@startjson") ||
+        fixture.source.contains("@startyaml")
+      )
     if envelope_data {
       continue
     }
@@ -392,4 +430,57 @@ test "regex, EBNF and envelope fixtures agree with PlantUML 1.2026.9" {
     fail(failures.join("\n\n"))
   }
   assert_true(checked > 100)
+}
+
+///|
+fn logical(a : @plantuml.Document, b : @plantuml.Document) -> Bool {
+  match (a, b) {
+    (Regex(x), Regex(y)) => x.logical_equal(y)
+    (Ebnf(x), Ebnf(y)) => x.logical_equal(y)
+    (Json(x), Json(y)) => x.logical_equal(y)
+    (Yaml(x), Yaml(y)) => x.logical_equal(y)
+    _ => false
+  }
+}
+
+///|
+test "every fixture reproduces its source and writes a stable canonical block" {
+  let failures = []
+  let mut written = 0
+  for fixture in @corpus.fixtures {
+    let read = @plantuml.read(fixture.source)
+    if read.tree.text() != fixture.source {
+      failures.push(fixture.name + ": the tree does not reproduce the source")
+    }
+    guard read.document is Some(document) else { continue }
+    match @plantuml.print(document).output {
+      None => {
+        let codes = @plantuml.print(document).diagnostics.map(d => d.code)
+        // A note above a rule name has no reliable canonical spelling.
+        if fixture.name != "ebnf/case-above.puml" {
+          failures.push(fixture.name + ": cannot write " + codes.join(","))
+        }
+      }
+      Some(text) => {
+        written += 1
+        let again = @plantuml.read(text)
+        match again.document {
+          Some(back) if logical(document, back) =>
+            if @plantuml.print(back).output != Some(text) {
+              failures.push(fixture.name + ": writing is not stable")
+            }
+          _ =>
+            failures.push(
+              fixture.name +
+              ": the written block reads back differently\n" +
+              text,
+            )
+        }
+      }
+    }
+  }
+  if !failures.is_empty() {
+    fail(failures.join("\n"))
+  }
+  assert_true(written > 150)
 }

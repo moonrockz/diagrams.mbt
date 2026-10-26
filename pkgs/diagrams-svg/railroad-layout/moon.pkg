@@ -7,3 +7,10 @@ import {
   "moonrockz/diagrams/railroad-trace" @trace,
   "moonrockz/diagrams-svg/theme",
 }
+
+import {
+  "moonrockz/diagrams-svg/railroad-layout" @layout,
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams-svg/theme",
+} for "test"

@@ -25,7 +25,7 @@ pub struct Notes {
 } derive(Eq, Debug)
 
 ///|
-pub let no_note : Notes = { above: None, below: None }
+pub let no_note : Notes = { above: None, below: None, }
 
 ///|
 pub extend Expr with Eq::{not_equal, equal}
@@ -68,6 +68,17 @@ pub struct Rule {
 } derive(Eq, Debug)
 
 ///|
+/// A rule from typed values, without a source location.
+pub fn Rule::new(
+  name : String,
+  body? : Expr,
+  above? : String,
+  below? : String,
+) -> Rule {
+  { name, body, above, below, span: None, }
+}
+
+///|
 pub extend Rule with Eq::{not_equal, equal}
 
 ///|
@@ -103,7 +114,7 @@ pub extend Document with @debug.Debug::{to_repr}
 pub fn Document::new(
   items : ArrayView[Item],
   name? : String,
-  statements? : ArrayView[@envelope.Statement] = [],
+  statements~ : ArrayView[@envelope.Statement] = [],
 ) -> Document {
   {
     name,
@@ -119,10 +130,16 @@ pub fn Document::without_spans(self : Document) -> Document {
     items: ReadOnlyArray::from_iter(
       self.items
       .iter()
-      .map(item => match item {
-        Rule(rule) =>
-          Rule({ ..rule, body: rule.body.map(e => e.without_spans()), span: None })
-        Note(lines, _) => Note(lines, None)
+      .map(item => {
+        match item {
+          Rule(rule) =>
+            Rule({
+              ..rule,
+              body: rule.body.map(e => e.without_spans()),
+              span: None,
+            })
+          Note(lines, _) => Note(lines, None)
+        }
       }),
     ),
   }

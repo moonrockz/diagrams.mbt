@@ -36,37 +36,37 @@ priv enum Lex {
 ///|
 priv struct Tok {
   lex : Lex
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 }
 
 ///|
 priv struct Failure {
   code : String
   message : String
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 }
 
 ///|
-fn is_letter_unit(c : Int) -> Bool {
+fn is_letter_unit(c : Int32) -> Bool {
   (c >= 65 && c <= 90) || (c >= 97 && c <= 122)
 }
 
 ///|
-fn is_name_char(c : Int) -> Bool {
+fn is_name_char(c : Int32) -> Bool {
   // Character.isLetter for the pinned reader; ASCII and non-ASCII letters.
   is_letter_unit(c) || (c >= 0xc0 && c != 0xd7 && c != 0xf7 && c < 0xd800)
 }
 
 ///|
-fn hex(c : Int) -> Bool {
+fn hex(c : Int32) -> Bool {
   (c >= 48 && c <= 57) || (c >= 65 && c <= 70) || (c >= 97 && c <= 102)
 }
 
 ///|
 /// The code point at `i` of `text` as a string, and its UTF-16 width.
-fn code_point(text : String, i : Int) -> (String, Int) {
+fn code_point(text : String, i : Int32) -> (String, Int32) {
   let c = text.code_unit_at(i).to_int()
   if c >= 0xd800 && c <= 0xdbff && i + 1 < text.length() {
     let d = text.code_unit_at(i + 1).to_int()
@@ -78,15 +78,16 @@ fn code_point(text : String, i : Int) -> (String, Int) {
 }
 
 ///|
-fn shorthand(c : Int) -> Bool {
+fn shorthand(c : Int32) -> Bool {
   // \d \D \w \W \s \S \h \H \v \V \R \X \N \t \n \r \f \e \a
-  [100, 68, 119, 87, 115, 83, 104, 72, 118, 86, 82, 88, 78, 116, 110, 114, 102, 101, 97].contains(
-    c,
-  )
+  [
+    100, 68, 119, 87, 115, 83, 104, 72, 118, 86, 82, 88, 78, 116, 110, 114, 102,
+    101, 97,
+  ].contains(c)
 }
 
 ///|
-fn parse_int(text : String) -> Int? {
+fn parse_int(text : String) -> Int32? {
   if text.is_empty() || text.length() > 10 {
     return None
   }
@@ -111,7 +112,7 @@ fn set_items(content : String) -> Array[@model.SetItem] {
   let items : Array[@model.SetItem] = []
   let n = content.length()
   let mut i = 0
-  fn item_at(at : Int) -> (String, Int, Bool) {
+  fn item_at(at : Int32) -> (String, Int32, Bool) {
     // A character, its width and whether it was escaped.
     if content.code_unit_at(at).to_int() == 92 && at + 1 < n {
       let (c, w) = code_point(content, at + 1)
@@ -123,7 +124,8 @@ fn set_items(content : String) -> Array[@model.SetItem] {
   }
   while i < n {
     let (first, width, escaped) = item_at(i)
-    if escaped && first.length() == 1 &&
+    if escaped &&
+      first.length() == 1 &&
       is_letter_unit(first.code_unit_at(0).to_int()) {
       items.push(Escape("\\" + first))
       i += width
@@ -144,25 +146,27 @@ fn set_items(content : String) -> Array[@model.SetItem] {
 
 ///|
 /// Tokenize one pattern line. `base` is the source offset of `text`.
-fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
+fn tokenize(text : String, base : Int32) -> Result[Array[Tok], Failure] {
   let out : Array[Tok] = []
   let n = text.length()
   let mut i = 0
-  fn at(k : Int) -> Int {
+  fn at(k : Int32) -> Int32 {
     if k < n {
       text.code_unit_at(k).to_int()
     } else {
       0
     }
   }
-  fn push(lex : Lex, start : Int, end : Int) {
-    out.push({ lex, start: base + start, end: base + end })
+  fn push(lex : Lex, start : Int32, end : Int32) {
+    out.push({ lex, start: base + start, end: base + end, })
   }
-  fn fail(code : String, message : String, start : Int, end : Int) -> Result[
-    Array[Tok],
-    Failure,
-  ] {
-    Err({ code, message, start: base + start, end: base + end })
+  fn fail(
+    code : String,
+    message : String,
+    start : Int32,
+    end : Int32,
+  ) -> Result[Array[Tok], Failure] {
+    Err({ code, message, start: base + start, end: base + end, })
   }
   while i < n {
     let c = at(i)
@@ -196,7 +200,12 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           }
           let inner = @cst.slice(text, i + 3, k)
           if inner.is_empty() {
-            return fail("regex/unsupported-escape", "Empty escape braces", i, k + 1)
+            return fail(
+              "regex/unsupported-escape",
+              "Empty escape braces",
+              i,
+              k + 1,
+            )
           }
           push(
             Class(
@@ -217,16 +226,32 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           let mut k = i + 2
           while k < n && !(at(k) == 92 && at(k + 1) == 69) {
             let (ch, w) = code_point(text, k)
-            push(Char(ch, ch.length() == 1 && !is_letter_unit(ch.code_unit_at(0).to_int()) && !(ch.code_unit_at(0).to_int() >= 48 && ch.code_unit_at(0).to_int() <= 57)), k, k + w)
+            push(
+              Char(
+                ch,
+                ch.length() == 1 &&
+                !is_letter_unit(ch.code_unit_at(0).to_int()) &&
+                !(ch.code_unit_at(0).to_int() >= 48 &&
+                ch.code_unit_at(0).to_int() <= 57),
+              ),
+              k,
+              k + w,
+            )
             k += w
           }
           i = if k < n { k + 2 } else { n }
           continue
         }
         117 => {
-          if !(hex(at(i + 2)) && hex(at(i + 3)) && hex(at(i + 4)) && hex(at(i + 5))) {
+          if !(hex(at(i + 2)) &&
+            hex(at(i + 3)) &&
+            hex(at(i + 4)) &&
+            hex(at(i + 5))) {
             return fail(
-              "regex/unsupported-escape", "\\u needs four hexadecimal digits", i, (i + 6).min(n),
+              "regex/unsupported-escape",
+              "\\u needs four hexadecimal digits",
+              i,
+              (i + 6).min(n),
             )
           }
           push(Class(CodePoint(@cst.slice(text, i, i + 6))), i, i + 6)
@@ -237,7 +262,10 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           let octal = k => at(k) >= 48 && at(k) <= 55
           if !(octal(i + 2) && octal(i + 3) && octal(i + 4)) {
             return fail(
-              "regex/unsupported-escape", "\\0 needs three octal digits", i, (i + 5).min(n),
+              "regex/unsupported-escape",
+              "\\0 needs three octal digits",
+              i,
+              (i + 5).min(n),
             )
           }
           push(Class(CodePoint(@cst.slice(text, i, i + 5))), i, i + 5)
@@ -256,7 +284,7 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
                 i + 2,
               )
             }
-            push(Class(Shorthand(Int::unsafe_to_char(d))), i, i + 2)
+            push(Class(Shorthand(Int32::unsafe_to_char(d))), i, i + 2)
           } else {
             let (ch, w) = code_point(text, i + 1)
             push(Char(ch, true), i, i + 1 + w)
@@ -275,7 +303,8 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
       }
       if k + 2 >= n || at(k + 1) != 93 || at(k + 2) != 93 || k == i + 3 {
         return fail(
-          "regex/invalid-posix", "Expected a POSIX class such as [[:alpha:]]", i, n,
+          "regex/invalid-posix", "Expected a POSIX class such as [[:alpha:]]", i,
+          n,
         )
       }
       push(Class(Posix(@cst.slice(text, i + 3, k))), i, k + 3)
@@ -299,7 +328,12 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
         content
       }
       if body.is_empty() {
-        return fail("regex/empty-set", "A character set needs an item", i, k + 1)
+        return fail(
+          "regex/empty-set",
+          "A character set needs an item",
+          i,
+          k + 1,
+        )
       }
       push(Set(negated, ReadOnlyArray::from_array(set_items(body))), i, k + 1)
       i = k + 1
@@ -330,7 +364,10 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
       }
       if k == i + 3 || at(k) != 62 {
         return fail(
-          "regex/unsupported-group", "A named group needs a letter name and '>'", i, (k + 1).min(n),
+          "regex/unsupported-group",
+          "A named group needs a letter name and '>'",
+          i,
+          (k + 1).min(n),
         )
       }
       push(Named(@cst.slice(text, i + 3, k)), i, k + 1)
@@ -341,7 +378,10 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
       i += 3
     } else if c == 40 && at(i + 1) == 63 {
       return fail(
-        "regex/unsupported-group", "Unsupported group form", i, (i + 3).min(n),
+        "regex/unsupported-group",
+        "Unsupported group form",
+        i,
+        (i + 3).min(n),
       )
     } else if c == 40 {
       push(Open(Plain), i, i + 1)
@@ -356,7 +396,9 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           k += 1
         }
         if k >= n {
-          return fail("regex/bad-quantifier", "Unclosed quantifier braces", i, n)
+          return fail(
+            "regex/bad-quantifier", "Unclosed quantifier braces", i, n,
+          )
         }
         k += 1
       }
@@ -372,7 +414,10 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
       } else {
         if reluctant {
           return fail(
-            "regex/bad-quantifier", "Bad quantifier \{spelling}", i, end,
+            "regex/bad-quantifier",
+            "Bad quantifier \{spelling}",
+            i,
+            end,
           )
         }
         let inner = @cst.slice(text, i + 1, k - 1)
@@ -381,16 +426,25 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           inner.iter().all(ch => (ch >= '0' && ch <= '9') || ch == ',')
         if !valid {
           return fail(
-            "regex/bad-quantifier", "Bad quantifier \{spelling}", i, end,
+            "regex/bad-quantifier",
+            "Bad quantifier \{spelling}",
+            i,
+            end,
           )
         }
         if parts.length() > 2 {
           return fail(
-            "regex/bad-quantifier", "A quantifier has at most one comma: \{spelling}",
-            i, end,
+            "regex/bad-quantifier",
+            "A quantifier has at most one comma: \{spelling}",
+            i,
+            end,
           )
         }
-        let min = if parts[0].is_empty() { Some(0) } else { parse_int(parts[0]) }
+        let min = if parts[0].is_empty() {
+          Some(0)
+        } else {
+          parse_int(parts[0])
+        }
         let max = if parts.length() == 1 {
           min
         } else if parts[1].is_empty() {
@@ -400,20 +454,26 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
         }
         guard min is Some(min) else {
           return fail(
-            "regex/bad-quantifier", "Quantifier bound is too large: \{spelling}",
-            i, end,
+            "regex/bad-quantifier",
+            "Quantifier bound is too large: \{spelling}",
+            i,
+            end,
           )
         }
         if parts.length() == 2 && !parts[1].is_empty() && max is None {
           return fail(
-            "regex/bad-quantifier", "Quantifier bound is too large: \{spelling}",
-            i, end,
+            "regex/bad-quantifier",
+            "Quantifier bound is too large: \{spelling}",
+            i,
+            end,
           )
         }
         if max is Some(m) && m < min {
           return fail(
-            "regex/bad-quantifier", "The upper bound is less than the lower bound: \{spelling}",
-            i, end,
+            "regex/bad-quantifier",
+            "The upper bound is less than the lower bound: \{spelling}",
+            i,
+            end,
           )
         }
         @model.Bounds::new(min, max?, spelling~)
@@ -448,9 +508,9 @@ fn needs_concat(a : Lex, b : Lex) -> Bool {
 ///|
 priv struct Item {
   expr : Expr
-  start : Int
-  end : Int
-  depth : Int
+  start : Int32
+  end : Int32
+  depth : Int32
 }
 
 ///|
@@ -458,8 +518,8 @@ priv struct Item {
 /// shunting-yard order of the pinned reader, so the structure agrees with it.
 fn parse_pattern(
   text : String,
-  base : Int,
-  span : (Int, Int) -> @diagrams.Span,
+  base : Int32,
+  span : (Int32, Int32) -> @diagrams.Span,
   limits : @envelope.Limits,
 ) -> Result[Expr, Failure] {
   let tokens = match tokenize(text, base) {
@@ -477,7 +537,7 @@ fn parse_pattern(
   let joined : Array[Tok] = []
   for tok in tokens {
     if joined.last() is Some(last) && needs_concat(last.lex, tok.lex) {
-      joined.push({ lex: Concat, start: tok.start, end: tok.start })
+      joined.push({ lex: Concat, start: tok.start, end: tok.start, })
     }
     joined.push(tok)
   }
@@ -486,8 +546,12 @@ fn parse_pattern(
   let mut depth = 0
   for tok in joined {
     match tok.lex {
-      Char(_, _) | Class(_) | Backref(_) | Set(_, _) | Anchor(_) | Quantifier(_) =>
-        output.push(tok)
+      Char(_, _)
+      | Class(_)
+      | Backref(_)
+      | Set(_, _)
+      | Anchor(_)
+      | Quantifier(_) => output.push(tok)
       Look(_, _) | Named(_) | Concat => operators.push(tok)
       Alternative => {
         while operators.last() is Some({ lex: Concat, .. }) {
@@ -522,13 +586,21 @@ fn parse_pattern(
         depth -= 1
         match open.lex {
           Open(Plain) =>
-            output.push({ lex: GroupMark(Capturing), start: open.start, end: tok.end })
+            output.push({
+              lex: GroupMark(Capturing),
+              start: open.start,
+              end: tok.end,
+            })
           Open(NonCapturing) =>
-            output.push({ lex: GroupMark(NonCapturing), start: open.start, end: tok.end })
+            output.push({
+              lex: GroupMark(NonCapturing),
+              start: open.start,
+              end: tok.end,
+            })
           _ =>
             if operators.last() is Some(marker) &&
-              (marker.lex is (Look(_, _) | Named(_))) {
-              output.push({ ..operators.pop().unwrap(), end: tok.end })
+              marker.lex is (Look(_, _) | Named(_)) {
+              output.push({ ..operators.pop().unwrap(), end: tok.end, })
             }
         }
       }
@@ -540,10 +612,10 @@ fn parse_pattern(
   }
   let stack : Array[Item] = []
   fn fail(message : String, tok : Tok) -> Result[Expr, Failure] {
-    Err({ code: "regex/syntax", message, start: tok.start, end: tok.end })
+    Err({ code: "regex/syntax", message, start: tok.start, end: tok.end, })
   }
   fn leaf(expr : Expr, tok : Tok) -> Unit {
-    stack.push({ expr, start: tok.start, end: tok.end, depth: 1 })
+    stack.push({ expr, start: tok.start, end: tok.end, depth: 1, })
   }
   for tok in output {
     let s = Some(span(tok.start, tok.end))
@@ -572,12 +644,14 @@ fn parse_pattern(
           )
         }
         let parts = []
-        let flatten = (item : Item) => match (tok.lex, item.expr) {
-          (Concat, Concat(items)) | (Alternative, Alt(items)) =>
-            for e in items {
-              parts.push(e)
-            }
-          _ => parts.push(item.expr)
+        let flatten = (item : Item) => {
+          match (tok.lex, item.expr) {
+            (Concat, Concat(items)) | (Alternative, Alt(items)) =>
+              for e in items {
+                parts.push(e)
+              }
+            _ => parts.push(item.expr)
+          }
         }
         flatten(left)
         flatten(right)
@@ -592,7 +666,11 @@ fn parse_pattern(
           })
         }
         stack.push({
-          expr: if tok.lex is Concat { Concat(items) } else { Alt(items) },
+          expr: if tok.lex is Concat {
+            Concat(items)
+          } else {
+            Alt(items)
+          },
           start: left.start,
           end: right.end,
           depth,
@@ -634,7 +712,7 @@ fn parse_pattern(
           GroupMark(kind) => Group(kind, inner.expr, whole)
           _ => inner.expr
         }
-        stack.push({ expr, start, end, depth })
+        stack.push({ expr, start, end, depth, })
       }
       Close => ()
     }
@@ -671,15 +749,18 @@ fn pattern_node(line : @envelope.Line) -> @cst.Node {
   let text = line.text
   let mut lead = 0
   while lead < text.length() &&
-    (text.code_unit_at(lead).to_int() == 32 || text.code_unit_at(lead).to_int() == 9) {
+        (
+          text.code_unit_at(lead).to_int() == 32 ||
+          text.code_unit_at(lead).to_int() == 9
+        ) {
     lead += 1
   }
   let mut tail = text.length()
   while tail > lead &&
-    (
-      text.code_unit_at(tail - 1).to_int() == 32 ||
-      text.code_unit_at(tail - 1).to_int() == 9
-    ) {
+        (
+          text.code_unit_at(tail - 1).to_int() == 32 ||
+          text.code_unit_at(tail - 1).to_int() == 9
+        ) {
     tail -= 1
   }
   if lead > 0 {
@@ -698,7 +779,13 @@ fn pattern_node(line : @envelope.Line) -> @cst.Node {
           let b = tok.end - offset
           if a > cursor {
             children.push(
-              Token(@cst.Token::new(Comment, @cst.slice(body, cursor, a), offset + cursor)),
+              Token(
+                @cst.Token::new(
+                  Comment,
+                  @cst.slice(body, cursor, a),
+                  offset + cursor,
+                ),
+              ),
             )
           }
           if b > a && a >= cursor {
@@ -710,34 +797,41 @@ fn pattern_node(line : @envelope.Line) -> @cst.Node {
               Open(_) | Close | Look(_, _) | Named(_) => Punctuation
               _ => Text
             }
-            children.push(Token(@cst.Token::new(kind, @cst.slice(body, a, b), tok.start)))
+            children.push(
+              Token(@cst.Token::new(kind, @cst.slice(body, a, b), tok.start)),
+            )
             cursor = b
           }
         }
         if cursor < body.length() {
           children.push(
             Token(
-              @cst.Token::new(Comment, @cst.slice(body, cursor, body.length()), offset + cursor),
+              @cst.Token::new(
+                Comment,
+                @cst.slice(body, cursor, body.length()),
+                offset + cursor,
+              ),
             ),
           )
         }
       }
-      Err(_) =>
-        children.push(Token(@cst.Token::new(Error, body, offset)))
+      Err(_) => children.push(Token(@cst.Token::new(Error, body, offset)))
     }
   }
   if tail < text.length() {
     children.push(
       Token(
-        @cst.Token::new(Whitespace, @cst.slice(text, tail, text.length()), line.offset + tail),
+        @cst.Token::new(
+          Whitespace,
+          @cst.slice(text, tail, text.length()),
+          line.offset + tail,
+        ),
       ),
     )
   }
   if !line.newline.is_empty() {
     children.push(
-      Token(
-        @cst.Token::new(Newline, line.newline, line.offset + text.length()),
-      ),
+      Token(@cst.Token::new(Newline, line.newline, line.offset + text.length())),
     )
   }
   @cst.Node::new(if tail > lead { Pattern } else { Blank }, children)
@@ -748,7 +842,7 @@ fn pattern_node(line : @envelope.Line) -> @cst.Node {
 /// line; further pattern lines are an error.
 pub fn read(
   scan : @envelope.Scan,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> ReadResult {
   let diagnostics = scan.diagnostics.iter().to_array()
   let nodes = scan.line_nodes(line => Some(pattern_node(line)))
@@ -760,7 +854,11 @@ pub fn read(
     let failed = diagnostics.iter().any(d => d.severity == Error)
     {
       nodes,
-      document: if failed { None } else { document },
+      document: if failed {
+        None
+      } else {
+        document
+      },
       diagnostics: ReadOnlyArray::from_array(diagnostics),
     }
   }
@@ -783,35 +881,42 @@ pub fn read(
       ),
     )
   }
-  let line = patterns[0]
-  let text = line.text
-  let mut lead = 0
-  while lead < text.length() &&
-    (text.code_unit_at(lead).to_int() == 32 || text.code_unit_at(lead).to_int() == 9) {
-    lead += 1
-  }
-  let body = @envelope.trim(text)
-  let offset = line.offset + lead
-  match parse_pattern(body, offset, (a, b) => scan.span(a, b), limits) {
-    Ok(pattern) =>
-      done(
-        Some({
-          name: scan.name,
-          statements: scan.statements,
-          pattern,
-          text: body,
-          span: Some(scan.span(offset, offset + body.length())),
-        }),
-      )
-    Err(failure) => {
-      diagnostics.push(
-        @diagrams.Diagnostic::error(
-          failure.code,
-          failure.message,
-          span=scan.span(failure.start, failure.end),
-        ),
-      )
-      done(None)
+  // Each pattern line is read, so one pass reports the errors of every line.
+  let mut first : Document? = None
+  for line in patterns {
+    let text = line.text
+    let mut lead = 0
+    while lead < text.length() &&
+          (
+            text.code_unit_at(lead).to_int() == 32 ||
+            text.code_unit_at(lead).to_int() == 9
+          ) {
+      lead += 1
+    }
+    let body = @envelope.trim(text)
+    let offset = line.offset + lead
+    match parse_pattern(body, offset, (a, b) => scan.span(a, b), limits) {
+      Ok(pattern) =>
+        if first is None {
+          first = Some({
+            name: scan.name,
+            statements: scan.statements,
+            pattern,
+            text: body,
+            span: Some(scan.span(offset, offset + body.length())),
+          })
+        }
+      Err(failure) =>
+        if diagnostics.length() < limits.diagnostics {
+          diagnostics.push(
+            @diagrams.Diagnostic::error(
+              failure.code,
+              failure.message,
+              span=scan.span(failure.start, failure.end),
+            ),
+          )
+        }
     }
   }
+  done(first)
 }

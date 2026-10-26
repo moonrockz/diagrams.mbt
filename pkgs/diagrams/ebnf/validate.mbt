@@ -1,9 +1,9 @@
 ///|
 /// Explicit bounds for grammar validation and indexing.
 pub struct Limits {
-  nodes : Int
-  depth : Int
-  work : Int
+  nodes : Int32
+  depth : Int32
+  work : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -14,11 +14,11 @@ pub extend Limits with @debug.Debug::{to_repr}
 
 ///|
 pub fn Limits::new(
-  nodes? : Int = 10000,
-  depth? : Int = 256,
-  work? : Int = 1000000,
+  nodes~ : Int32 = 10000,
+  depth~ : Int32 = 256,
+  work~ : Int32 = 1000000,
 ) -> Limits {
-  { nodes, depth, work }
+  { nodes, depth, work, }
 }
 
 ///|
@@ -48,11 +48,11 @@ pub extend Resolution with @debug.Debug::{to_repr}
 /// exactly one owner. References are symbolic and never expand definitions.
 pub struct Index {
   grammar : Grammar
-  priv positions : Map[String, Int]
+  priv positions : Map[String, Int32]
   priv rules : Map[String, Rule]
   priv parents : Map[String, String]
   priv owners : Map[String, String]
-  priv depths : Map[String, Int]
+  priv depths : Map[String, Int32]
   priv resolutions : Map[String, Resolution]
   /// Expression node identities in rule order, then pre-order.
   order : ReadOnlyArray[String]
@@ -87,7 +87,7 @@ pub fn Index::owner(self : Index, id : String) -> String? {
 }
 
 ///|
-pub fn Index::depth(self : Index, id : String) -> Int? {
+pub fn Index::depth(self : Index, id : String) -> Int32? {
   self.depths.get(id)
 }
 
@@ -115,7 +115,7 @@ fn is_decimal(text : String) -> Bool {
 /// recursion. Unresolved and ambiguous names are warnings.
 pub fn Index::build(
   grammar : Grammar,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> IndexResult {
   let out : Array[@diagrams.Diagnostic] = []
   let warnings : Array[@diagrams.Diagnostic] = []
@@ -126,7 +126,7 @@ pub fn Index::build(
       out.push(@diagrams.Diagnostic::error("ebnf/" + code, message))
     }
   }
-  fn charge(units : Int) -> Bool {
+  fn charge(units : Int32) -> Bool {
     if halted {
       return false
     }
@@ -139,7 +139,7 @@ pub fn Index::build(
     true
   }
   fn failed() -> IndexResult {
-    { index: None, diagnostics: ReadOnlyArray::from_array(out) }
+    { index: None, diagnostics: ReadOnlyArray::from_array(out), }
   }
   if limits.nodes <= 0 || limits.depth <= 0 || limits.work <= 0 {
     error("model-limit", "Grammar limits must be positive")
@@ -185,7 +185,7 @@ pub fn Index::build(
       }
     }
   }
-  let positions : Map[String, Int] = Map([])
+  let positions : Map[String, Int32] = Map([])
   for i, node in grammar.nodes {
     if !charge(node.id.length() + 1) {
       return failed()
@@ -234,13 +234,16 @@ pub fn Index::build(
   }
   let parents : Map[String, String] = Map([])
   let owners : Map[String, String] = Map([])
-  let depths : Map[String, Int] = Map([])
+  let depths : Map[String, Int32] = Map([])
   let resolutions : Map[String, Resolution] = Map([])
   let order : Array[String] = []
   for rule in rule_order {
     guard rule.body is Some(body) else { continue }
     guard positions.contains(body) else {
-      error("missing-node", "Rule '\{rule.id}' refers to missing node '\{body}'")
+      error(
+        "missing-node",
+        "Rule '\{rule.id}' refers to missing node '\{body}'",
+      )
       return failed()
     }
     if owners.contains(body) {
@@ -273,6 +276,7 @@ pub fn Index::build(
               @diagrams.Diagnostic::warning(
                 "ebnf/unresolved-reference",
                 "Reference '\{node.id}' names undefined rule '\{name}'",
+                span?=node.source,
               ),
             )
           Ambiguous(_) =>
@@ -280,6 +284,7 @@ pub fn Index::build(
               @diagrams.Diagnostic::warning(
                 "ebnf/ambiguous-reference",
                 "Reference '\{node.id}' names rule '\{name}', which has more than one definition",
+                span?=node.source,
               ),
             )
           Resolved(_) => ()
@@ -346,7 +351,7 @@ pub fn Index::build(
 /// unresolved or ambiguous names do not.
 pub fn validate(
   grammar : Grammar,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> ReadOnlyArray[@diagrams.Diagnostic] {
   Index::build(grammar, limits~).diagnostics
 }

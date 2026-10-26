@@ -33,4 +33,5 @@ import {
   "moonrockz/diagrams-svg/data-tree-layout" @data_tree_layout,
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/railroad-trace" @railroad_trace,
+  "moonrockz/diagrams-svg/railroad-layout" @railroad_layout,
 } for "test"

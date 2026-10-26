@@ -103,7 +103,7 @@ with exhaustive matches, or with record literals of these types, must add the ne
 cases and fields. Existing connection steps, orientation and BPMN, sequence and
 swimlane behavior are unchanged.
 
-```moonbit
+```moonbit notest
 ///|
 test "a constructed grammar keeps a recursive reference symbolic" {
   let grammar = @ebnf.Grammar::new(

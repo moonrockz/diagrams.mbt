@@ -25,7 +25,11 @@ pub extend Rect with Eq::{equal, not_equal}
 pub extend Rect with @debug.Debug::{to_repr}
 
 ///|
-pub fn Rect::contains(self : Rect, other : Rect, tolerance? : Double = 0.0) -> Bool {
+pub fn Rect::contains(
+  self : Rect,
+  other : Rect,
+  tolerance~ : Double = 0.0,
+) -> Bool {
   other.x >= self.x - tolerance &&
   other.y >= self.y - tolerance &&
   other.x + other.width <= self.x + self.width + tolerance &&
@@ -46,7 +50,7 @@ pub struct Label {
   lines : ReadOnlyArray[String]
   x : Double
   size : Double
-  weight : Int
+  weight : Int32
   box : Rect
   /// The semantic owner: a term, rule, frame or connector identity.
   owner : String
@@ -269,7 +273,7 @@ pub fn svg_number(value : Double) -> String {
 
 ///|
 /// The SVG path data of a wire, with rounded corners.
-pub fn Wire::path(self : Wire, radius? : Double = 8.0) -> String {
+pub fn Wire::path(self : Wire, radius~ : Double = 8.0) -> String {
   let p = self.points
   let n = svg_number
   if p.length() == 0 {
@@ -309,4 +313,16 @@ pub fn Wire::length(self : Wire) -> Double {
     total += (b.x - a.x).abs() + (b.y - a.y).abs()
   }
   total
+}
+
+///|
+/// The wire with other points, for supplied test geometry.
+pub fn Wire::with_points(self : Wire, points : ArrayView[Point]) -> Wire {
+  { ..self, points: ReadOnlyArray::from_array(points), }
+}
+
+///|
+/// The term with another rectangle, for supplied test geometry.
+pub fn TermBox::with_rect(self : TermBox, rect : Rect) -> TermBox {
+  { ..self, rect, }
 }
