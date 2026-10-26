@@ -1,11 +1,10 @@
-----
+///|
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/process",
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
 }
-----
 
 ///|
 /// Browser qualification of standalone SVG snapshots. The normal MoonBit tests

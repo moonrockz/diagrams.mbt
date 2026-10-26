@@ -233,6 +233,20 @@ pub fn read(source : String, limits~ : Limits = Limits::new()) -> ReadResult {
       start = i
       continue
     }
+    // EVENT_PAYLOAD_LXR consumes everything after an async colon to EOL.
+    // Payload punctuation cannot reopen the statement scanner's lexical modes.
+    if async_text {
+      if c == 10 || c == 13 {
+        tokens.push((trim(cut(source, start, i)), start, i, false))
+        async_text = false
+        parens = 0
+        i += 1
+        start = i
+      } else {
+        i += 1
+      }
+      continue
+    }
     if quote != 0 && (c == 10 || c == 13) {
       error(
         "unterminated-string", "Quoted statement does not close on this line", start,

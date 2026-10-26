@@ -240,3 +240,54 @@ test "BOM front matter and same-line Mermaid metadata preserve header dispatch" 
   assert_eq(read.diagnostics, [])
   assert_true(convert(read.ast.unwrap()).sequence is Some(_))
 }
+
+///|
+test "asynchronous payload stays opaque through the line boundary" {
+  for
+    payload in [
+      "https://unit.invalid/v1; retain // literal comment", "literal \"unclosed quote; } { %%{not metadata}%%",
+      "don't reinterpret `ticks` or punctuation; keep all text",
+    ] {
+    let source = "zenuml\r\nA->B: " + payload + "\r\nB->A: next\r\n"
+    let read = @syntax.read(source)
+    assert_eq(read.tree.text(), source)
+    assert_eq(read.diagnostics, [])
+    let ast = read.ast.unwrap()
+    guard ast.statements[0].kind is Async(label~, ..) else {
+      fail("Expected the complete first asynchronous message")
+    }
+    assert_eq(label, payload)
+    let sequence = convert(ast).sequence.unwrap()
+    guard sequence.events[0] is Message(message) else {
+      fail("Expected the first converted message")
+    }
+    assert_eq(message.label, payload)
+    assert_eq(@syntax.read(@printer.print(ast).output.unwrap()).ast, Some(ast))
+  }
+}
+
+///|
+test "descriptive quoted literal contents survive call return and creation conversion" {
+  let source = "zenuml\nClient->API.send(\"Hello, world\", \"two  spaces\", \"(x) ; . ,\") {\nreturn \"done, now  please\"\n}\nnew Worker(\"queue, east\", \"two  spaces\")\n"
+  let read = @syntax.read(source)
+  assert_eq(read.diagnostics, [])
+  let sequence = convert(read.ast.unwrap()).sequence.unwrap()
+  let messages = []
+  fn collect(events : ReadOnlyArray[@model.Event]) {
+    for event in events {
+      match event {
+        Message(message) => messages.push(message.label)
+        Frame(frame) =>
+          for section in frame.sections {
+            collect(section.events)
+          }
+        _ => ()
+      }
+    }
+  }
+  collect(sequence.events)
+  assert_eq(messages, [
+    "send(\"Hello, world\",\"two  spaces\",\"(x) ; . ,\")", "\"done, now  please\"",
+    "«\"queue, east\",\"two  spaces\"»",
+  ])
+}

@@ -1,4 +1,6 @@
-----
+///|
+/// Generate fixed BPMN 2.0.2 schema metadata and model discriminants. This tool
+/// accepts only the five digest-pinned inputs; it is not a general XSD compiler.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -8,11 +10,6 @@ import {
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Generate fixed BPMN 2.0.2 schema metadata and model discriminants. This tool
-/// accepts only the five digest-pinned inputs; it is not a general XSD compiler.
 
 ///|
 priv struct XNode {

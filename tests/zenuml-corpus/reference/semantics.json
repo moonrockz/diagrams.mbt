@@ -3,7 +3,8 @@
     "plugin": "1.0.1",
     "core": "3.47.9",
     "commit": "e3f93e0eb65d23fa3520e8691a5bca883853aa4b",
-    "extractor": "RootContext + OrderedParticipants + walkStatements + Assignment"
+    "extractor": "RootContext + OrderedParticipants + walkStatements + Assignment",
+    "quotedLiteralOracle": "Pinned ANTLR signature/parameter/expr token text preserves CSTRING contents; renderer display normalization is recorded separately when it differs"
   },
   "examples": [
     {
@@ -803,6 +804,158 @@
           "to": "B",
           "label": "last",
           "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "async-payload-punctuation",
+      "source": "zenuml\nA->B: https://unit.invalid/v1; retain // literal comment\nA->B: literal \"unclosed quote; } { %%{not metadata}%%\nA->B: don't reinterpret `ticks` or punctuation; keep all text\nB->A: next",
+      "participants": [
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "B",
+          "label": "https://unit.invalid/v1; retain // literal comment",
+          "kind": "async"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "literal \"unclosed quote; } { %%{not metadata}%%",
+          "kind": "async"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "don't reinterpret `ticks` or punctuation; keep all text",
+          "kind": "async"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "next",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "quoted-call-return-creation",
+      "source": "zenuml\nClient->API.send(\"Hello, world\", \"two  spaces\", \"(x) ; . ,\") {\nreturn \"done, now  please\"\n}\nnew Worker(\"queue, east\", \"two  spaces\")",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "Client",
+          "label": "Client",
+          "type": null
+        },
+        {
+          "id": "API",
+          "label": "API",
+          "type": null
+        },
+        {
+          "id": "Worker",
+          "label": "Worker",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Client",
+          "to": "API",
+          "label": "send(\"Hello, world\",\"two  spaces\",\"(x) ; . ,\")",
+          "kind": "sync",
+          "labelSource": "antlr-token-text",
+          "upstreamDisplayLabel": "send(\"Hello,world\",\"two spaces\",\"(x);.,\")"
+        },
+        {
+          "from": "API",
+          "to": "Client",
+          "label": "\"done, now  please\"",
+          "kind": "return",
+          "labelSource": "antlr-token-text",
+          "upstreamDisplayLabel": "done,now please"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "Worker",
+          "label": "«\"queue, east\",\"two  spaces\"»",
+          "kind": "creation",
+          "labelSource": "antlr-token-text",
+          "upstreamDisplayLabel": "«queue,east,two spaces»"
+        }
+      ]
+    },
+    {
+      "id": "quoted-reply",
+      "source": "zenuml\nA->B: request\n@reply\nB->A: \"Hello, world; two  spaces\"",
+      "participants": [
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "B",
+          "label": "request",
+          "kind": "async"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "\"Hello, world; two  spaces\"",
+          "kind": "return",
+          "labelSource": "antlr-token-text",
+          "upstreamDisplayLabel": "\"Hello,world;two spaces\""
+        }
+      ]
+    },
+    {
+      "id": "doubled-quote-literals",
+      "source": "zenuml\nA.send(\"say \"\"hi, friend\"\"  now\", \"left  right\")",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "send(\"say \"\"hi, friend\"\"  now\",\"left  right\")",
+          "kind": "sync",
+          "labelSource": "antlr-token-text",
+          "upstreamDisplayLabel": "send(\"say \"\"hi,friend\"\" now\",\"left right\")"
         }
       ]
     }

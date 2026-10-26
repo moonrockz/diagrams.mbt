@@ -1,4 +1,7 @@
-----
+///|
+/// Verify the frozen PlantUML 1.2026.9 corpus and its portable reference
+/// embedding. This task needs no Java; `plantuml-corpus:reference` refreshes
+/// the reference with the pinned JAR and JDK.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -8,12 +11,6 @@ import {
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Verify the frozen PlantUML 1.2026.9 corpus and its portable reference
-/// embedding. This task needs no Java; `plantuml-corpus:reference` refreshes
-/// the reference with the pinned JAR and JDK.
 
 ///|
 let corpus : String = "tests/corpus/plantuml-1.2026.9"

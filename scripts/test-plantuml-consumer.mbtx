@@ -1,4 +1,7 @@
-----
+///|
+/// Verify fresh consumers outside the workspace on all four targets: one uses
+/// only the models and renderer, one reads PlantUML, and one implements the
+/// public trace-provider trait. No consumer needs Java, a server or a UI.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -6,12 +9,6 @@ import {
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Verify fresh consumers outside the workspace on all four targets: one uses
-/// only the models and renderer, one reads PlantUML, and one implements the
-/// public trace-provider trait. No consumer needs Java, a server or a UI.
 
 ///|
 let model_test : String =

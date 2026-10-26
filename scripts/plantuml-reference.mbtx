@@ -1,4 +1,9 @@
-----
+///|
+/// Refresh or check the PlantUML 1.2026.9 reference with the pinned JAR and
+/// the JDK that the mise task pins. This is test-only qualification tooling:
+/// no library module runs Java, a server or the upstream renderer.
+///
+/// Usage: `mise run plantuml-corpus:reference [-- --check]`.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -9,14 +14,6 @@ import {
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Refresh or check the PlantUML 1.2026.9 reference with the pinned JAR and
-/// the JDK that the mise task pins. This is test-only qualification tooling:
-/// no library module runs Java, a server or the upstream renderer.
-///
-/// Usage: `mise run plantuml-corpus:reference [-- --check]`.
 
 ///|
 let corpus : String = "tests/corpus/plantuml-1.2026.9"

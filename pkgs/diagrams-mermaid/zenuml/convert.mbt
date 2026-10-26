@@ -34,24 +34,48 @@ fn formatted(value : String) -> String {
   let out = StringBuilder()
   let units = value.to_array()
   let mut pending = false
-  for c in units {
+  let mut suppress_space = true
+  let mut quote : Char? = None
+  let mut escaped = false
+  let mut index = 0
+  while index < units.length() {
+    let c = units[index]
+    if quote is Some(delimiter) {
+      out.write_char(c)
+      if escaped {
+        escaped = false
+      } else if c == '\\' {
+        escaped = true
+      } else if c == delimiter {
+        if index + 1 < units.length() && units[index + 1] == delimiter {
+          // Native CSTRING uses doubled quote delimiters inside a literal.
+          index += 1
+          out.write_char(units[index])
+        } else {
+          quote = None
+        }
+      }
+      index += 1
+      continue
+    }
     if c == ' ' || c == '\t' || c == '\r' || c == '\n' {
       pending = true
+      index += 1
       continue
     }
     let punctuation = [',', ';', '.', '(', ')'].contains(c)
-    if pending && !punctuation {
+    if pending && !punctuation && !suppress_space {
       out.write_char(' ')
     }
     pending = false
     out.write_char(c)
+    if c == '"' || c == '\'' || c == '`' {
+      quote = Some(c)
+    }
+    suppress_space = [',', ';', '.', '('].contains(c)
+    index += 1
   }
-  let text = out.to_string()
-  text
-  .replace_all(old="( ", new="(")
-  .replace_all(old=", ", new=",")
-  .replace_all(old=". ", new=".")
-  .replace_all(old="; ", new=";")
+  out.to_string()
 }
 
 ///|

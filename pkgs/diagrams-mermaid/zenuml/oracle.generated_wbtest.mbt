@@ -82,4 +82,20 @@ let oracle : Array[(String, String, String)] = [
     "loops", "zenuml\nforEach(item in items) {\nA->B: iterate\n}\nforeach(item in items) {\nA->B: next\n}\nloop(3) {\nA->B: last\n}",
     "{\"participants\":[\"A\",\"B\"],\"messages\":[{\"from\":\"A\",\"to\":\"B\",\"label\":\"iterate\"},{\"from\":\"A\",\"to\":\"B\",\"label\":\"next\"},{\"from\":\"A\",\"to\":\"B\",\"label\":\"last\"}]}",
   ),
+  (
+    "async-payload-punctuation", "zenuml\nA->B: https://unit.invalid/v1; retain // literal comment\nA->B: literal \"unclosed quote; } { %%{not metadata}%%\nA->B: don't reinterpret `ticks` or punctuation; keep all text\nB->A: next",
+    "{\"participants\":[\"A\",\"B\"],\"messages\":[{\"from\":\"A\",\"to\":\"B\",\"label\":\"https://unit.invalid/v1; retain // literal comment\"},{\"from\":\"A\",\"to\":\"B\",\"label\":\"literal \\\"unclosed quote; } { %%{not metadata}%%\"},{\"from\":\"A\",\"to\":\"B\",\"label\":\"don't reinterpret `ticks` or punctuation; keep all text\"},{\"from\":\"B\",\"to\":\"A\",\"label\":\"next\"}]}",
+  ),
+  (
+    "quoted-call-return-creation", "zenuml\nClient->API.send(\"Hello, world\", \"two  spaces\", \"(x) ; . ,\") {\nreturn \"done, now  please\"\n}\nnew Worker(\"queue, east\", \"two  spaces\")",
+    "{\"participants\":[\"_STARTER_\",\"Client\",\"API\",\"Worker\"],\"messages\":[{\"from\":\"Client\",\"to\":\"API\",\"label\":\"send(\\\"Hello, world\\\",\\\"two  spaces\\\",\\\"(x) ; . ,\\\")\"},{\"from\":\"API\",\"to\":\"Client\",\"label\":\"\\\"done, now  please\\\"\"},{\"from\":\"_STARTER_\",\"to\":\"Worker\",\"label\":\"«\\\"queue, east\\\",\\\"two  spaces\\\"»\"}]}",
+  ),
+  (
+    "quoted-reply", "zenuml\nA->B: request\n@reply\nB->A: \"Hello, world; two  spaces\"",
+    "{\"participants\":[\"A\",\"B\"],\"messages\":[{\"from\":\"A\",\"to\":\"B\",\"label\":\"request\"},{\"from\":\"B\",\"to\":\"A\",\"label\":\"\\\"Hello, world; two  spaces\\\"\"}]}",
+  ),
+  (
+    "doubled-quote-literals", "zenuml\nA.send(\"say \"\"hi, friend\"\"  now\", \"left  right\")",
+    "{\"participants\":[\"_STARTER_\",\"A\"],\"messages\":[{\"from\":\"_STARTER_\",\"to\":\"A\",\"label\":\"send(\\\"say \\\"\\\"hi, friend\\\"\\\"  now\\\",\\\"left  right\\\")\"}]}",
+  ),
 ]

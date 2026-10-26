@@ -1,4 +1,5 @@
-----
+///|
+/// Verify a fresh workspace whose only library dependency is moonrockz/bpmn.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -6,10 +7,6 @@ import {
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Verify a fresh workspace whose only library dependency is moonrockz/bpmn.
 
 ///|
 async fn main {

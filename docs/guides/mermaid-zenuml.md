@@ -93,7 +93,15 @@ participants have no explicit icon and retain their prior geometry. Existing
 sequence, BPMN and swimlane static snapshots remain unchanged.
 
 The independent fixture oracle and canonical upstream acceptance check are in
-`tests/zenuml-corpus/reference`. Acceptance snapshots cover nested calls,
+`tests/zenuml-corpus/reference`. The pinned renderer projection qualifies message
+order, endpoints, creation and replies. Its display formatter also changes
+punctuation spacing inside quoted strings. For quoted expression contents, the
+fixture oracle instead reads the pinned ANTLR signature, parameter and expression
+token text. It records the upstream display label separately. Conversion preserves
+those descriptive literal contents, including repeated spaces and punctuation.
+An asynchronous message payload is opaque text through its line boundary, so
+URLs, semicolons, comment-like text and unmatched quotes remain label text.
+Acceptance snapshots cover nested calls,
 creation, returns, multi-catch/finally, symbol identity, legibility, isolated
 inline copies and offline-player artifacts on all four targets.
 

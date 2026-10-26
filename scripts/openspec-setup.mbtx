@@ -1,4 +1,8 @@
-----
+///|
+/// Refresh the six core OpenSpec workflows for the supported agent clients.
+/// Run from the repository root with `mise run openspec:setup`.
+/// Isolate global settings so personal delivery/profile preferences cannot
+/// remove another client's entry points or change the workflow set.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -6,13 +10,6 @@ import {
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
 }
-----
-
-///|
-/// Refresh the six core OpenSpec workflows for the supported agent clients.
-/// Run from the repository root with `mise run openspec:setup`.
-/// Isolate global settings so personal delivery/profile preferences cannot
-/// remove another client's entry points or change the workflow set.
 
 ///|
 async fn main {

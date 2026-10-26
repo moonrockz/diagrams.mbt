@@ -11,5 +11,6 @@
   "licence": "MIT; provider asset terms are separately recorded in ../../pkgs/diagrams-svg/icons/catalog.json",
   "lock": "../zenuml-reference/bun.lock",
   "docsSource": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/docs/syntax/zenuml.md",
-  "sourceVersionNote": "The npm package version is 3.47.9. Its gitHead package.json version is 4.0.0. The registry and semantic source are frozen by gitHead and archive digest, independently from the npm integrity."
+  "sourceVersionNote": "The npm package version is 3.47.9. Its gitHead package.json version is 4.0.0. The registry and semantic source are frozen by gitHead and archive digest, independently from the npm integrity.",
+  "quoted_literal_oracle": "Quoted expression labels come from pinned ANTLR signature, parameter and expression token text, preserving CSTRING contents. The renderer display formatter normalizes these contents; its display label is recorded separately. Renderer projection continues to qualify message order, direction and creation."
 }
