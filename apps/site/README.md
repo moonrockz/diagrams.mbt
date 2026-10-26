@@ -128,3 +128,9 @@ HTML beside it. After building the site, run `mise run check:site-compatibility`
 The check permits added pages and anchors but rejects removal of a recorded page
 or anchor. `--out <directory>` checks a version tree; `--capture` deliberately
 replaces the inventory and is reserved for establishing a reviewed baseline.
+The reviewed baseline contains 77 routes and 5,376 actual element IDs. The scanner
+ignores escaped XML examples, comments and script/style text. Telescope's
+[source compatibility fixture](https://github.com/moonrockz/telescope/tree/DamianReeves/telescope-foundation/tests/diagrams-consumer)
+also checks that the nine formerly miscounted XML ID literals remain in the docs,
+and preserves 40 supplied gallery artifacts across all version trees. This source
+proof does not replace the required released-package adoption check.

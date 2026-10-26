@@ -1,6 +1,6 @@
 # Tasks
 
-Telescope change `extract-project-site-toolkit` and its owner-approved publication block group 1. Use real published versions, not a placeholder. After plan approval, create one epic and one story per numbered group. Group 2 and group 3 depend on group 1; group 4 depends on both.
+Implementation is approved. Telescope change `extract-project-site-toolkit` and its owner-approved publication block group 1. Use real published versions, not a placeholder. The epic and stories below remain open until merge. Group 2 and group 3 depend on group 1; group 4 depends on both.
 
 ## 1. Prove the released consumer path
 

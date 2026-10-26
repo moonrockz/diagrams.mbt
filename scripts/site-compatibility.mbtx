@@ -23,15 +23,60 @@ fn option(args : Array[String], flag : String, fallback : String) -> String {
 ///|
 fn attributes(html : String) -> Array[String] {
   let ids = []
-  for part in html.split(" id=") {
-    if part.has_prefix("\"") || part.has_prefix("'") {
-      let quote = if part.has_prefix("\"") { "\"" } else { "'" }
-      let tail = part[1:]
-      if tail.find(quote) is Some(end) {
-        let id = tail[:end].to_owned()
-        if !ids.contains(id) {
-          ids.push(id)
+  let mut rest = html[:]
+  while rest.find("<") is Some(start) {
+    let tag = rest[start:]
+    if tag.has_prefix("<!--") {
+      guard tag.find("-->") is Some(end) else { break }
+      rest = tag[end + 3:]
+      continue
+    }
+    let mut end = 1
+    let mut quote = 0
+    while end < tag.length() {
+      let c = tag[end].to_int()
+      if quote != 0 {
+        if c == quote {
+          quote = 0
         }
+      } else if c == '"' || c == '\'' {
+        quote = c
+      } else if c == '>' {
+        break
+      }
+      end += 1
+    }
+    if end == tag.length() {
+      break
+    }
+    let opening = tag[:end].to_owned()
+    for mark in ["\"", "'"] {
+      let marker = " id=" + mark
+      if opening.find(marker) is Some(begin) {
+        let tail = opening[begin + marker.length():]
+        if tail.find(mark) is Some(stop) {
+          let id = tail[:stop].to_owned()
+          if !ids.contains(id) {
+            ids.push(id)
+          }
+        }
+      }
+    }
+    rest = tag[end + 1:]
+    let lower = opening.to_lower()
+    if lower.has_prefix("<script ") ||
+      lower == "<script" ||
+      lower.has_prefix("<style ") ||
+      lower == "<style" {
+      let closing = if lower.has_prefix("<script") {
+        "</script>"
+      } else {
+        "</style>"
+      }
+      if rest.to_owned().to_lower().find(closing) is Some(stop) {
+        rest = rest[stop + closing.length():]
+      } else {
+        break
       }
     }
   }
@@ -152,4 +197,14 @@ test "anchor capture accepts both quoting styles" {
   @test.assert_eq(attributes("<h2 id=\"guide\">Guide</h2><a id='part'>"), [
     "part", "guide",
   ])
+}
+
+///|
+test "anchor capture ignores escaped source comments and raw script text" {
+  @test.assert_eq(
+    attributes(
+      "<pre>&#x3C;b:task id='A'/>&lt;node id=\"B\"&gt;</pre><!-- <i id='comment'> --><script>const source = \"<x id='script'>\";</script><h2 title='a > b' id='real'>Title</h2>",
+    ),
+    ["real"],
+  )
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source_ref": "d19c2e788a927be15ac07fa35140102e22e91048",
+  "source_ref": "31302b06c3a93cdc93a399884dd785d7337c54b3",
   "pages": {
     "api/moonrockz/bpmn/index.html": [
       "Cst",
@@ -5283,12 +5283,6 @@
       "arch-u-73-69-74-65-2d-6d-65-72-6d-61-69-64-2d-31--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-105-110-116-101-114-110-101-116"
     ],
     "docs/packages/bpmn/index.html": [
-      "A",
-      "B",
-      "C",
-      "P",
-      "AB",
-      "BC",
       "content",
       "site-nav",
       "site-toc",
@@ -5401,9 +5395,6 @@
       "__rabbita_transcript"
     ],
     "docs/packages/diagrams-bpmn/index.html": [
-      "P",
-      "T",
-      "Other",
       "content",
       "site-nav",
       "site-toc",
