@@ -164,3 +164,12 @@ test "an unresolved reference warning locates the reference occurrence" {
   let span = warning.span.unwrap()
   assert_eq((span.start.line, span.start.column, span.end.column), (2, 8, 15))
 }
+
+///|
+test "long concatenations and alternations do not count as nesting" {
+  let items = Array::makei(400, i => "t\{i}")
+  for separator in [", ", " | "] {
+    let source = "@startebnf\nr = " + items.join(separator) + ";\n@endebnf"
+    assert_true(read_source(source).document is Some(_), msg=separator)
+  }
+}

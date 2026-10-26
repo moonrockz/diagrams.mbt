@@ -127,3 +127,11 @@ test "an edited literal is written and reads back" {
   )
   assert_eq(bad.unwrap_err()[0].code, "regex/unrepresentable")
 }
+
+///|
+test "flat sequences and wide alternations do not count as nesting" {
+  let long = "a".repeat(400)
+  assert_true(read_source("@startregex\n" + long + "\n@endregex").document is Some(_))
+  let wide = Array::makei(400, i => "x\{i}").join("|")
+  assert_true(read_source("@startregex\n" + wide + "\n@endregex").document is Some(_))
+}

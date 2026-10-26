@@ -434,17 +434,25 @@ fn build_rule(
           return syntax("An operator has a missing operand")
         }
         let parts = []
+        // A flattened operand adds its children, so its own level does not
+        // count: depth measures nesting, not the number of reductions.
+        let mut inner = 0
         for item in [left, right] {
           match (t.sym, item.expr) {
-            (Concatenation, Concat(items)) | (Alternation, Alt(items)) =>
+            (Concatenation, Concat(items)) | (Alternation, Alt(items)) => {
               for e in items {
                 parts.push(e)
               }
-            _ => parts.push(item.expr)
+              inner = inner.max(item.depth - 1)
+            }
+            _ => {
+              parts.push(item.expr)
+              inner = inner.max(item.depth)
+            }
           }
         }
         let items = ReadOnlyArray::from_array(parts)
-        let depth = left.depth.max(right.depth) + 1
+        let depth = inner + 1
         if depth > limits.depth {
           return Err({
             code: "ebnf/limit",

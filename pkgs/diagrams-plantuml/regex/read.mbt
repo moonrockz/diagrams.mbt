@@ -644,19 +644,25 @@ fn parse_pattern(
           )
         }
         let parts = []
-        let flatten = (item : Item) => {
+        // A flattened operand adds its children, so its own level does not
+        // count: depth measures nesting, not the number of reductions.
+        let mut inner = 0
+        for item in [left, right] {
           match (tok.lex, item.expr) {
-            (Concat, Concat(items)) | (Alternative, Alt(items)) =>
+            (Concat, Concat(items)) | (Alternative, Alt(items)) => {
               for e in items {
                 parts.push(e)
               }
-            _ => parts.push(item.expr)
+              inner = inner.max(item.depth - 1)
+            }
+            _ => {
+              parts.push(item.expr)
+              inner = inner.max(item.depth)
+            }
           }
         }
-        flatten(left)
-        flatten(right)
         let items = ReadOnlyArray::from_array(parts)
-        let depth = left.depth.max(right.depth) + 1
+        let depth = inner + 1
         if depth > limits.depth {
           return Err({
             code: "regex/limit",

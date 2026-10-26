@@ -395,3 +395,26 @@ test "rendering, scenes, playback and export never call a provider" {
 
 ///|
 extend RegexStub with @trace.RailroadTraceProvider::{trace}
+
+///|
+/// A stub that returns cached evidence for another input.
+struct CachedStub {}
+
+///|
+impl @trace.RailroadTraceProvider for CachedStub with trace(_, request) {
+  let other = @trace.TraceRequest::regex(regex_model(), "ab")
+  let t = topology_of(request)
+  Matched(
+    @trace.Trace::new(other, "cached", [
+      @trace.Attempt::new("a", Matched, steps_between(t, t.tracks[0].start, t.tracks[0].end)),
+    ]),
+  )
+}
+
+///|
+test "evidence for another input is rejected" {
+  let result = @svg.SvgRenderer::new().render_traced(Regex(regex_model()), CachedStub::{  }, "cd")
+  assert_true(result.run.validated is None)
+  assert_true(result.rendered.output is None)
+  assert_eq(result.rendered.diagnostics[0].code, "trace/input-mismatch")
+}

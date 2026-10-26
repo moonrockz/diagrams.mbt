@@ -4,6 +4,7 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
   "trace/subject-mismatch", "trace/stale", "trace/invalid-target", "trace/invalid-role",
   "trace/discontinuous", "trace/invalid-span", "trace/invalid-attempt", "trace/limit",
   "trace/invalid-request", "trace/unsupported", "trace/exhausted", "trace/provider-error",
+  "trace/input-mismatch",
   "railroad/topology-limit",
 ]
 
@@ -255,6 +256,20 @@ pub fn[P : RailroadTraceProvider] run(
     return { result: None, validated: None, diagnostics: invalid }
   }
   let result = provider.trace(request)
+  // Evidence for another input is never accepted for this request.
+  match result {
+    Matched(trace) | NotMatched(trace) if trace.input != request.input =>
+      return {
+        result: Some(result),
+        validated: None,
+        diagnostics: [
+          @diagrams.Diagnostic::error(
+            "trace/input-mismatch", "The provider returned evidence for another input",
+          ),
+        ],
+      }
+    _ => ()
+  }
   let checked = validate_result(
     result,
     request.subject,
