@@ -1,0 +1,17 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/railroad-trace" @railroad_trace,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams-plantuml/regex" @regex_syntax,
+  "moonrockz/diagrams-plantuml/ebnf" @ebnf_syntax,
+}
+
+import {
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonrockz/diagrams-svg" @svg,
+  "moonbitlang/core/test",
+} for "test"

@@ -263,3 +263,11 @@ pub fn[P : RailroadTraceProvider] run(
   )
   { result: Some(result), validated: checked.validated, diagnostics: checked.diagnostics }
 }
+
+///|
+/// A run that did not reach a provider, with the reasons.
+pub fn TraceRun::refused(
+  diagnostics : ArrayView[@diagrams.Diagnostic],
+) -> TraceRun {
+  { result: None, validated: None, diagnostics: ReadOnlyArray::from_array(diagnostics) }
+}
