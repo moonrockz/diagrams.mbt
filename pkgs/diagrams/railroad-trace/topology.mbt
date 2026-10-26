@@ -276,6 +276,7 @@ fn regex_fingerprint(model : @regex.Regex) -> String {
       Class(_) => "class"
       Set(negated, _) => if negated { "nset" } else { "set" }
       Anchor(_) => "anchor"
+      Backreference(_) => "backreference"
       Sequence(_) => "sequence"
       Choice(_) => "choice"
       Group(Capturing, _) => "group"
@@ -621,7 +622,7 @@ fn Builder::track(
 fn regex_shape(index : @regex.Index, id : String) -> Shape {
   let node = index.node(id).unwrap()
   match node.kind {
-    Literal(_) | Class(_) | Set(_, _) => Leaf(Consumed)
+    Literal(_) | Class(_) | Set(_, _) | Backreference(_) => Leaf(Consumed)
     Anchor(_) => Leaf(Anchor)
     Sequence(items) => Sequence(items)
     Choice(items) => Choice(items)

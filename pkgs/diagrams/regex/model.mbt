@@ -142,6 +142,8 @@ pub(all) enum Kind {
   /// A bracketed set. `true` marks a negated set such as `[^abc]`.
   Set(Bool, ReadOnlyArray[SetItem])
   Anchor(AnchorKind)
+  /// A numbered backreference such as `\1`. It consumes the text of a group.
+  Backreference(String)
   Sequence(ReadOnlyArray[String])
   Choice(ReadOnlyArray[String])
   Group(GroupKind, String)
@@ -188,7 +190,7 @@ pub fn Node::children(self : Node) -> ReadOnlyArray[String] {
 /// Literal text, classes, sets and anchors are leaves of the railroad.
 pub fn Node::is_leaf(self : Node) -> Bool {
   match self.kind {
-    Literal(_) | Class(_) | Set(_, _) | Anchor(_) => true
+    Literal(_) | Class(_) | Set(_, _) | Anchor(_) | Backreference(_) => true
     _ => false
   }
 }
@@ -231,6 +233,7 @@ pub fn Node::label(self : Node) -> String {
         WordBoundary => "\\b"
         NonWordBoundary => "\\B"
       }
+    Backreference(number) => "\\" + number
     Sequence(_) => "sequence"
     Choice(_) => "choice"
     Group(Capturing, _) => "group"

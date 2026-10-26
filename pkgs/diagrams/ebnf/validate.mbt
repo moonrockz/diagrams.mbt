@@ -200,10 +200,6 @@ pub fn Index::build(
     }
     positions[node.id] = i
     match node.kind {
-      Terminal(text, _) | Special(text) =>
-        if text.is_empty() {
-          error("invalid-node", "Node '\{node.id}' has no text")
-        }
       Reference(name, target) => {
         if name.is_empty() {
           error("invalid-node", "Reference '\{node.id}' has no name")

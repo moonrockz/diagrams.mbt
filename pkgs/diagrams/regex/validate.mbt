@@ -119,6 +119,10 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
         if items.is_empty() {
           error("invalid-node", "Character set '\{node.id}' has no items")
         }
+      Backreference(number) =>
+        if number.is_empty() || number.iter().any(c => c < '0' || c > '9') {
+          error("invalid-node", "Backreference '\{node.id}' needs a group number")
+        }
       Class(Property(name)) | Class(Posix(name)) | Class(CodePoint(name)) =>
         if name.is_empty() {
           error("invalid-node", "Class '\{node.id}' has no name")
