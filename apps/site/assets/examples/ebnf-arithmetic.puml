@@ -1,0 +1,9 @@
+@startebnf
+title Arithmetic with recursion
+(* Expressions refer to terms; parentheses refer back to expressions. *)
+expression = term, { ("+" | "-"), term };
+term = factor, { ("*" | "/"), factor };
+factor = number | "(", expression, ")" | "-", factor;
+number = digit, { digit };
+digit = ? any decimal digit ? - "0" | "0";
+@endebnf

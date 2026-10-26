@@ -47,6 +47,44 @@ let long_example : String =
   #|@endregex
 
 ///|
+let json_example : String =
+  #|@startjson
+  #|title Order with nested collections
+  #|#highlight "items" / "0" / "sku"
+  #|{
+  #|  "id": 12345678901234567890,
+  #|  "paid": true,
+  #|  "coupon": null,
+  #|  "items": [
+  #|    {"sku": "A-1", "qty": 2, "tags": ["gift", "gift"]},
+  #|    {"sku": "B-2", "qty": 1, "tags": []}
+  #|  ],
+  #|  "notes": "A long note wraps inside its row without losing any character of the value text",
+  #|  "meta": {}
+  #|}
+  #|@endjson
+
+///|
+let yaml_example : String =
+  #|@startyaml
+  #|title Native YAML keeps scalars as text
+  #|#highlight "service" / "ports"
+  #|service:
+  #|  name: api
+  #|  enabled: true
+  #|  replicas: 3
+  #|  ports: [80, "443"]
+  #|  description: |
+  #|    First line
+  #|    Second line
+  #|clients:
+  #|  - name: web
+  #|    weight: 0.5
+  #|  - name: mobile
+  #|    weight: 0.5
+  #|@endyaml
+
+///|
 fn diagram_of(source : String) -> @render.Diagram {
   let read = @plantuml.read(source)
   for d in read.diagnostics {
@@ -209,6 +247,8 @@ test "PlantUML review gallery" (t : @test.Test) {
       ("regex-long", long_example),
       ("ebnf-arithmetic", ebnf_example),
       ("ebnf-constraints", ebnf_constraints),
+      ("json-order", json_example),
+      ("yaml-service", yaml_example),
     ] {
     let (name, source) = pair
     let diagram = diagram_of(source)

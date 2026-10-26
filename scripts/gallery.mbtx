@@ -67,7 +67,7 @@ async fn main {
     for
       package_name in [
         "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
-        "moonrockz/diagrams-tests/animation-acceptance",
+        "moonrockz/diagrams-tests/animation-acceptance", "moonrockz/diagrams-tests/plantuml-acceptance",
       ] {
       let code = @process.run(
         "moon",
@@ -100,7 +100,7 @@ async fn main {
       #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
       #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
       #|</style><h1>Diagram review gallery</h1>
-      #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#sequence">Sequence corpus</a></nav>
+      #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#plantuml">PlantUML regex, EBNF, JSON and YAML</a> · <a href="#sequence">Sequence corpus</a></nav>
       #|<p>Processes and collaborations render with supplied or automatic geometry. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
       #|<p>Players illustrate drawn connections. Conditions, timer triggers and gateway synchronization are not evaluated. No tokens or process execution are simulated.</p>
       #|<h2 id="sequence">Sequence corpus</h2><p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
@@ -250,6 +250,75 @@ async fn main {
     save(name + ".html", players[name], check, site_assets)
     html.write_string("<p><a href=\"\{name}.html\">\{name}</a></p>")
   }
+  html.write_string(
+    "<h2 id=\"plantuml\">PlantUML regex, EBNF, JSON and YAML</h2><p>Native PlantUML 1.2026.9 blocks, read and rendered by the MoonBit library without Java. Railroads show structure: they do not match or parse input. Trace highlights show evidence that an external provider supplied; this gallery uses a scripted test provider. Players visit terms and rows and follow only drawn connectors.</p>",
+  )
+  let plantuml : Map[String, String] = Map([])
+  let plantuml_order : Array[String] = []
+  for row in rows("tests/plantuml-acceptance/__snapshot__/plantuml-gallery.json") {
+    plantuml[string(row[0])] = string(row[2])
+    plantuml_order.push(string(row[0]))
+  }
+  let site_examples = [
+    "regex-date.puml", "regex-date-dark.svg", "regex-date-light.svg", "regex-date-light.html",
+    "ebnf-arithmetic.puml", "ebnf-arithmetic-dark.svg", "ebnf-arithmetic-light.svg",
+    "ebnf-arithmetic-light.html", "json-order.puml", "json-order-light.svg", "json-order-dark.svg",
+    "json-order-light.html", "yaml-service.puml", "yaml-service-light.svg", "yaml-service-dark.svg",
+    "regex-date-trace-success.svg", "regex-date-trace-failure.svg", "regex-date-trace-prefix.svg",
+    "regex-date-trace-terminal.svg", "ebnf-arithmetic-trace-failure.svg",
+  ]
+  for name in plantuml_order {
+    if name != "inline.html" {
+      save(name, plantuml[name], check, site_assets && site_examples.contains(name))
+    }
+  }
+  for
+    pair in [
+      ("regex-date", "Regex: named groups, sets, repetitions and a negative lookahead"),
+      ("regex-constraints", "Regex: anchors, lookbehind, reluctant and nested repeats, backreference"),
+      ("regex-long", "Regex: a long pattern continues on new rows"),
+      ("ebnf-arithmetic", "EBNF: recursive references and a note"),
+      ("ebnf-constraints", "EBNF: counts, options, exclusions, rule notes and an empty rule"),
+      ("json-order", "JSON: nested collections, exact numbers, empty containers and a highlight"),
+      ("yaml-service", "YAML: native string scalars, flow and block values, lists of maps"),
+    ] {
+    let (name, title) = pair
+    html.write_string(
+      "<article id=\"\{name}\"><h3>\{escape(title)}</h3><p><a href=\"\{name}.puml\">PlantUML source</a> · <a href=\"\{name}-dark.html\">dark player</a> · <a href=\"\{name}-light.html\">light player</a></p><div class=\"pair\">",
+    )
+    for variant in ["dark", "light"] {
+      let file = name + "-" + variant + ".svg"
+      html.write_string(
+        "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"\{escape(title)}, \{variant} theme\" loading=\"lazy\"></figure>",
+      )
+    }
+    html.write_string(
+      "</div><details><summary>PlantUML source</summary><pre><code>\{escape(plantuml[name + ".puml"])}</code></pre></details></article>\n",
+    )
+  }
+  html.write_string(
+    "<h3 id=\"plantuml-traces\">Independent trace highlight channels</h3><p>Matched paths are solid, non-matched paths are dashed, the taken path or prefix has its own colour, and failure points have a cross marker. Each channel can be shown alone. Unvisited branches stay neutral.</p>",
+  )
+  for name in ["regex-date", "ebnf-arithmetic"] {
+    html.write_string("<div class=\"pair\">")
+    for
+      variant in [
+        ("success", "matched and not-matched attempts"),
+        ("failure", "failed attempt and failure point"),
+        ("prefix", "taken prefix only"),
+        ("terminal", "failure terminal only"),
+        ("dark", "dark theme with taken path"),
+      ] {
+      let file = name + "-trace-" + variant.0 + ".svg"
+      html.write_string(
+        "<figure class=\"\{if variant.0 == "dark" { "dark" } else { "light" }}\"><figcaption><a href=\"\{file}\">\{name}: \{variant.1}</a></figcaption><img src=\"\{file}\" alt=\"\{name} trace, \{variant.1}\" loading=\"lazy\"></figure>",
+      )
+    }
+    html.write_string("</div>")
+  }
+  html.write_string(
+    "<p><a href=\"ebnf-scenario.html\">Explicit EBNF scenario with term visits and a return loop</a> · <a href=\"ebnf-arithmetic-trace-light.html\">Player with configured static trace highlights</a></p>",
+  )
   html.write_string("</html>\n")
   save("index.html", html.to_string(), check, false)
   if args.contains("--qualify") {

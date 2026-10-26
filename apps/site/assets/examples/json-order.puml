@@ -1,0 +1,15 @@
+@startjson
+title Order with nested collections
+#highlight "items" / "0" / "sku"
+{
+  "id": 12345678901234567890,
+  "paid": true,
+  "coupon": null,
+  "items": [
+    {"sku": "A-1", "qty": 2, "tags": ["gift", "gift"]},
+    {"sku": "B-2", "qty": 1, "tags": []}
+  ],
+  "notes": "A long note wraps inside its row without losing any character of the value text",
+  "meta": {}
+}
+@endjson
