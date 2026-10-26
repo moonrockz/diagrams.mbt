@@ -1,0 +1,6 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/zenuml-ast" @ast,
+  "moonrockz/diagrams-mermaid/zenuml-syntax" @syntax,
+}

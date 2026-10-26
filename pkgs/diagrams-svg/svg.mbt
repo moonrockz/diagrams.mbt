@@ -300,6 +300,23 @@ fn paint(
       @writer.element("style", children=[@writer.text(style_sheet(theme))]),
     )
   }
+  let icon_ids : Map[String, Bool] = Map([])
+  for participant in sequence.participants {
+    if participant.icon is Some(icon) {
+      let id = @symbols.asset_id(icon, "")
+      if @symbols.known(icon) && !icon_ids.contains(id) {
+        defs.push(@symbols.definition_node(icon, ""))
+        icon_ids[id] = true
+      } else if !@symbols.known(icon) {
+        diagnostics.push(
+          @diagrams.Diagnostic::warning(
+            "svg/unknown-icon",
+            "Unknown icon \{icon.pack}:\{icon.key} on participant \{participant.id}",
+          ),
+        )
+      }
+    }
+  }
   let bg = p.color("bg")
   let mask = p.color("mask")
   let arrow = p.color("arrow")
@@ -521,6 +538,49 @@ fn paint(
       ),
       p.label("p-label", part.label),
     ]
+    if part.participant.icon is Some(icon) {
+      let icon_box = part.icon_box.unwrap()
+      let x = icon_box.x
+      let y = icon_box.y
+      children.push(
+        @writer.element("rect", attrs=[
+          ("x", x.to_string()),
+          ("y", y.to_string()),
+          ("width", "32"),
+          ("height", "32"),
+          ("rx", "4"),
+          ("fill", "#ffffff"),
+        ]),
+      )
+      if @symbols.known(icon) {
+        children.push(
+          @symbols.paint_node(icon, "", x.to_double(), y.to_double(), 32.0),
+        )
+      } else {
+        children.push(
+          @writer.element(
+            "g",
+            attrs=[("role", "img"), ("aria-label", "Unknown icon " + icon.key)],
+            children=[
+              @writer.element("title", children=[
+                @writer.text("Unknown icon " + icon.key),
+              ]),
+              @writer.element(
+                "text",
+                attrs=[
+                  ("x", (x + 16).to_string()),
+                  ("y", (y + 22).to_string()),
+                  ("text-anchor", "middle"),
+                  ("font-size", "24"),
+                  ("fill", "#333333"),
+                ],
+                children=[@writer.text("?")],
+              ),
+            ],
+          ),
+        )
+      }
+    }
     if part.sublabel is Some(l) {
       children.push(p.label("sublabel", l))
     }
@@ -630,6 +690,7 @@ pub struct SvgRenderer {
   id_prefix : String?
   bpmn_policy : @bpmn.GeometryPolicy
   bpmn_limits : @bpmn_layout.Limits
+  architecture_limits : @architecture_layout.Limits
   swimlane_limits : @swimlane_layout.Limits
   railroad_limits : @railroad_layout.Limits
   data_tree_limits : @data_tree_layout.Limits
@@ -645,6 +706,7 @@ pub fn SvgRenderer::new(
   id_prefix? : String,
   bpmn_policy~ : @bpmn.GeometryPolicy = PreferDi,
   bpmn_limits~ : @bpmn_layout.Limits = @bpmn_layout.Limits::new(),
+  architecture_limits~ : @architecture_layout.Limits = @architecture_layout.Limits::new(),
   swimlane_limits~ : @swimlane_layout.Limits = @swimlane_layout.Limits::new(),
   railroad_limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   data_tree_limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
@@ -656,6 +718,7 @@ pub fn SvgRenderer::new(
     id_prefix,
     bpmn_policy,
     bpmn_limits,
+    architecture_limits,
     swimlane_limits,
     railroad_limits,
     data_tree_limits,
@@ -678,6 +741,14 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.id_prefix,
         self.bpmn_policy,
         self.bpmn_limits,
+      )
+    Architecture(a) =>
+      paint_architecture(
+        a,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.architecture_limits,
       )
     Swimlane(s) =>
       paint_swimlane(
@@ -743,8 +814,16 @@ fn scope_svg(
           let (key, value) = pair
           let value = if key == "id" {
             prefix + value
-          } else if key == "marker-start" || key == "marker-end" {
+          } else if [
+              "fill", "stroke", "clip-path", "mask", "filter", "marker-start", "marker-mid",
+              "marker-end",
+            ].contains(key) &&
+            value.has_prefix("url(#") &&
+            value.has_suffix(")") {
             "url(#\{prefix}\{value.view(start_offset=5, end_offset=value.length() - 1)})"
+          } else if (key == "href" || key == "xlink:href") &&
+            value.has_prefix("#") {
+            "#" + prefix + value[1:].to_owned()
           } else {
             value
           }

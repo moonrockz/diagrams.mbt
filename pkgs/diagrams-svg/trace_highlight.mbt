@@ -16,18 +16,18 @@ pub extend ChannelStyle with @debug.Debug::{to_repr}
 
 ///|
 pub fn ChannelStyle::new(
-  visible? : Bool = true,
+  visible~ : Bool = true,
   color? : @theme.Color,
-  width? : Double = 3.0,
-  dashed? : Bool = false,
+  width~ : Double = 3.0,
+  dashed~ : Bool = false,
 ) -> ChannelStyle {
-  { visible, color, width, dashed }
+  { visible, color, width, dashed, }
 }
 
 ///|
 /// A hidden channel.
 pub fn ChannelStyle::hidden() -> ChannelStyle {
-  { visible: false, color: None, width: 3.0, dashed: false }
+  { visible: false, color: None, width: 3.0, dashed: false, }
 }
 
 ///|
@@ -56,11 +56,11 @@ pub extend TraceHighlight with @debug.Debug::{to_repr}
 pub fn TraceHighlight::new(
   trace : @railroad_trace.Trace,
   attempts? : ArrayView[String],
-  matched? : ChannelStyle = ChannelStyle::new(),
-  not_matched? : ChannelStyle = ChannelStyle::new(dashed=true),
-  taken? : ChannelStyle = ChannelStyle::hidden(),
-  failure? : ChannelStyle = ChannelStyle::new(),
-  limits? : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
+  matched~ : ChannelStyle = ChannelStyle::new(),
+  not_matched~ : ChannelStyle = ChannelStyle::new(dashed=true),
+  taken~ : ChannelStyle = ChannelStyle::hidden(),
+  failure~ : ChannelStyle = ChannelStyle::new(),
+  limits~ : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
 ) -> TraceHighlight {
   {
     trace,

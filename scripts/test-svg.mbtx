@@ -1,12 +1,15 @@
-///|
-/// Browser qualification of standalone SVG snapshots. The normal MoonBit tests
-/// compare the snapshots with the current renderer on all four targets.
+----
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/process",
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Browser qualification of standalone SVG snapshots. The normal MoonBit tests
+/// compare the snapshots with the current renderer on all four targets.
 
 ///|
 async fn main {
@@ -35,6 +38,7 @@ async fn main {
         ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
       ),
       ("node", ["apps/site/scripts/svg-test.ts"]),
+      ("node", ["apps/site/scripts/native-mermaid-test.ts", "static"]),
     ] {
     let code = @process.run(
       command,

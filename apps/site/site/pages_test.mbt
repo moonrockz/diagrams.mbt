@@ -303,3 +303,19 @@ test "README.md and README.mbt.md in one directory is refused" {
     p.contains("pkgs/notebooks has both README.md and README.mbt.md")
   })
 }
+
+///|
+test "native diagram local symbols participate in final anchor validation" {
+  let prepared = @site.prepare(
+    bare,
+    [
+      text(
+        "docs/native.md", "# Native diagrams\n\n```mermaid\nzenuml\n@Actor User\n@PostgreSQL Store\nUser->Store: query\n```\n\n```mermaid\narchitecture-beta\nservice api(server)[API]\nservice db(database)[Database]\napi:R --> L:db\n```\n",
+      ),
+    ],
+    main_build=true,
+  )
+  assert_eq(prepared.pages.length(), 1)
+  assert_true(prepared.pages[0].html.contains("<use href=\"#"))
+  assert_true(prepared.pages[0].ids.iter().any(id => id.contains("icon-p-")))
+}

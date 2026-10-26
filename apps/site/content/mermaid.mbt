@@ -27,36 +27,63 @@ pub fn render_mermaid_blocks(file : String, html : String) -> MermaidPass {
     out.write_view(rest[:start])
     let source = unescape(body[:end].to_owned())
     let parsed = @native_mermaid.read_diagram(source)
-    let svg = if parsed.ast is Some(Swimlane(ast)) {
-      let converted = @native_mermaid.to_swimlane(ast)
-      let errors = parsed.diagnostics
-        .iter()
-        .concat(converted.diagnostics.iter())
-        .filter(d => d.severity == Error)
-        .to_array()
-      if !errors.is_empty() || converted.swimlane == None {
-        problems.push(
-          @model.problem(
-            file,
-            "Mermaid diagram \{index} does not render: \{errors.iter().map(d => d.code+": "+d.message).to_array().join("; ")}",
-          ),
-        )
-        ""
-      } else {
-        let rendered = @svg.SvgRenderer::new(
-          id_prefix="site-swimlane-" + index.to_string(),
-        ).render(Swimlane(converted.swimlane.unwrap()))
-        match rendered.output {
-          Some(svg) => svg
-          None => {
-            problems.push(
-              @model.problem(
-                file,
-                "Mermaid diagram \{index} does not render: \{rendered.diagnostics.iter().map(d => d.code+": "+d.message).to_array().join("; ")}",
-              ),
-            )
-            ""
+    let native_kind = match parsed.tree {
+      Swimlane(_) | Zenuml(_) | Architecture(_) => true
+      _ => false
+    }
+    let svg = if native_kind {
+      let diagnostics = parsed.diagnostics.iter().to_array()
+      let model = match parsed.ast {
+        Some(Swimlane(ast)) => {
+          let result = @native_mermaid.to_swimlane(ast)
+          for d in result.diagnostics {
+            diagnostics.push(d)
           }
+          result.swimlane.map(model => @render.Diagram::Swimlane(model))
+        }
+        Some(Zenuml(ast)) => {
+          let result = @native_mermaid.to_zenuml_sequence(ast)
+          for d in result.diagnostics {
+            diagnostics.push(d)
+          }
+          result.sequence.map(model => @render.Diagram::Sequence(model))
+        }
+        Some(Architecture(ast)) => {
+          let result = @native_mermaid.to_architecture(ast)
+          for d in result.diagnostics {
+            diagnostics.push(d)
+          }
+          result.architecture.map(model => @render.Diagram::Architecture(model))
+        }
+        _ => None
+      }
+      let mut output = None
+      if !diagnostics.iter().any(d => d.severity == Error) {
+        if model is Some(model) {
+          let prefix = if model is Swimlane(_) {
+            "site-swimlane-"
+          } else {
+            "site-mermaid-"
+          }
+          let rendered = @svg.SvgRenderer::new(
+            id_prefix=prefix + index.to_string(),
+          ).render(model)
+          for d in rendered.diagnostics {
+            diagnostics.push(d)
+          }
+          output = rendered.output
+        }
+      }
+      match output {
+        Some(svg) => svg
+        None => {
+          problems.push(
+            @model.problem(
+              file,
+              "Mermaid diagram \{index} does not render: \{diagnostics.iter().map(d => d.code+": "+d.message).to_array().join("; ")}",
+            ),
+          )
+          ""
         }
       }
     } else {

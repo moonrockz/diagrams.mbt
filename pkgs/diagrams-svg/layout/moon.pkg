@@ -1,4 +1,5 @@
 import {
+  "moonrockz/diagrams/icons",
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams-svg/theme",
   "moonbit-community/metrics",

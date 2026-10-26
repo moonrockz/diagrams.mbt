@@ -4,6 +4,10 @@ package "moonrockz/diagrams-mermaid"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/architecture",
+  "moonrockz/diagrams-mermaid/architecture-ast",
+  "moonrockz/diagrams-mermaid/architecture-cst",
+  "moonrockz/diagrams-mermaid/architecture-syntax",
   "moonrockz/diagrams-mermaid/ast",
   "moonrockz/diagrams-mermaid/cst",
   "moonrockz/diagrams-mermaid/sequence",
@@ -11,21 +15,29 @@ import {
   "moonrockz/diagrams-mermaid/swimlane-ast",
   "moonrockz/diagrams-mermaid/swimlane-cst",
   "moonrockz/diagrams-mermaid/swimlane-syntax",
+  "moonrockz/diagrams-mermaid/zenuml",
+  "moonrockz/diagrams-mermaid/zenuml-ast",
+  "moonrockz/diagrams-mermaid/zenuml-cst",
+  "moonrockz/diagrams-mermaid/zenuml-syntax",
   "moonrockz/diagrams/render",
 }
 
 // Values
+pub let architecture_conversion_diagnostic_codes : ReadOnlyArray[String]
+
+pub let architecture_diagnostic_codes : ReadOnlyArray[String]
+
 pub let conversion_diagnostic_codes : ReadOnlyArray[String]
 
 pub let diagnostic_codes : ReadOnlyArray[String]
 
 pub fn print(@ast.Diagram) -> String
 
-pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits) -> DiagramPrintResult
+pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramPrintResult
 
 pub fn read(String) -> ReadResult
 
-pub fn read_diagram(String, limits? : @swimlane-syntax.Limits) -> DiagramReadResult
+pub fn read_diagram(String, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramReadResult
 
 pub fn render_svg(String) -> @render.Rendered
 
@@ -33,9 +45,17 @@ pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String]
 
 pub let swimlane_diagnostic_codes : ReadOnlyArray[String]
 
+pub fn to_architecture(@architecture-ast.Diagram, limits? : @architecture-syntax.Limits, id? : String) -> @architecture.Conversion
+
 pub fn to_sequence(@ast.Diagram) -> @sequence.Conversion
 
 pub fn to_swimlane(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> @swimlane.Conversion
+
+pub fn to_zenuml_sequence(@zenuml-ast.Diagram, limits? : @zenuml-syntax.Limits) -> @zenuml.Conversion
+
+pub let zenuml_conversion_diagnostic_codes : ReadOnlyArray[String]
+
+pub let zenuml_diagnostic_codes : ReadOnlyArray[String]
 
 // Errors
 
@@ -60,6 +80,8 @@ pub fn DiagramReadResult::to_repr(Self) -> @debug.Repr
 pub(all) enum DiagramTree {
   Sequence(@cst.Node)
   Swimlane(@swimlane-cst.Node)
+  Zenuml(@zenuml-cst.Node)
+  Architecture(@architecture-cst.Node)
   Unsupported(String)
 } derive(Eq, @debug.Debug)
 pub fn DiagramTree::equal(Self, Self) -> Bool
@@ -70,6 +92,8 @@ pub fn DiagramTree::to_repr(Self) -> @debug.Repr
 pub(all) enum ParsedDiagram {
   Sequence(@ast.Diagram)
   Swimlane(@swimlane-ast.Diagram)
+  Zenuml(@zenuml-ast.Diagram)
+  Architecture(@architecture-ast.Diagram)
 } derive(Eq, @debug.Debug)
 pub fn ParsedDiagram::equal(Self, Self) -> Bool
 pub fn ParsedDiagram::not_equal(Self, Self) -> Bool

@@ -1,10 +1,10 @@
 ///|
 /// A rectangle in SVG user units. `x` and `y` are the top-left corner.
 pub(all) struct Rect {
-  x : Int
-  y : Int
-  width : Int
-  height : Int
+  x : Int32
+  y : Int32
+  width : Int32
+  height : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -16,7 +16,10 @@ pub extend Rect with @debug.Debug::{to_repr}
 ///|
 /// True when two rectangles share an area.
 pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
-  self.width > 0 && self.height > 0 && other.width > 0 && other.height > 0 &&
+  self.width > 0 &&
+  self.height > 0 &&
+  other.width > 0 &&
+  other.height > 0 &&
   self.x < other.x + other.width &&
   other.x < self.x + self.width &&
   self.y < other.y + other.height &&
@@ -58,10 +61,10 @@ pub extend Layer with @debug.Debug::{to_repr}
 /// `owner` names the element that the text belongs to.
 pub(all) struct Label {
   content : String
-  x : Int
-  baseline : Int
-  size : Int
-  weight : Int
+  x : Int32
+  baseline : Int32
+  size : Int32
+  weight : Int32
   box : Rect
   ink : Ink
   backdrop : ReadOnlyArray[Layer]
@@ -77,13 +80,14 @@ pub extend Label with @debug.Debug::{to_repr}
 ///|
 /// A participant box with its label and the x of its lifeline.
 pub(all) struct ParticipantBox {
+  icon_box : Rect?
   id : String
   family : @theme.Family
   box : Rect
   label : Label
-  lifeline_x : Int
-  lifeline_top : Int
-  lifeline_bottom : Int
+  lifeline_x : Int32
+  lifeline_top : Int32
+  lifeline_bottom : Int32
   destroyed : Bool
   participant : @sequence.Participant
   sublabel : Label?
@@ -98,13 +102,13 @@ pub extend ParticipantBox with @debug.Debug::{to_repr}
 ///|
 /// A message line from `x1` to `x2` at `y`, with its label on a chip.
 pub(all) struct MessageLine {
-  index : Int
+  index : Int32
   sender : String
   receiver : String
   family : @theme.Family
-  x1 : Int
-  x2 : Int
-  y : Int
+  x1 : Int32
+  x2 : Int32
+  y : Int32
   chip : Rect
   label : Label
   sublabel : Label?
@@ -122,10 +126,10 @@ pub extend MessageLine with @debug.Debug::{to_repr}
 /// The geometry of a sequence diagram. The painter draws it, and the
 /// legibility check reads it.
 pub(all) struct Geometry {
-  width : Int
-  height : Int
-  lifeline_top : Int
-  lifeline_bottom : Int
+  width : Int32
+  height : Int32
+  lifeline_top : Int32
+  lifeline_bottom : Int32
   participants : ReadOnlyArray[ParticipantBox]
   messages : ReadOnlyArray[MessageLine]
   notes : ReadOnlyArray[NoteBox]
@@ -145,10 +149,10 @@ pub extend Geometry with @debug.Debug::{to_repr}
 ///|
 /// One axis-aligned path segment. Owners associate a path with its label.
 pub(all) struct Segment {
-  x1 : Int
-  y1 : Int
-  x2 : Int
-  y2 : Int
+  x1 : Int32
+  y1 : Int32
+  x2 : Int32
+  y2 : Int32
   owner : String
 } derive(Eq, Debug)
 
@@ -161,7 +165,7 @@ pub extend Segment with @debug.Debug::{to_repr}
 ///|
 /// A note with measured text. The box spans each anchor for an over note.
 pub(all) struct NoteBox {
-  index : Int
+  index : Int32
   note : @sequence.Note
   box : Rect
   label : Label
@@ -177,7 +181,7 @@ pub extend NoteBox with @debug.Debug::{to_repr}
 /// One activation, numbered from depth zero. Nested bars move right by 4 px.
 pub(all) struct ActivationBar {
   participant : String
-  depth : Int
+  depth : Int32
   box : Rect
 } derive(Eq, Debug)
 
@@ -205,8 +209,8 @@ pub extend FrameSection with @debug.Debug::{to_repr}
 ///|
 /// A frame and its ordered sections. The array of frames is in preorder.
 pub(all) struct FrameBox {
-  index : Int
-  parent : Int?
+  index : Int32
+  parent : Int32?
   kind : @sequence.FrameKind
   colour : String?
   box : Rect

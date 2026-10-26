@@ -1,0 +1,11 @@
+---
+config:
+  architecture:
+    idealEdgeLengthMultiplier: 3
+---
+architecture-beta
+    service a(server)[A]
+    service b(server)[B]
+    service c(server)[C]
+    a:R --> L:b
+    b:R --> L:c

@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/architecture-syntax"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/architecture-ast",
+  "moonrockz/diagrams-mermaid/architecture-cst",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn read(String, limits? : Limits) -> ReadResult
+
+pub fn trim(String) -> String
+
+pub fn unquote(String) -> String
+
+// Errors
+
+// Types and methods
+pub struct Limits {
+  source : Int32
+  output : Int32
+  nodes : Int32
+  edges : Int32
+  alignments : Int32
+  depth : Int32
+  diagnostics : Int32
+  work : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(source? : Int32, output? : Int32, nodes? : Int32, edges? : Int32, alignments? : Int32, depth? : Int32, diagnostics? : Int32, work? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  tree : @architecture-cst.Node
+  ast : @architecture-ast.Diagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn ReadResult::equal(Self, Self) -> Bool
+pub fn ReadResult::not_equal(Self, Self) -> Bool
+pub fn ReadResult::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

@@ -27,3 +27,4 @@ body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 syste
   [data-diagram-viewer] .motion-visit, [data-diagram-viewer] .motion-selected { filter: none !important; }
   [data-diagram-viewer] .diagram-canvas { overflow: visible; border: none; }
 }
+[data-diagram-viewer] .motion-controls output { min-width: 24ch; font-variant-numeric: tabular-nums; }

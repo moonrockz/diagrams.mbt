@@ -33,7 +33,7 @@ fn grammar() -> @ebnf.Grammar {
 }
 
 ///|
-fn key(id : String, view? : String = "pattern") -> String {
+fn key(id : String, view~ : String = "pattern") -> String {
   @animation.railroad_key(view, id)
 }
 
@@ -46,8 +46,14 @@ test "equal literal terms in two branches have separate visit targets" {
   assert_true(a.key != b.key)
   assert_eq(a.railroad_term.unwrap().label, b.railroad_term.unwrap().label)
   // Every drawn connector is a path occurrence.
-  let paths = catalog.occurrences.iter().filter(o => o.railroad_connector is Some(_)).count()
-  assert_eq(paths, @railroad_trace.Topology::regex(pattern()).topology.unwrap().connectors.length())
+  let paths = catalog.occurrences
+    .iter()
+    .filter(o => o.railroad_connector is Some(_))
+    .count()
+  assert_eq(
+    paths,
+    @railroad_trace.Topology::regex(pattern()).topology.unwrap().connectors.length(),
+  )
 }
 
 ///|
@@ -61,10 +67,16 @@ test "a node visit samples halfway without a path and wrong kinds are refused" {
   let start = @railroad_trace.connector_id("pattern", Start)
   let wrong = @animation.PlaybackPlan::scenario(catalog, Step(key("a"), 1000L))
   assert_eq(wrong.diagnostics[0].code, "animation/invalid-target-kind")
-  let also = @animation.PlaybackPlan::scenario(catalog, Visit(key(start), 1000L))
+  let also = @animation.PlaybackPlan::scenario(
+    catalog,
+    Visit(key(start), 1000L),
+  )
   assert_eq(also.diagnostics[0].code, "animation/invalid-target-kind")
   // Existing connection steps keep their orientation.
-  let step = @animation.PlaybackPlan::scenario(catalog, OrientedStep(key(start), 100L, true)).plan.unwrap()
+  let step = @animation.PlaybackPlan::scenario(
+    catalog,
+    OrientedStep(key(start), 100L, true),
+  ).plan.unwrap()
   assert_true(step.steps[0].reversed && !step.steps[0].visit)
 }
 
@@ -77,7 +89,9 @@ test "routes follow drawn branch, return and bypass connectors in order" {
   let from = t.term("b").unwrap().exit
   let to = t.entry("c").unwrap()
   guard catalog.graph.route(from, to) is Found(route) else { fail("no route") }
-  let roles = route.edges.map(e => catalog.occurrence(e.occurrence.unwrap()).unwrap().kind)
+  let roles = route.edges.map(e => {
+    catalog.occurrence(e.occurrence.unwrap()).unwrap().kind
+  })
   assert_true(roles.contains(Railroad(Return)))
   // A finite plan follows the route with visits for terms.
   let plan = @animation.PlaybackPlan::route(catalog, route).plan.unwrap()
@@ -98,7 +112,12 @@ test "grammar references are inspectable and add no route between rules" {
   let second = t.tracks[1]
   assert_eq(catalog.graph.route(first.start, second.start), Unreachable)
   // The recursive reference stays one occurrence.
-  let references = catalog.occurrences.iter().filter(o => o.railroad_term.map(t => t.kind is Reference(_)).unwrap_or(false)).count()
+  let references = catalog.occurrences
+    .iter()
+    .filter(o => {
+      o.railroad_term.map(t => t.kind is Reference(_)).unwrap_or(false)
+    })
+    .count()
   assert_eq(references, 2)
 }
 
@@ -142,10 +161,17 @@ test "hierarchy routes combine row visits with drawn connectors only" {
     catalog.graph.route("root", "v5", limits=@animation.Limits::new(work=2)),
     Failed(Limit(Work)),
   )
-  assert_eq(catalog.graph.route("root", "nope"), Failed(InvalidEndpoint("nope")))
+  assert_eq(
+    catalog.graph.route("root", "nope"),
+    Failed(InvalidEndpoint("nope")),
+  )
   // Repeated values keep separate rows.
-  assert_true(catalog.occurrence(@animation.data_key("data", "row", "e0")) is Some(_))
-  assert_true(catalog.occurrence(@animation.data_key("data", "row", "e1")) is Some(_))
+  assert_true(
+    catalog.occurrence(@animation.data_key("data", "row", "e0")) is Some(_),
+  )
+  assert_true(
+    catalog.occurrence(@animation.data_key("data", "row", "e1")) is Some(_),
+  )
 }
 
 ///|

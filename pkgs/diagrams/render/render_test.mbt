@@ -14,8 +14,12 @@ struct Count {}
 ///|
 impl @render.Renderer for Count with fn render(_, diagram) {
   match diagram {
-    Bpmn(_) | Swimlane(_) | Regex(_) | Ebnf(_) | DataTree(_) =>
-      @render.Rendered::unsupported("text/plain", diagram)
+    Bpmn(_)
+    | Swimlane(_)
+    | Architecture(_)
+    | Regex(_)
+    | Ebnf(_)
+    | DataTree(_) => @render.Rendered::unsupported("text/plain", diagram)
     Sequence(s) =>
       @render.Rendered::ok(s.participants.length().to_string(), "text/plain")
   }

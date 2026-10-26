@@ -1,0 +1,5 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/architecture" @model,
+}

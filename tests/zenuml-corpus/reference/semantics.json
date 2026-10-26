@@ -1,0 +1,810 @@
+{
+  "reference": {
+    "plugin": "1.0.1",
+    "core": "3.47.9",
+    "commit": "e3f93e0eb65d23fa3520e8691a5bca883853aa4b",
+    "extractor": "RootContext + OrderedParticipants + walkStatements + Assignment"
+  },
+  "examples": [
+    {
+      "id": "docs-1",
+      "source": "zenuml\n    title Demo\n    Alice->John: Hello John, how are you?\n    John->Alice: Great!\n    Alice->John: See you later!",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "John",
+          "label": "John",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "John",
+          "label": "Hello John, how are you?",
+          "kind": "async"
+        },
+        {
+          "from": "John",
+          "to": "Alice",
+          "label": "Great!",
+          "kind": "async"
+        },
+        {
+          "from": "Alice",
+          "to": "John",
+          "label": "See you later!",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-2",
+      "source": "zenuml\n    title Declare participant (optional)\n    Bob\n    Alice\n    Alice->Bob: Hi Bob\n    Bob->Alice: Hi Alice",
+      "participants": [
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": null
+        },
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "Hi Bob",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Hi Alice",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-3",
+      "source": "zenuml\n    title Annotators\n    @Actor Alice\n    @Database Bob\n    Alice->Bob: Hi Bob\n    Bob->Alice: Hi Alice",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": "Actor"
+        },
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": "Database"
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "Hi Bob",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Hi Alice",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-4",
+      "source": "zenuml\n    title Aliases\n    A as Alice\n    J as John\n    A->J: Hello John, how are you?\n    J->A: Great!",
+      "participants": [
+        {
+          "id": "A",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "J",
+          "label": "John",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "J",
+          "label": "Hello John, how are you?",
+          "kind": "async"
+        },
+        {
+          "from": "J",
+          "to": "A",
+          "label": "Great!",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-5",
+      "source": "zenuml\n    title Sync message\n    A.SyncMessage\n    A.SyncMessage(with, parameters) {\n      B.nestedSyncMessage()\n    }",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "SyncMessage",
+          "kind": "sync"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "SyncMessage(with,parameters)",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "nestedSyncMessage()",
+          "kind": "sync"
+        }
+      ]
+    },
+    {
+      "id": "docs-6",
+      "source": "zenuml\n    title Async message\n    Alice->Bob: How are you?",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "How are you?",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-7",
+      "source": "zenuml\n    new A1\n    new A2(with, parameters)",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A1",
+          "label": "A1",
+          "type": null
+        },
+        {
+          "id": "A2",
+          "label": "A2",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A1",
+          "label": "«create»",
+          "kind": "creation"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "A2",
+          "label": "«with,parameters»",
+          "kind": "creation"
+        }
+      ]
+    },
+    {
+      "id": "docs-8",
+      "source": "zenuml\n    // 1. assign a variable from a sync message.\n    a = A.SyncMessage()\n\n    // 1.1. optionally give the variable a type\n    SomeType a = A.SyncMessage()\n\n    // 2. use return keyword\n    A.SyncMessage() {\n    return result\n    }\n\n    // 3. use @return or @reply annotator on an async message\n    @return\n    A->B: result",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "SyncMessage()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "_STARTER_",
+          "label": "a",
+          "kind": "assignment-return"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "SyncMessage()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "_STARTER_",
+          "label": "a",
+          "kind": "assignment-return"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "SyncMessage()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "_STARTER_",
+          "label": "result",
+          "kind": "return"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "result",
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "id": "docs-9",
+      "source": "zenuml\n    title Reply message\n    Client->A.method() {\n      B.method() {\n        if(condition) {\n          return x1\n          // return early\n          @return\n          A->Client: x11\n        }\n      }\n      return x2\n    }",
+      "participants": [
+        {
+          "id": "Client",
+          "label": "Client",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Client",
+          "to": "A",
+          "label": "method()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "method()",
+          "kind": "sync"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "x1",
+          "kind": "return"
+        },
+        {
+          "from": "A",
+          "to": "Client",
+          "label": "x11",
+          "kind": "return"
+        },
+        {
+          "from": "A",
+          "to": "Client",
+          "label": "x2",
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "id": "docs-10",
+      "source": "zenuml\n    A.method() {\n      B.nested_sync_method()\n      B->C: nested async message\n    }",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        },
+        {
+          "id": "C",
+          "label": "C",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "method()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "nested_sync_method()",
+          "kind": "sync"
+        },
+        {
+          "from": "B",
+          "to": "C",
+          "label": "nested async message",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-11",
+      "source": "zenuml\n    // a comment on a participant will not be rendered\n    BookService\n    // a comment on a message.\n    // **Markdown** is supported.\n    BookService.getBook()",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "BookService",
+          "label": "BookService",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "BookService",
+          "label": "getBook()",
+          "kind": "sync"
+        }
+      ]
+    },
+    {
+      "id": "docs-12",
+      "source": "zenuml\n    Alice->John: Hello John, how are you?\n    while(true) {\n      John->Alice: Great!\n    }",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "John",
+          "label": "John",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "John",
+          "label": "Hello John, how are you?",
+          "kind": "async"
+        },
+        {
+          "from": "John",
+          "to": "Alice",
+          "label": "Great!",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-13",
+      "source": "zenuml\n    Alice->Bob: Hello Bob, how are you?\n    if(is_sick) {\n      Bob->Alice: Not so good :(\n    } else {\n      Bob->Alice: Feeling fresh like a daisy\n    }",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "Hello Bob, how are you?",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Not so good :(",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Feeling fresh like a daisy",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-14",
+      "source": "zenuml\n    Alice->Bob: Hello Bob, how are you?\n    Bob->Alice: Not so good :(\n    opt {\n      Bob->Alice: Thanks for asking\n    }",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "Hello Bob, how are you?",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Not so good :(",
+          "kind": "async"
+        },
+        {
+          "from": "Bob",
+          "to": "Alice",
+          "label": "Thanks for asking",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-15",
+      "source": "zenuml\n    par {\n        Alice->Bob: Hello guys!\n        Alice->John: Hello guys!\n    }",
+      "participants": [
+        {
+          "id": "Alice",
+          "label": "Alice",
+          "type": null
+        },
+        {
+          "id": "Bob",
+          "label": "Bob",
+          "type": null
+        },
+        {
+          "id": "John",
+          "label": "John",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Alice",
+          "to": "Bob",
+          "label": "Hello guys!",
+          "kind": "async"
+        },
+        {
+          "from": "Alice",
+          "to": "John",
+          "label": "Hello guys!",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "docs-16",
+      "source": "zenuml\n    try {\n      Consumer->API: Book something\n      API->BookingService: Start booking process\n    } catch {\n      API->Consumer: show failure\n    } finally {\n      API->BookingService: rollback status\n    }",
+      "participants": [
+        {
+          "id": "Consumer",
+          "label": "Consumer",
+          "type": null
+        },
+        {
+          "id": "API",
+          "label": "API",
+          "type": null
+        },
+        {
+          "id": "BookingService",
+          "label": "BookingService",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Consumer",
+          "to": "API",
+          "label": "Book something",
+          "kind": "async"
+        },
+        {
+          "from": "API",
+          "to": "BookingService",
+          "label": "Start booking process",
+          "kind": "async"
+        },
+        {
+          "from": "API",
+          "to": "Consumer",
+          "label": "show failure",
+          "kind": "async"
+        },
+        {
+          "from": "API",
+          "to": "BookingService",
+          "label": "rollback status",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "nested-return",
+      "source": "zenuml\nClient->A.method() {\n B.nested() {\n return result\n }\n return done\n}",
+      "participants": [
+        {
+          "id": "Client",
+          "label": "Client",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "Client",
+          "to": "A",
+          "label": "method()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "nested()",
+          "kind": "sync"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "result",
+          "kind": "return"
+        },
+        {
+          "from": "A",
+          "to": "Client",
+          "label": "done",
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "id": "assignments",
+      "source": "zenuml\na = A.foo()\nSomeType b = B.bar(x, y)",
+      "participants": [
+        {
+          "id": "_STARTER_",
+          "label": "_STARTER_",
+          "type": null
+        },
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "_STARTER_",
+          "to": "A",
+          "label": "foo()",
+          "kind": "sync"
+        },
+        {
+          "from": "A",
+          "to": "_STARTER_",
+          "label": "a",
+          "kind": "assignment-return"
+        },
+        {
+          "from": "_STARTER_",
+          "to": "B",
+          "label": "bar(x,y)",
+          "kind": "sync"
+        },
+        {
+          "from": "B",
+          "to": "_STARTER_",
+          "label": "b",
+          "kind": "assignment-return"
+        }
+      ]
+    },
+    {
+      "id": "multi-catch",
+      "source": "zenuml\ntry {\n A->B: work\n} catch(one) {\n B->A: first\n} catch(two) {\n B->A: second\n} finally {\n A->B: clean\n}",
+      "participants": [
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "B",
+          "label": "work",
+          "kind": "async"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "first",
+          "kind": "async"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "second",
+          "kind": "async"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "clean",
+          "kind": "async"
+        }
+      ]
+    },
+    {
+      "id": "reply",
+      "source": "zenuml\nA->B: request\n@reply\nB->A: response",
+      "participants": [
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "B",
+          "label": "request",
+          "kind": "async"
+        },
+        {
+          "from": "B",
+          "to": "A",
+          "label": "response",
+          "kind": "return"
+        }
+      ]
+    },
+    {
+      "id": "loops",
+      "source": "zenuml\nforEach(item in items) {\nA->B: iterate\n}\nforeach(item in items) {\nA->B: next\n}\nloop(3) {\nA->B: last\n}",
+      "participants": [
+        {
+          "id": "A",
+          "label": "A",
+          "type": null
+        },
+        {
+          "id": "B",
+          "label": "B",
+          "type": null
+        }
+      ],
+      "messages": [
+        {
+          "from": "A",
+          "to": "B",
+          "label": "iterate",
+          "kind": "async"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "next",
+          "kind": "async"
+        },
+        {
+          "from": "A",
+          "to": "B",
+          "label": "last",
+          "kind": "async"
+        }
+      ]
+    }
+  ]
+}

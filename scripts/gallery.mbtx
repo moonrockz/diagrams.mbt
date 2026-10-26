@@ -1,5 +1,4 @@
-///|
-/// Write the review gallery after checking snapshots against the renderer.
+----
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -9,6 +8,10 @@ import {
   "moonbitlang/core/env",
   "moonbitlang/core/json",
 }
+----
+
+///|
+/// Write the review gallery after checking snapshots against the renderer.
 
 ///|
 fn escape(text : String) -> String {
@@ -68,6 +71,7 @@ async fn main {
       package_name in [
         "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
         "moonrockz/diagrams-tests/animation-acceptance", "moonrockz/diagrams-tests/plantuml-acceptance",
+        "moonrockz/diagrams-tests/zenuml-integration",
       ] {
       let code = @process.run(
         "moon",
@@ -334,6 +338,33 @@ async fn main {
   }
   html.write_string(
     "<p><a href=\"ebnf-scenario.html\">Explicit EBNF scenario with term visits and a return loop</a> · <a href=\"ebnf-arithmetic-trace-light.html\">Player with configured static trace highlights</a></p>",
+  )
+  html.write_string(
+    "<h2 id=\"native-mermaid\">Mermaid ZenUML and architecture</h2><p>Native interactions retain participant symbols. Architecture playback follows authored connections and does not execute deployments. <a href=\"icon-contact-sheet.svg\">Complete 523-key symbol contact sheet</a>.</p>",
+  )
+  for row in rows("tests/zenuml-integration/__snapshot__/new-gallery.json") {
+    let name = string(row[0])
+    save(name, string(row[2]), check, site_assets)
+    html.write_string(
+      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
+    )
+    if name.has_suffix("-light.svg") || name.has_suffix("-dark.svg") {
+      html.write_string(
+        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
+        escape(name) +
+        "\" src=\"" +
+        escape(name) +
+        "\">",
+      )
+    }
+  }
+  save(
+    "icon-contact-sheet.svg",
+    @fs.read_file(
+      "tests/zenuml-integration/__snapshot__/icon-contact-sheet.svg",
+    ).text(),
+    check,
+    false,
   )
   html.write_string("</html>\n")
   save("index.html", html.to_string(), check, false)

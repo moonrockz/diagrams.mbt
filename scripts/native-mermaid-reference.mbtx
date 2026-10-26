@@ -1,0 +1,88 @@
+----
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
+///|
+async fn run(
+  command : String,
+  args : Array[String],
+  extra_env? : Map[String, String],
+) -> Unit {
+  let code = @process.run(
+    command,
+    args,
+    extra_env?,
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}
+
+///|
+async fn main {
+  let check = @env.args().contains("--check")
+  run("bun", ["install", "--frozen-lockfile", "--cwd", "tests/zenuml-reference"])
+  run("bun", [
+    "install", "--frozen-lockfile", "--cwd", "tests/architecture-reference",
+  ])
+  run("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"])
+  run("node", [
+    "apps/site/node_modules/playwright/cli.js", "install", "chromium",
+  ])
+  @fs.mkdir("_build/zenuml-reference", recursive=true, allow_exist=true)
+  let archive = "_build/zenuml-reference/source.tar.gz"
+  if !@fs.exists(archive) {
+    run("curl", [
+      "-fsSL", "-o", archive, "https://codeload.github.com/mermaid-js/zenuml-core/tar.gz/e3f93e0eb65d23fa3520e8691a5bca883853aa4b",
+    ])
+  }
+  let digest = @crypto.bytes_to_hex_string(
+    @crypto.sha256(@fs.read_file(archive).binary()),
+  )
+  if digest !=
+    "92b8caac562056bb94871d3bfcd40542f14aa860981bc92b7eb995c39a1002af" {
+    abort("Pinned ZenUML source archive digest mismatch")
+  }
+  run("tar", ["-xzf", archive, "-C", "_build/zenuml-reference"])
+  let root = @fs.realpath(".")
+  let source = root +
+    "/_build/zenuml-reference/zenuml-core-e3f93e0eb65d23fa3520e8691a5bca883853aa4b"
+  let output = "_build/zenuml-reference/semantics.json"
+  run(
+    "bun",
+    [
+      "--tsconfig-override=" + source + "/tsconfig.app.json",
+      "tests/zenuml-corpus/reference/extract.ts",
+      source,
+      output,
+      "pkgs/diagrams-mermaid/zenuml/__snapshot__/canonical.json",
+    ],
+    extra_env={ "NODE_PATH": root + "/tests/zenuml-reference/node_modules" },
+  )
+  let frozen = "tests/zenuml-corpus/reference/semantics.json"
+  if check {
+    if @fs.read_file(output).text() != @fs.read_file(frozen).text() {
+      abort("ZenUML semantic reference differs")
+    }
+  } else {
+    @fs.write_file(frozen, @fs.read_file(output).text())
+  }
+  let args = ["tests/architecture-reference/reference.mjs", "--canonical"]
+  if check {
+    args.push("--check")
+  }
+  run("node", args)
+  println(
+    "Independent pinned ZenUML and architecture references repeat; canonical sources accepted",
+  )
+}

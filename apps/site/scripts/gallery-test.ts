@@ -26,7 +26,7 @@ try {
       for (const node of nodes) { node.loading = 'eager'; await node.decode(); if (!node.naturalWidth || !node.naturalHeight) throw new Error('Empty gallery image'); }
       return nodes.map(node => node.getAttribute('src')!);
     });
-    assert.equal(images.length, 110);
+    assert.equal(images.length, 120);
     for (const file of images) {
       const svg = await readFile(fileURLToPath(new URL(file, root)), 'utf8');
       await page.evaluate(svg => {
@@ -36,8 +36,9 @@ try {
     }
     assert.equal(new Set(references.filter(reference => reference.endsWith(".bpmn"))).size, 7);
     const players = references.filter(reference => reference.endsWith('.html'));
-    assert.equal(players.length, 31);
+    assert.equal(players.length, 46);
     assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6);
     for (const file of players) {
       await page.goto(new URL(file, root).href);
       await page.locator('[data-motion-ready="true"]').waitFor();
@@ -48,5 +49,5 @@ try {
     await page.close();
   }
   assert.deepEqual(external, []); assert.deepEqual(errors, []);
-  console.log('Gallery: 110 fixed-theme SVGs, 7 BPMN XML and 7 PlantUML sources, 31 offline players and all links verified in both preferences.');
+  console.log('Gallery: 120 fixed-theme SVGs, 7 BPMN XML, 7 PlantUML and 6 native Mermaid sources, 46 offline players and all links verified in both preferences.');
 } finally { await browser.close(); }

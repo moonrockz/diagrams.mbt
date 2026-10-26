@@ -26,7 +26,7 @@ pub extend Link with @debug.Debug::{to_repr}
 
 ///|
 pub fn Link::new(scheme : LinkScheme, target : String) -> Link {
-  { scheme, target }
+  { scheme, target, }
 }
 
 ///|
@@ -45,7 +45,7 @@ pub extend BoxGroup with @debug.Debug::{to_repr}
 
 ///|
 pub fn BoxGroup::new(id : String, label : String, colour? : String) -> BoxGroup {
-  { id, label, colour }
+  { id, label, colour, }
 }
 
 ///|
@@ -63,8 +63,12 @@ pub extend ParticipantProperties with Eq::{not_equal, equal}
 pub extend ParticipantProperties with @debug.Debug::{to_repr}
 
 ///|
-pub fn ParticipantProperties::new(kind? : ParticipantKind, sublabel? : String, description? : String) -> ParticipantProperties {
-  { kind, sublabel, description }
+pub fn ParticipantProperties::new(
+  kind? : ParticipantKind,
+  sublabel? : String,
+  description? : String,
+) -> ParticipantProperties {
+  { kind, sublabel, description, }
 }
 
 ///|
@@ -81,14 +85,20 @@ pub extend MessageProperties with Eq::{not_equal, equal}
 pub extend MessageProperties with @debug.Debug::{to_repr}
 
 ///|
-pub fn MessageProperties::new(sublabel? : String, description? : String) -> MessageProperties {
-  { sublabel, description }
+pub fn MessageProperties::new(
+  sublabel? : String,
+  description? : String,
+) -> MessageProperties {
+  { sublabel, description, }
 }
 
 ///|
 /// Return a participant with new render properties, leaving the input unchanged.
-pub fn Participant::with_properties(self : Participant, properties : ParticipantProperties) -> Participant {
-  { ..self, properties: Some(properties) }
+pub fn Participant::with_properties(
+  self : Participant,
+  properties : ParticipantProperties,
+) -> Participant {
+  { ..self, properties: Some(properties), }
 }
 
 ///|
@@ -98,8 +108,11 @@ pub fn Participant::render_kind(self : Participant) -> ParticipantKind {
 }
 
 ///|
-pub fn Message::with_properties(self : Message, properties : MessageProperties) -> Message {
-  { ..self, properties: Some(properties) }
+pub fn Message::with_properties(
+  self : Message,
+  properties : MessageProperties,
+) -> Message {
+  { ..self, properties: Some(properties), }
 }
 
 ///|
@@ -131,8 +144,12 @@ pub extend Note with Eq::{not_equal, equal}
 pub extend Note with @debug.Debug::{to_repr}
 
 ///|
-pub fn Note::new(placement : Placement, participants : ArrayView[String], text : String) -> Note {
-  { placement, participants: ReadOnlyArray::from_array(participants), text }
+pub fn Note::new(
+  placement : Placement,
+  participants : ArrayView[String],
+  text : String,
+) -> Note {
+  { placement, participants: ReadOnlyArray::from_array(participants), text, }
 }
 
 ///|
@@ -146,6 +163,7 @@ pub(all) enum FrameKind {
   Critical
   Break
   Rect
+  Try
 } derive(Eq, Debug)
 
 ///|
@@ -156,7 +174,22 @@ pub extend FrameKind with @debug.Debug::{to_repr}
 
 ///|
 /// One ordered section of a frame.
+pub(all) enum SectionRole {
+  Plain
+  Try
+  Catch
+  Finally
+} derive(Eq, Debug)
+
+///|
+pub extend SectionRole with Eq::{equal, not_equal}
+
+///|
+pub extend SectionRole with @debug.Debug::{to_repr}
+
+///|
 pub struct Section {
+  role : SectionRole
   label : String?
   events : ReadOnlyArray[Event]
 } derive(Eq, Debug)
@@ -168,8 +201,12 @@ pub extend Section with Eq::{not_equal, equal}
 pub extend Section with @debug.Debug::{to_repr}
 
 ///|
-pub fn Section::new(events : ArrayView[Event], label? : String) -> Section {
-  { label, events: ReadOnlyArray::from_array(events) }
+pub fn Section::new(
+  events : ArrayView[Event],
+  label? : String,
+  role~ : SectionRole = Plain,
+) -> Section {
+  { role, label, events: ReadOnlyArray::from_array(events), }
 }
 
 ///|
@@ -188,8 +225,13 @@ pub extend Frame with Eq::{not_equal, equal}
 pub extend Frame with @debug.Debug::{to_repr}
 
 ///|
-pub fn Frame::new(kind : FrameKind, first : Section, rest? : ArrayView[Section] = [], colour? : String) -> Frame {
-  { kind, sections: ReadOnlyArray::from_array([first, ..rest]), colour }
+pub fn Frame::new(
+  kind : FrameKind,
+  first : Section,
+  rest~ : ArrayView[Section] = [],
+  colour? : String,
+) -> Frame {
+  { kind, sections: ReadOnlyArray::from_array([first, ..rest]), colour, }
 }
 
 ///|

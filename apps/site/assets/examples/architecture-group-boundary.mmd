@@ -1,0 +1,7 @@
+architecture-beta
+group left(cloud)[Left]
+group right(server)[Right]
+service a(server)[A] in left
+service b(database)[B] in right
+a{group}:R --> L:b{group}
+a{group}:R <-- L:b{group}

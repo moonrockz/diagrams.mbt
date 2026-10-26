@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/architecture"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/architecture-ast",
+  "moonrockz/diagrams-mermaid/architecture-syntax",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn to_architecture(@architecture-ast.Diagram, limits? : @architecture-syntax.Limits, id? : String) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  architecture : @moonrockz/diagrams/architecture.Architecture?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

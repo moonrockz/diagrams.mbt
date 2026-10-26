@@ -56,9 +56,12 @@ express every arrow form of the Mermaid 12.2.0 sequence grammar.
 
 ### Requirement: Nested frames with sections
 
-The model SHALL have frames of the kinds loop, alt, opt, par, critical, break
-and rect. A frame SHALL have one or more sections, each with an optional label
-and its own events. Frames SHALL nest.
+The model SHALL have frames of the kinds loop, alt, opt, par, critical, break,
+rect and try. A frame SHALL have one or more sections, each with an optional
+label and its own events. Frames SHALL nest. A section SHALL have an explicit
+role of plain, try, catch or finally, with plain as the default for existing
+construction. Try frames SHALL retain ordered try/catch/finally sections without
+converting finally into an alternative.
 
 #### Scenario: An alt frame with two sections
 
@@ -69,6 +72,16 @@ and its own events. Frames SHALL nest.
 
 - **WHEN** a loop frame is inside the first section of an alt frame
 - **THEN** the model has the loop frame as an event of that section
+
+#### Scenario: Typed exception sections
+
+- **WHEN** a sequence represents try, two catches and finally
+- **THEN** it has a try frame with four ordered sections whose roles are try, catch, catch and finally, with the catch labels preserved
+
+#### Scenario: Existing section construction
+
+- **WHEN** a caller constructs a section with the existing constructor arguments
+- **THEN** its role is plain and its label and events retain their existing values
 
 ### Requirement: Participant kinds and groups
 
@@ -135,3 +148,21 @@ contain SHALL give a warning diagnostic with the link target.
 
 - **WHEN** the same test resolver resolves a model with a participant link to `example.weather#Missing`
 - **THEN** the result has a warning diagnostic that names `example.weather#Missing`, and the participant has no new render properties
+
+### Requirement: Participant icon references
+
+A participant SHALL have an optional immutable namespaced icon reference
+independent of its declared kind, label, group, links and render properties.
+The default SHALL be absent. A transformation of render properties SHALL
+preserve this reference unless it explicitly changes the icon. Symbol selection
+SHALL not overwrite semantic participant kind.
+
+#### Scenario: Cloud symbol on a service
+
+- **WHEN** a service participant has an EC2 icon reference and receives a new render sublabel
+- **THEN** its declared service kind, EC2 reference, label and link remain unchanged
+
+#### Scenario: Existing participant construction
+
+- **WHEN** a caller constructs a participant with the existing constructor arguments
+- **THEN** it has no explicit icon reference and retains its previous values

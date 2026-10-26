@@ -1,0 +1,15 @@
+import {
+  "moonrockz/diagrams/icons",
+  "moonrockz/diagrams-tests/architecture-acceptance" @corpus,
+  "moonbitlang/core/json",
+  "moonrockz/diagrams-svg/theme",
+  "moonbitlang/core/test",
+  "moonrockz/diagrams/architecture" @model,
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/architecture-layout" @layout,
+  "moonrockz/diagrams-mermaid/architecture-syntax" @syntax,
+  "moonrockz/diagrams-mermaid/architecture-printer" @printer,
+  "moonrockz/diagrams-mermaid/architecture" @conversion,
+  "moonrockz/diagrams-animated" @animated,
+} for "test"

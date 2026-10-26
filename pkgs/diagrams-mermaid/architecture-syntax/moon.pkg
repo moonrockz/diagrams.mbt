@@ -1,0 +1,8 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/architecture" @model,
+  "moonrockz/diagrams-mermaid/architecture-ast" @ast,
+  "moonrockz/diagrams-mermaid/architecture-cst" @cst,
+  "moonrockz/diagrams-mermaid/cst" @positions,
+}

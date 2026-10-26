@@ -20,3 +20,15 @@ pkgs/diagrams-mermaid/swimlane-syntax/entities.generated.mbt text eol=lf
 # PlantUML fixtures and the reference report have frozen byte digests.
 tests/corpus/plantuml-1.2026.9/** -text
 tests/plantuml-acceptance/corpus.generated.mbt text eol=lf
+
+# Native Mermaid references and full symbol provenance use original byte digests.
+tests/zenuml-corpus/** -text
+tests/architecture-corpus/** -text
+pkgs/diagrams-svg/icons/** -text
+
+# Portable generated source must match the MoonBit generators on Windows too.
+pkgs/diagrams-svg/icons/*.mbt text eol=lf
+pkgs/diagrams-svg/icons/*.mbti text eol=lf
+pkgs/diagrams/icons/registry.generated.mbt text eol=lf
+pkgs/diagrams-mermaid/zenuml/oracle.generated_wbtest.mbt text eol=lf
+tests/architecture-acceptance/fixtures.generated.mbt text eol=lf

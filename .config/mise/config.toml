@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -265,3 +265,23 @@ run = "moonx scripts/plantuml-reference.mbtx"
 [tasks."test:plantuml-consumer"]
 description = "Qualify fresh model-only, PlantUML-reader and external-provider consumers on all four targets"
 run = "moonx scripts/test-plantuml-consumer.mbtx"
+
+[tasks."icons:generate"]
+description = "Compile the frozen full annotator catalog into portable typed vector values"
+run = "moonx scripts/icon-catalog.mbtx generate"
+
+[tasks."validate:icons"]
+description = "Check all 523 icon asset digests and deterministic catalog generation"
+run = "moonx scripts/icon-catalog.mbtx check"
+
+[tasks."native-mermaid-corpus:generate"]
+description = "Embed independent ZenUML and architecture semantic reference fixtures"
+run = "moonx scripts/native-mermaid-corpus.mbtx generate"
+
+[tasks."validate:native-mermaid-corpus"]
+description = "Check pinned ZenUML/architecture sources, digests, oracles and portable embeddings"
+run = "moonx scripts/native-mermaid-corpus.mbtx check"
+
+[tasks."native-mermaid-corpus:reference"]
+description = "Repeat exact pinned test-only ZenUML/architecture oracles and canonical upstream parsing"
+run = "moonx scripts/native-mermaid-reference.mbtx"

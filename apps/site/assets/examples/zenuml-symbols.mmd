@@ -1,0 +1,15 @@
+zenuml
+title Checkout interaction
+@Actor Customer
+@EC2 API as "Orders API"
+@Lambda Worker
+@AzureFunction Functions
+@BigQuery Analytics
+@PostgreSQL Store
+@Kubernetes Cluster
+Customer->API.checkout() {
+    Worker.process() {
+        Store->Analytics: record
+    }
+    Functions->Cluster: deploy request
+}

@@ -1,0 +1,50 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/zenuml-ast"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Diagram {
+  statements : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::new(ArrayView[Statement]) -> Self
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+
+pub(all) struct Statement {
+  kind : StatementKind
+  span : @diagrams.Span
+} derive(@debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+pub impl Eq for Statement
+
+pub(all) enum StatementKind {
+  Participant(id~ : String, label~ : String?, annotator~ : String?)
+  Call(sender~ : String?, receiver~ : String, operation~ : String, assignment~ : String?, creation~ : Bool, scope~ : Bool)
+  Async(sender~ : String, receiver~ : String, label~ : String, reply~ : Bool)
+  Starter(String)
+  Return(String)
+  Begin(keyword~ : String, expression~ : String)
+  Section(keyword~ : String, expression~ : String)
+  End
+  Comment(String)
+  Title(String)
+  Metadata(String)
+} derive(Eq, @debug.Debug)
+pub fn StatementKind::equal(Self, Self) -> Bool
+pub fn StatementKind::not_equal(Self, Self) -> Bool
+pub fn StatementKind::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

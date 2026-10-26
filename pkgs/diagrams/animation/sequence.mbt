@@ -25,6 +25,7 @@ fn frame_label(kind : @sequence.FrameKind) -> String {
     Critical => "critical"
     Break => "break"
     Rect => "rect"
+    Try => "try"
   }
 }
 
@@ -209,6 +210,7 @@ pub fn Catalog::sequence(
   }
   for frame in pending {
     let sections = Array::makei(frame.sections.length(), i => SectionInfo::{
+      role: frame.frame.sections[i].role,
       label: frame.frame.sections[i].label,
       controls: ReadOnlyArray::from_array(frame.sections[i]),
     })
@@ -254,7 +256,8 @@ pub fn Catalog::sequence(
   for frame in build.frames {
     let enter = frame.key + ":in"
     let exit = frame.key + ":out"
-    if frame.kind == Alt ||
+    if frame.kind == Try ||
+      frame.kind == Alt ||
       frame.kind == Opt ||
       frame.kind == Par ||
       frame.kind == ParOver {

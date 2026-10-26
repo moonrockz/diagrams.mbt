@@ -1,5 +1,4 @@
-///|
-/// Check and embed the exact frozen OMG schemas and project BPMN fixture.
+----
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -8,6 +7,10 @@ import {
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Check and embed the exact frozen OMG schemas and project BPMN fixture.
 
 ///|
 let corpus_dir : String = "tests/corpus/bpmn-2.0.2"

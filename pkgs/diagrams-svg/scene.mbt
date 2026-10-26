@@ -11,6 +11,7 @@ pub(all) enum NodeBindingKind {
   Message(Int32)
   Frame(Int32)
   Swimlane(String)
+  Architecture(String)
   /// A railroad term group, by term identity.
   RailroadTerm(String)
   /// A data member row, by member identity.
@@ -83,6 +84,9 @@ fn sequence_scene_input(
   }
   for participant in sequence.participants {
     if !text(participant.id) || !text(participant.label) {
+      return false
+    }
+    if participant.icon is Some(icon) && (!text(icon.pack) || !text(icon.key)) {
       return false
     }
     if participant.link is Some(link) && !text(link.target) {
@@ -199,6 +203,7 @@ pub fn SvgRenderer::scene(
     )
   }
   let catalog_result = match diagram {
+    Architecture(view) => @animation.Catalog::architecture(view, limits~)
     Swimlane(view) => @animation.Catalog::swimlane(view, limits~)
     Bpmn(view) => @animation.Catalog::bpmn(view, limits~)
     Sequence(sequence) =>
@@ -213,6 +218,49 @@ pub fn SvgRenderer::scene(
   let paths : Array[(@animation.Occurrence, String)] = []
   let nodes : Array[NodeBinding] = []
   let (rendered, bpmn) = match diagram {
+    Architecture(view) => {
+      let result = @architecture_layout.layout(
+        view,
+        limits=self.architecture_limits,
+      )
+      guard result.geometry is Some(geometry) else {
+        return { scene: None, diagnostics: result.diagnostics, }
+      }
+      let rendered = paint_architecture(
+        view,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.architecture_limits,
+        geometry~,
+      )
+      if rendered.output == None {
+        return { scene: None, diagnostics: rendered.diagnostics, }
+      }
+      let edges = Map([])
+      for edge in geometry.connections {
+        edges[edge.connection.id] = edge
+      }
+      for occurrence in catalog.occurrences {
+        guard occurrence.kind is Architecture(connection) &&
+          edges.get(connection.id) is Some(edge) else {
+          return failed(
+            "animation/binding-mismatch", "An architecture connection has no rendered path",
+          )
+        }
+        let path = architecture_path(edge.points)
+        if path.length() > output_units {
+          return failed(
+            "animation/scene-limit", "Architecture scene path exceeds output limit",
+          )
+        }
+        paths.push((occurrence, path))
+      }
+      for node in catalog.graph.nodes {
+        nodes.push({ endpoint: node.id, kind: Architecture(node.id), })
+      }
+      (rendered, false)
+    }
     Swimlane(view) => {
       let geometry = @swimlane_layout.layout(view, limits=self.swimlane_limits)
       let rendered = paint_swimlane(
@@ -331,8 +379,7 @@ pub fn SvgRenderer::scene(
     }
     Regex(_) | Ebnf(_) | DataTree(_) => {
       let parts = match diagram {
-        DataTree(tree) =>
-          data_tree_scene(self, tree, catalog, output_units)
+        DataTree(tree) => data_tree_scene(self, tree, catalog, output_units)
         _ => railroad_scene(self, diagram, catalog, output_units)
       }
       match parts {

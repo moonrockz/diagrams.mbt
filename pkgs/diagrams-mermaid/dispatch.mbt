@@ -3,12 +3,16 @@
 pub(all) enum ParsedDiagram {
   Sequence(@ast.Diagram)
   Swimlane(@swimlane_ast.Diagram)
+  Zenuml(@zenuml_ast.Diagram)
+  Architecture(@architecture_ast.Diagram)
 } derive(Eq, Debug)
 
 ///|
 pub(all) enum DiagramTree {
   Sequence(@cst.Node)
   Swimlane(@swimlane_cst.Node)
+  Zenuml(@zenuml_cst.Node)
+  Architecture(@architecture_cst.Node)
   Unsupported(String)
 } derive(Eq, Debug)
 
@@ -17,6 +21,8 @@ pub fn DiagramTree::text(self : DiagramTree) -> String {
   match self {
     Sequence(tree) => tree.text()
     Swimlane(tree) => tree.text()
+    Zenuml(tree) => tree.text()
+    Architecture(tree) => tree.text()
     Unsupported(source) => source
   }
 }
@@ -38,8 +44,11 @@ pub struct DiagramPrintResult {
 pub fn read_diagram(
   source : String,
   limits~ : @swimlane_syntax.Limits = @swimlane_syntax.Limits::new(),
+  zenuml_limits~ : @zenuml_syntax.Limits = @zenuml_syntax.Limits::new(),
+  architecture_limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
 ) -> DiagramReadResult {
-  if source.length() > limits.source {
+  if source.length() >
+    limits.source.max(zenuml_limits.source).max(architecture_limits.source) {
     return {
       tree: Unsupported(source),
       ast: None,
@@ -73,7 +82,7 @@ pub fn read_diagram(
       remainder = remainder[close + 3:]
       let mut whitespace = 0
       while whitespace < remainder.length() &&
-        @swimlane_syntax.is_space(remainder.at(whitespace).to_int()) {
+            @swimlane_syntax.is_space(remainder.at(whitespace).to_int()) {
         whitespace += 1
       }
       remainder = remainder[whitespace:]
@@ -88,12 +97,49 @@ pub fn read_diagram(
     if text.has_prefix("%%") {
       continue
     }
+    if text.has_prefix("zenuml") &&
+      (
+        text.length() == 6 ||
+        @swimlane_syntax.is_space(text.at(6).to_int()) ||
+        text.at(6).to_int() == 59
+      ) {
+      let result = @zenuml_syntax.read(source, limits=zenuml_limits)
+      return {
+        tree: Zenuml(result.tree),
+        ast: result.ast.map(ast => Zenuml(ast)),
+        diagnostics: result.diagnostics,
+      }
+    }
+    if text.has_prefix("architecture-beta") &&
+      (
+        text.length() == 17 ||
+        @swimlane_syntax.is_space(text.at(17).to_int()) ||
+        text.at(17).to_int() == 59
+      ) {
+      let result = @architecture_syntax.read(source, limits=architecture_limits)
+      return {
+        tree: Architecture(result.tree),
+        ast: result.ast.map(ast => Architecture(ast)),
+        diagnostics: result.diagnostics,
+      }
+    }
     if text.has_prefix("swimlane-beta") &&
       (
         text.length() == 13 ||
         @swimlane_syntax.is_space(text.at(13).to_int()) ||
         text.at(13).to_int() == 59
       ) {
+      if source.length() > limits.source {
+        return {
+          tree: Unsupported(source),
+          ast: None,
+          diagnostics: [
+            @diagrams.Diagnostic::error(
+              "swimlane/source-limit", "Source limit exceeded",
+            ),
+          ],
+        }
+      }
       let result = @swimlane_syntax.read(source, limits~)
       return {
         tree: Swimlane(result.tree),
@@ -102,6 +148,17 @@ pub fn read_diagram(
       }
     }
     if text.has_prefix("sequenceDiagram") {
+      if source.length() > limits.source {
+        return {
+          tree: Unsupported(source),
+          ast: None,
+          diagnostics: [
+            @diagrams.Diagnostic::error(
+              "swimlane/source-limit", "Source limit exceeded",
+            ),
+          ],
+        }
+      }
       let result = read(source)
       return {
         tree: Sequence(result.tree),
@@ -116,7 +173,7 @@ pub fn read_diagram(
     ast: None,
     diagnostics: [
       @diagrams.Diagnostic::error(
-        "mermaid/unsupported-diagram", "Expected sequenceDiagram or swimlane-beta",
+        "mermaid/unsupported-diagram", "Expected sequenceDiagram, swimlane-beta, zenuml or architecture-beta",
       ),
     ],
   }
@@ -126,8 +183,18 @@ pub fn read_diagram(
 pub fn print_diagram(
   diagram : ParsedDiagram,
   limits~ : @swimlane_syntax.Limits = @swimlane_syntax.Limits::new(),
+  zenuml_limits~ : @zenuml_syntax.Limits = @zenuml_syntax.Limits::new(),
+  architecture_limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
 ) -> DiagramPrintResult {
   match diagram {
+    Zenuml(ast) => {
+      let result = @zenuml_printer.print(ast, limits=zenuml_limits)
+      { output: result.output, diagnostics: result.diagnostics, }
+    }
+    Architecture(ast) => {
+      let result = @architecture_printer.print(ast, limits=architecture_limits)
+      { output: result.output, diagnostics: result.diagnostics, }
+    }
     Sequence(ast) => {
       let output = print(ast)
       if output.length() > limits.output {
@@ -189,3 +256,32 @@ pub let swimlane_diagnostic_codes : ReadOnlyArray[String] = @swimlane_syntax.dia
 
 ///|
 pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String] = @swimlane_conversion.diagnostic_codes
+
+///|
+pub fn to_zenuml_sequence(
+  diagram : @zenuml_ast.Diagram,
+  limits~ : @zenuml_syntax.Limits = @zenuml_syntax.Limits::new(),
+) -> @zenuml_conversion.Conversion {
+  @zenuml_conversion.convert(diagram, limits~)
+}
+
+///|
+pub fn to_architecture(
+  diagram : @architecture_ast.Diagram,
+  limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
+  id~ : String = "architecture",
+) -> @architecture_conversion.Conversion {
+  @architecture_conversion.to_architecture(diagram, limits~, id~)
+}
+
+///|
+pub let zenuml_diagnostic_codes : ReadOnlyArray[String] = @zenuml_syntax.diagnostic_codes
+
+///|
+pub let zenuml_conversion_diagnostic_codes : ReadOnlyArray[String] = @zenuml_conversion.diagnostic_codes
+
+///|
+pub let architecture_diagnostic_codes : ReadOnlyArray[String] = @architecture_syntax.diagnostic_codes
+
+///|
+pub let architecture_conversion_diagnostic_codes : ReadOnlyArray[String] = @architecture_conversion.diagnostic_codes

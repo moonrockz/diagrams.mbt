@@ -28,6 +28,7 @@ pub struct Participant {
   kind : ParticipantKind
   group : BoxGroup?
   link : Link?
+  icon : @icons.Reference?
   properties : ParticipantProperties?
 } derive(Eq, Debug)
 
@@ -42,12 +43,13 @@ pub extend Participant with @debug.Debug::{to_repr}
 pub fn Participant::new(
   id : String,
   label? : String,
-  kind? : ParticipantKind = Participant,
+  kind~ : ParticipantKind = Participant,
   group? : BoxGroup,
   link? : Link,
   properties? : ParticipantProperties,
+  icon? : @icons.Reference,
 ) -> Participant {
-  { id, label: label.unwrap_or(id), kind, group, link, properties }
+  { id, label: label.unwrap_or(id), kind, group, link, properties, icon, }
 }
 
 ///|
@@ -107,14 +109,24 @@ pub fn Message::new(
   sender : String,
   receiver : String,
   label : String,
-  line? : LineStyle = Solid,
-  sender_head? : Head = NoHead,
-  receiver_head? : Head = Arrow,
+  line~ : LineStyle = Solid,
+  sender_head~ : Head = NoHead,
+  receiver_head~ : Head = Arrow,
   link? : Link,
   properties? : MessageProperties,
   number? : Double,
 ) -> Message {
-  { sender, receiver, line, sender_head, receiver_head, label, link, properties, number }
+  {
+    sender,
+    receiver,
+    line,
+    sender_head,
+    receiver_head,
+    label,
+    link,
+    properties,
+    number,
+  }
 }
 
 ///|

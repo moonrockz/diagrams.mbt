@@ -45,3 +45,29 @@ test "native swimlane fences use library SVG with isolated IDs and explicit fail
     failed.problems[0].render().contains("Mermaid diagram 1 does not render"),
   )
 }
+
+///|
+test "native annotated ZenUML and architecture fences retain local symbol IDs" {
+  for
+    source in [
+      "zenuml\n@Actor User\n@PostgreSQL Store\nUser->Store: query\n", "architecture-beta\nservice api(server)[API]\nservice db(database)[Store]\napi:R --&gt; L:db\n",
+    ] {
+    let fence = "<pre><code class=\"language-mermaid\">" +
+      source +
+      "</code></pre>"
+    let result = @content.render_mermaid_blocks("native.md", fence + fence)
+    assert_eq(result.problems, [])
+    assert_true(result.html.contains("<symbol"))
+    assert_true(result.html.contains("<use href=\"#"))
+    let ids = @content.ids_in(result.html)
+    let seen : Map[String, Bool] = Map([])
+    for id in ids {
+      assert_false(seen.contains(id))
+      seen[id] = true
+    }
+    for suffix in result.html.split("<use href=\"#").drop(1) {
+      let target = suffix.split("\"").next().unwrap().to_owned()
+      assert_true(seen.contains(target))
+    }
+  }
+}

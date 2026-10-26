@@ -1,4 +1,5 @@
 import {
+  "moonrockz/diagrams/icons",
   "moonrockz/diagrams",
   "moonbitlang/core/debug",
 }

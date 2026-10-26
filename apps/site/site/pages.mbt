@@ -101,7 +101,8 @@ fn build_page(
     Some(value) => {
       problems.push(
         @model.problem(
-          path, "unknown `status` value `\{value}`: the only value is `proposed`",
+          path,
+          "unknown `status` value `\{value}`: the only value is `proposed`",
         ),
       )
       false
@@ -147,8 +148,7 @@ fn build_page(
         problems.push(@model.problem(path, "article needs `authors`"))
       }
       match (fm.text("date"), parts) {
-        (None, _) =>
-          problems.push(@model.problem(path, "article needs `date`"))
+        (None, _) => problems.push(@model.problem(path, "article needs `date`"))
         (Some(d), Some((file_date, _))) if d != file_date =>
           problems.push(
             @model.problem(
@@ -175,12 +175,8 @@ fn build_page(
     order,
     full,
     html,
-    // A full page is written as it is, so its anchors are the ids it already has.
-    ids: if full {
-      @content.ids_in(fm.body)
-    } else {
-      doc.ids
-    },
+    // Diagram passes add local symbol IDs. Validate anchors against the final body.
+    ids: @content.ids_in(html),
     headings: doc.headings.map(h => h.text),
     toc: if full {
       []

@@ -1,0 +1,14 @@
+architecture-beta
+title Native architecture profile
+accTitle: Portable services
+accDescr {Architecture structure
+without execution semantics}
+group root(cloud)[Root]
+group nested(server)[Nested] in root
+service a(database)["Quoted label"] in nested
+service b "文字"['Literal symbol'] in root
+junction j in root
+a{group}:R < -["edge label"]- > L:b{group}
+a:B -- T:j
+align row a b
+align column b j

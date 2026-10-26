@@ -391,7 +391,10 @@ test "a failure terminal can be shown without its prefix" {
     @railroad_trace.Attempt::new(
       "a0",
       NotMatched,
-      [Traverse(start.id, false), Visit("a", Some(@railroad_trace.InputSpan::new(0, 1)))],
+      [
+        Traverse(start.id, false),
+        Visit("a", Some(@railroad_trace.InputSpan::new(0, 1))),
+      ],
       failure=@railroad_trace.FailurePoint::new(Terminal("b"), position=1),
     ),
   ])

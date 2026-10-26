@@ -1,7 +1,7 @@
 # diagrams.mbt
 
 diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence and
-native `swimlane-beta` diagrams, BPMN XML, and native PlantUML 1.2026.9 regex,
+native `swimlane-beta`, `zenuml` and `architecture-beta` diagrams, BPMN XML, and native PlantUML 1.2026.9 regex,
 EBNF, JSON and YAML blocks. It renders script-free SVG and generates offline HTML
 with illustrative playback and bounded structural exploration. Regex and EBNF
 railroads can show match and parse evidence that an external engine supplies.
@@ -119,7 +119,7 @@ from stored snapshots without compiling. `--check` compares existing artifacts;
 Run `mise run test:animation` for offline player qualification.
 
 Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`,
-`Swimlane`, `Regex`, `Ebnf` and `DataTree` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
+`Swimlane`, `Regex`, `Ebnf` `DataTree` and `Architecture` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
 See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
 and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 
@@ -127,3 +127,13 @@ and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 
 Release versions are shared across workspace members. Releases run in GitHub
 Actions, never from a workstation. See [the contributing guide](CONTRIBUTING.md).
+
+Mermaid `zenuml` keeps nested calls, returns, typed exception sections and the
+complete pinned 523-key participant symbol registry. `architecture-beta` keeps
+groups, services, junctions, explicit ports, labelled connections and ordered
+alignments. Both render to standalone SVG and offline playback without upstream
+JavaScript. See [ZenUML](docs/guides/mermaid-zenuml.md),
+[architecture](docs/guides/mermaid-architecture.md), and
+[symbol attribution](pkgs/diagrams-svg/icons/NOTICE.md). Run
+`mise run native-mermaid-corpus:reference -- --check` for independent upstream
+qualification and `mise run validate:icons` for the complete asset catalog.

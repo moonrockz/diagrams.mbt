@@ -1,0 +1,15 @@
+architecture-beta
+title Offline architecture
+accTitle: Order processing
+accDescr: Authored connections, not deployment execution
+group cloud(cloud)[Cloud]
+group backend(server)[Backend] in cloud
+service api(server)[API] in backend
+service db(database)[Database] in cloud
+service disk(disk)[Disk]
+service net(internet)[Internet]
+junction hub in cloud
+api:R <--> L:db
+db:B --> T:hub
+hub:R -- L:disk
+disk:R --> L:net

@@ -53,7 +53,9 @@ fn point_label(topology : @railroad_trace.Topology) -> Map[String, String] {
   for connector in topology.connectors {
     for point in [connector.from, connector.to] {
       if !labels.contains(point) {
-        labels[point] = connector.role.name() + " junction of " + connector.owner
+        labels[point] = connector.role.name() +
+          " junction of " +
+          connector.owner
       }
     }
   }
@@ -168,7 +170,7 @@ fn railroad_catalog(
 /// A catalog of a regex railroad: terms are visits, connectors are paths.
 pub fn Catalog::regex(
   model : @regex.Regex,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> CatalogResult {
   let built = @railroad_trace.Topology::regex(
     model,
@@ -179,7 +181,7 @@ pub fn Catalog::regex(
     ),
   )
   guard built.topology is Some(topology) else {
-    return { catalog: None, diagnostics: built.diagnostics }
+    return { catalog: None, diagnostics: built.diagnostics, }
   }
   railroad_catalog(Regex(model), topology, limits)
 }
@@ -189,7 +191,7 @@ pub fn Catalog::regex(
 /// they never add an edge to another rule.
 pub fn Catalog::ebnf(
   grammar : @ebnf.Grammar,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> CatalogResult {
   let built = @railroad_trace.Topology::ebnf(
     grammar,
@@ -200,7 +202,7 @@ pub fn Catalog::ebnf(
     ),
   )
   guard built.topology is Some(topology) else {
-    return { catalog: None, diagnostics: built.diagnostics }
+    return { catalog: None, diagnostics: built.diagnostics, }
   }
   railroad_catalog(Ebnf(grammar), topology, limits)
 }
@@ -211,7 +213,7 @@ pub fn Catalog::ebnf(
 /// has containment edges between values and no other relation.
 pub fn Catalog::data_tree(
   tree : @data_tree.DataTree,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> CatalogResult {
   let build = builder(DataTree(tree), tree.id, limits)
   let budget = build.budget

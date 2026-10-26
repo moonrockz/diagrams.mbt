@@ -1,5 +1,4 @@
-///|
-/// Run the pinned Mermaid parser only as a test oracle.
+----
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/process",
@@ -10,6 +9,10 @@ import {
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/x@0.5.5/crypto",
 }
+----
+
+///|
+/// Run the pinned Mermaid parser only as a test oracle.
 
 ///|
 async fn main {

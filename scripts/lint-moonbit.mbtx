@@ -1,3 +1,14 @@
+----
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Check MoonBit formatting and run the type checker across the workspace.
 ///
@@ -19,14 +30,6 @@
 /// dependency output under `_build/` and `.mooncakes/` does not count: CI makes it again. The pre-commit hook uses `--staged`.
 ///
 /// Usage: `mise run lint:moonbit [-- --staged]`, or `moonx scripts/lint-moonbit.mbtx [--staged]`.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/core/env",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 async fn moon(args : Array[String]) -> Int32 {

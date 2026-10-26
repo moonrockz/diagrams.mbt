@@ -44,11 +44,14 @@ test "events keep their diagram order" {
     ],
   )
   let labels = s.events
-    .map(e => match e {
-      Message(m) => m.label
-      _ => ""
+    .map(e => {
+      match e {
+        Message(m) => m.label
+        _ => ""
+      }
     })
-    .iter().to_array()
+    .iter()
+    .to_array()
   assert_eq(labels, ["one", "two"])
 }
 

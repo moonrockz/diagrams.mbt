@@ -1,5 +1,4 @@
-///|
-/// Verify frozen native Mermaid sources and portable reference embeddings.
+----
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
@@ -9,6 +8,10 @@ import {
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Verify frozen native Mermaid sources and portable reference embeddings.
 
 ///|
 fn literal(text : String) -> String {

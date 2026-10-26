@@ -1,5 +1,6 @@
 import {
   "moonrockz/diagrams-site/model",
+  "moonrockz/diagrams/render",
   "moonbit-community/cmark/cmark_html",
   "bobzhang/beautiful_mermaid" @mermaid,
   "moonrockz/diagrams-mermaid" @native_mermaid,

@@ -151,6 +151,7 @@ pub fn NoteBox::not_equal(Self, Self) -> Bool
 pub fn NoteBox::to_repr(Self) -> @debug.Repr
 
 pub(all) struct ParticipantBox {
+  icon_box : Rect?
   id : String
   family : @theme.Family
   box : Rect
