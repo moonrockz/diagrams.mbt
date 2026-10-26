@@ -17,5 +17,9 @@ import {
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/data-tree" @data_tree,
+  "moonrockz/diagrams/railroad-trace" @railroad_trace,
   "moonbitlang/core/test",
 } for "test"
