@@ -268,6 +268,21 @@ fn is_space_unit(c : Int) -> Bool {
 }
 
 ///|
+/// `text` without leading and trailing code units up to U+0020, as Java
+/// `String.trim` removes them.
+pub fn java_trim(text : String) -> String {
+  let mut a = 0
+  let mut b = text.length()
+  while a < b && text.code_unit_at(a).to_int() <= 32 {
+    a += 1
+  }
+  while b > a && text.code_unit_at(b - 1).to_int() <= 32 {
+    b -= 1
+  }
+  @cst.slice(text, a, b)
+}
+
+///|
 /// `text` without leading and trailing spaces, tabs and byte-order marks.
 pub fn trim(text : String) -> String {
   let mut a = 0
@@ -627,6 +642,14 @@ fn classify(
   let statements : Array[Statement] = []
   let data = kind == Json || kind == Yaml
   let mut data_started = false
+  // The pinned JSON and YAML header rules need one space after the word.
+  fn word_at(t : String, word : String) -> Bool {
+    if data {
+      t.has_prefix(word + " ")
+    } else {
+      has_word(t, word)
+    }
+  }
   let mut i = 0
   fn line(index : Int, role : Role) -> Line {
     let raw = raws[index]
@@ -672,7 +695,7 @@ fn classify(
   }
   while i < raws.length() {
     let raw = raws[i]
-    let t = trim(raw.text)
+    let t = if data { java_trim(raw.text) } else { trim(raw.text) }
     let (start, end) = whole(i)
     // Comments are removed before any diagram reader runs.
     if t.has_prefix("'") {
@@ -758,13 +781,17 @@ fn classify(
       }
       continue
     }
-    if t.has_prefix("#highlight ") && data {
+    // The pinned reader tests these prefixes before trimming, and counts
+    // them as data lines for the header rules.
+    if raw.text.has_prefix("#highlight ") && data {
       statement(i, i, Highlight, Text)
+      data_started = true
       i += 1
       continue
     }
-    if kind == Json && t.has_prefix("#") {
+    if kind == Json && raw.text.has_prefix("#") {
       statement(i, i, Comment, Comment)
+      data_started = true
       i += 1
       continue
     }
@@ -774,7 +801,7 @@ fn classify(
       i += 1
       continue
     }
-    if header && (has_word(t, "title") || t.has_prefix("title:")) {
+    if header && (word_at(t, "title") || (!data && t.has_prefix("title:"))) {
       let text = if t.has_prefix("title:") {
         trim(@cst.slice(t, 6, t.length()))
       } else {
@@ -855,7 +882,7 @@ fn classify(
         continue
       }
     }
-    if header && has_word(t, "skinparam") {
+    if header && word_at(t, "skinparam") {
       let rest = after_word(t, "skinparam")
       if rest.has_suffix("{") {
         match block_end(i, s => s == "}") {
@@ -888,7 +915,7 @@ fn classify(
       )
       continue
     }
-    if header && (has_word(t, "scale") || has_word(t, "skin")) {
+    if header && (word_at(t, "scale") || word_at(t, "skin")) {
       if has_word(t, "scale") {
         statements.push(Scale(after_word(t, "scale")))
         statement(i, i, Scale, Text)
@@ -903,7 +930,7 @@ fn classify(
       i += 1
       continue
     }
-    if header && (has_word(t, "hide") || has_word(t, "show")) {
+    if header && (word_at(t, "hide") || (!data && has_word(t, "show"))) {
       statements.push(Hide(t))
       statement(i, i, Hide, Text)
       report(

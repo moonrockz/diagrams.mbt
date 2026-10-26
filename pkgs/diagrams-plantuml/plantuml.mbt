@@ -11,6 +11,8 @@ pub let plantuml_commit : String = "18d0aae311a4f1eb3723bb4b0ad939185e22f166"
 pub(all) enum Document {
   Regex(@regex_syntax.Document)
   Ebnf(@ebnf_syntax.Document)
+  Json(@json_syntax.Document)
+  Yaml(@yaml_syntax.Document)
 } derive(Eq, Debug)
 
 ///|
@@ -24,6 +26,8 @@ pub fn Document::kind(self : Document) -> @envelope.Kind {
   match self {
     Regex(_) => Regex
     Ebnf(_) => Ebnf
+    Json(_) => Json
+    Yaml(_) => Yaml
   }
 }
 
@@ -56,6 +60,14 @@ fn read_scan(scan : @envelope.Scan, limits : @envelope.Limits) -> ReadResult {
     Some(Ebnf) => {
       let r = @ebnf_syntax.read(scan, limits~)
       finish(scan, r.nodes, r.document.map(d => Ebnf(d)), r.diagnostics)
+    }
+    Some(Json) => {
+      let r = @json_syntax.read(scan, limits~)
+      finish(scan, r.nodes, r.document.map(d => Json(d)), r.diagnostics)
+    }
+    Some(Yaml) => {
+      let r = @yaml_syntax.read(scan, limits~)
+      finish(scan, r.nodes, r.document.map(d => Yaml(d)), r.diagnostics)
     }
     _ => {
       let nodes = scan.line_nodes(line => Some(@cst.Node::new(Error, line.tokens(Error))))
@@ -110,6 +122,8 @@ fn statements_of(document : Document) -> ReadOnlyArray[@envelope.Statement] {
   match document {
     Regex(d) => d.statements
     Ebnf(d) => d.statements
+    Json(d) => d.statements
+    Yaml(d) => d.statements
   }
 }
 
@@ -118,6 +132,8 @@ fn name_of(document : Document) -> String? {
   match document {
     Regex(d) => d.name
     Ebnf(d) => d.name
+    Json(d) => d.name
+    Yaml(d) => d.name
   }
 }
 
@@ -130,6 +146,8 @@ pub fn print_body(
   let result = match document {
     Regex(d) => @regex_syntax.print_body(d, limits~)
     Ebnf(d) => @ebnf_syntax.print_body(d, limits~)
+    Json(d) => @json_syntax.print_body(d, limits~)
+    Yaml(d) => @yaml_syntax.print_body(d, limits~)
   }
   match result {
     Ok(text) => { output: Some(text), diagnostics: [] }
@@ -194,6 +212,14 @@ pub fn to_diagram(
     Ebnf(d) => {
       let c = @ebnf_syntax.to_grammar(d, id=id.unwrap_or("ebnf"), limits~)
       { diagram: c.grammar.map(g => Ebnf(g)), diagnostics: c.diagnostics }
+    }
+    Json(d) => {
+      let c = @json_syntax.to_data_tree(d, id=id.unwrap_or("json"), limits~)
+      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics }
+    }
+    Yaml(d) => {
+      let c = @yaml_syntax.to_data_tree(d, id=id.unwrap_or("yaml"), limits~)
+      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics }
     }
   }
 }
@@ -294,5 +320,7 @@ pub let diagnostic_codes : ReadOnlyArray[String] = ReadOnlyArray::from_iter(
   .iter()
   .concat(@regex_syntax.diagnostic_codes.iter())
   .concat(@ebnf_syntax.diagnostic_codes.iter())
+  .concat(@json_syntax.diagnostic_codes.iter())
+  .concat(@yaml_syntax.diagnostic_codes.iter())
   .concat(["plantuml/print-limit"].iter()),
 )

@@ -1,0 +1,74 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/ebnf",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams-plantuml/json",
+  "moonrockz/diagrams-plantuml/regex",
+  "moonrockz/diagrams-plantuml/yaml",
+  "moonrockz/diagrams-svg",
+  "moonrockz/diagrams/railroad-trace",
+  "moonrockz/diagrams/render",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub let plantuml_commit : String
+
+pub let plantuml_version : String
+
+pub fn print(Document, limits? : @envelope.Limits) -> PrintResult
+
+pub fn print_body(Document, limits? : @envelope.Limits) -> PrintResult
+
+pub fn read(String, limits? : @envelope.Limits) -> ReadResult
+
+pub fn read_body(@envelope.Kind, String, limits? : @envelope.Limits) -> ReadResult
+
+pub fn render_svg(String, renderer? : @diagrams-svg.SvgRenderer, limits? : @envelope.Limits, id? : String) -> @render.Rendered
+
+pub fn[P : @railroad-trace.RailroadTraceProvider] render_traced_svg(String, P, String, start_rule? : String, renderer? : @diagrams-svg.SvgRenderer, limits? : @envelope.Limits, trace_limits? : @railroad-trace.TraceLimits, matched? : @diagrams-svg.ChannelStyle, not_matched? : @diagrams-svg.ChannelStyle, taken? : @diagrams-svg.ChannelStyle, failure? : @diagrams-svg.ChannelStyle) -> @diagrams-svg.TracedRender
+
+pub fn to_diagram(Document, id? : String, limits? : @envelope.Limits) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  diagram : @render.Diagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Document {
+  Regex(@regex.Document)
+  Ebnf(@ebnf.Document)
+  Json(@json.Document)
+  Yaml(@yaml.Document)
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::kind(Self) -> @envelope.Kind
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+
+pub struct PrintResult {
+  output : String?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn PrintResult::equal(Self, Self) -> Bool
+pub fn PrintResult::not_equal(Self, Self) -> Bool
+pub fn PrintResult::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  tree : @cst.Node
+  document : Document?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

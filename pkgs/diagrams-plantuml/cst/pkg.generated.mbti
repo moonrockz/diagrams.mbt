@@ -1,0 +1,107 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/cst"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+pub fn slice(String, Int32, Int32) -> String
+
+pub fn span(String, Int32, Int32) -> @diagrams.Span
+
+// Errors
+
+// Types and methods
+pub(all) enum Element {
+  Token(Token)
+  Node(Node)
+} derive(Eq, @debug.Debug)
+pub fn Element::equal(Self, Self) -> Bool
+pub fn Element::not_equal(Self, Self) -> Bool
+pub fn Element::to_repr(Self) -> @debug.Repr
+
+pub struct Lines {
+  // private fields
+}
+pub fn Lines::new(String) -> Self
+pub fn Lines::position(Self, Int32) -> @diagrams.Position
+pub fn Lines::span(Self, Int32, Int32) -> @diagrams.Span
+
+pub struct Node {
+  kind : NodeKind
+  children : ReadOnlyArray[Element]
+} derive(Eq, @debug.Debug)
+pub fn Node::equal(Self, Self) -> Bool
+pub fn Node::new(NodeKind, ArrayView[Element]) -> Self
+pub fn Node::nodes(Self) -> Array[Self]
+pub fn Node::not_equal(Self, Self) -> Bool
+pub fn Node::range(Self) -> (Int32, Int32)?
+pub fn Node::text(Self) -> String
+pub fn Node::to_repr(Self) -> @debug.Repr
+pub fn Node::tokens(Self) -> Array[Token]
+
+pub(all) enum NodeKind {
+  Document
+  Start
+  End
+  Title
+  Caption
+  Header
+  Footer
+  Legend
+  Skinparam
+  Style
+  Pragma
+  Scale
+  Hide
+  Comment
+  Directive
+  Highlight
+  Pattern
+  Rule
+  Note
+  Data
+  Blank
+  Trailing
+  Error
+} derive(Eq, @debug.Debug)
+pub fn NodeKind::equal(Self, Self) -> Bool
+pub fn NodeKind::not_equal(Self, Self) -> Bool
+pub fn NodeKind::to_repr(Self) -> @debug.Repr
+
+pub struct Token {
+  kind : TokenKind
+  text : String
+  offset : Int32
+} derive(Eq, @debug.Debug)
+pub fn Token::equal(Self, Self) -> Bool
+pub fn Token::new(TokenKind, String, Int32) -> Self
+pub fn Token::not_equal(Self, Self) -> Bool
+pub fn Token::to_repr(Self) -> @debug.Repr
+
+pub(all) enum TokenKind {
+  Marker
+  Keyword
+  Name
+  Text
+  String
+  Number
+  Literal
+  Escape
+  Operator
+  Punctuation
+  Comment
+  Whitespace
+  Newline
+  Directive
+  Error
+} derive(Eq, @debug.Debug)
+pub fn TokenKind::equal(Self, Self) -> Bool
+pub fn TokenKind::not_equal(Self, Self) -> Bool
+pub fn TokenKind::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

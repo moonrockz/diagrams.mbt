@@ -8,6 +8,8 @@ import {
   "moonrockz/diagrams-plantuml/envelope",
   "moonrockz/diagrams-plantuml/regex" @regex_syntax,
   "moonrockz/diagrams-plantuml/ebnf" @ebnf_syntax,
+  "moonrockz/diagrams-plantuml/json" @json_syntax,
+  "moonrockz/diagrams-plantuml/yaml" @yaml_syntax,
 }
 
 import {

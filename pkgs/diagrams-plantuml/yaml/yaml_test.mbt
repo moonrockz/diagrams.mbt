@@ -183,7 +183,7 @@ test "canonical writing chooses a spelling that reads back" {
   assert_eq(
     body,
     (
-      #|"title": x
+      #|title: x
       #|"a:b": " lead"
       #|c: "x # y"
       #|e: ""
