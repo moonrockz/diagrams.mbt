@@ -19,6 +19,12 @@ PlantUML provides native regex, EBNF, JSON and YAML diagram formats for this wor
   PlantUML YAML scalar policy explicitly; this is not a general YAML processor.
 - Add measured railroad and structured-data layout, legibility checks and
   standalone SVG using the existing adaptive and fixed dark/light themes.
+- Expose independent static-render options for matched paths, non-matched paths,
+  traversed prefixes and failure terminals/assertions in regex and EBNF diagrams.
+  Accept immutable caller-supplied traces and retain distinct attempts.
+- Add a public trace-provider trait so external matching/parsing engines can
+  receive typed requests and supply those traces. Keep matched, non-matched,
+  unsupported, exhausted and error outcomes distinct; bundle no matching engine.
 - Extend the pure motion APIs, scene bindings and offline player. Animate actual
   railroad/connector paths and add typed node/row visits for data values without
   a drawn connector. Provide bounded structural route and hierarchy exploration.
@@ -32,8 +38,10 @@ PlantUML provides native regex, EBNF, JSON and YAML diagram formats for this wor
 
 - Other PlantUML diagram types, mixed UML diagrams, multi-block files and
   compatibility with every historical PlantUML version.
-- Regex matching, input validation against a pattern, EBNF parsing or parser
-  generation. Playback explains diagram structure; it does not prove acceptance.
+- Built-in regex matching, executing EBNF against sample input, and parser
+  generation. External implementations can provide results through the public
+  trait. Rendering presents supplied evidence; structural queries do not compute
+  or verify acceptance.
 - Full YAML schema resolution, alias expansion, merge-key processing, custom
   constructors or multi-document semantics. The native diagram profile governs
   whether such spelling is literal data or an unsupported construct.
@@ -50,27 +58,34 @@ PlantUML provides native regex, EBNF, JSON and YAML diagram formats for this wor
 - `plantuml-syntax`: four native envelopes and body readers, lossless CSTs,
   typed ASTs, canonical writing, diagnostics, conversion and pinned compatibility.
 - `railroad-model`: immutable regex expressions and EBNF grammars, source
-  identities, typed constraints and bounded validation.
+  identities, typed constraints, trace values, external provider contract and
+  bounded validation.
 - `structured-data-model`: ordered objects, arrays, scalar values, stable
   member/element identities and view highlights.
 - `railroad-svg-rendering`: measured pattern/grammar geometry, readable
-  connectors, safe labels, legibility and themed standalone SVG.
+  connectors, independently styled match/failure highlights, renderer hooks,
+  safe labels, legibility and themed standalone SVG.
 - `structured-data-svg-rendering`: nested data boxes and rows, collection
   connectors, safe highlights, legibility and themed standalone SVG.
 
 ### Modified Capabilities
 
 - `diagram-animation`: railroad and data catalogs, first-class node visits,
-  structural/hierarchy queries and the shared standalone playback contracts.
+  structural/hierarchy queries, preservation of configured trace highlights and
+  the shared standalone playback contracts.
 
 ## Impact
 
 - Add `pkgs/diagrams-plantuml` and register it in `moon.work`, version alignment,
   package validation, tested examples and dependency-ordered publication tooling.
   This change does not publish it.
-- Add `regex`, `ebnf` and `data-tree` packages to `moonrockz/diagrams`. JSON and
-  YAML are two source formats for one data-diagram kind. Regex and EBNF keep
+- Add `regex`, `ebnf`, `railroad-trace` and `data-tree` packages to
+  `moonrockz/diagrams`. JSON and YAML are two source formats for one data-diagram
+  kind. Regex and EBNF keep
   separate semantic models while sharing suitable rendering helpers.
+- Keep trace/provider types independent of PlantUML, SVG and the animation
+  runtime. Verify that a consumer outside the library can implement the trait
+  and drive both static rendering and explicitly requested trace generation.
 - Extend `diagrams-svg`, `diagrams-animated`, the existing corpus/gallery/browser
   tasks and the unpublished docs site. Keep production logic pure on `wasm`,
   `wasm-gc`, `js` and `native`.

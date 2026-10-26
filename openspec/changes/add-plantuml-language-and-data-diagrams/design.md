@@ -40,11 +40,16 @@ browser qualification and a gallery. These are the integration points.
 **Owner:** Start with PlantUML regex, EBNF, JSON and YAML diagrams and give them
 the same treatment as the existing diagram kinds.
 
+**Owner:** Expose independently controlled match/failure highlighting in the
+renderer and a public trait for external matching/parsing engines. Implement
+the renderer extension and hook; do not bundle those engines.
+
 **Call:** Parity includes lossless reading, typed values, canonical writing,
 diagnostics, pure constructed-model APIs, themed SVG, structural exploration,
 offline playback, static export, tested guides and a review gallery. As with
-BPMN playback, illustration does not execute the source language. A regex matcher
-or EBNF parser runtime would need a separate change.
+BPMN playback, illustration does not execute the source language. The new
+provider contract accepts evidence from an external engine; built-in regex
+matching or EBNF input execution would need a separate change.
 
 ### D2. Pin native behavior before completing the readers
 
@@ -81,6 +86,9 @@ Add `regex`, `ebnf` and `data-tree` packages to `diagrams`, and `Regex`, `Ebnf`
 and `DataTree` cases to the shared diagram union. Regex and EBNF keep separate
 expression types. JSON and YAML are source formats for one structured-data
 diagram kind. This follows the current distinction between a kind and a format.
+
+Add `railroad-trace` beside those model packages. It depends on regex/EBNF values
+and common diagnostics, not the format reader, renderer or animation package.
 
 Separate published modules for every source type were rejected: these are format
 adapters and visual models, not new general-purpose language runtimes. A single
@@ -196,12 +204,16 @@ rules remain unchanged.
 Default illustration is finite and source-ordered, or pre-order for data. It can
 repeat as an illustration but never expands an unbounded regex repeat or recursive
 grammar. Explicit scenarios preserve chosen repetitions and concurrent groups.
-The viewer calls these structural or hierarchy results, not matches or parses.
+The viewer calls computed routes structural or hierarchy results. A separately
+supplied match/parse outcome identifies its external source and is not presented
+as a conclusion of route search.
 
 Extend the existing runtime and scene payload with explicit target kinds. Reject
 wrong target/source combinations and stale scene bindings. Node visits obey the
 same positive duration, sampling, seeking, reduced-motion, visibility and print
 rules as connection steps. Export continues to return direct canonical SVG bytes.
+Configured static trace highlights belong to that canonical render. Current
+playback/selection effects stay separate from them.
 
 ### D9. Site and package integration stay at existing boundaries
 
@@ -233,6 +245,73 @@ an intentional shared-runtime/schema change, with existing controls and export
 contracts still qualified. Finish with a gallery for all four source kinds,
 dark/light modes, long text, nested branches/collections and finite scenarios.
 
+### D11. External trace providers and static renderer highlights
+
+**Call:** The core hook has this public shape, with immutable request/result
+values and no bundled matching implementation:
+
+```text
+pub(open) trait RailroadTraceProvider {
+  fn trace(Self, TraceRequest) -> TraceResult
+}
+```
+
+The request carries a typed regex model or EBNF grammar, the input text, view
+identity and explicit input/attempt/step/depth/work limits. EBNF requests name a
+start-rule identity. Providers use the library's public semantic occurrence and
+connector identities, not SVG IDs or label matching. A provider supporting only
+one subject kind returns an explicit unsupported result for the other.
+
+Results separate a completed matched result, a completed non-match, unsupported
+syntax/kind, exhausted limits and provider errors. Finite trace attempts have
+their own IDs, ordered path/visit occurrences, traversal orientation and optional
+input spans. Preserve repetition and backtracking attempts even when they reuse
+an occurrence. Failure points can identify a terminal, assertion or explicit
+entry/exit boundary, with optional UTF-16 input position and diagnostic text.
+Exhaustion and unsupported features are not evidence of a non-match.
+
+Export semantic occurrence/connector lookup so an implementor can map an engine's
+events to trace targets before any SVG or animation exists. Validate returned
+kind/model/view identity, target roles, step continuity where specified, span
+bounds and trace budgets. Do not re-run matching to verify a provider's claims.
+Provider computation honors a cooperative budget; host adapters own any harder
+timeout or I/O boundary. The library enforces its own trace-validation and
+rendering limits regardless of provider implementation.
+
+Expose a per-render highlight request for four independent channels: matched
+paths, non-matched paths, the taken path/prefix, and failure points. Each has
+separate visibility and theme-aware style options. A caller can show only the
+failure terminal, only the prefix, or any combination. Never infer that an
+unvisited alternative failed. Keep input strings and provider descriptions as
+escaped data. The request is separate from the immutable diagram and source AST.
+
+Keep distinct attempt memberships when the same connector is present in both a
+matched and a failed attempt. The caller can select attempts; if both are shown,
+use a documented deterministic layered style and accessible status labels rather
+than last-write-wins replacement. Static highlights do not move nodes or paths.
+With no highlight request, rendering retains the ordinary unannotated output bytes.
+
+The SVG renderer and PlantUML SVG convenience entry point accept validated trace
+values/highlight options directly. Provide an explicit opt-in orchestration entry
+point that invokes a supplied provider, validates its result and renders the
+trace. Keep the existing `Renderer::render` contract and ordinary render calls
+free of implicit engine execution. Engines requiring asynchronous work or I/O
+can run in an external host adapter and pass completed trace values instead.
+Provider failure yields a typed diagnostic rather than a fabricated no-match
+or a silent unhighlighted success in the trace-rendering entry point.
+
+Canonical SVG includes the highlights explicitly requested at render time.
+Scenes use the same geometry, trace configuration and styles. Animation overlays
+do not overwrite the configured evidence, and static export equals a direct
+render with the same trace options. No engine is invoked by playback or export.
+
+Test both subject kinds using small fake providers in consumer/test packages.
+They demonstrate the external trait contract; they are not production regex or
+EBNF matching engines. Cover full match, failure after a consumed prefix,
+terminal-only highlighting, assertion/end boundaries, repeated/backtracked
+attempts, overlapping statuses, empty/unvisited alternatives, wrong-model traces,
+invalid spans and unsupported/exhausted/error outcomes on all four targets.
+
 ## Risks / Trade-offs
 
 - Four grammars broaden the work. Mitigation: prove all four thin paths first,
@@ -247,11 +326,16 @@ dark/light modes, long text, nested branches/collections and finite scenarios.
   references/counts, bounded stacks and explicit errors at every processing stage.
 - Upstream code has separate notices. Mitigation: keep reference materials in
   test tooling, retain provenance and write original production implementations.
+- External engines have different semantics and resource behavior. Mitigation:
+  retain provider provenance and explicit outcomes, validate traces, require
+  cooperative limits and keep engine execution outside ordinary rendering.
 
 ## Migration Plan
 
-1. After review, create one epic and one bead per numbered task group. Keep
-   pending IDs until then. The first group proves the reference and four end-to-end
+1. The owner approved this scope and requested Claude implementation and landing.
+   Epic `diagrams-9sy` has one story per numbered task group, recorded in tasks.md.
+   The first group proves
+   the reference, external provider hook and four end-to-end
    paths; groups 2-4 complete readers/models; groups 5-6 complete static output;
    group 7 completes motion; group 8 completes integration and qualification.
 2. Document new diagram/occurrence/motion cases and any scene/catalog constructor
@@ -260,6 +344,12 @@ dark/light modes, long text, nested branches/collections and finite scenarios.
    then close and sync its beads after the corresponding merges.
 4. A future owner-approved release publishes the new module with the shared
    version. Until then the existing released versions remain unchanged.
+5. Dispatch to a Claude Orca workspace with full implementation/landing ownership.
+   Prefer one complete PR; split only when correctness or review needs it, not
+   once per task group. Use at most three agents total, counting the planning
+   agent and Claude lead. No further merge approval is needed after the declared
+   checks and concrete owner gallery review pass. Do not use admin bypass or
+   publish a release without separate authorization.
 
 ## Open Questions
 

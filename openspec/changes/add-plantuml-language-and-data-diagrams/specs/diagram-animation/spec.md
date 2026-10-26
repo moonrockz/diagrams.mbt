@@ -68,8 +68,9 @@ rows SHALL not create extra relations.
 Default illustrations SHALL use deterministic source or hierarchy order and
 bounded occurrence sets. They SHALL not expand unbounded repeats or recursive
 references. Explicit scenarios SHALL preserve chosen occurrences, repetitions,
-durations and concurrent groups. Neither mode SHALL evaluate sample input or
-report pattern/grammar acceptance.
+durations and concurrent groups. Neither mode SHALL compute or verify input
+acceptance. Supplied provider outcomes SHALL be distinguished from structural
+query results.
 
 #### Scenario: An unbounded repetition
 
@@ -93,6 +94,20 @@ runtime byte changes SHALL have deterministic updated HTML snapshots.
 
 - **WHEN** generated regex, EBNF, JSON and YAML players open with network access blocked
 - **THEN** controls, selection, path steps and row visits work with no request or console error
+
+### Requirement: Supplied trace highlights survive playback and export
+
+Configured static match/failure highlights SHALL remain separate from playback
+and selection overlays. Export SHALL equal direct static rendering with the
+same trace and style options. Playback and export SHALL not invoke a trace
+provider or compute acceptance. Displayed supplied outcomes SHALL identify
+their external origin.
+
+#### Scenario: Export a failure-highlighted grammar while playing
+
+- **WHEN** a grammar has configured failure-terminal highlights and the reader exports SVG during playback
+- **THEN** export retains those configured highlights, excludes transient progress, and preserves viewer position and selection
+- **AND** the provider is not invoked again
 
 ## MODIFIED Requirements
 

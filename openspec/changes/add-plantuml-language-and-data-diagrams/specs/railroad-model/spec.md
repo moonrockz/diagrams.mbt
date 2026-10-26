@@ -70,3 +70,57 @@ bounds and explicit resource limits and report errors without partial output.
 
 - **WHEN** a caller supplies invalid bounds or a cycle in expression containment
 - **THEN** validation reports the invalid model without recursing indefinitely
+
+### Requirement: Immutable external trace evidence
+
+The library SHALL expose immutable regex/EBNF trace values separate from the
+diagram. They SHALL retain attempt identity, ordered path/visit occurrences,
+orientation, supplied outcomes, optional input spans and failure points.
+Repeated or backtracked occurrences SHALL not be merged. Unvisited alternatives
+SHALL not be classified as failed without supplied evidence.
+
+#### Scenario: Failure after a matched prefix
+
+- **WHEN** a supplied attempt traverses two terminals and rejects the next terminal
+- **THEN** its traversed prefix and failure terminal remain independently addressable
+
+#### Scenario: One occurrence belongs to different attempts
+
+- **WHEN** a connector appears in a failed attempt and a later successful attempt
+- **THEN** both attempt memberships and their order are retained
+
+### Requirement: External matching and parsing provider trait
+
+The library SHALL expose a publicly implementable trait that accepts a typed
+regex or EBNF subject, input, view identity and explicit limits and returns
+trace evidence. EBNF requests SHALL identify a start rule. Results SHALL
+distinguish matched, non-matched, unsupported, exhausted and error outcomes.
+No production matching/parsing engine SHALL be bundled.
+
+#### Scenario: Consumer implements a regex-only provider
+
+- **WHEN** a separate consumer implements the trait for regex requests
+- **THEN** it can supply trace data for rendering and return unsupported for EBNF requests without implementing a dummy EBNF matcher
+
+#### Scenario: Provider exhausts its budget
+
+- **WHEN** a provider cannot finish within the requested budget
+- **THEN** it returns exhaustion rather than a non-match
+
+### Requirement: Source-bound trace validation
+
+Trace validation SHALL check subject kind, model/view identity, occurrence and
+connector targets, declared step continuity, input-span bounds and explicit
+trace budgets. It SHALL reject stale or invalid evidence without label-based
+target guessing. It SHALL validate structure without computing or verifying a
+regex match or grammar parse.
+
+#### Scenario: Same labels in another grammar
+
+- **WHEN** a trace for one grammar is supplied with another grammar that has equal terminal labels
+- **THEN** validation reports the source mismatch rather than highlighting equal text in the other grammar
+
+#### Scenario: Invalid failure position
+
+- **WHEN** a supplied failure span exceeds the input's UTF-16 bounds
+- **THEN** validation reports the invalid span without producing highlighted output
