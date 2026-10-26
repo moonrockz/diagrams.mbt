@@ -25,6 +25,12 @@ async fn main {
         ],
       ),
       (
+        "moon",
+        [
+          "test", "--target", "js", "-p", "moonrockz/diagrams-tests/plantuml-acceptance",
+        ],
+      ),
+      (
         "node",
         ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
       ),

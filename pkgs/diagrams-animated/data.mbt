@@ -165,13 +165,13 @@ fn playback_data(
         ),
         (
           "connection",
-          binding.occurrence.swimlane_connection
-          .map(c => budget.str(c.id))
-          .unwrap_or_else(() => {
-            binding.occurrence.flow
-            .map(f => budget.str(f.id))
-            .unwrap_or(Json(null))
-          }),
+          match binding.occurrence {
+            { swimlane_connection: Some(c), .. } => budget.str(c.id)
+            { flow: Some(f), .. } => budget.str(f.id)
+            { railroad_connector: Some(c), .. } => budget.str(c.id)
+            { data_member: Some(m), .. } => budget.str(m.id)
+            _ => Json(null)
+          },
         ),
       ]),
     )

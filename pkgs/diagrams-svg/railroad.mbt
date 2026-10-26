@@ -820,7 +820,7 @@ fn paint_railroad(
             c.paint.color("external-fill"),
             c.paint.color("external-stroke"),
           ),
-          c.label(note.label, c.paint.color("external-ink"), "rr-note-text"),
+          c.label(note.label, c.paint.color("text"), "rr-note-text"),
         ],
       ),
     )

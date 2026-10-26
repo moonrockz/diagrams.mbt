@@ -798,11 +798,13 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
             ctx.points[track.start] = start
             let mut last_x = 0.0
             let mut bottom = 0.0
+            let baselines : Array[Double] = []
             if rows.length() > 1 {
               for r, row in rows {
                 if r > 0 {
                   by += rows[r - 1].down + 2.0 * vertical + row.up
                 }
+                baselines.push(by)
                 let mut cursor = body_x
                 for k, item in row.items {
                   if k > 0 {
@@ -818,17 +820,17 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
                 Some(Seq(items)) => items
                 _ => []
               }
-              let first_of_row : Map[String, Bool] = Map([])
+              let first_of_row : Map[String, Int] = Map([])
               for r, row in rows {
                 if r > 0 {
-                  first_of_row[row.items[0]] = true
+                  first_of_row[row.items[0]] = r
                 }
               }
               for k in 1..<items.length() {
                 let a = ctx.exit_of(items[k - 1])
                 let b = ctx.entry_of(items[k])
-                if first_of_row.contains(items[k]) {
-                  let mid = a.y + ctx.frags[items[k - 1]].down + vertical
+                if first_of_row.get(items[k]) is Some(r) {
+                  let mid = baselines[r - 1] + rows[r - 1].down + vertical
                   let turn = Double::max(a.x, last_x) + radius
                   ctx.wire(items[k], Gap, [
                     a,
