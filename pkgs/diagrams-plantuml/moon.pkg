@@ -15,5 +15,6 @@ import {
 import {
   "moonrockz/diagrams-plantuml" @plantuml,
   "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/railroad-trace" @trace,
   "moonbitlang/core/test",
 } for "test"

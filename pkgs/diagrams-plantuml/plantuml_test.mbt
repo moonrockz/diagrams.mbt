@@ -4,9 +4,7 @@ test "render a regex" (t : @test.Test) {
     "@startregex\ntitle Year\nab[c-e]*(?<year>\\d{4})(?!x)|^z+?$\n@endregex\n",
     renderer=@svg.SvgRenderer::new(mode=Fixed(Light)),
   )
-  for d in regex.diagnostics {
-    println(d.code + " " + d.message)
-  }
+  assert_eq(regex.diagnostics.length(), 0)
   t.write(regex.output.unwrap())
   t.snapshot(filename="regex-light.svg")
 }
@@ -17,9 +15,7 @@ test "render a grammar" (t : @test.Test) {
     "@startebnf\nexpr = term, { (\"+\" | \"-\"), term };\nterm = 3 * \"x\" | [ y ] | a - b;\n@endebnf\n",
     renderer=@svg.SvgRenderer::new(mode=Fixed(Dark)),
   )
-  for d in grammar.diagnostics {
-    println(d.code + " " + d.message)
-  }
+  assert_true(grammar.diagnostics.iter().all(d => d.severity == Warning))
   t.write(grammar.output.unwrap())
   t.snapshot(filename="ebnf-dark.svg")
 }
