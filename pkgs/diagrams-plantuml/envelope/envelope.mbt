@@ -93,6 +93,8 @@ pub(all) enum Statement {
   Hide(String)
   /// The text after `!pragma`.
   Pragma(String)
+  /// The text after `!option`, such as `useDescriptiveNames true`.
+  Option(String)
 } derive(Eq, Debug)
 
 ///|
@@ -141,6 +143,7 @@ pub fn Statement::lines(self : Statement) -> Array[String] {
     Scale(text) => ["scale " + text]
     Hide(text) => [text]
     Pragma(text) => ["!pragma " + text]
+    Option(text) => ["!option " + text]
   }
 }
 
@@ -697,7 +700,14 @@ fn classify(
       continue
     }
     if t.has_prefix("!") {
-      if has_word(t, "!pragma") && (!data || !data_started) {
+      if has_word(t, "!option") && (!data || !data_started) {
+        statements.push(Option(after_word(t, "!option")))
+        statement(i, i, Pragma, Directive)
+        report(
+          "!plantuml/unapplied-presentation", "The option is retained but not applied",
+          start, end,
+        )
+      } else if has_word(t, "!pragma") && (!data || !data_started) {
         statements.push(Pragma(after_word(t, "!pragma")))
         statement(i, i, Pragma, Directive)
         report(

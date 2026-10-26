@@ -1,0 +1,4 @@
+@startregex
+!include foo.puml
+abc
+@endregex

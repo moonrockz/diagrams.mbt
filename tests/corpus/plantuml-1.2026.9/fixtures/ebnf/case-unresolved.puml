@@ -1,0 +1,3 @@
+@startebnf
+rule = undefined, rule;
+@endebnf

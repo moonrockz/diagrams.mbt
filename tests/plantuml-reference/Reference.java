@@ -339,7 +339,13 @@ public class Reference {
 			case '\r' -> sb.append("\\r");
 			case '\t' -> sb.append("\\t");
 			default -> {
-				if (c < 0x20 || c > 0x7e)
+				final boolean high = Character.isHighSurrogate(c) && i + 1 < s.length()
+						&& Character.isLowSurrogate(s.charAt(i + 1));
+				final boolean low = Character.isLowSurrogate(c) && i > 0 && Character.isHighSurrogate(s.charAt(i - 1));
+				if (Character.isSurrogate(c) && !high && !low)
+					// An unpaired surrogate is not valid JSON text; record it visibly.
+					sb.append(String.format("\\u27e8U+%04X\\u27e9", (int) c));
+				else if (c < 0x20 || c > 0x7e)
 					sb.append(String.format("\\u%04x", (int) c));
 				else
 					sb.append(c);

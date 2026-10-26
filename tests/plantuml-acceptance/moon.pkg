@@ -1,0 +1,7 @@
+import {
+  "moonbitlang/core/json",
+  "moonrockz/diagrams-tests/plantuml-acceptance" @corpus,
+  "moonrockz/diagrams/regex" @regex,
+  "moonrockz/diagrams/ebnf" @ebnf,
+  "moonrockz/diagrams-plantuml" @plantuml,
+} for "test"

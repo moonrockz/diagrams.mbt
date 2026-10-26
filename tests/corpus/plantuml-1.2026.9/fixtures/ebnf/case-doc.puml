@@ -1,0 +1,4 @@
+@startebnf
+(** doc **)
+r = "a";
+@endebnf

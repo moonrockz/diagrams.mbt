@@ -212,6 +212,17 @@ fn tokenize(text : String, base : Int) -> Result[Array[Tok], Failure] {
           i = k + 1
           continue
         }
+        81 => {
+          // \Q quotes text up to \E or the end of the pattern.
+          let mut k = i + 2
+          while k < n && !(at(k) == 92 && at(k + 1) == 69) {
+            let (ch, w) = code_point(text, k)
+            push(Char(ch, ch.length() == 1 && !is_letter_unit(ch.code_unit_at(0).to_int()) && !(ch.code_unit_at(0).to_int() >= 48 && ch.code_unit_at(0).to_int() <= 57)), k, k + w)
+            k += w
+          }
+          i = if k < n { k + 2 } else { n }
+          continue
+        }
         117 => {
           if !(hex(at(i + 2)) && hex(at(i + 3)) && hex(at(i + 4)) && hex(at(i + 5))) {
             return fail(

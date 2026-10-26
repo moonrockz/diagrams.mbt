@@ -1,0 +1,4 @@
+@startebnf
+!pragma compact
+r = "a", "b";
+@endebnf

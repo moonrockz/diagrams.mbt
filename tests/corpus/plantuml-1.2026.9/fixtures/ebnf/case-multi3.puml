@@ -1,0 +1,7 @@
+@startebnf
+r =
+  a,
+  b |
+  c
+;
+@endebnf

@@ -1,0 +1,5 @@
+@startebnf
+long =
+  "a",
+  "b";
+@endebnf

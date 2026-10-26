@@ -1,0 +1,4 @@
+@startregex
+title unicodeEscapes
+\uFFFF\x{FFFF}
+@endregex

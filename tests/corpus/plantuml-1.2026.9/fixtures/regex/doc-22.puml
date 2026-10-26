@@ -1,0 +1,4 @@
+@startregex
+title unicodeBlocks
+\p{InGeometric_Shapes}
+@endregex

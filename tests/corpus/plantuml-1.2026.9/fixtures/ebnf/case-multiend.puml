@@ -1,0 +1,4 @@
+@startebnf
+r = a,
+ b
+@endebnf

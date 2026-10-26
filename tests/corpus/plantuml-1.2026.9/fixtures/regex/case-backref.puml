@@ -1,0 +1,3 @@
+@startregex
+(a)\1
+@endregex

@@ -1,0 +1,4 @@
+@startregex
+title specialEscapes
+\t\r\n\a\e\f
+@endregex

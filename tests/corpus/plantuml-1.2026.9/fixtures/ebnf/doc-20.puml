@@ -1,0 +1,4 @@
+@startebnf
+title Could you put 'arrow head' on all rerouted lines?
+test = [1], [12], [123], [1234];
+@endebnf

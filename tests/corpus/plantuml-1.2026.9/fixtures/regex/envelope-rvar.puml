@@ -1,0 +1,4 @@
+@startregex
+!$x = "q"
+abc
+@endregex

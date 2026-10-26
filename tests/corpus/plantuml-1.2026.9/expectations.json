@@ -1,0 +1,74 @@
+{
+ "ebnf/case-nstar.puml": {
+  "category": "library-refusal",
+  "reason": "A repetition count must be a decimal number; PlantUML draws n * x with the label n."
+ },
+ "ebnf/case-tstar.puml": {
+  "category": "library-refusal",
+  "reason": "A repetition count must be a decimal number literal; PlantUML also accepts a quoted string."
+ },
+ "ebnf/case-two.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML ignores text after the first semicolon of a rule line; this library diagnoses it."
+ },
+ "regex/case-commaquant.puml": {
+  "category": "library-refusal",
+  "reason": "A quantifier with two commas such as {1,2,3} is refused; PlantUML draws it as a labelled loop."
+ },
+ "regex/case-setescape.puml": {
+  "category": "divergence",
+  "reason": "PlantUML reads \\- before a character in a set as a range start; this library reads an escaped hyphen."
+ },
+ "regex/case-toobig.puml": {
+  "category": "library-refusal",
+  "reason": "The bound exceeds the 32-bit integer range that PlantUML parses; this library refuses it instead of using -1."
+ },
+ "regex/case-two-lines.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML draws only the last of several pattern lines; this library refuses more than one pattern line."
+ },
+ "regex/case-unclosedset.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML accepts an unclosed character set; this library refuses it."
+ },
+ "regex/case-unicode.puml": {
+  "category": "divergence",
+  "reason": "PlantUML splits a surrogate pair into two drawn characters; this library keeps one code point."
+ },
+ "regex/case-xhex.puml": {
+  "category": "library-refusal",
+  "reason": "PlantUML reads \\x41 as the class \\x followed by literal 41; this library refuses \\x without braces instead of guessing."
+ },
+ "regex/doc-03.puml": {
+  "category": "divergence",
+  "reason": "PlantUML draws \\Q and \\E as class boxes around the text; this library reads \\Q...\\E as quoted literal text."
+ },
+ "regex/doc-08.puml": {
+  "category": "divergence",
+  "reason": "The !option useDescriptiveNames and language settings are retained but not applied; labels keep the regex spelling."
+ },
+ "regex/doc-09.puml": {
+  "category": "divergence",
+  "reason": "The !option useDescriptiveNames and language settings are retained but not applied; labels keep the regex spelling."
+ },
+ "regex/doc-10.puml": {
+  "category": "divergence",
+  "reason": "The !option useDescriptiveNames and language settings are retained but not applied; labels keep the regex spelling."
+ },
+ "regex/doc-18.puml": {
+  "category": "library-refusal",
+  "reason": "The documented source has text after the end marker; this library diagnoses text outside the block."
+ },
+ "regex/envelope-rdefine.puml": {
+  "category": "library-refusal",
+  "reason": "Preprocessor variables, definitions and themes are not evaluated; they are refused."
+ },
+ "regex/envelope-rtheme.puml": {
+  "category": "library-refusal",
+  "reason": "Preprocessor variables, definitions and themes are not evaluated; they are refused."
+ },
+ "regex/envelope-rvar.puml": {
+  "category": "library-refusal",
+  "reason": "Preprocessor variables, definitions and themes are not evaluated; they are refused."
+ }
+}

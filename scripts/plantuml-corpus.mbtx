@@ -1,0 +1,252 @@
+///|
+/// Verify the frozen PlantUML 1.2026.9 corpus and its portable reference
+/// embedding. This task needs no Java; `plantuml-corpus:reference` refreshes
+/// the reference with the pinned JAR and JDK.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let corpus : String = "tests/corpus/plantuml-1.2026.9"
+
+///|
+let kinds : Array[String] = ["regex", "ebnf", "json", "yaml", "envelope"]
+
+///|
+let metadata_files : Array[String] = [
+  "manifest.json", "expectations.json", "reference.json", "NOTICE.md",
+]
+
+///|
+fn literal(text : String) -> String {
+  let out = StringBuilder()
+  out.write_char('"')
+  for c in text {
+    match c {
+      '"' => out.write_string("\\\"")
+      '\\' => out.write_string("\\\\")
+      '\n' => out.write_string("\\n")
+      '\r' => out.write_string("\\r")
+      '\t' => out.write_string("\\t")
+      _ =>
+        if c.to_int() < 32 || c.to_int() == 0xfeff {
+          out.write_string("\\u{" + c.to_int().to_string(radix=16) + "}")
+        } else {
+          out.write_char(c)
+        }
+    }
+  }
+  out.write_char('"')
+  out.to_string()
+}
+
+///|
+fn chunks(text : String, size : Int) -> Array[String] {
+  let out = []
+  let mut i = 0
+  while i < text.length() {
+    let mut end = i + size.min(text.length() - i).max(1)
+    if end < text.length() &&
+      text.code_unit_at(end - 1).to_int() >= 0xd800 &&
+      text.code_unit_at(end - 1).to_int() <= 0xdbff {
+      end += 1
+    }
+    out.push(text.view(start_offset=i, end_offset=end).to_owned())
+    i = end
+  }
+  out
+}
+
+///|
+fn digest(text : String) -> String {
+  @crypto.bytes_to_hex_string(@crypto.sha256(@utf8.encode(text)))
+}
+
+///|
+fn fail(message : String) -> Unit {
+  eprintln("❌ " + message)
+  @sys.exit(1)
+}
+
+///|
+/// The fixture paths relative to the corpus directory, sorted.
+async fn fixture_names() -> Array[String] {
+  let names = []
+  for kind in kinds {
+    for file in @fs.readdir(corpus + "/fixtures/" + kind, sort=true) {
+      if file.has_suffix(".puml") {
+        names.push(kind + "/" + file)
+      }
+    }
+  }
+  names
+}
+
+///|
+/// The digest that binds the reference report to the exact fixture inputs.
+async fn fixtures_digest() -> String {
+  let lines = StringBuilder()
+  for name in fixture_names() {
+    let source = @fs.read_file(corpus + "/fixtures/" + name).text()
+    lines.write_string(digest(source) + "  " + name + "\n")
+  }
+  digest(lines.to_string())
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  let command = if args.length() > 1 { args[1] } else { "check" }
+  if args.length() > 2 ||
+    (command != "check" && command != "generate" && command != "digest") {
+    eprintln("Usage: plantuml-corpus.mbtx check|generate|digest")
+    @sys.exit(1)
+  }
+  if command == "digest" {
+    println(fixtures_digest())
+    return
+  }
+  let generate = command == "generate"
+  let names = fixture_names()
+  // Every fixture and metadata file has a recorded digest, and no other
+  // file is listed.
+  let expected = StringBuilder()
+  for file in metadata_files {
+    if file != "reference.json" || @fs.exists(corpus + "/" + file) {
+      expected.write_string(
+        digest(@fs.read_file(corpus + "/" + file).text()) + "  " + file + "\n",
+      )
+    }
+  }
+  for name in names {
+    expected.write_string(
+      digest(@fs.read_file(corpus + "/fixtures/" + name).text()) +
+      "  fixtures/" +
+      name +
+      "\n",
+    )
+  }
+  let sums_path = corpus + "/SHA256SUMS"
+  if generate {
+    @fs.write_file(sums_path, expected.to_string())
+  } else if !@fs.exists(sums_path) ||
+    @fs.read_file(sums_path).text() != expected.to_string() {
+    fail(
+      "PlantUML corpus digests changed; run mise run plantuml-corpus:reference",
+    )
+  }
+  // The reference report certifies these exact fixtures and pinned tools.
+  let manifest = @json.parse(@fs.read_file(corpus + "/manifest.json").text())
+  let reference = @json.parse(@fs.read_file(corpus + "/reference.json").text())
+  guard manifest is Object(m) &&
+    m.get("jar") is Some(Object(jar)) &&
+    jar.get("sha256") is Some(String(jar_sha)) &&
+    m.get("plantuml") is Some(String(version)) &&
+    m.get("jdk") is Some(String(jdk)) &&
+    reference is Object(r) &&
+    r.get("fixtures_digest") is Some(String(certified)) &&
+    r.get("jar_sha256") is Some(String(report_jar)) &&
+    r.get("plantuml") is Some(String(report_version)) &&
+    r.get("jdk") is Some(String(report_jdk)) &&
+    r.get("fixtures") is Some(Array(entries)) else {
+    fail("Invalid PlantUML manifest or reference report")
+    return
+  }
+  if certified != fixtures_digest() ||
+    report_jar != jar_sha ||
+    report_version != version ||
+    report_jdk != jdk {
+    fail(
+      "The PlantUML reference report is stale for these fixtures or tools; run mise run plantuml-corpus:reference",
+    )
+  }
+  let reported : Map[String, Bool] = Map([])
+  for entry in entries {
+    guard entry is Object(e) && e.get("name") is Some(String(name)) else {
+      fail("Invalid reference entry")
+      return
+    }
+    reported[name] = true
+  }
+  for name in names {
+    if !reported.contains(name) {
+      fail("No reference entry for " + name)
+    }
+  }
+  if reported.length() != names.length() {
+    fail("The reference report has entries for missing fixtures")
+  }
+  let expectations = @json.parse(
+    @fs.read_file(corpus + "/expectations.json").text(),
+  )
+  guard expectations is Object(cases) else {
+    fail("Invalid expectations")
+    return
+  }
+  for name, value in cases {
+    guard names.contains(name) &&
+      value is Object(fields) &&
+      fields.get("category") is Some(String(category)) &&
+      ["library-refusal", "divergence"].contains(category) &&
+      fields.get("reason") is Some(String(_)) else {
+      fail("Invalid expectation for " + name)
+      return
+    }
+  }
+  let out = StringBuilder()
+  out.write_string(
+    "// Generated by mise run plantuml-corpus:generate. Do not edit.\n",
+  )
+  out.write_string("\n///|\npub let fixtures : ReadOnlyArray[Fixture] = [\n")
+  for name in names {
+    let source = @fs.read_file(corpus + "/fixtures/" + name).text()
+    out.write_string("  { name: " + literal(name) + ", source: ")
+    for i, part in chunks(source, 4000) {
+      if i != 0 {
+        out.write_string(" + ")
+      }
+      out.write_string(literal(part))
+    }
+    out.write_string(" },\n")
+  }
+  out.write_string("]\n")
+  for
+    pair in [("reference", "reference.json"), ("expectations", "expectations.json")] {
+    let source = @fs.read_file(corpus + "/" + pair.1).text()
+    out.write_string("\n///|\npub let " + pair.0 + " : String = ")
+    for i, part in chunks(source, 12000) {
+      if i != 0 {
+        out.write_string(" +\n  ")
+      }
+      out.write_string(literal(part))
+    }
+    out.write_string("\n")
+  }
+  let target = "tests/plantuml-acceptance/corpus.generated.mbt"
+  if generate {
+    @fs.write_file(target, out.to_string())
+  } else if !@fs.exists(target) ||
+    @fs.read_file(target).text() != out.to_string() {
+    fail("Stale PlantUML embeddings; run mise run plantuml-corpus:generate")
+  }
+  println(
+    "✅ Verified \{names.length()} pinned PlantUML fixtures and their portable reference",
+  )
+}
+
+///|
+test "literal escapes control characters and chunks keep surrogate pairs" {
+  let original = "\r\n\"\\😀"
+  assert_eq(@json.parse(literal(original)), Json(original))
+  assert_eq(literal("\u{feff}\u{1}"), "\"\\u{feff}\\u{1}\"")
+  let source = "x".repeat(3) + "😀"
+  for size in [1, 2, 3, 4] {
+    assert_eq(chunks(source, size).join(""), source)
+  }
+}

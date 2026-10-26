@@ -1,0 +1,7 @@
+@startregex
+skinparam backgroundColor red
+<style>
+regex { LineColor blue }
+</style>
+abc
+@endregex
