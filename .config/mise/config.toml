@@ -261,3 +261,7 @@ run = "moonx scripts/plantuml-corpus.mbtx generate"
 description = "Refresh (or with -- --check, verify) the PlantUML reference with the pinned test-only JAR and JDK"
 tools = { java = "temurin-21.0.13+9.0.LTS" }
 run = "moonx scripts/plantuml-reference.mbtx"
+
+[tasks."test:plantuml-consumer"]
+description = "Qualify fresh model-only, PlantUML-reader and external-provider consumers on all four targets"
+run = "moonx scripts/test-plantuml-consumer.mbtx"

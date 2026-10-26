@@ -16,3 +16,7 @@ tests/corpus/mermaid-swimlanes/** -text
 # Generated reference/table source is compared byte-for-byte by its MoonBit task.
 tests/swimlane-acceptance/corpus.generated.mbt text eol=lf
 pkgs/diagrams-mermaid/swimlane-syntax/entities.generated.mbt text eol=lf
+
+# PlantUML fixtures and the reference report have frozen byte digests.
+tests/corpus/plantuml-1.2026.9/** -text
+tests/plantuml-acceptance/corpus.generated.mbt text eol=lf

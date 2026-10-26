@@ -63,6 +63,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run build` | Build `wasm`, `wasm-gc`, `js`, and `native` |
 | `mise run test` | Test all four targets |
 | `mise run test:bpmn-consumer` | Verify a fresh reader-only BPMN consumer on all four targets |
+| `mise run test:plantuml-consumer` | Verify fresh model-only, PlantUML-reader and external trace-provider consumers on all four targets |
 | `mise run test:animation` | Qualify stored offline BPMN/sequence/swimlane players without a workspace/site rebuild |
 | `mise run swimlane-corpus:reference` | Verify native syntax and semantics against locked test-only Mermaid 12.2.0 |
 | `mise run plantuml-corpus:reference` | Refresh the PlantUML 1.2026.9 reference with the pinned test-only JAR and JDK (`-- --check` verifies it) |
