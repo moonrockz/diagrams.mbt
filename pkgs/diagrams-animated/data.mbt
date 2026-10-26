@@ -131,17 +131,25 @@ fn playback_data(
         (
           "label",
           budget.str(
-            binding.occurrence.swimlane_connection
-            .map(c => c.label)
-            .unwrap_or(""),
+            match binding.occurrence.kind {
+              Architecture(c) => c.label.unwrap_or("")
+              _ =>
+                binding.occurrence.swimlane_connection
+                .map(c => c.label)
+                .unwrap_or("")
+            },
           ),
         ),
         (
           "reversed",
           Json(
-            binding.occurrence.swimlane_connection
-            .map(c => c.direction == Backward)
-            .unwrap_or(false),
+            match binding.occurrence.kind {
+              Architecture(c) => c.source_head && !c.target_head
+              _ =>
+                binding.occurrence.swimlane_connection
+                .map(c => c.direction == Backward)
+                .unwrap_or(false)
+            },
           ),
         ),
         ("key", budget.str(binding.occurrence.key)),
@@ -150,7 +158,9 @@ fn playback_data(
         (
           "kind",
           budget.str(
-            if binding.occurrence.swimlane_connection is Some(_) {
+            if binding.occurrence.kind is Architecture(_) {
+              "architecture"
+            } else if binding.occurrence.swimlane_connection is Some(_) {
               "swimlane"
             } else if binding.occurrence.flow is Some(_) {
               "bpmn"
@@ -166,6 +176,7 @@ fn playback_data(
         (
           "connection",
           match binding.occurrence {
+            { kind: Architecture(c), .. } => budget.str(c.id)
             { swimlane_connection: Some(c), .. } => budget.str(c.id)
             { flow: Some(f), .. } => budget.str(f.id)
             { railroad_connector: Some(c), .. } => budget.str(c.id)
@@ -184,6 +195,8 @@ fn playback_data(
     let kind = match node.kind {
       Bpmn(_) => "bpmn"
       SwimlaneNode | SwimlaneGroup | SwimlaneLane => "swimlane"
+      ArchitectureService | ArchitectureJunction | ArchitectureGroup =>
+        "architecture"
       Message => "message"
       RailroadPoint => "point"
       DataValue => "data"
@@ -214,6 +227,7 @@ fn playback_data(
       MessageFlow => "message"
       Order => "order"
       SwimlaneFlow => "swimlane"
+      ArchitectureFlow => "architecture"
       Undirected => "undirected"
       Railroad => "railroad"
       Containment => "containment"
@@ -253,6 +267,12 @@ fn playback_data(
   let node_bindings = []
   for binding in scene.nodes {
     let value = match binding.kind {
+      Architecture(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("architecture")),
+          ("id", budget.str(id)),
+        ])
       Swimlane(id) =>
         budget.object([
           ("endpoint", budget.str(binding.endpoint)),

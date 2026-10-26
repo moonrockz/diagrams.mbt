@@ -1,0 +1,117 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/architecture"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/icons",
+}
+
+// Values
+pub fn validate(Architecture, nodes_limit? : Int32, edges_limit? : Int32, depth_limit? : Int32, work_limit? : Int32) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+// Errors
+
+// Types and methods
+pub struct Alignment {
+  axis : Axis
+  members : ReadOnlyArray[String]
+} derive(Eq, @debug.Debug)
+pub fn Alignment::equal(Self, Self) -> Bool
+pub fn Alignment::new(Axis, ArrayView[String]) -> Self
+pub fn Alignment::not_equal(Self, Self) -> Bool
+pub fn Alignment::to_repr(Self) -> @debug.Repr
+
+pub struct Architecture {
+  id : String
+  groups : ReadOnlyArray[Group]
+  services : ReadOnlyArray[Service]
+  junctions : ReadOnlyArray[Junction]
+  connections : ReadOnlyArray[Connection]
+  alignments : ReadOnlyArray[Alignment]
+  title : String?
+  accessibility_title : String?
+  accessibility_description : String?
+} derive(Eq, @debug.Debug)
+pub fn Architecture::equal(Self, Self) -> Bool
+pub fn Architecture::new(String, ArrayView[Service], ArrayView[Connection], groups? : ArrayView[Group], junctions? : ArrayView[Junction], alignments? : ArrayView[Alignment], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
+pub fn Architecture::not_equal(Self, Self) -> Bool
+pub fn Architecture::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Axis {
+  Row
+  Column
+} derive(Eq, @debug.Debug)
+pub fn Axis::equal(Self, Self) -> Bool
+pub fn Axis::not_equal(Self, Self) -> Bool
+pub fn Axis::to_repr(Self) -> @debug.Repr
+
+pub struct Connection {
+  id : String
+  source : Endpoint
+  target : Endpoint
+  label : String?
+  source_head : Bool
+  target_head : Bool
+} derive(Eq, @debug.Debug)
+pub fn Connection::equal(Self, Self) -> Bool
+pub fn Connection::new(String, Endpoint, Endpoint, label? : String, source_head? : Bool, target_head? : Bool) -> Self
+pub fn Connection::not_equal(Self, Self) -> Bool
+pub fn Connection::to_repr(Self) -> @debug.Repr
+
+pub struct Endpoint {
+  id : String
+  side : Side
+  group : Bool
+} derive(Eq, @debug.Debug)
+pub fn Endpoint::equal(Self, Self) -> Bool
+pub fn Endpoint::new(String, Side, group? : Bool) -> Self
+pub fn Endpoint::not_equal(Self, Self) -> Bool
+pub fn Endpoint::to_repr(Self) -> @debug.Repr
+
+pub struct Group {
+  id : String
+  label : String
+  parent : String?
+  icon : @icons.Reference?
+} derive(Eq, @debug.Debug)
+pub fn Group::equal(Self, Self) -> Bool
+pub fn Group::new(String, label? : String, parent? : String, icon? : @icons.Reference) -> Self
+pub fn Group::not_equal(Self, Self) -> Bool
+pub fn Group::to_repr(Self) -> @debug.Repr
+
+pub struct Junction {
+  id : String
+  parent : String?
+} derive(Eq, @debug.Debug)
+pub fn Junction::equal(Self, Self) -> Bool
+pub fn Junction::new(String, parent? : String) -> Self
+pub fn Junction::not_equal(Self, Self) -> Bool
+pub fn Junction::to_repr(Self) -> @debug.Repr
+
+pub struct Service {
+  id : String
+  label : String
+  parent : String?
+  icon : @icons.Reference?
+  icon_text : String?
+} derive(Eq, @debug.Debug)
+pub fn Service::equal(Self, Self) -> Bool
+pub fn Service::new(String, label? : String, parent? : String, icon? : @icons.Reference, icon_text? : String) -> Self
+pub fn Service::not_equal(Self, Self) -> Bool
+pub fn Service::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Side {
+  Left
+  Right
+  Top
+  Bottom
+} derive(Eq, @debug.Debug)
+pub fn Side::equal(Self, Self) -> Bool
+pub fn Side::not_equal(Self, Self) -> Bool
+pub fn Side::to_repr(Self) -> @debug.Repr
+pub fn Side::to_string(Self) -> String
+
+// Type aliases
+
+// Traits

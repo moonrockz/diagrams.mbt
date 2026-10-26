@@ -1,0 +1,33 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/icons"
+
+import {
+  "moonrockz/diagrams-svg/writer",
+}
+
+// Values
+pub fn asset_id(@moonrockz/diagrams/icons.Reference, String) -> String
+
+pub fn contains(@moonrockz/diagrams/icons.Reference) -> Bool
+
+pub fn definition(@moonrockz/diagrams/icons.Reference, String) -> String
+
+pub fn definition_node(@moonrockz/diagrams/icons.Reference, String) -> @writer.Node
+
+pub fn definitions(ReadOnlyArray[@moonrockz/diagrams/icons.Reference], String) -> String
+
+pub fn known(@moonrockz/diagrams/icons.Reference) -> Bool
+
+pub fn paint(@moonrockz/diagrams/icons.Reference, String, Double, Double, Double) -> String
+
+pub fn paint_node(@moonrockz/diagrams/icons.Reference, String, Double, Double, Double) -> @writer.Node
+
+pub fn registry_keys() -> ReadOnlyArray[String]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

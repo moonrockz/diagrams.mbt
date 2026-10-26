@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Diagram flow illustration</title><style>body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 system-ui, sans-serif; }
+[data-diagram-viewer] { --viewer-bg: #f4f5f7; --viewer-ink: #0f172a; --viewer-border: #64748b; max-width: 90rem; margin: auto; }
+[data-diagram-viewer] .diagram-canvas { overflow: auto; border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] .diagram-canvas > svg { display: block; max-width: 100%; height: auto; }
+[data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
+[data-diagram-viewer] fieldset { border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] button, [data-diagram-viewer] select, [data-diagram-viewer] input { font: inherit; }
+[data-diagram-viewer] button, [data-diagram-viewer] select { padding: .35rem .6rem; border: 1px solid var(--viewer-border); border-radius: .3rem; background: var(--viewer-bg); color: var(--viewer-ink); }
+[data-diagram-viewer] [hidden] { display: none !important; }
+[data-diagram-viewer] label { display: inline-flex; align-items: center; gap: .35rem; }
+[data-diagram-viewer] select { max-width: 20rem; }
+[data-diagram-viewer] [data-control="seek"] { width: min(22rem, 60vw); }
+[data-diagram-viewer] :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+[data-diagram-viewer] [data-control="status"] { min-height: 1.5em; }
+[data-diagram-viewer] .motion-overlay { pointer-events: none; }
+@media screen {
+  [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
+  [data-diagram-viewer] .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
+}
+@media (prefers-color-scheme: dark) {
+  body { background: #10131a; color: #e2e8f0; }
+  [data-diagram-viewer] { --viewer-bg: #10131a; --viewer-ink: #e2e8f0; --viewer-border: #94a3b8; }
+}
+@media print {
+  body { margin: 0; background: white; }
+  [data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset, [data-diagram-viewer] [data-control="status"], [data-diagram-viewer] .motion-overlay { display: none !important; }
+  [data-diagram-viewer] .motion-visit, [data-diagram-viewer] .motion-selected { filter: none !important; }
+  [data-diagram-viewer] .diagram-canvas { overflow: visible; border: none; }
+}
+[data-diagram-viewer] .motion-controls output { min-width: 24ch; font-variant-numeric: tabular-nums; }
+</style></head><body>
+<main data-diagram-viewer aria-label="Diagram flow viewer">
+<p>Explicit scenario. Selected connections illustrate the supplied order; no process execution is inferred.</p>
+<section class="motion-controls" aria-label="Playback controls">
+<button type="button" data-control="play" aria-pressed="false">Play</button>
+<button type="button" data-control="restart">Restart</button>
+<button type="button" data-control="step">Step</button>
+<label>Speed <select data-control="speed" aria-label="Playback speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+<label>Position <input data-control="seek" aria-label="Playback position" type="range" min="0" max="7000" value="0" step="1"></label>
+<output data-control="position">0 / 7000 ms</output>
+<button type="button" data-control="download">Download SVG</button>
+</section>
+<fieldset><legend>Structural exploration</legend>
+<label>From <select data-control="from" aria-label="Route from"></select></label>
+<label>To <select data-control="to" aria-label="Route to"></select></label>
+<label><input data-control="messages" type="checkbox">Include message flows</label>
+<label><input data-control="undirected" type="checkbox">Include unheaded connections</label>
+<button type="button" data-control="route">Show route</button>
+<label>Connection <select data-control="connection" aria-label="Select a swimlane connection"></select></label>
+<button type="button" data-control="show-connection">Show connection</button>
+<label>Direction <select data-control="direction" aria-label="Reachability direction"><option value="forward">Downstream</option><option value="reverse">Upstream</option><option value="both">Both directions</option></select></label>
+<button type="button" data-control="reach">Show reachability</button>
+<button type="button" data-control="clear">Reset view</button>
+</fieldset>
+<p data-control="status" role="status" aria-live="polite">Paused</p>
+<div class="diagram-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1286 824" width="1286" height="824" role="img" data-diagram="sequence" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-diagram">
+  <title>Checkout interaction</title>
+  <desc>Sequence diagram with 7 participants (Customer, API, Worker, Functions, Analytics, Store, Cluster) and 8 messages.</desc>
+  <defs>
+    <symbol fill="none" viewBox="0 0 24 24" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-48">
+      <g>
+        <path d="M15.5489 4.19771C15.5489 5.18773 15.1485 6.13721 14.4358 6.83726C13.7231 7.53731 12.7565 7.93058 11.7486 7.93058C10.7407 7.93058 9.77403 7.53731 9.06133 6.83726C8.34863 6.13721 7.94824 5.18773 7.94824 4.19771C7.94824 3.20768 8.34863 2.25822 9.06133 1.55818C9.77403 0.858126 10.7407 0.464844 11.7486 0.464844C12.7565 0.464844 13.7231 0.858126 14.4358 1.55818C15.1485 2.25822 15.5489 3.20768 15.5489 4.19771Z" stroke="currentColor"/>
+        <path d="M6.54883 11.2152L17.2025 11.2073M11.7471 8.06641V19.5806V8.06641ZM11.7471 19.4385L6.79789 23.5738L11.7471 19.4385ZM11.7551 19.4385L17.1864 23.3055L11.7551 19.4385Z" stroke="currentColor"/>
+      </g>
+      <desc>Peng Xiao. MIT repository grant; provider icon terms: MIT. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/actor.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol viewBox="0 0 48 48" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57">
+      <g fill="none" fill-rule="evenodd" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57-i2" stroke="none" stroke-width="1">
+        <path d="M9,39 L39,39 L39,9 L9,9 L9,39 Z M46,13 L46,11 L41,11 L41,8 C41,7.448 40.552,7 40,7 L37,7 L37,2 L35,2 L35,7 L31,7 L31,2 L29,2 L29,7 L25,7 L25,2 L23,2 L23,7 L19,7 L19,2 L17,2 L17,7 L13,7 L13,2 L11,2 L11,7 L8,7 C7.447,7 7,7.448 7,8 L7,11 L2,11 L2,13 L7,13 L7,17 L2,17 L2,19 L7,19 L7,23 L2,23 L2,25 L7,25 L7,29 L2,29 L2,31 L7,31 L7,35 L2,35 L2,37 L7,37 L7,40 C7,40.553 7.447,41 8,41 L11,41 L11,46 L13,46 L13,41 L17,41 L17,46 L19,46 L19,41 L23,41 L23,46 L25,46 L25,41 L29,41 L29,46 L31,46 L31,41 L35,41 L35,46 L37,46 L37,41 L40,41 C40.552,41 41,40.553 41,40 L41,37 L46,37 L46,35 L41,35 L41,31 L46,31 L46,29 L41,29 L41,25 L46,25 L46,23 L41,23 L41,19 L46,19 L46,17 L41,17 L41,13 L46,13 Z" fill="#ED7100" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57-i3"/>
+      </g>
+      <desc>Amazon Web Services. MIT repository grant; provider icon terms: https://aws.amazon.com/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/AWS-Asset-Package_02062024/Resource-Icons_01312024/Res_Compute/Res_Amazon-EC2_Instance_48.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol viewBox="0 0 48 48" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56">
+      <g fill="none" fill-rule="evenodd" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56-i2" stroke="none" stroke-width="1">
+        <path d="M24,44 C12.972,44 4,35.028 4,24 C4,12.972 12.972,4 24,4 C35.028,4 44,12.972 44,24 C44,35.028 35.028,44 24,44 L24,44 Z M24,2 C11.869,2 2,11.869 2,24 C2,36.131 11.869,46 24,46 C36.131,46 46,36.131 46,24 C46,11.869 36.131,2 24,2 L24,2 Z M17.231,35.25 L11.876,35.25 L18.221,21.959 L20.902,27.492 L17.231,35.25 Z M19.114,19.215 C18.946,18.87 18.597,18.651 18.214,18.651 L18.211,18.651 C17.826,18.652 17.477,18.874 17.312,19.221 L9.389,35.819 C9.24,36.129 9.262,36.493 9.445,36.783 C9.628,37.074 9.947,37.25 10.291,37.25 L17.864,37.25 C18.251,37.25 18.603,37.027 18.769,36.678 L22.915,27.915 C23.044,27.642 23.043,27.323 22.911,27.051 L19.114,19.215 Z M36.125,35.25 L30.673,35.25 L20.761,13.953 C20.597,13.601 20.243,13.375 19.854,13.375 L16.251,13.375 L16.255,9.25 L23.475,9.25 L33.339,30.545 C33.503,30.898 33.856,31.125 34.246,31.125 L36.125,31.125 L36.125,35.25 Z M37.125,29.125 L34.885,29.125 L25.021,7.83 C24.856,7.477 24.503,7.25 24.113,7.25 L15.256,7.25 C14.704,7.25 14.257,7.697 14.256,8.249 L14.25,14.374 C14.25,14.64 14.355,14.894 14.543,15.082 C14.73,15.27 14.984,15.375 15.25,15.375 L19.217,15.375 L29.129,36.672 C29.293,37.024 29.646,37.25 30.035,37.25 L37.125,37.25 C37.678,37.25 38.125,36.803 38.125,36.25 L38.125,30.125 C38.125,29.572 37.678,29.125 37.125,29.125 L37.125,29.125 Z" fill="#ED7100" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56-i3"/>
+      </g>
+      <desc>Amazon Web Services. MIT repository grant; provider icon terms: https://aws.amazon.com/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/AWS-Asset-Package_02062024/Resource-Icons_01312024/Res_Compute/Res_AWS-Lambda_Lambda-Function_48.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol viewBox="0 0 18 18" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50">
+      <defs>
+        <linearGradient gradientTransform="translate(212.573 370.548) scale(1.156 1.029)" gradientUnits="userSpaceOnUse" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50-i2" x1="-175.993" x2="-175.993" y1="-343.723" y2="-359.232">
+          <stop offset="0" stop-color="#fea11b"/>
+          <stop offset="0.284" stop-color="#fea51a"/>
+          <stop offset="0.547" stop-color="#feb018"/>
+          <stop offset="0.8" stop-color="#ffc314"/>
+          <stop offset="1" stop-color="#ffd70f"/>
+        </linearGradient>
+      </defs>
+      <g>
+        <path d="M2.37,7.475H3.2a.267.267,0,0,1,.267.267v6.148a.533.533,0,0,1-.533.533H2.1a0,0,0,0,1,0,0V7.741a.267.267,0,0,1,.267-.267Z" fill="#50e6ff" transform="translate(12.507 16.705) rotate(134.919)"/>
+        <path d="M2.325,3.6h.833a.267.267,0,0,1,.267.267v6.583a0,0,0,0,1,0,0H2.591a.533.533,0,0,1-.533-.533V3.865A.267.267,0,0,1,2.325,3.6Z" fill="#1490df" transform="translate(5.759 0.114) rotate(44.919)"/>
+      </g>
+      <g>
+        <path d="M14.53,7.475h.833a.533.533,0,0,1,.533.533v6.148a.267.267,0,0,1-.267.267H14.8a.267.267,0,0,1-.267-.267V7.475a0,0,0,0,1,0,0Z" fill="#50e6ff" transform="translate(12.223 -7.555) rotate(45.081)"/>
+        <path d="M15.108,3.6h.833a0,0,0,0,1,0,0v6.583a.267.267,0,0,1-.267.267h-.833a.267.267,0,0,1-.267-.267V4.131a.533.533,0,0,1,.533-.533Z" fill="#1490df" transform="translate(31.022 1.222) rotate(135.081)"/>
+      </g>
+      <path d="M8.459,9.9H4.87a.193.193,0,0,1-.2-.181.166.166,0,0,1,.018-.075L8.991,1.13a.206.206,0,0,1,.186-.106h4.245a.193.193,0,0,1,.2.181.165.165,0,0,1-.035.1L8.534,7.966h4.928a.193.193,0,0,1,.2.181.176.176,0,0,1-.052.122L5.421,16.788c-.077.046-.624.5-.356-.189h0Z" fill="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50-i2)"/>
+      <desc>Microsoft. MIT repository grant; provider icon terms: https://learn.microsoft.com/en-us/azure/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/Azure_Public_Service_Icons/Icons/Compute/10029-icon-service-Function-Apps.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol viewBox="0 0 24 24" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-56">
+      <defs/>
+      <g>
+        <g>
+          <path d="M6.73,10.83v2.63A4.91,4.91,0,0,0,8.44,15.2V10.83Z" fill="#aecbfa" fill-rule="evenodd"/>
+          <path d="M9.89,8.41v7.53A7.62,7.62,0,0,0,11,16,8,8,0,0,0,12,16V8.41Z" fill="#669df6" fill-rule="evenodd"/>
+          <path d="M13.64,11.86v3.29a5,5,0,0,0,1.7-1.82V11.86Z" fill="#aecbfa" fill-rule="evenodd"/>
+          <path d="M17.74,16.32l-1.42,1.42a.42.42,0,0,0,0,.6l3.54,3.54a.42.42,0,0,0,.59,0l1.43-1.43a.42.42,0,0,0,0-.59l-3.54-3.54a.42.42,0,0,0-.6,0" fill="#4285f4" fill-rule="evenodd"/>
+          <path d="M11,2a9,9,0,1,0,9,9,9,9,0,0,0-9-9m0,15.69A6.68,6.68,0,1,1,17.69,11,6.68,6.68,0,0,1,11,17.69" fill="#669df6" fill-rule="evenodd"/>
+        </g>
+      </g>
+      <desc>Google. MIT repository grant; provider icon terms: https://cloud.google.com/icons. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/google-cloud-icons/bigquery/bigquery.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol fill="#000000" viewBox="0 0 32 32" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-49">
+      <path d="M24.295 9.929c-0.010 0.155-0.082 0.292-0.191 0.387l-0.001 0.001c-0.131 0.143-0.306 0.243-0.504 0.278l-0.005 0.001c-0.028 0.004-0.061 0.007-0.094 0.007h-0c-0.001 0-0.003 0-0.004 0-0.312 0-0.58-0.189-0.694-0.46l-0.002-0.005c-0.030-0.221 0.33-0.388 0.701-0.44s0.764 0.011 0.794 0.231zM14.385 10.443c-0.121 0.311-0.418 0.528-0.766 0.528-0.004 0-0.007-0-0.011-0h0.001c-0 0-0 0-0 0-0.036 0-0.070-0.003-0.105-0.007l0.004 0c-0.261-0.047-0.483-0.191-0.63-0.392l-0.002-0.003c-0.082-0.094-0.132-0.219-0.132-0.354 0-0 0-0.001 0-0.001v0c0.012-0.077 0.055-0.143 0.115-0.185l0.001-0.001c0.152-0.084 0.334-0.133 0.528-0.133 0.083 0 0.164 0.009 0.242 0.026l-0.007-0.001c0.395 0.055 0.803 0.242 0.764 0.523zM25.403 18.086l-0.107-0.134-0.044-0.055c0.457-0.846 0.725-1.853 0.725-2.921 0-0.488-0.056-0.962-0.162-1.418l0.008 0.042c-0.070-0.453-0.111-0.976-0.111-1.508 0-0.007 0-0.014 0-0.021v0.001c0.023-0.501 0.076-0.97 0.158-1.429l-0.010 0.066c0.089-0.464 0.14-0.998 0.14-1.544 0-0.051-0-0.101-0.001-0.151l0 0.008c0.012-0.049 0.019-0.104 0.019-0.162 0-0.027-0.002-0.053-0.004-0.079l0 0.003c-0.4-1.58-1.151-2.949-2.168-4.073l0.007 0.008c-0.911-1.068-2.031-1.929-3.3-2.523l-0.060-0.025c0.696-0.149 1.496-0.234 2.316-0.234 0.075 0 0.15 0.001 0.225 0.002l-0.011-0c0.045-0.001 0.097-0.002 0.15-0.002 2.378 0 4.496 1.109 5.866 2.838l0.012 0.016c0.028 0.036 0.056 0.077 0.080 0.12l0.003 0.005c0.904 1.694-0.345 7.842-3.732 13.172zM25.117 9.322c-0.016 0.455-0.064 0.886-0.14 1.307l0.008-0.055c-0.078 0.425-0.134 0.931-0.157 1.445l-0.001 0.025c-0 0.017-0 0.036-0 0.056 0 0.567 0.042 1.124 0.124 1.668l-0.008-0.061c0.085 0.377 0.134 0.809 0.134 1.254 0 0.763-0.144 1.493-0.407 2.162l0.014-0.040c-0.076-0.131-0.155-0.289-0.224-0.453l-0.011-0.029c-0.066-0.159-0.209-0.416-0.406-0.77-0.769-1.38-2.571-4.611-1.649-5.929 0.474-0.678 1.676-0.707 2.722-0.579zM24.406 20.907c-0.051-1.039 0.336-1.148 0.746-1.263q0.085-0.023 0.169-0.051c0.050 0.044 0.105 0.087 0.162 0.125l0.005 0.003c0.62 0.273 1.342 0.431 2.102 0.431 0.592 0 1.161-0.096 1.693-0.274l-0.038 0.011c-0.344 0.293-0.736 0.544-1.16 0.738l-0.031 0.013c-0.644 0.264-1.391 0.429-2.173 0.454l-0.010 0c-0.119 0.018-0.256 0.029-0.395 0.029-0.386 0-0.754-0.080-1.087-0.224l0.018 0.007zM23.293 22.933c-0.021 0.221-0.045 0.47-0.077 0.745l-0.182 0.548c-0.014 0.040-0.022 0.086-0.023 0.134v0c0.001 0.027 0.001 0.058 0.001 0.089 0 0.355-0.053 0.699-0.151 1.022l0.006-0.025c-0.116 0.389-0.196 0.84-0.223 1.305l-0.001 0.016c-0.052 1.684-1.355 3.047-3.008 3.194l-0.013 0.001c-1.894 0.406-2.23-0.621-2.526-1.527q-0.045-0.142-0.096-0.283c-0.16-0.652-0.252-1.401-0.252-2.171 0-0.36 0.020-0.715 0.059-1.065l-0.004 0.043c0.006-0.128 0.009-0.279 0.009-0.43 0-1.026-0.154-2.016-0.441-2.948l0.019 0.071q0.008-0.55 0.024-1.114c0-0.003 0-0.008 0-0.012 0-0.046-0.007-0.090-0.020-0.132l0.001 0.003c-0.014-0.1-0.033-0.188-0.058-0.273l0.003 0.013c-0.141-0.521-0.496-0.941-0.964-1.164l-0.011-0.005c-0.176-0.088-0.384-0.14-0.605-0.14-0.104 0-0.205 0.011-0.302 0.033l0.009-0.002c0.128-0.47 0.26-0.854 0.412-1.228l-0.026 0.073 0.066-0.177c0.074-0.2 0.167-0.407 0.266-0.626 0.546-1.124 0.865-2.445 0.865-3.841 0-0.938-0.144-1.842-0.411-2.692l0.017 0.063c-0.183-1.108-1.135-1.943-2.281-1.943-0.18 0-0.356 0.021-0.524 0.060l0.016-0.003c-0.796 0.104-1.516 0.338-2.171 0.682l0.035-0.017q-0.124 0.063-0.245 0.13c0.091-2.147 0.896-4.090 2.181-5.615l-0.012 0.014c0.118-0.119 0.242-0.232 0.37-0.338l0.009-0.007c0.069-0.014 0.13-0.042 0.182-0.081l-0.001 0.001c0.893-0.654 2.014-1.047 3.227-1.047 0.097 0 0.193 0.002 0.288 0.007l-0.013-0.001c0.526 0.008 1.034 0.044 1.534 0.108l-0.067-0.007c2.043 0.393 3.787 1.463 5.032 2.963l0.011 0.014c0.748 0.869 1.354 1.887 1.766 2.998l0.022 0.069c-0.257-0.069-0.552-0.109-0.856-0.109-0.983 0-1.868 0.416-2.49 1.081l-0.002 0.002c-1.24 1.773 0.679 5.215 1.601 6.869 0.169 0.303 0.315 0.565 0.361 0.676 0.26 0.601 0.587 1.118 0.98 1.577l-0.007-0.008c0.087 0.109 0.171 0.214 0.236 0.306-0.501 0.144-1.401 0.478-1.319 2.146-0.015 0.195-0.053 0.558-0.104 1.018-0.054 0.269-0.098 0.597-0.123 0.93l-0.002 0.028zM14.091 17.219l-0.066 0.176c-0.137 0.328-0.279 0.745-0.397 1.172l-0.019 0.081c-0.893-0.013-1.695-0.395-2.261-1.001l-0.002-0.002c-0.632-0.667-1.020-1.57-1.020-2.564 0-0.198 0.015-0.392 0.045-0.582l-0.003 0.021c0.097-0.72 0.153-1.551 0.153-2.396 0-0.502-0.020-0.999-0.058-1.491l0.004 0.065c-0.006-0.107-0.012-0.201-0.015-0.275 0.805-0.611 1.824-0.98 2.929-0.98 0.132 0 0.262 0.005 0.391 0.015l-0.017-0.001c0.554 0.129 0.971 0.588 1.037 1.153l0.001 0.006c0.238 0.728 0.375 1.566 0.375 2.435 0 1.266-0.291 2.464-0.809 3.532l0.021-0.048c-0.105 0.233-0.204 0.453-0.289 0.682zM11.474 22.203c-0.205-0.052-0.385-0.128-0.549-0.227l0.009 0.005c0.172-0.073 0.375-0.134 0.585-0.173l0.019-0.003c1.604-0.33 1.851-0.563 2.392-1.25 0.124-0.157 0.264-0.336 0.459-0.553 0.040-0.045 0.072-0.099 0.091-0.159l0.001-0.003c0.213-0.189 0.34-0.137 0.546-0.052 0.227 0.125 0.395 0.336 0.46 0.587l0.001 0.007c0.023 0.065 0.037 0.139 0.037 0.217 0 0.125-0.035 0.242-0.095 0.341l0.002-0.003c-0.645 0.882-1.676 1.449-2.839 1.449-0.4 0-0.785-0.067-1.144-0.191l0.025 0.007zM3.967 15.846c-0.651-1.985-1.181-4.34-1.494-6.764l-0.021-0.199c-0.061-0.322-0.095-0.693-0.095-1.071 0-1.806 0.789-3.427 2.041-4.537l0.006-0.005c2.295-1.623 6.048-0.676 7.633-0.163l-0.012 0.012c-1.535 1.872-2.466 4.292-2.466 6.928 0 0.090 0.001 0.18 0.003 0.27l-0-0.013c-0 0.103 0.008 0.249 0.020 0.449 0.033 0.41 0.052 0.888 0.052 1.371 0 0.802-0.052 1.592-0.154 2.367l0.010-0.091c-0.033 0.206-0.051 0.444-0.051 0.686 0 1.231 0.482 2.35 1.269 3.177l-0.002-0.002q0.151 0.158 0.315 0.297c-0.433 0.464-1.375 1.49-2.377 2.696-0.709 0.853-1.199 0.689-1.36 0.636-0.685-0.368-1.222-0.939-1.538-1.631l-0.009-0.022c-0.684-1.252-1.286-2.708-1.73-4.232l-0.039-0.157zM30.445 19.403c-0.019-0.057-0.043-0.106-0.072-0.151l0.002 0.003c-0.174-0.329-0.596-0.427-1.259-0.29-2.066 0.426-2.866 0.164-3.156-0.024 1.617-2.452 2.918-5.292 3.751-8.326l0.049-0.209c0.339-1.313 0.997-4.403 0.153-5.913-0.059-0.112-0.122-0.208-0.192-0.298l0.003 0.004c-1.563-1.955-3.948-3.196-6.623-3.196-0.076 0-0.152 0.001-0.227 0.003l0.011-0c-0.042-0.001-0.091-0.001-0.141-0.001-1.342 0-2.633 0.22-3.838 0.625l0.085-0.025q-0.321-0.060-0.645-0.102c-0.488-0.093-1.053-0.151-1.631-0.16l-0.008-0c-0.083-0.004-0.18-0.006-0.278-0.006-1.315 0-2.538 0.394-3.557 1.071l0.024-0.015c-1.071-0.401-5.984-2.056-9.025 0.098-1.489 1.27-2.426 3.147-2.426 5.244 0 0.405 0.035 0.802 0.102 1.188l-0.006-0.041c0.335 2.698 0.879 5.126 1.632 7.461l-0.079-0.284c0.493 1.716 1.103 3.201 1.852 4.6l-0.061-0.124c0.433 0.984 1.182 1.764 2.116 2.225l0.026 0.012c0.168 0.049 0.361 0.078 0.561 0.078 0.742 0 1.392-0.391 1.756-0.979l0.005-0.009c1.001-1.204 1.987-2.282 2.43-2.758 0.502 0.279 1.097 0.451 1.731 0.471l0.006 0 0.001 0.005q-0.158 0.188-0.309 0.382c-0.424 0.538-0.512 0.649-1.875 0.93-0.388 0.080-1.418 0.292-1.433 1.014-0 0.004-0 0.008-0 0.013 0 0.147 0.043 0.284 0.117 0.399l-0.002-0.003c0.312 0.395 0.751 0.678 1.254 0.788l0.015 0.003c0.399 0.13 0.859 0.205 1.335 0.205 1.1 0 2.106-0.398 2.884-1.058l-0.006 0.005c-0.024 0.418-0.037 0.908-0.037 1.401 0 1.753 0.171 3.467 0.496 5.125l-0.027-0.167c0.382 1.373 1.616 2.367 3.084 2.38h0.002c0.369-0.003 0.726-0.046 1.070-0.124l-0.033 0.006c1.919-0.171 3.431-1.705 3.567-3.619l0.001-0.012c0.188-1.088 0.502-3.593 0.673-5.125 0.008-0.065 0.034-0.123 0.072-0.171l-0.001 0.001c0.001-0.001 0.087-0.059 0.534 0.038l0.055 0.009 0.317 0.028 0.019 0.001c0.095 0.004 0.207 0.007 0.319 0.007 1.024 0 2.002-0.2 2.895-0.564l-0.051 0.018c0.805-0.373 2.256-1.29 1.993-2.087z"/>
+      <desc>Respective technology owners; SVG Repo contributors. MIT repository grant; provider icon terms: https://www.svgrepo.com/page/licensing/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/HLD-Architecture/postgresql.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <symbol fill="none" viewBox="0 0 16 16" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-51">
+      <path clip-rule="evenodd" d="M5.374 15c-.335 0-.66-.153-.874-.431l-3.254-4.172a1.15 1.15 0 01-.214-.978l1.165-5.207c.074-.345.298-.623.605-.776l4.715-2.32c.15-.078.317-.116.485-.116.168 0 .335.038.485.115L13.2 3.426c.308.153.532.432.606.777l1.165 5.207c.074.345 0 .7-.214.978L11.5 14.566c-.214.268-.54.434-.875.434h-5.25zm7.718-5.835l.031.008a.308.308 0 01.26.371.306.306 0 01-.396.223h-.004l-.003-.001-.003-.001-.03-.007-.05-.01a2.548 2.548 0 01-.274-.106 2.87 2.87 0 00-.533-.156.242.242 0 00-.171.063 4.76 4.76 0 00-.131-.023 3.972 3.972 0 01-1.764 2.212c.015.042.032.083.051.123a.239.239 0 00-.023.18c.074.17.165.332.271.484.06.078.114.16.164.244l.028.057.012.025a.306.306 0 01-.381.44.307.307 0 01-.172-.18 2.608 2.608 0 00-.01-.02l-.028-.058a2.545 2.545 0 01-.089-.28 2.835 2.835 0 00-.21-.512.242.242 0 00-.156-.095 5.926 5.926 0 01-.03-.053l-.035-.064a3.97 3.97 0 01-2.824-.007l-.069.125a.249.249 0 00-.132.064c-.104.17-.184.355-.237.548a2.525 2.525 0 01-.088.28l-.025.05-.013.027v.001a.307.307 0 11-.553-.261l.014-.03.026-.052c.05-.085.104-.166.164-.244.108-.156.2-.322.277-.496a.302.302 0 00-.028-.173l.056-.133A3.972 3.972 0 014.22 9.532l-.134.023a.34.34 0 00-.176-.062 2.872 2.872 0 00-.533.156c-.09.04-.181.075-.274.105l-.05.011-.03.007H3.02l-.002.002h-.005a.308.308 0 01-.397-.349.306.306 0 01.261-.245l.004-.001h.003l.006-.002c.024-.006.054-.014.076-.018.097-.013.195-.021.293-.023.186-.013.37-.043.549-.09a.422.422 0 00.131-.133l.128-.037a3.938 3.938 0 01.624-2.752l-.097-.087a.338.338 0 00-.062-.176 2.854 2.854 0 00-.455-.319 2.557 2.557 0 01-.254-.148 1.129 1.129 0 01-.063-.05l-.004-.004a.323.323 0 01-.076-.45.295.295 0 01.244-.107.365.365 0 01.213.08l.022.017c.016.013.034.026.046.037.071.067.139.139.202.213.125.137.263.262.412.372.056.03.121.036.182.018l.11.078a3.938 3.938 0 012.552-1.224l.007-.129a.332.332 0 00.1-.157 2.844 2.844 0 00-.034-.554 2.555 2.555 0 01-.042-.29v-.053-.025-.004-.004A.306.306 0 018 2.82a.308.308 0 01.306.337v.087a2.53 2.53 0 01-.041.29 2.85 2.85 0 00-.035.553.242.242 0 00.1.153v.007l.007.13c.967.087 1.87.522 2.54 1.223l.116-.083a.34.34 0 00.186-.02c.149-.11.287-.235.412-.373a2.53 2.53 0 01.202-.213l.051-.04.017-.014a.308.308 0 01.472.388.307.307 0 01-.09.09c-.008.005-.017.012-.025.02l-.043.033a2.549 2.549 0 01-.254.148 2.865 2.865 0 00-.455.32.24.24 0 00-.058.172 4.458 4.458 0 01-.05.044l-.058.053c.542.806.769 1.783.637 2.745l.123.036c.031.056.077.101.132.132.18.048.364.078.55.09.097.003.195.01.292.024l.058.013zm-2.875-3.1l-1.308.925-.004-.002a.27.27 0 01-.43-.205v-.001l-.091-1.598a3.183 3.183 0 011.833.882zM7.754 7.818h.492l.306.381-.11.476L8 8.886l-.443-.213-.11-.475.307-.381zM7.29 5.24c.107-.024.216-.043.326-.056l-.09 1.6-.008.004a.268.268 0 01-.293.256.27.27 0 01-.135-.05l-.002.001-1.316-.93c.419-.41.945-.696 1.518-.825zM5.296 6.663l1.201 1.071-.001.007a.269.269 0 01-.106.462l-.001.005-1.54.443a3.134 3.134 0 01.447-1.988zm1.608 2.846l-.612 1.474a3.16 3.16 0 01-1.27-1.586L6.6 9.13l.003.003a.265.265 0 01.18.029.27.27 0 01.117.341l.004.006zm1.806 1.896c-.572.13-1.17.1-1.726-.088l.777-1.4h.001a.27.27 0 01.475-.001h.006l.779 1.402a3.286 3.286 0 01-.312.087zm1.004-.416L9.096 9.5l.001-.003a.269.269 0 01.296-.37l.003-.004 1.593.269a3.147 3.147 0 01-1.275 1.597zm1.442-2.343L9.61 8.201l-.002-.006a.27.27 0 01-.185-.343.27.27 0 01.08-.12L9.5 7.73l1.195-1.067c.366.594.527 1.29.46 1.983z" fill="#000000" fill-rule="evenodd"/>
+      <desc>Respective technology owners; SVG Repo contributors. MIT repository grant; provider icon terms: https://www.svgrepo.com/page/licensing/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/HLD-Architecture/kubernetes.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.
+MIT License
+
+Copyright (c) 2022 Peng Xiao
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</desc>
+    </symbol>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#ea580c" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#7c3aed" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#ea580c" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#ea580c" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1286" height="824" rx="0" fill="#f4f5f7"/>
+  <g class="bands">
+    <rect class="band-mask" x="32" y="332" width="1222" height="432" rx="6" fill="#f4f5f7"/>
+    <rect class="frame" x="32" y="332" width="1222" height="432" rx="6" fill="rgba(148, 163, 184, 0.18)" stroke="#64748b" stroke-width="1.5"/>
+  </g>
+  <g class="lifelines">
+    <path class="lifeline" d="M114 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M301 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M480 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M655 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M841 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M1012 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M1176 112 V792" fill="none" stroke="#64748b" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations">
+    <rect class="activation-mask" x="475" y="215" width="10" height="48" rx="0" fill="#ffffff"/>
+    <rect class="activation" x="475" y="215" width="10" height="48" rx="0" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+    <rect class="activation-mask" x="296" y="167" width="10" height="144" rx="0" fill="#ffffff"/>
+    <rect class="activation" x="296" y="167" width="10" height="144" rx="0" fill="rgba(34, 211, 238, 0.15)" stroke="#0891b2" stroke-width="1.5"/>
+  </g>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="Customer" data-to="API" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M121 167 L294 167" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-0-end)"/>
+      <rect class="mask" x="165" y="140" width="84" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="207" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="207" y="155">checkout()</tspan>
+      </text>
+    </g>
+    <g class="message f-frontend" data-index="1" data-from="API" data-to="Worker" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M306 215 L473 215" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-1-end)"/>
+      <rect class="mask" x="352" y="188" width="77" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="390" y="203" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="390" y="203">process()</tspan>
+      </text>
+    </g>
+    <g class="message f-messagebus" data-index="2" data-from="Store" data-to="Analytics" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M1005 263 L848 263" fill="none" stroke="#ea580c" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-2-end)"/>
+      <rect class="mask" x="898" y="236" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="926" y="251" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#c3490a">
+        <tspan x="926" y="251">record</tspan>
+      </text>
+    </g>
+    <g class="message f-database" data-index="3" data-from="Functions" data-to="Cluster" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M662 311 L1169 311" fill="none" stroke="#7c3aed" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-3-end)"/>
+      <rect class="mask" x="860" y="284" width="111" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="915" y="299" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#7c3aed">
+        <tspan x="915" y="299">deploy request</tspan>
+      </text>
+    </g>
+    <g class="message f-frontend" data-index="4" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M308 402 L1005 402" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-4-end)"/>
+      <rect class="mask" x="631" y="375" width="50" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="656" y="390" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="656" y="390">query</tspan>
+      </text>
+    </g>
+    <g class="message f-messagebus" data-index="5" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M1005 509 L308 509" fill="none" stroke="#ea580c" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-5-end)"/>
+      <rect class="mask" x="628" y="482" width="57" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="656" y="497" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#c3490a">
+        <tspan x="656" y="497">absent</tspan>
+      </text>
+    </g>
+    <g class="message f-messagebus" data-index="6" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M1005 616 L308 616" fill="none" stroke="#ea580c" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-6-end)"/>
+      <rect class="mask" x="631" y="589" width="50" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="656" y="604" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#c3490a">
+        <tspan x="656" y="604">retry</tspan>
+      </text>
+    </g>
+    <g class="message f-frontend" data-index="7" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M308 723 L1005 723" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-7-end)"/>
+      <rect class="mask" x="631" y="696" width="50" height="23" rx="3" fill="#ffffff"/>
+      <text class="m-label" x="656" y="711" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
+        <tspan x="656" y="711">close</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="Customer">
+      <rect class="mask" x="48" y="64" width="132" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="48" y="64" width="132" height="48" rx="6" fill="rgba(34, 211, 238, 0.15)" stroke="#0891b2" stroke-width="1.5"/>
+      <text class="p-label" x="134" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="134" y="92">Customer</tspan>
+      </text>
+      <rect x="60" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:actor" color="#111827">
+        <title>zenuml:actor</title>
+        <rect x="60" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-48" x="60" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-frontend" data-id="API">
+      <rect class="mask" x="228" y="64" width="146" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="228" y="64" width="146" height="48" rx="6" fill="rgba(34, 211, 238, 0.15)" stroke="#0891b2" stroke-width="1.5"/>
+      <text class="p-label" x="321" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="321" y="92">Orders API</tspan>
+      </text>
+      <rect x="240" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:ec2" color="#111827">
+        <title>zenuml:ec2</title>
+        <rect x="240" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57" x="240" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-backend" data-id="Worker">
+      <rect class="mask" x="422" y="64" width="117" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="422" y="64" width="117" height="48" rx="6" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="p-label" x="500" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="500" y="92">Worker</tspan>
+      </text>
+      <rect x="434" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:lambda" color="#111827">
+        <title>zenuml:lambda</title>
+        <rect x="434" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56" x="434" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-database" data-id="Functions">
+      <rect class="mask" x="586" y="64" width="139" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="586" y="64" width="139" height="48" rx="6" fill="rgba(167, 139, 250, 0.2)" stroke="#7c3aed" stroke-width="1.5"/>
+      <text class="p-label" x="675" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="675" y="92">Functions</tspan>
+      </text>
+      <rect x="598" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:azurefunction" color="#111827">
+        <title>zenuml:azurefunction</title>
+        <rect x="598" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50" x="598" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-cloud" data-id="Analytics">
+      <rect class="mask" x="772" y="64" width="139" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="772" y="64" width="139" height="48" rx="6" fill="rgba(251, 191, 36, 0.18)" stroke="#d97706" stroke-width="1.5"/>
+      <text class="p-label" x="861" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="861" y="92">Analytics</tspan>
+      </text>
+      <rect x="784" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:bigquery" color="#111827">
+        <title>zenuml:bigquery</title>
+        <rect x="784" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-56" x="784" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-messagebus" data-id="Store">
+      <rect class="mask" x="958" y="64" width="109" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="958" y="64" width="109" height="48" rx="6" fill="rgba(251, 146, 60, 0.15)" stroke="#ea580c" stroke-width="1.5"/>
+      <text class="p-label" x="1032" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="1032" y="92">Store</tspan>
+      </text>
+      <rect x="970" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:postgresql" color="#111827">
+        <title>zenuml:postgresql</title>
+        <rect x="970" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-49" x="970" y="72" width="32" height="32"/>
+      </g>
+    </g>
+    <g class="participant f-frontend" data-id="Cluster">
+      <rect class="mask" x="1114" y="64" width="124" height="48" rx="6" fill="#ffffff"/>
+      <rect class="box" x="1114" y="64" width="124" height="48" rx="6" fill="rgba(34, 211, 238, 0.15)" stroke="#0891b2" stroke-width="1.5"/>
+      <text class="p-label" x="1196" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+        <tspan x="1196" y="92">Cluster</tspan>
+      </text>
+      <rect x="1126" y="72" width="32" height="32" rx="4" fill="#ffffff"/>
+      <g role="img" aria-label="zenuml:kubernetes" color="#111827">
+        <title>zenuml:kubernetes</title>
+        <rect x="1126" y="72" width="32" height="32" rx="2" fill="#ffffff"/>
+        <use href="#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-51" x="1126" y="72" width="32" height="32"/>
+      </g>
+    </g>
+  </g>
+  <g class="annotations">
+    <rect class="mask" x="40" y="340" width="37" height="23" rx="3" fill="#ffffff"/>
+    <text class="frame-label" x="58" y="355" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#111827">
+      <tspan x="58" y="355">try</tspan>
+    </text>
+    <path class="section-divider" d="M32 439 L1254 439" fill="none" stroke="#64748b" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="447" width="118" height="23" rx="3" fill="#ffffff"/>
+    <text class="section-label" x="99" y="462" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#111827">
+      <tspan x="99" y="462">catch (missing)</tspan>
+    </text>
+    <path class="section-divider" d="M32 546 L1254 546" fill="none" stroke="#64748b" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="554" width="98" height="23" rx="3" fill="#ffffff"/>
+    <text class="section-label" x="89" y="569" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#111827">
+      <tspan x="89" y="569">catch (busy)</tspan>
+    </text>
+    <path class="section-divider" d="M32 653 L1254 653" fill="none" stroke="#64748b" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="661" width="64" height="23" rx="3" fill="#ffffff"/>
+    <text class="section-label" x="72" y="676" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#111827">
+      <tspan x="72" y="676">finally</tspan>
+    </text>
+    <rect class="mask" x="32" y="16" width="1222" height="32" rx="3" fill="#ffffff"/>
+    <text class="diagram-title" x="643" y="36" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#111827">
+      <tspan x="643" y="36">Checkout interaction</tspan>
+    </text>
+  </g>
+<g data-motion-paths="true" aria-hidden="true">
+  <path id="motion-5501500e1c4c8047-0" d="M121 167 L294 167" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-1" d="M306 215 L473 215" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-2" d="M1005 263 L848 263" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-3" d="M662 311 L1169 311" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-4" d="M308 402 L1005 402" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-5" d="M1005 509 L308 509" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-6" d="M1005 616 L308 616" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-5501500e1c4c8047-7" d="M308 723 L1005 723" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+</g>
+</svg>
+</div>
+<script type="application/json" data-motion-data>{"version":1,"step_limit":100000,"view_id":"sequence","kind":"sequence","canonical":"\u003csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1286 824\" width=\"1286\" height=\"824\" role=\"img\" data-diagram=\"sequence\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-diagram\"\u003e\n  \u003ctitle\u003eCheckout interaction\u003c/title\u003e\n  \u003cdesc\u003eSequence diagram with 7 participants (Customer, API, Worker, Functions, Analytics, Store, Cluster) and 8 messages.\u003c/desc\u003e\n  \u003cdefs\u003e\n    \u003csymbol fill=\"none\" viewBox=\"0 0 24 24\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-48\"\u003e\n      \u003cg\u003e\n        \u003cpath d=\"M15.5489 4.19771C15.5489 5.18773 15.1485 6.13721 14.4358 6.83726C13.7231 7.53731 12.7565 7.93058 11.7486 7.93058C10.7407 7.93058 9.77403 7.53731 9.06133 6.83726C8.34863 6.13721 7.94824 5.18773 7.94824 4.19771C7.94824 3.20768 8.34863 2.25822 9.06133 1.55818C9.77403 0.858126 10.7407 0.464844 11.7486 0.464844C12.7565 0.464844 13.7231 0.858126 14.4358 1.55818C15.1485 2.25822 15.5489 3.20768 15.5489 4.19771Z\" stroke=\"currentColor\"/\u003e\n        \u003cpath d=\"M6.54883 11.2152L17.2025 11.2073M11.7471 8.06641V19.5806V8.06641ZM11.7471 19.4385L6.79789 23.5738L11.7471 19.4385ZM11.7551 19.4385L17.1864 23.3055L11.7551 19.4385Z\" stroke=\"currentColor\"/\u003e\n      \u003c/g\u003e\n      \u003cdesc\u003ePeng Xiao. MIT repository grant; provider icon terms: MIT. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/actor.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol viewBox=\"0 0 48 48\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57\"\u003e\n      \u003cg fill=\"none\" fill-rule=\"evenodd\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57-i2\" stroke=\"none\" stroke-width=\"1\"\u003e\n        \u003cpath d=\"M9,39 L39,39 L39,9 L9,9 L9,39 Z M46,13 L46,11 L41,11 L41,8 C41,7.448 40.552,7 40,7 L37,7 L37,2 L35,2 L35,7 L31,7 L31,2 L29,2 L29,7 L25,7 L25,2 L23,2 L23,7 L19,7 L19,2 L17,2 L17,7 L13,7 L13,2 L11,2 L11,7 L8,7 C7.447,7 7,7.448 7,8 L7,11 L2,11 L2,13 L7,13 L7,17 L2,17 L2,19 L7,19 L7,23 L2,23 L2,25 L7,25 L7,29 L2,29 L2,31 L7,31 L7,35 L2,35 L2,37 L7,37 L7,40 C7,40.553 7.447,41 8,41 L11,41 L11,46 L13,46 L13,41 L17,41 L17,46 L19,46 L19,41 L23,41 L23,46 L25,46 L25,41 L29,41 L29,46 L31,46 L31,41 L35,41 L35,46 L37,46 L37,41 L40,41 C40.552,41 41,40.553 41,40 L41,37 L46,37 L46,35 L41,35 L41,31 L46,31 L46,29 L41,29 L41,25 L46,25 L46,23 L41,23 L41,19 L46,19 L46,17 L41,17 L41,13 L46,13 Z\" fill=\"#ED7100\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57-i3\"/\u003e\n      \u003c/g\u003e\n      \u003cdesc\u003eAmazon Web Services. MIT repository grant; provider icon terms: https://aws.amazon.com/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/AWS-Asset-Package_02062024/Resource-Icons_01312024/Res_Compute/Res_Amazon-EC2_Instance_48.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol viewBox=\"0 0 48 48\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56\"\u003e\n      \u003cg fill=\"none\" fill-rule=\"evenodd\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56-i2\" stroke=\"none\" stroke-width=\"1\"\u003e\n        \u003cpath d=\"M24,44 C12.972,44 4,35.028 4,24 C4,12.972 12.972,4 24,4 C35.028,4 44,12.972 44,24 C44,35.028 35.028,44 24,44 L24,44 Z M24,2 C11.869,2 2,11.869 2,24 C2,36.131 11.869,46 24,46 C36.131,46 46,36.131 46,24 C46,11.869 36.131,2 24,2 L24,2 Z M17.231,35.25 L11.876,35.25 L18.221,21.959 L20.902,27.492 L17.231,35.25 Z M19.114,19.215 C18.946,18.87 18.597,18.651 18.214,18.651 L18.211,18.651 C17.826,18.652 17.477,18.874 17.312,19.221 L9.389,35.819 C9.24,36.129 9.262,36.493 9.445,36.783 C9.628,37.074 9.947,37.25 10.291,37.25 L17.864,37.25 C18.251,37.25 18.603,37.027 18.769,36.678 L22.915,27.915 C23.044,27.642 23.043,27.323 22.911,27.051 L19.114,19.215 Z M36.125,35.25 L30.673,35.25 L20.761,13.953 C20.597,13.601 20.243,13.375 19.854,13.375 L16.251,13.375 L16.255,9.25 L23.475,9.25 L33.339,30.545 C33.503,30.898 33.856,31.125 34.246,31.125 L36.125,31.125 L36.125,35.25 Z M37.125,29.125 L34.885,29.125 L25.021,7.83 C24.856,7.477 24.503,7.25 24.113,7.25 L15.256,7.25 C14.704,7.25 14.257,7.697 14.256,8.249 L14.25,14.374 C14.25,14.64 14.355,14.894 14.543,15.082 C14.73,15.27 14.984,15.375 15.25,15.375 L19.217,15.375 L29.129,36.672 C29.293,37.024 29.646,37.25 30.035,37.25 L37.125,37.25 C37.678,37.25 38.125,36.803 38.125,36.25 L38.125,30.125 C38.125,29.572 37.678,29.125 37.125,29.125 L37.125,29.125 Z\" fill=\"#ED7100\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56-i3\"/\u003e\n      \u003c/g\u003e\n      \u003cdesc\u003eAmazon Web Services. MIT repository grant; provider icon terms: https://aws.amazon.com/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/AWS-Asset-Package_02062024/Resource-Icons_01312024/Res_Compute/Res_AWS-Lambda_Lambda-Function_48.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol viewBox=\"0 0 18 18\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50\"\u003e\n      \u003cdefs\u003e\n        \u003clinearGradient gradientTransform=\"translate(212.573 370.548) scale(1.156 1.029)\" gradientUnits=\"userSpaceOnUse\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50-i2\" x1=\"-175.993\" x2=\"-175.993\" y1=\"-343.723\" y2=\"-359.232\"\u003e\n          \u003cstop offset=\"0\" stop-color=\"#fea11b\"/\u003e\n          \u003cstop offset=\"0.284\" stop-color=\"#fea51a\"/\u003e\n          \u003cstop offset=\"0.547\" stop-color=\"#feb018\"/\u003e\n          \u003cstop offset=\"0.8\" stop-color=\"#ffc314\"/\u003e\n          \u003cstop offset=\"1\" stop-color=\"#ffd70f\"/\u003e\n        \u003c/linearGradient\u003e\n      \u003c/defs\u003e\n      \u003cg\u003e\n        \u003cpath d=\"M2.37,7.475H3.2a.267.267,0,0,1,.267.267v6.148a.533.533,0,0,1-.533.533H2.1a0,0,0,0,1,0,0V7.741a.267.267,0,0,1,.267-.267Z\" fill=\"#50e6ff\" transform=\"translate(12.507 16.705) rotate(134.919)\"/\u003e\n        \u003cpath d=\"M2.325,3.6h.833a.267.267,0,0,1,.267.267v6.583a0,0,0,0,1,0,0H2.591a.533.533,0,0,1-.533-.533V3.865A.267.267,0,0,1,2.325,3.6Z\" fill=\"#1490df\" transform=\"translate(5.759 0.114) rotate(44.919)\"/\u003e\n      \u003c/g\u003e\n      \u003cg\u003e\n        \u003cpath d=\"M14.53,7.475h.833a.533.533,0,0,1,.533.533v6.148a.267.267,0,0,1-.267.267H14.8a.267.267,0,0,1-.267-.267V7.475a0,0,0,0,1,0,0Z\" fill=\"#50e6ff\" transform=\"translate(12.223 -7.555) rotate(45.081)\"/\u003e\n        \u003cpath d=\"M15.108,3.6h.833a0,0,0,0,1,0,0v6.583a.267.267,0,0,1-.267.267h-.833a.267.267,0,0,1-.267-.267V4.131a.533.533,0,0,1,.533-.533Z\" fill=\"#1490df\" transform=\"translate(31.022 1.222) rotate(135.081)\"/\u003e\n      \u003c/g\u003e\n      \u003cpath d=\"M8.459,9.9H4.87a.193.193,0,0,1-.2-.181.166.166,0,0,1,.018-.075L8.991,1.13a.206.206,0,0,1,.186-.106h4.245a.193.193,0,0,1,.2.181.165.165,0,0,1-.035.1L8.534,7.966h4.928a.193.193,0,0,1,.2.181.176.176,0,0,1-.052.122L5.421,16.788c-.077.046-.624.5-.356-.189h0Z\" fill=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50-i2)\"/\u003e\n      \u003cdesc\u003eMicrosoft. MIT repository grant; provider icon terms: https://learn.microsoft.com/en-us/azure/architecture/icons/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/Azure_Public_Service_Icons/Icons/Compute/10029-icon-service-Function-Apps.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol viewBox=\"0 0 24 24\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-56\"\u003e\n      \u003cdefs/\u003e\n      \u003cg\u003e\n        \u003cg\u003e\n          \u003cpath d=\"M6.73,10.83v2.63A4.91,4.91,0,0,0,8.44,15.2V10.83Z\" fill=\"#aecbfa\" fill-rule=\"evenodd\"/\u003e\n          \u003cpath d=\"M9.89,8.41v7.53A7.62,7.62,0,0,0,11,16,8,8,0,0,0,12,16V8.41Z\" fill=\"#669df6\" fill-rule=\"evenodd\"/\u003e\n          \u003cpath d=\"M13.64,11.86v3.29a5,5,0,0,0,1.7-1.82V11.86Z\" fill=\"#aecbfa\" fill-rule=\"evenodd\"/\u003e\n          \u003cpath d=\"M17.74,16.32l-1.42,1.42a.42.42,0,0,0,0,.6l3.54,3.54a.42.42,0,0,0,.59,0l1.43-1.43a.42.42,0,0,0,0-.59l-3.54-3.54a.42.42,0,0,0-.6,0\" fill=\"#4285f4\" fill-rule=\"evenodd\"/\u003e\n          \u003cpath d=\"M11,2a9,9,0,1,0,9,9,9,9,0,0,0-9-9m0,15.69A6.68,6.68,0,1,1,17.69,11,6.68,6.68,0,0,1,11,17.69\" fill=\"#669df6\" fill-rule=\"evenodd\"/\u003e\n        \u003c/g\u003e\n      \u003c/g\u003e\n      \u003cdesc\u003eGoogle. MIT repository grant; provider icon terms: https://cloud.google.com/icons. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/google-cloud-icons/bigquery/bigquery.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol fill=\"#000000\" viewBox=\"0 0 32 32\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-49\"\u003e\n      \u003cpath d=\"M24.295 9.929c-0.010 0.155-0.082 0.292-0.191 0.387l-0.001 0.001c-0.131 0.143-0.306 0.243-0.504 0.278l-0.005 0.001c-0.028 0.004-0.061 0.007-0.094 0.007h-0c-0.001 0-0.003 0-0.004 0-0.312 0-0.58-0.189-0.694-0.46l-0.002-0.005c-0.030-0.221 0.33-0.388 0.701-0.44s0.764 0.011 0.794 0.231zM14.385 10.443c-0.121 0.311-0.418 0.528-0.766 0.528-0.004 0-0.007-0-0.011-0h0.001c-0 0-0 0-0 0-0.036 0-0.070-0.003-0.105-0.007l0.004 0c-0.261-0.047-0.483-0.191-0.63-0.392l-0.002-0.003c-0.082-0.094-0.132-0.219-0.132-0.354 0-0 0-0.001 0-0.001v0c0.012-0.077 0.055-0.143 0.115-0.185l0.001-0.001c0.152-0.084 0.334-0.133 0.528-0.133 0.083 0 0.164 0.009 0.242 0.026l-0.007-0.001c0.395 0.055 0.803 0.242 0.764 0.523zM25.403 18.086l-0.107-0.134-0.044-0.055c0.457-0.846 0.725-1.853 0.725-2.921 0-0.488-0.056-0.962-0.162-1.418l0.008 0.042c-0.070-0.453-0.111-0.976-0.111-1.508 0-0.007 0-0.014 0-0.021v0.001c0.023-0.501 0.076-0.97 0.158-1.429l-0.010 0.066c0.089-0.464 0.14-0.998 0.14-1.544 0-0.051-0-0.101-0.001-0.151l0 0.008c0.012-0.049 0.019-0.104 0.019-0.162 0-0.027-0.002-0.053-0.004-0.079l0 0.003c-0.4-1.58-1.151-2.949-2.168-4.073l0.007 0.008c-0.911-1.068-2.031-1.929-3.3-2.523l-0.060-0.025c0.696-0.149 1.496-0.234 2.316-0.234 0.075 0 0.15 0.001 0.225 0.002l-0.011-0c0.045-0.001 0.097-0.002 0.15-0.002 2.378 0 4.496 1.109 5.866 2.838l0.012 0.016c0.028 0.036 0.056 0.077 0.080 0.12l0.003 0.005c0.904 1.694-0.345 7.842-3.732 13.172zM25.117 9.322c-0.016 0.455-0.064 0.886-0.14 1.307l0.008-0.055c-0.078 0.425-0.134 0.931-0.157 1.445l-0.001 0.025c-0 0.017-0 0.036-0 0.056 0 0.567 0.042 1.124 0.124 1.668l-0.008-0.061c0.085 0.377 0.134 0.809 0.134 1.254 0 0.763-0.144 1.493-0.407 2.162l0.014-0.040c-0.076-0.131-0.155-0.289-0.224-0.453l-0.011-0.029c-0.066-0.159-0.209-0.416-0.406-0.77-0.769-1.38-2.571-4.611-1.649-5.929 0.474-0.678 1.676-0.707 2.722-0.579zM24.406 20.907c-0.051-1.039 0.336-1.148 0.746-1.263q0.085-0.023 0.169-0.051c0.050 0.044 0.105 0.087 0.162 0.125l0.005 0.003c0.62 0.273 1.342 0.431 2.102 0.431 0.592 0 1.161-0.096 1.693-0.274l-0.038 0.011c-0.344 0.293-0.736 0.544-1.16 0.738l-0.031 0.013c-0.644 0.264-1.391 0.429-2.173 0.454l-0.010 0c-0.119 0.018-0.256 0.029-0.395 0.029-0.386 0-0.754-0.080-1.087-0.224l0.018 0.007zM23.293 22.933c-0.021 0.221-0.045 0.47-0.077 0.745l-0.182 0.548c-0.014 0.040-0.022 0.086-0.023 0.134v0c0.001 0.027 0.001 0.058 0.001 0.089 0 0.355-0.053 0.699-0.151 1.022l0.006-0.025c-0.116 0.389-0.196 0.84-0.223 1.305l-0.001 0.016c-0.052 1.684-1.355 3.047-3.008 3.194l-0.013 0.001c-1.894 0.406-2.23-0.621-2.526-1.527q-0.045-0.142-0.096-0.283c-0.16-0.652-0.252-1.401-0.252-2.171 0-0.36 0.020-0.715 0.059-1.065l-0.004 0.043c0.006-0.128 0.009-0.279 0.009-0.43 0-1.026-0.154-2.016-0.441-2.948l0.019 0.071q0.008-0.55 0.024-1.114c0-0.003 0-0.008 0-0.012 0-0.046-0.007-0.090-0.020-0.132l0.001 0.003c-0.014-0.1-0.033-0.188-0.058-0.273l0.003 0.013c-0.141-0.521-0.496-0.941-0.964-1.164l-0.011-0.005c-0.176-0.088-0.384-0.14-0.605-0.14-0.104 0-0.205 0.011-0.302 0.033l0.009-0.002c0.128-0.47 0.26-0.854 0.412-1.228l-0.026 0.073 0.066-0.177c0.074-0.2 0.167-0.407 0.266-0.626 0.546-1.124 0.865-2.445 0.865-3.841 0-0.938-0.144-1.842-0.411-2.692l0.017 0.063c-0.183-1.108-1.135-1.943-2.281-1.943-0.18 0-0.356 0.021-0.524 0.060l0.016-0.003c-0.796 0.104-1.516 0.338-2.171 0.682l0.035-0.017q-0.124 0.063-0.245 0.13c0.091-2.147 0.896-4.090 2.181-5.615l-0.012 0.014c0.118-0.119 0.242-0.232 0.37-0.338l0.009-0.007c0.069-0.014 0.13-0.042 0.182-0.081l-0.001 0.001c0.893-0.654 2.014-1.047 3.227-1.047 0.097 0 0.193 0.002 0.288 0.007l-0.013-0.001c0.526 0.008 1.034 0.044 1.534 0.108l-0.067-0.007c2.043 0.393 3.787 1.463 5.032 2.963l0.011 0.014c0.748 0.869 1.354 1.887 1.766 2.998l0.022 0.069c-0.257-0.069-0.552-0.109-0.856-0.109-0.983 0-1.868 0.416-2.49 1.081l-0.002 0.002c-1.24 1.773 0.679 5.215 1.601 6.869 0.169 0.303 0.315 0.565 0.361 0.676 0.26 0.601 0.587 1.118 0.98 1.577l-0.007-0.008c0.087 0.109 0.171 0.214 0.236 0.306-0.501 0.144-1.401 0.478-1.319 2.146-0.015 0.195-0.053 0.558-0.104 1.018-0.054 0.269-0.098 0.597-0.123 0.93l-0.002 0.028zM14.091 17.219l-0.066 0.176c-0.137 0.328-0.279 0.745-0.397 1.172l-0.019 0.081c-0.893-0.013-1.695-0.395-2.261-1.001l-0.002-0.002c-0.632-0.667-1.020-1.57-1.020-2.564 0-0.198 0.015-0.392 0.045-0.582l-0.003 0.021c0.097-0.72 0.153-1.551 0.153-2.396 0-0.502-0.020-0.999-0.058-1.491l0.004 0.065c-0.006-0.107-0.012-0.201-0.015-0.275 0.805-0.611 1.824-0.98 2.929-0.98 0.132 0 0.262 0.005 0.391 0.015l-0.017-0.001c0.554 0.129 0.971 0.588 1.037 1.153l0.001 0.006c0.238 0.728 0.375 1.566 0.375 2.435 0 1.266-0.291 2.464-0.809 3.532l0.021-0.048c-0.105 0.233-0.204 0.453-0.289 0.682zM11.474 22.203c-0.205-0.052-0.385-0.128-0.549-0.227l0.009 0.005c0.172-0.073 0.375-0.134 0.585-0.173l0.019-0.003c1.604-0.33 1.851-0.563 2.392-1.25 0.124-0.157 0.264-0.336 0.459-0.553 0.040-0.045 0.072-0.099 0.091-0.159l0.001-0.003c0.213-0.189 0.34-0.137 0.546-0.052 0.227 0.125 0.395 0.336 0.46 0.587l0.001 0.007c0.023 0.065 0.037 0.139 0.037 0.217 0 0.125-0.035 0.242-0.095 0.341l0.002-0.003c-0.645 0.882-1.676 1.449-2.839 1.449-0.4 0-0.785-0.067-1.144-0.191l0.025 0.007zM3.967 15.846c-0.651-1.985-1.181-4.34-1.494-6.764l-0.021-0.199c-0.061-0.322-0.095-0.693-0.095-1.071 0-1.806 0.789-3.427 2.041-4.537l0.006-0.005c2.295-1.623 6.048-0.676 7.633-0.163l-0.012 0.012c-1.535 1.872-2.466 4.292-2.466 6.928 0 0.090 0.001 0.18 0.003 0.27l-0-0.013c-0 0.103 0.008 0.249 0.020 0.449 0.033 0.41 0.052 0.888 0.052 1.371 0 0.802-0.052 1.592-0.154 2.367l0.010-0.091c-0.033 0.206-0.051 0.444-0.051 0.686 0 1.231 0.482 2.35 1.269 3.177l-0.002-0.002q0.151 0.158 0.315 0.297c-0.433 0.464-1.375 1.49-2.377 2.696-0.709 0.853-1.199 0.689-1.36 0.636-0.685-0.368-1.222-0.939-1.538-1.631l-0.009-0.022c-0.684-1.252-1.286-2.708-1.73-4.232l-0.039-0.157zM30.445 19.403c-0.019-0.057-0.043-0.106-0.072-0.151l0.002 0.003c-0.174-0.329-0.596-0.427-1.259-0.29-2.066 0.426-2.866 0.164-3.156-0.024 1.617-2.452 2.918-5.292 3.751-8.326l0.049-0.209c0.339-1.313 0.997-4.403 0.153-5.913-0.059-0.112-0.122-0.208-0.192-0.298l0.003 0.004c-1.563-1.955-3.948-3.196-6.623-3.196-0.076 0-0.152 0.001-0.227 0.003l0.011-0c-0.042-0.001-0.091-0.001-0.141-0.001-1.342 0-2.633 0.22-3.838 0.625l0.085-0.025q-0.321-0.060-0.645-0.102c-0.488-0.093-1.053-0.151-1.631-0.16l-0.008-0c-0.083-0.004-0.18-0.006-0.278-0.006-1.315 0-2.538 0.394-3.557 1.071l0.024-0.015c-1.071-0.401-5.984-2.056-9.025 0.098-1.489 1.27-2.426 3.147-2.426 5.244 0 0.405 0.035 0.802 0.102 1.188l-0.006-0.041c0.335 2.698 0.879 5.126 1.632 7.461l-0.079-0.284c0.493 1.716 1.103 3.201 1.852 4.6l-0.061-0.124c0.433 0.984 1.182 1.764 2.116 2.225l0.026 0.012c0.168 0.049 0.361 0.078 0.561 0.078 0.742 0 1.392-0.391 1.756-0.979l0.005-0.009c1.001-1.204 1.987-2.282 2.43-2.758 0.502 0.279 1.097 0.451 1.731 0.471l0.006 0 0.001 0.005q-0.158 0.188-0.309 0.382c-0.424 0.538-0.512 0.649-1.875 0.93-0.388 0.080-1.418 0.292-1.433 1.014-0 0.004-0 0.008-0 0.013 0 0.147 0.043 0.284 0.117 0.399l-0.002-0.003c0.312 0.395 0.751 0.678 1.254 0.788l0.015 0.003c0.399 0.13 0.859 0.205 1.335 0.205 1.1 0 2.106-0.398 2.884-1.058l-0.006 0.005c-0.024 0.418-0.037 0.908-0.037 1.401 0 1.753 0.171 3.467 0.496 5.125l-0.027-0.167c0.382 1.373 1.616 2.367 3.084 2.38h0.002c0.369-0.003 0.726-0.046 1.070-0.124l-0.033 0.006c1.919-0.171 3.431-1.705 3.567-3.619l0.001-0.012c0.188-1.088 0.502-3.593 0.673-5.125 0.008-0.065 0.034-0.123 0.072-0.171l-0.001 0.001c0.001-0.001 0.087-0.059 0.534 0.038l0.055 0.009 0.317 0.028 0.019 0.001c0.095 0.004 0.207 0.007 0.319 0.007 1.024 0 2.002-0.2 2.895-0.564l-0.051 0.018c0.805-0.373 2.256-1.29 1.993-2.087z\"/\u003e\n      \u003cdesc\u003eRespective technology owners; SVG Repo contributors. MIT repository grant; provider icon terms: https://www.svgrepo.com/page/licensing/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/HLD-Architecture/postgresql.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003csymbol fill=\"none\" viewBox=\"0 0 16 16\" id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-51\"\u003e\n      \u003cpath clip-rule=\"evenodd\" d=\"M5.374 15c-.335 0-.66-.153-.874-.431l-3.254-4.172a1.15 1.15 0 01-.214-.978l1.165-5.207c.074-.345.298-.623.605-.776l4.715-2.32c.15-.078.317-.116.485-.116.168 0 .335.038.485.115L13.2 3.426c.308.153.532.432.606.777l1.165 5.207c.074.345 0 .7-.214.978L11.5 14.566c-.214.268-.54.434-.875.434h-5.25zm7.718-5.835l.031.008a.308.308 0 01.26.371.306.306 0 01-.396.223h-.004l-.003-.001-.003-.001-.03-.007-.05-.01a2.548 2.548 0 01-.274-.106 2.87 2.87 0 00-.533-.156.242.242 0 00-.171.063 4.76 4.76 0 00-.131-.023 3.972 3.972 0 01-1.764 2.212c.015.042.032.083.051.123a.239.239 0 00-.023.18c.074.17.165.332.271.484.06.078.114.16.164.244l.028.057.012.025a.306.306 0 01-.381.44.307.307 0 01-.172-.18 2.608 2.608 0 00-.01-.02l-.028-.058a2.545 2.545 0 01-.089-.28 2.835 2.835 0 00-.21-.512.242.242 0 00-.156-.095 5.926 5.926 0 01-.03-.053l-.035-.064a3.97 3.97 0 01-2.824-.007l-.069.125a.249.249 0 00-.132.064c-.104.17-.184.355-.237.548a2.525 2.525 0 01-.088.28l-.025.05-.013.027v.001a.307.307 0 11-.553-.261l.014-.03.026-.052c.05-.085.104-.166.164-.244.108-.156.2-.322.277-.496a.302.302 0 00-.028-.173l.056-.133A3.972 3.972 0 014.22 9.532l-.134.023a.34.34 0 00-.176-.062 2.872 2.872 0 00-.533.156c-.09.04-.181.075-.274.105l-.05.011-.03.007H3.02l-.002.002h-.005a.308.308 0 01-.397-.349.306.306 0 01.261-.245l.004-.001h.003l.006-.002c.024-.006.054-.014.076-.018.097-.013.195-.021.293-.023.186-.013.37-.043.549-.09a.422.422 0 00.131-.133l.128-.037a3.938 3.938 0 01.624-2.752l-.097-.087a.338.338 0 00-.062-.176 2.854 2.854 0 00-.455-.319 2.557 2.557 0 01-.254-.148 1.129 1.129 0 01-.063-.05l-.004-.004a.323.323 0 01-.076-.45.295.295 0 01.244-.107.365.365 0 01.213.08l.022.017c.016.013.034.026.046.037.071.067.139.139.202.213.125.137.263.262.412.372.056.03.121.036.182.018l.11.078a3.938 3.938 0 012.552-1.224l.007-.129a.332.332 0 00.1-.157 2.844 2.844 0 00-.034-.554 2.555 2.555 0 01-.042-.29v-.053-.025-.004-.004A.306.306 0 018 2.82a.308.308 0 01.306.337v.087a2.53 2.53 0 01-.041.29 2.85 2.85 0 00-.035.553.242.242 0 00.1.153v.007l.007.13c.967.087 1.87.522 2.54 1.223l.116-.083a.34.34 0 00.186-.02c.149-.11.287-.235.412-.373a2.53 2.53 0 01.202-.213l.051-.04.017-.014a.308.308 0 01.472.388.307.307 0 01-.09.09c-.008.005-.017.012-.025.02l-.043.033a2.549 2.549 0 01-.254.148 2.865 2.865 0 00-.455.32.24.24 0 00-.058.172 4.458 4.458 0 01-.05.044l-.058.053c.542.806.769 1.783.637 2.745l.123.036c.031.056.077.101.132.132.18.048.364.078.55.09.097.003.195.01.292.024l.058.013zm-2.875-3.1l-1.308.925-.004-.002a.27.27 0 01-.43-.205v-.001l-.091-1.598a3.183 3.183 0 011.833.882zM7.754 7.818h.492l.306.381-.11.476L8 8.886l-.443-.213-.11-.475.307-.381zM7.29 5.24c.107-.024.216-.043.326-.056l-.09 1.6-.008.004a.268.268 0 01-.293.256.27.27 0 01-.135-.05l-.002.001-1.316-.93c.419-.41.945-.696 1.518-.825zM5.296 6.663l1.201 1.071-.001.007a.269.269 0 01-.106.462l-.001.005-1.54.443a3.134 3.134 0 01.447-1.988zm1.608 2.846l-.612 1.474a3.16 3.16 0 01-1.27-1.586L6.6 9.13l.003.003a.265.265 0 01.18.029.27.27 0 01.117.341l.004.006zm1.806 1.896c-.572.13-1.17.1-1.726-.088l.777-1.4h.001a.27.27 0 01.475-.001h.006l.779 1.402a3.286 3.286 0 01-.312.087zm1.004-.416L9.096 9.5l.001-.003a.269.269 0 01.296-.37l.003-.004 1.593.269a3.147 3.147 0 01-1.275 1.597zm1.442-2.343L9.61 8.201l-.002-.006a.27.27 0 01-.185-.343.27.27 0 01.08-.12L9.5 7.73l1.195-1.067c.366.594.527 1.29.46 1.983z\" fill=\"#000000\" fill-rule=\"evenodd\"/\u003e\n      \u003cdesc\u003eRespective technology owners; SVG Repo contributors. MIT repository grant; provider icon terms: https://www.svgrepo.com/page/licensing/. Source: https://github.com/mermaid-js/zenuml-core/blob/e3f93e0eb65d23fa3520e8691a5bca883853aa4b/src/assets/HLD-Architecture/kubernetes.svg. Normalization preserves geometry, expands CSS classes and scopes IDs.\nMIT License\n\nCopyright (c) 2022 Peng Xiao\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\u003c/desc\u003e\n    \u003c/symbol\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-0-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0 L-9,4 z\" fill=\"#0891b2\" stroke=\"#0891b2\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-1-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0 L-9,4 z\" fill=\"#0891b2\" stroke=\"#0891b2\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-2-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-3-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-4-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-5-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-6-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-7-end\" viewBox=\"-10 -5 15 10\" refX=\"0\" refY=\"0\" markerWidth=\"15\" markerHeight=\"10\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9,-4 L0,0\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\"/\u003e\n    \u003c/marker\u003e\n  \u003c/defs\u003e\n  \u003crect class=\"bg\" x=\"0\" y=\"0\" width=\"1286\" height=\"824\" rx=\"0\" fill=\"#f4f5f7\"/\u003e\n  \u003cg class=\"bands\"\u003e\n    \u003crect class=\"band-mask\" x=\"32\" y=\"332\" width=\"1222\" height=\"432\" rx=\"6\" fill=\"#f4f5f7\"/\u003e\n    \u003crect class=\"frame\" x=\"32\" y=\"332\" width=\"1222\" height=\"432\" rx=\"6\" fill=\"rgba(148, 163, 184, 0.18)\" stroke=\"#64748b\" stroke-width=\"1.5\"/\u003e\n  \u003c/g\u003e\n  \u003cg class=\"lifelines\"\u003e\n    \u003cpath class=\"lifeline\" d=\"M114 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M301 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M480 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M655 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M841 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M1012 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n    \u003cpath class=\"lifeline\" d=\"M1176 112 V792\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"0.8\" stroke-dasharray=\"3 7\"/\u003e\n  \u003c/g\u003e\n  \u003cg class=\"activations\"\u003e\n    \u003crect class=\"activation-mask\" x=\"475\" y=\"215\" width=\"10\" height=\"48\" rx=\"0\" fill=\"#ffffff\"/\u003e\n    \u003crect class=\"activation\" x=\"475\" y=\"215\" width=\"10\" height=\"48\" rx=\"0\" fill=\"rgba(52, 211, 153, 0.18)\" stroke=\"#059669\" stroke-width=\"1.5\"/\u003e\n    \u003crect class=\"activation-mask\" x=\"296\" y=\"167\" width=\"10\" height=\"144\" rx=\"0\" fill=\"#ffffff\"/\u003e\n    \u003crect class=\"activation\" x=\"296\" y=\"167\" width=\"10\" height=\"144\" rx=\"0\" fill=\"rgba(34, 211, 238, 0.15)\" stroke=\"#0891b2\" stroke-width=\"1.5\"/\u003e\n  \u003c/g\u003e\n  \u003cg class=\"messages\"\u003e\n    \u003cg class=\"message f-frontend\" data-index=\"0\" data-from=\"Customer\" data-to=\"API\" data-sender-head=\"none\" data-receiver-head=\"arrow\"\u003e\n      \u003cpath class=\"m-line\" d=\"M121 167 L294 167\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-0-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"165\" y=\"140\" width=\"84\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"207\" y=\"155\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#077995\"\u003e\n        \u003ctspan x=\"207\" y=\"155\"\u003echeckout()\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-frontend\" data-index=\"1\" data-from=\"API\" data-to=\"Worker\" data-sender-head=\"none\" data-receiver-head=\"arrow\"\u003e\n      \u003cpath class=\"m-line\" d=\"M306 215 L473 215\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-1-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"352\" y=\"188\" width=\"77\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"390\" y=\"203\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#077995\"\u003e\n        \u003ctspan x=\"390\" y=\"203\"\u003eprocess()\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-messagebus\" data-index=\"2\" data-from=\"Store\" data-to=\"Analytics\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M1005 263 L848 263\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-2-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"898\" y=\"236\" width=\"57\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"926\" y=\"251\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#c3490a\"\u003e\n        \u003ctspan x=\"926\" y=\"251\"\u003erecord\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-database\" data-index=\"3\" data-from=\"Functions\" data-to=\"Cluster\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M662 311 L1169 311\" fill=\"none\" stroke=\"#7c3aed\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-3-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"860\" y=\"284\" width=\"111\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"915\" y=\"299\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#7c3aed\"\u003e\n        \u003ctspan x=\"915\" y=\"299\"\u003edeploy request\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-frontend\" data-index=\"4\" data-from=\"API\" data-to=\"Store\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M308 402 L1005 402\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-4-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"631\" y=\"375\" width=\"50\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"656\" y=\"390\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#077995\"\u003e\n        \u003ctspan x=\"656\" y=\"390\"\u003equery\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-messagebus\" data-index=\"5\" data-from=\"Store\" data-to=\"API\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M1005 509 L308 509\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-5-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"628\" y=\"482\" width=\"57\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"656\" y=\"497\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#c3490a\"\u003e\n        \u003ctspan x=\"656\" y=\"497\"\u003eabsent\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-messagebus\" data-index=\"6\" data-from=\"Store\" data-to=\"API\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M1005 616 L308 616\" fill=\"none\" stroke=\"#ea580c\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-6-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"631\" y=\"589\" width=\"50\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"656\" y=\"604\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#c3490a\"\u003e\n        \u003ctspan x=\"656\" y=\"604\"\u003eretry\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"message f-frontend\" data-index=\"7\" data-from=\"API\" data-to=\"Store\" data-sender-head=\"none\" data-receiver-head=\"async\"\u003e\n      \u003cpath class=\"m-line\" d=\"M308 723 L1005 723\" fill=\"none\" stroke=\"#0891b2\" stroke-width=\"1.4\" marker-end=\"url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74-head-7-end)\"/\u003e\n      \u003crect class=\"mask\" x=\"631\" y=\"696\" width=\"50\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n      \u003ctext class=\"m-label\" x=\"656\" y=\"711\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#077995\"\u003e\n        \u003ctspan x=\"656\" y=\"711\"\u003eclose\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"notes\"/\u003e\n  \u003cg class=\"participants\"\u003e\n    \u003cg class=\"participant f-frontend\" data-id=\"Customer\"\u003e\n      \u003crect class=\"mask\" x=\"48\" y=\"64\" width=\"132\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"48\" y=\"64\" width=\"132\" height=\"48\" rx=\"6\" fill=\"rgba(34, 211, 238, 0.15)\" stroke=\"#0891b2\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"134\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"134\" y=\"92\"\u003eCustomer\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"60\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:actor\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:actor\u003c/title\u003e\n        \u003crect x=\"60\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-48\" x=\"60\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-frontend\" data-id=\"API\"\u003e\n      \u003crect class=\"mask\" x=\"228\" y=\"64\" width=\"146\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"228\" y=\"64\" width=\"146\" height=\"48\" rx=\"6\" fill=\"rgba(34, 211, 238, 0.15)\" stroke=\"#0891b2\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"321\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"321\" y=\"92\"\u003eOrders API\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"240\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:ec2\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:ec2\u003c/title\u003e\n        \u003crect x=\"240\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-57\" x=\"240\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-backend\" data-id=\"Worker\"\u003e\n      \u003crect class=\"mask\" x=\"422\" y=\"64\" width=\"117\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"422\" y=\"64\" width=\"117\" height=\"48\" rx=\"6\" fill=\"rgba(52, 211, 153, 0.18)\" stroke=\"#059669\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"500\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"500\" y=\"92\"\u003eWorker\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"434\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:lambda\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:lambda\u003c/title\u003e\n        \u003crect x=\"434\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-50-57-56\" x=\"434\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-database\" data-id=\"Functions\"\u003e\n      \u003crect class=\"mask\" x=\"586\" y=\"64\" width=\"139\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"586\" y=\"64\" width=\"139\" height=\"48\" rx=\"6\" fill=\"rgba(167, 139, 250, 0.2)\" stroke=\"#7c3aed\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"675\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"675\" y=\"92\"\u003eFunctions\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"598\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:azurefunction\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:azurefunction\u003c/title\u003e\n        \u003crect x=\"598\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-50\" x=\"598\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-cloud\" data-id=\"Analytics\"\u003e\n      \u003crect class=\"mask\" x=\"772\" y=\"64\" width=\"139\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"772\" y=\"64\" width=\"139\" height=\"48\" rx=\"6\" fill=\"rgba(251, 191, 36, 0.18)\" stroke=\"#d97706\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"861\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"861\" y=\"92\"\u003eAnalytics\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"784\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:bigquery\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:bigquery\u003c/title\u003e\n        \u003crect x=\"784\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-51-57-56\" x=\"784\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-messagebus\" data-id=\"Store\"\u003e\n      \u003crect class=\"mask\" x=\"958\" y=\"64\" width=\"109\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"958\" y=\"64\" width=\"109\" height=\"48\" rx=\"6\" fill=\"rgba(251, 146, 60, 0.15)\" stroke=\"#ea580c\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"1032\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"1032\" y=\"92\"\u003eStore\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"970\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:postgresql\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:postgresql\u003c/title\u003e\n        \u003crect x=\"970\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-49\" x=\"970\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n    \u003cg class=\"participant f-frontend\" data-id=\"Cluster\"\u003e\n      \u003crect class=\"mask\" x=\"1114\" y=\"64\" width=\"124\" height=\"48\" rx=\"6\" fill=\"#ffffff\"/\u003e\n      \u003crect class=\"box\" x=\"1114\" y=\"64\" width=\"124\" height=\"48\" rx=\"6\" fill=\"rgba(34, 211, 238, 0.15)\" stroke=\"#0891b2\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"p-label\" x=\"1196\" y=\"92\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n        \u003ctspan x=\"1196\" y=\"92\"\u003eCluster\u003c/tspan\u003e\n      \u003c/text\u003e\n      \u003crect x=\"1126\" y=\"72\" width=\"32\" height=\"32\" rx=\"4\" fill=\"#ffffff\"/\u003e\n      \u003cg role=\"img\" aria-label=\"zenuml:kubernetes\" color=\"#111827\"\u003e\n        \u003ctitle\u003ezenuml:kubernetes\u003c/title\u003e\n        \u003crect x=\"1126\" y=\"72\" width=\"32\" height=\"32\" rx=\"2\" fill=\"#ffffff\"/\u003e\n        \u003cuse href=\"#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-6c-69-67-68-74--icon-p-122-101-110-117-109-108-p-97-115-115-101-116-52-52-51\" x=\"1126\" y=\"72\" width=\"32\" height=\"32\"/\u003e\n      \u003c/g\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"annotations\"\u003e\n    \u003crect class=\"mask\" x=\"40\" y=\"340\" width=\"37\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n    \u003ctext class=\"frame-label\" x=\"58\" y=\"355\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"600\" fill=\"#111827\"\u003e\n      \u003ctspan x=\"58\" y=\"355\"\u003etry\u003c/tspan\u003e\n    \u003c/text\u003e\n    \u003cpath class=\"section-divider\" d=\"M32 439 L1254 439\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.4\" stroke-dasharray=\"4 4\"/\u003e\n    \u003crect class=\"mask\" x=\"40\" y=\"447\" width=\"118\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n    \u003ctext class=\"section-label\" x=\"99\" y=\"462\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#111827\"\u003e\n      \u003ctspan x=\"99\" y=\"462\"\u003ecatch (missing)\u003c/tspan\u003e\n    \u003c/text\u003e\n    \u003cpath class=\"section-divider\" d=\"M32 546 L1254 546\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.4\" stroke-dasharray=\"4 4\"/\u003e\n    \u003crect class=\"mask\" x=\"40\" y=\"554\" width=\"98\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n    \u003ctext class=\"section-label\" x=\"89\" y=\"569\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#111827\"\u003e\n      \u003ctspan x=\"89\" y=\"569\"\u003ecatch (busy)\u003c/tspan\u003e\n    \u003c/text\u003e\n    \u003cpath class=\"section-divider\" d=\"M32 653 L1254 653\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1.4\" stroke-dasharray=\"4 4\"/\u003e\n    \u003crect class=\"mask\" x=\"40\" y=\"661\" width=\"64\" height=\"23\" rx=\"3\" fill=\"#ffffff\"/\u003e\n    \u003ctext class=\"section-label\" x=\"72\" y=\"676\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"11\" font-weight=\"400\" fill=\"#111827\"\u003e\n      \u003ctspan x=\"72\" y=\"676\"\u003efinally\u003c/tspan\u003e\n    \u003c/text\u003e\n    \u003crect class=\"mask\" x=\"32\" y=\"16\" width=\"1222\" height=\"32\" rx=\"3\" fill=\"#ffffff\"/\u003e\n    \u003ctext class=\"diagram-title\" x=\"643\" y=\"36\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"12\" font-weight=\"600\" fill=\"#111827\"\u003e\n      \u003ctspan x=\"643\" y=\"36\"\u003eCheckout interaction\u003c/tspan\u003e\n    \u003c/text\u003e\n  \u003c/g\u003e\n\u003c/svg\u003e\n","accent":"#2563eb","plan":{"mode":"finite","duration_ms":"7000","steps":[{"reversed":false,"visit":false,"ordinal":0,"key":"sequence:8:sequence:0","start_ms":"0","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":1,"key":"sequence:8:sequence:2","start_ms":"1000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":2,"key":"sequence:8:sequence:4","start_ms":"2000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":3,"key":"sequence:8:sequence:6","start_ms":"3000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":4,"key":"sequence:8:sequence:8/0/0","start_ms":"4000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":5,"key":"sequence:8:sequence:8/1/0","start_ms":"5000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":6,"key":"sequence:8:sequence:8/3/0","start_ms":"6000","duration_ms":"1000","groups":[]}]},"paths":[{"label":"","reversed":false,"key":"sequence:8:sequence:0","id":"motion-5501500e1c4c8047-0","index":0,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:2","id":"motion-5501500e1c4c8047-1","index":1,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:4","id":"motion-5501500e1c4c8047-2","index":2,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:6","id":"motion-5501500e1c4c8047-3","index":3,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:8/0/0","id":"motion-5501500e1c4c8047-4","index":4,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:8/1/0","id":"motion-5501500e1c4c8047-5","index":5,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:8/2/0","id":"motion-5501500e1c4c8047-6","index":6,"kind":"sequence","connection":null},{"label":"","reversed":false,"key":"sequence:8:sequence:8/3/0","id":"motion-5501500e1c4c8047-7","index":7,"kind":"sequence","connection":null}],"node_bindings":[{"endpoint":"sequence:8:sequence:0","kind":"message","index":0},{"endpoint":"sequence:8:sequence:2","kind":"message","index":1},{"endpoint":"sequence:8:sequence:4","kind":"message","index":2},{"endpoint":"sequence:8:sequence:6","kind":"message","index":3},{"endpoint":"sequence:8:sequence:8/0/0","kind":"message","index":4},{"endpoint":"sequence:8:sequence:8/1/0","kind":"message","index":5},{"endpoint":"sequence:8:sequence:8/2/0","kind":"message","index":6},{"endpoint":"sequence:8:sequence:8/3/0","kind":"message","index":7},{"endpoint":"frame:8:sequence:8:in","kind":"frame","index":0},{"endpoint":"frame:8:sequence:8:out","kind":"frame","index":0}],"outside":[],"graph":{"nodes":[{"primary":false,"id":"control:8:sequence:start","label":"Start","kind":"control","occurrence":null,"description":""},{"primary":false,"id":"control:8:sequence:end","label":"End","kind":"control","occurrence":null,"description":""},{"primary":false,"id":"sequence:8:sequence:0","label":"Message 1: checkout()","kind":"message","occurrence":"sequence:8:sequence:0","description":""},{"primary":false,"id":"sequence:8:sequence:2","label":"Message 2: process()","kind":"message","occurrence":"sequence:8:sequence:2","description":""},{"primary":false,"id":"sequence:8:sequence:4","label":"Message 3: record","kind":"message","occurrence":"sequence:8:sequence:4","description":""},{"primary":false,"id":"sequence:8:sequence:6","label":"Message 4: deploy request","kind":"message","occurrence":"sequence:8:sequence:6","description":""},{"primary":false,"id":"frame:8:sequence:8:in","label":"try","kind":"control","occurrence":null,"description":""},{"primary":false,"id":"frame:8:sequence:8:out","label":"try","kind":"control","occurrence":null,"description":""},{"primary":false,"id":"sequence:8:sequence:8/0/0","label":"Message 5: query","kind":"message","occurrence":"sequence:8:sequence:8/0/0","description":""},{"primary":false,"id":"sequence:8:sequence:8/1/0","label":"Message 6: absent","kind":"message","occurrence":"sequence:8:sequence:8/1/0","description":""},{"primary":false,"id":"sequence:8:sequence:8/2/0","label":"Message 7: retry","kind":"message","occurrence":"sequence:8:sequence:8/2/0","description":""},{"primary":false,"id":"sequence:8:sequence:8/3/0","label":"Message 8: close","kind":"message","occurrence":"sequence:8:sequence:8/3/0","description":""}],"edges":[{"reversed":false,"kind":"order","source":"control:8:sequence:start","target":"sequence:8:sequence:0","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:0","target":"sequence:8:sequence:2","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:2","target":"sequence:8:sequence:4","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:4","target":"sequence:8:sequence:6","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:6","target":"frame:8:sequence:8:in","occurrence":null},{"reversed":false,"kind":"order","source":"frame:8:sequence:8:out","target":"control:8:sequence:end","occurrence":null},{"reversed":false,"kind":"order","source":"frame:8:sequence:8:in","target":"sequence:8:sequence:8/0/0","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:8/0/0","target":"frame:8:sequence:8:out","occurrence":null},{"reversed":false,"kind":"order","source":"frame:8:sequence:8:in","target":"sequence:8:sequence:8/1/0","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:8/1/0","target":"frame:8:sequence:8:out","occurrence":null},{"reversed":false,"kind":"order","source":"frame:8:sequence:8:in","target":"sequence:8:sequence:8/2/0","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:8/2/0","target":"frame:8:sequence:8:out","occurrence":null},{"reversed":false,"kind":"order","source":"frame:8:sequence:8:in","target":"sequence:8:sequence:8/3/0","occurrence":null},{"reversed":false,"kind":"order","source":"sequence:8:sequence:8/3/0","target":"frame:8:sequence:8:out","occurrence":null}]},"query_limits":{"nodes":10000,"edges":50000,"results":10000,"work":1000000}}</script>
+<script>(() => {
+  'use strict';
+  const root = document.currentScript.closest('[data-diagram-viewer]');
+  if (!root || root.dataset.motionReady) return;
+  root.dataset.motionReady = 'true';
+  const data = JSON.parse(root.querySelector('script[data-motion-data]').textContent);
+  const svg = root.querySelector('svg');
+  const control = name => root.querySelector(`[data-control="${name}"]`);
+  const play = control('play'), restart = control('restart'), step = control('step');
+  const speedControl = control('speed'), seek = control('seek'), positionLabel = control('position');
+  const status = control('status'), from = control('from'), to = control('to');
+  const connectionControl=control('connection'), showConnection=control('show-connection');
+  const undirectedKinds = control('undirected');
+  const messageKinds = control('messages'), direction = control('direction');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const ns = 'http://www.w3.org/2000/svg';
+  const elements = new Map([...svg.querySelectorAll('path[id]')].map(path => [path.id, path]));
+  const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
+  const nodeElements = new Map();
+  const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id'),element]));
+  const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
+  const architectureElements = new Map([...svg.querySelectorAll('.architecture-service[data-id], .architecture-junction[data-id], .architecture-group[data-id]')].map(element => [element.getAttribute('data-id'),element]));
+  const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
+  const frameElements = [...svg.querySelectorAll('rect.frame')];
+  const byData = (selector, name) => new Map([...svg.querySelectorAll(selector)].map(element => [element.getAttribute(name), element]));
+  const termElements = byData('.rr-term[data-term]', 'data-term'), rowElements = byData('.data-row[data-member]', 'data-member'), boxElements = byData('.data-box[data-node]', 'data-node');
+  const visitKeys = new Set();
+  for (const binding of data.node_bindings) {
+    const element = binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
+    if (element) nodeElements.set(binding.endpoint, element);
+    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box') visitKeys.add(binding.endpoint);
+  }
+  const structural = data.kind === 'regex' || data.kind === 'ebnf' || data.kind === 'data-tree';
+  function decode(plan) {
+    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed), visit: Boolean(item.visit) })) };
+  }
+  const authored = decode(data.plan);
+  let plan = authored, position = 0, speed = 1, playing = false, previous = null, frame = null;
+  const overlays = new Map(), highlights = new Set(), visits = new Map();
+  function clearVisits() { for (const element of visits.values()) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; } visits.clear(); }
+  function clearHighlights() { for (const element of highlights) element.classList.remove('motion-selected'); highlights.clear(); }
+  function highlight(ids) { clearHighlights(); for (const id of ids) { const element = nodeElements.get(id); if (element) { element.classList.add('motion-selected'); highlights.add(element); } } }
+  function clearOverlays() { for (const overlay of overlays.values()) overlay.group.remove(); overlays.clear(); clearVisits(); }
+  function normalize(time) {
+    if (plan.duration === 0) return 0;
+    return plan.mode === 'illustrative' ? Math.max(0, time) % plan.duration : Math.max(0, Math.min(time, plan.duration));
+  }
+  function stopFrame() { if (frame !== null) cancelAnimationFrame(frame); frame = null; previous = null; }
+  function state(message) {
+    root.dataset.playing = String(playing);
+    play.textContent = playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(playing));
+    play.disabled = plan.duration === 0; restart.disabled = plan.duration === 0; step.disabled = plan.duration === 0; seek.disabled = plan.duration === 0;
+    status.textContent = message || (playing ? (plan.mode === 'finite' ? 'Playing explicit scenario' : 'Playing illustrative flow') : plan.mode === 'finite' && position >= plan.duration ? 'Finished' : reduced.matches ? 'Paused. Reduced motion: use Step or Position.' : 'Paused');
+  }
+  function makeOverlay(item) {
+    const binding = bindings.get(item.key);
+    if (!binding || !binding.element) throw new Error('Missing validated motion binding');
+    if (binding.length === null) binding.length = binding.element.getTotalLength();
+    const group = document.createElementNS(ns, 'g');
+    group.setAttribute('class', 'motion-overlay'); group.setAttribute('aria-hidden', 'true'); group.dataset.ordinal = String(item.ordinal); group.dataset.key = item.key;
+    const path = document.createElementNS(ns, 'path'); path.setAttribute('d', binding.element.getAttribute('d'));
+    path.setAttribute('fill', 'none'); path.setAttribute('stroke', data.accent); path.setAttribute('stroke-width', '3'); path.setAttribute('stroke-opacity', '.5'); path.setAttribute('stroke-dasharray', '12 8');
+    const dot = document.createElementNS(ns, 'circle'); dot.setAttribute('r', '4'); dot.setAttribute('fill', data.accent);
+    group.append(path, dot); binding.element.parentElement.append(group);
+    const overlay = { key: item.key, group, path, dot, binding };
+    overlays.set(item.ordinal, overlay); return overlay;
+  }
+  function draw() {
+    const logical = Math.floor(normalize(position)); const active = new Set(); const keys = [];
+    for (const item of plan.steps) {
+      if (logical < item.start || logical >= item.start + item.duration) continue;
+      active.add(item.ordinal); keys.push(item.key);
+      if (item.visit) {
+        const element = nodeElements.get(item.key);
+        if (!element) throw new Error('Missing validated visit binding');
+        const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+        element.classList.add('motion-visit'); element.dataset.motionProgress = String(progress); visits.set(item.ordinal, element);
+        continue;
+      }
+      const overlay = overlays.get(item.ordinal) || makeOverlay(item);
+      const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+      const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
+      overlay.dot.setAttribute('cx', String(point.x)); overlay.dot.setAttribute('cy', String(point.y));
+      overlay.path.setAttribute('stroke-dashoffset', String(-overlay.binding.length * progress));
+      overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
+    }
+    for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }
+    for (const [ordinal, element] of visits) if (!active.has(ordinal)) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; visits.delete(ordinal); }
+    // Still startup keeps the complete static diagram without an overlay.
+    if (!playing && position === 0 && !root.dataset.inspected) clearOverlays();
+    root.dataset.position = String(logical); root.dataset.active = JSON.stringify(keys); root.dataset.finished = String(plan.mode === 'finite' && logical >= plan.duration);
+    seek.max = String(plan.duration); seek.value = String(logical);
+    positionLabel.textContent = `${logical} / ${plan.duration} ms`;
+  }
+  function advance(now) {
+    if (previous !== null) position = normalize(position + Math.max(0, now - previous) * speed);
+    previous = now;
+    if (plan.mode === 'finite' && position >= plan.duration) { playing = false; stopFrame(); state('Finished'); }
+  }
+  function tick(now) {
+    frame = null;
+    if (!playing || document.hidden || reduced.matches) { previous = null; return; }
+    advance(now); draw();
+    if (playing) frame = requestAnimationFrame(tick);
+  }
+  function schedule() { stopFrame(); if (playing && !document.hidden && !reduced.matches) frame = requestAnimationFrame(tick); }
+  function inspect(time) {
+    playing = false; stopFrame(); position = Math.max(0, Math.min(time, plan.duration)); root.dataset.inspected = 'true'; draw(); state();
+  }
+  function nextStep() {
+    const logical = Math.floor(normalize(position));
+    let next = plan.duration;
+    for (const item of plan.steps) if (item.start > logical && item.start < next) next = item.start;
+    if (plan.mode === 'illustrative' && next >= plan.duration) inspect(0); else inspect(next);
+  }
+  play.addEventListener('click', () => {
+    if (reduced.matches) { nextStep(); return; }
+    if (!playing && plan.mode === 'finite' && position >= plan.duration) position = 0;
+    const requested = !playing;
+    if (playing && previous !== null) advance(performance.now());
+    playing = requested; root.dataset.inspected = 'true'; state(); draw(); schedule();
+  });
+  restart.addEventListener('click', () => inspect(0));
+  step.addEventListener('click', nextStep);
+  speedControl.addEventListener('change', () => {
+    if (playing && previous !== null) advance(performance.now());
+    const selected = Number(speedControl.value); if ([.25, .5, 1, 1.5, 2, 4].includes(selected)) speed = selected;
+    root.dataset.speed = String(speed); previous = null; draw(); schedule();
+  });
+  seek.addEventListener('input', () => { position = Math.max(0, Math.min(Number(seek.value), plan.duration)); previous = null; root.dataset.inspected = 'true'; draw(); state(); });
+  document.addEventListener('visibilitychange', () => { schedule(); });
+  reduced.addEventListener('change', () => { if (reduced.matches) playing = false; state(); schedule(); });
+  control('download').addEventListener('click', () => {
+    const url = URL.createObjectURL(new Blob([data.canonical], { type: 'image/svg+xml;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = `${data.view_id.replace(/[^a-z0-9._-]/gi, '_') || 'diagram'}.svg`;
+    root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0);
+  });
+
+  const outside = new Set(data.outside || []);
+  const nodeIndex = new Map(data.graph.nodes.map((node, index) => [node.id, index]));
+  const outgoing = new Map(), incoming = new Map();
+  function add(table, node, kind, arc) { let kinds = table.get(node); if (!kinds) table.set(node, kinds = new Map()); let arcs = kinds.get(kind); if (!arcs) kinds.set(kind, arcs = []); arcs.push(arc); }
+  data.graph.edges.forEach((edge, index) => { const a = nodeIndex.get(edge.source), b = nodeIndex.get(edge.target); add(outgoing, a, edge.kind, [b, index]); add(incoming, b, edge.kind, [a, index]); });
+  function* arcs(node, kinds, selectedDirection) {
+    const streams = [];
+    for (const kind of kinds) {
+      if (selectedDirection !== 'reverse') { const items = outgoing.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+      if (selectedDirection !== 'forward') { const items = incoming.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+    }
+    let last = -1;
+    for (;;) {
+      let chosen = null;
+      for (const stream of streams) if (stream.next < stream.items.length && (!chosen || stream.items[stream.next][1] < chosen.items[chosen.next][1])) chosen = stream;
+      if (!chosen) return;
+      const arc = chosen.items[chosen.next++]; if (arc[1] === last) continue; last = arc[1]; yield arc;
+    }
+  }
+  function search(startId, targetId, selectedDirection, reach) {
+    const limits = data.query_limits;
+    const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
+    if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
+    const kinds = ['sequence', 'order', 'swimlane', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
+    if (!reach && start === target) return { nodes: [start], edges: [] };
+    while (at < queue.length) {
+      if (++work > limits.work) return { failure: 'Search limit exceeded: work' };
+      const current = queue[at++];
+      for (const [next, edge] of arcs(current, kinds, selectedDirection)) {
+        if (++work > limits.work || ++count > limits.edges) return { failure: 'Search limit exceeded' };
+        if (seen.has(next)) continue;
+        if (queue.length >= limits.nodes || (reach && queue.length >= limits.results)) return { failure: 'Search limit exceeded: nodes/results' };
+        seen.add(next); previous.set(next, [current, edge]); queue.push(next);
+        if (!reach && next === target) {
+          const nodes = [target], edges = []; let cursor = target;
+          while (cursor !== start) { if (nodes.length >= limits.results) return { failure: 'Search limit exceeded: results' }; const [parent, selected] = previous.get(cursor); nodes.push(parent); edges.push(selected); cursor = parent; }
+          return { nodes: nodes.reverse(), edges: edges.reverse() };
+        }
+      }
+    }
+    return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
+  }
+  for (const node of data.graph.nodes) {
+    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
+    for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
+  }
+  if ((data.kind === 'swimlane' || data.kind === 'architecture')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
+  if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
+  messageKinds.closest('label').hidden = data.kind !== 'bpmn';
+  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture');
+  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture');
+  for (const binding of data.paths) {
+    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture') continue;
+    const option=document.createElement('option'); option.value=binding.key;
+    option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
+  }
+  showConnection.disabled=connectionControl.options.length===0;
+  control('route').disabled = from.options.length === 0; control('reach').disabled = from.options.length === 0;
+  function replace(next, message) { playing = false; stopFrame(); clearOverlays(); plan = next; position = 0; root.dataset.inspected = 'true'; draw(); state(message); }
+  showConnection.addEventListener('click', () => {
+    const binding=data.paths.find(binding => binding.key===connectionControl.value);
+    if (!binding) return;
+    replace({mode:'finite',duration:1000,steps:[{ordinal:0,key:binding.key,start:0,duration:1000,groups:[],reversed:Boolean(binding.reversed)}]},'Selected connection: '+binding.connection);
+    clearHighlights(); const element=connectionElements.get(binding.connection);
+    if(element) { element.classList.add('motion-selected'); highlights.add(element); }
+    root.dataset.connection=binding.connection; root.dataset.route=JSON.stringify([binding.key]);
+  });
+  control('route').addEventListener('click', () => {
+    delete root.dataset.connection;
+    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture') ? direction.value : 'forward', false);
+    if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
+    if (structural) {
+      // Railroad routes follow drawn connectors and term visits. Hierarchy
+      // routes visit rows and boxes and follow connectors only where drawn.
+      const items = [];
+      if (data.kind === 'data-tree' && data.graph.nodes[result.nodes[0]].occurrence) items.push({ key: data.graph.nodes[result.nodes[0]].occurrence, visit: true });
+      result.edges.forEach((index, ordinal) => {
+        const key = data.graph.edges[index].occurrence;
+        if (key) items.push({ key, visit: visitKeys.has(key) });
+        const next = data.graph.nodes[result.nodes[ordinal + 1]];
+        if (data.kind === 'data-tree' && next && next.occurrence) items.push({ key: next.occurrence, visit: true });
+      });
+      if (items.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+      const steps = items.map((item, ordinal) => ({ ordinal, key: item.key, start: ordinal * 1000, duration: 1000, groups: [], reversed: false, visit: item.visit }));
+      replace({ mode: 'finite', duration: steps.length * 1000, steps }, data.kind === 'data-tree' ? `Hierarchy route: ${steps.length} steps. Containment only; equal values create no relation.` : `Structural route: ${steps.length} steps. No input is matched or parsed.`);
+      highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(items.map(item => item.key));
+      return;
+    }
+    const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
+    if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+    const steps = keys.map((key, ordinal) => {
+      const edge = data.graph.edges[result.edges[ordinal]];
+      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
+    });
+    replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);
+    highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(keys);
+  });
+  control('reach').addEventListener('click', () => {
+    const result = search(from.value, null, direction.value, true);
+    playing = false; stopFrame(); clearOverlays();
+    if (result.failure) { clearHighlights(); state(result.failure); root.dataset.reachable = '[]'; return; }
+    const ids = result.nodes.map(index => data.graph.nodes[index].id); highlight(ids); root.dataset.reachable = JSON.stringify(ids);
+    const visible = new Set(ids.map(id => nodeElements.get(id)).filter(Boolean));
+    state(`Structural reachability: ${visible.size} diagram elements. Conditions and event triggers are not evaluated.`);
+  });
+  control('clear').addEventListener('click', () => { clearHighlights(); delete root.dataset.route; delete root.dataset.connection; delete root.dataset.reachable; replace(authored, 'Paused'); delete root.dataset.inspected; draw(); });
+  root.dataset.speed = '1'; draw(); state();
+})();
+</script>
+</main></body></html>

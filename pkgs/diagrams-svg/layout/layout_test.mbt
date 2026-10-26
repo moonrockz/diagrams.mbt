@@ -7,7 +7,7 @@ fn two(label : String) -> @sequence.Sequence {
 }
 
 ///|
-fn right(r : @layout.Rect) -> Int {
+fn right(r : @layout.Rect) -> Int32 {
   r.x + r.width
 }
 
@@ -35,8 +35,9 @@ test "a box is wide enough for its label" {
 test "a long label makes a wider gap between lifelines" {
   let short = @layout.layout(two("hi"))
   let long = @layout.layout(two("x".repeat(60)))
-  let gap = (g : @layout.Geometry) => g.participants[1].lifeline_x -
-    g.participants[0].lifeline_x
+  let gap = (g : @layout.Geometry) => {
+    g.participants[1].lifeline_x - g.participants[0].lifeline_x
+  }
   assert_true(gap(long) > gap(short))
   let m = long.messages[0]
   assert_true(m.chip.x > long.participants[0].lifeline_x)
@@ -58,7 +59,7 @@ test "a message is below the boxes and ends near both lifelines" {
 }
 
 ///|
-fn right_bottom(r : @layout.Rect) -> Int {
+fn right_bottom(r : @layout.Rect) -> Int32 {
   r.y + r.height
 }
 
@@ -84,9 +85,11 @@ test "the layout of a simple diagram passes the legibility check in both palette
 test "the check finds text that is too small" {
   let g = @layout.layout(two("hello"))
   let m = g.messages[0]
-  let small = { ..m, label: { ..m.label, size: 7 } }
-  let broken = { ..g, messages: [small] }
-  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => f.rule)
+  let small = { ..m, label: { ..m.label, size: 7, }, }
+  let broken = { ..g, messages: [small], }
+  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => {
+    f.rule
+  })
   assert_eq(rules, [Size])
 }
 
@@ -94,9 +97,11 @@ test "the check finds text that is too small" {
 test "the check finds overlapping labels" {
   let g = @layout.layout(two("hello"))
   let a = g.participants[0]
-  let moved = { ..a, label: { ..a.label, box: g.participants[1].label.box } }
-  let broken = { ..g, participants: [moved, g.participants[1]] }
-  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => f.rule)
+  let moved = { ..a, label: { ..a.label, box: g.participants[1].label.box, }, }
+  let broken = { ..g, participants: [moved, g.participants[1]], }
+  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => {
+    f.rule
+  })
   assert_true(rules.contains(Overlap))
 }
 
@@ -104,9 +109,11 @@ test "the check finds overlapping labels" {
 test "the check finds a label that does not fit" {
   let g = @layout.layout(two("hello"))
   let m = g.messages[0]
-  let narrow = { ..m, chip: { ..m.chip, width: 10 } }
-  let broken = { ..g, messages: [narrow] }
-  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => f.rule)
+  let narrow = { ..m, chip: { ..m.chip, width: 10, }, }
+  let broken = { ..g, messages: [narrow], }
+  let rules = @layout.check(broken, @theme.Theme::classic().dark).map(f => {
+    f.rule
+  })
   assert_true(rules.contains(Fit))
 }
 
@@ -114,7 +121,11 @@ test "the check finds a label that does not fit" {
 test "the check finds text with low contrast" {
   let g = @layout.layout(two("hello"))
   let dark = @theme.Theme::classic().dark
-  let flat = { ..dark, text: dark.mask, frontend: { ..dark.frontend, ink: dark.mask } }
+  let flat = {
+    ..dark,
+    text: dark.mask,
+    frontend: { ..dark.frontend, ink: dark.mask, },
+  }
   let rules = @layout.check(g, flat).map(f => f.rule)
   assert_eq(rules.filter(r => r == Contrast).length(), 3)
 }
@@ -125,14 +136,27 @@ test "messages inside nested frames remain in diagram order" {
     [@sequence.Participant::new("A"), @sequence.Participant::new("B")],
     [
       Activate("A"),
-      Frame(@sequence.Frame::new(Alt, @sequence.Section::new([
-        Message(@sequence.Message::new("A", "B", "one")),
-        Frame(@sequence.Frame::new(Loop, @sequence.Section::new([
-          Message(@sequence.Message::new("B", "A", "two")),
-        ]))),
-      ]))),
+      Frame(
+        @sequence.Frame::new(
+          Alt,
+          @sequence.Section::new([
+            Message(@sequence.Message::new("A", "B", "one")),
+            Frame(
+              @sequence.Frame::new(
+                Loop,
+                @sequence.Section::new([
+                  Message(@sequence.Message::new("B", "A", "two")),
+                ]),
+              ),
+            ),
+          ]),
+        ),
+      ),
       Deactivate("A"),
     ],
   )
-  assert_eq(@layout.layout(s).messages.map(m => m.label.content).iter().to_array(), ["one", "two"])
+  assert_eq(
+    @layout.layout(s).messages.map(m => m.label.content).iter().to_array(),
+    ["one", "two"],
+  )
 }

@@ -1,0 +1,16 @@
+{
+  "mermaid": "12.2.0",
+  "mermaidCommit": "1fb7869866dd619168d840291c9c54b4f129758b",
+  "plugin": "@mermaid-js/mermaid-zenuml@1.0.1",
+  "pluginIntegrity": "sha512-O5DiRODoFVNgugOVloxcDXmd+bXe/sbGlDh3onnzuE4EWtgTWwaAlWuPPOXbU9QESsztnD4Gtnu7dr+tYLFE0A==",
+  "core": "@zenuml/core@3.47.9",
+  "coreIntegrity": "sha512-rJI5NKiphqdg1XGQzeTgi7aRKD6xgS3luj9YVDa9Ic8Cl9S9XDanXjigzrMx0YK2trvrdN5O1sfTFtlhVcg8Lg==",
+  "coreCommit": "e3f93e0eb65d23fa3520e8691a5bca883853aa4b",
+  "sourceArchive": "https://codeload.github.com/mermaid-js/zenuml-core/tar.gz/e3f93e0eb65d23fa3520e8691a5bca883853aa4b",
+  "sourceArchiveSha256": "92b8caac562056bb94871d3bfcd40542f14aa860981bc92b7eb995c39a1002af",
+  "licence": "MIT; provider asset terms are separately recorded in ../../pkgs/diagrams-svg/icons/catalog.json",
+  "lock": "../zenuml-reference/bun.lock",
+  "docsSource": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/docs/syntax/zenuml.md",
+  "sourceVersionNote": "The npm package version is 3.47.9. Its gitHead package.json version is 4.0.0. The registry and semantic source are frozen by gitHead and archive digest, independently from the npm integrity.",
+  "quoted_literal_oracle": "Quoted expression labels come from pinned ANTLR signature, parameter and expression token text, preserving CSTRING contents. The renderer display formatter normalizes these contents; its display label is recorded separately. Renderer projection continues to qualify message order, direction and creation."
+}

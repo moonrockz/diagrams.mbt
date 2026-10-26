@@ -1,0 +1,18 @@
+---
+config:
+  architecture:
+    randomize: true
+---
+%%{init: {'theme':'dark'}}%%
+architecture-beta
+%% comments remain syntax
+group g(custom:cloud)[  spaced group  ]
+service abc_def-1(custom:server)[  spaced service  ] in g
+service B 'a\'b'["a\"b"]
+service Empty
+junction J
+abc_def-1:R -- L:B
+B:R <-- L:Empty
+Empty:T --> B:J
+J:B <--> T:B
+align row Empty J

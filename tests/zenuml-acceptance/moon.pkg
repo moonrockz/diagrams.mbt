@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/test",
+  "moonrockz/diagrams/icons",
+  "moonrockz/diagrams/sequence" @model,
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-mermaid/zenuml-syntax" @syntax,
+  "moonrockz/diagrams-mermaid/zenuml",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/layout",
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-animated" @animated,
+} for "test"

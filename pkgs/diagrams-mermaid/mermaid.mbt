@@ -54,6 +54,20 @@ pub fn render_svg(source : String) -> @render.Rendered {
     return @render.Rendered::failed("image/svg+xml", diagnostics[:])
   }
   let model = match ast {
+    Zenuml(ast) => {
+      let converted = to_zenuml_sequence(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      converted.sequence.map(model => @render.Diagram::Sequence(model))
+    }
+    Architecture(ast) => {
+      let converted = to_architecture(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      converted.architecture.map(model => @render.Diagram::Architecture(model))
+    }
     Sequence(ast) => {
       let converted = to_sequence(ast)
       for d in converted.diagnostics {

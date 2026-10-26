@@ -1,0 +1,1923 @@
+{
+  "reference": "mermaid@12.2.0",
+  "configuration": {
+    "securityLevel": "strict"
+  },
+  "normalizations": [
+    "Database values only; no diagram renderer or layout is used.",
+    "Absent labels use authored ID. Undefined values normalize to null.",
+    "Every documentation fence containing architecture-beta and every cases/*.mmd input is included."
+  ],
+  "fixtures": [
+    {
+      "name": "docs/01.mmd",
+      "source": "architecture-beta\n    group api(cloud)[API]\n\n    service db(database)[Database] in api\n    service disk1(disk)[Storage] in api\n    service disk2(disk)[Storage] in api\n    service server(server)[Server] in api\n\n    db:L -- R:server\n    disk1:T -- B:server\n    disk2:T -- B:db\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "api",
+            "icon": "cloud",
+            "label": "API",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "db",
+            "icon": "database",
+            "iconText": null,
+            "label": "Database",
+            "parent": "api"
+          },
+          {
+            "id": "disk1",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Storage",
+            "parent": "api"
+          },
+          {
+            "id": "disk2",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Storage",
+            "parent": "api"
+          },
+          {
+            "id": "server",
+            "icon": "server",
+            "iconText": null,
+            "label": "Server",
+            "parent": "api"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "db",
+            "target": "server",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "disk1",
+            "target": "server",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "disk2",
+            "target": "db",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/02.mmd",
+      "source": "architecture-beta\n    group api(cloud)[API]\n    service db1(database)[DB1] in api\n    service db2(database)[DB2] in api\n    service db3(database)[DB3] in api\n    service mcp(server)[MCP] in api\n    db1:R --> L:mcp\n    db2:R --> L:mcp\n    db3:R --> L:mcp\n    align column db1 db2 db3\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "api",
+            "icon": "cloud",
+            "label": "API",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "db1",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB1",
+            "parent": "api"
+          },
+          {
+            "id": "db2",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB2",
+            "parent": "api"
+          },
+          {
+            "id": "db3",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB3",
+            "parent": "api"
+          },
+          {
+            "id": "mcp",
+            "icon": "server",
+            "iconText": null,
+            "label": "MCP",
+            "parent": "api"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "db1",
+            "target": "mcp",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "db2",
+            "target": "mcp",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "db3",
+            "target": "mcp",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [
+          {
+            "direction": "column",
+            "members": [
+              "db1",
+              "db2",
+              "db3"
+            ]
+          }
+        ],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/03.mmd",
+      "source": "architecture-beta\n    service src1(server)[Source 1]\n    service src2(server)[Source 2]\n    service src3(server)[Source 3]\n    service proc(server)[Processor]\n    src1:B --> T:proc\n    src2:B --> T:proc\n    src3:B --> T:proc\n    align row src1 src2 src3\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [],
+        "services": [
+          {
+            "id": "src1",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source 1",
+            "parent": null
+          },
+          {
+            "id": "src2",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source 2",
+            "parent": null
+          },
+          {
+            "id": "src3",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source 3",
+            "parent": null
+          },
+          {
+            "id": "proc",
+            "icon": "server",
+            "iconText": null,
+            "label": "Processor",
+            "parent": null
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "src1",
+            "target": "proc",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "src2",
+            "target": "proc",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "src3",
+            "target": "proc",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [
+          {
+            "direction": "row",
+            "members": [
+              "src1",
+              "src2",
+              "src3"
+            ]
+          }
+        ],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/04.mmd",
+      "source": "architecture-beta\n    group sources(cloud)[Sources]\n        service src_a(server)[Source A] in sources\n        service src_b(server)[Source B] in sources\n        service src_c(server)[Source C] in sources\n\n    group storage(database)[Storage]\n        service db_one(database)[DB One] in storage\n        service db_two(database)[DB Two] in storage\n        service db_three(database)[DB Three] in storage\n\n    group output(disk)[Output]\n        service brief(disk)[Brief] in output\n        service analyst(server)[Analyst] in output\n        service delivery(cloud)[Delivery] in output\n\n    src_a:B --> T:db_one\n    src_b:B --> T:db_two\n    src_c:B --> T:db_three\n    db_two:B --> T:brief\n    brief:R --> L:analyst\n    analyst:R --> L:delivery\n\n    align row src_a src_b src_c\n    align row db_one db_two db_three\n    align row brief analyst delivery\n\n    align column src_a db_one\n    align column src_b db_two brief\n    align column src_c db_three\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "sources",
+            "icon": "cloud",
+            "label": "Sources",
+            "parent": null
+          },
+          {
+            "id": "storage",
+            "icon": "database",
+            "label": "Storage",
+            "parent": null
+          },
+          {
+            "id": "output",
+            "icon": "disk",
+            "label": "Output",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "src_a",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source A",
+            "parent": "sources"
+          },
+          {
+            "id": "src_b",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source B",
+            "parent": "sources"
+          },
+          {
+            "id": "src_c",
+            "icon": "server",
+            "iconText": null,
+            "label": "Source C",
+            "parent": "sources"
+          },
+          {
+            "id": "db_one",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB One",
+            "parent": "storage"
+          },
+          {
+            "id": "db_two",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB Two",
+            "parent": "storage"
+          },
+          {
+            "id": "db_three",
+            "icon": "database",
+            "iconText": null,
+            "label": "DB Three",
+            "parent": "storage"
+          },
+          {
+            "id": "brief",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Brief",
+            "parent": "output"
+          },
+          {
+            "id": "analyst",
+            "icon": "server",
+            "iconText": null,
+            "label": "Analyst",
+            "parent": "output"
+          },
+          {
+            "id": "delivery",
+            "icon": "cloud",
+            "iconText": null,
+            "label": "Delivery",
+            "parent": "output"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "src_a",
+            "target": "db_one",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "src_b",
+            "target": "db_two",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "src_c",
+            "target": "db_three",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "db_two",
+            "target": "brief",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "brief",
+            "target": "analyst",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "analyst",
+            "target": "delivery",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [
+          {
+            "direction": "row",
+            "members": [
+              "src_a",
+              "src_b",
+              "src_c"
+            ]
+          },
+          {
+            "direction": "row",
+            "members": [
+              "db_one",
+              "db_two",
+              "db_three"
+            ]
+          },
+          {
+            "direction": "row",
+            "members": [
+              "brief",
+              "analyst",
+              "delivery"
+            ]
+          },
+          {
+            "direction": "column",
+            "members": [
+              "src_a",
+              "db_one"
+            ]
+          },
+          {
+            "direction": "column",
+            "members": [
+              "src_b",
+              "db_two",
+              "brief"
+            ]
+          },
+          {
+            "direction": "column",
+            "members": [
+              "src_c",
+              "db_three"
+            ]
+          }
+        ],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/05.mmd",
+      "source": "architecture-beta\n    service left_disk(disk)[Disk]\n    service top_disk(disk)[Disk]\n    service bottom_disk(disk)[Disk]\n    service top_gateway(internet)[Gateway]\n    service bottom_gateway(internet)[Gateway]\n    junction junctionCenter\n    junction junctionRight\n\n    left_disk:R -- L:junctionCenter\n    top_disk:B -- T:junctionCenter\n    bottom_disk:T -- B:junctionCenter\n    junctionCenter:R -- L:junctionRight\n    top_gateway:B -- T:junctionRight\n    bottom_gateway:T -- B:junctionRight\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [],
+        "services": [
+          {
+            "id": "left_disk",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Disk",
+            "parent": null
+          },
+          {
+            "id": "top_disk",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Disk",
+            "parent": null
+          },
+          {
+            "id": "bottom_disk",
+            "icon": "disk",
+            "iconText": null,
+            "label": "Disk",
+            "parent": null
+          },
+          {
+            "id": "top_gateway",
+            "icon": "internet",
+            "iconText": null,
+            "label": "Gateway",
+            "parent": null
+          },
+          {
+            "id": "bottom_gateway",
+            "icon": "internet",
+            "iconText": null,
+            "label": "Gateway",
+            "parent": null
+          }
+        ],
+        "junctions": [
+          {
+            "id": "junctionCenter",
+            "parent": null
+          },
+          {
+            "id": "junctionRight",
+            "parent": null
+          }
+        ],
+        "edges": [
+          {
+            "source": "left_disk",
+            "target": "junctionCenter",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "top_disk",
+            "target": "junctionCenter",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "bottom_disk",
+            "target": "junctionCenter",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "junctionCenter",
+            "target": "junctionRight",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "top_gateway",
+            "target": "junctionRight",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "bottom_gateway",
+            "target": "junctionRight",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/06.mmd",
+      "source": "---\nconfig:\n  architecture:\n    randomize: true\n---\narchitecture-beta\n    group api(cloud)[API]\n    service db(database)[Database] in api\n    service server(server)[Server] in api\n    db:R --> L:server\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "api",
+            "icon": "cloud",
+            "label": "API",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "db",
+            "icon": "database",
+            "iconText": null,
+            "label": "Database",
+            "parent": "api"
+          },
+          {
+            "id": "server",
+            "icon": "server",
+            "iconText": null,
+            "label": "Server",
+            "parent": "api"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "db",
+            "target": "server",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/07.mmd",
+      "source": "---\nconfig:\n  architecture:\n    idealEdgeLengthMultiplier: 3\n---\narchitecture-beta\n    service a(server)[A]\n    service b(server)[B]\n    service c(server)[C]\n    a:R --> L:b\n    b:R --> L:c\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [],
+        "services": [
+          {
+            "id": "a",
+            "icon": "server",
+            "iconText": null,
+            "label": "A",
+            "parent": null
+          },
+          {
+            "id": "b",
+            "icon": "server",
+            "iconText": null,
+            "label": "B",
+            "parent": null
+          },
+          {
+            "id": "c",
+            "icon": "server",
+            "iconText": null,
+            "label": "C",
+            "parent": null
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "a",
+            "target": "b",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "b",
+            "target": "c",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "docs/08.mmd",
+      "source": "architecture-beta\n    group api(logos:aws-lambda)[API]\n\n    service db(logos:aws-aurora)[Database] in api\n    service disk1(logos:aws-glacier)[Storage] in api\n    service disk2(logos:aws-s3)[Storage] in api\n    service server(logos:aws-ec2)[Server] in api\n\n    db:L -- R:server\n    disk1:T -- B:server\n    disk2:T -- B:db\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "api",
+            "icon": "logos:aws-lambda",
+            "label": "API",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "db",
+            "icon": "logos:aws-aurora",
+            "iconText": null,
+            "label": "Database",
+            "parent": "api"
+          },
+          {
+            "id": "disk1",
+            "icon": "logos:aws-glacier",
+            "iconText": null,
+            "label": "Storage",
+            "parent": "api"
+          },
+          {
+            "id": "disk2",
+            "icon": "logos:aws-s3",
+            "iconText": null,
+            "label": "Storage",
+            "parent": "api"
+          },
+          {
+            "id": "server",
+            "icon": "logos:aws-ec2",
+            "iconText": null,
+            "label": "Server",
+            "parent": "api"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "db",
+            "target": "server",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "disk1",
+            "target": "server",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "disk2",
+            "target": "db",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "cases/all-ports.mmd",
+      "source": "architecture-beta\nservice source\nservice target\nsource:L -- L:target\nsource:L <-- L:target\nsource:L --> L:target\nsource:L <--> L:target\nsource:L -- R:target\nsource:L <-- R:target\nsource:L --> R:target\nsource:L <--> R:target\nsource:L -- T:target\nsource:L <-- T:target\nsource:L --> T:target\nsource:L <--> T:target\nsource:L -- B:target\nsource:L <-- B:target\nsource:L --> B:target\nsource:L <--> B:target\nsource:R -- L:target\nsource:R <-- L:target\nsource:R --> L:target\nsource:R <--> L:target\nsource:R -- R:target\nsource:R <-- R:target\nsource:R --> R:target\nsource:R <--> R:target\nsource:R -- T:target\nsource:R <-- T:target\nsource:R --> T:target\nsource:R <--> T:target\nsource:R -- B:target\nsource:R <-- B:target\nsource:R --> B:target\nsource:R <--> B:target\nsource:T -- L:target\nsource:T <-- L:target\nsource:T --> L:target\nsource:T <--> L:target\nsource:T -- R:target\nsource:T <-- R:target\nsource:T --> R:target\nsource:T <--> R:target\nsource:T -- T:target\nsource:T <-- T:target\nsource:T --> T:target\nsource:T <--> T:target\nsource:T -- B:target\nsource:T <-- B:target\nsource:T --> B:target\nsource:T <--> B:target\nsource:B -- L:target\nsource:B <-- L:target\nsource:B --> L:target\nsource:B <--> L:target\nsource:B -- R:target\nsource:B <-- R:target\nsource:B --> R:target\nsource:B <--> R:target\nsource:B -- T:target\nsource:B <-- T:target\nsource:B --> T:target\nsource:B <--> T:target\nsource:B -- B:target\nsource:B <-- B:target\nsource:B --> B:target\nsource:B <--> B:target\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [],
+        "services": [
+          {
+            "id": "source",
+            "icon": null,
+            "iconText": null,
+            "label": "source",
+            "parent": null
+          },
+          {
+            "id": "target",
+            "icon": null,
+            "iconText": null,
+            "label": "target",
+            "parent": null
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "L",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "R",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "source",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "cases/empty-unquoted-label.mmd",
+      "source": "architecture-beta\nservice a[]\n",
+      "normalized": {
+        "accepted": false,
+        "errorName": "Error",
+        "message": "Parsing failed: Lexer error on line 2, column 10: unexpected character: ->[<- at offset: 27, skipped 2 characters. "
+      }
+    },
+    {
+      "name": "cases/forward-reference.mmd",
+      "source": "architecture-beta\nservice a in later\ngroup later\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "later",
+            "icon": null,
+            "label": "later",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "a",
+            "icon": null,
+            "iconText": null,
+            "label": "a",
+            "parent": "later"
+          }
+        ],
+        "junctions": [],
+        "edges": [],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "cases/grammar.mmd",
+      "source": "architecture-beta\ntitle Native architecture profile\naccTitle: Portable services\naccDescr {Architecture structure\nwithout execution semantics}\ngroup root(cloud)[Root]\ngroup nested(server)[Nested] in root\nservice a(database)[\"Quoted label\"] in nested\nservice b \"文字\"['Literal symbol'] in root\njunction j in root\na{group}:R < -[\"edge label\"]- > L:b{group}\na:B -- T:j\nalign row a b\nalign column b j\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "root",
+            "icon": "cloud",
+            "label": "Root",
+            "parent": null
+          },
+          {
+            "id": "nested",
+            "icon": "server",
+            "label": "Nested",
+            "parent": "root"
+          }
+        ],
+        "services": [
+          {
+            "id": "a",
+            "icon": "database",
+            "iconText": null,
+            "label": "Quoted label",
+            "parent": "nested"
+          },
+          {
+            "id": "b",
+            "icon": null,
+            "iconText": "文字",
+            "label": "Literal symbol",
+            "parent": "root"
+          }
+        ],
+        "junctions": [
+          {
+            "id": "j",
+            "parent": "root"
+          }
+        ],
+        "edges": [
+          {
+            "source": "a",
+            "target": "b",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": true,
+            "targetGroup": true,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": "edge label"
+          },
+          {
+            "source": "a",
+            "target": "j",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          }
+        ],
+        "alignments": [
+          {
+            "direction": "row",
+            "members": [
+              "a",
+              "b"
+            ]
+          },
+          {
+            "direction": "column",
+            "members": [
+              "b",
+              "j"
+            ]
+          }
+        ],
+        "title": "Native architecture profile",
+        "accTitle": "Portable services",
+        "accDescription": "Architecture structure\nwithout execution semantics"
+      }
+    },
+    {
+      "name": "cases/group-boundary.mmd",
+      "source": "architecture-beta\ngroup left(cloud)[Left]\ngroup right(server)[Right]\nservice a(server)[A] in left\nservice b(database)[B] in right\na{group}:R --> L:b{group}\na{group}:R <-- L:b{group}\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "left",
+            "icon": "cloud",
+            "label": "Left",
+            "parent": null
+          },
+          {
+            "id": "right",
+            "icon": "server",
+            "label": "Right",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "a",
+            "icon": "server",
+            "iconText": null,
+            "label": "A",
+            "parent": "left"
+          },
+          {
+            "id": "b",
+            "icon": "database",
+            "iconText": null,
+            "label": "B",
+            "parent": "right"
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "a",
+            "target": "b",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": true,
+            "targetGroup": true,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "a",
+            "target": "b",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": true,
+            "targetGroup": true,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "cases/invalid-alignment.mmd",
+      "source": "architecture-beta\ngroup g\nservice a in g\nalign row a g\n",
+      "normalized": {
+        "accepted": false,
+        "errorName": "Error",
+        "message": "align row references [g], which is not a service or junction"
+      }
+    },
+    {
+      "name": "cases/lexical.mmd",
+      "source": "architecture-beta group grouped[Header group]\nservice a[100%% ready] in grouped\nservice b(technology:icon)[\"\"]\nservice c \"\"[Quoted literal]\na:R --> L:b\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "grouped",
+            "icon": null,
+            "label": "Header group",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "a",
+            "icon": null,
+            "iconText": null,
+            "label": "100%% ready",
+            "parent": "grouped"
+          },
+          {
+            "id": "b",
+            "icon": "technology:icon",
+            "iconText": null,
+            "label": "",
+            "parent": null
+          },
+          {
+            "id": "c",
+            "icon": null,
+            "iconText": "",
+            "label": "Quoted literal",
+            "parent": null
+          }
+        ],
+        "junctions": [],
+        "edges": [
+          {
+            "source": "a",
+            "target": "b",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    },
+    {
+      "name": "cases/reserved-port-id.mmd",
+      "source": "---\nconfig:\n  architecture:\n    randomize: true\n---\n%%{init: {'theme':'dark'}}%%\narchitecture-beta\n%% comments remain syntax\ngroup g(custom:cloud)[  spaced group  ]\nservice abc_def-1(custom:server)[  spaced service  ] in g\nservice B 'a\\'b'[\"a\\\"b\"]\nservice Empty\njunction J\nabc_def-1:R -- L:B\nB:R <-- L:Empty\nEmpty:T --> B:J\nJ:B <--> T:B\nalign row Empty J\n",
+      "normalized": {
+        "accepted": false,
+        "errorName": "Error",
+        "message": "Parsing failed:  Parse error on line 4, column 9: Expecting token of type 'ID' but found `B`.\nParse error on line 7, column 18: Expecting token of type 'ID' but found `B`.\nParse error on line 8, column 1: Expecting token of type 'EOF' but found `B`.\nParse error on line 8, column 16: Expecting token of type ':' but found `\n`.\nParse error on line 10, column 12: Expecting token of type 'ID' but found `B`."
+      }
+    },
+    {
+      "name": "cases/same-group-boundary.mmd",
+      "source": "architecture-beta\ngroup g\nservice a in g\nservice b in g\na{group}:R --> L:b\n",
+      "normalized": {
+        "accepted": false,
+        "errorName": "Error",
+        "message": "The left-hand id [a] is modified to traverse the group boundary, but the edge does not pass through two groups."
+      }
+    },
+    {
+      "name": "cases/terminals.mmd",
+      "source": "---\nconfig:\n  architecture:\n    randomize: true\n---\n%%{init: {'theme':'dark'}}%%\narchitecture-beta\n%% comments remain syntax\ngroup g(custom:cloud)[  spaced group  ]\nservice abc_def-1(custom:server)[  spaced service  ] in g\nservice target 'a\\'b'[\"a\\\"b\"]\nservice Empty\njunction J\nabc_def-1:R -- L:target\ntarget:R <-- L:Empty\nEmpty:T --> B:J\nJ:B <--> T:target\nalign row Empty J\n",
+      "normalized": {
+        "accepted": true,
+        "groups": [
+          {
+            "id": "g",
+            "icon": "custom:cloud",
+            "label": "spaced group",
+            "parent": null
+          }
+        ],
+        "services": [
+          {
+            "id": "abc_def-1",
+            "icon": "custom:server",
+            "iconText": null,
+            "label": "spaced service",
+            "parent": "g"
+          },
+          {
+            "id": "target",
+            "icon": null,
+            "iconText": "a'b",
+            "label": "a\"b",
+            "parent": null
+          },
+          {
+            "id": "Empty",
+            "icon": null,
+            "iconText": null,
+            "label": "Empty",
+            "parent": null
+          }
+        ],
+        "junctions": [
+          {
+            "id": "J",
+            "parent": null
+          }
+        ],
+        "edges": [
+          {
+            "source": "abc_def-1",
+            "target": "target",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "target",
+            "target": "Empty",
+            "sourceSide": "R",
+            "targetSide": "L",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": false,
+            "label": null
+          },
+          {
+            "source": "Empty",
+            "target": "J",
+            "sourceSide": "T",
+            "targetSide": "B",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": false,
+            "targetHead": true,
+            "label": null
+          },
+          {
+            "source": "J",
+            "target": "target",
+            "sourceSide": "B",
+            "targetSide": "T",
+            "sourceGroup": false,
+            "targetGroup": false,
+            "sourceHead": true,
+            "targetHead": true,
+            "label": null
+          }
+        ],
+        "alignments": [
+          {
+            "direction": "row",
+            "members": [
+              "Empty",
+              "J"
+            ]
+          }
+        ],
+        "title": "",
+        "accTitle": "",
+        "accDescription": ""
+      }
+    }
+  ]
+}

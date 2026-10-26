@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/architecture-printer"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/architecture-ast",
+  "moonrockz/diagrams-mermaid/architecture-syntax",
+}
+
+// Values
+pub fn print(@architecture-ast.Diagram, limits? : @architecture-syntax.Limits) -> PrintResult
+
+// Errors
+
+// Types and methods
+pub struct PrintResult {
+  output : String?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

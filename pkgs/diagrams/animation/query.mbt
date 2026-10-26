@@ -40,12 +40,13 @@ fn EdgeKind::tag(self : EdgeKind) -> Int32 {
     Undirected => 4
     Railroad => 5
     Containment => 6
+    ArchitectureFlow => 7
   }
 }
 
 ///|
 fn query_kinds(kinds : ArrayView[EdgeKind]) -> Array[EdgeKind] {
-  let selected = Array::make(7, false)
+  let selected = Array::make(8, false)
   let unique = []
   for kind in kinds {
     let tag = kind.tag()
@@ -111,13 +112,27 @@ fn next_arc(streams : ArrayView[ArcStream]) -> (Int32, Int32)? {
 pub fn Graph::reachable(
   self : Graph,
   start : String,
-  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment],
+  kinds? : ArrayView[EdgeKind],
   direction~ : Direction = Forward,
   limits~ : Limits = Limits::new(),
 ) -> ReachabilityResult {
   if !limits.valid() {
     return Failed(InvalidLimits)
   }
+  let kinds : ArrayView[EdgeKind] = kinds.unwrap_or_else(() => {
+    if self.source is Architecture(_) {
+      [
+        SequenceFlow,
+        Order,
+        SwimlaneFlow,
+        ArchitectureFlow,
+        Railroad,
+        Containment,
+      ]
+    } else {
+      [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment]
+    }
+  })
   if kinds.length() > limits.work {
     return Failed(Limit(Work))
   }
@@ -226,13 +241,27 @@ pub fn Graph::route(
   self : Graph,
   start : String,
   target : String,
-  kinds~ : ArrayView[EdgeKind] = [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment],
+  kinds? : ArrayView[EdgeKind],
   direction~ : Direction = Forward,
   limits~ : Limits = Limits::new(),
 ) -> RouteResult {
   if !limits.valid() {
     return Failed(InvalidLimits)
   }
+  let kinds : ArrayView[EdgeKind] = kinds.unwrap_or_else(() => {
+    if self.source is Architecture(_) {
+      [
+        SequenceFlow,
+        Order,
+        SwimlaneFlow,
+        ArchitectureFlow,
+        Railroad,
+        Containment,
+      ]
+    } else {
+      [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment]
+    }
+  })
   if kinds.length() > limits.work {
     return Failed(Limit(Work))
   }
@@ -319,7 +348,7 @@ pub fn PlaybackPlan::route(
           actions.push(Motion::Step(key, duration_ms))
         }
       }
-    Swimlane(_) =>
+    Swimlane(_) | Architecture(_) =>
       for i, edge in route.edges {
         if edge.occurrence is Some(key) {
           actions.push(

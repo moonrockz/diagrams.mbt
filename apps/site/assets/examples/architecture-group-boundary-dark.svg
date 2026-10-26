@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b-diagram" viewBox="0 0 699 348" width="699" height="348" role="img" data-diagram="architecture">
+  <title>Architecture diagram</title>
+  <desc>Architecture diagram of authored services, junctions and connections.</desc>
+  <defs>
+    <symbol viewBox="0 0 32 32" id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-99-108-111-117-100">
+      <path d="M8 24C0 24 0 12 8 12C10 1 25 1 27 12C35 12 35 24 27 24Z" fill="#e8f0fe" stroke="#234b75" stroke-width="1.5"/>
+    </symbol>
+    <symbol viewBox="0 0 32 32" id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-115-101-114-118-101-114">
+      <path d="M4 3H28V11H4ZM4 13H28V21H4ZM4 23H28V31H4ZM8 7H10M8 17H10M8 27H10" fill="#e8f0fe" stroke="#234b75" stroke-width="1.5"/>
+    </symbol>
+    <symbol viewBox="0 0 32 32" id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-100-97-116-97-98-97-115-101">
+      <path d="M4 7C4 1 28 1 28 7V25C28 31 4 31 4 25ZM4 7C4 13 28 13 28 7M4 16C4 22 28 22 28 16" fill="#e8f0fe" stroke="#234b75" stroke-width="1.5"/>
+    </symbol>
+    <marker id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.4"/>
+    </marker>
+    <marker id="arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="699" height="348" fill="#020617"/>
+  <g class="architecture-groups">
+    <g class="architecture-group" data-id="right">
+      <rect class="architecture-group" x="419" y="24" width="200" height="244" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+      <text class="group-label" x="519" y="47" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" fill="#ffffff">
+        <tspan x="519" y="47">Right</tspan>
+      </text>
+      <g role="img" aria-label="architecture:server" color="#111827">
+        <title>architecture:server</title>
+        <rect x="427" y="32" width="24" height="24" rx="2" fill="#ffffff"/>
+        <use href="#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-115-101-114-118-101-114" x="427" y="32" width="24" height="24"/>
+      </g>
+    </g>
+    <g class="architecture-group" data-id="left">
+      <rect class="architecture-group" x="73" y="24" width="200" height="244" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+      <text class="group-label" x="173" y="47" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" fill="#ffffff">
+        <tspan x="173" y="47">Left</tspan>
+      </text>
+      <g role="img" aria-label="architecture:cloud" color="#111827">
+        <title>architecture:cloud</title>
+        <rect x="81" y="32" width="24" height="24" rx="2" fill="#ffffff"/>
+        <use href="#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-99-108-111-117-100" x="81" y="32" width="24" height="24"/>
+      </g>
+    </g>
+  </g>
+  <g class="architecture-connections">
+    <g class="architecture-connection" data-id="edge-0" data-from="a" data-to="b">
+      <path class="architecture-path" d="M273 174 L289 174 L403 174 L419 174" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b-head-0-end)"/>
+    </g>
+    <g class="architecture-connection" data-id="edge-1" data-from="a" data-to="b">
+      <path class="architecture-path" d="M273 182 L291 182 L401 182 L419 182" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-start="url(#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b-head-1-start)"/>
+    </g>
+  </g>
+  <g class="architecture-nodes">
+    <g class="architecture-service" data-id="a">
+      <rect class="service-box" x="113" y="120" width="120" height="108" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <g role="img" aria-label="architecture:server" color="#111827">
+        <title>architecture:server</title>
+        <rect x="153" y="132" width="40" height="40" rx="2" fill="#ffffff"/>
+        <use href="#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-115-101-114-118-101-114" x="153" y="132" width="40" height="40"/>
+      </g>
+      <text class="service-label" x="173" y="206" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" fill="#ffffff">
+        <tspan x="173" y="206">A</tspan>
+      </text>
+    </g>
+    <g class="architecture-service" data-id="b">
+      <rect class="service-box" x="459" y="120" width="120" height="108" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <g role="img" aria-label="architecture:database" color="#111827">
+        <title>architecture:database</title>
+        <rect x="499" y="132" width="40" height="40" rx="2" fill="#ffffff"/>
+        <use href="#arch-u-61-72-63-68-69-74-65-63-74-75-72-65-2d-67-72-6f-75-70-2d-62-6f-75-6e-64-61-72-79-2d-64-61-72-6b--icon-p-97-114-99-104-105-116-101-99-116-117-114-101-p-100-97-116-97-98-97-115-101" x="499" y="132" width="40" height="40"/>
+      </g>
+      <text class="service-label" x="519" y="206" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" fill="#ffffff">
+        <tspan x="519" y="206">B</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

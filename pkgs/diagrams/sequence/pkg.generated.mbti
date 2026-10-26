@@ -4,6 +4,7 @@ package "moonrockz/diagrams/sequence"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams/icons",
 }
 
 // Values
@@ -63,6 +64,7 @@ pub(all) enum FrameKind {
   Critical
   Break
   Rect
+  Try
 } derive(Eq, @debug.Debug)
 pub fn FrameKind::equal(Self, Self) -> Bool
 pub fn FrameKind::not_equal(Self, Self) -> Bool
@@ -148,10 +150,11 @@ pub struct Participant {
   kind : ParticipantKind
   group : BoxGroup?
   link : Link?
+  icon : @icons.Reference?
   properties : ParticipantProperties?
 } derive(Eq, @debug.Debug)
 pub fn Participant::equal(Self, Self) -> Bool
-pub fn Participant::new(String, label? : String, kind? : ParticipantKind, group? : BoxGroup, link? : Link, properties? : ParticipantProperties) -> Self
+pub fn Participant::new(String, label? : String, kind? : ParticipantKind, group? : BoxGroup, link? : Link, properties? : ParticipantProperties, icon? : @icons.Reference) -> Self
 pub fn Participant::not_equal(Self, Self) -> Bool
 pub fn Participant::render_kind(Self) -> ParticipantKind
 pub fn Participant::to_repr(Self) -> @debug.Repr
@@ -199,13 +202,24 @@ pub struct Resolution {
 }
 
 pub struct Section {
+  role : SectionRole
   label : String?
   events : ReadOnlyArray[Event]
 } derive(Eq, @debug.Debug)
 pub fn Section::equal(Self, Self) -> Bool
-pub fn Section::new(ArrayView[Event], label? : String) -> Self
+pub fn Section::new(ArrayView[Event], label? : String, role? : SectionRole) -> Self
 pub fn Section::not_equal(Self, Self) -> Bool
 pub fn Section::to_repr(Self) -> @debug.Repr
+
+pub(all) enum SectionRole {
+  Plain
+  Try
+  Catch
+  Finally
+} derive(Eq, @debug.Debug)
+pub fn SectionRole::equal(Self, Self) -> Bool
+pub fn SectionRole::not_equal(Self, Self) -> Bool
+pub fn SectionRole::to_repr(Self) -> @debug.Repr
 
 pub struct Sequence {
   participants : ReadOnlyArray[Participant]

@@ -39,6 +39,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  Architecture(@architecture.Connection)
   /// A drawn railroad connector with its structural role.
   Railroad(@railroad_trace.ConnectorRole)
   /// A drawn connector from a data row to its nested container.
@@ -88,6 +89,7 @@ pub(all) enum Control {
 
 ///|
 pub struct SectionInfo {
+  role : @sequence.SectionRole
   label : String?
   controls : ReadOnlyArray[Control]
 } derive(Eq, Debug)
@@ -111,6 +113,9 @@ pub(all) enum NodeKind {
   SwimlaneNode
   SwimlaneGroup
   SwimlaneLane
+  ArchitectureService
+  ArchitectureJunction
+  ArchitectureGroup
   /// An entry, exit or junction point of a railroad.
   RailroadPoint
   /// One structured-data value.
@@ -133,6 +138,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  ArchitectureFlow
   Undirected
   /// A drawn railroad connector or a term traversal, in drawing direction.
   Railroad
@@ -219,6 +225,7 @@ pub(all) enum Choice {
   Alternative(Int32)
   Repetitions(Int32)
   Optional(Bool)
+  ExceptionSections(ReadOnlyArray[Int32])
 } derive(Eq, Debug)
 
 ///|

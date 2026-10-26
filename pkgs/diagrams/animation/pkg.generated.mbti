@@ -4,6 +4,7 @@ package "moonrockz/diagrams/animation"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams/architecture",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/data-tree",
   "moonrockz/diagrams/ebnf",
@@ -46,6 +47,7 @@ pub struct Catalog {
   graph : Graph
   // private fields
 }
+pub fn Catalog::architecture(@architecture.Architecture, limits? : Limits) -> CatalogResult
 pub fn Catalog::bpmn(@bpmn.Bpmn, limits? : Limits) -> CatalogResult
 pub fn Catalog::connection(Self, String) -> Occurrence?
 pub fn Catalog::data_tree(@data-tree.DataTree, limits? : Limits) -> CatalogResult
@@ -67,6 +69,7 @@ pub(all) enum Choice {
   Alternative(Int32)
   Repetitions(Int32)
   Optional(Bool)
+  ExceptionSections(ReadOnlyArray[Int32])
 } derive(Eq, @debug.Debug)
 pub fn Choice::equal(Self, Self) -> Bool
 pub fn Choice::not_equal(Self, Self) -> Bool
@@ -94,6 +97,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  ArchitectureFlow
   Undirected
   Railroad
   Containment
@@ -205,6 +209,9 @@ pub(all) enum NodeKind {
   SwimlaneNode
   SwimlaneGroup
   SwimlaneLane
+  ArchitectureService
+  ArchitectureJunction
+  ArchitectureGroup
   RailroadPoint
   DataValue
 } derive(Eq, @debug.Debug)
@@ -235,6 +242,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  Architecture(@architecture.Connection)
   Railroad(@railroad-trace.ConnectorRole)
   DataConnector
   Visit(VisitKind)
@@ -337,6 +345,7 @@ pub fn ScheduledStep::not_equal(Self, Self) -> Bool
 pub fn ScheduledStep::to_repr(Self) -> @debug.Repr
 
 pub struct SectionInfo {
+  role : @sequence.SectionRole
   label : String?
   controls : ReadOnlyArray[Control]
 } derive(Eq, @debug.Debug)

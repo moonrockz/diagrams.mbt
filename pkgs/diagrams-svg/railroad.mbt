@@ -2,13 +2,13 @@
 priv struct RailPaint {
   paint : Paint
   diagnostics : Array[@diagrams.Diagnostic]
-  limit : Int
-  mut used : Int
+  limit : Int32
+  mut used : Int32
   mut failed : Bool
 }
 
 ///|
-fn RailPaint::reserve(self : RailPaint, units : Int) -> Bool {
+fn RailPaint::reserve(self : RailPaint, units : Int32) -> Bool {
   if units < 0 || units > self.limit - self.used {
     if !self.failed {
       self.diagnostics.push(
@@ -25,7 +25,11 @@ fn RailPaint::reserve(self : RailPaint, units : Int) -> Bool {
 }
 
 ///|
-fn RailPaint::escaped(self : RailPaint, value : String, attribute : Bool) -> Bool {
+fn RailPaint::escaped(
+  self : RailPaint,
+  value : String,
+  attribute : Bool,
+) -> Bool {
   let mut i = 0
   while i < value.length() {
     let u = value.code_unit_at(i).to_int()
@@ -82,8 +86,8 @@ fn RailPaint::escaped(self : RailPaint, value : String, attribute : Bool) -> Boo
 fn RailPaint::element(
   self : RailPaint,
   name : String,
-  attrs? : ArrayView[(String, String)] = [],
-  children? : ArrayView[@writer.Node] = [],
+  attrs~ : ArrayView[(String, String)] = [],
+  children~ : ArrayView[@writer.Node] = [],
 ) -> @writer.Node {
   if !self.reserve(name.length() * 2 + 8) {
     return @writer.element("g")
@@ -115,7 +119,7 @@ fn RailPaint::label(
   label : @railroad_layout.Label,
   fill : String,
   class : String,
-  anchor? : String = "middle",
+  anchor~ : String = "middle",
 ) -> @writer.Node {
   let x = if anchor == "start" { label.box.x } else { label.x }
   let children = []
@@ -127,7 +131,12 @@ fn RailPaint::label(
           ("x", rail_number(x)),
           (
             "y",
-            rail_number(label.box.y + label.size + i.to_double() * (label.size + 4.0) - 2.0),
+            rail_number(
+              label.box.y +
+              label.size +
+              i.to_double() * (label.size + 4.0) -
+              2.0,
+            ),
           ),
         ],
         children=[self.text(line)],
@@ -194,7 +203,7 @@ fn RailPaint::rect(
   fill : String,
   stroke : String,
   dash? : String,
-  width? : String = "1.5",
+  width~ : String = "1.5",
 ) -> @writer.Node {
   let attrs = [
     ("class", class),
@@ -240,9 +249,7 @@ fn RailPaint::term(
       attrs.push(("data-resolution", "unresolved"))
       dash = Some("4 3")
       children.push(
-        self.element("title", children=[
-          self.text("Undefined rule " + t.label),
-        ]),
+        self.element("title", children=[self.text("Undefined rule " + t.label)]),
       )
     }
     Reference(Ambiguous(_)) => {
@@ -268,11 +275,14 @@ fn RailPaint::term(
           ("fill", stroke),
         ]),
       )
-    Pill => children.push(self.rect("rr-box", r, r.height / 2.0, fill, stroke, dash?))
+    Pill =>
+      children.push(self.rect("rr-box", r, r.height / 2.0, fill, stroke, dash?))
     Square => children.push(self.rect("rr-box", r, 2.0, fill, stroke, dash?))
     Class => children.push(self.rect("rr-box", r, 6.0, fill, stroke))
-    Special => children.push(self.rect("rr-box", r, 6.0, fill, stroke, dash="2 3"))
-    Anchor => children.push(self.rect("rr-box", r, 6.0, fill, stroke, dash="4 3"))
+    Special =>
+      children.push(self.rect("rr-box", r, 6.0, fill, stroke, dash="2 3"))
+    Anchor =>
+      children.push(self.rect("rr-box", r, 6.0, fill, stroke, dash="4 3"))
     Lookaround =>
       children.push(self.rect("rr-box", r, 8.0, fill, stroke, dash="6 4"))
   }
@@ -356,7 +366,7 @@ priv struct Overlay {
 
 ///|
 fn evidence() -> Evidence {
-  { matched: [], not_matched: [], taken: [], failure: [] }
+  { matched: [], not_matched: [], taken: [], failure: [], }
 }
 
 ///|
@@ -407,7 +417,8 @@ fn resolve_overlay(
           None =>
             return Err([
               @diagrams.Diagnostic::error(
-                "trace/invalid-attempt", "The highlight selects missing attempt '\{id}'",
+                "trace/invalid-attempt",
+                "The highlight selects missing attempt '\{id}'",
               ),
             ])
         }
@@ -451,7 +462,7 @@ fn resolve_overlay(
       e.failure.push((attempt.id, failure))
     }
   }
-  Ok({ trace, selected, terms, connectors, boundaries, order })
+  Ok({ trace, selected, terms, connectors, boundaries, order, })
 }
 
 ///|
@@ -467,10 +478,7 @@ fn RailPaint::channel_color(
 }
 
 ///|
-fn status_text(
-  channel : String,
-  attempts : ArrayView[String],
-) -> String {
+fn status_text(channel : String, attempts : ArrayView[String]) -> String {
   "\{channel} in attempt\{if attempts.length() == 1 { "" } else { "s" }} \{attempts.join(", ")}. Supplied by an external trace provider."
 }
 
@@ -493,9 +501,17 @@ fn RailPaint::overlay(
     boxes[b.term.id] = b
   }
   let layers = []
-  let channels : Array[(String, String, ChannelStyle, Double, (Evidence) -> Array[String])] = [
+  let channels : Array[
+    (String, String, ChannelStyle, Double, (Evidence) -> Array[String]),
+  ] = [
     ("matched", "backend-ink", highlight.matched, 4.0, e => e.matched),
-    ("not-matched", "messagebus-ink", highlight.not_matched, 2.0, e => e.not_matched),
+    (
+      "not-matched",
+      "messagebus-ink",
+      highlight.not_matched,
+      2.0,
+      e => e.not_matched,
+    ),
     ("taken", "database-ink", highlight.taken, 0.0, e => e.taken),
   ]
   for channel in channels {
@@ -528,14 +544,16 @@ fn RailPaint::overlay(
         items.push(
           self.element("path", attrs~, children=[
             self.element("title", children=[
-              self.text(status_text(
-                match name {
-                  "matched" => "Matched"
-                  "not-matched" => "Not matched"
-                  _ => "Taken"
-                },
-                pick(e),
-              )),
+              self.text(
+                status_text(
+                  match name {
+                    "matched" => "Matched"
+                    "not-matched" => "Not matched"
+                    _ => "Taken"
+                  },
+                  pick(e),
+                ),
+              ),
             ]),
           ]),
         )
@@ -567,14 +585,16 @@ fn RailPaint::overlay(
         items.push(
           self.element("rect", attrs~, children=[
             self.element("title", children=[
-              self.text(status_text(
-                match name {
-                  "matched" => "Matched"
-                  "not-matched" => "Not matched"
-                  _ => "Taken"
-                },
-                pick(e),
-              )),
+              self.text(
+                status_text(
+                  match name {
+                    "matched" => "Matched"
+                    "not-matched" => "Not matched"
+                    _ => "Taken"
+                  },
+                  pick(e),
+                ),
+              ),
             ]),
           ]),
         )
@@ -603,9 +623,13 @@ fn RailPaint::overlay(
           Entry(_) => "entry boundary"
           Exit(_) => "exit boundary"
         }
-        let position = f.position.map(p => " at input position \{p}").unwrap_or("")
+        let position = f.position
+          .map(p => " at input position \{p}")
+          .unwrap_or("")
         let message = f.message.map(m => ": " + m).unwrap_or("")
-        parts.push("Failure in attempt \{attempt} at the \{target}\{position}\{message}")
+        parts.push(
+          "Failure in attempt \{attempt} at the \{target}\{position}\{message}",
+        )
       }
       parts.join(". ") + ". Supplied by an external trace provider."
     }
@@ -740,7 +764,10 @@ fn paint_railroad(
   renderer : SvgRenderer,
 ) -> RailroadPaint {
   fn failed(diagnostics : ArrayView[@diagrams.Diagnostic]) -> RailroadPaint {
-    { rendered: @render.Rendered::failed("image/svg+xml", diagnostics), geometry: None }
+    {
+      rendered: @render.Rendered::failed("image/svg+xml", diagnostics),
+      geometry: None,
+    }
   }
   guard railroad_model(diagram) is Some(model) else {
     return failed([
@@ -764,7 +791,7 @@ fn paint_railroad(
   let theme = renderer.theme
   let mode = renderer.mode
   let c = RailPaint::{
-    paint: Paint::{ theme, mode },
+    paint: Paint::{ theme, mode, },
     diagnostics,
     limit: limits.output_units,
     used: 0,
@@ -809,29 +836,32 @@ fn paint_railroad(
   let notes = []
   for note in geometry.notes {
     notes.push(
-      c.element(
-        "g",
-        attrs=[("class", "rr-note"), ("data-note", note.id)],
-        children=[
-          c.rect(
-            "rr-note-box",
-            note.rect,
-            4.0,
-            c.paint.color("external-fill"),
-            c.paint.color("external-stroke"),
-          ),
-          c.label(note.label, c.paint.color("text"), "rr-note-text"),
-        ],
-      ),
+      c.element("g", attrs=[("class", "rr-note"), ("data-note", note.id)], children=[
+        c.rect(
+          "rr-note-box",
+          note.rect,
+          4.0,
+          c.paint.color("external-fill"),
+          c.paint.color("external-stroke"),
+        ),
+        c.label(note.label, c.paint.color("text"), "rr-note-text"),
+      ]),
     )
   }
   let tracks = []
   for track in geometry.tracks {
     let children = [
-      c.label(track.label, c.paint.color("text"), "rr-rule-name", anchor="start"),
+      c.label(
+        track.label,
+        c.paint.color("text"),
+        "rr-rule-name",
+        anchor="start",
+      ),
     ]
     for note in track.notes {
-      children.push(c.label(note, c.paint.color("muted"), "rr-note-text", anchor="start"))
+      children.push(
+        c.label(note, c.paint.color("muted"), "rr-note-text", anchor="start"),
+      )
     }
     children.push(
       c.element("circle", attrs=[
@@ -882,13 +912,25 @@ fn paint_railroad(
             frame.rect,
             8.0,
             "none",
-            c.paint.color(if frame.role == Except { "security-stroke" } else { "muted" }),
+            c.paint.color(
+              if frame.role == Except {
+                "security-stroke"
+              } else {
+                "muted"
+              },
+            ),
             dash="5 4",
             width="1.2",
           ),
           c.label(
             frame.label,
-            c.paint.color(if frame.role == Except { "security-ink" } else { "muted" }),
+            c.paint.color(
+              if frame.role == Except {
+                "security-ink"
+              } else {
+                "muted"
+              },
+            ),
             "rr-frame-label",
           ),
         ],
@@ -911,9 +953,15 @@ fn paint_railroad(
   }
   let title = match model {
     Regex(m) =>
-      m.accessibility_title.map(t => Some(t)).unwrap_or(m.title).unwrap_or("Regular expression")
+      m.accessibility_title
+      .map(t => Some(t))
+      .unwrap_or(m.title)
+      .unwrap_or("Regular expression")
     Ebnf(g) =>
-      g.accessibility_title.map(t => Some(t)).unwrap_or(g.title).unwrap_or("EBNF grammar")
+      g.accessibility_title
+      .map(t => Some(t))
+      .unwrap_or(g.title)
+      .unwrap_or("EBNF grammar")
   }
   let mut description = match model {
     Regex(m) =>
@@ -942,7 +990,10 @@ fn paint_railroad(
     "svg",
     attrs=[
       ("xmlns", "http://www.w3.org/2000/svg"),
-      ("viewBox", "0 0 \{rail_number(geometry.width)} \{rail_number(geometry.height)}"),
+      (
+        "viewBox",
+        "0 0 \{rail_number(geometry.width)} \{rail_number(geometry.height)}",
+      ),
       ("width", rail_number(geometry.width)),
       ("height", rail_number(geometry.height)),
       ("role", "img"),
@@ -1029,12 +1080,19 @@ fn paint_railroad(
         ])
       }
       c.diagnostics.push(
-        @diagrams.Diagnostic::warning("railroad/legibility", name + ": " + finding.message),
+        @diagrams.Diagnostic::warning(
+          "railroad/legibility",
+          name + ": " + finding.message,
+        ),
       )
     }
   }
   {
-    rendered: @render.Rendered::ok(output, "image/svg+xml", diagnostics=c.diagnostics),
+    rendered: @render.Rendered::ok(
+      output,
+      "image/svg+xml",
+      diagnostics=c.diagnostics,
+    ),
     geometry: Some(geometry),
   }
 }
@@ -1046,7 +1104,7 @@ fn railroad_scene(
   renderer : SvgRenderer,
   diagram : @render.Diagram,
   catalog : @animation.Catalog,
-  output_units : Int,
+  output_units : Int32,
 ) -> Result[
   (@render.Rendered, Array[(@animation.Occurrence, String)], Array[NodeBinding]),
   ReadOnlyArray[@diagrams.Diagnostic],
@@ -1082,7 +1140,7 @@ fn railroad_scene(
         paths.push((occurrence, d))
       }
       (None, Some(term)) =>
-        nodes.push({ endpoint: occurrence.key, kind: RailroadTerm(term.id) })
+        nodes.push({ endpoint: occurrence.key, kind: RailroadTerm(term.id), })
       _ =>
         return Err([
           @diagrams.Diagnostic::error(
@@ -1099,13 +1157,19 @@ fn railroad_scene(
 /// supplied trace adds static highlights; no provider is invoked.
 pub fn render_regex(
   model : @regex.Regex,
-  theme? : @theme.Theme = @theme.Theme::classic(),
-  mode? : Mode = Adaptive,
+  theme~ : @theme.Theme = @theme.Theme::classic(),
+  mode~ : Mode = Adaptive,
   id_prefix? : String,
-  limits? : @railroad_layout.Limits = @railroad_layout.Limits::new(),
+  limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   trace? : TraceHighlight,
 ) -> @render.Rendered {
-  let renderer = SvgRenderer::new(theme~, mode~, id_prefix?, railroad_limits=limits, trace?)
+  let renderer = SvgRenderer::new(
+    theme~,
+    mode~,
+    id_prefix?,
+    railroad_limits=limits,
+    trace?,
+  )
   paint_railroad(Regex(model), renderer).rendered
 }
 
@@ -1113,13 +1177,19 @@ pub fn render_regex(
 /// Render a grammar railroad with the same options as `SvgRenderer`.
 pub fn render_ebnf(
   grammar : @ebnf.Grammar,
-  theme? : @theme.Theme = @theme.Theme::classic(),
-  mode? : Mode = Adaptive,
+  theme~ : @theme.Theme = @theme.Theme::classic(),
+  mode~ : Mode = Adaptive,
   id_prefix? : String,
-  limits? : @railroad_layout.Limits = @railroad_layout.Limits::new(),
+  limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   trace? : TraceHighlight,
 ) -> @render.Rendered {
-  let renderer = SvgRenderer::new(theme~, mode~, id_prefix?, railroad_limits=limits, trace?)
+  let renderer = SvgRenderer::new(
+    theme~,
+    mode~,
+    id_prefix?,
+    railroad_limits=limits,
+    trace?,
+  )
   paint_railroad(Ebnf(grammar), renderer).rendered
 }
 
@@ -1141,12 +1211,12 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] SvgRenderer::render_traced(
   provider : P,
   input : String,
   start_rule? : String,
-  limits? : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
+  limits~ : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
   attempts? : ArrayView[String],
-  matched? : ChannelStyle = ChannelStyle::new(),
-  not_matched? : ChannelStyle = ChannelStyle::new(dashed=true),
-  taken? : ChannelStyle = ChannelStyle::hidden(),
-  failure? : ChannelStyle = ChannelStyle::new(),
+  matched~ : ChannelStyle = ChannelStyle::new(),
+  not_matched~ : ChannelStyle = ChannelStyle::new(dashed=true),
+  taken~ : ChannelStyle = ChannelStyle::hidden(),
+  failure~ : ChannelStyle = ChannelStyle::new(),
 ) -> TracedRender {
   fn refused(diagnostics : ArrayView[@diagrams.Diagnostic]) -> TracedRender {
     {
@@ -1158,7 +1228,8 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] SvgRenderer::render_traced(
     Regex(m) => @railroad_trace.TraceRequest::regex(m, input, limits~)
     Ebnf(g) =>
       match start_rule {
-        Some(rule) => @railroad_trace.TraceRequest::ebnf(g, rule, input, limits~)
+        Some(rule) =>
+          @railroad_trace.TraceRequest::ebnf(g, rule, input, limits~)
         None =>
           return refused([
             @diagrams.Diagnostic::error(
@@ -1175,7 +1246,10 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] SvgRenderer::render_traced(
   }
   let run = @railroad_trace.run(provider, request)
   guard run.validated is Some(validated) else {
-    return { run, rendered: @render.Rendered::failed("image/svg+xml", run.diagnostics) }
+    return {
+      run,
+      rendered: @render.Rendered::failed("image/svg+xml", run.diagnostics),
+    }
   }
   let highlight = TraceHighlight::new(
     validated.trace,
@@ -1186,8 +1260,8 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] SvgRenderer::render_traced(
     failure~,
     limits~,
   )
-  let rendered = paint_railroad(diagram, { ..self, trace: Some(highlight) }).rendered
-  { run, rendered }
+  let rendered = paint_railroad(diagram, { ..self, trace: Some(highlight), }).rendered
+  { run, rendered, }
 }
 
 ///|

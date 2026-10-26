@@ -1,0 +1,4 @@
+import {
+  "moonrockz/diagrams/icons" @icon_ref,
+  "moonrockz/diagrams-svg/writer",
+}

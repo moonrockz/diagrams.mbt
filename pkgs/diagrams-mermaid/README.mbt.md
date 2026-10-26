@@ -376,3 +376,54 @@ fixtures. `mise run validate:swimlane-corpus` verifies source digests
 and portable generated fixtures; `swimlane-corpus:generate` refreshes embeddings.
 The frozen grammar-production and shape manifests describe coverage. Mermaid
 and its JavaScript dependencies are used only by the test oracle.
+
+## Native ZenUML interactions
+
+`zenuml` uses a separate typed reader and canonical printer. Its conversion
+produces the shared sequence model. Participant icon references preserve all
+523 keys in the pinned annotator registry, separately from semantic kinds.
+Nested calls create scoped activations. Try/catch/finally sections keep their
+explicit roles. The existing sequence-only APIs keep their types.
+
+```mbt check
+///|
+test {
+  let source = "zenuml\n@Actor User\n@PostgreSQL Store\nUser->Store: query\n"
+  let parsed = @mermaid.read_diagram(source)
+  assert_eq(parsed.tree.text(), source)
+  guard parsed.ast is Some(@mermaid.ParsedDiagram::Zenuml(ast)) else {
+    fail("ZenUML expected")
+  }
+  let converted = @mermaid.to_zenuml_sequence(ast)
+  assert_eq(converted.sequence.unwrap().participants.length(), 2)
+  assert_eq(
+    converted.sequence.unwrap().participants[0].icon.unwrap().key,
+    "actor",
+  )
+  assert_true(@mermaid.render_svg(source).output is Some(_))
+}
+```
+
+See [Mermaid ZenUML](../../docs/guides/mermaid-zenuml.md) for the profile,
+limits, diagnostics, icon provenance and exhaustive-match migration.
+
+## Native architecture diagrams
+
+`architecture-beta` uses typed groups, services, junctions, explicit ports,
+labelled connections, group-boundary attachments and row/column alignments.
+`read_diagram` returns `ParsedDiagram::Architecture` and
+`DiagramTree::Architecture`. `to_architecture` returns an optional immutable
+architecture model with diagnostics. `print_diagram` prints typed AST fields.
+Existing sequence-specific entry points keep their original types.
+
+The reader has a separate optional `architecture_limits` value. Its defaults
+bound source and output to 16,777,216 UTF-16 units, nodes and alignments to
+10,000, connections to 50,000, depth to 256, diagnostics to 256 and work to
+1,000,000. Codes use the stable `architecture/` prefix. Syntax/header, source,
+output, node, edge, alignment, depth, diagnostic and work failures are distinct.
+Conversion adds duplicate-ID, invalid-parent, ownership-cycle, invalid-endpoint,
+invalid-group-attachment and invalid-alignment findings. Source metadata is
+retained with `architecture/metadata-option`; it never controls library layout.
+
+See [the architecture guide](../../docs/guides/mermaid-architecture.md) for the
+frozen reference profile, symbols, rendering limits, playback and enum migration.

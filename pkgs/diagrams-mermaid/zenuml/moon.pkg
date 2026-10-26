@@ -1,0 +1,14 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/sequence" @model,
+  "moonrockz/diagrams/icons",
+  "moonrockz/diagrams-mermaid/zenuml-ast" @ast,
+  "moonrockz/diagrams-mermaid/zenuml-syntax" @syntax,
+}
+
+import {
+  "moonrockz/diagrams-mermaid/zenuml-printer" @printer,
+  "moonbitlang/core/json",
+  "moonbitlang/core/test",
+} for "wbtest"

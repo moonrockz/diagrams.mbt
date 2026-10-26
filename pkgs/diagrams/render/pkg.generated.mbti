@@ -4,6 +4,7 @@ package "moonrockz/diagrams/render"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams/architecture",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/data-tree",
   "moonrockz/diagrams/ebnf",
@@ -21,6 +22,7 @@ pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
   Swimlane(@swimlane.Swimlane)
+  Architecture(@architecture.Architecture)
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar)
   DataTree(@data-tree.DataTree)

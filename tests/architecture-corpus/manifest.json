@@ -1,0 +1,15 @@
+{
+  "mermaid": "12.2.0",
+  "commit": "1fb7869866dd619168d840291c9c54b4f129758b",
+  "licence": "MIT",
+  "lock": "../architecture-reference/bun.lock",
+  "oracle": "../architecture-reference/reference.mjs",
+  "sources": {
+    "architecture.langium": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/parser/src/language/architecture/architecture.langium",
+    "arch.langium": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/parser/src/language/architecture/arch.langium",
+    "common.langium": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/parser/src/language/common/common.langium",
+    "architecture.md": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/docs/syntax/architecture.md",
+    "architectureDb.ts": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/diagrams/architecture/architectureDb.ts",
+    "architectureParser.ts": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/diagrams/architecture/architectureParser.ts"
+  }
+}

@@ -3,6 +3,7 @@ import {
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/architecture",
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/ebnf",
   "moonrockz/diagrams/data-tree" @data_tree,

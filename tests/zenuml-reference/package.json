@@ -1,0 +1,12 @@
+{
+  "name": "@moonrockz/zenuml-reference",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@mermaid-js/mermaid-zenuml": "1.0.1",
+    "@zenuml/core": "3.47.9",
+    "antlr4": "4.11.0"
+  },
+  "overrides": { "@zenuml/core": "3.47.9" },
+  "packageManager": "bun@1.4.3"
+}

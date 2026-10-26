@@ -1,0 +1,7 @@
+{
+  "name": "@moonrockz/architecture-reference",
+  "private": true,
+  "type": "module",
+  "devDependencies": { "mermaid": "12.2.0" },
+  "packageManager": "bun@1.4.3"
+}

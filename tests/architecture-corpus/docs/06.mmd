@@ -1,0 +1,10 @@
+---
+config:
+  architecture:
+    randomize: true
+---
+architecture-beta
+    group api(cloud)[API]
+    service db(database)[Database] in api
+    service server(server)[Server] in api
+    db:R --> L:server

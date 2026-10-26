@@ -53,6 +53,17 @@ pub fn PlaybackPlan::sequence(
     let valid = match (frame.kind, selection.choice) {
       (Alt, Alternative(i)) => i >= 0 && i < frame.sections.length()
       (Opt, Optional(_)) => true
+      (Try, ExceptionSections(indices)) => {
+        let mut previous = -1
+        let mut valid = indices.length() > 0
+        for index in indices {
+          if index <= previous || index < 0 || index >= frame.sections.length() {
+            valid = false
+          }
+          previous = index
+        }
+        valid
+      }
       (Loop, Repetitions(n)) => n >= 0 && n <= limits.steps
       _ => false
     }
@@ -124,6 +135,24 @@ pub fn PlaybackPlan::sequence(
           Frame(index) => {
             let frame = catalog.frames[index]
             match frame.kind {
+              Try =>
+                match choices.get(frame.key) {
+                  Some(ExceptionSections(indices)) => {
+                    jobs.push(Combine(false, indices.length()))
+                    for reversed in 0..<indices.length() {
+                      let index = indices[indices.length() - 1 - reversed]
+                      jobs.push(
+                        Series(frame.sections[index].controls, depth + 1),
+                      )
+                    }
+                  }
+                  _ => {
+                    budget.error(
+                      "animation/selection-required", "Choose exception sections explicitly, including finally only when intended",
+                    )
+                    return fail()
+                  }
+                }
               Alt =>
                 match choices.get(frame.key) {
                   Some(Alternative(section)) =>
