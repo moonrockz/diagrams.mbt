@@ -188,16 +188,20 @@ try {
   }
   for (const javaScriptEnabled of [true, false]) {
     for (const colorScheme of ['light', 'dark'] as const) {
-      for (const width of [1280, 390]) {
+      for (const width of [1440, 768, 360]) {
         const context = await browser.newContext({ javaScriptEnabled, colorScheme, reducedMotion: 'reduce', viewport: { width, height: 900 } });
         const galleryPage = await context.newPage();
         galleryPage.on('pageerror', (e) => errors.push(`${galleryPage.url()}: ${e.message}`));
+        await galleryPage.goto(`${site}gallery/`);
+        if (width === 360) {
+          check(await galleryPage.locator('.gallery-card').first().evaluate(card => card.getBoundingClientRect().top < innerHeight), `${colorScheme}, JS=${javaScriptEnabled}: family navigation leaves the first preview in the narrow viewport`);
+        }
         for (const [id, family] of examples) {
           await galleryPage.goto(`${site}gallery/${id}/`);
           const label = `${id}, ${width}px, ${colorScheme}, JS=${javaScriptEnabled}`;
-          check((await galleryPage.locator('#content').innerText()).includes(`Family: ${family}. Status: Implemented`), `${label}: family and support label`);
-          await galleryPage.locator('.gallery-preview img').first().scrollIntoViewIfNeeded();
-          for (const image of await galleryPage.locator('.gallery-preview img').all()) {
+          check((await galleryPage.locator('.gallery-detail > .gallery-card-meta').textContent())?.replace(/\s+/g, ' ').includes(`Family: ${family}. Status: Implemented`) === true, `${label}: family and support label`);
+          await galleryPage.locator('.gallery-preview img:visible').first().scrollIntoViewIfNeeded();
+          for (const image of await galleryPage.locator('.gallery-preview img:visible').all()) {
             await image.scrollIntoViewIfNeeded();
             await image.evaluate((img: HTMLImageElement) => img.decode());
             check(await image.evaluate((img: HTMLImageElement) => img.naturalWidth > 0), `${label}: static preview loads`);
@@ -214,7 +218,7 @@ try {
         if (javaScriptEnabled) {
           await galleryPage.keyboard.press('Tab');
           check(await galleryPage.locator('.skip-link').evaluate((link) => link === document.activeElement), 'keyboard starts at Skip to content');
-          if (width === 390) {
+          if (width <= 760) {
             await galleryPage.locator('.menu-toggle').focus();
             await galleryPage.keyboard.press('Enter');
             check(await galleryPage.locator('.site-links').isVisible(), 'keyboard opens narrow navigation');
@@ -229,6 +233,64 @@ try {
         await context.close();
       }
     }
+  }
+
+  // The real consumer inherits its theme and specimen controls from the published toolkit.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    const context = await browser.newContext({ colorScheme, viewport: { width: 1440, height: 1000 } });
+    const specimen = await context.newPage();
+    specimen.on('pageerror', error => errors.push(`${specimen.url()}: ${error.message}`));
+    const expected = colorScheme === 'light'
+      ? { background: 'rgb(249, 250, 251)', foreground: 'rgb(17, 24, 39)', accent: '#4f46e5' }
+      : { background: 'rgb(15, 16, 20)', foreground: 'rgb(229, 231, 235)', accent: '#a5b4fc' };
+    for (const route of ['', 'docs/', 'api/', 'gallery/']) {
+      await specimen.goto(site + route);
+      const palette = await specimen.evaluate(() => ({
+        background: getComputedStyle(document.body).backgroundColor,
+        foreground: getComputedStyle(document.body).color,
+        accent: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+      }));
+      check(JSON.stringify(palette) === JSON.stringify(expected), `${colorScheme} shared Smithy palette on ${route || 'landing'}`);
+    }
+    const cards = specimen.locator('.gallery-card:visible');
+    check(await cards.count() === 12, `${colorScheme}: 12 preview cards`);
+    await specimen.getByRole('link', { name: 'BPMN', exact: true }).click();
+    check(await cards.count() === 2, `${colorScheme}: family filter selects two BPMN examples`);
+    const filter = specimen.getByRole('searchbox', { name: 'Filter examples', exact: true });
+    await filter.fill('collaboration');
+    check(await cards.count() === 1, `${colorScheme}: family and text filters combine`);
+    check(await filter.evaluate(node => node === document.activeElement), `${colorScheme}: filtering retains focus`);
+    await filter.fill('no-such-diagram-example');
+    check(await cards.count() === 0, `${colorScheme}: empty results hide cards`);
+    check(await specimen.getByText('No examples match these filters.', { exact: true }).isVisible(), `${colorScheme}: empty state visible`);
+    await specimen.getByRole('button', { name: 'Reset filters', exact: true }).first().click();
+    check(await cards.count() === 12, `${colorScheme}: reset restores all examples`);
+
+    await specimen.goto(`${site}gallery/sequence-basic/`);
+    const tabs = specimen.getByRole('tablist', { name: 'Example inspection' });
+    const previewTab = tabs.getByRole('tab', { name: 'Preview', exact: true });
+    const sourceTab = tabs.getByRole('tab', { name: 'Source', exact: true });
+    await previewTab.focus(); await previewTab.press('ArrowRight');
+    check(await sourceTab.getAttribute('aria-selected') === 'true', `${colorScheme}: keyboard selects Source`);
+    check(await sourceTab.evaluate(node => node === document.activeElement), `${colorScheme}: keyboard focus follows selected tab`);
+    const source = specimen.locator('.gallery-source pre code').first();
+    const download = specimen.locator('.gallery-source a[download]').first();
+    const sourceURL = await download.getAttribute('href');
+    check(sourceURL !== null, `${colorScheme}: source download is explicit`);
+    if (sourceURL) {
+      const raw = await (await specimen.request.get(new URL(sourceURL, site).href)).text();
+      check(await source.textContent() === raw, `${colorScheme}: displayed source matches downloaded text exactly`);
+    }
+    const copy = specimen.getByRole('button', { name: /^Copy source:/ }).first();
+    await specimen.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
+      writeText: () => Promise.reject(new DOMException('Denied by consumer browser qualification', 'NotAllowedError')),
+    } }));
+    await copy.click();
+    check(await source.isVisible(), `${colorScheme}: denied clipboard retains selectable source`);
+    check(await download.isVisible(), `${colorScheme}: denied clipboard retains source download`);
+    await sourceTab.press('Home');
+    check(await previewTab.getAttribute('aria-selected') === 'true', `${colorScheme}: Home returns to Preview`);
+    await context.close();
   }
 
   // One API page: the item anchor, a source link, and a search that opens an API item.
