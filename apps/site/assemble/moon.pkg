@@ -1,5 +1,6 @@
 import {
-  "moonrockz/diagrams-site/model",
+  "moonrockz/telescope/model",
+  "moonrockz/telescope/host",
   "moonbitlang/async",
   "moonbitlang/async/fs",
   "moonbitlang/async/process",

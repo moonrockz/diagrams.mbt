@@ -1,0 +1,20 @@
+import {
+  "moonrockz/telescope/host",
+  "moonrockz/telescope/extensions",
+  "moonrockz/telescope/model",
+  "moonrockz/diagrams/render",
+  "bobzhang/beautiful_mermaid" @mermaid,
+  "moonrockz/diagrams-mermaid" @native_mermaid,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonbitlang/async",
+  "moonbitlang/async/fs",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/async/process",
+  "moonbitlang/x/sys",
+}
+
+supported_targets = "native"
+
+pkgtype(kind: "executable")

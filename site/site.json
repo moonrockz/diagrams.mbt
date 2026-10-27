@@ -50,5 +50,26 @@
         "WRITING_FOR_THE_SITE.md"
       ]
     }
-  ]
+  ],
+  "schema_version": 1,
+  "source_roots": [
+    "docs",
+    "site/pages",
+    "site/articles",
+    "pkgs",
+    "apps/site/assets",
+    "tests/corpus"
+  ],
+  "api_output": "_build/site-api",
+  "api_generate": false,
+  "static": [
+    {
+      "from": "apps/site/assets/examples",
+      "to": "assets/examples"
+    }
+  ],
+  "gallery": {
+    "manifest": "site/gallery.json",
+    "root": "apps/site/assets/examples"
+  }
 }

@@ -4,19 +4,15 @@
 ///
 /// Usage: `mise run dev:site`, or `moonx scripts/serve-site.mbtx [--port <n>] [--no-watch]`.
 /// The base path is the `base_path` of `site/site.json`. The default port is 4173.
-/// The rules: a path outside the base path redirects to the base path, a path that leaves the site
-/// directory gives 403, a directory serves its `index.html`, and a missing file gives 404.
+/// The released CLI owns HTTP routing and static responses.
 /// The watch polls the modification time of the site sources every 500 ms, because
 /// `moonbitlang/async` has no file watch API, and runs `moonx scripts/site.mbtx build` after a change.
 /// Run it from the workspace root.
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/http",
   "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/socket",
   "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/core/encoding/utf8",
   "moonbitlang/core/env",
   "moonbitlang/core/json",
   "moonbitlang/core/string",
@@ -32,114 +28,11 @@ let site_dir : String = "_site"
 
 ///|
 /// The source directories that the watch always polls, relative to the workspace root.
-let watched : Array[String] = ["docs", "site", "apps/site"]
+let watched : Array[String] = ["docs", "site", "apps/site", "tests/corpus"]
 
 ///|
 /// Directory names that the watch skips: build output and installed packages.
 let skipped : Array[String] = ["_build", "node_modules", ".mooncakes"]
-
-///|
-/// What the server does with one request path.
-enum Route {
-  /// Redirect to this location.
-  Redirect(String)
-  /// Answer 403: the path leaves the site directory or cannot be decoded.
-  Forbidden
-  /// Serve this path below the site directory. An empty path or a path that ends with `/` names a
-  /// directory.
-  Serve(String)
-} derive(Eq, Debug)
-
-///|
-fn hex_value(c : Int32) -> Int32? {
-  if c >= '0' && c <= '9' {
-    Some(c - '0')
-  } else if c >= 'a' && c <= 'f' {
-    Some(c - 'a' + 10)
-  } else if c >= 'A' && c <= 'F' {
-    Some(c - 'A' + 10)
-  } else {
-    None
-  }
-}
-
-///|
-/// Decode the `%XX` escapes of a URL path as UTF-8. Returns `None` for a bad escape or bad UTF-8.
-fn percent_decode(path : String) -> String? {
-  let utf8 = @utf8.encode(path)
-  let out = Array(capacity=utf8.length())
-  let mut i = 0
-  while i < utf8.length() {
-    let b = utf8[i]
-    if b == b'%' {
-      guard i + 2 < utf8.length() &&
-        hex_value(utf8[i + 1].to_int()) is Some(hi) &&
-        hex_value(utf8[i + 2].to_int()) is Some(lo) else {
-        return None
-      }
-      out.push((hi * 16 + lo).to_byte())
-      i += 3
-    } else {
-      out.push(b)
-      i += 1
-    }
-  }
-  try @utf8.decode(Bytes::from_array(out)) catch {
-    _ => None
-  } noraise {
-    text => Some(text)
-  }
-}
-
-///|
-/// The route of the request path `target` for a site below `base`. The query and the fragment are
-/// ignored. A path that has a `..` or `.` segment, a backslash or a NUL after decoding leaves the
-/// directory.
-fn route(base : String, target : String) -> Route {
-  let path = match target.find("?") {
-    Some(i) => target[:i].to_owned()
-    None => target
-  }
-  let path = match path.find("#") {
-    Some(i) => path[:i].to_owned()
-    None => path
-  }
-  guard percent_decode(path) is Some(path) else { return Forbidden }
-  guard path.has_prefix(base) else { return Redirect(base) }
-  let rel = path[base.length():].to_owned()
-  if rel.contains("\\") || rel.contains("\u{0}") {
-    return Forbidden
-  }
-  for segment in rel.split("/") {
-    if segment == ".." || segment == "." {
-      return Forbidden
-    }
-  }
-  if rel.has_prefix("/") {
-    return Forbidden
-  }
-  Serve(rel)
-}
-
-///|
-/// The content type of a file name.
-fn content_type(name : String) -> String {
-  let types = [
-    (".html", "text/html; charset=utf-8"),
-    (".css", "text/css; charset=utf-8"),
-    (".js", "text/javascript; charset=utf-8"),
-    (".json", "application/json"),
-    (".xml", "application/atom+xml"),
-    (".svg", "image/svg+xml"),
-    (".png", "image/png"),
-  ]
-  for entry in types {
-    if name.has_suffix(entry.0) {
-      return entry.1
-    }
-  }
-  "application/octet-stream"
-}
 
 ///|
 /// The options of the script.
@@ -206,56 +99,6 @@ fn watched_dirs(text : String) -> Array[String] raise Failure {
     }
   }
   dirs
-}
-
-///|
-fn header(
-  name : String,
-  value : String,
-) -> Map[@http.CaseInsensitiveString, String] {
-  Map::from_array([(@http.CaseInsensitiveString(name), value)])
-}
-
-///|
-/// Answer one request.
-async fn answer(
-  base : String,
-  request : @http.Request,
-  conn : @http.ServerConnection,
-) -> Unit {
-  match route(base, request.path) {
-    Redirect(location) =>
-      conn.send_response(
-        302,
-        "Found",
-        extra_headers=header("Location", location),
-      )
-    Forbidden => conn..send_response(403, "Forbidden").write("Forbidden")
-    Serve(rel) => {
-      let mut file = "\{site_dir}/\{rel}"
-      if rel == "" ||
-        rel.has_suffix("/") ||
-        (@fs.exists(file) && @fs.kind(file) is Directory) {
-        file = if file.has_suffix("/") {
-          "\{file}index.html"
-        } else {
-          "\{file}/index.html"
-        }
-      }
-      if !@fs.exists(file) || !(@fs.kind(file) is Regular) {
-        conn..send_response(404, "Not Found").write("Not found")
-        return
-      }
-      let data = @fs.read_file(file).binary()
-      conn
-      ..send_response(
-        200,
-        "OK",
-        extra_headers=header("Content-Type", content_type(file)),
-      )
-      .write(data)
-    }
-  }
 }
 
 ///|
@@ -360,65 +203,29 @@ async fn main {
       return
     }
   }
-  let server = @http.Server(
-    @socket.Addr::parse("127.0.0.1:\{options.port}"),
-    reuse_addr=true,
-  )
-  println("🌐 Site: http://127.0.0.1:\{options.port}\{base}")
   @async.with_task_group() <| group => {
     if options.watch {
       group.spawn_bg(watch_sources)
     }
-    server.run_forever(allow_failure=true, (request, _body, conn) => {
-      answer(base, request, conn)
-    })
+    let code = @process.run(
+      "moonx",
+      [
+        "scripts/telescope.mbtx",
+        "serve",
+        "--out",
+        site_dir,
+        "--base",
+        base,
+        "--port",
+        options.port.to_string(),
+      ],
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
   }
-}
-
-///|
-test "directory request" {
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/docs/"), Serve("docs/"))
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/"), Serve(""))
-  assert_eq(
-    route("/diagrams.mbt/", "/diagrams.mbt/assets/site.css?v=1"),
-    Serve("assets/site.css"),
-  )
-}
-
-///|
-test "path outside the base" {
-  assert_eq(route("/diagrams.mbt/", "/other/"), Redirect("/diagrams.mbt/"))
-  assert_eq(route("/diagrams.mbt/", "/"), Redirect("/diagrams.mbt/"))
-  assert_eq(
-    route("/diagrams.mbt/", "/diagrams.mbt"),
-    Redirect("/diagrams.mbt/"),
-  )
-}
-
-///|
-test "path escape" {
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/../secret"), Forbidden)
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/%2e%2e/secret"), Forbidden)
-  assert_eq(
-    route("/diagrams.mbt/", "/diagrams.mbt/docs/%2E%2E/%2e%2e/x"),
-    Forbidden,
-  )
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/..%5csecret"), Forbidden)
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt//etc/passwd"), Forbidden)
-  assert_eq(route("/diagrams.mbt/", "/diagrams.mbt/%zz"), Forbidden)
-}
-
-///|
-test "escapes decode as UTF-8" {
-  assert_eq(percent_decode("/a%20b/%C3%A9"), Some("/a b/é"))
-  assert_eq(percent_decode("/%FF"), None)
-}
-
-///|
-test "content types" {
-  assert_eq(content_type("index.html"), "text/html; charset=utf-8")
-  assert_eq(content_type("atom.xml"), "application/atom+xml")
-  assert_eq(content_type("a.bin"), "application/octet-stream")
 }
 
 ///|
@@ -442,9 +249,11 @@ test "the watch follows the packages and API modules of site/site.json" {
     watched_dirs(
       "{\"packages\": [\"notebooks\", \"diagrams\"], \"api\": [\"pkgs/diagrams\", \"pkgs/notebooks\"]}",
     ),
-    ["docs", "site", "apps/site", "pkgs/notebooks", "pkgs/diagrams"],
+    [
+      "docs", "site", "apps/site", "tests/corpus", "pkgs/notebooks", "pkgs/diagrams",
+    ],
   )
-  assert_eq(watched_dirs("{}"), ["docs", "site", "apps/site"])
+  assert_eq(watched_dirs("{}"), ["docs", "site", "apps/site", "tests/corpus"])
 }
 
 ///|

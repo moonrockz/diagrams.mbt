@@ -159,6 +159,78 @@ try {
   check(new URL(plainPage.url()).pathname === `${base}articles/`, 'without JavaScript a main link navigates');
   await plain.close();
 
+  // Gallery keeps exact supplied artifact links and honest scope labels in every tree.
+  await page.goto(site);
+  check((await page.locator(`.hero a[href="${base}gallery/"]`).count()) === 1, 'landing links to the gallery');
+  check((await page.locator(`.site-links a[href="${base}gallery/"]`).count()) === 1, 'primary navigation links to Gallery');
+  const landingText = await page.locator('#content').innerText();
+  check(landingText.includes('General PlantUML diagrams, Draw.io and Graphviz DOT are planned'), 'landing labels planned formats');
+  check(landingText.includes('does not execute a process or simulate BPMN tokens'), 'landing states BPMN limits');
+  check(landingText.includes('evidence supplied by an external engine'), 'landing states trace evidence provenance');
+  const examples = [
+    ['sequence-basic', 'sequence'], ['zenuml-symbols', 'ZenUML'], ['architecture-cloud', 'architecture'],
+    ['bpmn-process', 'BPMN'], ['bpmn-collaboration', 'BPMN'], ['swimlane-review', 'swimlane'],
+    ['regex-date', 'regex'], ['regex-evidence', 'regex'], ['ebnf-arithmetic', 'EBNF'],
+    ['ebnf-evidence', 'EBNF'], ['json-order', 'JSON'], ['yaml-service', 'YAML'],
+  ];
+  await page.goto(`${site}gallery/`);
+  check((await page.locator('#content a[href^="#"]').count()) >= 9, 'gallery has family navigation');
+  for (const [id, family] of examples) {
+    check((await page.locator(`#content a[href="${base}gallery/${id}/"]`).count()) === 1, `gallery lists ${id} (${family})`);
+  }
+  for (const [id] of examples) {
+    await page.goto(`${site}gallery/${id}/`);
+    check((await page.locator('#content a[download][href$=".svg"]').count()) > 0, `${id}: SVG download link available`);
+    for (const link of await page.locator('#content a[download]').all()) {
+      const href = await link.getAttribute('href');
+      check(href !== null && (await page.request.get(new URL(href, site).href)).ok(), `${id}: download resolves ${href}`);
+    }
+  }
+  for (const javaScriptEnabled of [true, false]) {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      for (const width of [1280, 390]) {
+        const context = await browser.newContext({ javaScriptEnabled, colorScheme, reducedMotion: 'reduce', viewport: { width, height: 900 } });
+        const galleryPage = await context.newPage();
+        galleryPage.on('pageerror', (e) => errors.push(`${galleryPage.url()}: ${e.message}`));
+        for (const [id, family] of examples) {
+          await galleryPage.goto(`${site}gallery/${id}/`);
+          const label = `${id}, ${width}px, ${colorScheme}, JS=${javaScriptEnabled}`;
+          check((await galleryPage.locator('#content').innerText()).includes(`Family: ${family}. Status: Implemented`), `${label}: family and support label`);
+          await galleryPage.locator('.gallery-preview img').first().scrollIntoViewIfNeeded();
+          for (const image of await galleryPage.locator('.gallery-preview img').all()) {
+            await image.scrollIntoViewIfNeeded();
+            await image.evaluate((img: HTMLImageElement) => img.decode());
+            check(await image.evaluate((img: HTMLImageElement) => img.naturalWidth > 0), `${label}: static preview loads`);
+          }
+          check(await galleryPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label}: no clipped page content`);
+          const downloads = galleryPage.locator('#content a[download]');
+          check((await downloads.count()) > 0, `${label}: source download available`);
+          for (const link of await galleryPage.locator('#content a').all()) {
+            const href = await link.getAttribute('href');
+            if (href?.startsWith('/')) check(href.startsWith(base), `${label}: ${href} remains in the current tree`);
+          }
+        }
+        await galleryPage.goto(`${site}gallery/swimlane-review/`);
+        if (javaScriptEnabled) {
+          await galleryPage.keyboard.press('Tab');
+          check(await galleryPage.locator('.skip-link').evaluate((link) => link === document.activeElement), 'keyboard starts at Skip to content');
+          if (width === 390) {
+            await galleryPage.locator('.menu-toggle').focus();
+            await galleryPage.keyboard.press('Enter');
+            check(await galleryPage.locator('.site-links').isVisible(), 'keyboard opens narrow navigation');
+            await galleryPage.keyboard.press('Enter');
+            check(!(await galleryPage.locator('.site-links').isVisible()), 'keyboard closes narrow navigation');
+          }
+          await galleryPage.locator('.theme-toggle').focus();
+          check(await galleryPage.locator('.theme-toggle').evaluate((button) => getComputedStyle(button).outlineStyle !== 'none'), 'keyboard theme control has visible focus');
+        } else {
+          check(await galleryPage.locator('.site-links').isVisible(), 'no-script primary navigation remains visible');
+        }
+        await context.close();
+      }
+    }
+  }
+
   // One API page: the item anchor, a source link, and a search that opens an API item.
   const apiPage = `${site}api/moonrockz/diagrams/`;
   await page.goto(apiPage);
