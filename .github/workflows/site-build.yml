@@ -31,10 +31,17 @@ jobs:
         uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cache pinned Telescope CLI
+        uses: actions/cache@v4
+        with:
+          path: _build/tools/telescope
+          key: telescope-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/telescope.mbtx') }}
       - name: Build site
         run: mise run build:site -- --main --tree next
       - name: Check site
         run: mise run check:site -- --tree next
+      - name: Compare published routes and anchors
+        run: mise run check:site-compatibility -- --out _site/next
       # test:site installs Chromium with the Playwright CLI of apps/site/bun.lock. The cache keeps the
       # download, so the install does nothing on a hit. The runner image has the OS libraries of Chromium.
       - name: Cache Playwright browsers
@@ -47,6 +54,13 @@ jobs:
       # Consume current-commit portable snapshots; reuse the locked browser and cache above.
       - name: Qualify standalone animation
         run: mise run test:animation
+      - name: Upload checked preview
+        if: ${{ !inputs.pages }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: site-preview
+          path: _site
+          if-no-files-found: error
       # gh reads the releases and downloads their site assets with the read-only token of this job.
       - name: Assemble the versioned site
         if: inputs.pages

@@ -151,20 +151,32 @@ async fn run(
   if !missing.is_empty() {
     raise @model.Invalid(missing)
   }
+  let input = root + "/_build/site-assembly-input"
+  if @fs.exists(input) { @fs.rmdir(input, recursive=true) }
+  copy_input(site + "/next", input + "/next")
+  let trees : Array[Json] = [{
+    "id": "next", "path": "next", "base_path": config.base_path + "next/",
+  }]
   for release in selected {
     let line = minor_of(release.version)
     let archive = download(root, release, "\{assets_dir}/\{line}")
-    let tree = "\{site}/v/\{line}"
+    let tree = "\{input}/v/\{line}"
     if @fs.exists(tree) {
       @fs.rmdir(tree, recursive=true)
     }
     unpack(release.tag, archive, tree)
+    trees.push({ "id": line, "path": "v/" + line, "base_path": config.base_path + "v/" + line + "/" })
     println("assemble: \{release.tag} gives /v/\{line}/")
   }
-  assemble_site(site, {
-    base: config.base_path,
-    site_url: config.site_url,
-    lines: selected.map(release => minor_of(release.version)),
-  })
+  let manifest : Json = {
+    "schema_version": 1,
+    "base_path": config.base_path,
+    "site_url": config.site_url,
+    "latest": selected.get(0).map(release => minor_of(release.version)).unwrap_or(""),
+    "trees": trees,
+  }
+  let manifest_path = input + "/trees.json"
+  write_text(manifest_path, manifest.stringify())
+  @host.assemble(manifest_path, site)
   selected
 }

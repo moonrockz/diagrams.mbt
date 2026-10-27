@@ -35,6 +35,11 @@ jobs:
         uses: ./.github/actions/setup
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cache pinned Telescope CLI
+        uses: actions/cache@v4
+        with:
+          path: _build/tools/telescope
+          key: telescope-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/telescope.mbtx') }}
       - name: Read the minor line of moon.mod
         id: line
         run: |

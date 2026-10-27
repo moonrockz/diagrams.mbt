@@ -7,6 +7,7 @@ import {
   "moonbitlang/x@0.5.5/sys",
   "moonbitlang/core/env",
   "moonbitlang/core/json",
+  "moonbitlang/core/test",
 }
 
 ///|
@@ -127,7 +128,7 @@ async fn main {
     for variant in ["dark", "light"] {
       let file = "\{name}-\{variant}.svg"
       let svg = @fs.read_file("tests/acceptance/__snapshot__/svg/\{file}")
-      save(file, svg.text(), check, false)
+      save(file, svg.text(), check, site_assets && name == "01")
       html.write_string(
         "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"Example \{name}, \{variant} theme\" loading=\"lazy\"></figure>",
       )
@@ -137,6 +138,12 @@ async fn main {
       "</div><details><summary>Mermaid source</summary><pre><code>\{source}</code></pre></details></article>\n",
     )
   }
+  save(
+    "sequence-basic.mmd",
+    @fs.read_file("tests/corpus/mermaid-12.2.0/examples/01.mmd").text(),
+    check,
+    site_assets,
+  )
   html.write_string(
     "<h2 id=\"bpmn\">BPMN process and collaboration views</h2><p>Project-authored Apache-2.0 fixtures retain their XML and exact supplied DI. Automatic views deliberately ignore DI.</p>",
   )
@@ -268,8 +275,8 @@ async fn main {
     "ebnf-arithmetic.puml", "ebnf-arithmetic-dark.svg", "ebnf-arithmetic-light.svg",
     "ebnf-arithmetic-light.html", "json-order.puml", "json-order-light.svg", "json-order-dark.svg",
     "json-order-light.html", "yaml-service.puml", "yaml-service-light.svg", "yaml-service-dark.svg",
-    "regex-date-trace-success.svg", "regex-date-trace-failure.svg", "regex-date-trace-prefix.svg",
-    "regex-date-trace-terminal.svg", "ebnf-arithmetic-trace-failure.svg",
+    "yaml-service-light.html", "regex-date-trace-success.svg", "regex-date-trace-failure.svg",
+    "regex-date-trace-prefix.svg", "regex-date-trace-terminal.svg", "ebnf-arithmetic-trace-failure.svg",
   ]
   for name in plantuml_order {
     if name != "inline.html" {
@@ -367,6 +374,9 @@ async fn main {
   )
   html.write_string("</html>\n")
   save("index.html", html.to_string(), check, false)
+  if site_assets {
+    save_site_gallery(check)
+  }
   if args.contains("--qualify") {
     for
       (command, arguments) in [
@@ -389,4 +399,247 @@ async fn main {
     }
   }
   println("Gallery: _gallery/index.html")
+}
+
+///|
+fn gallery_file(path : String, media_type : String) -> Json {
+  { "path": path, "media_type": media_type }
+}
+
+///|
+fn gallery_example(
+  id : String,
+  family : String,
+  title : String,
+  description : String,
+  scope : String,
+  source : String,
+  source_type : String,
+  preview : String,
+  preview_dark? : String,
+  player? : String,
+) -> Json {
+  let fields : Map[String, Json] = {
+    "id": @json.to_json(id),
+    "family": @json.to_json(family),
+    "title": @json.to_json(title),
+    "status": "implemented",
+    "description": @json.to_json(description),
+    "scope": @json.to_json(scope),
+    "sources": @json.to_json([gallery_file(source, source_type)]),
+    "preview": gallery_file(preview, "image/svg+xml"),
+  }
+  if preview_dark is Some(path) {
+    fields["preview_dark"] = gallery_file(path, "image/svg+xml")
+  }
+  if player is Some(path) {
+    fields["player"] = gallery_file(path, "text/html")
+  }
+  @json.to_json(fields)
+}
+
+///|
+fn site_gallery_examples() -> Array[Json] {
+  [
+    gallery_example(
+      "sequence-basic",
+      "sequence",
+      "Messages and replies",
+      "Mermaid sequence syntax with solid, dashed and open-headed messages.",
+      "Implemented Mermaid sequence subset; script-free SVG.",
+      "sequence-basic.mmd",
+      "text/plain",
+      "01-light.svg",
+      preview_dark="01-dark.svg",
+    ),
+    gallery_example(
+      "zenuml-symbols",
+      "ZenUML",
+      "Annotated interactions and symbols",
+      "Native ZenUML interactions with typed participant symbols and styled messages.",
+      "Implemented Mermaid ZenUML syntax and illustrative playback, without executing calls.",
+      "zenuml-symbols.mmd",
+      "text/plain",
+      "zenuml-symbols-light.svg",
+      preview_dark="zenuml-symbols-dark.svg",
+      player="zenuml-symbols-light.html",
+    ),
+    gallery_example(
+      "architecture-cloud",
+      "architecture",
+      "Services, ports and connections",
+      "Native architecture-beta with groups, services and authored port connections.",
+      "Architecture rendering and bounded structural exploration, without deployment execution.",
+      "architecture-cloud.mmd",
+      "text/plain",
+      "architecture-cloud-light.svg",
+      preview_dark="architecture-cloud-dark.svg",
+      player="architecture-cloud-light.html",
+    ),
+    gallery_example(
+      "bpmn-process",
+      "BPMN",
+      "Process with supplied diagram geometry",
+      "A BPMN XML process rendered with its supplied diagram interchange geometry.",
+      "Process rendering and structural illustration. No token simulation or process execution.",
+      "process-di.bpmn",
+      "application/xml",
+      "bpmn-process-di-supplied-light.svg",
+      preview_dark="bpmn-process-di-supplied-dark.svg",
+    ),
+    gallery_example(
+      "bpmn-collaboration",
+      "BPMN",
+      "Collaboration and message flows",
+      "Pools, participants and message flows with an optional offline player.",
+      "Collaboration rendering and drawn-structure illustration. Conditions and tokens are not executed.",
+      "collaboration-di.bpmn",
+      "application/xml",
+      "bpmn-collaboration-di-supplied-light.svg",
+      preview_dark="bpmn-collaboration-di-supplied-dark.svg",
+      player="bpmn-collaboration-light.html",
+    ),
+    gallery_example(
+      "swimlane-review",
+      "swimlane",
+      "Review across responsibility bands",
+      "Native Mermaid swimlane-beta with directed interactions and a return path.",
+      "Implemented native swimlane syntax and bounded structural exploration.",
+      "swimlane-review.mmd",
+      "text/plain",
+      "swimlane-review-light.svg",
+      preview_dark="swimlane-review-dark.svg",
+      player="swimlane-review-light.html",
+    ),
+    gallery_example(
+      "regex-date",
+      "regex",
+      "Date pattern railroad",
+      "PlantUML regex block with named groups, character sets, repetition and a negative lookahead.",
+      "Static regex syntax diagram and structural exploration; no embedded regex execution engine.",
+      "regex-date.puml",
+      "text/plain",
+      "regex-date-light.svg",
+      preview_dark="regex-date-dark.svg",
+      player="regex-date-light.html",
+    ),
+    gallery_example(
+      "regex-evidence", "regex", "Externally supplied match evidence", "The date pattern with a successful trace supplied by the frozen test trace provider.",
+      "External provider evidence only. The renderer does not execute the regex or infer failure for unvisited paths.",
+      "regex-date.puml", "text/plain", "regex-date-trace-success.svg",
+    ),
+    gallery_example(
+      "ebnf-arithmetic",
+      "EBNF",
+      "Arithmetic grammar railroad",
+      "PlantUML EBNF with recursive rule references and a note.",
+      "Static grammar diagram and structural exploration; parse evidence requires an external provider.",
+      "ebnf-arithmetic.puml",
+      "text/plain",
+      "ebnf-arithmetic-light.svg",
+      preview_dark="ebnf-arithmetic-dark.svg",
+      player="ebnf-arithmetic-light.html",
+    ),
+    gallery_example(
+      "ebnf-evidence", "EBNF", "Externally supplied parse failure", "An arithmetic grammar with failure evidence supplied by the frozen test trace provider.",
+      "External provider evidence only. No parser is executed inside the renderer.",
+      "ebnf-arithmetic.puml", "text/plain", "ebnf-arithmetic-trace-failure.svg",
+    ),
+    gallery_example(
+      "json-order",
+      "JSON",
+      "Nested order data",
+      "PlantUML JSON with nested collections, exact numbers and highlighted data.",
+      "Implemented native JSON data-tree rendering and structural exploration.",
+      "json-order.puml",
+      "text/plain",
+      "json-order-light.svg",
+      preview_dark="json-order-dark.svg",
+      player="json-order-light.html",
+    ),
+    gallery_example(
+      "yaml-service",
+      "YAML",
+      "Service configuration tree",
+      "PlantUML YAML with flow and block values and lists of maps.",
+      "Implemented native YAML string scalars and data-tree rendering; no YAML execution.",
+      "yaml-service.puml",
+      "text/plain",
+      "yaml-service-light.svg",
+      preview_dark="yaml-service-dark.svg",
+      player="yaml-service-light.html",
+    ),
+  ]
+}
+
+///|
+async fn save_site_gallery(check : Bool) -> Unit {
+  let entries = site_gallery_examples()
+  let root = "apps/site/assets/examples"
+  let absolute_root = @fs.realpath(root)
+  for entry in entries {
+    guard entry is Object(fields) else {
+      raise Failure("Invalid gallery entry")
+    }
+    let id = string(fields["id"])
+    let files : Array[Json] = []
+    guard fields["sources"] is Array(sources) else {
+      raise Failure("Missing gallery sources: " + id)
+    }
+    files.append(sources)
+    for key in ["preview", "preview_dark", "player"] {
+      if fields.get(key) is Some(file) {
+        files.push(file)
+      }
+    }
+    for file in files {
+      guard file is Object(record) else {
+        raise Failure("Invalid gallery file: " + id)
+      }
+      let path = root + "/" + string(record["path"])
+      guard @fs.exists(path) && @fs.kind(path) is Regular else {
+        raise Failure("Missing gallery artifact: " + id + ": " + path)
+      }
+      guard @fs.realpath(path).has_prefix(absolute_root + "/") else {
+        raise Failure("Gallery artifact escapes its root: " + id + ": " + path)
+      }
+    }
+  }
+  let manifest : Json = {
+    "schema_version": 1,
+    "root": root,
+    "entries": @json.to_json(entries),
+  }
+  let path = "site/gallery.json"
+  let text = manifest.stringify(indent=2) + "\n"
+  if check {
+    guard @fs.exists(path) && @fs.read_file(path).text() == text else {
+      raise Failure(
+        "Gallery metadata changed; run mise run gallery -- --existing-output --site-assets",
+      )
+    }
+  } else {
+    @fs.write_file(path, text)
+  }
+}
+
+///|
+test "site gallery covers implemented families with unique ids and no digests" {
+  let ids : Array[String] = []
+  let families : Array[String] = []
+  for entry in site_gallery_examples() {
+    guard entry is Object(fields) else { fail("object required") }
+    let id = string(fields["id"])
+    @test.assert_eq(ids.contains(id), false)
+    ids.push(id)
+    families.push(string(fields["family"]))
+    @test.assert_eq(entry.stringify().contains("sha256"), false)
+  }
+  for
+    family in [
+      "sequence", "ZenUML", "architecture", "BPMN", "swimlane", "regex", "EBNF",
+      "JSON", "YAML",
+    ] {
+    @test.assert_eq(families.contains(family), true)
+  }
 }

@@ -1,4 +1,4 @@
-schema: spec-driven
+schema: html-design
 context: |
   diagrams.mbt is a MoonBit library for diagrams. It supports formats such as
   Mermaid, PlantUML, Draw.io and Graphviz DOT. It has the same focus, design
@@ -16,3 +16,13 @@ rules:
     - Group tasks into story-sized units. Each group names its beads issue ID once one exists.
   proposal:
     - State what is out of scope.
+  design:
+    - Write design.html with the local .agents/templates/agent-document.html template.
+    - Label maintainer decisions Owner and author decisions Call.
+operations:
+  archive:
+    guidance:
+      - >-
+        Update design.html asset links from ../../../.agents/templates/assets/
+        to ../../../../.agents/templates/assets/ after archive.
+      - Follow CONTRIBUTING.md. Archive in the last task group pull request and close beads only after merge.

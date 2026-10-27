@@ -1,0 +1,60 @@
+<!DOCTYPE html><html data-base="/diagrams.mbt/" data-site-root="/diagrams.mbt/" lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>BPMN and flow animation · diagrams.mbt</title><meta name="description" content="Read portable BPMN documents, select views and generate static SVG or offline playback."><script>try{var t=localStorage.getItem('site-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script><link href="/diagrams.mbt/assets/site.css" rel="stylesheet"><link title="diagrams.mbt articles" href="/diagrams.mbt/articles/atom.xml" rel="alternate" type="application/atom+xml"><script src="/diagrams.mbt/assets/islands.js" type="module"></script><script id="__rabbita_transcript" type="application/json">{}</script></head><body><a href="#content" target="_self" class="skip-link">Skip to content</a><header class="site-header"><a href="/diagrams.mbt/" target="_self" class="brand">diagrams.mbt</a><nav aria-label="Main" class="site-links" id="site-links"><a aria-current="page" href="/diagrams.mbt/docs/" target="_self" class="current">Docs</a><a href="/diagrams.mbt/articles/" target="_self">Articles</a><a href="/diagrams.mbt/api/" target="_self">API</a><a href="https://github.com/moonrockz/diagrams.mbt" target="_self">GitHub</a></nav><div id="site-search"></div><div id="site-version"></div><div id="site-theme"></div><div id="site-nav"></div></header><div class="version-banner"></div><main id="content"><div class="docs-layout"><aside class="docs-sidebar"><nav aria-label="Documentation"><ul><li class="depth-0"><span class="nav-label">Guides</span></li><li class="depth-0"><a href="/diagrams.mbt/docs/guides/mermaid-sequence/" target="_self">Mermaid sequence diagrams</a></li><li class="depth-0"><a aria-current="page" href="/diagrams.mbt/docs/guides/bpmn-and-animation/" target="_self" class="current">BPMN and flow animation</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/guides/mermaid-swimlanes/" target="_self">Mermaid swimlanes</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/guides/plantuml/" target="_self">PlantUML regex, EBNF, JSON and YAML</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/guides/mermaid-zenuml/" target="_self">Mermaid ZenUML</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/guides/mermaid-architecture/" target="_self">Mermaid architecture diagrams</a></li><li class="depth-0"><span class="nav-label">Design</span></li><li class="depth-0"><a href="/diagrams.mbt/docs/design/overview/" target="_self">Design overview</a></li><li class="depth-0"><span class="nav-label">Packages</span></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/bpmn/" target="_self">moonrockz/bpmn</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams/" target="_self">moonrockz/diagrams</a></li><li class="depth-1"><a href="/diagrams.mbt/docs/packages/diagrams/architecture/" target="_self">Architecture values</a></li><li class="depth-1"><a href="/diagrams.mbt/docs/packages/diagrams/animation/" target="_self">Pure motion and structural exploration</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams-animated/" target="_self">moonrockz/diagrams-animated</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams-bpmn/" target="_self">moonrockz/diagrams-bpmn</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams-mermaid/" target="_self">moonrockz/diagrams-mermaid</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams-plantuml/" target="_self">moonrockz/diagrams-plantuml</a></li><li class="depth-0"><a href="/diagrams.mbt/docs/packages/diagrams-svg/" target="_self">moonrockz/diagrams-svg</a></li><li class="depth-1"><a href="/diagrams.mbt/docs/packages/diagrams-svg/bpmn-layout/" target="_self">BPMN geometry</a></li><li class="depth-1"><a href="/diagrams.mbt/docs/packages/diagrams-svg/swimlane-layout/" target="_self">Swimlane geometry</a></li><li class="depth-0"><span class="nav-label">Contribute</span></li><li class="depth-0"><a href="/diagrams.mbt/docs/writing_for_the_site/" target="_self">Writing for the site</a></li></ul></nav></aside><article class="docs-article"><div class="prose"><h1 id="bpmn-and-flow-animation">BPMN and flow animation</h1>
+<p>Use <code>moonrockz/bpmn</code> independently to read, write, validate and traverse BPMN XML.
+It depends on MoonBit core only. It retains processes, collaborations,
+choreography, conversations, diagram interchange and vendor extensions. Reference
+resolution accepts explicit resources; namespace URIs and import locations never
+cause network or filesystem access.</p>
+<p>The <a href="/diagrams.mbt/docs/packages/bpmn/">BPMN document guide</a> has compiled examples for
+reading, typed construction, writing, validation, reference indexes and bounded
+graph traversal. Syntax, structural and reference diagnostics remain distinct.
+Source reproduction keeps the original spelling; canonical writing is deterministic.</p>
+<h2 id="select-and-render-a-view">Select and render a view</h2>
+<p>Use <a href="/diagrams.mbt/docs/packages/diagrams-bpmn/">diagrams-bpmn</a> to select a process,
+collaboration or diagram plane. Automatic selection requires one view at its
+selected tier. Select explicitly when a document has multiple candidate views.
+Choreography and conversation documents remain typed, but their rendering is
+deferred and produces an explicit diagnostic.</p>
+<p>The <a href="/diagrams.mbt/docs/packages/diagrams-svg/">SVG guide</a> documents supplied-DI,
+preferred-DI and automatic geometry policies. Supplied views preserve exact
+coordinates, label bounds and waypoints. Automatic layout deliberately ignores
+DI. Limits fail with diagnostics; legibility findings describe supplied geometry
+without silently moving it.</p>
+<p><img src="/diagrams.mbt/assets/examples/bpmn-process-di-supplied-light.svg" alt="A BPMN process with two lanes, task markers, a timer boundary event, a gateway and data artifacts." ></p>
+<p>Compare the process in <a href="/diagrams.mbt/assets/examples/bpmn-process-di-supplied-dark.svg">dark</a>
+and <a href="/diagrams.mbt/assets/examples/bpmn-process-di-supplied-light.svg">light</a>, or its automatic
+<a href="/diagrams.mbt/assets/examples/bpmn-process-di-automatic-dark.svg">dark</a> and
+<a href="/diagrams.mbt/assets/examples/bpmn-process-di-automatic-light.svg">light</a> layout.
+Read the <a href="/diagrams.mbt/assets/examples/process-di.bpmn">process XML</a>.</p>
+<p>The collaboration has an expanded subprocess and a black-box participant. Compare
+its supplied <a href="/diagrams.mbt/assets/examples/bpmn-collaboration-di-supplied-dark.svg">dark</a> and
+<a href="/diagrams.mbt/assets/examples/bpmn-collaboration-di-supplied-light.svg">light</a> views, or the
+<a href="/diagrams.mbt/assets/examples/collaboration-di.bpmn">collaboration XML</a>.</p>
+<h2 id="follow-connections-offline">Follow connections offline</h2>
+<p><a href="/diagrams.mbt/docs/packages/diagrams-animated/">diagrams-animated</a> generates one HTML
+artifact with inline SVG, data, styles and runtime. It starts still and needs no
+network, external font or UI framework. Its controls support keyboard operation,
+reduced motion, hidden-page suspension and static printing. Download SVG returns
+the exact canonical static bytes and preserves viewer state.</p>
+<p>Open the collaboration player in <a href="/diagrams.mbt/assets/examples/bpmn-collaboration-dark.html">dark</a>
+or <a href="/diagrams.mbt/assets/examples/bpmn-collaboration-light.html">light</a>, the
+<a href="/diagrams.mbt/assets/examples/bpmn-automatic.html">automatic process player</a>, or the
+<a href="/diagrams.mbt/assets/examples/bpmn-concurrent.html">finite concurrent BPMN scenario</a>.</p>
+<p>The finite sequence scenario selects one alternative, repeats a loop twice, and
+runs parallel branches. Open it in <a href="/diagrams.mbt/assets/examples/sequence-scenario-dark.html">dark</a>
+or <a href="/diagrams.mbt/assets/examples/sequence-scenario-light.html">light</a>. Unselected messages
+remain visible. Repeated participants do not create invented interaction cycles.</p>
+<p>The <a href="/diagrams.mbt/docs/packages/diagrams/animation/">pure motion guide</a> documents
+occurrences, finite serial/parallel plans, explicit branch choices, deterministic
+sampling and bounded structural queries. Illustrative flow repeats authored
+connections. A structural route is a path over drawn connections. Conditions,
+events and gateway synchronization are not evaluated. Neither mode executes a
+business process or simulates tokens.</p>
+<h2 id="review-and-verify">Review and verify</h2>
+<p>Run <code>mise run gallery</code> and open <code>_gallery/index.html</code> for the complete review
+set, including XML for choreography and conversation documents. After snapshot
+qualification, <code>mise run gallery -- --existing-output --check --qualify</code> checks
+all stored files, links and browser output without a workspace/site rebuild.
+Run <code>mise run test:animation</code> for the full offline player qualification.</p>
+<p><code>mise run gallery -- --site-assets</code> refreshes the selected site examples from
+verified snapshots. Versions and publication remain separate owner decisions.</p>
+</div><p class="page-source"><a href="https://github.com/moonrockz/diagrams.mbt/blob/main/docs/guides/bpmn-and-animation.md" target="_self">View source on GitHub</a></p></article><aside class="docs-rail"><nav aria-label="On this page" class="docs-toc" id="site-toc"><p class="nav-label">On this page</p><ul><li class="depth-0"><a href="#select-and-render-a-view" target="_self">Select and render a view</a></li><li class="depth-0"><a href="#follow-connections-offline" target="_self">Follow connections offline</a></li><li class="depth-0"><a href="#review-and-verify" target="_self">Review and verify</a></li></ul></nav></aside></div></main><footer class="site-footer"><p>Apache-2.0 · diagrams.mbt, diagramming for MoonBit</p></footer></body></html>

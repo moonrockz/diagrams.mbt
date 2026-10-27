@@ -1,6 +1,35 @@
 <section class="hero">
   <h1>diagrams.mbt</h1>
-  <p>Portable BPMN documents and Mermaid sequence and swimlane diagrams for MoonBit, with script-free SVG and offline flow illustration.</p>
-  <p><a href="/docs/design/overview/">Read the Design overview</a>. It explains the document, model and rendering boundaries.</p>
-  <p>Read the <a href="/docs/guides/bpmn-and-animation/">BPMN and animation guide</a> for static views and standalone players. Read the <a href="/docs/guides/mermaid-swimlanes/">Mermaid swimlane guide</a> for responsibility bands and directed interactions. Read the <a href="/docs/guides/mermaid-zenuml/">ZenUML guide</a> for annotated interactions and the <a href="/docs/guides/mermaid-architecture/">architecture guide</a> for port connections and offline exploration. Source and proposals are on <a href="https://github.com/moonrockz/diagrams.mbt">GitHub</a>.</p>
+  <p>Read diagram source. Build typed models. Render SVG and offline players.</p>
+  <p>A MoonBit library for Mermaid sequence, swimlane, ZenUML and architecture diagrams, BPMN documents, and native PlantUML regex, EBNF, JSON and YAML blocks.</p>
+  <p><a href="/docs/guides/mermaid-sequence/">Get started with Mermaid</a> · <a href="/gallery/">Explore the gallery</a> · <a href="/docs/">Read the docs</a> · <a href="#diagram-families">Diagram families</a> · <a href="api:moonrockz/diagrams">Browse the API</a></p>
+</section>
+
+<section aria-labelledby="diagram-families">
+  <h2 id="diagram-families">Diagram families</h2>
+  <table>
+    <thead><tr><th>Family</th><th>What you can build</th><th>Guide</th></tr></thead>
+    <tbody>
+      <tr><td>Sequence</td><td>Participants, messages, grouped frames and explicit finite scenarios.</td><td><a href="/docs/guides/mermaid-sequence/">Mermaid sequence</a></td></tr>
+      <tr><td>Swimlane</td><td>Responsibility bands and directed interactions in four directions.</td><td><a href="/docs/guides/mermaid-swimlanes/">Mermaid swimlane-beta</a></td></tr>
+      <tr><td>ZenUML</td><td>Annotated interactions, exceptions and typed participant symbols.</td><td><a href="/docs/guides/mermaid-zenuml/">Mermaid ZenUML</a></td></tr>
+      <tr><td>Architecture</td><td>Groups, services, ports and connections with offline exploration.</td><td><a href="/docs/guides/mermaid-architecture/">Mermaid architecture</a></td></tr>
+      <tr><td>BPMN</td><td>Portable documents, process and collaboration SVG, supplied or automatic geometry.</td><td><a href="/docs/guides/bpmn-and-animation/">BPMN and animation</a></td></tr>
+      <tr><td>Regex</td><td>Railroad diagrams for patterns, with optional externally supplied match evidence.</td><td><a href="/docs/guides/plantuml/">PlantUML regex</a></td></tr>
+      <tr><td>EBNF</td><td>Grammar railroads, rule references and externally supplied parse evidence.</td><td><a href="/docs/guides/plantuml/">PlantUML EBNF</a></td></tr>
+      <tr><td>JSON and YAML</td><td>Data trees with themed SVG and offline structural exploration.</td><td><a href="/docs/guides/plantuml/">PlantUML data blocks</a></td></tr>
+    </tbody>
+  </table>
+  <figure>
+    <a href="/gallery/swimlane-review/"><img src="/assets/examples/swimlane-review-light.svg" alt="A review workflow with responsibility bands and a return interaction" loading="lazy"></a>
+    <figcaption>A native swimlane diagram rendered by diagrams.mbt. <a href="/assets/examples/swimlane-review.mmd">Read the source</a> or <a href="/assets/examples/swimlane-review-light.html">open its offline player</a>.</figcaption>
+  </figure>
+</section>
+
+<section aria-labelledby="portable-output">
+  <h2 id="portable-output">Portable models and output</h2>
+  <p>The libraries build for wasm, wasm-gc, JavaScript and native targets. SVG output needs no scripts. Offline players add playback and bounded structural exploration without a server.</p>
+  <p>Diagram illustration does not execute a process or simulate BPMN tokens. Regex and EBNF traces describe evidence supplied by an external engine. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
+  <p>General PlantUML diagrams, Draw.io and Graphviz DOT are planned. The <a href="/docs/design/overview/">design overview</a> explains the document, model and rendering boundaries.</p>
+  <p><a href="https://github.com/moonrockz/diagrams.mbt">Source on GitHub</a> · <a href="/docs/writing_for_the_site/">Contribute documentation and examples</a></p>
 </section>

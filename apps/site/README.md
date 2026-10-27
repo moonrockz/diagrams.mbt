@@ -1,101 +1,121 @@
-# Moon-Lander docs site
+# diagrams.mbt site consumer
 
-`moonrockz/diagrams-site` builds the static docs site of this repository. It is a
-docs tool and is not published.
+`moonrockz/diagrams-site` is an unpublished native consumer of
+[`moonrockz/telescope@0.1.1`](https://mooncakes.io/docs/moonrockz/telescope).
+The published diagram libraries have no Telescope or UI dependency.
 
-| Package | Content | Targets |
-| --- | --- | --- |
-| `model` | Site configuration, routes, search entries, build problems, and the `moon doc` reader and signature links of the API pages | all four |
-| `content` | Front matter, Markdown, heading anchors and the HTML passes of the building blocks | `native` |
-| `views` | Rabbita components for each page kind | `native` |
-| `site` | Sources to outputs: pages, links, sidebar, articles, feed, search index and API pages | `native` |
-| `generate` | Executable that reads the repository and writes `_site/` | `native` |
-| `check` | Executable that checks the links of a built `_site/`, tree by tree when it is assembled, and warns about API items without a docstring | `native` |
-| `assemble` | Executable that adds the release trees to a `next` build and writes the versioned site: root, `/latest/`, banners, canonical links and `versions.json` | `native` |
-| `islands` | Client islands, bundled with Bun into `_site/assets/islands.js` | `js` |
+`consumer/` supplies compiled Mermaid and PlantUML fence callbacks to the released
+`host.build` API. They preserve `figure.diagram`, the legacy SVG ID seeds, and one
+occurrence counter for both `plantuml` and `puml`. The consumer records the actual
+Git revision in `_build/site-config.json` for page and API source links.
+`assemble/releases.mbt` owns GitHub tag selection, `versions.since`, and the
+`site-<minor>.tar.gz` asset policy. Its host boundary downloads existing archives
+and supplies them, together with `next`, to Telescope's offline assembler.
 
-`scripts/highlight.ts` highlights code blocks with Shiki after `generate`. It is the
-only TypeScript step.
+Telescope owns configuration validation, content parsing, API ingestion, routes,
+HTML, navigation, search, themes, browser controls, static assets, checks, serving
+and generic version assembly. There is no local copy of those engines.
 
-## Content
+## Pinned installation
 
-| Source | Route |
+Use the tools in `.config/mise/config.toml` and run from the repository root:
+
+```shell
+mise trust
+mise install
+mise exec -- moon update
+mise run test:site-consumer
+mise run test:site -- --tree next
+```
+
+`test:site-consumer` builds and checks root and `next`, compares the unchanged
+77-route and 5,376-anchor compatibility baseline, and checks all 12 gallery
+entries and the exact bytes of their 40 supplied artifacts. It writes
+`_build/site-consumer-report.json`. `-- --existing-output` checks builds already
+on disk. No Telescope checkout, path override or source build is used.
+
+`scripts/telescope.mbtx` downloads CLI **v0.1.1** from the
+[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.1.1), verifies
+both the pinned SHA-256 and companion checksum, extracts it below
+`_build/tools/telescope/`, and checks `--version` before use. It supports the
+release's qualified Linux x64 and macOS arm64 archives:
+
+| Archive | SHA-256 |
 | --- | --- |
-| `docs/<path>.md` or `.html` | `/docs/<path>/` |
-| `site/articles/YYYY-MM-DD-slug.md` | `/articles/slug/`, also in `/articles/atom.xml` |
-| `README.md` or `README.mbt.md` of a package in `packages` | `/docs/packages/<name>/` |
-| `site/pages/index.html` | `/` |
-| `moon doc` output of a module directory in `api` | `/api/<package path>/`, and the index `/api/` |
+| `telescope-0.1.1-linux-x64.tar.gz` | `dbd2e1813b6d1a7d16bf88e022cd5e971209811fc12c2cf3c7955d6270dca4de` |
+| `telescope-0.1.1-macos-arm64.tar.gz` | `10fc718ff86184a8d21cb77aec0dfff3ad35c16008d8de0b5bbd272a274a1036` |
 
-The sidebar groups come from `nav` in `site/site.json`. Each page below `docs/` must
-match a `nav` item, or the build fails.
+The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40531421002)
+published source `4c2c7ebb235425c917780fccfc874a5beb06c156`. See the
+[0.1.1 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.1.1.md)
+for the public-install qualification. The downloader never substitutes a
+binary from PATH or rebuilds Telescope. The library and CLI embed their CSS and
+browser islands; Bun installs only the locked browser test dependencies.
 
-## API pages
-
-`build:site` runs `moon doc` in each module directory of `api` in `site/site.json`, with
-the output below `_build/site-api/<module directory>/`. `generate` reads
-`module_index.json` and `package_data.json` and writes one page for each package. The
-sections are Types, Errors, Traits, Type aliases and Values; an empty section is not
-shown. Each item has the anchor `#<name>`. A method has `#<Type>.<method>`, and a method
-of a trait implementation has `#<Type>.<Trait>.<method>`, or `#<Trait>.<Type>.<method>`
-below a trait. A signature link to a package on the site goes to its API page; any other
-target is plain text. `check:site` prints a warning for each item and method without a
-docstring.
-
-## Building blocks
-
-| Block | Write | Build output |
-| --- | --- | --- |
-| Table | GitHub Markdown table | `<table>` |
-| Code | fenced block with a language | Shiki colors for the light and dark themes |
-| Diagram | ```` ```mermaid ```` block | inline SVG in `figure.diagram`; a diagram that does not render fails the build |
-| Image | relative image link | a copy below the route of the page |
-| Callout | `> [!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]` or `[!CAUTION]` | `aside.callout.<kind>` with a label |
-| Status | `status: proposed` in the front matter | the banner "Proposed — not implemented" and a sidebar badge |
-| Layer stack | ```` ```layers ```` block, one `name \| detail` line for each layer | `figure.layer-stack` |
-
-A `moonbit` or `mbt` fence outside a `.mbt.md` file must say `notest`, for example
-```` ```moonbit notest ````, because `moon test` does not compile it. Put an example
-that a reader can copy in a `.mbt.md` file of its package.
-
-The site configuration is `site/site.json` at the repository root. The landing page
-is `site/pages/index.html`. Static assets are in `apps/site/assets/`.
-
-Build, check and preview the site from the repository root:
+## Commands and content
 
 ```shell
 mise run build:site
 mise run check:site
 mise run test:site
 mise run dev:site
+mise run build:site -- --main --tree next
+mise run check:site -- --tree next
+mise run assemble:site
+mise run check:site
 ```
 
-`dev:site` serves the site at `http://127.0.0.1:4173/diagrams.mbt/` and builds it
-again after a source file changes.
+`dev:site` invokes the released CLI at
+`http://127.0.0.1:4173/diagrams.mbt/`. A local source watcher rebuilds changes.
+`-- --port 4175 --no-watch` selects another port and disables watching.
 
-`check:site` checks the built `_site/`: internal links, page titles, the Atom feed,
-and that no file is below `docs/superpowers/`. `test:site` runs the tests of the
-site packages and then a Chromium smoke test (`apps/site/scripts/browser-test.ts`)
-against `_site/`, served on port 4174, so build the site first.
+| Input | Output |
+| --- | --- |
+| `docs/<path>.md` or `.html` | `/docs/<path>/` |
+| Selected package README | `/docs/packages/<name>/` |
+| `site/pages/index.html` | `/` |
+| Dated `site/articles/` content | `/articles/<slug>/` and Atom feed |
+| Selected `moon doc` metadata | `/api/<qualified-package>/` |
+| `site/gallery.json` | `/gallery/` and `/gallery/<id>/` |
 
-The output is `_site/`. Each route is a directory with `index.html`, and each link
-starts with the `base_path` of `site/site.json`.
+`site/site.json` declares schema version 1, explicit discovery roots, navigation,
+API modules, static examples and the gallery artifact root. Local plans below
+`docs/superpowers/` stay excluded. `build:site` runs `moon doc` for each selected
+API module into `_build/site-api`; missing API prose remains visible as warnings.
+Builds use Telescope's staged promotion, preserving the previous tree on failure.
 
-## Versions
+`--tree <minor>` builds `_site/v/<minor>/` only for the root module's current
+minor line. `assemble:site` downloads the newest eligible historical release in
+each minor line, supplies its existing archive without rebuilding it, and writes
+root, `next`, `v/<minor>`, `latest`, banners and `versions.json`. Historical trees
+are staged in `_build/site-assembly-input`. `check:site` checks the assembled
+output tree by tree. Assembly requires GitHub read access through `gh`.
 
-The deployed site is versioned. CI builds `main` as the `next` tree with
-`mise run build:site -- --main --tree next`, so its pages are in `_site/next/` and
-each link starts with `/diagrams.mbt/next/`. A release builds the tree of its minor
-line with `--tree <minor>`, in `_site/v/<minor>/`, and attaches it as
-`site-<minor>.tar.gz`. `--tree` fails for a minor line that is not the line of the
-root `moon.mod`. A source page cannot have a route below `v`, `next` or `latest`.
+## Add and qualify an example
 
-On `main`, `mise run assemble:site` reads the releases with `gh`, downloads the
-asset of the newest release of each minor line from `versions.since` in
-`site/site.json` on, and writes the root, `/latest/`, the version banners, the
-canonical links and `versions.json`. Then `mise run check:site` checks each tree:
-a link that leaves its tree fails, except the banner link and the canonical link.
-The version switcher in the header reads `versions.json`.
+Update a tested renderer source or fixture first, then add an entry to
+`site_gallery_examples` in `scripts/gallery.mbtx`. Choose a stable ID and family,
+state the implemented scope, name a source and light SVG, and optionally provide
+a dark SVG, a qualified player and companion artifacts. BPMN players illustrate
+structure or supplied scenarios; regex and EBNF evidence comes from external
+engines. General PlantUML diagrams, Draw.io and DOT remain planned.
 
-The design is in `openspec/changes/archive/2026-10-22-add-docs-site/design.md`,
-and the requirements are in `openspec/specs/docs-site/spec.md`.
+```shell
+mise run gallery -- --site-assets
+mise run validate:examples
+mise run test:animation
+mise run test:site-consumer
+mise run test:site -- --tree next
+```
+
+The exporter owns `site/gallery.json` and `apps/site/assets/examples/`. Telescope
+validates and renders that version 1 contract. Do not edit Telescope internals to
+add an example. `consumer/gallery_wbtest.mbt` demonstrates adding a fixture
+through this contract and rejects duplicate IDs, missing files, traversal and
+symlinks escaping the artifact root. Provider tests cover real native rendering.
+The browser suite covers gallery previews, downloads, scope labels, themes,
+keyboard navigation, narrow widths and reading without JavaScript.
+
+The reviewed compatibility inventory is `fixtures/compatibility/routes.json`.
+Run `mise run check:site-compatibility -- --out _site/next` for a selected tree.
+Do not recapture the baseline to accept removed routes or anchors.

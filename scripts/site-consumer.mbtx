@@ -1,0 +1,124 @@
+///|
+/// Qualify the released site consumer at root and next, without a baseline recapture.
+/// --existing-output checks the current builds without compiling them again.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+async fn run(args : Array[String]) -> Unit {
+  let code = @process.run(
+    "mise",
+    args,
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  guard code == 0 else {
+    fail("site consumer command failed: " + args.join(" "))
+  }
+}
+
+///|
+async fn verify(out : String, base : String) -> Int32 {
+  guard @json.parse(@fs.read_file(out + "/telescope-build.json").text())
+    is Object(build) &&
+    build.get("toolkit_version") == Some(Json::string("0.1.1")) else {
+    fail(out + ": expected released Telescope 0.1.1 provenance")
+  }
+  let (code, revision) = @process.collect_stdout("git", ["rev-parse", "HEAD"])
+  guard code == 0 &&
+    build.get("repo_ref") ==
+    Some(Json::string(revision.text().trim().to_owned())) else {
+    fail(out + ": source links do not name the current revision")
+  }
+  guard @json.parse(@fs.read_file("site/gallery.json").text())
+    is Object(manifest) &&
+    manifest.get("entries") is Some(Array(entries)) &&
+    entries.length() == 12 else {
+    fail("expected 12 qualified examples")
+  }
+  let artifacts : Map[String, Bool] = Map([])
+  for entry in entries {
+    guard entry is Object(fields) && fields.get("id") is Some(String(id)) else {
+      fail("invalid example")
+    }
+    let html = @fs.read_file(out + "/gallery/" + id + "/index.html").text()
+    guard html.contains(base + "gallery/artifacts/") &&
+      html.contains("Implemented") else {
+      fail(out + ": missing artifact link or support label for " + id)
+    }
+    let files = []
+    for key in ["sources", "companions"] {
+      if fields.get(key) is Some(Array(items)) {
+        files.append(items)
+      }
+    }
+    for key in ["preview", "preview_dark", "player"] {
+      if fields.get(key) is Some(Object(file)) {
+        files.push(Json::object(file))
+      }
+    }
+    for file in files {
+      guard file is Object(file) && file.get("path") is Some(String(path)) else {
+        fail("invalid artifact")
+      }
+      guard @fs.read_file("apps/site/assets/examples/" + path).binary() ==
+        @fs.read_file(out + "/gallery/artifacts/" + path).binary() else {
+        fail("gallery artifact bytes changed: " + path)
+      }
+      artifacts[path] = true
+    }
+  }
+  guard artifacts.length() == 40 else {
+    fail("expected 40 unique qualified artifacts")
+  }
+  artifacts.length()
+}
+
+///|
+async fn qualify() -> Unit {
+  let existing = @env.args().contains("--existing-output")
+  if !existing {
+    run(["run", "build:site"])
+  }
+  run(["run", "check:site"])
+  run(["run", "check:site-compatibility"])
+  ignore(verify("_site", "/diagrams.mbt/"))
+  if !existing {
+    run(["run", "build:site", "--", "--main", "--tree", "next"])
+  }
+  run(["run", "check:site", "--", "--tree", "next"])
+  run(["run", "check:site-compatibility", "--", "--out", "_site/next"])
+  let artifacts = verify("_site/next", "/diagrams.mbt/next/")
+  let report : Json = {
+    "library": "moonrockz/telescope@0.1.1",
+    "cli": "0.1.1",
+    "baseline_routes": 77,
+    "baseline_anchors": 5376,
+    "gallery_entries": 12,
+    "byte_preserved_artifacts": artifacts,
+    "trees": ["root", "next"],
+  }
+  @fs.write_file(
+    "_build/site-consumer-report.json",
+    report.stringify(indent=2),
+    create_mode=CreateOrTruncate,
+  )
+  println(report.stringify(indent=2))
+}
+
+///|
+async fn main {
+  qualify() catch {
+    error => {
+      eprintln("site consumer: \{error}")
+      @sys.exit(1)
+    }
+  }
+}

@@ -9,7 +9,7 @@
 # Node.js runs the js target in `moon test --target js` and `moon run --target js`.
 node = "24.14.1"
 
-# Bun installs the docs site dependencies and bundles its browser script
+# Bun installs the locked site browser test dependencies
 bun = "1.4.3"
 
 # Browser harness CLI for the docs site smoke test; must match apps/site/package.json and the Playwright
@@ -82,7 +82,7 @@ description = "Check the built docs site in _site/, tree by tree when it is asse
 run = "moonx scripts/site.mbtx check"
 
 [tasks."test:site"]
-description = "Test the docs site packages and the highlight step, and run the browser smoke test on _site/ (args: --tree next|<minor>)"
+description = "Test the thin site consumer and run the browser smoke test on _site/ (args: --tree next|<minor>)"
 run = "moonx scripts/site.mbtx test"
 
 [tasks."assemble:site"]
@@ -285,3 +285,11 @@ run = "moonx scripts/native-mermaid-corpus.mbtx check"
 [tasks."native-mermaid-corpus:reference"]
 description = "Repeat exact pinned test-only ZenUML/architecture oracles and canonical upstream parsing"
 run = "moonx scripts/native-mermaid-reference.mbtx"
+
+[tasks."check:site-compatibility"]
+description = "Compare built public routes and heading anchors with the pre-Telescope baseline"
+run = "moonx scripts/site-compatibility.mbtx"
+
+[tasks."test:site-consumer"]
+description = "Qualify released Telescope root/next builds, legacy routes and exact gallery bytes (args: --existing-output)"
+run = "moonx scripts/site-consumer.mbtx"

@@ -1,0 +1,99 @@
+///|
+/// Download and verify the released Telescope CLI, then forward its arguments.
+/// No source checkout, local build or PATH fallback is accepted.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let version : String = "0.1.1"
+
+///|
+async fn output(command : String, args : Array[String]) -> String {
+  let (code, out, err) = @process.collect_output(command, args)
+  guard code == 0 else { fail("\{command}: \{err.text()}") }
+  out.text().trim().to_owned()
+}
+
+///|
+async fn install() -> String {
+  let system = output("uname", ["-s"])
+  let machine = output("uname", ["-m"])
+  let (platform, expected) = match (system, machine) {
+    ("Darwin", "arm64") =>
+      (
+        "macos-arm64", "10fc718ff86184a8d21cb77aec0dfff3ad35c16008d8de0b5bbd272a274a1036",
+      )
+    ("Linux", "x86_64") =>
+      (
+        "linux-x64", "dbd2e1813b6d1a7d16bf88e022cd5e971209811fc12c2cf3c7955d6270dca4de",
+      )
+    _ => fail("Telescope \{version} is not qualified for \{system}/\{machine}")
+  }
+  let stem = "telescope-" + version + "-" + platform
+  let dir = "_build/tools/telescope/" + version + "/" + platform
+  let binary = dir + "/" + stem + "/telescope"
+  let archive = dir + "/" + stem + ".tar.gz"
+  @fs.mkdir(dir, recursive=true, allow_exist=true)
+  if !@fs.exists(binary) {
+    let url = "https://github.com/moonrockz/telescope/releases/download/v" +
+      version +
+      "/" +
+      stem +
+      ".tar.gz"
+    for
+      (remote, destination) in [
+        (url, archive),
+        (url + ".sha256", archive + ".sha256"),
+      ] {
+      ignore(
+        output("curl", [
+          "--fail", "--location", "--retry", "3", "--output", destination, remote,
+        ]),
+      )
+    }
+    let companion = @fs.read_file(archive + ".sha256").text()
+    guard companion.has_prefix(expected + " ") else {
+      fail("Telescope release checksum differs from the pinned checksum")
+    }
+    let checksum = if system == "Darwin" {
+      output("shasum", ["-a", "256", archive])
+    } else {
+      output("sha256sum", [archive])
+    }
+    guard checksum.has_prefix(expected + " ") else {
+      fail("Telescope archive checksum verification failed")
+    }
+    ignore(output("tar", ["-xzf", archive, "-C", dir]))
+  }
+  guard output(binary, ["--version"]) == version else {
+    fail("Telescope CLI does not report pinned version " + version)
+  }
+  binary
+}
+
+///|
+async fn main {
+  let code = try {
+    let binary = install()
+    @process.run(
+      binary,
+      @env.args()[1:].to_owned(),
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+  } catch {
+    error => {
+      eprintln("Telescope: \{error}")
+      1
+    }
+  }
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}

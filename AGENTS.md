@@ -18,6 +18,9 @@ Graphviz DOT. The library has no UI package.
 
 - Follow `CONTRIBUTING.md` for the OpenSpec and beads workflow. Changes to behavior,
   public APIs or requirements start as an OpenSpec change in `openspec/changes/`.
+- New changes use the local `html-design` schema and `design.html`, based on
+  `.agents/templates/agent-document.html`. Existing changes retain their declared
+  schema and design artifacts. Update relative asset links when archiving HTML.
 - Each task group in a change's `tasks.md` is one beads story; its `Bead:` line holds
   the ID. Tick the tasks in `tasks.md` in the pull request.
 - Landing a pull request includes the tracker state. Follow "Land a change" in
