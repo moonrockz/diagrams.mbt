@@ -1,7 +1,7 @@
 # diagrams.mbt site consumer
 
 `moonrockz/diagrams-site` is an unpublished native consumer of
-[`moonrockz/telescope@0.1.1`](https://mooncakes.io/docs/moonrockz/telescope).
+[`moonrockz/telescope@0.2.0`](https://mooncakes.io/docs/moonrockz/telescope).
 The published diagram libraries have no Telescope or UI dependency.
 
 `consumer/` supplies compiled Mermaid and PlantUML fence callbacks to the released
@@ -34,23 +34,24 @@ entries and the exact bytes of their 40 supplied artifacts. It writes
 `_build/site-consumer-report.json`. `-- --existing-output` checks builds already
 on disk. No Telescope checkout, path override or source build is used.
 
-`scripts/telescope.mbtx` downloads CLI **v0.1.1** from the
-[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.1.1), verifies
+`scripts/telescope.mbtx` downloads CLI **v0.2.0** from the
+[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.2.0), verifies
 both the pinned SHA-256 and companion checksum, extracts it below
 `_build/tools/telescope/`, and checks `--version` before use. It supports the
 release's qualified Linux x64 and macOS arm64 archives:
 
 | Archive | SHA-256 |
 | --- | --- |
-| `telescope-0.1.1-linux-x64.tar.gz` | `dbd2e1813b6d1a7d16bf88e022cd5e971209811fc12c2cf3c7955d6270dca4de` |
-| `telescope-0.1.1-macos-arm64.tar.gz` | `10fc718ff86184a8d21cb77aec0dfff3ad35c16008d8de0b5bbd272a274a1036` |
+| `telescope-0.2.0-linux-x64.tar.gz` | `1000e96a2f0b8572be8dc896c7e825e0d83a9f7303263f362a4aefdf02604b97` |
+| `telescope-0.2.0-macos-arm64.tar.gz` | `db9600b57572af656d0bf9ee129546ddc485e8964b205c66171f8187f02314a7` |
 
-The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40531421002)
-published source `4c2c7ebb235425c917780fccfc874a5beb06c156`. See the
-[0.1.1 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.1.1.md)
+The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40573188390)
+published source `597f50ab27ffc116d50b48c7a402a250ade856b2`. See the
+[0.2.0 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.2.0.md)
 for the public-install qualification. The downloader never substitutes a
 binary from PATH or rebuilds Telescope. The library and CLI embed their CSS and
 browser islands; Bun installs only the locked browser test dependencies.
+This release supplies the shared Smithy palette and gallery presentation.
 
 ## Commands and content
 
@@ -88,8 +89,10 @@ Builds use Telescope's staged promotion, preserving the previous tree on failure
 minor line. `assemble:site` downloads the newest eligible historical release in
 each minor line, supplies its existing archive without rebuilding it, and writes
 root, `next`, `v/<minor>`, `latest`, banners and `versions.json`. Historical trees
-are staged in `_build/site-assembly-input`. `check:site` checks the assembled
-output tree by tree. Assembly requires GitHub read access through `gh`.
+are staged in `_build/site-assembly-input`. New development builds deploy to
+`/diagrams.mbt/next/`; root and `latest` retain the historical release presentation.
+`check:site` checks the assembled output tree by tree. Assembly requires GitHub
+read access through `gh`.
 
 ## Add and qualify an example
 
@@ -113,9 +116,14 @@ validates and renders that version 1 contract. Do not edit Telescope internals t
 add an example. `consumer/gallery_wbtest.mbt` demonstrates adding a fixture
 through this contract and rejects duplicate IDs, missing files, traversal and
 symlinks escaping the artifact root. Provider tests cover real native rendering.
-The browser suite covers gallery previews, downloads, scope labels, themes,
-keyboard navigation, narrow widths and reading without JavaScript.
+The browser suite covers the shared landing/docs/API/gallery palette, preview
+cards, family and text filters, counts and reset, Preview/Source keyboard tabs,
+clipboard failure fallback, downloads and scope labels. It checks both themes
+at 360, 768 and 1440 CSS pixels and reading without JavaScript.
 
 The reviewed compatibility inventory is `fixtures/compatibility/routes.json`.
 Run `mise run check:site-compatibility -- --out _site/next` for a selected tree.
 Do not recapture the baseline to accept removed routes or anchors.
+
+See [0.2.0 adoption verification](verification-0.2.0.md) for the fresh public
+consumer, browser matrix and unchanged historical archive assembly evidence.
