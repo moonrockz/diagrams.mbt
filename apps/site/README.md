@@ -1,7 +1,7 @@
 # diagrams.mbt site consumer
 
 `moonrockz/diagrams-site` is an unpublished native consumer of
-[`moonrockz/telescope@0.1.0`](https://mooncakes.io/docs/moonrockz/telescope).
+[`moonrockz/telescope@0.1.1`](https://mooncakes.io/docs/moonrockz/telescope).
 The published diagram libraries have no Telescope or UI dependency.
 
 `consumer/` supplies compiled Mermaid and PlantUML fence callbacks to the released
@@ -34,11 +34,21 @@ entries and the exact bytes of their 40 supplied artifacts. It writes
 `_build/site-consumer-report.json`. `-- --existing-output` checks builds already
 on disk. No Telescope checkout, path override or source build is used.
 
-`scripts/telescope.mbtx` downloads CLI **v0.1.0** from the
-[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.1.0), verifies
+`scripts/telescope.mbtx` downloads CLI **v0.1.1** from the
+[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.1.1), verifies
 both the pinned SHA-256 and companion checksum, extracts it below
 `_build/tools/telescope/`, and checks `--version` before use. It supports the
-release's qualified Linux x64 and macOS arm64 archives. It never substitutes a
+release's qualified Linux x64 and macOS arm64 archives:
+
+| Archive | SHA-256 |
+| --- | --- |
+| `telescope-0.1.1-linux-x64.tar.gz` | `dbd2e1813b6d1a7d16bf88e022cd5e971209811fc12c2cf3c7955d6270dca4de` |
+| `telescope-0.1.1-macos-arm64.tar.gz` | `10fc718ff86184a8d21cb77aec0dfff3ad35c16008d8de0b5bbd272a274a1036` |
+
+The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40531421002)
+published source `4c2c7ebb235425c917780fccfc874a5beb06c156`. See the
+[0.1.1 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.1.1.md)
+for the public-install qualification. The downloader never substitutes a
 binary from PATH or rebuilds Telescope. The library and CLI embed their CSS and
 browser islands; Bun installs only the locked browser test dependencies.
 
