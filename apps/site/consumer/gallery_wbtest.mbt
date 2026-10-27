@@ -1,4 +1,5 @@
 ///|
+#cfg(not(platform="windows"))
 async fn gallery_fixture(name : String, entries : Array[Json]) -> String {
   let root = "_build/telescope-gallery-" + name
   if @fs.exists(root) { @fs.rmdir(root, recursive=true) }
@@ -20,6 +21,7 @@ async fn gallery_fixture(name : String, entries : Array[Json]) -> String {
 }
 
 ///|
+#cfg(not(platform="windows"))
 fn example(preview~ : String = "preview.svg") -> Json {
   {
     "id": "added-example", "family": "sequence", "title": "Added fixture example",
@@ -30,6 +32,7 @@ fn example(preview~ : String = "preview.svg") -> Json {
 }
 
 ///|
+#cfg(not(platform="windows"))
 async fn fixture_problems(root : String) -> Array[@model.Problem] {
   try {
     ignore(@host.build(root, root + "/site/site.json", root + "/built"))
@@ -41,6 +44,7 @@ async fn fixture_problems(root : String) -> Array[@model.Problem] {
 }
 
 ///|
+#cfg(not(platform="windows"))
 async test "adding a qualified example needs only the public gallery contract" {
   let root = gallery_fixture("added", [example()])
   assert_eq(fixture_problems(root), [])
@@ -50,6 +54,7 @@ async test "adding a qualified example needs only the public gallery contract" {
 }
 
 ///|
+#cfg(not(platform="windows"))
 async test "gallery inputs reject duplicate IDs missing files traversal and escaped symlinks" {
   for (name, entries) in [
     ("duplicate", [example(), example()]),
