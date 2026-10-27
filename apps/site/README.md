@@ -1,7 +1,7 @@
 # diagrams.mbt site consumer
 
 `moonrockz/diagrams-site` is an unpublished native consumer of
-[`moonrockz/telescope@0.2.0`](https://mooncakes.io/docs/moonrockz/telescope).
+[`moonrockz/telescope@0.2.1`](https://mooncakes.io/docs/moonrockz/telescope).
 The published diagram libraries have no Telescope or UI dependency.
 
 `consumer/` supplies compiled Mermaid and PlantUML fence callbacks to the released
@@ -34,24 +34,25 @@ entries and the exact bytes of their 40 supplied artifacts. It writes
 `_build/site-consumer-report.json`. `-- --existing-output` checks builds already
 on disk. No Telescope checkout, path override or source build is used.
 
-`scripts/telescope.mbtx` downloads CLI **v0.2.0** from the
-[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.2.0), verifies
+`scripts/telescope.mbtx` downloads CLI **v0.2.1** from the
+[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.2.1), verifies
 both the pinned SHA-256 and companion checksum, extracts it below
 `_build/tools/telescope/`, and checks `--version` before use. It supports the
 release's qualified Linux x64 and macOS arm64 archives:
 
 | Archive | SHA-256 |
 | --- | --- |
-| `telescope-0.2.0-linux-x64.tar.gz` | `1000e96a2f0b8572be8dc896c7e825e0d83a9f7303263f362a4aefdf02604b97` |
-| `telescope-0.2.0-macos-arm64.tar.gz` | `db9600b57572af656d0bf9ee129546ddc485e8964b205c66171f8187f02314a7` |
+| `telescope-0.2.1-linux-x64.tar.gz` | `452fda1f4300f65d2b56e80a526fdc48b4ee027ec0c02f44464566b387cde145` |
+| `telescope-0.2.1-macos-arm64.tar.gz` | `9bac662547f7e52867ad57ef914b9518161952337392e5ed8083623a1117ba4e` |
 
-The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40573188390)
-published source `597f50ab27ffc116d50b48c7a402a250ade856b2`. See the
-[0.2.0 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.2.0.md)
+The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40594390130)
+published source `1f84c6c8de780ea9322db6eef14c10395a4670f9`. See the
+[0.2.1 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.2.1.md)
 for the public-install qualification. The downloader never substitutes a
 binary from PATH or rebuilds Telescope. The library and CLI embed their CSS and
 browser islands; Bun installs only the locked browser test dependencies.
-This release supplies the shared Smithy palette and gallery presentation.
+This release supplies the shared Smithy palette and gallery presentation, with
+the indigo Reset filters button aligned to the textbox.
 
 ## Commands and content
 
@@ -125,5 +126,5 @@ The reviewed compatibility inventory is `fixtures/compatibility/routes.json`.
 Run `mise run check:site-compatibility -- --out _site/next` for a selected tree.
 Do not recapture the baseline to accept removed routes or anchors.
 
-See [0.2.0 adoption verification](verification-0.2.0.md) for the fresh public
+See [0.2.1 adoption verification](verification-0.2.1.md) for the fresh public
 consumer, browser matrix and unchanged historical archive assembly evidence.
