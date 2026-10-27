@@ -13,18 +13,18 @@
   Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
   list them in nav.toc.
 -->
-<link rel="stylesheet" href="../../../.agents/templates/assets/agent-document.css">
-<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
-<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
-<script defer src="../../../.agents/templates/assets/highlight/highlight.min.js"></script>
-<script defer src="../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
-<script defer src="../../../.agents/templates/assets/agent-document.js"></script>
+<link rel="stylesheet" href="../../../../.agents/templates/assets/agent-document.css">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script defer src="../../../../.agents/templates/assets/highlight/highlight.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/agent-document.js"></script>
 </head>
 <body>
 <main>
 
 <h1>Adopt Telescope for the diagrams site</h1>
-<p class="meta">OpenSpec change adopt-telescope-site · 2026-10-26 · Implementation approved · Bead <code>diagrams-3dz</code></p>
+<p class="meta">OpenSpec change adopt-telescope-site · 2026-10-27 · Released Telescope 0.1.1 integration verified · Bead <code>diagrams-3dz</code></p>
 <nav class="toc" aria-label="Contents"><ul>
 <li><a href="#context">Context</a></li><li><a href="#goals">Goals and non-goals</a></li>
 <li><a href="#decisions">Decisions</a></li><li><a href="#risks">Risks and trade-offs</a></li>
@@ -32,8 +32,9 @@
 </ul></nav>
 <h2 id="context">Context</h2>
 <p>See <a href="proposal.md">the proposal</a> for motivation and scope. The baseline is diagrams.mbt
-<code>e0a541033c77590d4c51ecfeb7fb2932e5c478c4</code>. This repository already has an unpublished
-<code>moonrockz/diagrams-site</code> tool, rather than an empty site. Its current landing text lags the implemented PlantUML formats.</p>
+<code>e0a541033c77590d4c51ecfeb7fb2932e5c478c4</code>. At proposal time the repository already had an unpublished
+<code>moonrockz/diagrams-site</code> tool and its landing text lagged the implemented formats.</p>
+<p>The implemented consumer pins actual <code>moonrockz/telescope@0.1.1</code> and matching CLI archives from owner-approved Actions run <code>40531421002</code>, source <code>4c2c7ebb235425c917780fccfc874a5beb06c156</code>. Independent fresh installation and both root/next browser suites pass. The original 77 routes, 5,376 anchors and 40 artifact bytes remain. Both historical assembly paths produce 499 identical files, with 259 correct latest canonicals and no invented links for 73 routes absent from latest. The inventory below records the original extraction boundaries.</p>
 <table><thead><tr><th>Observed source</th><th>Current responsibility</th><th>Proposed owner</th></tr></thead><tbody>
 <tr><td><code>apps/site/model</code>, <code>content</code>, <code>views</code>, <code>site</code></td><td>Routes, Markdown/HTML, Rabbita shell, navigation, search, API pages and output</td><td>Telescope shared packages, with consumer adapters where needed</td></tr>
 <tr><td><code>apps/site/generate</code>, <code>check</code>, <code>assemble</code>, <code>islands</code></td><td>Filesystem hosts, tree checking, versions, browser controls</td><td>Telescope tools and optional adapters; thin local entry point</td></tr>

@@ -1,6 +1,6 @@
 # Tasks
 
-Implementation is approved. The consumer pins the actual published Telescope library and CLI 0.1.1 from owner-approved Actions run 40531421002 at 4c2c7ebb235425c917780fccfc874a5beb06c156. Both clean public installs and an independent diagrams checkout pass. Root and next preserve 77 routes, 5,376 anchors, 12 examples and 40 artifact bytes. Both strict browser suites, full four-target repository checks and standalone qualification pass. Historical 0.1/0.2 archives assemble through host and CLI into 499 identical files; 259 latest canonicals are correct and 73 absent-latest routes have no invented canonical. Cross-workspace results are acknowledged. The final PR preview artifact remains to be verified; stories stay open until merge.
+Implementation is approved and all tasks are verified. The consumer pins actual published Telescope library and CLI 0.1.1 from owner-approved Actions run 40531421002 at 4c2c7ebb235425c917780fccfc874a5beb06c156. Clean public installs and an independent diagrams checkout pass. Root and next preserve 77 routes, 5,376 anchors, 12 examples and 40 artifact bytes. Both strict browser suites, full four-target checks and standalone qualification pass. Historical 0.1/0.2 archives assemble through host and CLI into 499 identical files; 259 latest canonicals are correct and 73 absent-latest routes have no invented canonical. Cross-workspace results are acknowledged. CI run 40535704727 passed at source 511cce6 and uploaded checked preview artifact 12747938717; the downloaded artifact also passes released-CLI links, legacy routes and exact gallery-byte checks. Stories stay open until this final implementation/archive PR merges.
 
 ## 1. Prove the released consumer path
 
@@ -35,7 +35,7 @@ Bead: diagrams-3dz.3
 Bead: diagrams-3dz.4
 
 - [x] 4.1 Run `mise run format`, `mise run check`, the site build/check/browser suites and strict OpenSpec validation; record actual results and verify the published diagram libraries have no Telescope or Rabbita dependency on all four targets.
-- [ ] 4.2 Adapt the existing site CI inputs and cache keys to pinned Telescope artifacts where needed; verify a pull-request build produces the checked site artifact and a deployment dry run retains historical release assembly.
+- [x] 4.2 Adapt the existing site CI inputs and cache keys to pinned Telescope artifacts where needed; verify a pull-request build produces the checked site artifact and a deployment dry run retains historical release assembly.
 - [x] 4.3 Send the pinned versions, route comparison and gallery/browser results to the Telescope workspace through the Orca Run; verify receipt and resolution of any integration issues before merge.
 
 ## Workflow follow-up
