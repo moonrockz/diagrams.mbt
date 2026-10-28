@@ -2,8 +2,14 @@
 // built `_site/` with `scripts/serve-site.mbtx --no-watch --port 4174`, gives the origin in
 // SITE_ORIGIN and the base path of the tree in SITE_BASE, and runs this file with the pinned Node.
 // The checks cover client code that no other test runs: the islands and the Rabbita link capture.
-import { chromium, type Page } from 'playwright';
-import { readFile } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+import { chromium, type Page, type Locator, type Download } from 'playwright';
+import { mkdir, readFile } from 'node:fs/promises';
+const portableStills = JSON.parse(await readFile('tests/raster-acceptance/__snapshot__/still.json', 'utf8')) as { name: string; source: string; png: string; jpeg: string }[];
+const sequenceStill = portableStills.find(row => row.name === 'sequence')!;
+const treeName = (process.env.SITE_BASE ?? '/diagrams.mbt/').includes('/next/') ? 'next' : 'root';
+await mkdir('_build/handoff', { recursive: true });
+let galleryConversions = 0, portableComparisons = 0;
 const galleryInventory = JSON.parse(await readFile('site/gallery.json', 'utf8')).entries as { id: string; family: string }[];
 
 const origin = process.env.SITE_ORIGIN ?? 'http://127.0.0.1:4174';
@@ -41,6 +47,65 @@ const pathAndHash = (url: string | URL) => {
   return u.pathname + u.hash;
 };
 
+
+async function downloadBytes(download: Download) {
+  assert.equal(await download.failure(), null);
+  return readFile((await download.path())!);
+}
+async function recordGallery(page: Page) {
+  await page.evaluate(() => {
+    const original = window.DiagramsRaster.export;
+    window.__galleryLibrary = original; window.__galleryRequests = []; window.__galleryRendering = 0;
+    window.DiagramsRaster.export = request => {
+      const { signal, onProgress, ...serializable } = request;
+      window.__galleryRequests.push(structuredClone(serializable));
+      return original({ ...request, onProgress: value => {
+        if (typeof value === 'object' && value.phase === 'rendering') window.__galleryRendering++;
+        onProgress?.(value);
+      } });
+    };
+  });
+}
+async function galleryExport(page: Page, root: Locator, format: 'png' | 'jpeg', portable = false, race = false) {
+  await root.getByRole('combobox', { name: 'Format', exact: true }).selectOption(format);
+  const canonical = await root.locator('.diagram-viewer__canonical').evaluate((template: HTMLTemplateElement) => template.content.textContent!);
+  const imageURL = await root.locator('.diagram-viewer__content img').evaluate((image: HTMLImageElement) => image.currentSrc || image.src);
+  assert.equal(canonical, await (await page.request.get(imageURL)).text(), 'Selected preview and canonical export source differ');
+  const index = await page.evaluate(() => window.__galleryRequests.length);
+  const pending = page.waitForEvent('download');
+  await root.getByRole('button', { name: `Download ${format.toUpperCase()}`, exact: true }).click();
+  if (race) await root.evaluate(root => {
+    if (!root.querySelector('.diagram-viewer__export')!.hasAttribute('aria-busy')) throw new Error('Option race must happen during a pending conversion');
+    const select = root.querySelector<HTMLSelectElement>('select[aria-label="Format"]')!;
+    select.value = 'png'; select.dispatchEvent(new Event('change', { bubbles: true }));
+    const input = root.querySelector<HTMLInputElement>('input[type="number"]')!; input.value = '191'; input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  const download = await pending;
+  assert.ok(download.suggestedFilename().endsWith(format === 'png' ? '.png' : '.jpg'));
+  const bytes = await downloadBytes(download);
+  const direct = await page.evaluate(async index => {
+    const request = window.__galleryRequests[index], result = await window.__galleryLibrary(request);
+    let binary = ''; for (const byte of result.bytes) binary += String.fromCharCode(byte);
+    return { bytes: btoa(binary), width: result.width, height: result.height, type: result.mediaType, request };
+  }, index);
+  assert.equal(direct.request.svg, canonical); assert.equal(direct.request.format, format);
+  assert.equal(direct.request.options.theme, await root.getAttribute('data-viewer-resolved-theme'));
+  assert.deepEqual(bytes, Buffer.from(direct.bytes, 'base64'), 'Published gallery download differs from direct compiled portable-library adapter');
+  if (portable) {
+    assert.equal(canonical.trimEnd(), sequenceStill.source.trimEnd());
+    assert.deepEqual(bytes, Buffer.from(sequenceStill[format], 'base64'), 'Published gallery download differs from pinned four-target portable fixture');
+    portableComparisons++;
+  }
+  const dimensions = await page.evaluate(async ({ bytes, type }) => {
+    const image = await createImageBitmap(new Blob([Uint8Array.from(atob(bytes), c => c.charCodeAt(0))], { type }));
+    const dimensions = [image.width, image.height]; image.close(); return dimensions;
+  }, direct);
+  assert.deepEqual(dimensions, [direct.width, direct.height]);
+  assert.equal(direct.type, `image/${format}`);
+  assert.match((await root.locator('[role="status"]').textContent())!, /^Downloaded (PNG|JPEG), [1-9]\d* × [1-9]\d* pixels\.$/);
+  galleryConversions++;
+}
+
 await waitForSite(180_000);
 const browser = await chromium.launch();
 const errors: string[] = [];
@@ -50,6 +115,31 @@ try {
 
   await page.goto(site);
   check((await page.title()) === 'diagrams.mbt', 'the landing page title is "diagrams.mbt"');
+
+  for (const width of [360, 768, 1440]) for (const colorScheme of ['light', 'dark'] as const) {
+    const landing = await browser.newPage({ viewport: { width, height: 900 }, colorScheme });
+    landing.on('pageerror', error => errors.push(`${landing.url()}: ${error.message}`));
+    await landing.goto(site);
+    check(await landing.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${width}/${colorScheme}: landing fits the viewport`);
+    check(await landing.locator('.brand-badge').evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0), `${width}/${colorScheme}: selected Lunar drafter badge loads`);
+    check(await landing.locator('.family-preview img').evaluateAll(images => images.length >= 3 && images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0)), `${width}/${colorScheme}: supported family previews load`);
+    const links = await landing.locator('.primary-links a').evaluateAll(anchors => anchors.map(anchor => (anchor as HTMLAnchorElement).href));
+    check(links.length === 4 && links.every(href => new URL(href).pathname.startsWith(base)), `${width}/${colorScheme}: primary links stay in the active tree`);
+    for (const href of links) check((await landing.request.get(href)).ok(), `${width}/${colorScheme}: primary link resolves: ${href}`);
+    check(await landing.locator('#diagram-families, #portable-output').count() === 2, `${width}/${colorScheme}: landing anchors remain available`);
+    const logo = landing.locator('.site-header .brand img');
+    check(await logo.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0), `${width}/${colorScheme}: branded header icon loads`);
+    check(await landing.locator('.site-header .brand').getAttribute('href') === base, `${width}/${colorScheme}: branded header stays in current tree`);
+    const favicon = await landing.locator('link[rel="icon"]').getAttribute('href');
+    check(favicon === `${base}assets/brand/icons/favicon.ico`, `${width}/${colorScheme}: configured favicon is tree scoped`);
+    if (width === 1440 && colorScheme === 'light') {
+      assert.deepEqual(await (await landing.request.get(new URL((await logo.getAttribute('src'))!, site).href)).body(), await readFile('docs/assets/brand/icons/logo-64.png'));
+      assert.deepEqual(await (await landing.request.get(new URL(favicon!, site).href)).body(), await readFile('docs/assets/brand/icons/favicon.ico'));
+      assert.deepEqual(await (await landing.request.get(`${site}assets/brand/diagrams-badge.png`)).body(), await readFile('docs/assets/brand/diagrams-badge.png'));
+    }
+    if (width === 360 || width === 1440) await landing.screenshot({ path: `_build/handoff/landing-final-${treeName}-${width}-${colorScheme}.png`, fullPage: true });
+    await landing.close();
+  }
 
   // Search: Enter and a click open the first result, and a query without a match says so.
   await searchFor(page, 'diagram');
@@ -290,6 +380,72 @@ try {
     await context.close();
   }
 
+  // Exercise published Telescope's forms and the configured diagrams.mbt
+  // library adapter; retain the distinction from the independently pinned
+  // portable output fixtures used for the matching sequence specimen.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    const context = await browser.newContext({ colorScheme, acceptDownloads: true, viewport: { width: 1024, height: 1000 } });
+    const gallery = await context.newPage();
+    gallery.on('pageerror', error => errors.push(`${gallery.url()}: ${error.message}`));
+    const external: string[] = [];
+    gallery.on('request', request => { if (new URL(request.url()).origin !== origin && /^https?:/.test(request.url())) external.push(request.url()); });
+    await gallery.goto(`${site}gallery/`);
+    await gallery.locator('.diagram-viewer__export').first().waitFor({ state: 'attached' });
+    await recordGallery(gallery);
+    const card = gallery.locator('.gallery-card').first(), other = gallery.locator('.gallery-card').nth(1);
+    const root = card.locator('[data-diagram-viewer]:visible').first();
+    await root.locator('summary').click();
+    check(await other.locator('.diagram-viewer__export[open]').count() === 0, `${colorScheme}: opening export is isolated to selected gallery card`);
+    await root.getByLabel('Background', { exact: true }).fill('#f8f0e8');
+    await root.getByRole('combobox', { name: 'Format', exact: true }).selectOption('jpeg');
+    await root.getByLabel('JPEG quality', { exact: true }).fill('80');
+    await root.locator('[aria-label="Zoom in"]').click();
+    await root.locator('.diagram-viewer__viewport').focus(); await gallery.keyboard.press('ArrowLeft');
+    const transform = await root.locator('.diagram-viewer__content').getAttribute('style');
+    await galleryExport(gallery, root, 'png', colorScheme === 'light');
+    await galleryExport(gallery, root, 'jpeg', colorScheme === 'light');
+    assert.equal(await root.locator('.diagram-viewer__content').getAttribute('style'), transform, 'Gallery export changes zoom/pan');
+    assert.equal(await other.locator('.diagram-viewer__export[aria-busy]').count(), 0);
+    assert.equal(await other.locator('.diagram-viewer__export [role="status"]').allTextContents().then(values => values.some(Boolean)), false);
+    if (colorScheme === 'light') {
+      // Options and suffix are captured before the converter awaits its worker.
+      await root.getByLabel('Width in pixels, blank for source size', { exact: true }).fill('512');
+      await galleryExport(gallery, root, 'jpeg', false, true);
+      let offered = 0; gallery.on('download', () => offered++);
+      await root.getByRole('combobox', { name: 'Format', exact: true }).selectOption('png');
+      const width = root.getByLabel('Width in pixels, blank for source size', { exact: true });
+      await width.fill('2048');
+      const rendering = await gallery.evaluate(() => window.__galleryRendering);
+      await root.getByRole('button', { name: 'Download PNG', exact: true }).click();
+      await gallery.waitForFunction(rendering => window.__galleryRendering > rendering, rendering);
+      await root.getByRole('button', { name: 'Cancel export', exact: true }).click();
+      await gallery.waitForFunction(() => [...document.querySelectorAll('.diagram-viewer__export [role="status"]')].some(status => status.textContent === 'Export cancelled.'));
+      assert.equal(offered, 0, 'Cancelled export offered a partial download');
+      await width.fill('0');
+      const count = await gallery.evaluate(() => window.__galleryRequests.length);
+      await root.getByRole('button', { name: 'Download PNG', exact: true }).click();
+      assert.equal(await gallery.evaluate(() => window.__galleryRequests.length), count, 'Invalid form reached conversion');
+      await width.fill('16384'); await root.getByRole('button', { name: 'Download PNG', exact: true }).click();
+      await gallery.waitForFunction(() => [...document.querySelectorAll('.diagram-viewer__export [role="status"]')].some(status => status.textContent?.startsWith('Export failed:')));
+      assert.equal(offered, 0);
+      const svgURL = await root.locator('.diagram-viewer__content img').getAttribute('src');
+      assert.ok((await gallery.request.get(new URL(svgURL!, site).href)).ok(), 'Canonical SVG remains served after raster failure');
+      await width.fill(''); await galleryExport(gallery, root, 'png', true);
+    }
+    await gallery.goto(`${site}gallery/sequence-basic/`); await recordGallery(gallery);
+    if (colorScheme === 'light') {
+      const svgLink = gallery.locator('#content a[download][href$=".svg"]').first();
+      const href = new URL((await svgLink.getAttribute('href'))!, site).href;
+      const pending = gallery.waitForEvent('download'); await svgLink.click();
+      assert.deepEqual(await downloadBytes(await pending), await (await gallery.request.get(href)).body(), 'Original SVG download survives raster errors');
+    }
+    const detail = gallery.locator('[data-diagram-viewer]:visible').first();
+    await detail.locator('summary').click(); await detail.getByLabel('Background', { exact: true }).fill('#f8f0e8');
+    await galleryExport(gallery, detail, 'png', colorScheme === 'light');
+    assert.deepEqual(external, [], 'Gallery export must not request external conversion resources');
+    await context.close();
+  }
+
   // One API page: the item anchor, a source link, and a search that opens an API item.
   const apiPage = `${site}api/moonrockz/diagrams/`;
   await page.goto(apiPage);
@@ -316,4 +472,4 @@ if (failures.length) {
   for (const f of failures) console.error(`FAIL: ${f}`);
   process.exit(1);
 }
-console.log('site browser smoke test passed');
+console.log(`Published Telescope0.4 ${treeName}: ${galleryInventory.length} entries, ${galleryInventory.length * 12} responsive detail cases, ${galleryConversions} real UI conversions match compiled-library bytes (${portableComparisons} also match four-target portable fixtures); branding/assets, root-scoped links, cancellation/error/recovery, option race, isolation, filters/tabs and landing screenshots passed.`);

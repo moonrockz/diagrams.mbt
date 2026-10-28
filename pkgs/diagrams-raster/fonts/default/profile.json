@@ -1,0 +1,46 @@
+{
+  "subsetter": "mizchi/font@0.7.4 subset_font",
+  "coverage": [
+    [
+      32,
+      1327
+    ],
+    [
+      8192,
+      8303
+    ],
+    [
+      8592,
+      8703
+    ],
+    [
+      9216,
+      9279
+    ],
+    [
+      9472,
+      9727
+    ],
+    [
+      9744,
+      9746
+    ]
+  ],
+  "ranges": "inclusive; absent source glyphs remain absent and diagnosed at export",
+  "originals": "../source.json",
+  "license": "OFL-1.1",
+  "files": {
+    "regular": {
+      "bytes": 214712,
+      "sha256": "496b3e880274c721bc89a5a7c0ad6d70449568179b201b4445fd280b950ec439"
+    },
+    "bold": {
+      "bytes": 219884,
+      "sha256": "907cac2a1419ce8e465ffbdbeb11f56db1a6b89a72e33f1529cda3f10d1d1acd"
+    },
+    "symbols": {
+      "bytes": 43544,
+      "sha256": "5e88ba96ece392769936bf5091e34d065185096a011b5cdd388d0c14abb3f952"
+    }
+  }
+}

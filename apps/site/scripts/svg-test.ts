@@ -472,7 +472,7 @@ try {
   const paused = await dot.getAttribute('cx');
   await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   assert.equal(await dot.getAttribute('cx'), paused, 'pause retains the current position');
-  assert.equal(await page.locator('[role="status"]').textContent(), 'Paused');
+  assert.equal(await page.locator('[data-control="status"]').textContent(), 'Paused');
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   assert.equal(await page.getByRole('button', { name: 'Play', exact: true }).getAttribute('aria-pressed'), 'false');

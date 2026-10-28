@@ -5,7 +5,9 @@ native `swimlane-beta`, `zenuml` and `architecture-beta` diagrams, BPMN XML, and
 EBNF, JSON and YAML blocks. It renders script-free SVG and generates offline HTML
 with illustrative playback and bounded structural exploration. Regex and EBNF
 railroads can show match and parse evidence that an external engine supplies.
-Other PlantUML diagrams, Draw.io and Graphviz DOT are planned. The library has
+The optional raster module converts generated SVG to PNG/JPEG and source-bound
+playback to animated GIF on all four targets. Other PlantUML diagrams, Draw.io
+and Graphviz DOT are planned. The library has
 no UI framework.
 
 `moonrockz/bpmn` is an independent portable document reader, writer, validator
@@ -64,7 +66,9 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run test` | Test all four targets |
 | `mise run test:bpmn-consumer` | Verify a fresh reader-only BPMN consumer on all four targets |
 | `mise run test:plantuml-consumer` | Verify fresh model-only, PlantUML-reader and external trace-provider consumers on all four targets |
-| `mise run test:animation` | Qualify stored offline BPMN/sequence/swimlane players without a workspace/site rebuild |
+| `mise run test:animation` | Qualify offline players, viewport controls and real PNG/JPEG/GIF downloads |
+| `mise run test:raster-consumer` | Verify a fresh portable raster consumer on all four targets |
+| `mise run test:site-consumer` | Qualify the published Telescope consumer at root and next, preserving routes and artifact bytes |
 | `mise run swimlane-corpus:reference` | Verify native syntax and semantics against locked test-only Mermaid 12.2.0 |
 | `mise run plantuml-corpus:reference` | Refresh the PlantUML 1.2026.9 reference with the pinned test-only JAR and JDK (`-- --check` verifies it) |
 | `mise run validate:plantuml-corpus` | Check the PlantUML fixture digests, the reference binding and the portable embedding, without Java |
@@ -90,6 +94,8 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `moon.work` lists the workspace members.
 - `pkgs/bpmn/` is the independent BPMN document module, with MoonBit core dependencies only.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
+- `pkgs/diagrams-raster/` converts generated SVG and playback to bounded binary images. See [raster export](docs/guides/raster-export.md).
+- `apps/raster-browser/` builds the unpublished offline worker adapter for that same library.
 - `pkgs/diagrams-animated/` emits standalone HTML over pure motion plans and SVG scenes.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
   as `@diagrams`, immutable sequence/BPMN/swimlane/flowchart/regex/EBNF/data-tree models, the trace provider

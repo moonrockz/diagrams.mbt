@@ -1,0 +1,10 @@
+options("is-main": true)
+supported_targets = "native"
+import {
+  "moonrockz/diagrams-raster" @raster,
+  "moonbitlang/async/fs",
+  "moonbitlang/async",
+  "moonbitlang/core/env",
+  "moonbitlang/x/sys",
+  "Milky2018/xml",
+}

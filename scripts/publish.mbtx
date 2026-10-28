@@ -18,6 +18,7 @@ let publish_list : Array[(String, String)] = [
   ("pkgs/bpmn", "moonrockz/bpmn"),
   ("pkgs/diagrams", "moonrockz/diagrams"),
   ("pkgs/diagrams-svg", "moonrockz/diagrams-svg"),
+  ("pkgs/diagrams-raster", "moonrockz/diagrams-raster"),
   ("pkgs/diagrams-mermaid", "moonrockz/diagrams-mermaid"),
   ("pkgs/diagrams-plantuml", "moonrockz/diagrams-plantuml"),
   ("pkgs/diagrams-bpmn", "moonrockz/diagrams-bpmn"),
@@ -144,12 +145,14 @@ test "publication includes every public module after its dependencies" {
     ("moonrockz/diagrams", "moonrockz/diagrams-svg"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-bpmn"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-animated"),
+    ("moonrockz/diagrams-svg", "moonrockz/diagrams-raster"),
+    ("moonrockz/diagrams-raster", "moonrockz/diagrams-animated"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-mermaid"),
     ("moonrockz/diagrams", "moonrockz/diagrams-plantuml"),
     ("moonrockz/diagrams-svg", "moonrockz/diagrams-plantuml"),
   ]
   let names = publish_list.map(entry => entry.1)
-  assert_eq(names.length(), 7)
+  assert_eq(names.length(), 8)
   for (dependency, consumer) in dependencies {
     assert_true(
       names.search_by(name => name == dependency).unwrap() <
@@ -158,4 +161,5 @@ test "publication includes every public module after its dependencies" {
   }
   assert_false(names.contains("moonrockz/diagrams-tests"))
   assert_false(names.contains("moonrockz/diagrams-site"))
+  assert_false(names.contains("moonrockz/diagrams-raster-browser"))
 }

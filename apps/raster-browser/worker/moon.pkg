@@ -1,0 +1,8 @@
+options("is-main": true)
+supported_targets = "js"
+import {
+  "moonrockz/diagrams-raster" @raster,
+  "moonbitlang/core/json",
+  "moonbitlang/core/string",
+  "moonbitlang/core/encoding/base64",
+}

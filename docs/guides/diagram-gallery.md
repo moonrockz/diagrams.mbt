@@ -25,6 +25,37 @@ Each additional source has fixed light and dark SVG previews, an adaptive SVG
 artifact and standalone light and dark players. Source downloads preserve the
 reader input. Theme and player variants do not count as distinct sources.
 
+## Inspect and save a preview
+
+Every local image panel, published gallery card and example detail has a corner
+Fullscreen, Zoom in, Zoom out and Fit toolbar. Zoom ranges from 25% to 800% of
+the fitted view. Drag an enlarged image with a mouse or touch pointer, or focus
+the viewport and use arrow keys. Fit restores the complete diagram and resets
+pan. Fullscreen uses the browser API when available and an expanded modal
+otherwise. Escape restores the prior page, focus and scroll position.
+
+Open **Export image** to save PNG or JPEG. PNG is the default and can retain a
+transparent background. Choose a pixel width to preserve the diagram's aspect
+ratio, or leave it blank for source dimensions. JPEG uses the selected opaque
+background and quality from 1 to 100. Exports contain the complete canonical SVG,
+so zoom and pan do not crop the image. Source and original SVG links keep their
+existing URLs. Conversion errors and cancellation leave those links usable.
+
+The local gallery works from its generated files without an HTTP server. Its
+supplied converter and font data need no external request. Font coverage,
+diagnostics, supported generated SVG and work limits follow the
+[raster export contract](raster-export.md). Without JavaScript, static previews,
+source panels and links remain available without inactive viewport/export
+buttons. Printing shows complete untransformed diagrams.
+
+The shared `.diagram-viewer` root and its `__viewport`, `__content`, `__toolbar`,
+`__export` and `__status` part classes expose the documented styling contract.
+Use namespaced CSS variables on one viewer to change its palette, typography,
+spacing or radii. The same overrides stay active in fullscreen. See the
+[standalone player guide](../../pkgs/diagrams-animated/README.mbt.md) for the
+complete variable list and a per-instance skin example. Fixed light/dark SVG
+colors stay independent from the surrounding controls.
+
 ## Compare connector options
 
 The six connector comparison cards use the same Mermaid flowchart. Their titles
@@ -64,11 +95,20 @@ well as local gallery downloads:
 
 ## Build and verify
 
-Run `mise run gallery -- --site-assets --qualify` to verify the renderer snapshots,
+Run `mise run raster-assets:generate` to build the supported offline conversion
+payload and its qualified font data. Then run `mise run gallery -- --site-assets
+--qualify` to verify the renderer snapshots,
 write local and published artifacts, and check local links and players in the
 browser. After qualification, `mise run gallery -- --existing-output --check
 --site-assets` checks stored artifacts without compiling the renderers again.
 Run the site build, link checks and browser suite to qualify root and next routes.
+
+Normal local gallery generation requires the supported raster payload. While
+working on that payload, `--existing-output` can produce an explicitly labelled
+viewport-only review. `mise exec -- node apps/site/scripts/gallery-test.ts --viewports-only`
+checks that mode. Complete qualification requires the real converter and verifies
+every preview against its supplied font profile, PNG/JPEG downloads against
+direct library output, independent decoding and unchanged source/SVG digests.
 
 The site supports family navigation without scripting. With scripting, family
 and text filters combine and report the resulting count. Each detail page keeps

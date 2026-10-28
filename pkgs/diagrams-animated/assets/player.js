@@ -100,7 +100,8 @@
     if (!playing && position === 0 && !root.dataset.inspected) clearOverlays();
     root.dataset.position = String(logical); root.dataset.active = JSON.stringify(keys); root.dataset.finished = String(plan.mode === 'finite' && logical >= plan.duration);
     seek.max = String(plan.duration); seek.value = String(logical);
-    positionLabel.textContent = `${logical} / ${plan.duration} ms`;
+    const time = milliseconds => `${Math.floor(milliseconds / 60000)}:${String(Math.floor(milliseconds / 1000) % 60).padStart(2, '0')}.${String(milliseconds % 1000).padStart(3, '0')}`;
+    positionLabel.textContent = `${time(logical)} / ${time(plan.duration)}`;
   }
   function advance(now) {
     if (previous !== null) position = normalize(position + Math.max(0, now - previous) * speed);
@@ -145,6 +146,68 @@
     const link = document.createElement('a'); link.href = url; link.download = `${data.view_id.replace(/[^a-z0-9._-]/gi, '_') || 'diagram'}.svg`;
     root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0);
   });
+
+  const rasterForm = control('raster-form');
+  if (rasterForm && typeof window.DiagramsRaster?.export === 'function') {
+    rasterForm.hidden = false;
+    const formatControl = control('raster-format'), widthControl = control('raster-width');
+    const backgroundControl = control('raster-background'), transparentControl = control('raster-transparent');
+    const qualityControl = control('raster-quality'), gifOptions = control('gif-options');
+    const exportButton = control('raster-export'), cancelButton = control('raster-cancel'), exportStatus = control('raster-status');
+    const fonts = JSON.parse(data.raster_fonts || 'null'), animation = JSON.parse(data.raster_animation || 'null');
+    let exportJob = null;
+    function exportDimensions() {
+      const box = svg.viewBox.baseVal;
+      const width = Number(widthControl.value) || box.width;
+      control('raster-size').textContent = `${Math.ceil(width)} × ${Math.ceil(box.height * width / box.width)} pixels`;
+    }
+    function exportFormat() {
+      const format = formatControl.value;
+      exportButton.textContent = `Download ${format === 'gif' ? 'animated GIF' : format.toUpperCase()}`;
+      transparentControl.disabled = format !== 'png'; qualityControl.disabled = format !== 'jpeg';
+      gifOptions.disabled = format !== 'gif'; gifOptions.hidden = format !== 'gif';
+      exportDimensions();
+    }
+    widthControl.addEventListener('input', exportDimensions);
+    formatControl.addEventListener('change', exportFormat); exportFormat();
+    cancelButton.addEventListener('click', () => exportJob?.abort());
+    rasterForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (exportJob || !rasterForm.reportValidity()) return;
+      const job = new AbortController(); exportJob = job;
+      const format = formatControl.value;
+      const dimensionsText = control('raster-size').textContent;
+      const options = { theme: root.dataset.viewerResolvedTheme || 'light',
+        background: format === 'png' && transparentControl.checked ? null : backgroundControl.value,
+        quality: Number(qualityControl.value), ...(widthControl.value ? { width: Number(widthControl.value) } : {}) };
+      if (format === 'gif') {
+        options.frameRate = Number(control('gif-rate').value);
+        options.loop = control('gif-loop').value === 'repeat' ? Number(control('gif-repeats').value) : control('gif-loop').value;
+        const start = control('gif-start').value, end = control('gif-end').value;
+        if (start || end) options.interval = { start: start ? Number(start) : 0, end: end ? Number(end) : plan.duration };
+      }
+      const selectedPlan = animation ? { source_id: animation.source_id, mode: plan.mode, duration_ms: String(plan.duration),
+        steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start_ms: String(item.start), duration_ms: String(item.duration),
+          groups: [...item.groups], reversed: Boolean(item.reversed), visit: Boolean(item.visit) })) } : null;
+      exportButton.disabled = true; cancelButton.hidden = false; rasterForm.setAttribute('aria-busy', 'true');
+      exportStatus.textContent = `Preparing ${format.toUpperCase()}, ${dimensionsText}…`;
+      try {
+        if (data.raster_error || !fonts) throw new Error(data.raster_error || 'Raster font data is unavailable. SVG download remains available.');
+        if (format === 'gif' && (data.raster_gif_error || !animation)) throw new Error(data.raster_gif_error || 'GIF playback data is unavailable. Still images and SVG remain available.');
+        const result = await window.DiagramsRaster.export({ svg: data.canonical, format, options, fonts, animation, plan: selectedPlan, signal: job.signal,
+          onProgress: value => { if (exportJob === job && !job.signal.aborted) exportStatus.textContent = typeof value === 'number' ? `Exporting ${format.toUpperCase()}: ${Math.round(value * 100)}%` : `Exporting ${format.toUpperCase()}, ${dimensionsText}…`; } });
+        if (job.signal.aborted) throw new DOMException('Export cancelled', 'AbortError');
+        const expectedType = format === 'png' ? 'image/png' : format === 'jpeg' ? 'image/jpeg' : 'image/gif';
+        if (result.mediaType !== expectedType || !result.bytes.length) throw new Error('The converter returned no complete image.');
+        const url = URL.createObjectURL(new Blob([result.bytes], { type: result.mediaType }));
+        const link = document.createElement('a'); link.href = url;
+        link.download = `${data.view_id.replace(/[^a-z0-9._-]/gi, '_') || 'diagram'}.${format === 'jpeg' ? 'jpg' : format}`;
+        root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+        exportStatus.textContent = `Downloaded ${format.toUpperCase()}, ${result.width} × ${result.height} pixels.`;
+      } catch (error) { exportStatus.textContent = job.signal.aborted ? 'Export cancelled.' : `Export failed: ${error.message || error}`; }
+      finally { exportJob = null; exportButton.disabled = false; cancelButton.hidden = true; rasterForm.removeAttribute('aria-busy'); }
+    });
+  }
 
   const outside = new Set(data.outside || []);
   const nodeIndex = new Map(data.graph.nodes.map((node, index) => [node.id, index]));

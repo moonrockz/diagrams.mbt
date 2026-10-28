@@ -142,10 +142,75 @@ self-messages, concurrent/repeated occurrences, hostile labels, all controls,
 visibility, reduced motion, print, independent viewers and exact downloads.
 Portable tests compare complete scene/HTML bytes on all four targets.
 
-Trusted runtime sources live in `assets/player.js` and `assets/player.css`.
+Trusted runtime sources live in `assets/player.js`, `assets/player.css`,
+`assets/viewer.js` and `assets/viewer.css`.
 After an intentional change run `mise run animation-assets:generate`; normal
 validation rejects stale embedding. No module publication or release is performed
 by these tasks.
+
+## Viewport and theme styling
+
+The stage provides Fullscreen, Zoom in, Zoom out and Fit. Zoom ranges from
+25 to 800 percent of the fitted diagram. Fit resets pan and shows the complete
+drawing. Drag an enlarged drawing with a mouse or one touch pointer. Focus the
+stage to pan with the arrow keys. Viewport changes move SVG and overlays
+together and preserve playback and canonical downloads.
+
+Fullscreen uses the browser API when available. If it is denied, the stage
+opens as a modal overlay. Escape or Exit closes it, restores page scrolling
+and returns focus to the initiating button. Printing removes transforms,
+controls and transient motion. With scripts disabled, the static SVG remains
+visible and no viewport toolbar is inserted.
+
+The shell follows the site's `site-theme` preference when storage is available,
+then the system preference. Set `data-viewer-theme="light"`, `"dark"` or
+`"system"` on the viewer root to override that policy per instance. This changes
+the shell independently from fixed SVG colors. Blocked storage is harmless.
+
+The root hooks are `.diagram-viewer` and `[data-diagram-viewer]`. Stable part
+classes are `.diagram-viewer__header`, `.diagram-viewer__viewport`,
+`.diagram-viewer__content`, `.diagram-viewer__toolbar`,
+`.diagram-viewer__playback`, `.diagram-viewer__timeline`,
+`.diagram-viewer__status`, `.diagram-viewer__exploration` and
+`.diagram-viewer__export`. Gallery viewers omit playback parts. Use custom
+properties on the root rather than private descendant selectors. Properties
+inherit into the stage, including fullscreen and its modal fallback.
+
+| Property | Default and purpose |
+| --- | --- |
+| `--diagram-viewer-bg` | Light `#f9fafb`, dark `#0f1014`, shell background |
+| `--diagram-viewer-surface` | Light `#ffffff`, dark `#17181f`, panels |
+| `--diagram-viewer-ink` | Light `#111827`, dark `#e5e7eb`, control text |
+| `--diagram-viewer-muted` | Light `#6b7280`, dark `#9ca3af`, descriptions |
+| `--diagram-viewer-border` | Light `#d1d5db`, dark `#374151`, boundaries |
+| `--diagram-viewer-accent` | Light `#4f46e5`, dark `#a5b4fc`, primary action |
+| `--diagram-viewer-accent-ink` | Light `#ffffff`, dark `#111827`, primary text |
+| `--diagram-viewer-canvas-bg` | Surface, diagram stage |
+| `--diagram-viewer-toolbar-bg` | Surface, fixed viewport toolbar |
+| `--diagram-viewer-focus` | Accent, visible keyboard focus |
+| `--diagram-viewer-font` | `system-ui, sans-serif` |
+| `--diagram-viewer-font-size` | `15px` |
+| `--diagram-viewer-space` | `.75rem`, panel gaps and padding |
+| `--diagram-viewer-control-radius` | `.5rem`, controls |
+| `--diagram-viewer-panel-radius` | `.75rem`, stage and panels |
+| `--diagram-viewer-height` | `clamp(18rem, 60vh, 48rem)`, fitted stage height |
+
+For two adjacent player roots, assign `id="review-player"` to only the player
+that needs this skin. The other root retains its defaults. Controls retain
+44 CSS pixel targets; keep sufficient color contrast when overriding colors.
+
+```css
+#review-player {
+  --diagram-viewer-accent: #9d174d;
+  --diagram-viewer-accent-ink: #ffffff;
+  --diagram-viewer-surface: #fff1f2;
+  --diagram-viewer-ink: #1f2937;
+  --diagram-viewer-font: Georgia, serif;
+  --diagram-viewer-space: 1rem;
+  --diagram-viewer-control-radius: .8rem;
+  --diagram-viewer-panel-radius: 1rem;
+}
+```
 
 
 ## Swimlane playback
@@ -211,3 +276,21 @@ test "play a regex railroad with term visits" {
   assert_true(html.contains("no input is matched or parsed"))
 }
 ```
+
+## Raster downloads
+
+PNG, JPEG and animated GIF use `moonrockz/diagrams-raster` in an embedded offline
+worker. PNG defaults to transparency; JPEG requires the selected opaque
+background and quality. GIF exports the submitted interval, frame rate and loop
+setting from the current source-bound plan, including selected routes. Export
+captures options before starting and preserves position, speed, selection and
+viewport. Busy status, Cancel and errors remain in the export panel.
+
+The renderer embeds validated default-font subsets for its canonical labels.
+Pass `raster_fonts=` to provide a supported `FontSet` for other labels. Missing
+glyphs or unsupported shaping disable raster export with a diagnostic while
+canonical SVG remains available. GIF preparation errors leave still downloads
+available. The browser needs Worker, Blob, object URLs and
+`DecompressionStream('deflate')`; no external font or conversion requests occur.
+See [raster export](../../docs/guides/raster-export.md) for bounds, timing,
+quantization and font coverage.

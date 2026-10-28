@@ -1,12 +1,14 @@
 members = [
   ".",
   "./apps/site",
+  "./apps/raster-browser",
   "./pkgs/diagrams",
   "./pkgs/bpmn",
   "./pkgs/diagrams-bpmn",
   "./pkgs/diagrams-animated",
   "./pkgs/diagrams-mermaid",
   "./pkgs/diagrams-svg",
+  "./pkgs/diagrams-raster",
   "./pkgs/diagrams-plantuml",
   "./tests",
 ]

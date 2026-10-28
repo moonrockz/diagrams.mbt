@@ -1,0 +1,11 @@
+import {
+  "moonrockz/diagrams-raster" @raster,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonbitlang/core/encoding/base64",
+  "moonbitlang/core/test",
+} for "test"

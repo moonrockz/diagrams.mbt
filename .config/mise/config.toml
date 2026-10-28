@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus", "validate:state-mermaid-corpus", "validate:state-plantuml-corpus"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus", "validate:state-mermaid-corpus", "validate:state-plantuml-corpus", "validate:raster-fonts", "validate:raster-assets"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -363,3 +363,23 @@ run = "moonx scripts/state-plantuml-corpus.mbtx generate"
 [tasks."openspec:check"]
 description = "Shared OpenSpec check"
 run = "moon run --target wasm scripts/openspec-ext.mbtx -- check"
+
+[tasks."test:raster-consumer"]
+description = "Qualify a fresh raster consumer on all four targets"
+run = "moonx scripts/test-raster-consumer.mbtx"
+
+[tasks."raster-fonts:generate"]
+description = "Regenerate the licensed default raster font profile"
+run = "moonx scripts/raster-fonts.mbtx generate"
+
+[tasks."validate:raster-fonts"]
+description = "Verify licensed font derivation and embedding"
+run = "moonx scripts/raster-fonts.mbtx check"
+
+[tasks."raster-assets:generate"]
+description = "Build the offline raster worker and gallery font assets"
+run = "moonx scripts/raster-assets.mbtx generate"
+
+[tasks."validate:raster-assets"]
+description = "Verify the compiled offline raster adapter and font assets"
+run = "moonx scripts/raster-assets.mbtx check"

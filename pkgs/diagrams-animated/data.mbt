@@ -102,6 +102,10 @@ fn playback_data(
   query_limits : @animation.Limits,
   step_limit : Int32,
   budget : HtmlBudget,
+  raster_fonts : Json,
+  raster_animation : Json,
+  raster_error : String,
+  raster_gif_error : String,
 ) -> Json {
   let steps = []
   for step in plan.steps {
@@ -408,6 +412,10 @@ fn playback_data(
     ("view_id", budget.str(scene.catalog.view_id)),
     ("kind", budget.str(scene.catalog.source.kind_name())),
     ("canonical", budget.str(scene.canonical_svg)),
+    ("raster_fonts", budget.str(raster_fonts.stringify())),
+    ("raster_animation", budget.str(raster_animation.stringify())),
+    ("raster_error", budget.str(raster_error)),
+    ("raster_gif_error", budget.str(raster_gif_error)),
     ("accent", budget.str("#2563eb")),
     (
       "plan",

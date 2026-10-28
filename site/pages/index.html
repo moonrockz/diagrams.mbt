@@ -1,12 +1,67 @@
+<style>
+.diagrams-home { max-width: 76rem; margin: auto; }
+.diagrams-home .hero { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(15rem, 1fr); align-items: center; gap: clamp(1rem, 4vw, 4rem); padding: clamp(1rem, 4vw, 3rem) 0; }
+.diagrams-home .hero h1 { font-size: clamp(2.8rem, 7vw, 5rem); line-height: 1; letter-spacing: -.05em; }
+.diagrams-home .hero-lead { font-size: clamp(1.2rem, 2.4vw, 1.65rem); line-height: 1.4; max-width: 32ch; }
+.diagrams-home .brand-badge { width: 100%; max-width: 28rem; height: auto; justify-self: center; }
+.diagrams-home .eyebrow { color: var(--muted); font-size: .85rem; letter-spacing: .1em; text-transform: uppercase; }
+.diagrams-home .primary-links { display: flex; flex-wrap: wrap; gap: .65rem; margin-top: 1.5rem; }
+.diagrams-home .primary-links a { display: inline-flex; align-items: center; min-height: 44px; padding: .65rem 1rem; border: 1px solid var(--line); border-radius: .6rem; color: var(--page-fg); background: var(--surface); text-decoration: none; }
+.diagrams-home .primary-links a:first-child { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.diagrams-home .output-note { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; padding: 1rem 0; border-block: 1px solid var(--border); color: var(--muted); }
+.diagrams-home .family-previews { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0 2rem; }
+.diagrams-home .family-preview { margin: 0; min-width: 0; border: 1px solid var(--border); border-radius: .8rem; overflow: hidden; background: var(--surface); }
+.diagrams-home .family-preview img { width: 100%; height: 13rem; object-fit: contain; padding: .75rem; background: #ffffff; }
+.diagrams-home .family-preview figcaption { padding: 1rem; }
+.diagrams-home .family-preview a { color: var(--accent); font-weight: 650; }
+.diagrams-home .family-preview p { margin-bottom: 0; font-size: .9rem; color: var(--muted); }
+.diagrams-home tbody td { font-weight: 400; background: transparent; }
+.diagrams-home tbody td:first-child { font-weight: 650; }
+.diagrams-home .scope-note { padding: clamp(1rem, 3vw, 2rem); background: var(--surface); border: 1px solid var(--border); border-radius: .8rem; margin-top: 2rem; }
+@media (max-width: 760px) {
+  .diagrams-home table, .diagrams-home tbody { display: block; width: 100%; }
+  .diagrams-home thead { display: none; }
+  .diagrams-home tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .75rem; border-top: 1px solid var(--border); padding: .75rem 0; }
+  .diagrams-home tbody td { display: block; border: 0; padding: 0; }
+  .diagrams-home tbody td:nth-child(2) { grid-column: 1 / -1; grid-row: 2; }
+  .diagrams-home tbody td:nth-child(3) { grid-column: 2; grid-row: 1; text-align: right; }
+ .diagrams-home .hero { grid-template-columns: 1fr; } .diagrams-home .brand-badge { max-width: 20rem; grid-row: 1; } .diagrams-home .family-previews { grid-template-columns: 1fr; } }
+</style>
+<div class="diagrams-home">
 <section class="hero">
-  <h1>diagrams.mbt</h1>
-  <p>Read diagram source. Build typed models. Render SVG and offline players.</p>
-  <p>A MoonBit library for Mermaid sequence, swimlane, ZenUML and architecture diagrams, BPMN documents, and native PlantUML regex, EBNF, JSON and YAML blocks.</p>
-  <p><a href="/docs/guides/mermaid-sequence/">Get started with Mermaid</a> · <a href="/gallery/">Explore the gallery</a> · <a href="/docs/">Read the docs</a> · <a href="#diagram-families">Diagram families</a> · <a href="api:moonrockz/diagrams">Browse the API</a></p>
+  <div>
+    <p class="eyebrow">Moonrockz · MoonBit libraries</p>
+    <h1>diagrams.mbt</h1>
+    <p class="hero-lead">Read diagram source. Build typed models. Render diagrams you can explore.</p>
+    <p>Turn Mermaid, BPMN and supported PlantUML into script-free SVG and offline players. Use the same models on the web and in native tools.</p>
+    <nav class="primary-links" aria-label="Get started">
+      <a href="/docs/guides/mermaid-sequence/">Get started</a>
+      <a href="/gallery/">Explore the gallery</a>
+      <a href="/docs/">Read the docs</a>
+      <a href="api:moonrockz/diagrams">Browse the API</a>
+    </nav>
+    <p><a href="#diagram-families">See supported diagram families</a></p>
+  </div>
+  <img class="brand-badge" src="/assets/brand/diagrams-badge.png" width="1254" height="1254" alt="Moonrockz bunny drawing a flowchart on the moon, diagrams.mbt Lunar drafter badge" fetchpriority="high">
 </section>
+<div class="output-note"><span>wasm · wasm-gc · JavaScript · native</span><span>Typed models and deterministic output</span><span>Offline playback and structural exploration</span></div>
 
 <section aria-labelledby="diagram-families">
   <h2 id="diagram-families">Diagram families</h2>
+  <div class="family-previews">
+    <figure class="family-preview">
+      <a href="/gallery/swimlane-review/"><img src="/assets/examples/swimlane-review-light.svg" alt="A review workflow with responsibility bands and a return interaction" loading="lazy"></a>
+      <figcaption><a href="/gallery/swimlane-review/">Review across responsibilities</a><p>Native swimlane diagrams keep ownership bands and directed handoffs explicit.</p></figcaption>
+    </figure>
+    <figure class="family-preview">
+      <a href="/gallery/sequence-basic/"><img src="/assets/examples/01-light.svg" alt="A sequence diagram with participants and directed messages" loading="lazy"></a>
+      <figcaption><a href="/gallery/sequence-basic/">Follow an interaction</a><p>Sequence diagrams retain participants, message occurrences and grouped frames.</p></figcaption>
+    </figure>
+    <figure class="family-preview">
+      <a href="/gallery/architecture-cloud/"><img src="/assets/examples/architecture-cloud-light.svg" alt="An architecture diagram showing grouped services and their connections" loading="lazy"></a>
+      <figcaption><a href="/gallery/architecture-cloud/">Inspect a system</a><p>Architecture diagrams show services, ports and authored connections.</p></figcaption>
+    </figure>
+  </div>
   <table>
     <thead><tr><th>Family</th><th>What you can build</th><th>Guide</th></tr></thead>
     <tbody>
@@ -15,21 +70,22 @@
       <tr><td>ZenUML</td><td>Annotated interactions, exceptions and typed participant symbols.</td><td><a href="/docs/guides/mermaid-zenuml/">Mermaid ZenUML</a></td></tr>
       <tr><td>Architecture</td><td>Groups, services, ports and connections with offline exploration.</td><td><a href="/docs/guides/mermaid-architecture/">Mermaid architecture</a></td></tr>
       <tr><td>BPMN</td><td>Portable documents, process and collaboration SVG, supplied or automatic geometry.</td><td><a href="/docs/guides/bpmn-and-animation/">BPMN and animation</a></td></tr>
+      <tr><td>Flowchart</td><td>Mermaid graphs and modern or legacy PlantUML activities with branches, loops and ownership.</td><td><a href="/docs/guides/mermaid-flowcharts/">Mermaid flowcharts</a></td></tr>
+      <tr><td>State</td><td>Lifecycles, composite states, concurrency and descriptive transition scenarios.</td><td><a href="/docs/guides/states-and-animation/">States and animation</a></td></tr>
       <tr><td>Regex</td><td>Railroad diagrams for patterns, with optional externally supplied match evidence.</td><td><a href="/docs/guides/plantuml/">PlantUML regex</a></td></tr>
       <tr><td>EBNF</td><td>Grammar railroads, rule references and externally supplied parse evidence.</td><td><a href="/docs/guides/plantuml/">PlantUML EBNF</a></td></tr>
       <tr><td>JSON and YAML</td><td>Data trees with themed SVG and offline structural exploration.</td><td><a href="/docs/guides/plantuml/">PlantUML data blocks</a></td></tr>
     </tbody>
   </table>
-  <figure>
-    <a href="/gallery/swimlane-review/"><img src="/assets/examples/swimlane-review-light.svg" alt="A review workflow with responsibility bands and a return interaction" loading="lazy"></a>
-    <figcaption>A native swimlane diagram rendered by diagrams.mbt. <a href="/assets/examples/swimlane-review.mmd">Read the source</a> or <a href="/assets/examples/swimlane-review-light.html">open its offline player</a>.</figcaption>
-  </figure>
+
 </section>
 
-<section aria-labelledby="portable-output">
+<section class="scope-note" aria-labelledby="portable-output">
   <h2 id="portable-output">Portable models and output</h2>
   <p>The libraries build for wasm, wasm-gc, JavaScript and native targets. SVG output needs no scripts. Offline players add playback and bounded structural exploration without a server.</p>
   <p>Diagram illustration does not execute a process or simulate BPMN tokens. Regex and EBNF traces describe evidence supplied by an external engine. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
   <p>General PlantUML diagrams, Draw.io and Graphviz DOT are planned. The <a href="/docs/design/overview/">design overview</a> explains the document, model and rendering boundaries.</p>
   <p><a href="https://github.com/moonrockz/diagrams.mbt">Source on GitHub</a> · <a href="/docs/writing_for_the_site/">Contribute documentation and examples</a></p>
 </section>
+
+</div>

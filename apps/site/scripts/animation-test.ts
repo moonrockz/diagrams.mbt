@@ -10,8 +10,8 @@ type Player = [string, string, string, Sample[], Query];
 const players = JSON.parse(await readFile('tests/animation-acceptance/__snapshot__/players.json', 'utf8')) as Player[];
 const sequenceScenes = JSON.parse(await readFile('tests/acceptance/__snapshot__/scenes.json', 'utf8')) as [string, string, string, string][];
 const bpmnScenes = JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/scenes.json', 'utf8')) as [string, string, string, string][];
-const runtime = await readFile('pkgs/diagrams-animated/assets/player.js', 'utf8');
-const stylesheet = await readFile('pkgs/diagrams-animated/assets/player.css', 'utf8');
+const runtime = await readFile('pkgs/diagrams-animated/assets/raster-runtime.generated.js', 'utf8') + '\n' + await readFile('pkgs/diagrams-animated/assets/viewer.js', 'utf8') + '\n' + await readFile('pkgs/diagrams-animated/assets/player.js', 'utf8');
+const stylesheet = await readFile('pkgs/diagrams-animated/assets/viewer.css', 'utf8') + '\n' + await readFile('pkgs/diagrams-animated/assets/player.css', 'utf8');
 assert.equal(players.length, 27); assert.equal(sequenceScenes.length, 114); assert.equal(bpmnScenes.length, 12);
 const browser = await chromium.launch();
 const errors: string[] = [], requests: string[] = [];
@@ -119,7 +119,7 @@ try {
         const [from, to, outcome, keys] = expectedQuery;
         await view.locator('[data-control="from"]').selectOption(from); await view.locator('[data-control="to"]').selectOption(to);
         await view.getByRole('button', { name: 'Show route', exact: true }).click();
-        const status = await view.locator('[role="status"]').textContent();
+        const status = await view.locator('[data-control="status"]').textContent();
         if (outcome === 'found') assert.deepEqual(JSON.parse((await view.locator('[data-diagram-viewer]').getAttribute('data-route'))!), keys);
         else assert.match(status!, outcome === 'limit' ? /limit/i : /Unreachable/);
       }
@@ -132,7 +132,7 @@ try {
       assert.deepEqual(await view.locator('[data-diagram-viewer]').evaluate(root => [root.getAttribute('data-position'), root.getAttribute('data-route'), root.getAttribute('data-playing')]), before);
       await view.emulateMedia({ media: 'print' });
       assert.equal(await view.locator('.motion-controls').evaluate(node => getComputedStyle(node).display), 'none');
-      assert.equal(await view.locator('fieldset').evaluate(node => getComputedStyle(node).display), 'none');
+      assert.ok(await view.locator('fieldset').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).display === 'none')));
       assert.ok(await view.locator('.motion-overlay').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).display === 'none')));
       assert.ok(await view.locator('.motion-selected').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).filter === 'none')));
       await view.close();
@@ -176,7 +176,7 @@ try {
   const routed = await page(player('bpmn-supplied')[1]);
   await routed.locator('[data-control="from"]').selectOption({ label: 'Prepare' });
   await routed.locator('[data-control="to"]').selectOption({ label: 'Supplier' });
-  await routed.getByRole('button', { name: 'Show route', exact: true }).click(); assert.match((await routed.locator('[role="status"]').textContent())!, /Unreachable/);
+  await routed.getByRole('button', { name: 'Show route', exact: true }).click(); assert.match((await routed.locator('[data-control="status"]').textContent())!, /Unreachable/);
   await routed.locator('[data-control="messages"]').check(); await routed.getByRole('button', { name: 'Show route', exact: true }).click();
   assert.equal(JSON.parse((await routed.locator('[data-diagram-viewer]').getAttribute('data-route'))!).length, 1);
   const base = await routed.locator('svg .bpmn-shape').evaluateAll(nodes => nodes.map(node => node.querySelector('.bpmn-bounds')!.outerHTML));
@@ -220,7 +220,7 @@ try {
   assert.deepEqual(await swim.locator('.swimlane-connection').evaluateAll(nodes => nodes.map(node => node.outerHTML)),markers);
   await swim.locator('[data-control="from"]').selectOption('C');
   await swim.getByRole('button', { name: 'Show route', exact: true }).click();
-  assert.match((await swim.locator('[role="status"]').textContent())!,/Unreachable/);
+  assert.match((await swim.locator('[data-control="status"]').textContent())!,/Unreachable/);
   await swim.locator('[data-control="undirected"]').check();
   await swim.getByRole('button', { name: 'Show route', exact: true }).click();
   assert.equal(JSON.parse((await swim.locator('[data-diagram-viewer]').getAttribute('data-route'))!).length,1);
@@ -257,7 +257,7 @@ try {
   await collapsed.locator('[data-control="from"]').evaluate(element => { const option=document.createElement('option'); option.value='Hidden'; option.textContent='Hidden'; element.append(option); });
   await collapsed.locator('[data-control="from"]').selectOption('Hidden');
   await collapsed.getByRole('button',{name:'Show route',exact:true}).click();
-  assert.match((await collapsed.locator('[role="status"]').textContent())!,/Outside current view/); await collapsed.close();
+  assert.match((await collapsed.locator('[data-control="status"]').textContent())!,/Outside current view/); await collapsed.close();
   const swimReduced=await page(player('swimlane-lr')[1],'dark','reduce');
   await swimReduced.getByRole('button', {name:'Step',exact:true}).click();
   const swimStill=await position(swimReduced); await swimReduced.waitForTimeout(120); assert.equal(await position(swimReduced),swimStill); await swimReduced.close();
@@ -339,7 +339,7 @@ try {
   const options = await railroad.locator('[data-control="from"] option').evaluateAll(nodes => nodes.map(node => (node as HTMLOptionElement).value));
   await railroad.locator('[data-control="from"]').selectOption(options[0]); await railroad.locator('[data-control="to"]').selectOption(options[options.length - 1]);
   await railroad.getByRole('button', { name: 'Show route', exact: true }).click();
-  assert.match((await railroad.locator('[role="status"]').textContent())!, /Structural route|Unreachable/);
+  assert.match((await railroad.locator('[data-control="status"]').textContent())!, /Structural route|Unreachable/);
   await railroad.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); document.dispatchEvent(new Event('visibilitychange')); });
   await railroad.getByRole('button', { name: 'Play', exact: true }).click(); const hiddenAt = await position(railroad);
   await railroad.waitForTimeout(120); assert.equal(await position(railroad), hiddenAt, 'hidden pages do not advance');

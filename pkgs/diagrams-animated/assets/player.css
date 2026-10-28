@@ -1,32 +1,39 @@
-body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 system-ui, sans-serif; }
-[data-diagram-viewer] { --viewer-bg: #f4f5f7; --viewer-ink: #0f172a; --viewer-border: #64748b; max-width: 90rem; margin: auto; }
-[data-diagram-viewer] .diagram-canvas { overflow: auto; border: 1px solid var(--viewer-border); border-radius: .4rem; }
-[data-diagram-viewer] .diagram-canvas > svg { display: block; max-width: 100%; height: auto; }
-[data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
-[data-diagram-viewer] fieldset { border: 1px solid var(--viewer-border); border-radius: .4rem; }
-[data-diagram-viewer] button, [data-diagram-viewer] select, [data-diagram-viewer] input { font: inherit; }
-[data-diagram-viewer] button, [data-diagram-viewer] select { padding: .35rem .6rem; border: 1px solid var(--viewer-border); border-radius: .3rem; background: var(--viewer-bg); color: var(--viewer-ink); }
-[data-diagram-viewer] [hidden] { display: none !important; }
-[data-diagram-viewer] label { display: inline-flex; align-items: center; gap: .35rem; }
-[data-diagram-viewer] select { max-width: 20rem; }
-[data-diagram-viewer] [data-control="seek"] { width: min(22rem, 60vw); }
-[data-diagram-viewer] :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
-[data-diagram-viewer] [data-control="status"] { min-height: 1.5em; }
-[data-diagram-viewer] .motion-overlay { pointer-events: none; }
+body { margin: 0; background: #f9fafb; color: #111827; }
+body:has(> main.diagram-viewer:only-child[data-viewer-resolved-theme="dark"]) { background: #0f1014; }
+.diagram-viewer { box-sizing: border-box; max-width: 90rem; margin: auto; padding: clamp(.75rem, 3vw, 2rem); line-height: 1.5; }
+.diagram-viewer *, .diagram-viewer *::before, .diagram-viewer *::after { box-sizing: border-box; }
+.diagram-viewer__header { margin-bottom: calc(2 * var(--dv-space)); }
+.diagram-viewer__header h1 { margin: 0 0 .4rem; font-size: clamp(1.5rem, 4vw, 2.25rem); line-height: 1.2; }
+.diagram-viewer__header p { max-width: 85ch; margin: 0; color: var(--dv-muted); }
+.diagram-viewer__playback, .diagram-viewer__exploration, .diagram-viewer__export { display: flex; align-items: center; flex-wrap: wrap; gap: var(--dv-space); padding: var(--dv-space); margin: var(--dv-space) 0; border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-panel-radius, .75rem); background: var(--dv-surface); min-width: 0; }
+.diagram-viewer button, .diagram-viewer select, .diagram-viewer input { font: inherit; accent-color: var(--dv-accent); }
+.diagram-viewer button, .diagram-viewer select { min-height: 44px; padding: .5rem .75rem; border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-control-radius, .5rem); background: var(--dv-surface); color: var(--dv-ink); max-width: 100%; }
+.diagram-viewer button { cursor: pointer; }
+.diagram-viewer button:disabled { cursor: default; opacity: .5; }
+.diagram-viewer [data-control="play"] { background: var(--dv-accent); color: var(--dv-accent-ink); border-color: var(--dv-accent); min-width: 6rem; font-weight: 650; }
+.diagram-viewer [hidden] { display: none !important; }
+.diagram-viewer label { display: inline-flex; align-items: center; flex-wrap: wrap; gap: .35rem; min-width: 0; min-height: 44px; max-width: 100%; }
+.diagram-viewer select { max-width: min(20rem, 100%); }
+.diagram-viewer__timeline { flex: 1 1 20rem; }
+.diagram-viewer [data-control="seek"] { flex: 1; min-width: 5rem; width: 100%; min-height: 44px; }
+.diagram-viewer__playback output { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.diagram-viewer__status { min-height: 1.5em; color: var(--dv-muted); overflow-wrap: anywhere; }
+.diagram-viewer__export h2 { margin: 0 auto 0 0; font-size: 1rem; }
+.diagram-viewer__raster { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr)); width: 100%; gap: var(--dv-space); }
+.diagram-viewer__raster label { display: flex; flex-direction: column; align-items: flex-start; }
+.diagram-viewer__raster input { max-width: 100%; min-width: 0; min-height: 44px; padding: .4rem; background: var(--dv-surface); color: var(--dv-ink); border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-control-radius, .5rem); }
+.diagram-viewer__gif-options { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--dv-space); border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-control-radius, .5rem); min-width: 0; }
+.diagram-viewer__export-actions { display: flex; flex-wrap: wrap; gap: var(--dv-space); grid-column: 1 / -1; }
+.diagram-viewer .motion-overlay { pointer-events: none; }
 @media screen {
-  [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) { filter: none; }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
-  [data-diagram-viewer] .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
-}
-@media (prefers-color-scheme: dark) {
-  body { background: #10131a; color: #e2e8f0; }
-  [data-diagram-viewer] { --viewer-bg: #10131a; --viewer-ink: #e2e8f0; --viewer-border: #94a3b8; }
+  .diagram-viewer .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
+  .diagram-viewer .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) { filter: none; }
+  .diagram-viewer .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
+  .diagram-viewer .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
 }
 @media print {
   body { margin: 0; background: white; }
-  [data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset, [data-diagram-viewer] [data-control="status"], [data-diagram-viewer] .motion-overlay { display: none !important; }
-  [data-diagram-viewer] .motion-visit, [data-diagram-viewer] .motion-selected, [data-diagram-viewer] .motion-selected > path { filter: none !important; }
-  [data-diagram-viewer] .diagram-canvas { overflow: visible; border: none; }
+  .diagram-viewer .motion-controls, .diagram-viewer fieldset, .diagram-viewer__status, .diagram-viewer__export, .diagram-viewer .motion-overlay { display: none !important; }
+  .diagram-viewer .motion-visit, .diagram-viewer .motion-selected, .diagram-viewer .motion-selected > path { filter: none !important; }
+  .diagram-viewer .diagram-canvas { overflow: visible; border: none; }
 }
-[data-diagram-viewer] .motion-controls output { min-width: 24ch; font-variant-numeric: tabular-nums; }

@@ -14,6 +14,7 @@
     "diagrams-mermaid",
     "diagrams-plantuml",
     "diagrams-bpmn",
+    "diagrams-raster",
     "diagrams-animated"
   ],
   "api": [
@@ -23,6 +24,7 @@
     "pkgs/diagrams-mermaid",
     "pkgs/diagrams-plantuml",
     "pkgs/diagrams-bpmn",
+    "pkgs/diagrams-raster",
     "pkgs/diagrams-animated"
   ],
   "nav": [
@@ -66,10 +68,42 @@
     {
       "from": "apps/site/assets/examples",
       "to": "assets/examples"
+    },
+    {
+      "from": "docs/assets/brand",
+      "to": "assets/brand"
+    },
+    {
+      "from": "apps/site/assets/raster",
+      "to": "assets/raster"
     }
   ],
   "gallery": {
     "manifest": "site/gallery.json",
     "root": "apps/site/assets/examples"
-  }
+  },
+  "exclude": [
+    "docs/templates",
+    "docs/superpowers",
+    "templates",
+    "superpowers",
+    ".agents",
+    ".claude",
+    ".cursor",
+    ".grok",
+    "openspec",
+    "_build",
+    "_site",
+    ".mooncakes",
+    "node_modules",
+    "target",
+    ".git",
+    "docs/assets/brand/README.md",
+    "docs/assets/brand/alternatives",
+    "docs/assets/brand/generation-prompts.txt",
+    "docs/assets/brand/icon-generation-prompt.txt"
+  ],
+  "header_logo": "assets/brand/icons/logo-64.png",
+  "favicon": "assets/brand/icons/favicon.ico",
+  "gallery_raster_adapter": "assets/raster/diagrams-raster.js"
 }

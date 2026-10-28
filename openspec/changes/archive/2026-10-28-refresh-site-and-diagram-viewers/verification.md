@@ -1,0 +1,27 @@
+# Verification
+
+All 26 implementation tasks and all 25 added requirements were checked before
+archive. CI in the implementation pull request qualifies the committed tree.
+
+| Capability | Requirement coverage | Evidence |
+| --- | --- | --- |
+| diagram-raster-export | Portable PNG/JPEG API, complete generated-SVG content, sizing/alpha/quality, deterministic GIF, binary results, bounds, shared browser path, cancellation/offline feedback | `tests/raster-spike/evidence.json`, `tests/raster-acceptance`, raster white-box tests, `test:raster-consumer`, `raster-test.ts`, `player-export-test.ts` |
+| diagram-viewer-controls | Corner toolbar, bounded zoom/Fit, mouse/touch/keyboard pan, native/modal fullscreen, public hooks, independent instances/print/no-script | `viewer-test.ts`, local `gallery-test.ts`, published `browser-test.ts`, upstream Telescope PR 15 |
+| diagram-animation | PNG/JPEG/GIF downloads, themed presentation, stored/explicit/system policy, viewport state preservation, public skin, compatibility | `test:animation`, four-target HTML snapshots, `player-export-test.ts`, documented player hooks |
+| diagram-gallery | Card/detail/local downloads and viewport controls; exact source/SVG artifacts and no-script use | All 213 local previews converted and independently decoded; 328 local static digests; root/next 57-entry browser matrices; 311 published artifact byte checks |
+| project-site | Selected A badge/header/favicon, preserved B/C/prompts, branded responsive landing and primary links/anchors | Root/next asset-byte checks and 360/768/1440 browser matrix; eight screenshots and visual review |
+
+The owner-approved Telescope 0.4.0 release used its verified merge commit through
+GitHub Actions. See `apps/site/verification-0.4.0.md` and the public release guide
+for publication and actual public-consumer evidence. No sibling override or
+workstation publication was used.
+
+`mise run format`, `mise run check`, strict OpenSpec validation, stored SVG and
+animation browser suites, fresh portable raster/flowchart/state consumers, and
+root/next site consumer checks passed. The final local gate had 924 tests on
+each portable backend, 935 on native and 27 task-script suites. Source/static
+SVG inventory remained exact; historical archive assembly code was unchanged.
+
+Independent review's glyph allocation, cmap expansion and signed-wrap findings
+were fixed and re-reviewed. Regression tests enforce early aggregate budgets
+and successful outlining/subsetting of the formerly crashing valid font.

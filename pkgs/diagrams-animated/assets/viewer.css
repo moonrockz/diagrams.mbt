@@ -1,0 +1,47 @@
+.diagram-viewer {
+  --dv-bg: var(--diagram-viewer-bg, var(--page-bg, #f9fafb));
+  --dv-surface: var(--diagram-viewer-surface, var(--surface, #ffffff));
+  --dv-ink: var(--diagram-viewer-ink, var(--page-fg, #111827));
+  --dv-muted: var(--diagram-viewer-muted, var(--muted, #6b7280));
+  --dv-border: var(--diagram-viewer-border, var(--line, #d1d5db));
+  --dv-accent: var(--diagram-viewer-accent, var(--accent, #4f46e5));
+  --dv-accent-ink: var(--diagram-viewer-accent-ink, #ffffff);
+  --dv-space: var(--diagram-viewer-space, .75rem);
+  color: var(--dv-ink); background: var(--dv-bg);
+  font-family: var(--diagram-viewer-font, system-ui, sans-serif);
+  font-size: var(--diagram-viewer-font-size, 15px);
+}
+.diagram-viewer[data-viewer-theme="dark"], .diagram-viewer[data-viewer-resolved-theme="dark"] {
+  --dv-bg: var(--diagram-viewer-bg, #0f1014); --dv-surface: var(--diagram-viewer-surface, #17181f);
+  --dv-ink: var(--diagram-viewer-ink, #e5e7eb); --dv-muted: var(--diagram-viewer-muted, #9ca3af);
+  --dv-border: var(--diagram-viewer-border, #374151); --dv-accent: var(--diagram-viewer-accent, #a5b4fc);
+  --dv-accent-ink: var(--diagram-viewer-accent-ink, #111827);
+  color-scheme: dark;
+}
+.diagram-viewer[data-viewer-theme="light"], .diagram-viewer[data-viewer-resolved-theme="light"] {
+  --dv-bg: var(--diagram-viewer-bg, #f9fafb); --dv-surface: var(--diagram-viewer-surface, #ffffff);
+  --dv-ink: var(--diagram-viewer-ink, #111827); --dv-muted: var(--diagram-viewer-muted, #6b7280);
+  --dv-border: var(--diagram-viewer-border, #d1d5db); --dv-accent: var(--diagram-viewer-accent, #4f46e5);
+  --dv-accent-ink: var(--diagram-viewer-accent-ink, #ffffff);
+  color-scheme: light;
+}
+.diagram-viewer__viewport { position: relative; border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-panel-radius, .75rem); background: var(--diagram-viewer-canvas-bg, var(--dv-surface)); }
+.diagram-viewer__content > :is(svg, img) { display: block; max-width: 100%; height: auto; }
+.diagram-viewer[data-viewer-ready="true"] .diagram-viewer__viewport { height: var(--diagram-viewer-height, clamp(18rem, 60vh, 48rem)); overflow: hidden; isolation: isolate; }
+.diagram-viewer[data-viewer-ready="true"] .diagram-viewer__content { position: absolute; left: 50%; top: calc(50% + 28px); transform-origin: center; }
+.diagram-viewer[data-viewer-ready="true"] .diagram-viewer__content > :is(svg, img) { width: 100%; height: 100%; max-width: none; }
+.diagram-viewer__toolbar { position: absolute; z-index: 2; top: var(--dv-space); right: var(--dv-space); display: flex; align-items: center; gap: .125rem; max-width: calc(100% - 2 * var(--dv-space)); padding: .125rem; background: var(--diagram-viewer-toolbar-bg, var(--dv-surface)); border: 1px solid var(--dv-border); border-radius: var(--diagram-viewer-control-radius, .5rem); box-shadow: 0 2px 8px #0002; }
+.diagram-viewer__toolbar button { min-width: 44px; min-height: 44px; padding: .4rem .5rem; border: 0; background: transparent; color: var(--dv-ink); font: inherit; cursor: pointer; border-radius: var(--diagram-viewer-control-radius, .5rem); }
+.diagram-viewer__toolbar button:hover { background: var(--dv-bg); }
+.diagram-viewer__toolbar button:disabled { opacity: .4; cursor: default; }
+.diagram-viewer__toolbar output { min-width: 4ch; text-align: center; font-size: .8em; font-variant-numeric: tabular-nums; }
+.diagram-viewer :focus-visible { outline: 3px solid var(--diagram-viewer-focus, var(--dv-accent)); outline-offset: 2px; }
+.diagram-viewer__viewport--pannable { cursor: grab; touch-action: none; user-select: none; }
+.diagram-viewer__viewport--pannable:active { cursor: grabbing; }
+.diagram-viewer .diagram-viewer__viewport--expanded, .diagram-viewer__viewport:fullscreen { position: fixed; inset: 0; z-index: 2147483647; width: 100%; height: 100dvh !important; border-radius: 0; background: var(--diagram-viewer-canvas-bg, var(--dv-surface)); }
+@media print {
+  .diagram-viewer .diagram-viewer__toolbar { display: none !important; }
+  .diagram-viewer[data-viewer-ready="true"] .diagram-viewer__viewport { height: auto; overflow: visible; border: none; }
+  .diagram-viewer[data-viewer-ready="true"] .diagram-viewer__content { position: static; width: 100% !important; height: auto !important; transform: none !important; }
+  .diagram-viewer[data-viewer-ready="true"] .diagram-viewer__content > :is(svg, img) { max-width: 100%; height: auto; }
+}
