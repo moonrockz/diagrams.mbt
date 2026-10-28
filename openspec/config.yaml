@@ -17,12 +17,12 @@ rules:
   proposal:
     - State what is out of scope.
   design:
-    - Write design.html with the local .agents/templates/agent-document.html template.
+    - Use the shared offline design.html template with inline CSS for new designs.
     - Label maintainer decisions Owner and author decisions Call.
 operations:
   archive:
     guidance:
       - >-
-        Update design.html asset links from ../../../.agents/templates/assets/
-        to ../../../../.agents/templates/assets/ after archive.
+        For historical designs with external assets, update asset paths after archive.
+        New shared designs are self-contained and need no asset path rewrite.
       - Follow CONTRIBUTING.md. Archive in the last task group pull request and close beads only after merge.

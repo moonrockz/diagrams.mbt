@@ -11,18 +11,18 @@ artifacts:
 
       Sections:
       - **Why**: 1-2 sentences on the problem or opportunity. What problem does this solve? Why now?
-            - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or
-      removals. Mark breaking changes with **BREAKING**.
+      - **What Changes**: Bullet list of changes. Be specific about new capabilities, modifications, or
+        removals. Mark breaking changes with **BREAKING**.
       - **Capabilities**: Identify which specs will be created or modified:
-              - **New Capabilities**: List capabilities being introduced. Each becomes a new
-      `specs/<capability-path>/spec.md`. Name each capability for a durable system behavior (for example,
-      `user-auth`), not the work in this change (for example, `add-login-endpoint`). Choose a cohesive boundary
-      that can own related requirements as the system evolves; avoid broad catch-all capabilities. Use kebab-case
-      for path segments you introduce (e.g., `user-auth` or `identity/user-auth`) and follow the project's existing
-      spec organization.
-              - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include
-      if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Use the exact
-      existing path under `openspec/specs/`. Leave empty if no requirement changes.
+          - **New Capabilities**: List capabilities being introduced. Each becomes a new
+          `specs/<capability-path>/spec.md`. Name each capability for a durable system behavior (for example,
+          `user-auth`), not the work in this change (for example, `add-login-endpoint`). Choose a cohesive boundary
+          that can own related requirements as the system evolves; avoid broad catch-all capabilities. Use
+          kebab-case for path segments you introduce (e.g., `user-auth` or `identity/user-auth`) and follow the
+          project's existing spec organization.
+          - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only
+          include if spec-level behavior changes (not just implementation details). Each needs a delta spec file.
+          Use the exact existing path under `openspec/specs/`. Leave empty if no requirement changes.
       - **Impact**: Affected code, APIs, dependencies, or systems.
 
       IMPORTANT: The Capabilities section is critical. It creates the contract between
@@ -49,10 +49,9 @@ artifacts:
       behavior, so if behavior does not change, no spec should change either.
       Do not invent a requirement just to satisfy validation.
 
-      **Beads**: Follow CONTRIBUTING.md. After maintainer approval, create
-      one epic for the change and one story for each numbered task group.
-      Do not create tracker entries during proposal writing. A proposal can
-      say that tracking is pending approval. Reuse existing relevant beads.
+      Follow the consuming repository's AGENTS.md and openspec/config.yaml for
+      tracking, approval and landing policy. Do not import another repository's
+      issue IDs, tracker hierarchy, release gates or authorization rules.
 
       Keep it concise (1-2 pages). Focus on the "why" not the "how" -
       implementation details belong in design.html.
@@ -87,14 +86,14 @@ artifacts:
       Create one spec file per capability listed in the proposal's Capabilities section.
       `<capability-path>` is the spec directory relative to `specs/` (for example,
       `user-auth` or `identity/user-auth`). Preserve the full path:
-            - New capabilities: use the exact path from the proposal at `specs/<capability-path>/spec.md`. Any path
-      segment newly introduced in the proposal must be kebab-case. Follow the project's existing organization; do
-      not add a new domain level when the project uses a flat layout.
-            - Modified capabilities: use the exact existing path from `openspec/specs/<capability-path>/` when
-      creating the delta at `specs/<capability-path>/spec.md`. Run `openspec list --specs` to confirm that path
-      before writing the delta, appending `--store "<id>"` only for a registered standalone store - a mistyped or
-      invented path targets a capability that does not exist rather than the one you meant. Do not move or rename
-      the capability.
+      - New capabilities: use the exact path from the proposal at `specs/<capability-path>/spec.md`. Any path
+        segment newly introduced in the proposal must be kebab-case. Follow the project's existing organization; do
+        not add a new domain level when the project uses a flat layout.
+      - Modified capabilities: use the exact existing path from `openspec/specs/<capability-path>/` when
+        creating the delta at `specs/<capability-path>/spec.md`. Run `openspec list --specs` to confirm that path
+        before writing the delta, appending `--store "<id>"` only for a registered standalone store - a mistyped or
+        invented path targets a capability that does not exist rather than the one you meant. Do not move or rename
+        the capability.
 
       Write the spec files one at a time, so the user sees progress and an
       interrupted run keeps the files it already wrote:
@@ -124,16 +123,16 @@ artifacts:
       - Each scenario: `#### Scenario: <name>` with WHEN/THEN format
       - **CRITICAL**: Scenarios MUST use exactly 4 hashtags (`####`). Using 3 hashtags or bullets will fail silently.
       - Every requirement MUST have at least one scenario.
-            - Keep each requirement's description (the text between `### Requirement:` and its first scenario) to
-      500 characters or fewer. `openspec validate` flags longer descriptions in ADDED requirements and in the main
-      spec. This is a warning: normal validation still passes, but `openspec validate --strict` fails on it. When
-      writing a new requirement, state one behavior per requirement: move examples and edge cases into scenarios,
-      and split a requirement that covers several behaviors into separate `### Requirement:` blocks, each with its
-      own scenarios. Under MODIFIED, keep the existing requirement block whole; never split, trim or rewrite
-      existing text just to meet the length. Split an existing long requirement only when the user asks for it, in
-      a change made for that purpose: under MODIFIED, keep its header and every scenario and cut its description
-      down to one behavior without changing its meaning, then add each behavior you removed as its own ADDED
-      requirement with its own scenarios.
+      - Keep each requirement's description (the text between `### Requirement:` and its first scenario) to
+        500 characters or fewer. `openspec validate` flags longer descriptions in ADDED requirements and in the main
+        spec. This is a warning: normal validation still passes, but `openspec validate --strict` fails on it. When
+        writing a new requirement, state one behavior per requirement: move examples and edge cases into scenarios,
+        and split a requirement that covers several behaviors into separate `### Requirement:` blocks, each with its
+        own scenarios. Under MODIFIED, keep the existing requirement block whole; never split, trim or rewrite
+        existing text just to meet the length. Split an existing long requirement only when the user asks for it, in
+        a change made for that purpose: under MODIFIED, keep its header and every scenario and cut its description
+        down to one behavior without changing its meaning, then add each behavior you removed as its own ADDED
+        requirement with its own scenarios.
 
       New capabilities only: the delta spec's first section is `## Purpose` -
       one or two sentences (50+ characters, or `openspec validate --strict`
@@ -187,9 +186,6 @@ artifacts:
 
       Specs should be testable - each scenario is a potential test case.
 
-      When a requirement comes from a bead (a bug, a decision or a request),
-      end its description with `(bead: <id>)`. Keep bead ids out of scenarios
-      and out of `## Purpose`.
     requires:
       - proposal
 
@@ -200,32 +196,33 @@ artifacts:
     instruction: |
       Create the design document that explains HOW to implement the change.
 
-      Write it as an HTML page, not Markdown. The template is the repository's
-      agent document (.agents/templates/agent-document.html):
-      - Keep its <head> as it is. Set <title> and <h1> to the change name. The
-        <head> references the styles and scripts in .agents/templates/assets/ by
-        relative paths that are correct from openspec/changes/<name>/. Do not
-        embed CSS or JavaScript in the page.
-      - Replace the example content inside <main> with the sections below. Give each
-        section an <h2 id="...">, and list every section in nav.toc.
-      - Put code in <pre><code class="language-moonbit"> (also scheme, toml, json,
-        bash, diff). Escape <, > and & in text and code.
-      - Add no other external resource and no other script.
+      Write a standalone HTML page, not Markdown. Copy the schema's design.html
+      template, which has inline CSS for light and dark mode:
+      - Keep the doctype, language, charset, viewport and color-scheme metadata.
+        Set <title> and <h1> to the change name.
+      - Keep CSS inline. Add no external styles, fonts, scripts or remote resources.
+        The page must open offline and survive archiving without path changes.
+      - Replace the example content inside <main> with the sections below. Give
+        each section an <h2 id="..."> and list every section in nav.toc.
+      - Put code in <pre><code class="language-moonbit"> (also toml, json, console,
+        diff). Escape <, > and & in text and code.
       - Use tables, <details> and inline SVG diagrams where they help a reviewer.
+        Keep links to proposal.md, tasks.md and change-local specs relative.
 
-      When to include design.html (create only if any apply):
+      The tasks artifact requires design, so always create design.html. Keep it
+      brief for simple work; expand these cases:
       - Cross-cutting change (multiple services/modules) or new architectural pattern
       - New external dependency or significant data model changes
       - Security, performance, or migration complexity
       - Ambiguity that benefits from technical decisions before coding
 
       Sections:
-            - **Context**: Only the current state and constraints needed to explain the approach. Reference the
-      proposal for motivation instead of restating it (e.g., "See proposal.md - Why").
-            - **Goals / Non-Goals**: What this design achieves and explicitly excludes. Don't restate the
-      proposal's scope - add only design-level boundaries.
-            - **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered
-      for each decision.
+      - **Context**: Only the current state and constraints needed to explain the approach. Reference the
+        proposal for motivation instead of restating it (e.g., "See proposal.md - Why").
+      - **Goals / Non-Goals**: What this design achieves and explicitly excludes. Don't restate the proposal's
+        scope - add only design-level boundaries.
+      - **Decisions**: Key technical choices with rationale (why X over Y?). Include alternatives considered
+        for each decision.
         Name each decision with a short slug for its area, 2 to 5 capital letters, and a number: `SRV-1`, `SRV-2`
         for server decisions, `UI-1` for the interface. Do not use single-letter ids such as `D1`: the slug tells
         the reader what the decision is about. Give the heading the lowercase id as its `id` (`<h3 id="srv-1">`)
@@ -246,9 +243,6 @@ artifacts:
 
       Good design docs explain the "why" behind technical decisions.
 
-      Put the review status and date in the <p class="meta"> line. Include
-      the epic bead there after approval, when it exists. Label each decision
-      Owner for a maintainer decision or Call for an author decision.
     requires:
       - proposal
 
@@ -318,10 +312,8 @@ artifacts:
 
       Reference specs for what needs to be built, design for how to build it.
 
-      Each numbered task group is one beads story. Put a `Bead:` line below
-      its heading. Use `Bead: pending approval` until a maintainer approves
-      the change. Follow CONTRIBUTING.md for creating beads and dependencies.
-      Never close beads before the implementation pull request merges.
+      Follow the repository's tracking policy for group IDs and dependencies.
+      Keep each group's tests and documentation with its implementation.
     requires:
       - specs
       - design
@@ -333,7 +325,5 @@ apply:
     Read context files, work through pending tasks, mark complete as you go.
     Pause if you hit blockers or need clarification.
 
-    Follow CONTRIBUTING.md for tracker and landing steps. Claim the current
-    story, tick completed tasks, and archive in the last task group's pull
-    request. Close beads only after merge, with the PR and merge SHA as reason,
-    then close a finished epic and sync the tracker.
+    Keep repository-local tracking in step with tasks.md, using AGENTS.md and
+    openspec/config.yaml. Do not infer publication or merge approval from a task.
