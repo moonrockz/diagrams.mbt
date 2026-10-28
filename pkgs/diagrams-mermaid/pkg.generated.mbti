@@ -10,6 +10,8 @@ import {
   "moonrockz/diagrams-mermaid/architecture-syntax",
   "moonrockz/diagrams-mermaid/ast",
   "moonrockz/diagrams-mermaid/cst",
+  "moonrockz/diagrams-mermaid/flowchart",
+  "moonrockz/diagrams-mermaid/flowchart-ast",
   "moonrockz/diagrams-mermaid/sequence",
   "moonrockz/diagrams-mermaid/swimlane",
   "moonrockz/diagrams-mermaid/swimlane-ast",
@@ -31,6 +33,10 @@ pub let conversion_diagnostic_codes : ReadOnlyArray[String]
 
 pub let diagnostic_codes : ReadOnlyArray[String]
 
+pub let flowchart_conversion_diagnostic_codes : ReadOnlyArray[String]
+
+pub let flowchart_diagnostic_codes : ReadOnlyArray[String]
+
 pub fn print(@ast.Diagram) -> String
 
 pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramPrintResult
@@ -46,6 +52,8 @@ pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String]
 pub let swimlane_diagnostic_codes : ReadOnlyArray[String]
 
 pub fn to_architecture(@architecture-ast.Diagram, limits? : @architecture-syntax.Limits, id? : String) -> @architecture.Conversion
+
+pub fn to_flowchart(@flowchart-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> @flowchart.Conversion
 
 pub fn to_sequence(@ast.Diagram) -> @sequence.Conversion
 
@@ -78,6 +86,7 @@ pub fn DiagramReadResult::not_equal(Self, Self) -> Bool
 pub fn DiagramReadResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum DiagramTree {
+  Flowchart(@swimlane-cst.Node)
   Sequence(@cst.Node)
   Swimlane(@swimlane-cst.Node)
   Zenuml(@zenuml-cst.Node)
@@ -90,6 +99,7 @@ pub fn DiagramTree::text(Self) -> String
 pub fn DiagramTree::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ParsedDiagram {
+  Flowchart(@flowchart-ast.Diagram)
   Sequence(@ast.Diagram)
   Swimlane(@swimlane-ast.Diagram)
   Zenuml(@zenuml-ast.Diagram)

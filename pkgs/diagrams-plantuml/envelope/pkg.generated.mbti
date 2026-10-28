@@ -30,6 +30,7 @@ pub(all) enum Kind {
   Ebnf
   Json
   Yaml
+  Activity
 } derive(Eq, @debug.Debug)
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
@@ -41,11 +42,12 @@ pub struct Limits {
   output : Int32
   depth : Int32
   nodes : Int32
+  edges : Int32
   work : Int32
   diagnostics : Int32
 } derive(Eq, @debug.Debug)
 pub fn Limits::equal(Self, Self) -> Bool
-pub fn Limits::new(source? : Int32, output? : Int32, depth? : Int32, nodes? : Int32, work? : Int32, diagnostics? : Int32) -> Self
+pub fn Limits::new(source? : Int32, output? : Int32, depth? : Int32, nodes? : Int32, edges? : Int32, work? : Int32, diagnostics? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::valid(Self) -> Bool

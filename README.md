@@ -92,11 +92,11 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
 - `pkgs/diagrams-animated/` emits standalone HTML over pure motion plans and SVG scenes.
 - `pkgs/diagrams/` contains the provisional `moonrockz/diagrams` library, imported
-  as `@diagrams`, immutable sequence/BPMN/swimlane/regex/EBNF/data-tree models, the trace provider
+  as `@diagrams`, immutable sequence/BPMN/swimlane/flowchart/regex/EBNF/data-tree models, the trace provider
   contract, motion/exploration and the renderer contract.
-- `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence and swimlane diagrams.
-- `pkgs/diagrams-plantuml/` reads, prints and converts PlantUML regex, EBNF, JSON and YAML blocks.
-- `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane/railroad/data-tree models and writes standalone SVG and scene bindings.
+- `pkgs/diagrams-mermaid/` reads, prints and converts Mermaid sequence, swimlane, flowchart, ZenUML and architecture diagrams.
+- `pkgs/diagrams-plantuml/` reads, prints and converts PlantUML regex, EBNF, JSON, YAML and modern/legacy activity blocks.
+- `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane/flowchart/railroad/data-tree models and writes standalone SVG and scene bindings.
 - `tests/` contains the unpublished acceptance suites and frozen Mermaid/BPMN corpora.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
@@ -119,7 +119,7 @@ from stored snapshots without compiling. `--check` compares existing artifacts;
 Run `mise run test:animation` for offline player qualification.
 
 Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`,
-`Swimlane`, `Regex`, `Ebnf` `DataTree` and `Architecture` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
+`Swimlane`, `Flowchart`, `Regex`, `Ebnf`, `DataTree` and `Architecture` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
 See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
 and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 
@@ -137,3 +137,18 @@ JavaScript. See [ZenUML](docs/guides/mermaid-zenuml.md),
 [symbol attribution](pkgs/diagrams-svg/icons/NOTICE.md). Run
 `mise run native-mermaid-corpus:reference -- --check` for independent upstream
 qualification and `mise run validate:icons` for the complete asset catalog.
+
+Mermaid `flowchart`/`graph` and PlantUML modern/legacy activity diagrams share
+immutable flowchart values, standalone themed SVG, geometry checks and offline
+animation. Subgraphs remain ordinary groups; PlantUML responsibility lanes stay
+explicit. Playback and routes describe structure and caller-supplied scenarios.
+They do not evaluate conditions or execute a workflow. See
+[Mermaid flowcharts](docs/guides/mermaid-flowcharts.md),
+[PlantUML activities](docs/guides/plantuml-flowcharts.md), and
+[flowchart playback](docs/guides/flowcharts-and-animation.md).
+
+Run `mise run flowchart-mermaid-corpus:reference -- --check` and
+`mise run activity-corpus:reference -- --check` for independent source and
+canonical-output qualification. `mise run test:flowchart` checks stored SVG and
+players in Chromium; `mise run test:flowchart-consumer` checks fresh model,
+reader and renderer/player consumers on all four targets.

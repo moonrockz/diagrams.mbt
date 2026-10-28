@@ -13,11 +13,13 @@ pub fn decode_content(String) -> String
 
 pub let diagnostic_codes : ReadOnlyArray[String]
 
+pub fn front_matter_title(String, limits? : Limits) -> (String?, String?)
+
 pub fn is_space(Int32) -> Bool
 
 pub let max_metadata_depth : Int32
 
-pub fn read(String, limits? : Limits) -> ReadResult
+pub fn read(String, limits? : Limits, header? : String, diagnostic_prefix? : String, accepted_headers? : ArrayView[String]) -> ReadResult
 
 pub fn trim_space(String) -> String
 

@@ -1,0 +1,214 @@
+///|
+/// Verify frozen native Mermaid sources and portable reference embeddings.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn literal(text : String) -> String {
+  let out = StringBuilder()
+  out.write_char('"')
+  for c in text {
+    match c {
+      '"' => out.write_string("\\\"")
+      '\\' => out.write_string("\\\\")
+      '\n' => out.write_string("\\n")
+      '\r' => out.write_string("\\r")
+      '\t' => out.write_string("\\t")
+      _ => out.write_char(c)
+    }
+  }
+  out.write_char('"')
+  out.to_string()
+}
+
+///|
+fn chunks(text : String, size : Int32) -> Array[String] {
+  let out = []
+  let mut i = 0
+  while i < text.length() {
+    let mut end = i + size.min(text.length() - i).max(1)
+    if end < text.length() &&
+      text.at(end - 1).to_int() >= 55296 &&
+      text.at(end - 1).to_int() <= 56319 &&
+      text.at(end).to_int() >= 56320 &&
+      text.at(end).to_int() <= 57343 {
+      if end - i == 1 {
+        end += 1
+      } else {
+        end -= 1
+      }
+    }
+    out.push(text[i:end].to_owned())
+    i = end
+  }
+  out
+}
+
+///|
+async fn main {
+  let args = @env.args()
+  let command = if args.length() > 1 { args[1] } else { "check" }
+  if args.length() > 2 || (command != "check" && command != "generate") {
+    eprintln("Usage: flowchart-mermaid-corpus.mbtx check|generate")
+    @sys.exit(1)
+  }
+  let generate = command == "generate"
+  let dir = "tests/corpus/mermaid-flowcharts"
+  let sums = @fs.read_file(dir + "/SHA256SUMS").text()
+  let mut count = 0
+  for line in sums.split("\n") {
+    if line.is_empty() {
+      continue
+    }
+    guard line.length() > 66 && line[64:66] == "  " else { @sys.exit(1) }
+    let name = line[66:].to_owned()
+    if name.contains("..") || name.has_prefix("/") {
+      @sys.exit(1)
+    }
+    let actual = @crypto.bytes_to_hex_string(
+      @crypto.sha256(@utf8.encode(@fs.read_file(dir + "/" + name).text())),
+    )
+    if actual != line[:64].to_owned() {
+      eprintln("Flowchart corpus digest mismatch: " + name)
+      @sys.exit(1)
+    }
+    count += 1
+  }
+  let coverage = @json.parse(
+    @fs.read_file(dir + "/grammar-coverage.json").text(),
+  )
+  let grammar = @fs.read_file(dir + "/upstream/flow.jison")
+    .text()
+    .split("\n")
+    .to_array()
+  guard coverage is Object(manifest) &&
+    manifest.get("productions") is Some(Array(productions)) else {
+    @sys.exit(1)
+  }
+  for production in productions {
+    guard production is Object(fields) &&
+      fields.get("line") is Some(Number(line, ..)) &&
+      fields.get("production") is Some(String(expected)) &&
+      fields.get("fixture") is Some(String(fixture)) else {
+      @sys.exit(1)
+    }
+    let index = line.to_int() - 1
+    if index < 0 ||
+      index >= grammar.length() ||
+      grammar[index].trim().to_owned() != expected ||
+      !@fs.exists(dir + "/" + fixture) {
+      eprintln("Stale grammar coverage entry")
+      @sys.exit(1)
+    }
+  }
+  let documentation = @json.parse(
+    @fs.read_file(dir + "/documentation-coverage.json").text(),
+  )
+  guard documentation is Object(doc_fields) &&
+    doc_fields.get("examples") is Some(Array(examples)) else {
+    @sys.exit(1)
+  }
+  let blocks = @fs.read_file(dir + "/upstream/flowchart.md")
+    .text()
+    .split("```mermaid")
+    .to_array()
+  if blocks.length() != examples.length() + 1 {
+    eprintln("Incomplete flowchart documentation coverage")
+    @sys.exit(1)
+  }
+  let reference = @json.parse(@fs.read_file(dir + "/reference.json").text())
+  guard reference is Object(reference_fields) &&
+    reference_fields.get("fixtures") is Some(Array(fixtures)) else {
+    @sys.exit(1)
+  }
+  let fixture_sources : Map[String, String] = Map([])
+  for fixture in fixtures {
+    guard fixture is Object(fields) &&
+      fields.get("name") is Some(String(name)) &&
+      fields.get("source") is Some(String(source)) else {
+      @sys.exit(1)
+    }
+    if fixture_sources.contains(name) ||
+      @fs.read_file(dir + "/" + name).text() != source {
+      eprintln("Stale or duplicate flowchart reference input: " + name)
+      @sys.exit(1)
+    }
+    fixture_sources[name] = source
+  }
+  for i, example in examples {
+    guard example is Object(fields) &&
+      fields.get("source") is Some(String(name)) else {
+      @sys.exit(1)
+    }
+    let block = blocks[i + 1].to_owned()
+    guard block.find("\n") is Some(start) else { @sys.exit(1) }
+    let body = block[start + 1:]
+    guard body.find("```") is Some(end) else { @sys.exit(1) }
+    let expected = body[:end].trim().to_owned() + "\n"
+    if fixture_sources.get(name) != Some(expected) {
+      eprintln("Stale documentation flowchart: " + name)
+      @sys.exit(1)
+    }
+  }
+  let out = StringBuilder()
+  out.write_string(
+    "// Generated by mise run flowchart-mermaid-corpus:generate. Do not edit.\n",
+  )
+  for
+    (field, file) in [
+      ("reference", "reference.json"),
+      ("shapes", "shape-coverage.json"),
+    ] {
+    let source = @fs.read_file(dir + "/" + file).text()
+    out.write_string("\n///|\npub let " + field + " : String = ")
+    for i, part in chunks(source, 12000) {
+      if i != 0 {
+        out.write_string(" +\n  ")
+      }
+      out.write_string(literal(part))
+    }
+    out.write_string("\n")
+  }
+  let target = "tests/flowchart-mermaid-acceptance/corpus.generated.mbt"
+  if generate {
+    @fs.write_file(target, out.to_string())
+  } else if !@fs.exists(target) ||
+    @fs.read_file(target).text() != out.to_string() {
+    eprintln(
+      "Stale flowchart-mermaid embeddings; run mise run flowchart-mermaid-corpus:generate",
+    )
+    @sys.exit(1)
+  }
+  println(
+    "Verified " +
+    count.to_string() +
+    " pinned flowchart-mermaid inputs and portable reference embeddings",
+  )
+}
+
+///|
+test "literal and chunks preserve quotes CRLF and non-BMP chunk boundaries" {
+  let original = "\r\n\"\\😀"
+  assert_eq(@json.parse(literal(original)), Json(original))
+  for size in [1, 2, 3, 12000] {
+    let source = "x".repeat(11999) + "😀" + "\r\n"
+    let pieces = chunks(source, size)
+    assert_eq(pieces.join(""), source)
+    for piece in pieces {
+      if !piece.is_empty() {
+        assert_true(
+          !(piece.at(0).to_int() >= 56320 && piece.at(0).to_int() <= 57343),
+        )
+        let last = piece.at(piece.length() - 1).to_int()
+        assert_true(!(last >= 55296 && last <= 56319))
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+@startuml
+title Request handling
+partition Intake {
+(*) --> "Read request" as R
+}
+if "Valid?" then
+-->[yes] "Process" as P
+P --> "Complete" as Done
+else
+-->[no] "Reject"
+--> Done
+endif
+Done --> (*)
+@enduml

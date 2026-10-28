@@ -1,4 +1,8 @@
 import {
+  "moonrockz/diagrams-mermaid/flowchart-ast" @flowchart_ast,
+  "moonrockz/diagrams-mermaid/flowchart-syntax" @flowchart_syntax,
+  "moonrockz/diagrams-mermaid/flowchart-printer" @flowchart_printer,
+  "moonrockz/diagrams-mermaid/flowchart" @flowchart_conversion,
   "moonrockz/diagrams-mermaid/zenuml-ast" @zenuml_ast,
   "moonrockz/diagrams-mermaid/zenuml-cst" @zenuml_cst,
   "moonrockz/diagrams-mermaid/zenuml-syntax" @zenuml_syntax,

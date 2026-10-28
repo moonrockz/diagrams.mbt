@@ -1,0 +1,80 @@
+{
+  "repository": "https://github.com/mermaid-js/mermaid",
+  "tag": "mermaid@12.2.0",
+  "commit": "1fb7869866dd619168d840291c9c54b4f129758b",
+  "licence": "MIT",
+  "documentationExamples": 114,
+  "note": "Pinned grammar and shape aliases; no production JavaScript dependency.",
+  "sources": [
+    {
+      "path": "upstream/flowchart.md",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/docs/syntax/flowchart.md",
+      "licence": "MIT"
+    },
+    {
+      "path": "upstream/flow.jison",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/mermaid@12.2.0/packages/mermaid/src/diagrams/flowchart/parser/flow.jison",
+      "licence": "MIT"
+    },
+    {
+      "path": "upstream/flowDb.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/mermaid@12.2.0/packages/mermaid/src/diagrams/flowchart/flowDb.ts",
+      "licence": "MIT"
+    },
+    {
+      "path": "upstream/shapes.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/mermaid@12.2.0/packages/mermaid/src/rendering-util/rendering-elements/shapes.ts",
+      "licence": "MIT"
+    },
+    {
+      "path": "upstream/html-entities.json",
+      "url": "https://html.spec.whatwg.org/entities.json",
+      "retrieved": "2026-10-25",
+      "lastModified": "2025-11-12T00:20:03Z",
+      "licence": "CC-BY-4.0 data; BSD-3-Clause when incorporated into source code",
+      "copyright": "WHATWG (Apple, Google, Mozilla, Microsoft)",
+      "licenceUrl": "https://whatwg.org/ipr-policy#copyright-license",
+      "licenceFile": "upstream/WHATWG-LICENSE",
+      "generatedSourceNotice": "pkgs/diagrams-mermaid/NOTICE-WHATWG"
+    }
+  ],
+  "reference": {
+    "package": "mermaid@12.2.0",
+    "lock": "tests/swimlane-reference/bun.lock",
+    "runner": "scripts/flowchart-mermaid-reference.mbtx",
+    "browser": "apps/site locked playwright Chromium",
+    "network": "loopback module loading only; external requests aborted"
+  },
+  "projectCases": {
+    "path": "cases/*.mmd",
+    "licence": "Apache-2.0",
+    "authors": "diagrams.mbt contributors"
+  },
+  "yaml": {
+    "packages": [
+      {
+        "package": "moonbitstack/moonyaml@0.1.1",
+        "licence": "Apache-2.0",
+        "source": "https://github.com/moonbitstack/moonyaml"
+      },
+      {
+        "package": "moonbit-community/yaml@0.0.8",
+        "licence": "MIT",
+        "source": "https://github.com/moonbit-community/yaml.mbt"
+      }
+    ],
+    "boundedFlavor": {
+      "duplicates": "Reject",
+      "aliases": true,
+      "depth": "Limits.metadata_depth: 1..256, default 256; independent of diagram depth",
+      "budget": "Limits.metadata_work: positive, default 1000000; also limited by remaining reader work"
+    },
+    "preflight": "Alias-free physical-depth pass, then event-based logical alias depth and expansion work before recursive dependency weighing. JSON_SCHEMA numeric normalization preserves NaN/infinities, binary integers and overflowing-literal strings.",
+    "productionUse": "pure shape-data YAML normalization only; no filesystem/process/network"
+  },
+  "normalization": [
+    "Groups remain groups at every nesting depth; no lane ownership is inferred.",
+    "Pinned upstream database values are recorded independently of MoonBit.",
+    "Source trivia, diagnostics, canonical text and geometry have separate portable assertions."
+  ]
+}

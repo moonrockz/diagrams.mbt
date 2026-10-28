@@ -121,7 +121,7 @@ fn statement_text(kind : @ast.StatementKind, context : PrintContext) -> String {
  }
 }
 ///|
-pub fn print(diagram : @ast.Diagram, limits? : @syntax.Limits = @syntax.Limits::new()) -> Printed {
+pub fn print(diagram : @ast.Diagram, limits? : @syntax.Limits = @syntax.Limits::new(), header? : String = "swimlane-beta", diagnostic_prefix? : String = "swimlane") -> Printed {
  let context={limits,failed:false}; let out=StringBuilder(); let mut length=0; let mut failed=false; let mut depth=0; let mut work=0
  fn charge(units : Int) -> Bool { if failed || units < 0 || units > limits.work-work { failed=true; false } else { work+=units; true } }
  fn node_budget(node : @ast.NodeDecl) -> Bool {
@@ -146,7 +146,7 @@ pub fn print(diagram : @ast.Diagram, limits? : @syntax.Limits = @syntax.Limits::
  fn write(text : String) { if text.length() > limits.output-length || text.length() > limits.work-work { failed=true } else if !failed { length+=text.length(); work+=text.length(); out.write_string(text) } }
  if diagram.front_matter is Some(front) { write(front); write("\n") }
  for directive in diagram.directives { write(directive); write("\n") }
- write("swimlane-beta"); if diagram.direction is Some(direction) { write(" "+direction) }; write("\n")
+ write(header); if diagram.direction is Some(direction) { write(" "+direction) }; write("\n")
  for statement in diagram.statements {
   work+=1; if work > limits.work || failed { failed=true; break }
   if !statement_budget(statement.kind) { break }
@@ -155,11 +155,11 @@ pub fn print(diagram : @ast.Diagram, limits? : @syntax.Limits = @syntax.Limits::
   write(statement_text(statement.kind,context)); write("\n")
   if statement.kind is Subgraph(..) { depth+=1; if depth > limits.depth { failed=true; break } }
  }
- if failed || context.failed { {output:None,diagnostics:[@diagrams.Diagnostic::error("swimlane/print-limit","Printing limit exceeded")]} } else {
+ if failed || context.failed { {output:None,diagnostics:[@diagrams.Diagnostic::error(diagnostic_prefix+"/print-limit","Printing limit exceeded")]} } else {
   let output=out.to_string()
-  let checked=@syntax.read(output,limits=@syntax.Limits::new(source=limits.source,output=limits.output,nodes=limits.nodes,edges=limits.edges,depth=limits.depth,work=(limits.work-work).max(0),diagnostics=limits.diagnostics,metadata_depth=limits.metadata_depth,metadata_work=limits.metadata_work))
+  let checked=@syntax.read(output,header~,diagnostic_prefix~,limits=@syntax.Limits::new(source=limits.source,output=limits.output,nodes=limits.nodes,edges=limits.edges,depth=limits.depth,work=(limits.work-work).max(0),diagnostics=limits.diagnostics,metadata_depth=limits.metadata_depth,metadata_work=limits.metadata_work))
   if checked.diagnostics.iter().any(d => d.severity == @diagrams.Severity::Error) || checked.ast != Some(diagram) {
-   let code=if checked.diagnostics.iter().any(d => d.code.has_suffix("-limit")) { "swimlane/print-limit" } else { "swimlane/invalid-ast" }
+   let code=if checked.diagnostics.iter().any(d => d.code.has_suffix("-limit")) { diagnostic_prefix+"/print-limit" } else { diagnostic_prefix+"/invalid-ast" }
    let mut detail="Typed values cannot be written as an equivalent native diagram within the limits"
    if checked.ast is Some(actual) {
     if actual.statements.length() != diagram.statements.length() { detail+=" (statement count)" }

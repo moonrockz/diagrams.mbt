@@ -133,6 +133,7 @@ fn playback_data(
           budget.str(
             match binding.occurrence.kind {
               Architecture(c) => c.label.unwrap_or("")
+              Flowchart(c) => c.label
               _ =>
                 binding.occurrence.swimlane_connection
                 .map(c => c.label)
@@ -145,6 +146,7 @@ fn playback_data(
           Json(
             match binding.occurrence.kind {
               Architecture(c) => c.source_head && !c.target_head
+              Flowchart(c) => c.direction == Backward
               _ =>
                 binding.occurrence.swimlane_connection
                 .map(c => c.direction == Backward)
@@ -160,6 +162,8 @@ fn playback_data(
           budget.str(
             if binding.occurrence.kind is Architecture(_) {
               "architecture"
+            } else if binding.occurrence.kind is Flowchart(_) {
+              "flowchart"
             } else if binding.occurrence.swimlane_connection is Some(_) {
               "swimlane"
             } else if binding.occurrence.flow is Some(_) {
@@ -177,6 +181,7 @@ fn playback_data(
           "connection",
           match binding.occurrence {
             { kind: Architecture(c), .. } => budget.str(c.id)
+            { kind: Flowchart(c), .. } => budget.str(c.id)
             { swimlane_connection: Some(c), .. } => budget.str(c.id)
             { flow: Some(f), .. } => budget.str(f.id)
             { railroad_connector: Some(c), .. } => budget.str(c.id)
@@ -195,6 +200,7 @@ fn playback_data(
     let kind = match node.kind {
       Bpmn(_) => "bpmn"
       SwimlaneNode | SwimlaneGroup | SwimlaneLane => "swimlane"
+      FlowchartNode(_) | FlowchartGroup | FlowchartLane | FlowchartNote(_) => "flowchart"
       ArchitectureService | ArchitectureJunction | ArchitectureGroup =>
         "architecture"
       Message => "message"
@@ -202,10 +208,15 @@ fn playback_data(
       DataValue => "data"
       _ => "control"
     }
-    let detail = node.source_node.map(n => description(n, budget)).unwrap_or("")
+    let detail = match node.kind {
+      FlowchartNode(n) => "Control role: "+n.role.to_repr().to_string()+". Structural illustration only."
+      FlowchartNote(note) => note.text
+      FlowchartRegion(region,_) => "Control region: "+region.kind.to_repr().to_string()+". "+region.condition.unwrap_or("")+" "+region.join_specification.unwrap_or("")
+      _ => node.source_node.map(n => description(n,budget)).unwrap_or("")
+    }
     nodes.push(
       budget.object([
-        ("primary", Json(node.swimlane_node is Some(_))),
+        ("primary", Json(node.swimlane_node is Some(_) || node.kind is FlowchartNode(_))),
         ("id", budget.str(node.id)),
         ("label", budget.str(endpoint_label(node, scene.catalog))),
         ("kind", budget.str(kind)),
@@ -227,6 +238,7 @@ fn playback_data(
       MessageFlow => "message"
       Order => "order"
       SwimlaneFlow => "swimlane"
+      FlowchartFlow => "flowchart"
       ArchitectureFlow => "architecture"
       Undirected => "undirected"
       Railroad => "railroad"
@@ -250,6 +262,11 @@ fn playback_data(
   }
   let outside = []
   match scene.catalog.source {
+    Flowchart(view) => {
+      for id in view.nodes.map(n => n.id).iter().concat(view.groups.map(g => g.id).iter()).concat(view.notes.map(n => n.id).iter()).concat(view.regions.map(r => r.id).iter()) {
+        if scene.catalog.graph.lookup(id) is Err(OutsideView(_)) { outside.push(budget.str(id)) }
+      }
+    }
     Swimlane(view) => {
       for node in view.nodes {
         if scene.catalog.graph.lookup(node.id) is Err(OutsideView(_)) {
@@ -273,6 +290,7 @@ fn playback_data(
           ("kind", budget.str("architecture")),
           ("id", budget.str(id)),
         ])
+      Flowchart(id) => budget.object([("endpoint",budget.str(binding.endpoint)),("kind",budget.str("flowchart")),("id",budget.str(id))])
       Swimlane(id) =>
         budget.object([
           ("endpoint", budget.str(binding.endpoint)),

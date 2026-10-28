@@ -9,13 +9,13 @@ import {
 }
 
 // Values
-pub fn check(Geometry, @theme.Palette, work_limit? : Int32) -> ReadOnlyArray[Finding]
+pub fn check(Geometry, @theme.Palette, work_limit? : Int32, intentional_containment? : ArrayView[(String, String)]) -> ReadOnlyArray[Finding]
 
 pub fn family(String) -> @theme.Family
 
 pub fn label_text(String) -> String
 
-pub fn layout(@swimlane.Swimlane, limits? : Limits) -> Result
+pub fn layout(@swimlane.Swimlane, limits? : Limits, flowchart? : Bool, direction_hints? : ArrayView[(String, @swimlane.Direction)]) -> Result
 
 pub fn outline(String, Rect) -> ReadOnlyArray[Point]
 
@@ -40,6 +40,13 @@ pub fn Connection::equal(Self, Self) -> Bool
 pub fn Connection::not_equal(Self, Self) -> Bool
 pub fn Connection::to_repr(Self) -> @debug.Repr
 
+pub struct ConnectionNote {
+  id : String
+  connection : String
+  note : String
+}
+pub fn ConnectionNote::new(String, String, String) -> Self
+
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
@@ -56,8 +63,10 @@ pub struct Geometry {
   width : Int32
   height : Int32
 } derive(Eq, @debug.Debug)
+pub fn Geometry::annotate(Self, ArrayView[ConnectionNote], limits? : Limits) -> Result
 pub fn Geometry::equal(Self, Self) -> Bool
 pub fn Geometry::not_equal(Self, Self) -> Bool
+pub fn Geometry::overlay(Self, ArrayView[Overlay], limits? : Limits, direction_hints? : ArrayView[(String, @swimlane.Direction)]) -> Result
 pub fn Geometry::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Kind {
@@ -92,6 +101,13 @@ pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, edges? : Int32, depth? : Int32, work? : Int32, output_units? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct Overlay {
+  id : String
+  members : ReadOnlyArray[String]
+  parent : String?
+}
+pub fn Overlay::new(String, ArrayView[String], parent? : String) -> Self
 
 pub(all) struct Point {
   x : Double

@@ -1,0 +1,124 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-plantuml/activity"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams/flowchart",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn print_body(Document, limits? : @envelope.Limits) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]]
+
+pub fn read(@envelope.Scan, limits? : @envelope.Limits, dialect? : Dialect) -> ReadResult
+
+pub fn to_flowchart(Document, id? : String, limits? : @envelope.Limits) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  flowchart : @flowchart.Flowchart?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub(all) enum Dialect {
+  Modern
+  Legacy
+} derive(Eq, @debug.Debug)
+pub fn Dialect::equal(Self, Self) -> Bool
+pub fn Dialect::not_equal(Self, Self) -> Bool
+pub fn Dialect::to_repr(Self) -> @debug.Repr
+
+pub struct Document {
+  dialect : Dialect
+  name : String?
+  statements : ReadOnlyArray[@envelope.Statement]
+  items : ReadOnlyArray[Statement]
+} derive(Eq, @debug.Debug)
+pub fn Document::equal(Self, Self) -> Bool
+pub fn Document::logical_equal(Self, Self) -> Bool
+pub fn Document::new(Dialect, ArrayView[Statement], name? : String, statements? : ArrayView[@envelope.Statement]) -> Self
+pub fn Document::not_equal(Self, Self) -> Bool
+pub fn Document::to_repr(Self) -> @debug.Repr
+pub fn Document::without_spans(Self) -> Self
+
+pub(all) enum Endpoint {
+  Start(Bool)
+  Final
+  Action(String, String?, String)
+  Alias(String)
+  Synchronization(String)
+} derive(Eq, @debug.Debug)
+pub fn Endpoint::equal(Self, Self) -> Bool
+pub fn Endpoint::not_equal(Self, Self) -> Bool
+pub fn Endpoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Kind {
+  Action(String, String, String)
+  Start
+  Stop
+  End
+  If(String, String)
+  ElseIf(String, String)
+  ElseIfIncoming(String, String, String)
+  Else(String)
+  EndIf
+  Switch(String)
+  Case(String)
+  EndSwitch
+  While(String, String)
+  EndWhile(String)
+  Repeat(String)
+  RepeatWhile(String, String, String)
+  Backward(String)
+  Break
+  Fork
+  ForkAgain
+  EndFork(Bool, String)
+  Split
+  SplitAgain
+  EndSplit
+  Kill
+  Detach
+  Connector(String)
+  Label(String)
+  Goto(String)
+  Group(String, String, String, String)
+  EndGroup
+  Lane(String, String, String)
+  Note(String, String, String?, String)
+  NoteOnLink(String, String)
+  Arrow(String, String)
+  Edge(Endpoint?, String, Endpoint, String)
+  LegacyIf(String)
+  LegacyDecision(Endpoint?, String, String, String)
+  ActionList(String, Int32)
+  Presentation(String)
+} derive(Eq, @debug.Debug)
+pub fn Kind::equal(Self, Self) -> Bool
+pub fn Kind::not_equal(Self, Self) -> Bool
+pub fn Kind::to_repr(Self) -> @debug.Repr
+
+pub struct ReadResult {
+  nodes : ReadOnlyArray[@cst.Node]
+  document : Document?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+pub struct Statement {
+  kind : Kind
+  span : @diagrams.Span?
+} derive(Eq, @debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::new(Kind, span? : @diagrams.Span) -> Self
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

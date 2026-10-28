@@ -1,0 +1,135 @@
+/* ========================================================================
+ * PlantUML : a free UML diagram generator
+ * ========================================================================
+ *
+ * (C) Copyright 2009-2024, Arnaud Roques
+ *
+ * Project Info:  https://plantuml.com
+ * 
+ * If you like this project or if you find it useful, you can support us at:
+ * 
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
+ * 
+ * This file is part of PlantUML.
+ *
+ * PlantUML is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PlantUML distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ *
+ * Original Author:  Arnaud Roques
+ *
+ *
+ */
+package net.sourceforge.plantuml.activitydiagram3.command;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import net.sourceforge.plantuml.activitydiagram3.ActivityDiagram3;
+import net.sourceforge.plantuml.activitydiagram3.LinkRendering;
+import net.sourceforge.plantuml.activitydiagram3.ftile.BoxStyle;
+import net.sourceforge.plantuml.annotation.Explain;
+import net.sourceforge.plantuml.command.CommandExecutionResult;
+import net.sourceforge.plantuml.command.CommandMultilines3;
+import net.sourceforge.plantuml.command.MultilinesStrategy;
+import net.sourceforge.plantuml.command.Trim;
+import net.sourceforge.plantuml.klimt.color.NoSuchColorException;
+import net.sourceforge.plantuml.regex.IRegex;
+import net.sourceforge.plantuml.regex.RegexConcat;
+import net.sourceforge.plantuml.regex.RegexLeaf;
+import net.sourceforge.plantuml.regex.RegexResult;
+import net.sourceforge.plantuml.stereo.Stereogroup;
+import net.sourceforge.plantuml.stereo.Stereotype;
+import net.sourceforge.plantuml.utils.BlocLines;
+
+public class CommandBackwardLong3 extends CommandMultilines3<ActivityDiagram3> {
+
+	private static final Collection<String> FIRST_TOKENS = Arrays.asList("backward");
+
+	private final static IRegex END = new RegexConcat(//
+			new RegexLeaf(1, "TEXT", "(.*)"), //
+			new RegexLeaf(";"), //
+			RegexLeaf.spaceZeroOrMore(), //
+			Stereogroup.optionalStereogroup(), //
+			RegexLeaf.end());
+
+	public CommandBackwardLong3() {
+		super(getRegexConcat(), MultilinesStrategy.REMOVE_STARTING_QUOTE, Trim.BOTH, END);
+	}
+
+	static IRegex getRegexConcat() {
+		return RegexConcat.build(CommandBackwardLong3.class.getName(), RegexLeaf.start(), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexLeaf("backward"), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexLeaf(":"), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexLeaf(1, "DATA", "(.*)"), //
+				RegexLeaf.end());
+	}
+
+	@Override
+	@Explain
+	protected String explainNow(BlocLines lines) {
+		// Mirror executeNow: 'backward :text...' defines a multiline activity
+		// drawn on the return edge of the enclosing repeat loop. Unlike the
+		// single line form, no '(...)' arrow decoration is available here.
+		lines = lines.removeEmptyColumns();
+		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
+		final RegexResult lineLast = getEndingPattern().matcher(lines.getLast().getString());
+		if (line0 == null || lineLast == null)
+			return "Defining a backward activity on the return edge of the repeat loop";
+
+		final StringBuilder sb = new StringBuilder();
+		sb.append("Defining a backward activity of ").append(lines.size())
+				.append(lines.size() == 1 ? " line" : " lines")
+				.append(" of text on the return edge of the repeat loop");
+
+		final Stereogroup stereogroup = Stereogroup.build(lineLast);
+		if (stereogroup.isEmpty() == false) {
+			sb.append(", stereotyped ").append(lineLast.get("STEREOGROUP", 0));
+			final BoxStyle style = stereogroup.getBoxStyle();
+			if (style != BoxStyle.PLAIN)
+				sb.append(" (box style: ").append(style.name().toLowerCase()).append(")");
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	protected CommandExecutionResult executeNow(ActivityDiagram3 diagram, BlocLines lines) throws NoSuchColorException {
+		lines = lines.removeEmptyColumns();
+		final RegexResult line0 = getStartingPattern().matcher(lines.getFirst().getTrimmed().getString());
+		final RegexResult lineLast = getEndingPattern().matcher(lines.getLast().getString());
+		final Stereogroup stereogroup = Stereogroup.build(lineLast);
+		final Stereotype stereotype = stereogroup.buildStereotype();
+
+		final BoxStyle style = stereogroup.getBoxStyle();
+		lines = lines.removeStartingAndEnding(line0.get("DATA", 0), 0);
+		lines = lines.overrideLastLine(lineLast.get("TEXT", 0));
+
+		final LinkRendering in = LinkRendering.none();
+		final LinkRendering out = LinkRendering.none();
+
+		return diagram.backward(lines.toDisplay(), style, in, out, stereotype);
+	}
+
+	@Override
+	public Collection<String> mandatoryFirstTokensFast() {
+		return FIRST_TOKENS;
+	}
+
+}

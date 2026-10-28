@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>add-mermaid-and-plantuml-flowcharts</title>
+<!--
+  Agent document template (.agents/templates/agent-document.html). Specs, plans and reports that a person reviews
+  start from this file: copy it, keep the <head> as it is, and write the content inside the main element.
+  Styles and scripts are files in .agents/templates/assets/, referenced and not embedded. In a copy, change the
+  "assets/" prefix of each href and src to the relative path from the copy to that directory, for example
+  "../../.agents/templates/assets/" from .dev/beads-specs/. See AGENTS.md, "Specs and plans are HTML documents".
+  Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
+  list them in nav.toc.
+-->
+<link rel="stylesheet" href="../../../../.agents/templates/assets/agent-document.css">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script defer src="../../../../.agents/templates/assets/highlight/highlight.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/agent-document.js"></script>
+</head>
+<body>
+<main>
+<h1>add-mermaid-and-plantuml-flowcharts</h1>
+<p class="meta">OpenSpec change · 2026-10-27 · Implemented and verified · Epic diagrams-bx7</p>
+<nav class="toc" aria-label="Contents"><ul>
+<li><a href="#context">Context</a></li>
+<li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li>
+<li><a href="#migration">Migration plan</a></li>
+<li><a href="#verification">Verification and delivery</a></li>
+</ul></nav>
+
+<h2 id="context">Context</h2>
+<p>See <a href="proposal.md">proposal.md</a> for the need and scope. The current Mermaid dispatcher accepts sequence, swimlane, ZenUML and architecture source. The swimlane parser already follows a frozen Mermaid 12.2.0 flowchart grammar. Its converter promotes top-level subgraphs to lanes, so accepting another header alone would give ordinary flowcharts the wrong ownership model.</p>
+<p>The PlantUML envelope accepts regex, EBNF, JSON and YAML start markers. Activity syntax uses the shared <code>@startuml</code> envelope, which does not identify a UML family by itself. The existing root reader, body reader, printer and renderer accumulate bounded diagnostics and return no complete model on error. The shared renderer enum, animation catalog and SVG scene bindings each dispatch by diagram kind.</p>
+<p>The source review covered <code>pkgs/diagrams/render</code>, <code>pkgs/diagrams/animation/catalog.mbt</code>, <code>pkgs/diagrams-mermaid/dispatch.mbt</code>, the swimlane parser/converter/model, <code>pkgs/diagrams-plantuml/plantuml.mbt</code>, its envelope, <code>pkgs/diagrams-svg/scene.mbt</code>, and the frozen swimlane corpus. Accepted requirements for swimlanes, PlantUML syntax, animation, SVG and gallery behavior supply the compatibility constraints.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p><strong>Owner:</strong> support Mermaid and PlantUML flowcharts with animation and the usual diagram feature set. This includes source APIs, portable models, standalone themed SVG, geometry checks, motion plans, route/reachability queries, offline controls, export and qualified examples.</p>
+<p><strong>Call:</strong> cover both modern and legacy PlantUML activity syntax. This is the proposed interpretation of the requested PlantUML support. Keep dialect-specific syntax and identity rules explicit while projecting both to one flowchart model.</p>
+<p>Keep parsers separate from the shared model. Keep animation structural. Source-to-source translation, execution, external resources and upstream pixel matching are outside the design. See the proposal for the full exclusions.</p>
+
+<h2 id="decisions">Decisions</h2>
+<h3 id="model-1">MODEL-1. Separate flowchart model, shared low-level helpers</h3>
+<p><strong>Call:</strong> add <code>pkgs/diagrams/flowchart</code> and <code>Diagram::Flowchart</code>. Flowchart values own ordered nodes, edges, groups, explicit lanes, notes and structured control regions. Copy mutable collections at construction. Keep shape identity separate from typed control roles. PlantUML supplies explicit action/control roles; a Mermaid diamond remains a generic graph node unless explicit source data supplies a role. Regions retain branch order, loop membership and fork/join descriptions without imposing execution behavior.</p>
+<p>Reuse existing text, marker and shape helpers where possible. Do not expose the swimlane model as the flowchart API or construct fake lanes to get its layout. A generic graph refactor of every existing family would enlarge migration risk. Extract small internal helpers only when the new path needs them and existing contracts can remain unchanged.</p>
+<table><thead><tr><th>Boundary</th><th>Responsibility</th></tr></thead><tbody>
+<tr><td>Mermaid flowchart AST and PlantUML activity AST</td><td>Source grammar, locations, dialect and canonical printing</td></tr>
+<tr><td>Flowchart converters</td><td>Reference-compatible topology, generated identities and source bindings</td></tr>
+<tr><td>Flowchart model</td><td>Immutable values, ownership, roles and bounded validation</td></tr>
+<tr><td>SVG layout and scene</td><td>Geometry, safe vector output and actual path/node bindings</td></tr>
+<tr><td>Shared animation and HTML</td><td>Catalog, finite plans, exploration, controls and isolated export</td></tr>
+</tbody></table>
+
+<h3 id="read-1">READ-1. Reuse Mermaid grammar without swimlane ownership</h3>
+<p><strong>Call:</strong> add a typed flowchart dispatch variant and a flowchart conversion entry point in the existing Mermaid module. Parameterize shared lexical/statement handling by the expected header, and retain the header alias in the AST so canonical printing stays equivalent. Reuse the shared flowchart grammar and metadata handling. Normalize graph membership before applying the flowchart or swimlane ownership policy. Preserve the existing swimlane policy and all sequence-only entry points.</p>
+<p>The alternative, changing <code>swimlane-beta</code> text to <code>flowchart</code> before reading, loses header locations and risks drift in diagnostics. Independent duplicated parsers would make grammar fixes diverge. Use small shared parsing helpers and distinct public result variants. Keep flowchart diagnostic codes distinct from swimlane codes. Flowchart local-direction behavior must match the flowchart reference, including any override caused by external connections.</p>
+
+<h3 id="read-2">READ-2. Activity envelope with explicit dialect</h3>
+<p><strong>Call:</strong> extend the PlantUML envelope with an activity kind and typed dialect. A complete activity document retains its dialect; body-only reading receives it explicitly. Existing four-kind body calls retain their types and defaults. Classify the <code>@startuml</code> body from parsed activity statements, with comments, quoted text, multiline actions and notes excluded from header heuristics. A non-activity or ambiguous block receives an unsupported-kind finding. Reject unsupported mixed dialects explicitly.</p>
+<p>Add activity syntax, printing and conversion subpackages within <code>pkgs/diagrams-plantuml</code>. Preserve the existing envelope's source reproduction, bounds, wrong-marker and multiple-block checks. Extending the current reader keeps one public dispatch surface and one diagnostic policy; a separate top-level activity module would duplicate those contracts.</p>
+
+<h3 id="flow-1">FLOW-1. Build explicit control topology</h3>
+<p><strong>Call:</strong> lower modern statements with a bounded control-stack and explicit pending continuation sets. If/elseif/else and switch introduce decision branches and merges. Loop frames hold entry, test, return and exit targets; <code>break</code> uses the nearest valid loop exit. Fork, merge and split retain distinct roles and branch membership. Final, kill and detach forms terminate or suppress continuation according to the pinned reference. Connectors and label/goto resolve through a bounded identity table. Unresolved or illegal references produce diagnostics.</p>
+<p>Legacy conversion uses its own previous-activity and alias rules, named synchronization bars and explicit arrows. Do not merge modern action occurrences because their labels match. Generate IDs from deterministic occurrence paths with a reserved namespace and collision checking against authored IDs. Retain source bindings on introduced nodes, regions and connections. This gives scenarios a stable address for a branch or return edge without treating layout coordinates as identity.</p>
+
+<h3 id="svg-1">SVG-1. Reuse vector primitives and expose flowchart geometry</h3>
+<p><strong>Call:</strong> add a flowchart layout package under <code>pkgs/diagrams-svg</code>. Reuse existing measurement, path routing, palette and vector shape painting. Keep a separate layout result and checker for groups, explicit lanes, control regions, note placement and connection attachment. A private adapter to low-level geometry is acceptable; a public conversion to a swimlane model is not required.</p>
+<p>Use deterministic cycle handling and feedback routes, distinct ports or routes for parallel edges, and declared order to break ties. Preserve group-local direction behavior from conversion. A collapsed group has display geometry at its boundary while catalog endpoints keep their authored identity. Unrenderable assets or failed layout checks return diagnostics and no SVG. Exact upstream coordinates are not a test oracle; use geometry checks and readable snapshots for this library's own layout. Crossing partition boundaries use measured container overlays over the primary lane hierarchy. Notes use private, unpainted placement containers or attachments to actual connection paths. Explicit arrow hints use bounded two-axis placement and routing ports; authored endpoints remain unchanged.</p>
+
+<h3 id="anim-1">ANIM-1. Extend the shared catalog and player</h3>
+<p><strong>Call:</strong> extend <code>pkgs/diagrams/animation/catalog.mbt</code>, SVG scene dispatch, node-binding variants and <code>pkgs/diagrams-animated</code> serialization. Bind edge occurrences to actual routed paths. Keep semantic endpoint identity separate from display attachment. Bind isolated actions as node visits. Exclude invisible constraints and note attachments from route topology.</p>
+<p>Reuse direction-aware query and plan machinery. A default illustration visits an ordered finite set once. Explicit scenarios supply repetitions and concurrent groups. Guards and join specifications stay text; the player does not choose an executable branch or synchronize tokens. Hidden descendants return outside-view. Keep the canonical SVG separate from display overlays so download bytes equal a direct static render during any playback state. Reuse existing keyboard, reduced-motion, page-visibility, print and offline controls.</p>
+
+<h3 id="qual-1">QUAL-1. Reference evidence comes from pinned upstream tools</h3>
+<p><strong>Call:</strong> retain Mermaid 12.2.0 and PlantUML 1.2026.9. Freeze upstream source/documentation, licenses, digests, feature inventories and input fixtures. Mermaid graph expectations come from its pinned database. For PlantUML, use a test-only adapter over the pinned activity representation or independently inspectable generated connection metadata to record control topology and dialect identity. The first story must demonstrate extraction for a branch, loop and parallel region before the adapter is used as the full oracle. Do not derive expected topology with the MoonBit converter under test.</p>
+<p>Extend the existing MoonBit task scripts, run through <code>moonx</code> and mise, for reference refresh/check and portable fixture embedding. Record any test-only Graphviz dependency required by legacy reference rendering with an exact version and provenance. Normal tests consume committed fixtures and need no Java, Graphviz, upstream JavaScript or network. Check upstream acceptance and topology for canonical output as well as original source. Documentation coverage cannot silently drop an example because the reference refuses it.</p>
+<p>The inventory accounts for every pinned documented feature. Required control features cannot be reclassified as an unsupported subset during implementation. Keep native refusals, library execution/resource refusals and unapplied presentation separate. Preserve all presentation data for source printing; use the shared safe text/link policy in rendering. No runtime dependency or tool version upgrade is part of this change.</p>
+<p>Primary references: <a href="https://mermaid.js.org/syntax/flowchart.html">Mermaid flowchart documentation</a>, <a href="https://plantuml.com/activity-diagram-beta">PlantUML modern activity syntax</a>, and <a href="https://plantuml.com/activity-diagram-legacy">PlantUML legacy activity syntax</a>. These are discovery links. Frozen version-bound files, rather than the moving web pages, define acceptance.</p>
+
+<h3 id="api-1">API-1. Add variants and document exhaustive-match migration</h3>
+<p><strong>Call:</strong> add flowchart variants to the renderer, Mermaid parsed/tree dispatch and scene bindings, and activity variants to PlantUML document/kind types. Update every internal exhaustive match in the same story that adds a variant. Retain existing named APIs and their behavior. Add fresh model-only, reader and render/player consumer cases so accidental renderer or host-tool dependencies are caught. Document new match cases in module guides and the changelog. No release or publication is authorized by this plan.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table><thead><tr><th>Risk</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Shared Mermaid refactoring changes swimlane membership</td><td>Compare frozen database values and keep existing swimlane snapshots and API consumers unchanged.</td></tr>
+<tr><td>Generic UML envelope is misclassified</td><td>Use statement-aware dialect selection and negative class/sequence/mixed-body fixtures.</td></tr>
+<tr><td>Reference output proves painting but not topology</td><td>Prove independent activity topology extraction in the first story before expanding coverage.</td></tr>
+<tr><td>Nested branches or grouped endpoints exhaust resources</td><td>Charge work, depth, node and edge budgets before expansion; test limit results on all targets.</td></tr>
+<tr><td>Control symbols are flattened into generic shapes</td><td>Keep typed roles, distinct final/merge/join forms and source-bound region assertions.</td></tr>
+<tr><td>Cycles and labels produce unreadable layouts</td><td>Run public geometry checks and fixed-theme snapshots, then browser checks for representative large and nested examples.</td></tr>
+<tr><td>Playback appears to execute a workflow</td><td>Label illustrations and explicit scenarios, retain guards as text and never report execution outcomes.</td></tr>
+<tr><td>New enum cases break exhaustive consumers</td><td>State the break in the proposal and guide; test fresh consumers and all workspace matches.</td></tr>
+</tbody></table>
+
+<h2 id="migration">Migration plan</h2>
+<p>Epic <code>diagrams-bx7</code> and its eight dependent stories track the approved implementation. Deliver them in one pull request. The first story proves a thin source-to-player path for both formats, including both PlantUML dialects and reference topology extraction. Later stories complete the syntax profiles, layout, motion and example coverage without marking the feature complete early. Keep docs support descriptions aligned with landed coverage.</p>
+<p>Land the last story with the archived change and merged accepted requirements. Update design asset links from <code>../../../.agents/templates/assets/</code> to <code>../../../../.agents/templates/assets/</code>. After merge, close beads with the PR and merge SHA, close the finished epic and sync the tracker. Roll back a faulty story by reverting its code and corresponding capability claims together. No data migration is required.</p>
+
+<h2 id="verification">Verification and delivery</h2>
+<p>Use independent parser/topology fixtures for compatibility, property-style read/print/read checks for typed edits, geometry checks for layout and browser qualification for offline interaction. Include malformed Unicode/CRLF, limits, unsafe metadata, collapsed scope, repeated labels, parallel edges, reverse routes and finite loop scenarios. Existing static bytes remain unchanged; shared HTML runtime changes need reviewed deterministic snapshots.</p>
+<p>Run strict OpenSpec validation after planning edits. During implementation, run focused corpus and consumer checks, <code>mise run format</code>, <code>mise run check</code>, reference checks, SVG and animation browser checks, gallery qualification, and site build/link/smoke checks. Keep generated package interfaces with their implementation changes. The public libraries remain independent of the site and its UI packages.</p>
+
+</main>
+</body>
+</html>

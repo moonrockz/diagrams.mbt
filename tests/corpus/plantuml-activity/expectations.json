@@ -1,0 +1,26 @@
+{
+  "modern/docs/70.puml": {
+    "category": "library-refusal",
+    "reason": "The frozen documentation example repeats @enduml. The upstream reader ignores trailing text; the library requires exactly one block and diagnoses plantuml/text-outside-block.",
+    "stage": "read",
+    "code": "plantuml/text-outside-block"
+  },
+  "modern/docs/72.puml": {
+    "category": "library-refusal",
+    "reason": "The frozen documentation example repeats @enduml. The upstream reader ignores trailing text; the library requires exactly one block and diagnoses plantuml/text-outside-block.",
+    "stage": "read",
+    "code": "plantuml/text-outside-block"
+  },
+  "legacy/docs/08.puml": {
+    "category": "library-refusal",
+    "stage": "conversion",
+    "code": "activity/external-asset",
+    "reason": "The example requests an external image. Reading and printing retain its text, while conversion refuses asset loading and no file or network access occurs."
+  },
+  "modern/docs/75.puml": {
+    "category": "library-refusal",
+    "stage": "conversion",
+    "code": "activity/external-asset",
+    "reason": "The example requests an external image. Reading and printing retain its text, while conversion refuses asset loading and no file or network access occurs."
+  }
+}

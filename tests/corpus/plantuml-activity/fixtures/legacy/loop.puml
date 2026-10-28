@@ -1,0 +1,6 @@
+@startuml
+(*) --> "Read" as R
+R --> "Write" as W
+W --> R
+W --> (*)
+@enduml

@@ -12,6 +12,7 @@ that kind read into it and write from it. The packages are:
 | `moonrockz/diagrams/sequence` | The immutable `Sequence` model, links, render properties and link resolution |
 | `moonrockz/diagrams/bpmn` | Immutable process/collaboration views, graphical markers and ownership |
 | `moonrockz/diagrams/swimlane` | Immutable responsibility lanes, groups, shapes, connections and validation |
+| `moonrockz/diagrams/flowchart` | Immutable actions, control regions, graph connections, groups, explicit lanes, notes and validation |
 | `moonrockz/diagrams/regex` | Immutable regex expressions: literals, classes, sets, anchors, groups, lookarounds, alternatives and symbolic repeats |
 | `moonrockz/diagrams/ebnf` | Immutable grammars: ordered rules and notes, terminals, symbolic references, options, repetitions, counts and exclusions |
 | `moonrockz/diagrams/data-tree` | Immutable ordered data: objects, arrays, exact-number scalars, member identities and view highlights |
@@ -121,3 +122,19 @@ test "a constructed grammar keeps a recursive reference symbolic" {
   assert_eq(grammar.nodes.length(), 4)
 }
 ```
+
+## Flowchart compatibility
+
+`Diagram::Flowchart(view)` uses the same format-independent model for Mermaid
+flowcharts and both PlantUML activity dialects. Nodes keep shape identity
+separate from typed control roles; plain Mermaid diamonds do not acquire
+execution semantics. Notes distinguish node targets from connection targets.
+Connection direction hints affect placement without reversing semantic endpoints.
+Constructors and transformations copy mutable input collections.
+
+Exhaustive consumers must add the flowchart renderer, catalog, node/visit and
+scene variants. Mermaid dispatch and PlantUML document/kind enums also have new
+variants. Existing named APIs and sequence, BPMN, swimlane, architecture,
+railroad and data-tree contracts remain available. Read the checked
+[model guide](flowchart/README.mbt.md) and
+[playback guide](../../docs/guides/flowcharts-and-animation.md).

@@ -1,0 +1,74 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-svg/flowchart-layout"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-svg/swimlane-layout",
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams/flowchart",
+}
+
+// Values
+pub fn check(Geometry, @theme.Palette, work_limit? : Int32) -> ReadOnlyArray[@swimlane-layout.Finding]
+
+pub fn diagnostics(ArrayView[@diagrams.Diagnostic]) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+pub fn layout(@flowchart.Flowchart, limits? : Limits) -> Result
+
+// Errors
+
+// Types and methods
+pub struct Connection {
+  connection : @flowchart.Connection
+  index : Int32
+  source : String
+  target : String
+  line : ReadOnlyArray[@swimlane-layout.Point]
+  label : @swimlane-layout.Label?
+} derive(Eq, @debug.Debug)
+pub fn Connection::equal(Self, Self) -> Bool
+pub fn Connection::not_equal(Self, Self) -> Bool
+pub fn Connection::to_repr(Self) -> @debug.Repr
+
+pub struct Geometry {
+  view : @flowchart.Flowchart
+  shapes : ReadOnlyArray[@swimlane-layout.Shape]
+  connections : ReadOnlyArray[Connection]
+  width : Int32
+  height : Int32
+  // private fields
+} derive(Eq, @debug.Debug)
+pub fn Geometry::drawing(Self) -> @swimlane-layout.Geometry
+pub fn Geometry::drawing_result(Self) -> @swimlane-layout.Result
+pub fn Geometry::equal(Self, Self) -> Bool
+pub fn Geometry::hidden_containers(Self) -> ReadOnlyArray[String]
+pub fn Geometry::intentional_containment(Self) -> ReadOnlyArray[(String, String)]
+pub fn Geometry::not_equal(Self, Self) -> Bool
+pub fn Geometry::to_repr(Self) -> @debug.Repr
+
+pub struct Limits {
+  nodes : Int32
+  edges : Int32
+  depth : Int32
+  work : Int32
+  output_units : Int32
+  width : Int32
+  height : Int32
+} derive(Eq, @debug.Debug)
+pub fn Limits::equal(Self, Self) -> Bool
+pub fn Limits::new(nodes? : Int32, edges? : Int32, depth? : Int32, work? : Int32, output_units? : Int32, width? : Int32, height? : Int32) -> Self
+pub fn Limits::not_equal(Self, Self) -> Bool
+pub fn Limits::to_repr(Self) -> @debug.Repr
+
+pub struct Result {
+  geometry : Geometry?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn Result::equal(Self, Self) -> Bool
+pub fn Result::not_equal(Self, Self) -> Bool
+pub fn Result::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

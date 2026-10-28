@@ -692,6 +692,7 @@ pub struct SvgRenderer {
   bpmn_limits : @bpmn_layout.Limits
   architecture_limits : @architecture_layout.Limits
   swimlane_limits : @swimlane_layout.Limits
+  flowchart_limits : @flowchart_layout.Limits
   railroad_limits : @railroad_layout.Limits
   data_tree_limits : @data_tree_layout.Limits
   /// Supplied trace evidence for regex and EBNF static highlights. It is part
@@ -708,6 +709,7 @@ pub fn SvgRenderer::new(
   bpmn_limits~ : @bpmn_layout.Limits = @bpmn_layout.Limits::new(),
   architecture_limits~ : @architecture_layout.Limits = @architecture_layout.Limits::new(),
   swimlane_limits~ : @swimlane_layout.Limits = @swimlane_layout.Limits::new(),
+  flowchart_limits~ : @flowchart_layout.Limits = @flowchart_layout.Limits::new(),
   railroad_limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   data_tree_limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
   trace? : TraceHighlight,
@@ -720,6 +722,7 @@ pub fn SvgRenderer::new(
     bpmn_limits,
     architecture_limits,
     swimlane_limits,
+    flowchart_limits,
     railroad_limits,
     data_tree_limits,
     trace,
@@ -758,6 +761,7 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.id_prefix,
         self.swimlane_limits,
       )
+    Flowchart(view) => paint_flowchart(view, self.theme, self.mode, self.id_prefix, self.flowchart_limits)
     Regex(_) | Ebnf(_) => paint_railroad(diagram, self).rendered
     DataTree(tree) =>
       if self.trace is Some(_) {

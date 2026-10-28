@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/flowchart-ast"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams-mermaid/swimlane-ast",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Diagram {
+  header : String
+  direction : String?
+  front_matter : String?
+  directives : ReadOnlyArray[String]
+  statements : ReadOnlyArray[@swimlane-ast.Statement]
+} derive(Eq, @debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::new(ArrayView[@swimlane-ast.Statement], header? : String, direction? : String, front_matter? : String, directives? : ArrayView[String]) -> Self
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::shared(Self) -> @swimlane-ast.Diagram
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

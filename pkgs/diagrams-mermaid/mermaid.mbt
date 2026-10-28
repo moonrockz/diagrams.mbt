@@ -54,6 +54,13 @@ pub fn render_svg(source : String) -> @render.Rendered {
     return @render.Rendered::failed("image/svg+xml", diagnostics[:])
   }
   let model = match ast {
+    Flowchart(ast) => {
+      let converted = to_flowchart(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      converted.flowchart.map(model => @render.Diagram::Flowchart(model))
+    }
     Zenuml(ast) => {
       let converted = to_zenuml_sequence(ast)
       for d in converted.diagnostics {

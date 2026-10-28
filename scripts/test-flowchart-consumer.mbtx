@@ -1,0 +1,119 @@
+///|
+/// Qualify fresh model-only, native reader and SVG/offline-player consumers.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn version(text : String) -> String {
+  for line in text.split("\n") {
+    if line.trim().has_prefix("version = ") {
+      let parts = line.split("\"").to_array()
+      if parts.length() == 3 {
+        return parts[1].to_owned()
+      }
+    }
+  }
+  abort("Root moon.mod has no version")
+}
+
+///|
+async fn consumer(
+  name : String,
+  modules : ArrayView[String],
+  packages : String,
+) -> Unit {
+  let release = version(@fs.read_file("moon.mod").text())
+  let dir = @fs.tmpdir(prefix="flowchart-" + name)
+  defer @fs.rmdir(dir, recursive=true)
+  let members = StringBuilder()
+  members.write_string("\".\"")
+  let imports = StringBuilder()
+  for i, module_path in modules {
+    members.write_string(", \"" + @fs.realpath("pkgs/" + module_path) + "\"")
+    if i != 0 {
+      imports.write_string(", ")
+    }
+    imports.write_string("\"moonrockz/" + module_path + "@" + release + "\"")
+  }
+  @fs.write_file(
+    dir + "/moon.mod",
+    "name = \"qualification/flowchart-" +
+    name +
+    "\"\nversion = \"0.0.0\"\nimport { " +
+    imports.to_string() +
+    " }\n",
+  )
+  @fs.write_file(
+    dir + "/moon.work",
+    "members = [" + members.to_string() + "]\n",
+  )
+  @fs.write_file(
+    dir + "/moon.pkg",
+    "import { " + packages + " } for \"test\"\n",
+  )
+  @fs.write_file(
+    dir + "/consumer_test.mbt",
+    @fs.read_file("tests/flowchart-consumer/" + name + ".mbt.txt").text(),
+  )
+  if name == "model" {
+    // The model-only workspace has exactly the core module and no adapter.
+    if modules.length() != 1 || modules[0] != "diagrams" {
+      abort("Unexpected model consumer dependency")
+    }
+    let manifest = @fs.read_file("pkgs/diagrams/moon.mod").text().to_lower()
+    for
+      forbidden in [
+        "diagrams-svg", "diagrams-mermaid", "diagrams-plantuml", "diagrams-animated",
+        "rabbita", "telescope", "moonbitlang/async",
+      ] {
+      if manifest.contains(forbidden) {
+        abort("Core model module depends on " + forbidden)
+      }
+    }
+  }
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let code = @process.run(
+      "moon",
+      [
+        "test",
+        "--target",
+        target,
+        "--deny-warn",
+        "-p",
+        "qualification/flowchart-" + name,
+      ],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    println("Fresh flowchart " + name + " consumer passed: " + target)
+  }
+}
+
+///|
+async fn main {
+  consumer("model", ["diagrams"], "\"moonrockz/diagrams/flowchart\"")
+  consumer(
+    "reader",
+    ["diagrams", "diagrams-svg", "diagrams-mermaid", "diagrams-plantuml"],
+    "\"moonrockz/diagrams-mermaid/flowchart-syntax\" @syntax, \"moonrockz/diagrams-mermaid/flowchart-printer\" @printer, \"moonrockz/diagrams-mermaid/flowchart\" @conversion, \"moonrockz/diagrams-plantuml/activity\", \"moonrockz/diagrams-plantuml/envelope\"",
+  )
+  consumer(
+    "player",
+    ["diagrams", "diagrams-svg", "diagrams-animated"],
+    "\"moonrockz/diagrams/flowchart\", \"moonrockz/diagrams/render\", \"moonrockz/diagrams/animation\", \"moonrockz/diagrams-svg\" @svg, \"moonrockz/diagrams-svg/flowchart-layout\" @layout, \"moonrockz/diagrams-svg/theme\" @theme, \"moonrockz/diagrams-animated\" @animated",
+  )
+}
+
+///|
+test "fresh consumer version follows the root manifest" {
+  assert_eq(version("name = \"example\"\nversion = \"1.2.3\"\n"), "1.2.3")
+}

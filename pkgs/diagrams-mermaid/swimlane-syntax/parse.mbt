@@ -292,17 +292,19 @@ fn parse_statement(text : String, context : ParseContext) -> @ast.StatementKind?
  Some(Edges({endpoints:ReadOnlyArray::from_array(endpoints[:]),links:ReadOnlyArray::from_array(links[:])}))
 }
 ///|
-pub fn read(source : String, limits? : Limits = Limits::new()) -> ReadResult {
+pub fn read(source : String, limits? : Limits = Limits::new(), header? : String = "swimlane-beta", diagnostic_prefix? : String = "swimlane", accepted_headers? : ArrayView[String] = []) -> ReadResult {
+ let expected_header=header; let prefix=diagnostic_prefix+"/"
+ let headers=if accepted_headers.is_empty() { [expected_header] } else { accepted_headers.to_owned() }
  let context={limits,failure:None,work:0}; let tokens : Array[@cst.Token]=[]; let statements : Array[@ast.Statement]=[]; let diagnostics=[]; let groups=[]; let directives=[]; let mut front : String?=None; let mut limited=false; let mut header=false; let mut direction : String?=None; let mut i=0; let mut work=0
  if source.length() > limits.source || source.length() > limits.work || limits.source < 0 || limits.work < 0 || limits.nodes < 0 || limits.edges < 0 || limits.depth < 0 {
-  let code=if source.length() > limits.source || limits.source < 0 { "swimlane/source-limit" } else { "swimlane/work-limit" }
+  let code=if source.length() > limits.source || limits.source < 0 { prefix+"source-limit" } else { prefix+"work-limit" }
   return {tree:@cst.Node::new([{kind:Error,text:source,offset:0}]),ast:None,diagnostics:[@diagrams.Diagnostic::error(code,"Input processing limit exceeded")]}
  }
  if limits.metadata_depth < 1 || limits.metadata_depth > max_metadata_depth {
-  return {tree:@cst.Node::new([{kind:Error,text:source,offset:0}]),ast:None,diagnostics:[@diagrams.Diagnostic::error("swimlane/depth-limit","metadata_depth must be between 1 and 256")]}
+  return {tree:@cst.Node::new([{kind:Error,text:source,offset:0}]),ast:None,diagnostics:[@diagrams.Diagnostic::error(prefix+"depth-limit","metadata_depth must be between 1 and 256")]}
  }
  if limits.metadata_work < 1 {
-  return {tree:@cst.Node::new([{kind:Error,text:source,offset:0}]),ast:None,diagnostics:[@diagrams.Diagnostic::error("swimlane/work-limit","metadata_work must be positive")]}
+  return {tree:@cst.Node::new([{kind:Error,text:source,offset:0}]),ast:None,diagnostics:[@diagrams.Diagnostic::error(prefix+"work-limit","metadata_work must be positive")]}
  }
  let line_starts=[0]
  let mut line_offset=0
@@ -318,7 +320,7 @@ pub fn read(source : String, limits? : Limits = Limits::new()) -> ReadResult {
  }
  fn span(start : Int, end : Int) -> @diagrams.Span { {start:position(start),end:position(end)} }
  fn report(code : String, message : String, start : Int, end : Int) {
-  let diagnostic=@diagrams.Diagnostic::error("swimlane/"+code,message,span=span(start,end))
+  let diagnostic=@diagrams.Diagnostic::error(prefix+code,message,span=span(start,end))
   if code.has_suffix("-limit") { limited=true; if diagnostics.length() >= limits.diagnostics.max(1) { diagnostics[diagnostics.length()-1]=diagnostic; return } }
   if diagnostics.length() < limits.diagnostics.max(1) { diagnostics.push(diagnostic) }
  }
@@ -359,8 +361,8 @@ pub fn read(source : String, limits? : Limits = Limits::new()) -> ReadResult {
   let raw=part(source,start,i); work+=raw.length(); if work > limits.work { report("work-limit","Parser work limit exceeded",start,i) }; let text=trim(raw)
   if comment { tokens.push({kind:Comment,text:raw,offset:start}); statements.push({kind:Comment(text),spelling:text,span:span(start,i)}); continue }
   if !header {
-   if text.has_prefix("swimlane-beta") && (text.length() == 13 || is_space(ch(text,13))) { header=true; let value=trim(part(text,13,text.length())); if value != "" { direction=Some(value) }; tokens.push({kind:Header,text:raw,offset:start}) }
-   else { report("unsupported-header","Expected swimlane-beta header",start,i); tokens.push({kind:Error,text:raw,offset:start}) }
+   if headers.iter().find_first(value => text.has_prefix(value) && (text.length() == value.length() || is_space(ch(text,value.length())))) is Some(matched_header) { header=true; let value=trim(part(text,matched_header.length(),text.length())); if value != "" { direction=Some(value) }; tokens.push({kind:Header,text:raw,offset:start}) }
+   else { report("unsupported-header","Expected "+expected_header+" header",start,i); tokens.push({kind:Error,text:raw,offset:start}) }
    continue
   }
   context.failure=None; context.work=work
@@ -374,7 +376,7 @@ pub fn read(source : String, limits? : Limits = Limits::new()) -> ReadResult {
     }
     statements.push({kind,spelling:text,span:span(start,i)}); tokens.push({kind:Statement,text:raw,offset:start})
    }
-   None => { report(context.failure.unwrap_or("syntax"),"Invalid swimlane statement",start,i); tokens.push({kind:Error,text:raw,offset:start}) }
+   None => { report(context.failure.unwrap_or("syntax"),"Invalid "+diagnostic_prefix+" statement",start,i); tokens.push({kind:Error,text:raw,offset:start}) }
   }
  }
  for range in groups { report("missing-end","Subgraph has no closing end",range.0,range.1) }
@@ -393,3 +395,13 @@ pub extend ReadResult with @debug.Debug::{to_repr}
 ///|
 /// Stable reader findings. Limit findings produce no complete AST.
 pub let diagnostic_codes : ReadOnlyArray[String] = ["swimlane/source-limit","swimlane/work-limit","swimlane/depth-limit","swimlane/unsupported-header","swimlane/directive","swimlane/unexpected-end","swimlane/syntax","swimlane/missing-end"]
+
+///|
+/// Decode title metadata with the same explicit YAML depth and work bounds.
+pub fn front_matter_title(front : String, limits? : Limits = Limits::new()) -> (String?, String?) {
+ if front.length() < 6 || !front.has_prefix("---") || !front.has_suffix("---") { return (None,Some("syntax")) }
+ let context={limits,failure:None,work:0}
+ guard metadata(front[3:front.length()-3].to_owned(),context) is Some(fields) else { return (None,Some(context.failure.unwrap_or("syntax"))) }
+ for (key,value) in fields { if key == "title" { match value { String(title) => return (Some(title),None); _ => return (None,Some("syntax")) } } }
+ (None,None)
+}

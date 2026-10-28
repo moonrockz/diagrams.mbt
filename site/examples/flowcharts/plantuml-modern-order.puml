@@ -1,0 +1,18 @@
+@startuml
+title Order review
+|Customer|
+start
+partition Request {
+:Submit order;
+}
+|Service|
+repeat
+:Review;
+repeat while (Retry?) is (yes) not (no)
+fork
+:Save;
+fork again
+:Notify;
+end fork
+stop
+@enduml

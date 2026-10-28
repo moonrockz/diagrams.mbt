@@ -41,12 +41,13 @@ fn EdgeKind::tag(self : EdgeKind) -> Int32 {
     Railroad => 5
     Containment => 6
     ArchitectureFlow => 7
+    FlowchartFlow => 8
   }
 }
 
 ///|
 fn query_kinds(kinds : ArrayView[EdgeKind]) -> Array[EdgeKind] {
-  let selected = Array::make(8, false)
+  let selected = Array::make(9, false)
   let unique = []
   for kind in kinds {
     let tag = kind.tag()
@@ -129,6 +130,8 @@ pub fn Graph::reachable(
         Railroad,
         Containment,
       ]
+    } else if self.source is Flowchart(_) {
+      [FlowchartFlow]
     } else {
       [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment]
     }
@@ -258,6 +261,8 @@ pub fn Graph::route(
         Railroad,
         Containment,
       ]
+    } else if self.source is Flowchart(_) {
+      [FlowchartFlow]
     } else {
       [SequenceFlow, Order, SwimlaneFlow, Railroad, Containment]
     }
@@ -348,6 +353,10 @@ pub fn PlaybackPlan::route(
           actions.push(Motion::Step(key, duration_ms))
         }
       }
+    Flowchart(_) => {
+      if route.edges.is_empty() && route.nodes.get(0).bind(n => n.occurrence) is Some(key) { actions.push(Motion::Visit(key,duration_ms)) }
+      for i,edge in route.edges { if edge.occurrence is Some(key) { actions.push(Motion::OrientedStep(key,duration_ms,route.reversed[i])) } }
+    }
     Swimlane(_) | Architecture(_) =>
       for i, edge in route.edges {
         if edge.occurrence is Some(key) {

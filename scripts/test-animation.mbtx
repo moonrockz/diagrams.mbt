@@ -20,6 +20,7 @@ async fn main {
       ),
       ("node", ["apps/site/scripts/animation-test.ts"]),
       ("node", ["apps/site/scripts/native-mermaid-test.ts", "animation"]),
+      ("node", ["apps/site/scripts/flowchart-test.ts"]),
     ] {
     let code = @process.run(
       command,

@@ -52,7 +52,10 @@ text. The writer never copies stale source text.
 ```mbt check
 ///|
 test {
-  let body = @plantuml.read_body(Ebnf, "expr = term, { (\"+\" | \"-\"), term };")
+  let body = @plantuml.read_body(
+    Ebnf,
+    "expr = term, { (\"+\" | \"-\"), term };",
+  )
   assert_eq(body.diagnostics.length(), 0)
   let printed = @plantuml.print_body(body.document.unwrap())
   assert_eq(printed.output, Some("expr = term, { (\"+\" | \"-\"), term };\n"))
@@ -78,7 +81,9 @@ Diagnostics use half-open UTF-16 spans. These inputs give errors:
 ```mbt check
 ///|
 test {
-  let read = @plantuml.read("@startregex\n!include other.puml\nabc\n@endregex\n")
+  let read = @plantuml.read(
+    "@startregex\n!include other.puml\nabc\n@endregex\n",
+  )
   assert_true(read.document is None)
   assert_eq(read.diagnostics[0].code, "plantuml/unsupported-directive")
 }
@@ -152,10 +157,15 @@ test {
   guard @plantuml.to_diagram(document).diagram is Some(DataTree(tree)) else {
     fail("json")
   }
-  let numbers = tree.nodes.iter().filter_map(n => match n.value {
-    Number(lexeme) => Some(lexeme)
-    _ => None
-  }).collect()
+  let numbers = tree.nodes
+    .iter()
+    .filter_map(n => {
+      match n.value {
+        Number(lexeme) => Some(lexeme)
+        _ => None
+      }
+    })
+    .collect()
   assert_eq(numbers, ["12345678901234567890", "-0.0"])
 }
 ```
@@ -197,7 +207,7 @@ Ordinary rendering, scenes, playback and export never call a provider.
 struct FirstTermFails {}
 
 ///|
-impl @trace.RailroadTraceProvider for FirstTermFails with trace(_, request) {
+impl @trace.RailroadTraceProvider for FirstTermFails with fn trace(_, request) {
   guard request.subject is Regex(_) else { return Unsupported("regex only") }
   let topology = request.topology().topology.unwrap()
   let track = topology.tracks[0]
@@ -218,14 +228,14 @@ impl @trace.RailroadTraceProvider for FirstTermFails with trace(_, request) {
 test {
   let result = @plantuml.render_traced_svg(
     "@startregex\nab|cd\n@endregex\n",
-    FirstTermFails::{  },
+    FirstTermFails::{ },
     "x",
   )
   assert_true(result.run.result is Some(NotMatched(_)))
   assert_true(result.rendered.output.unwrap().contains("rr-trace-failure"))
   let grammar = @plantuml.render_traced_svg(
     "@startebnf\nr = \"x\";\n@endebnf\n",
-    FirstTermFails::{  },
+    FirstTermFails::{ },
     "x",
     start_rule="r",
   )
@@ -237,3 +247,54 @@ test {
 To draw evidence that a host adapter already has, pass a `TraceHighlight` to
 `SvgRenderer::new(trace=...)` and render normally. The
 [SVG module guide](../diagrams-svg/README.mbt.md) describes the channels.
+
+## Modern and legacy activity flowcharts
+
+`@startuml` activity blocks use the shared flowchart model, SVG renderer and
+offline player. The reader keeps the activity dialect, typed control statements
+and lossless source. Other UML families remain explicit unsupported inputs.
+Both modern and legacy syntax use the pinned PlantUML 1.2026.9 profile.
+
+```mbt check
+///|
+test "activity source prints and converts to a flowchart" {
+  let source = "@startuml\nstart\n:Read;\n:Read;\nstop\n@enduml\n"
+  let result = @plantuml.read(source)
+  assert_eq(result.tree.text(), source)
+  assert_eq(result.diagnostics, [])
+  let document = result.document.unwrap()
+  guard document is Activity(activity) else { fail("Expected activity") }
+  assert_eq(activity.dialect, Modern)
+  let printed = @plantuml.print(document)
+  assert_eq(printed.diagnostics, [])
+  let model = @plantuml.to_diagram(document)
+  assert_eq(model.diagnostics, [])
+  guard model.diagram is Some(Flowchart(flowchart)) else {
+    fail("Expected flowchart")
+  }
+  assert_eq(flowchart.nodes.length(), 4)
+  assert_true(flowchart.nodes[1].id != flowchart.nodes[2].id)
+}
+```
+
+An explicit activity body needs a dialect. This keeps generic UML block
+selection separate from body parsing.
+
+```mbt check
+///|
+test "legacy activity body requires an explicit dialect" {
+  let result = @plantuml.read_body(
+    Activity,
+    "(*) --> \"Read\" as R\nR --> (*)\n",
+    dialect=Legacy,
+  )
+  assert_eq(result.diagnostics, [])
+  let model = @plantuml.to_diagram(result.document.unwrap())
+  assert_true(model.diagram is Some(Flowchart(_)))
+}
+```
+
+See the [PlantUML flowchart guide](../../docs/guides/plantuml-flowcharts.md) for
+control syntax, ownership, notes, finite structural playback and independent
+compatibility evidence. Conditions and join specifications remain descriptive.
+The library does not execute workflows or load author-requested resources.

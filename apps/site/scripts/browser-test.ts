@@ -172,6 +172,7 @@ try {
     ['bpmn-process', 'BPMN'], ['bpmn-collaboration', 'BPMN'], ['swimlane-review', 'swimlane'],
     ['regex-date', 'regex'], ['regex-evidence', 'regex'], ['ebnf-arithmetic', 'EBNF'],
     ['ebnf-evidence', 'EBNF'], ['json-order', 'JSON'], ['yaml-service', 'YAML'],
+    ['flowchart-mermaid-review','flowchart'], ['flowchart-plantuml-modern','flowchart'], ['flowchart-plantuml-legacy','flowchart'],
   ];
   await page.goto(`${site}gallery/`);
   check((await page.locator('#content a[href^="#"]').count()) >= 9, 'gallery has family navigation');
@@ -253,7 +254,7 @@ try {
       check(JSON.stringify(palette) === JSON.stringify(expected), `${colorScheme} shared Smithy palette on ${route || 'landing'}`);
     }
     const cards = specimen.locator('.gallery-card:visible');
-    check(await cards.count() === 12, `${colorScheme}: 12 preview cards`);
+    check(await cards.count() === 15, `${colorScheme}: original 12 plus three flowchart preview cards`);
     await specimen.getByRole('link', { name: 'BPMN', exact: true }).click();
     check(await cards.count() === 2, `${colorScheme}: family filter selects two BPMN examples`);
     const filter = specimen.getByRole('searchbox', { name: 'Filter examples', exact: true });
@@ -264,7 +265,7 @@ try {
     check(await cards.count() === 0, `${colorScheme}: empty results hide cards`);
     check(await specimen.getByText('No examples match these filters.', { exact: true }).isVisible(), `${colorScheme}: empty state visible`);
     await specimen.getByRole('button', { name: 'Reset filters', exact: true }).first().click();
-    check(await cards.count() === 12, `${colorScheme}: reset restores all examples`);
+    check(await cards.count() === 15, `${colorScheme}: reset restores all examples`);
 
     await specimen.goto(`${site}gallery/sequence-basic/`);
     const tabs = specimen.getByRole('tablist', { name: 'Example inspection' });

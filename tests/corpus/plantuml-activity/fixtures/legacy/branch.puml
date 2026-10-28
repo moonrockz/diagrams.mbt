@@ -1,0 +1,9 @@
+@startuml
+(*) --> "Read"
+if "Ready?" then
+--> [yes] "Write"
+else
+--> [no] "Wait"
+endif
+--> (*)
+@enduml

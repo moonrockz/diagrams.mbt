@@ -1,0 +1,10 @@
+flowchart BT
+subgraph outer ["Outer"]
+subgraph "Anonymous nested work"
+A@{ shape: rect, label: "<b>safe</b>" }
+B@{ shape: diamond, label: "**Markdown**", labelType: markdown }
+C@{ shape: circle, label: "Plain", labelType: string }
+end
+end
+A -->|handoff| B
+B --> C

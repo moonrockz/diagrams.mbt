@@ -7,6 +7,7 @@ import {
   "moonrockz/diagrams-svg/architecture-layout",
   "moonrockz/diagrams-svg/bpmn-layout",
   "moonrockz/diagrams-svg/data-tree-layout",
+  "moonrockz/diagrams-svg/flowchart-layout",
   "moonrockz/diagrams-svg/railroad-layout",
   "moonrockz/diagrams-svg/swimlane-layout",
   "moonrockz/diagrams-svg/theme",
@@ -15,6 +16,7 @@ import {
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/data-tree",
   "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/flowchart",
   "moonrockz/diagrams/railroad-trace",
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/render",
@@ -27,11 +29,15 @@ pub fn bpmn_geometry_path(@bpmn-layout.Connection, max_units? : Int32) -> String
 
 pub fn bpmn_path(@bpmn.Flow) -> String
 
+pub fn flowchart_path(@flowchart-layout.Connection) -> String
+
 pub fn render_architecture(@architecture.Architecture, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @architecture-layout.Limits) -> @render.Rendered
 
 pub fn render_data_tree(@data-tree.DataTree, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @data-tree-layout.Limits) -> @render.Rendered
 
 pub fn render_ebnf(@ebnf.Grammar, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight) -> @render.Rendered
+
+pub fn render_flowchart(@flowchart.Flowchart, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @flowchart-layout.Limits) -> @render.Rendered
 
 pub fn render_regex(@regex.Regex, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight) -> @render.Rendered
 
@@ -74,6 +80,7 @@ pub(all) enum NodeBindingKind {
   Message(Int32)
   Frame(Int32)
   Swimlane(String)
+  Flowchart(String)
   Architecture(String)
   RailroadTerm(String)
   DataRow(String)
@@ -110,11 +117,12 @@ pub struct SvgRenderer {
   bpmn_limits : @bpmn-layout.Limits
   architecture_limits : @architecture-layout.Limits
   swimlane_limits : @swimlane-layout.Limits
+  flowchart_limits : @flowchart-layout.Limits
   railroad_limits : @railroad-layout.Limits
   data_tree_limits : @data-tree-layout.Limits
   trace : TraceHighlight?
 }
-pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy, bpmn_limits? : @bpmn-layout.Limits, architecture_limits? : @architecture-layout.Limits, swimlane_limits? : @swimlane-layout.Limits, railroad_limits? : @railroad-layout.Limits, data_tree_limits? : @data-tree-layout.Limits, trace? : TraceHighlight) -> Self
+pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy, bpmn_limits? : @bpmn-layout.Limits, architecture_limits? : @architecture-layout.Limits, swimlane_limits? : @swimlane-layout.Limits, flowchart_limits? : @flowchart-layout.Limits, railroad_limits? : @railroad-layout.Limits, data_tree_limits? : @data-tree-layout.Limits, trace? : TraceHighlight) -> Self
 pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub fn[P : @railroad-trace.RailroadTraceProvider] SvgRenderer::render_traced(Self, @render.Diagram, P, String, start_rule? : String, limits? : @railroad-trace.TraceLimits, attempts? : ArrayView[String], matched? : ChannelStyle, not_matched? : ChannelStyle, taken? : ChannelStyle, failure? : ChannelStyle) -> TracedRender
 pub fn SvgRenderer::scene(Self, @render.Diagram, sequence_view_id? : String, limits? : @animation.Limits, output_units? : Int32) -> SceneResult

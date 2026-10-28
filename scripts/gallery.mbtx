@@ -71,7 +71,7 @@ async fn main {
       package_name in [
         "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
         "moonrockz/diagrams-tests/animation-acceptance", "moonrockz/diagrams-tests/plantuml-acceptance",
-        "moonrockz/diagrams-tests/zenuml-integration",
+        "moonrockz/diagrams-tests/zenuml-integration", "moonrockz/diagrams-tests/flowchart-gallery-acceptance",
       ] {
       let code = @process.run(
         "moon",
@@ -104,7 +104,7 @@ async fn main {
       #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
       #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
       #|</style><h1>Diagram review gallery</h1>
-      #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#plantuml">PlantUML regex, EBNF, JSON and YAML</a> · <a href="#sequence">Sequence corpus</a></nav>
+      #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#plantuml">PlantUML regex, EBNF, JSON and YAML</a> · <a href="#sequence">Sequence corpus</a> · <a href="#flowcharts">Flowcharts</a></nav>
       #|<p>Processes and collaborations render with supplied or automatic geometry. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
       #|<p>Players illustrate drawn connections. Conditions, timer triggers and gateway synchronization are not evaluated. No tokens or process execution are simulated.</p>
       #|<h2 id="sequence">Sequence corpus</h2><p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
@@ -364,6 +364,45 @@ async fn main {
       )
     }
   }
+  html.write_string(
+    "<h2 id=\"flowcharts\">Mermaid and PlantUML flowcharts</h2><p>Mermaid flowchart/graph and modern/legacy PlantUML activity examples keep groups, branches, loop returns and parallel paths. Players illustrate structure and caller-supplied scenarios. They do not evaluate conditions, execute actions or assert synchronization.</p>",
+  )
+  for
+    row in rows(
+      "tests/flowchart-gallery-acceptance/__snapshot__/flowchart-gallery.json",
+    ) {
+    let name = string(row[0])
+    let media = string(row[1])
+    let content = string(row[2])
+    let source_path = match name {
+      "flowchart-mermaid-review.mmd" =>
+        Some("site/examples/flowcharts/mermaid-review.mmd")
+      "flowchart-plantuml-modern.puml" =>
+        Some("site/examples/flowcharts/plantuml-modern-order.puml")
+      "flowchart-plantuml-legacy.puml" =>
+        Some("site/examples/flowcharts/plantuml-legacy-request.puml")
+      _ => None
+    }
+    if source_path is Some(path) {
+      if @fs.read_file(path).text() != content {
+        raise Failure("Stale flowchart source fixture: " + path)
+      }
+    }
+    save(name, content, check, site_assets)
+    html.write_string(
+      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
+    )
+    if media == "image/svg+xml" &&
+      (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
+      html.write_string(
+        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
+        escape(name) +
+        "\" src=\"" +
+        escape(name) +
+        "\">",
+      )
+    }
+  }
   save(
     "icon-contact-sheet.svg",
     @fs.read_file(
@@ -386,6 +425,7 @@ async fn main {
           ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
         ),
         ("node", ["apps/site/scripts/gallery-test.ts"]),
+        ("node", ["apps/site/scripts/flowchart-test.ts"]),
       ] {
       let code = @process.run(
         command,
@@ -510,6 +550,42 @@ fn site_gallery_examples() -> Array[Json] {
       "swimlane-review-light.svg",
       preview_dark="swimlane-review-dark.svg",
       player="swimlane-review-light.html",
+    ),
+    gallery_example(
+      "flowchart-mermaid-review",
+      "flowchart",
+      "Mermaid request review",
+      "Mermaid flowchart with nested groups, labelled branches and a return path.",
+      "Mermaid 12.2.0 flowchart/graph syntax with structural playback and bounded exploration; conditions are not evaluated.",
+      "flowchart-mermaid-review.mmd",
+      "text/plain",
+      "flowchart-mermaid-review-light.svg",
+      preview_dark="flowchart-mermaid-review-dark.svg",
+      player="flowchart-mermaid-review-light.html",
+    ),
+    gallery_example(
+      "flowchart-plantuml-modern",
+      "flowchart",
+      "PlantUML modern order activity",
+      "Modern PlantUML activity syntax with an explicit partition, lanes, repeat loop and parallel branches.",
+      "PlantUML 1.2026.9 modern activity syntax with structural scenarios; actions and fork synchronization are not executed.",
+      "flowchart-plantuml-modern.puml",
+      "text/plain",
+      "flowchart-plantuml-modern-light.svg",
+      preview_dark="flowchart-plantuml-modern-dark.svg",
+      player="flowchart-plantuml-modern-light.html",
+    ),
+    gallery_example(
+      "flowchart-plantuml-legacy",
+      "flowchart",
+      "PlantUML legacy request activity",
+      "Legacy PlantUML activity syntax with an activity alias, partition and labelled branches.",
+      "PlantUML 1.2026.9 legacy activity syntax with structural playback and bounded exploration; no workflow execution.",
+      "flowchart-plantuml-legacy.puml",
+      "text/plain",
+      "flowchart-plantuml-legacy-light.svg",
+      preview_dark="flowchart-plantuml-legacy-dark.svg",
+      player="flowchart-plantuml-legacy-light.html",
     ),
     gallery_example(
       "regex-date",
@@ -638,7 +714,7 @@ test "site gallery covers implemented families with unique ids and no digests" {
   for
     family in [
       "sequence", "ZenUML", "architecture", "BPMN", "swimlane", "regex", "EBNF",
-      "JSON", "YAML",
+      "JSON", "YAML", "flowchart",
     ] {
     @test.assert_eq(families.contains(family), true)
   }

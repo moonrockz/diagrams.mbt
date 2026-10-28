@@ -1,6 +1,7 @@
 ///|
 /// Multi-kind entry points preserve the sequence-only API.
 pub(all) enum ParsedDiagram {
+  Flowchart(@flowchart_ast.Diagram)
   Sequence(@ast.Diagram)
   Swimlane(@swimlane_ast.Diagram)
   Zenuml(@zenuml_ast.Diagram)
@@ -9,6 +10,7 @@ pub(all) enum ParsedDiagram {
 
 ///|
 pub(all) enum DiagramTree {
+  Flowchart(@swimlane_cst.Node)
   Sequence(@cst.Node)
   Swimlane(@swimlane_cst.Node)
   Zenuml(@zenuml_cst.Node)
@@ -19,6 +21,7 @@ pub(all) enum DiagramTree {
 ///|
 pub fn DiagramTree::text(self : DiagramTree) -> String {
   match self {
+    Flowchart(tree) => tree.text()
     Sequence(tree) => tree.text()
     Swimlane(tree) => tree.text()
     Zenuml(tree) => tree.text()
@@ -123,6 +126,21 @@ pub fn read_diagram(
         diagnostics: result.diagnostics,
       }
     }
+    for header in ["flowchart-elk", "flowchart", "graph"] {
+      if text.has_prefix(header) &&
+        (
+          text.length() == header.length() ||
+          @swimlane_syntax.is_space(text.at(header.length()).to_int()) ||
+          text.at(header.length()).to_int() == 59
+        ) {
+        let result = @flowchart_syntax.read(source, header~, limits~)
+        return {
+          tree: Flowchart(result.tree),
+          ast: result.ast.map(value => Flowchart(value)),
+          diagnostics: result.diagnostics,
+        }
+      }
+    }
     if text.has_prefix("swimlane-beta") &&
       (
         text.length() == 13 ||
@@ -173,7 +191,7 @@ pub fn read_diagram(
     ast: None,
     diagnostics: [
       @diagrams.Diagnostic::error(
-        "mermaid/unsupported-diagram", "Expected sequenceDiagram, swimlane-beta, zenuml or architecture-beta",
+        "mermaid/unsupported-diagram", "Expected sequenceDiagram, swimlane-beta, flowchart, graph, zenuml or architecture-beta",
       ),
     ],
   }
@@ -187,6 +205,10 @@ pub fn print_diagram(
   architecture_limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
 ) -> DiagramPrintResult {
   match diagram {
+    Flowchart(ast) => {
+      let result = @flowchart_printer.print(ast, limits~)
+      { output: result.output, diagnostics: result.diagnostics, }
+    }
     Zenuml(ast) => {
       let result = @zenuml_printer.print(ast, limits=zenuml_limits)
       { output: result.output, diagnostics: result.diagnostics, }
@@ -285,3 +307,18 @@ pub let architecture_diagnostic_codes : ReadOnlyArray[String] = @architecture_sy
 
 ///|
 pub let architecture_conversion_diagnostic_codes : ReadOnlyArray[String] = @architecture_conversion.diagnostic_codes
+
+///|
+pub fn to_flowchart(
+  diagram : @flowchart_ast.Diagram,
+  limits~ : @swimlane_syntax.Limits = @swimlane_syntax.Limits::new(),
+  id~ : String = "flowchart",
+) -> @flowchart_conversion.Conversion {
+  @flowchart_conversion.to_flowchart(diagram, limits~, id~)
+}
+
+///|
+pub let flowchart_diagnostic_codes : ReadOnlyArray[String] = @flowchart_syntax.diagnostic_codes
+
+///|
+pub let flowchart_conversion_diagnostic_codes : ReadOnlyArray[String] = @flowchart_conversion.diagnostic_codes

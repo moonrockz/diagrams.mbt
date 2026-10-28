@@ -5,6 +5,7 @@ pub(all) enum Kind {
   Ebnf
   Json
   Yaml
+  Activity
 } derive(Eq, Debug)
 
 ///|
@@ -21,6 +22,7 @@ pub fn Kind::word(self : Kind) -> String {
     Ebnf => "ebnf"
     Json => "json"
     Yaml => "yaml"
+    Activity => "uml"
   }
 }
 
@@ -31,6 +33,7 @@ pub fn kind_of_word(word : String) -> Kind? {
     "ebnf" => Some(Ebnf)
     "json" => Some(Json)
     "yaml" => Some(Yaml)
+    "uml" => Some(Activity)
     _ => None
   }
 }
@@ -38,12 +41,13 @@ pub fn kind_of_word(word : String) -> Kind? {
 ///|
 /// Explicit positive bounds for reading, writing and conversion.
 pub struct Limits {
-  source : Int
-  output : Int
-  depth : Int
-  nodes : Int
-  work : Int
-  diagnostics : Int
+  source : Int32
+  output : Int32
+  depth : Int32
+  nodes : Int32
+  edges : Int32
+  work : Int32
+  diagnostics : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -54,14 +58,15 @@ pub extend Limits with @debug.Debug::{to_repr}
 
 ///|
 pub fn Limits::new(
-  source? : Int = 1048576,
-  output? : Int = 4194304,
-  depth? : Int = 256,
-  nodes? : Int = 100000,
-  work? : Int = 4000000,
-  diagnostics? : Int = 64,
+  source~ : Int32 = 1048576,
+  output~ : Int32 = 4194304,
+  depth~ : Int32 = 256,
+  nodes~ : Int32 = 100000,
+  edges~ : Int32 = 100000,
+  work~ : Int32 = 4000000,
+  diagnostics~ : Int32 = 64,
 ) -> Limits {
-  { source, output, depth, nodes, work, diagnostics }
+  { source, output, depth, nodes, edges, work, diagnostics, }
 }
 
 ///|
@@ -70,6 +75,7 @@ pub fn Limits::valid(self : Limits) -> Bool {
   self.output > 0 &&
   self.depth > 0 &&
   self.nodes > 0 &&
+  self.edges > 0 &&
   self.work > 0 &&
   self.diagnostics > 0
 }
@@ -124,9 +130,12 @@ pub fn Statement::lines(self : Statement) -> Array[String] {
       if lines.length() == 1 {
         ["skinparam " + lines[0]]
       } else {
-        let out = ["skinparam {"]
-        for line in lines {
-          out.push("  " + line)
+        let named = !lines.is_empty() && lines[0].has_suffix("{")
+        let out = [if named { "skinparam " + lines[0] } else { "skinparam {" }]
+        for i, line in lines {
+          if !named || i != 0 {
+            out.push("  " + line)
+          }
         }
         out.push("}")
         out
@@ -168,8 +177,8 @@ pub extend Role with @debug.Debug::{to_repr}
 ///|
 /// One source line between the block markers, without its line break.
 pub struct Line {
-  number : Int
-  offset : Int
+  number : Int32
+  offset : Int32
   text : String
   newline : String
   role : Role
@@ -226,7 +235,7 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 
 ///|
 priv struct Raw {
-  offset : Int
+  offset : Int32
   text : String
   newline : String
 }
@@ -240,7 +249,9 @@ fn split_lines(source : String) -> Array[Raw] {
   while i < n {
     let c = source.code_unit_at(i).to_int()
     if c == 10 || c == 13 {
-      let width = if c == 13 && i + 1 < n && source.code_unit_at(i + 1).to_int() == 10 {
+      let width = if c == 13 &&
+        i + 1 < n &&
+        source.code_unit_at(i + 1).to_int() == 10 {
         2
       } else {
         1
@@ -257,13 +268,13 @@ fn split_lines(source : String) -> Array[Raw] {
     }
   }
   if start < n || n == 0 {
-    out.push({ offset: start, text: @cst.slice(source, start, n), newline: "" })
+    out.push({ offset: start, text: @cst.slice(source, start, n), newline: "", })
   }
   out
 }
 
 ///|
-fn is_space_unit(c : Int) -> Bool {
+fn is_space_unit(c : Int32) -> Bool {
   c == 32 || c == 9 || c == 0xfeff
 }
 
@@ -318,8 +329,11 @@ pub fn has_preprocessor_call(text : String) -> Bool {
   while i < n {
     if text.code_unit_at(i).to_int() == 37 {
       let mut j = i + 1
-      fn name(c : Int) -> Bool {
-        (c >= 97 && c <= 122) || (c >= 65 && c <= 90) || c == 95 || (c >= 48 && c <= 57)
+      fn name(c : Int32) -> Bool {
+        (c >= 97 && c <= 122) ||
+        (c >= 65 && c <= 90) ||
+        c == 95 ||
+        (c >= 48 && c <= 57)
       }
       while j < n && name(text.code_unit_at(j).to_int()) {
         j += 1
@@ -380,7 +394,9 @@ fn trivia_node(
   }
   if !raw.newline.is_empty() {
     children.push(
-      Token(@cst.Token::new(Newline, raw.newline, raw.offset + raw.text.length())),
+      Token(
+        @cst.Token::new(Newline, raw.newline, raw.offset + raw.text.length()),
+      ),
     )
   }
   @cst.Node::new(
@@ -402,20 +418,24 @@ fn trivia_node(
 ///|
 /// Scan one native block. Multiple blocks, wrong end markers and text
 /// outside the block are errors, never a partial result.
-pub fn scan(source : String, limits? : Limits = Limits::new()) -> Scan {
+pub fn scan(source : String, limits~ : Limits = Limits::new()) -> Scan {
   let diagnostics : Array[@diagrams.Diagnostic] = []
   let index = @cst.Lines::new(source)
-  fn error(code : String, message : String, start : Int, end : Int) {
+  fn error(code : String, message : String, start : Int32, end : Int32) {
     if diagnostics.length() < limits.diagnostics {
       diagnostics.push(
         @diagrams.Diagnostic::error(code, message, span=index.span(start, end)),
       )
     }
   }
-  fn warning(code : String, message : String, start : Int, end : Int) {
+  fn warning(code : String, message : String, start : Int32, end : Int32) {
     if diagnostics.length() < limits.diagnostics {
       diagnostics.push(
-        @diagrams.Diagnostic::warning(code, message, span=index.span(start, end)),
+        @diagrams.Diagnostic::warning(
+          code,
+          message,
+          span=index.span(start, end),
+        ),
       )
     }
   }
@@ -443,9 +463,7 @@ pub fn scan(source : String, limits? : Limits = Limits::new()) -> Scan {
   if source.length() > limits.source {
     return {
       ..empty,
-      head: [
-        @cst.Node::new(Error, [Token(@cst.Token::new(Error, source, 0))]),
-      ],
+      head: [@cst.Node::new(Error, [Token(@cst.Token::new(Error, source, 0))])],
       diagnostics: [
         @diagrams.Diagnostic::error(
           "plantuml/source-limit", "Source limit exceeded",
@@ -512,14 +530,12 @@ pub fn scan(source : String, limits? : Limits = Limits::new()) -> Scan {
   }
   if kind is None && diagnostics.is_empty() {
     error(
-      "plantuml/missing-start-marker",
-      "Expected @startregex, @startebnf, @startjson or @startyaml",
-      0,
-      0,
+      "plantuml/missing-start-marker", "Expected @startregex, @startebnf, @startjson or @startyaml",
+      0, 0,
     )
   }
   let body_raws : Array[Raw] = []
-  let mut end_index : Int? = None
+  let mut end_index : Int32? = None
   while i < raws.length() {
     if marker(raws[i].text, "@end") is Some(_) {
       end_index = Some(i)
@@ -530,7 +546,8 @@ pub fn scan(source : String, limits? : Limits = Limits::new()) -> Scan {
   }
   let tail : Array[@cst.Node] = []
   match end_index {
-    None => if kind is Some(k) {
+    None =>
+      if kind is Some(k) {
         error(
           "plantuml/missing-end-marker",
           "Missing @end\{k.word()}",
@@ -635,13 +652,14 @@ pub fn scan(source : String, limits? : Limits = Limits::new()) -> Scan {
 fn classify(
   kind : Kind,
   raws : Array[Raw],
-  _span : (Int) -> @diagrams.Span,
-  report : (String, String, Int, Int) -> Unit,
+  _span : (Int32) -> @diagrams.Span,
+  report : (String, String, Int32, Int32) -> Unit,
 ) -> (Array[Line], Array[Statement]) {
   let lines : Array[Line] = []
   let statements : Array[Statement] = []
   let data = kind == Json || kind == Yaml
   let mut data_started = false
+  let mut activity_text = 0
   // The pinned JSON and YAML header rules need one space after the word.
   fn word_at(t : String, word : String) -> Bool {
     if data {
@@ -651,18 +669,24 @@ fn classify(
     }
   }
   let mut i = 0
-  fn line(index : Int, role : Role) -> Line {
+  fn line(index : Int32, role : Role) -> Line {
     let raw = raws[index]
-    { number: index, offset: raw.offset, text: raw.text, newline: raw.newline, role }
+    {
+      number: index,
+      offset: raw.offset,
+      text: raw.text,
+      newline: raw.newline,
+      role,
+    }
   }
   fn statement(
-    first : Int,
-    last : Int,
+    first : Int32,
+    last : Int32,
     kind : @cst.NodeKind,
     token : @cst.TokenKind,
   ) -> Unit {
     let children : Array[@cst.Element] = []
-    for k in first..=last {
+    for k in first..<=last {
       let raw = raws[k]
       if !raw.text.is_empty() {
         children.push(Token(@cst.Token::new(token, raw.text, raw.offset)))
@@ -670,20 +694,24 @@ fn classify(
       if !raw.newline.is_empty() {
         children.push(
           Token(
-            @cst.Token::new(Newline, raw.newline, raw.offset + raw.text.length()),
+            @cst.Token::new(
+              Newline,
+              raw.newline,
+              raw.offset + raw.text.length(),
+            ),
           ),
         )
       }
     }
     lines.push(line(first, Statement(@cst.Node::new(kind, children))))
-    for k in (first + 1)..=last {
+    for k in (first + 1)..<=last {
       lines.push(line(k, Continuation))
     }
   }
-  fn whole(index : Int) -> (Int, Int) {
+  fn whole(index : Int32) -> (Int32, Int32) {
     (raws[index].offset, raws[index].offset + raws[index].text.length())
   }
-  fn block_end(start : Int, close : (String) -> Bool) -> Int? {
+  fn block_end(start : Int32, close : (String) -> Bool) -> Int32? {
     let mut k = start + 1
     while k < raws.length() {
       if close(trim(raws[k].text)) {
@@ -697,6 +725,34 @@ fn classify(
     let raw = raws[i]
     let t = if data { java_trim(raw.text) } else { trim(raw.text) }
     let (start, end) = whole(i)
+    // Activity labels and notes can contain words that otherwise introduce
+    // envelope metadata. Keep those lines in their body construct.
+    if kind == Activity {
+      if activity_text != 0 {
+        lines.push(line(i, Body))
+        if (activity_text == 1 && t.contains(";")) ||
+          (activity_text == 2 && (t == "end note" || t == "endnote")) {
+          activity_text = 0
+        }
+        i += 1
+        continue
+      }
+      if (t.has_prefix("note ") || t == "note" || t.has_prefix("floating note")) &&
+        !t.contains(":") {
+        activity_text = 2
+        lines.push(line(i, Body))
+        i += 1
+        continue
+      }
+      if (t.has_prefix(":") || (t.has_prefix("#") && t.contains(":"))) &&
+        !t.contains(";") &&
+        !t.has_suffix(")") {
+        activity_text = 1
+        lines.push(line(i, Body))
+        i += 1
+        continue
+      }
+    }
     // Comments are removed before any diagram reader runs.
     if t.has_prefix("'") {
       statement(i, i, Comment, Comment)
@@ -715,7 +771,9 @@ fn classify(
           i = last + 1
         }
         None => {
-          report("plantuml/unclosed-block", "Unclosed block comment", start, end)
+          report(
+            "plantuml/unclosed-block", "Unclosed block comment", start, end,
+          )
           statement(i, raws.length() - 1, Error, Error)
           i = raws.length()
         }
@@ -740,10 +798,8 @@ fn classify(
       } else {
         statement(i, i, Directive, Directive)
         report(
-          "plantuml/unsupported-directive",
-          "Preprocessor directives such as includes, definitions and themes are not supported",
-          start,
-          end,
+          "plantuml/unsupported-directive", "Preprocessor directives such as includes, definitions and themes are not supported",
+          start, end,
         )
       }
       i += 1
@@ -774,7 +830,9 @@ fn classify(
           i = last + 1
         }
         None => {
-          report("plantuml/unclosed-block", "Unclosed <style> block", start, end)
+          report(
+            "plantuml/unclosed-block", "Unclosed <style> block", start, end,
+          )
           statement(i, raws.length() - 1, Error, Error)
           i = raws.length()
         }
@@ -899,7 +957,9 @@ fn classify(
             i = last + 1
           }
           None => {
-            report("plantuml/unclosed-block", "Unclosed skinparam block", start, end)
+            report(
+              "plantuml/unclosed-block", "Unclosed skinparam block", start, end,
+            )
             statement(i, raws.length() - 1, Error, Error)
             i = raws.length()
           }
@@ -985,7 +1045,7 @@ pub fn Scan::line_nodes(
 }
 
 ///|
-pub fn Scan::span(self : Scan, start : Int, end : Int) -> @diagrams.Span {
+pub fn Scan::span(self : Scan, start : Int32, end : Int32) -> @diagrams.Span {
   self.lines_index.span(start, end)
 }
 
@@ -1007,7 +1067,7 @@ pub fn Scan::title(self : Scan) -> String? {
 pub fn scan_body(
   kind : Kind,
   body : String,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> Scan {
   let index = @cst.Lines::new(body)
   if !limits.valid() || body.length() > limits.source {
@@ -1047,7 +1107,11 @@ pub fn scan_body(
               span=index.span(start, end),
             )
           } else {
-            @diagrams.Diagnostic::error(code, message, span=index.span(start, end))
+            @diagrams.Diagnostic::error(
+              code,
+              message,
+              span=index.span(start, end),
+            )
           },
         )
       }

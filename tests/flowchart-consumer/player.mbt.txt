@@ -1,0 +1,28 @@
+test "fresh SVG and player consumer uses the shared portable APIs" {
+  let model = @flowchart.Flowchart::new(
+    "fresh-player",
+    [@flowchart.Node::new("A"), @flowchart.Node::new("B")],
+    [@flowchart.Connection::new("AB", "A", "B"), @flowchart.Connection::new("BA", "B", "A")],
+    direction=LR,
+  )
+  let catalog = @animation.Catalog::flowchart(model).catalog.unwrap()
+  let a = catalog.flow("AB").unwrap().key
+  let b = catalog.flow("BA").unwrap().key
+  let plan = @animation.PlaybackPlan::scenario(catalog, @animation.Motion::serial([
+    @animation.Motion::parallel([Step(a, 1000L), Step(b, 500L)]),
+    Step(a, 1000L),
+  ])).plan.unwrap()
+  assert_eq(plan.sample_at(250L).active.length(), 2)
+  assert_true(plan.sample_at(2000L).finished)
+  let renderer = @svg.SvgRenderer::new(mode=Fixed(Light), id_prefix="fresh")
+  let svg_result = @render.Renderer::render(renderer, Flowchart(model))
+  assert_true(svg_result.output.unwrap().contains("data-diagram=\"flowchart\""))
+  let geometry = @layout.layout(model).geometry.unwrap()
+  assert_eq(@layout.check(geometry, @theme.Theme::classic().light), [])
+  let html = @render.Renderer::render(
+    @animated.AnimatedRenderer::new(svg=renderer, playback=plan),
+    Flowchart(model),
+  )
+  assert_true(html.output.unwrap().contains("data-motion-data"))
+  assert_true(html.output.unwrap().contains("Download SVG"))
+}

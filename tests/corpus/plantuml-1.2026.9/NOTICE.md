@@ -12,5 +12,5 @@ PlantUML 1.2026.9 (commit `18d0aae311a4f1eb3723bb4b0ad939185e22f166`).
   `manifest.json`, and is not part of this repository or of any published
   module. PlantUML is distributed under the GPL and other licenses; see
   <https://plantuml.com/download>.
-- No PlantUML source code is copied into this repository. The MoonBit readers
+- No PlantUML source code is copied into this corpus. The MoonBit readers
   and renderers are original implementations.

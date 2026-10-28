@@ -7,7 +7,7 @@ import {
   "moonrockz/diagrams-svg@0.2.0",
 }
 
-description = "PlantUML for diagrams.mbt: native regex, EBNF, JSON and YAML readers, writers and conversion to diagram models"
+description = "PlantUML for diagrams.mbt: native activity, regex, EBNF, JSON and YAML readers, writers and conversion to diagram models"
 
 repository = "https://github.com/moonrockz/diagrams.mbt"
 

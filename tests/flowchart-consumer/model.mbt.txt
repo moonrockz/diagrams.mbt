@@ -1,0 +1,19 @@
+test "fresh immutable flowchart model needs only the core library" {
+  let inputs = [
+    @flowchart.Node::new("Read", label="Read request", groups=["Work"], role=Action),
+    @flowchart.Node::new("Save", label="Save", groups=["Work"], role=Action),
+  ]
+  let model = @flowchart.Flowchart::new(
+    "fresh-model",
+    inputs[:],
+    [@flowchart.Connection::new("save", "Read", "Save")],
+    groups=[@flowchart.Group::new("Work")],
+    notes=[@flowchart.Note::new("Note", "Source text", targets=["Read"], groups=["Work"])],
+  )
+  inputs[0] = @flowchart.Node::new("Changed")
+  assert_eq(model.nodes[0].id, "Read")
+  assert_eq(model.nodes[0].role, Action)
+  assert_eq(model.lanes.length(), 0)
+  assert_eq(@flowchart.validate(model), [])
+  assert_true(!@flowchart.validate(model, work_limit=1).is_empty())
+}

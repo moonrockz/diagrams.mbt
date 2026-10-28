@@ -39,6 +39,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  Flowchart(@flowchart.Connection)
   Architecture(@architecture.Connection)
   /// A drawn railroad connector with its structural role.
   Railroad(@railroad_trace.ConnectorRole)
@@ -51,6 +52,8 @@ pub(all) enum OccurrenceKind {
 ///|
 /// The kind of a node-visit target.
 pub(all) enum VisitKind {
+  FlowchartNode(@flowchart.Role)
+  FlowchartNote
   /// A railroad term: a literal, class, terminal, reference or constraint.
   RailroadTerm(@railroad_trace.TermKind)
   /// One member row of a data container.
@@ -111,6 +114,11 @@ pub(all) enum NodeKind {
   Start
   End
   SwimlaneNode
+  FlowchartNode(@flowchart.Node)
+  FlowchartGroup
+  FlowchartLane
+  FlowchartNote(@flowchart.Note)
+  FlowchartRegion(@flowchart.Region, String)
   SwimlaneGroup
   SwimlaneLane
   ArchitectureService
@@ -138,6 +146,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  FlowchartFlow
   ArchitectureFlow
   Undirected
   /// A drawn railroad connector or a term traversal, in drawing direction.
