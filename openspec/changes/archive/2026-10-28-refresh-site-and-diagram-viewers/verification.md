@@ -31,3 +31,7 @@ the cumulative-pixel check. Both sampler and worker paths now preflight pixel
 and minimum byte budgets before allocating timestamps. Regressions exercise a
 2,147,483,647-frame request with tiny pixel/output budgets without materializing
 its schedule.
+
+Offline generated HTML and JavaScript include complete converter/font license
+notices. Exact source copies are retained; generated comments use LF so HTML
+parsing and cross-checkout asset validation preserve their text.

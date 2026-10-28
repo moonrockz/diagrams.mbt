@@ -126,3 +126,7 @@ submitted options and the selected plan without changing live playback or
 viewport state. Cancel terminates the worker. SVG remains available when raster
 validation fails. Worker, Blob and DecompressionStream support are required for
 browser raster downloads; static SVG remains usable with scripts disabled.
+
+Generated adapters and standalone HTML retain the converter and default-font
+license notices offline. The original source texts are stored with the browser
+adapter, and the raster module retains its JPEG adaptation and font records.

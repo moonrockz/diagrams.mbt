@@ -39,3 +39,8 @@ tests/corpus/plantuml-state/** -text
 tests/state-mermaid-acceptance/*.generated.mbt text eol=lf
 tests/plantuml-state-acceptance/*.generated.mbt text eol=lf
 tests/plantuml-state-acceptance/fixtures.mbt text eol=lf
+
+# Retain exact upstream license copies; generated JavaScript normalizes EOL to LF.
+apps/raster-browser/assets/THIRD-PARTY-NOTICES.txt -text
+apps/raster-browser/assets/*.js text eol=lf
+apps/site/assets/raster/*.js text eol=lf
