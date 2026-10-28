@@ -73,7 +73,7 @@ jobs:
     name: Test native (zig)
     runs-on: ubuntu-latest
     needs: [lint]
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -82,7 +82,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Test using the external zig-cross tool
-        run: mise run test:native-zig -- --diagnostics
+        run: mise run test:native-zig -- --diagnostics --jobs=2
 
   test-scripts:
     name: Test task scripts

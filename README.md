@@ -88,6 +88,10 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run clean` | Remove build artifacts |
 | `mise run openspec:setup` | Refresh OpenSpec skills and commands for the supported agents |
 
+Pass `--jobs=N` after the task separator to limit parallel work in `test` or
+`test:native-zig`. Hosted Zig CI uses two jobs and retains the full native suite;
+`--diagnostics` adds bounded Linux resource/process observations.
+
 ## Layout
 
 - `moon.mod` holds the shared version, currently `0.4.0`.

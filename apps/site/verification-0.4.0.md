@@ -49,3 +49,9 @@ original font panic reproducer now succeeds, including font subsetting.
 Continued PR review also moved cumulative-pixel and minimum-byte GIF budget
 checks ahead of timestamp allocation. Public sampler/worker regressions cover
 enormous custom frame limits with small remaining budgets.
+
+[Native Zig telemetry](https://github.com/moonrockz/diagrams.mbt/actions/runs/40784881127/job/123156125023)
+recorded four concurrent compiler processes using 14.76 GiB combined RSS on a
+16 GiB host immediately before shutdown. That gate now limits Moon parallelism
+to two jobs and allows 30 minutes, retaining all native tests and the compiler
+pin. Resource diagnostics remain available.

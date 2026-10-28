@@ -1,7 +1,7 @@
 ///|
 /// Run the tests of every workspace member for one or more targets.
 ///
-/// Usage: `mise run test [-- <target>...]`, or `moonx scripts/test.mbtx <target>...`.
+/// Usage: `moonx scripts/test.mbtx [--jobs=N] [<target>...]`.
 /// With no target, it tests wasm, wasm-gc, js and native.
 ///
 /// Run from the workspace root so Moon discovers all members and nested packages.
@@ -13,6 +13,7 @@ import {
   "moonbitlang/async@0.22.5/fs",
   "moonbitlang/async@0.22.5/stdio",
   "moonbitlang/core/env",
+  "moonbitlang/core/string",
   "moonbitlang/x@0.5.5/sys",
 }
 
@@ -20,15 +21,60 @@ import {
 let all_targets : Array[String] = ["wasm", "wasm-gc", "js", "native"]
 
 ///|
+priv struct TestOptions {
+  targets : Array[String]
+  jobs : Int32?
+}
+
+///|
+/// Parse before starting any target so invalid job limits cannot run a partial
+/// gate. The limit controls Moon's parallel work, never package discovery.
+fn test_options(args : ArrayView[String]) -> Result[TestOptions, String] {
+  let targets : Array[String] = []
+  let mut jobs : Int32? = None
+  for arg in args {
+    if arg.has_prefix("--jobs=") {
+      let raw = arg[7:]
+      if jobs is Some(_) ||
+        raw.is_empty() ||
+        !raw.iter().all(c => c >= '0' && c <= '9') {
+        return Err("Supply one positive --jobs=N limit")
+      }
+      let value = @string.parse_int(raw) catch {
+        _ => return Err("Job limit exceeds the integer range")
+      }
+      if value <= 0 {
+        return Err("Job limit must be positive")
+      }
+      jobs = Some(value)
+    } else if arg.has_prefix("--") {
+      return Err("Unknown test option; use --jobs=N and target names")
+    } else {
+      targets.push(arg)
+    }
+  }
+  Ok({ targets: if targets.is_empty() { all_targets } else { targets }, jobs, })
+}
+
+///|
 async fn main {
-  let args = @env.args()[1:]
-  let targets = args.filter(fn(arg) { !arg.has_prefix("--") })
-  let targets = if targets.is_empty() { all_targets } else { targets }
-  for target in targets {
+  let options = match test_options(@env.args()[1:]) {
+    Ok(options) => options
+    Err(message) => {
+      eprintln(message)
+      @sys.exit(2)
+      return
+    }
+  }
+  for target in options.targets {
     println("🧪 Testing for \{target}...")
+    let arguments = ["test", "--target", target]
+    if options.jobs is Some(jobs) {
+      arguments.append(["--jobs", jobs.to_string()])
+    }
     let code = @process.run(
       "moon",
-      ["test", "--target", target],
+      arguments,
       stdout=@stdio.stdout,
       stderr=@stdio.stderr,
     )
@@ -72,16 +118,60 @@ async test "workspace test gate delegates discovery and target filtering to moon
     "\{dir}/lib/expression_only/moon.pkg",
     "supported_targets = \"+all-js-wasm-gc-wasm\"\n",
   )
-  for (target, count) in [("wasm", 2), ("native", 4)] {
-    let (code, out, err) = @process.collect_output(
-      "moonx",
-      [script, target],
-      cwd=dir,
-    )
+  for
+    (target, count, jobs) in [
+      ("wasm", 2, None),
+      ("native", 4, None),
+      ("wasm", 2, Some(1)),
+      ("native", 4, Some(2)),
+    ] {
+    let arguments = [script, target]
+    if jobs is Some(jobs) {
+      arguments.push("--jobs=" + jobs.to_string())
+    }
+    let (code, out, err) = @process.collect_output("moonx", arguments, cwd=dir)
     assert_eq(code, 0, msg=out.text() + err.text())
     assert_true(
       out.text().contains("Total tests: \{count}, passed: \{count}, failed: 0."),
       msg=out.text(),
     )
+  }
+  // A jobs-only invocation retains the complete ordinary target matrix.
+  let (code, out, err) = @process.collect_output(
+    "moonx",
+    [script, "--jobs=2"],
+    cwd=dir,
+  )
+  assert_eq(code, 0, msg=out.text() + err.text())
+  for target in all_targets {
+    assert_true(
+      out.text().contains("Testing for " + target + "..."),
+      msg=out.text(),
+    )
+  }
+  assert_eq(
+    out.text().split("Total tests: 2, passed: 2, failed: 0.").count(),
+    4,
+  )
+  assert_true(
+    out.text().contains("Total tests: 4, passed: 4, failed: 0."),
+    msg=out.text(),
+  )
+}
+
+///|
+test "invalid or duplicate job limits fail before target execution" {
+  for
+    args in [
+      ["--jobs=0"],
+      ["--jobs=-1"],
+      ["--jobs="],
+      ["--jobs=2.5"],
+      ["--jobs=2147483648"],
+      ["--jobs=1", "--jobs=2"],
+      ["native", "--jobs=0"],
+      ["--jobs", "2"],
+    ] {
+    assert_true(test_options(args) is Err(_))
   }
 }

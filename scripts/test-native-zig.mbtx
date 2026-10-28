@@ -18,6 +18,43 @@ priv struct MonitorState {
 }
 
 ///|
+priv struct ZigOptions {
+  diagnostics : Bool
+  jobs : Int32?
+}
+
+///|
+fn zig_options(args : ArrayView[String]) -> Result[ZigOptions, String] {
+  let mut diagnostics = false
+  let mut jobs : Int32? = None
+  for arg in args {
+    if arg == "--diagnostics" {
+      if diagnostics {
+        return Err("Duplicate diagnostics option")
+      }
+      diagnostics = true
+    } else if arg.has_prefix("--jobs=") {
+      let raw = arg[7:]
+      if jobs is Some(_) ||
+        raw.is_empty() ||
+        !raw.iter().all(c => c >= '0' && c <= '9') {
+        return Err("Supply one positive --jobs=N limit")
+      }
+      let value = @string.parse_int(raw) catch {
+        _ => return Err("Job limit exceeds the integer range")
+      }
+      if value <= 0 {
+        return Err("Job limit must be positive")
+      }
+      jobs = Some(value)
+    } else {
+      return Err("Unknown Zig test option")
+    }
+  }
+  Ok({ diagnostics, jobs, })
+}
+
+///|
 priv struct ProcessRow {
   pid : Int64
   ppid : Int64
@@ -312,12 +349,12 @@ async fn run_monitored(
   arguments : Array[String],
   sample : async (Int32) -> Unit,
   interval_ms~ : Int32 = 15000,
-  max_samples~ : Int32 = 80,
+  max_samples~ : Int32 = 120,
 ) -> Int32 {
   let state = MonitorState::{ done: false, }
   @async.with_task_group() <| group => {
     group.spawn_bg(allow_failure=true, () => {
-      for index in 0..<max_samples.min(80) {
+      for index in 0..<max_samples.min(120) {
         if state.done {
           return
         }
@@ -345,15 +382,19 @@ async fn run_monitored(
 
 ///|
 async fn main {
-  let args = @env.args()[1:]
-  if args.length() > 1 || (args.length() == 1 && args[0] != "--diagnostics") {
-    eprintln("Usage: test-native-zig.mbtx [--diagnostics]")
-    @sys.exit(2)
+  let options = match zig_options(@env.args()[1:]) {
+    Ok(options) => options
+    Err(message) => {
+      eprintln(message)
+      eprintln("Usage: test-native-zig.mbtx [--diagnostics] [--jobs=N]")
+      @sys.exit(2)
+      return
+    }
   }
   try {
-    let diagnostics = args.length() == 1 &&
+    let diagnostics = options.diagnostics &&
       small_file("/proc/self/stat") is Some(_)
-    if args.length() == 1 && !diagnostics {
+    if options.diagnostics && !diagnostics {
       println(
         "[zig-diag] unavailable: Linux procfs is unavailable; test command unchanged",
       )
@@ -362,6 +403,9 @@ async fn main {
       "moonrockz/zig-cross@0.1.2", "exec", "host", "--", "moonx", "scripts/test.mbtx",
       "native",
     ]
+    if options.jobs is Some(jobs) {
+      arguments.push("--jobs=" + jobs.to_string())
+    }
     let code = if diagnostics {
       let samples = Samples::{
         previous: Map([]),
@@ -387,6 +431,31 @@ async fn main {
       eprintln("Zig test invocation failed")
       @sys.exit(1)
     }
+  }
+}
+
+///|
+test "diagnostics and a positive worker limit remain independent" {
+  for args in [["--diagnostics", "--jobs=2"], ["--jobs=2", "--diagnostics"]] {
+    let options = match zig_options(args) {
+      Ok(options) => options
+      Err(message) => fail(message)
+    }
+    assert_true(options.diagnostics)
+    assert_eq(options.jobs, Some(2))
+  }
+  for
+    args in [
+      ["--jobs=0"],
+      ["--jobs=-1"],
+      ["--jobs="],
+      ["--jobs=2.5"],
+      ["--jobs=2147483648"],
+      ["--jobs=1", "--jobs=2"],
+      ["--diagnostics", "--jobs=0"],
+      ["--jobs", "2"],
+    ] {
+    assert_true(zig_options(args) is Err(_))
   }
 }
 

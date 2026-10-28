@@ -37,5 +37,10 @@ notices. Exact source copies are retained; generated comments use LF so HTML
 parsing and cross-checkout asset validation preserve their text.
 
 The existing Zig CI gate has optional bounded Linux resource/process diagnostics
-for runner shutdown investigation. It keeps the exact pinned full native test
-command, propagates its exit status and excludes process arguments/environment.
+for runner shutdown investigation. It keeps the pinned full native test
+command and coverage, propagates its exit status and excludes process arguments/environment.
+
+The hosted trace measured four concurrent Zig compiler processes at 14.76 GiB
+combined RSS, about 111 MiB available RAM and 2.09 GiB swap use before runner
+shutdown. Only this gate now uses `--jobs=2`, with a 30-minute allowance for the
+reduced parallelism. The selected OS, compiler pin and full suite remain the same.
