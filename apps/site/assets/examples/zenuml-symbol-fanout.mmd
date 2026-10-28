@@ -1,0 +1,10 @@
+zenuml
+title Queue fan-out
+@Actor Client
+@SQS Queue
+@Lambda Worker
+@PostgreSQL Store
+Client->Queue: publish
+Queue->Worker: consume
+Worker->Store: persist
+Worker->Queue: acknowledge

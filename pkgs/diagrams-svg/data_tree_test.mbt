@@ -271,7 +271,10 @@ test "deep data renders without recursion" {
   nodes.push(@data_tree.Node::new("n\{depth}", Text("leaf")))
   let tree = @data_tree.DataTree::new("deep", "n0", nodes)
   let rendered = @svg.render_data_tree(tree)
-  assert_true(rendered.output is Some(_))
+  assert_true(
+    rendered.output is Some(_),
+    msg=@debug.to_string(rendered.diagnostics),
+  )
   let shallow = @svg.render_data_tree(
     tree,
     limits=@data_tree_layout.Limits::new(depth=50),
@@ -317,7 +320,15 @@ test "scene bindings follow drawn rows, boxes and connectors" {
       .iter()
       .find_first(c => c.entry == entry)
       .unwrap()
-    assert_eq(binding.path, connector.path())
+    let resolved = @svg.inspect_connectors(scene.canonical_svg)
+      .iter()
+      .find_first(p => p.id == entry)
+      .unwrap()
+    assert_eq(binding.path, resolved.path.svg())
+    assert_eq(
+      resolved.route.svg(),
+      @svg.ConnectorPath::parse(connector.path()).unwrap().svg(),
+    )
     assert_true(scene.canonical_svg.contains("d=\"" + binding.path + "\""))
   }
   let rows = scene.nodes.iter().filter(n => n.kind is DataRow(_)).count()

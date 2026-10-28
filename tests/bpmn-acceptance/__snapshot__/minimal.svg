@@ -1,24 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 444 144" width="444" height="144" role="img" data-diagram="bpmn" id="bpmn-1d7b852b48d46c8b-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 444 144" width="444" height="144" role="img" data-diagram="bpmn" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Plain,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="bpmn-48f81ca8d23f673b-diagram">
   <title>Review request</title>
   <desc>BPMN view with 3 visible shapes and 2 connections. Structural flow is illustrative. Conditions, timers and execution outcomes are not evaluated.</desc>
   <defs>
-    <marker id="bpmn-1d7b852b48d46c8b-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-48f81ca8d23f673b-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-10 -5 L0 0 L-10 5 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-1d7b852b48d46c8b-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-48f81ca8d23f673b-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-10 -5 L0 0 L-10 5" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-1d7b852b48d46c8b-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-48f81ca8d23f673b-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <circle cx="0" cy="0" r="3.5" fill="var(--bg)" stroke="var(--arrow)" stroke-width="1.5"/>
     </marker>
-    <marker id="bpmn-1d7b852b48d46c8b-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="bpmn-48f81ca8d23f673b-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M0 0 L6 -4 L12 0 L6 4 Z" fill="var(--bg)" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-1d7b852b48d46c8b-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="bpmn-48f81ca8d23f673b-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M4 -5 L10 5" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
     <style>
-svg#bpmn-1d7b852b48d46c8b-diagram {
+svg#bpmn-48f81ca8d23f673b-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -47,7 +47,7 @@ svg#bpmn-1d7b852b48d46c8b-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#bpmn-1d7b852b48d46c8b-diagram {
+  svg#bpmn-48f81ca8d23f673b-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -76,7 +76,7 @@ svg#bpmn-1d7b852b48d46c8b-diagram {
     --external-ink: #5a687c;
   }
 }
-svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="dark"] {
+svg#bpmn-48f81ca8d23f673b-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -104,7 +104,7 @@ svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="light"] {
+svg#bpmn-48f81ca8d23f673b-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -138,15 +138,15 @@ svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="light"] {
   <g transform="translate(-8 -8)" class="bpmn-viewport">
     <g class="bpmn-backgrounds"/>
     <g class="bpmn-connections">
-      <g data-id="Flow_1" data-source-id="Flow_1" data-source-path="0/0/3" id="bpmn-1d7b852b48d46c8b-flow-0" class="bpmn-flow" data-kind="sequenceFlow" data-from="Start" data-to="Review">
-        <path d="M76 80 L140 80" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-1d7b852b48d46c8b-sequence-head)"/>
+      <g data-id="Flow_1" data-source-id="Flow_1" data-source-path="0/0/3" id="bpmn-48f81ca8d23f673b-flow-0" class="bpmn-flow" data-kind="sequenceFlow" data-from="Start" data-to="Review">
+        <path class="bpmn-connector" d="M76 80 L140 80" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-48f81ca8d23f673b-sequence-head)" data-connector-id="Flow_1" data-connector-source="Start" data-connector-target="Review" data-connector-route="M76 80 L140 80" data-connector-key="0"/>
       </g>
-      <g data-id="Flow_2" data-source-id="Flow_2" data-source-path="0/0/4" id="bpmn-1d7b852b48d46c8b-flow-1" class="bpmn-flow" data-kind="sequenceFlow" data-from="Review" data-to="End">
-        <path d="M320 80 L384 80" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-1d7b852b48d46c8b-sequence-head)"/>
+      <g data-id="Flow_2" data-source-id="Flow_2" data-source-path="0/0/4" id="bpmn-48f81ca8d23f673b-flow-1" class="bpmn-flow" data-kind="sequenceFlow" data-from="Review" data-to="End">
+        <path class="bpmn-connector" d="M320 80 L384 80" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-48f81ca8d23f673b-sequence-head)" data-connector-id="Flow_2" data-connector-source="Review" data-connector-target="End" data-connector-route="M320 80 L384 80" data-connector-key="1"/>
       </g>
     </g>
     <g class="bpmn-nodes">
-      <g data-id="Start" data-source-id="Start" data-source-path="0/0/0" id="bpmn-1d7b852b48d46c8b-node-0" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-events="">
+      <g data-id="Start" data-source-id="Start" data-source-path="0/0/0" id="bpmn-48f81ca8d23f673b-node-0" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-events="">
         <rect class="bpmn-bounds" x="40" y="62" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(40 62) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">
@@ -157,7 +157,7 @@ svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="light"] {
           <g transform="translate(8.1 8.1) scale(0.825)"/>
         </g>
       </g>
-      <g data-id="Review" data-source-id="Review" data-source-path="0/0/1" id="bpmn-1d7b852b48d46c8b-node-1" class="bpmn-shape" data-kind="task" data-expanded="false" data-black-box="false" data-events="">
+      <g data-id="Review" data-source-id="Review" data-source-path="0/0/1" id="bpmn-48f81ca8d23f673b-node-1" class="bpmn-shape" data-kind="task" data-expanded="false" data-black-box="false" data-events="">
         <rect class="bpmn-bounds" x="140" y="40" width="180" height="80" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(140 40) scale(180 80)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -169,7 +169,7 @@ svg#bpmn-1d7b852b48d46c8b-diagram[data-theme="light"] {
           <g transform="translate(10 8) scale(0.8)"/>
         </g>
       </g>
-      <g data-id="End" data-source-id="End" data-source-path="0/0/2" id="bpmn-1d7b852b48d46c8b-node-2" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
+      <g data-id="End" data-source-id="End" data-source-path="0/0/2" id="bpmn-48f81ca8d23f673b-node-2" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
         <rect class="bpmn-bounds" x="384" y="62" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(384 62) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">

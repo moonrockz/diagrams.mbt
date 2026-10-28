@@ -1,0 +1,12 @@
+swimlane-beta RL
+subgraph Intake [Intake]
+A([Received])
+B[Validate]
+end
+subgraph Dispatch [Dispatch]
+C[Ship]
+D((Done))
+end
+A --> B
+B --> C
+C --> D

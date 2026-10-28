@@ -1,0 +1,12 @@
+@startyaml
+title Mixed collections
+settings:
+  limits: {soft: 20, hard: 100}
+  regions: [east, west]
+  notes: |
+    First line
+    Second line
+routes:
+  - [api, worker]
+  - [worker, store]
+@endyaml

@@ -6,6 +6,7 @@ pub struct Limits {
   depth : Int32
   work : Int32
   output_units : Int32
+  minimum_approach : Double
 } derive(Eq, Debug)
 
 ///|
@@ -15,8 +16,9 @@ pub fn Limits::new(
   depth~ : Int32 = 256,
   work~ : Int32 = 1000000,
   output_units~ : Int32 = 16777216,
+  minimum_approach~ : Double = 24.0,
 ) -> Limits {
-  { nodes, edges, depth, work, output_units, }
+  { minimum_approach, nodes, edges, depth, work, output_units, }
 }
 
 ///|
@@ -448,4 +450,13 @@ fn strip_pairs(text : String, marker : String) -> String {
     }
   }
   out.to_string()
+}
+
+///|
+/// Retain resource limits while selecting the marked terminal reservation.
+pub fn Limits::with_minimum_approach(
+  self : Limits,
+  minimum_approach : Double,
+) -> Limits {
+  { ..self, minimum_approach, }
 }

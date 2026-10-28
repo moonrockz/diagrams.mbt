@@ -1,0 +1,15 @@
+swimlane-beta LR
+subgraph Customer [Customer]
+A[Request]
+end
+subgraph Support [Support]
+B{Review}
+end
+subgraph Engineering [Engineering]
+C[Investigate]
+D([Complete])
+end
+A --> B
+B -->|escalate| C
+C -->|clarify| B
+C --> D

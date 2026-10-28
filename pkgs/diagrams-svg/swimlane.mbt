@@ -2,7 +2,7 @@
 priv struct SwimlanePaint {
   paint : Paint
   kind : String
-  parent_overrides : Map[String,String?]
+  parent_overrides : Map[String, String?]
   diagnostics : Array[@diagrams.Diagnostic]
   limit : Int32
   mut used : Int32
@@ -460,6 +460,7 @@ fn SwimlanePaint::connection(
 ) -> @writer.Node {
   let flow = edge.connection
   let attrs = [
+    ("class", self.kind + "-connector"),
     ("d", swimlane_path(edge)),
     ("fill", "none"),
     ("stroke", self.paint.color("arrow")),
@@ -512,10 +513,19 @@ fn paint_swimlane(
   limits : @swimlane_layout.Limits,
   precomputed? : @swimlane_layout.Result,
   kind~ : String = "swimlane",
-  intentional_containment~ : ArrayView[(String,String)] = [],
+  intentional_containment~ : ArrayView[(String, String)] = [],
   hidden_containers~ : ArrayView[String] = [],
-  parent_overrides~ : ArrayView[(String,String?)] = [],
+  parent_overrides~ : ArrayView[(String, String?)] = [],
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
+  if !connector_options_valid(connectors) {
+    return @render.Rendered::failed("image/svg+xml", [
+      @diagrams.Diagnostic::error(
+        "connector/invalid-option", "Invalid connector options",
+      ),
+    ])
+  }
+  let limits = limits.with_minimum_approach(connectors.minimum_approach)
   let result = precomputed.unwrap_or_else(() => {
     @swimlane_layout.layout(view, limits~)
   })
@@ -529,7 +539,7 @@ fn paint_swimlane(
   }
   let c = SwimlanePaint::{
     kind,
-    parent_overrides:Map(parent_overrides),
+    parent_overrides: Map(parent_overrides),
     paint: Paint::{ theme, mode, },
     diagnostics,
     limit: limits.output_units,
@@ -596,9 +606,11 @@ fn paint_swimlane(
       area
     }
   })
-  let hidden=Map(hidden_containers.map(id => (id,true)))
+  let hidden = Map(hidden_containers.map(id => (id, true)))
   for shape in ordered {
-    if hidden.contains(shape.id) { continue }
+    if hidden.contains(shape.id) {
+      continue
+    }
     if c.failed {
       break
     }
@@ -616,11 +628,13 @@ fn paint_swimlane(
     .map(value => Some(value))
     .unwrap_or(view.title)
     .unwrap_or(view.id)
-  let description = view.accessibility_description.unwrap_or(if kind == "flowchart" {
-    "Flowchart with \{view.nodes.length()} nodes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a workflow."
-  } else {
-    "Swimlane diagram with \{view.lanes.length()} responsibility lanes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a process."
-  })
+  let description = view.accessibility_description.unwrap_or(
+    if kind == "flowchart" {
+      "Flowchart with \{view.nodes.length()} nodes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a workflow."
+    } else {
+      "Swimlane diagram with \{view.lanes.length()} responsibility lanes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a process."
+    },
+  )
   let root = c.element(
     "svg",
     attrs=[
@@ -665,6 +679,56 @@ fn paint_swimlane(
         "swimlane/render-limit", "Scoped SVG identifiers exceed the output limit",
       ),
     ])
+  }
+  let obstacles : Array[ConnectorObstacle] = []
+  let labels : Array[(String, ConnectorObstacle)] = []
+  for shape in geometry.shapes {
+    if shape.kind == Node {
+      let r = shape.outline_box
+      obstacles.push({
+        owner: shape.id,
+        x: r.x,
+        y: r.y,
+        width: r.width,
+        height: r.height,
+      })
+    }
+    if shape.label is Some(label) {
+      let r = label.box
+      labels.push(
+        (
+          "",
+          { owner: shape.id, x: r.x, y: r.y, width: r.width, height: r.height, },
+        ),
+      )
+    }
+  }
+  for edge in geometry.connections {
+    if edge.label is Some(label) {
+      let r = label.box
+      labels.push(
+        (
+          "",
+          {
+            owner: edge.connection.id,
+            x: r.x,
+            y: r.y,
+            width: r.width,
+            height: r.height,
+          },
+        ),
+      )
+    }
+  }
+  guard finalize_connectors(
+      root,
+      connectors,
+      diagnostics,
+      obstacles=obstacles[:],
+      labels=labels[:],
+    )
+    is Some(root) else {
+    return @render.Rendered::failed("image/svg+xml", diagnostics)
   }
   let original = @writer.to_string(root)
   if original.length() > limits.output_units - 128 {
@@ -766,6 +830,7 @@ pub fn render_swimlane(
   mode~ : Mode = Adaptive,
   id_prefix? : String,
   limits~ : @swimlane_layout.Limits = @swimlane_layout.Limits::new(),
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
-  paint_swimlane(view, theme, mode, id_prefix, limits)
+  paint_swimlane(view, theme, mode, id_prefix, limits, connectors~)
 }

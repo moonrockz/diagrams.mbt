@@ -1,5 +1,6 @@
 import {
   "moonbitlang/core/debug",
+  "moonbitlang/core/string",
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/animation",

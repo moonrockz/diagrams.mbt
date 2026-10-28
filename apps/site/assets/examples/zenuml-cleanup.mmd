@@ -1,0 +1,11 @@
+zenuml
+title Safe storage request
+try {
+ API->Store: query
+} catch(missing) {
+ Store->API: absent
+} catch(busy) {
+ Store->API: retry
+} finally {
+ API->Store: close
+}

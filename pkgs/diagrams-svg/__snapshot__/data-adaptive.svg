@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 296" width="760" height="296" role="img" data-diagram="data-tree" id="dt-75efcf0dae88afcd-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 776 296" width="776" height="296" role="img" data-diagram="data-tree" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="dt-21eb52c75e53ecfa-diagram">
   <title>Sample data</title>
   <desc>Structured data diagram with 12 values in 4 containers. Rows show members in source order and arrays show positions; connectors join nested containers.</desc>
   <defs>
     <style>
-svg#dt-75efcf0dae88afcd-diagram {
+svg#dt-21eb52c75e53ecfa-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg#dt-75efcf0dae88afcd-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#dt-75efcf0dae88afcd-diagram {
+  svg#dt-21eb52c75e53ecfa-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg#dt-75efcf0dae88afcd-diagram {
     --external-ink: #606f85;
   }
 }
-svg#dt-75efcf0dae88afcd-diagram[data-theme="dark"] {
+svg#dt-21eb52c75e53ecfa-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg#dt-75efcf0dae88afcd-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#dt-75efcf0dae88afcd-diagram[data-theme="light"] {
+svg#dt-21eb52c75e53ecfa-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,18 +118,18 @@ svg#dt-75efcf0dae88afcd-diagram[data-theme="light"] {
   --external-ink: #606f85;
 }
 </style>
-    <marker id="dt-75efcf0dae88afcd-dt-arrow" viewBox="-10 -6 12 12" refX="0" refY="0" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="dt-21eb52c75e53ecfa-dt-arrow" viewBox="-10 -6 12 12" refX="0" refY="0" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)"/>
     </marker>
   </defs>
-  <rect class="bg" x="0" y="0" width="760" height="296" fill="var(--bg)"/>
+  <rect class="bg" x="0" y="0" width="776" height="296" fill="var(--bg)"/>
   <text class="data-title" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="var(--text)">
     <tspan x="20" y="34" xml:space="preserve">Sample data</tspan>
   </text>
   <g class="data-connectors">
-    <path class="data-connector" data-member="m/3" data-source="v" data-target="v/3" d="M428 147.5 C456 147.5 456 147.5 484 147.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-75efcf0dae88afcd-dt-arrow)"/>
-    <path class="data-connector" data-member="m/4" data-source="v" data-target="v/4" d="M428 174.5 C456 174.5 456 244.5 484 244.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-75efcf0dae88afcd-dt-arrow)"/>
-    <path class="data-connector" data-member="m/3/2" data-source="v/3" data-target="v/3/2" d="M588 201.5 C616 201.5 616 201.5 644 201.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-75efcf0dae88afcd-dt-arrow)"/>
+    <path class="data-connector" data-member="m/3" data-source="v" data-target="v/3" d="M428 147.5 C460 147.5 460 147.5 468 147.5 L492 147.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-21eb52c75e53ecfa-dt-arrow)" data-connector-id="m/3" data-connector-source="v" data-connector-target="v/3" data-connector-route="M428 147.5 C460 147.5 460 147.5 492 147.5" data-connector-key="0"/>
+    <path class="data-connector" data-member="m/4" data-source="v" data-target="v/4" d="M428 174.5 C460 174.5 460 244.5 468 244.5 L492 244.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-21eb52c75e53ecfa-dt-arrow)" data-connector-id="m/4" data-connector-source="v" data-connector-target="v/4" data-connector-route="M428 174.5 C460 174.5 460 244.5 492 244.5" data-connector-key="1"/>
+    <path class="data-connector" data-member="m/3/2" data-source="v/3" data-target="v/3/2" d="M596 201.5 C628 201.5 628 201.5 636 201.5 L660 201.5" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#dt-21eb52c75e53ecfa-dt-arrow)" data-connector-id="m/3/2" data-connector-source="v/3" data-connector-target="v/3/2" data-connector-route="M596 201.5 C628 201.5 628 201.5 660 201.5" data-connector-key="2"/>
   </g>
   <g class="data-boxes">
     <g class="data-box" data-node="v" data-type="object">
@@ -202,53 +202,53 @@ svg#dt-75efcf0dae88afcd-diagram[data-theme="light"] {
       <path class="data-divider" d="M76 53 V276" fill="none" stroke="var(--external-stroke)" stroke-width="0.75"/>
     </g>
     <g class="data-box" data-node="v/3" data-type="array">
-      <rect class="data-box-frame" x="484" y="134" width="104" height="81" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
+      <rect class="data-box-frame" x="492" y="134" width="104" height="81" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
       <g class="data-row" data-member="m/3/0" data-node="v/3/0" data-type="boolean">
-        <rect class="data-row-bounds" x="484" y="134" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
+        <rect class="data-row-bounds" x="492" y="134" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
         <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--muted)">
-          <tspan x="492" y="150" xml:space="preserve">[0]</tspan>
+          <tspan x="500" y="150" xml:space="preserve">[0]</tspan>
         </text>
         <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--database-ink)">
-          <tspan x="532" y="150" xml:space="preserve">☑ true</tspan>
+          <tspan x="540" y="150" xml:space="preserve">☑ true</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/3/1" data-node="v/3/1" data-type="string">
-        <rect class="data-row-bounds" x="484" y="161" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
+        <rect class="data-row-bounds" x="492" y="161" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
         <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--muted)">
-          <tspan x="492" y="177" xml:space="preserve">[1]</tspan>
+          <tspan x="500" y="177" xml:space="preserve">[1]</tspan>
         </text>
         <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
-          <tspan x="532" y="177" xml:space="preserve">true</tspan>
+          <tspan x="540" y="177" xml:space="preserve">true</tspan>
         </text>
       </g>
       <g class="data-row" data-member="m/3/2" data-node="v/3/2" data-type="object">
-        <rect class="data-row-bounds" x="484" y="188" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
+        <rect class="data-row-bounds" x="492" y="188" width="104" height="27" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="0.75"/>
         <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--muted)">
-          <tspan x="492" y="204" xml:space="preserve">[2]</tspan>
+          <tspan x="500" y="204" xml:space="preserve">[2]</tspan>
         </text>
         <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--muted)">
-          <tspan x="532" y="204" xml:space="preserve">{…}</tspan>
+          <tspan x="540" y="204" xml:space="preserve">{…}</tspan>
         </text>
       </g>
-      <path class="data-divider" d="M524 134 V215" fill="none" stroke="var(--external-stroke)" stroke-width="0.75"/>
+      <path class="data-divider" d="M532 134 V215" fill="none" stroke="var(--external-stroke)" stroke-width="0.75"/>
     </g>
     <g class="data-box" data-node="v/3/2" data-type="object">
-      <rect class="data-box-frame" x="644" y="188" width="96" height="27" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
+      <rect class="data-box-frame" x="660" y="188" width="96" height="27" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
       <g class="data-row" data-member="m/3/2/0" data-node="v/3/2/0" data-type="number" data-highlight="true">
-        <rect class="data-row-bounds" x="644" y="188" width="96" height="27" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
+        <rect class="data-row-bounds" x="660" y="188" width="96" height="27" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
         <text class="data-key" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
-          <tspan x="652" y="204" xml:space="preserve">deep</tspan>
+          <tspan x="668" y="204" xml:space="preserve">deep</tspan>
         </text>
         <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--frontend-ink)">
-          <tspan x="700" y="204" xml:space="preserve">-0.0</tspan>
+          <tspan x="716" y="204" xml:space="preserve">-0.0</tspan>
         </text>
       </g>
-      <path class="data-divider" d="M692 188 V215" fill="none" stroke="var(--external-stroke)" stroke-width="0.75"/>
+      <path class="data-divider" d="M708 188 V215" fill="none" stroke="var(--external-stroke)" stroke-width="0.75"/>
     </g>
     <g class="data-box" data-node="v/4" data-type="object" data-empty="true">
-      <rect class="data-box-frame" x="484" y="231" width="32" height="27" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
+      <rect class="data-box-frame" x="492" y="231" width="32" height="27" rx="4" fill="var(--mask)" stroke="var(--external-stroke)" stroke-width="1.5"/>
       <text class="data-value" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--muted)">
-        <tspan x="492" y="247" xml:space="preserve">{}</tspan>
+        <tspan x="500" y="247" xml:space="preserve">{}</tspan>
       </text>
     </g>
   </g>

@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1049 250" width="1049" height="250" role="img" data-diagram="regex" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="rr-u-72-65-67-65-78-2d-61-73-73-65-72-74-69-6f-6e-73-2d-64-61-72-6b-diagram">
+  <title>Version capture</title>
+  <desc>Railroad diagram of the regular expression (?=v)(?&lt;version&gt;v\d+(?:\.\d+){1,2})(?![\w.]) with 8 terms. It shows structure; it does not match input.</desc>
+  <defs>
+    <marker id="rr-u-72-65-67-65-78-2d-61-73-73-65-72-74-69-6f-6e-73-2d-64-61-72-6b-rr-return" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-8 -4 L0 0 L-8 4 Z" fill="#94a3b8" stroke="none"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1049" height="250" fill="#020617"/>
+  <g class="rr-title">
+    <text class="rr-title-text" x="524.5" y="34" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="16" font-weight="700" fill="#ffffff">
+      <tspan x="524.5" y="34">Version capture</tspan>
+    </text>
+  </g>
+  <g class="rr-notes"/>
+  <g class="rr-frames">
+    <g class="rr-frame rr-group" data-owner="p.1">
+      <rect class="rr-frame-box" x="180" y="76" width="628" height="154" rx="8" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text class="rr-frame-label" x="494" y="87" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="494" y="87">group version</tspan>
+      </text>
+    </g>
+    <g class="rr-frame rr-group" data-owner="p.1.0.2.0">
+      <rect class="rr-frame-box" x="490" y="105" width="240" height="82" rx="8" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text class="rr-frame-label" x="610" y="116" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="610" y="116">non-capturing group</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="rr-connectors">
+    <path class="rr-connector rr-start" data-connector="c16:regex-assertions:start" data-role="start" data-owner="regex-assertions" d="M30 147.5 L50 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c16:regex-assertions:start" data-connector-source="" data-connector-target="" data-connector-route="M30 147.5 L50 147.5" data-connector-key="0"/>
+    <path class="rr-connector rr-gap" data-connector="c3:p.1:gap" data-role="gap" data-owner="p.1" d="M160 147.5 L180 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c3:p.1:gap" data-connector-source="" data-connector-target="" data-connector-route="M160 147.5 L180 147.5" data-connector-key="1"/>
+    <path class="rr-connector rr-gap" data-connector="c3:p.2:gap" data-role="gap" data-owner="p.2" d="M808 147.5 L828 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c3:p.2:gap" data-connector-source="" data-connector-target="" data-connector-route="M808 147.5 L828 147.5" data-connector-key="2"/>
+    <path class="rr-connector rr-enter" data-connector="c3:p.1:enter" data-role="enter" data-owner="p.1" d="M180 147.5 L194 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c3:p.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M180 147.5 L194 147.5" data-connector-key="3"/>
+    <path class="rr-connector rr-leave" data-connector="c3:p.1:leave" data-role="leave" data-owner="p.1" d="M794 147.5 L808 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c3:p.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M794 147.5 L808 147.5" data-connector-key="4"/>
+    <path class="rr-connector rr-gap" data-connector="c7:p.1.0.1:gap" data-role="gap" data-owner="p.1.0.1" d="M222 147.5 L242 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.1:gap" data-connector-source="" data-connector-target="" data-connector-route="M222 147.5 L242 147.5" data-connector-key="5"/>
+    <path class="rr-connector rr-gap" data-connector="c7:p.1.0.2:gap" data-role="gap" data-owner="p.1.0.2" d="M406 147.5 L426 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.2:gap" data-connector-source="" data-connector-target="" data-connector-route="M406 147.5 L426 147.5" data-connector-key="6"/>
+    <path class="rr-connector rr-enter" data-connector="c7:p.1.0.1:enter" data-role="enter" data-owner="p.1.0.1" d="M242 147.5 L306 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M242 147.5 L306 147.5" data-connector-key="7"/>
+    <path class="rr-connector rr-leave" data-connector="c7:p.1.0.1:leave" data-role="leave" data-owner="p.1.0.1" d="M342 147.5 L406 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M342 147.5 L406 147.5" data-connector-key="8"/>
+    <path class="rr-connector rr-return" data-connector="c7:p.1.0.1:return" data-role="return" data-owner="p.1.0.1" d="M342 147.5 L366 147.5 Q374 147.5 374 155.5 L374 165 Q374 173 366 173 L282 173 Q274 173 274 165 L274 155.5 Q274 147.5 282 147.5 L306 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-u-72-65-67-65-78-2d-61-73-73-65-72-74-69-6f-6e-73-2d-64-61-72-6b-rr-return)" data-connector-id="c7:p.1.0.1:return" data-connector-source="" data-connector-target="" data-connector-route="M342 147.5 L366 147.5 Q374 147.5 374 155.5 L374 165 Q374 173 366 173 L282 173 Q274 173 274 165 L274 155.5 Q274 147.5 282 147.5 L306 147.5" data-connector-key="9"/>
+    <path class="rr-connector rr-enter" data-connector="c7:p.1.0.2:enter" data-role="enter" data-owner="p.1.0.2" d="M426 147.5 L490 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.2:enter" data-connector-source="" data-connector-target="" data-connector-route="M426 147.5 L490 147.5" data-connector-key="10"/>
+    <path class="rr-connector rr-leave" data-connector="c7:p.1.0.2:leave" data-role="leave" data-owner="p.1.0.2" d="M730 147.5 L794 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c7:p.1.0.2:leave" data-connector-source="" data-connector-target="" data-connector-route="M730 147.5 L794 147.5" data-connector-key="11"/>
+    <g class="rr-wire">
+      <path class="rr-connector rr-return" data-connector="c7:p.1.0.2:return" data-role="return" data-owner="p.1.0.2" d="M730 147.5 L754 147.5 Q762 147.5 762 155.5 L762 191 Q762 199 754 199 L466 199 Q458 199 458 191 L458 155.5 Q458 147.5 466 147.5 L490 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-u-72-65-67-65-78-2d-61-73-73-65-72-74-69-6f-6e-73-2d-64-61-72-6b-rr-return)" data-connector-id="c7:p.1.0.2:return" data-connector-source="" data-connector-target="" data-connector-route="M730 147.5 L754 147.5 Q762 147.5 762 155.5 L762 191 Q762 199 754 199 L466 199 Q458 199 458 191 L458 155.5 Q458 147.5 466 147.5 L490 147.5" data-connector-key="12"/>
+      <text class="rr-bounds" x="610" y="210" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="610" y="210">{1,2}</tspan>
+      </text>
+    </g>
+    <path class="rr-connector rr-enter" data-connector="c9:p.1.0.2.0:enter" data-role="enter" data-owner="p.1.0.2.0" d="M490 147.5 L504 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c9:p.1.0.2.0:enter" data-connector-source="" data-connector-target="" data-connector-route="M490 147.5 L504 147.5" data-connector-key="13"/>
+    <path class="rr-connector rr-leave" data-connector="c9:p.1.0.2.0:leave" data-role="leave" data-owner="p.1.0.2.0" d="M716 147.5 L730 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c9:p.1.0.2.0:leave" data-connector-source="" data-connector-target="" data-connector-route="M716 147.5 L730 147.5" data-connector-key="14"/>
+    <path class="rr-connector rr-gap" data-connector="c13:p.1.0.2.0.0.1:gap" data-role="gap" data-owner="p.1.0.2.0.0.1" d="M532 147.5 L552 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c13:p.1.0.2.0.0.1:gap" data-connector-source="" data-connector-target="" data-connector-route="M532 147.5 L552 147.5" data-connector-key="15"/>
+    <path class="rr-connector rr-enter" data-connector="c13:p.1.0.2.0.0.1:enter" data-role="enter" data-owner="p.1.0.2.0.0.1" d="M552 147.5 L616 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c13:p.1.0.2.0.0.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M552 147.5 L616 147.5" data-connector-key="16"/>
+    <path class="rr-connector rr-leave" data-connector="c13:p.1.0.2.0.0.1:leave" data-role="leave" data-owner="p.1.0.2.0.0.1" d="M652 147.5 L716 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c13:p.1.0.2.0.0.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M652 147.5 L716 147.5" data-connector-key="17"/>
+    <path class="rr-connector rr-return" data-connector="c13:p.1.0.2.0.0.1:return" data-role="return" data-owner="p.1.0.2.0.0.1" d="M652 147.5 L676 147.5 Q684 147.5 684 155.5 L684 165 Q684 173 676 173 L592 173 Q584 173 584 165 L584 155.5 Q584 147.5 592 147.5 L616 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-u-72-65-67-65-78-2d-61-73-73-65-72-74-69-6f-6e-73-2d-64-61-72-6b-rr-return)" data-connector-id="c13:p.1.0.2.0.0.1:return" data-connector-source="" data-connector-target="" data-connector-route="M652 147.5 L676 147.5 Q684 147.5 684 155.5 L684 165 Q684 173 676 173 L592 173 Q584 173 584 165 L584 155.5 Q584 147.5 592 147.5 L616 147.5" data-connector-key="18"/>
+    <path class="rr-connector rr-enter" data-connector="c3:p.0:enter" data-role="enter" data-owner="p.0" d="M54 185 L64 185" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c3:p.0:enter" data-connector-source="" data-connector-target="" data-connector-route="M54 185 L64 185" data-connector-key="19"/>
+    <path class="rr-connector rr-leave" data-connector="c3:p.0:leave" data-role="leave" data-owner="p.0" d="M92 185 L156 185" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c3:p.0:leave" data-connector-source="" data-connector-target="" data-connector-route="M92 185 L156 185" data-connector-key="20"/>
+    <path class="rr-connector rr-enter" data-connector="c3:p.2:enter" data-role="enter" data-owner="p.2" d="M832 185 L842 185" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c3:p.2:enter" data-connector-source="" data-connector-target="" data-connector-route="M832 185 L842 185" data-connector-key="21"/>
+    <path class="rr-connector rr-leave" data-connector="c3:p.2:leave" data-role="leave" data-owner="p.2" d="M950 185 L995 185" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c3:p.2:leave" data-connector-source="" data-connector-target="" data-connector-route="M950 185 L995 185" data-connector-key="22"/>
+    <path class="rr-connector rr-end" data-connector="c16:regex-assertions:end" data-role="end" data-owner="regex-assertions" d="M999 147.5 L1019 147.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c16:regex-assertions:end" data-connector-source="" data-connector-target="" data-connector-route="M999 147.5 L1019 147.5" data-connector-key="23"/>
+  </g>
+  <g class="rr-terms">
+    <g class="rr-term rr-lookaround" data-term="p.0" data-role="assertion" data-rule="regex-assertions">
+      <rect class="rr-box" x="50" y="137.5" width="110" height="75" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="rr-label" x="105" y="148.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="105" y="148.5">lookahead ?=</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="p.0.0" data-role="consumed" data-rule="regex-assertions" data-constraint="true">
+      <rect class="rr-box" x="64" y="171.5" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="78" y="187.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="78" y="187.5">v</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="p.1.0.0" data-role="consumed" data-rule="regex-assertions">
+      <rect class="rr-box" x="194" y="134" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="208" y="150" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="208" y="150">v</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-class" data-term="p.1.0.1.0" data-role="consumed" data-rule="regex-assertions">
+      <rect class="rr-box" x="306" y="134" width="36" height="27" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="rr-label" x="324" y="150" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="324" y="150">\d</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-terminal" data-term="p.1.0.2.0.0.0" data-role="consumed" data-rule="regex-assertions">
+      <rect class="rr-box" x="504" y="134" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="518" y="150" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="518" y="150">.</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-class" data-term="p.1.0.2.0.0.1.0" data-role="consumed" data-rule="regex-assertions">
+      <rect class="rr-box" x="616" y="134" width="36" height="27" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="rr-label" x="634" y="150" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="634" y="150">\d</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-lookaround" data-term="p.2" data-role="assertion" data-rule="regex-assertions">
+      <rect class="rr-box" x="828" y="137.5" width="171" height="75" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="rr-label" x="913.5" y="148.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="913.5" y="148.5">negative lookahead ?!</tspan>
+      </text>
+    </g>
+    <g class="rr-term rr-class" data-term="p.2.0" data-role="consumed" data-rule="regex-assertions" data-constraint="true">
+      <rect class="rr-box" x="842" y="171.5" width="108" height="27" rx="6" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="rr-label" x="896" y="187.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="896" y="187.5">one of \w .</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="rr-tracks">
+    <g class="rr-track" data-rule="regex-assertions">
+      <text class="rr-rule-name" x="20" y="64" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
+        <tspan x="20" y="64">pattern</tspan>
+      </text>
+      <circle class="rr-start" cx="25" cy="147.5" r="5" fill="#94a3b8"/>
+      <circle class="rr-end" cx="1025" cy="147.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="1025" cy="147.5" r="3" fill="#94a3b8"/>
+    </g>
+  </g>
+</svg>

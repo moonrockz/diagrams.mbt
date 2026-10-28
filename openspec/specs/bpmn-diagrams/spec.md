@@ -80,7 +80,7 @@ an error diagnostic. It SHALL NOT be silently omitted or shown as another kind.
 
 Layout SHALL support prefer-supplied, require-supplied and automatic policies.
 Complete valid supplied geometry SHALL retain shape, label and waypoint
-coordinates. Prefer-supplied SHALL use a complete automatic layout with a warning
+coordinates. Supplied paths SHALL remain unstyled by default. Prefer-supplied SHALL use a complete automatic layout with a warning
 when geometry is absent or incomplete. Invalid supplied geometry SHALL give an
 error under supplied policies. Require-supplied SHALL fail when geometry is missing.
 
@@ -105,7 +105,8 @@ Automatic layout SHALL size labels by measured text and keep pools, lanes,
 subprocesses and attached events in their proper containment. It SHALL route
 connections to their actual endpoints and handle cycles, branches, joins,
 disconnected components and multiple edges. Equal inputs and options SHALL give
-equal geometry on all four targets, without an external layout service.
+equal geometry on all four targets, without an external layout service. Automatic connections SHALL follow the
+shared connector style, crossing and marker-clearance contract.
 
 #### Scenario: A cyclic process
 
@@ -116,6 +117,11 @@ equal geometry on all four targets, without an external layout service.
 
 - **WHEN** two pools contain nested lanes, long task labels and cross-pool message flows
 - **THEN** each node stays in its lane and each message reaches its declared pool or activity endpoint
+
+#### Scenario: Short final approach
+
+- **WHEN** an automatic BPMN return flow would turn too close to its arrowhead
+- **THEN** its route reserves the required straight marker approach in every direction without changing the endpoint
 
 ### Requirement: BPMN legibility findings
 
@@ -173,10 +179,25 @@ metadata. Caller-supplied ID prefixes SHALL isolate multiple inline diagrams.
 ### Requirement: Preserve existing sequence output
 
 Adding BPMN support SHALL preserve existing sequence model behavior and SVG bytes
-for equal existing inputs and options. The public API change from adding a BPMN
+for equal existing inputs and options except reviewed connector changes under
+the connector-rendering contract. The public API change from adding a BPMN
 diagram variant SHALL be documented for callers with exhaustive matches.
 
 #### Scenario: Existing sequence snapshots
 
 - **WHEN** the existing sequence corpus is rendered with its existing options after BPMN support is added
-- **THEN** all stored sequence SVG snapshots remain byte-identical on all four targets
+- **THEN** all sequence content and semantics remain unchanged, with deterministic reviewed updates limited to connector geometry and crossing treatment on all four targets
+
+### Requirement: Explicit display styling of supplied paths
+
+The renderer SHALL allow explicit connector styling of supplied BPMN paths.
+Source waypoints, shape bounds, semantic endpoints and the source document
+SHALL remain unchanged. Display geometry SHALL expose the styled path and the
+original points separately. Unsafe requested styling SHALL give a diagnostic
+without silently moving the supplied geometry.
+
+#### Scenario: Explicitly style supplied paths
+
+- **WHEN** a caller opts into curved lines or crossing bridges for a complete supplied plane
+- **THEN** display paths use the requested styling, source waypoints and shape bounds remain unchanged, and inspection retains the supplied points
+- **AND** an unsafe styled path gives a diagnostic without silently moving supplied shapes or waypoints

@@ -161,7 +161,16 @@ fn paint_bpmn(
   policy : @bpmn.GeometryPolicy,
   limits : @bpmn_layout.Limits,
   precomputed? : @bpmn_layout.Result,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
+  if !connector_options_valid(connectors) {
+    return @render.Rendered::failed("image/svg+xml", [
+      @diagrams.Diagnostic::error(
+        "connector/invalid-option", "Invalid connector options",
+      ),
+    ])
+  }
+  let limits = limits.with_minimum_approach(connectors.minimum_approach)
   let theme = @theme.Theme::{
     dark: @bpmn_layout.bpmn_palette(theme.dark),
     light: @bpmn_layout.bpmn_palette(theme.light),
@@ -288,6 +297,75 @@ fn paint_bpmn(
     ],
   )
   if c.failed {
+    return @render.Rendered::failed("image/svg+xml", diagnostics)
+  }
+  let obstacles : Array[ConnectorObstacle] = []
+  let labels : Array[(String, ConnectorObstacle)] = []
+  for shape in geometry.shapes {
+    if !bpmn_background(shape.node.kind, shape.node.expanded.unwrap_or(false)) {
+      let r = shape.box
+      obstacles.push({
+        owner: shape.node.id,
+        x: r.x,
+        y: r.y,
+        width: r.width,
+        height: r.height,
+      })
+    }
+    if shape.label is Some(label) {
+      let r = label.box
+      labels.push(
+        (
+          "",
+          {
+            owner: shape.node.id,
+            x: r.x,
+            y: r.y,
+            width: r.width,
+            height: r.height,
+          },
+        ),
+      )
+    }
+  }
+  for edge in geometry.connections {
+    if edge.label is Some(label) {
+      let r = label.box
+      labels.push(
+        (
+          "",
+          {
+            owner: edge.flow.id,
+            x: r.x,
+            y: r.y,
+            width: r.width,
+            height: r.height,
+          },
+        ),
+      )
+    }
+  }
+  let display_options = if geometry.source == Supplied &&
+    !connectors.style_supplied_bpmn {
+    ConnectorOptions::new(crossing=Plain, limits=connectors.limits)
+  } else {
+    connectors
+  }
+  guard finalize_connectors(
+      root,
+      display_options,
+      diagnostics,
+      obstacles=obstacles[:],
+      labels=labels[:],
+      viewport=(
+        -geometry.translate_x.to_double(),
+        -geometry.translate_y.to_double(),
+        geometry.width.to_double(),
+        geometry.height.to_double(),
+      ),
+      supplied=geometry.source == Supplied,
+    )
+    is Some(root) else {
     return @render.Rendered::failed("image/svg+xml", diagnostics)
   }
   guard bpmn_prefix(root, id_prefix, c) is Some(prefix) else {

@@ -1,0 +1,7 @@
+@startebnf
+title Command
+command = ("get" | "put"), name, [ "--force" ];
+name = letter, { letter | digit };
+letter = ? alphabetic ?;
+digit = ? decimal digit ?;
+@endebnf

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1286 824" width="1286" height="824" role="img" data-diagram="sequence" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1286 824" width="1286" height="824" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-diagram">
   <title>Checkout interaction</title>
   <desc>Sequence diagram with 7 participants (Customer, API, Worker, Functions, Analytics, Store, Cluster) and 8 messages.</desc>
   <defs>
@@ -380,56 +380,56 @@ SOFTWARE.
   </g>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="Customer" data-to="API" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M121 167 L294 167" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-0-end)"/>
+      <path class="m-line" d="M121 167 L294 167" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-0-end)" data-connector-id="0" data-connector-source="Customer" data-connector-target="API" data-connector-route="M121 167 L294 167" data-connector-key="0"/>
       <rect class="mask" x="165" y="140" width="84" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="207" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="207" y="155">checkout()</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="1" data-from="API" data-to="Worker" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M306 215 L473 215" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-1-end)"/>
+      <path class="m-line" d="M306 215 L473 215" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-1-end)" data-connector-id="1" data-connector-source="API" data-connector-target="Worker" data-connector-route="M306 215 L473 215" data-connector-key="1"/>
       <rect class="mask" x="352" y="188" width="77" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="390" y="203" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="390" y="203">process()</tspan>
       </text>
     </g>
     <g class="message f-messagebus" data-index="2" data-from="Store" data-to="Analytics" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M1005 263 L848 263" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-2-end)"/>
+      <path class="m-line" d="M1005 263 L848 263" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-2-end)" data-connector-id="2" data-connector-source="Store" data-connector-target="Analytics" data-connector-route="M1005 263 L848 263" data-connector-key="2"/>
       <rect class="mask" x="898" y="236" width="57" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="926" y="251" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--messagebus-ink)">
         <tspan x="926" y="251">record</tspan>
       </text>
     </g>
     <g class="message f-database" data-index="3" data-from="Functions" data-to="Cluster" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M662 311 L1169 311" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-3-end)"/>
+      <path class="m-line" d="M662 311 L1169 311" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-3-end)" data-connector-id="3" data-connector-source="Functions" data-connector-target="Cluster" data-connector-route="M662 311 L1169 311" data-connector-key="3"/>
       <rect class="mask" x="860" y="284" width="111" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="915" y="299" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="915" y="299">deploy request</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="4" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M308 402 L1005 402" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-4-end)"/>
+      <path class="m-line" d="M308 402 L1005 402" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-4-end)" data-connector-id="4" data-connector-source="API" data-connector-target="Store" data-connector-route="M308 402 L1005 402" data-connector-key="4"/>
       <rect class="mask" x="631" y="375" width="50" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="656" y="390" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="656" y="390">query</tspan>
       </text>
     </g>
     <g class="message f-messagebus" data-index="5" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M1005 509 L308 509" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-5-end)"/>
+      <path class="m-line" d="M1005 509 L308 509" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-5-end)" data-connector-id="5" data-connector-source="Store" data-connector-target="API" data-connector-route="M1005 509 L308 509" data-connector-key="5"/>
       <rect class="mask" x="628" y="482" width="57" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="656" y="497" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--messagebus-ink)">
         <tspan x="656" y="497">absent</tspan>
       </text>
     </g>
     <g class="message f-messagebus" data-index="6" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M1005 616 L308 616" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-6-end)"/>
+      <path class="m-line" d="M1005 616 L308 616" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-6-end)" data-connector-id="6" data-connector-source="Store" data-connector-target="API" data-connector-route="M1005 616 L308 616" data-connector-key="6"/>
       <rect class="mask" x="631" y="589" width="50" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="656" y="604" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--messagebus-ink)">
         <tspan x="656" y="604">retry</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="7" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
-      <path class="m-line" d="M308 723 L1005 723" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-7-end)"/>
+      <path class="m-line" d="M308 723 L1005 723" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-65-78-63-65-70-74-69-6f-6e-73-2d-61-64-61-70-74-69-76-65-head-7-end)" data-connector-id="7" data-connector-source="API" data-connector-target="Store" data-connector-route="M308 723 L1005 723" data-connector-key="7"/>
       <rect class="mask" x="631" y="696" width="50" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="656" y="711" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="656" y="711">close</tspan>

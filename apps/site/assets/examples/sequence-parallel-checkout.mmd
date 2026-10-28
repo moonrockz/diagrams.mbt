@@ -1,0 +1,18 @@
+sequenceDiagram
+actor Buyer
+participant Shop
+participant Stock
+participant Bank
+Buyer->>Shop: Checkout
+par Inventory
+Shop->>Stock: Reserve
+Stock-->>Shop: Available
+and Payment
+Shop->>Bank: Authorise
+Bank-->>Shop: Accepted
+end
+alt ready
+Shop-->>Buyer: Confirmed
+else unavailable
+Shop-->>Buyer: Retry later
+end

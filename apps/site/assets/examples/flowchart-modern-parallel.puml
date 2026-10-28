@@ -1,0 +1,16 @@
+@startuml
+title Parallel preparation
+start
+partition Preparation {
+repeat
+:Validate;
+repeat while (Retry?) is (yes) not (no)
+fork
+:Prepare stock;
+fork again
+:Prepare invoice;
+end fork
+}
+:Dispatch;
+stop
+@enduml

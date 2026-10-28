@@ -45,7 +45,8 @@ alternative. A reference SHALL not inline a recursive definition.
 Rendering SHALL return complete, deterministic, script-free SVG with adaptive
 and fixed dark/light modes, title and accessibility text. Labels SHALL be safe
 text. Resource IDs SHALL be scoped by an explicit prefix so inline copies
-remain independent. Existing SVG output for other kinds SHALL remain unchanged.
+remain independent. Existing SVG output for other kinds SHALL remain unchanged except reviewed
+connector changes under the connector-rendering contract.
 
 #### Scenario: Inline copies in different themes
 

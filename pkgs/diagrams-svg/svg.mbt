@@ -290,8 +290,21 @@ fn paint(
   mode : Mode,
   id_prefix : String?,
   geometry? : @layout.Geometry,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> (String, Array[@diagrams.Diagnostic]) {
-  let g = geometry.unwrap_or_else(() => @layout.layout(sequence))
+  if !connector_options_valid(connectors) {
+    return (
+      "",
+      [
+        @diagrams.Diagnostic::error(
+          "connector/invalid-option", "Invalid connector options",
+        ),
+      ],
+    )
+  }
+  let g = geometry.unwrap_or_else(() => {
+    @layout.layout(sequence, minimum_approach=connectors.minimum_approach)
+  })
   let p = Paint::{ theme, mode, }
   let diagnostics : Array[@diagrams.Diagnostic] = []
   let defs : Array[@writer.Node] = []
@@ -636,6 +649,88 @@ fn paint(
       ),
     ],
   )
+  let obstacles : Array[ConnectorObstacle] = []
+  let labels : Array[(String, ConnectorObstacle)] = []
+  for participant in g.participants {
+    let r = participant.box
+    obstacles.push({
+      owner: participant.id,
+      x: r.x.to_double(),
+      y: r.y.to_double(),
+      width: r.width.to_double(),
+      height: r.height.to_double(),
+    })
+  }
+  for note in g.notes {
+    let r = note.box
+    labels.push(
+      (
+        "",
+        {
+          owner: "note",
+          x: r.x.to_double(),
+          y: r.y.to_double(),
+          width: r.width.to_double(),
+          height: r.height.to_double(),
+        },
+      ),
+    )
+  }
+  for message in g.messages {
+    let r = message.chip
+    labels.push(
+      (
+        message.index.to_string(),
+        {
+          owner: message.index.to_string(),
+          x: r.x.to_double(),
+          y: r.y.to_double(),
+          width: r.width.to_double(),
+          height: r.height.to_double(),
+        },
+      ),
+    )
+  }
+  fn header(owner : String, r : @layout.Rect) -> Unit {
+    labels.push(
+      (
+        "",
+        {
+          owner,
+          x: r.x.to_double(),
+          y: r.y.to_double(),
+          width: r.width.to_double(),
+          height: r.height.to_double(),
+        },
+      ),
+    )
+  }
+  for group in g.groups {
+    header("group", group.chip)
+  }
+  for frame in g.frames {
+    if frame.chip is Some(chip) {
+      header("frame", chip)
+    }
+    for section in frame.sections {
+      if section.chip is Some(chip) {
+        header("section", chip)
+      }
+    }
+  }
+  if g.title_box is Some(box) {
+    header("title", box)
+  }
+  guard finalize_connectors(
+      root,
+      connectors,
+      diagnostics,
+      obstacles=obstacles[:],
+      labels=labels[:],
+    )
+    is Some(root) else {
+    return ("", diagnostics)
+  }
   let palettes = match mode {
     Adaptive => [("dark", theme.dark), ("light", theme.light)]
     Fixed(Dark) => [("dark", theme.dark)]
@@ -678,8 +773,9 @@ pub fn render_sequence(
   theme~ : @theme.Theme = @theme.Theme::classic(),
   mode~ : Mode = Adaptive,
   id_prefix? : String,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> String {
-  paint(sequence, theme, mode, id_prefix).0
+  paint(sequence, theme, mode, id_prefix, connectors~).0
 }
 
 ///|
@@ -697,6 +793,7 @@ pub struct SvgRenderer {
   data_tree_limits : @data_tree_layout.Limits
   /// Supplied trace evidence for regex and EBNF static highlights. It is part
   /// of canonical output; no provider is invoked.
+  connectors : ConnectorOptions
   trace : TraceHighlight?
 }
 
@@ -713,6 +810,7 @@ pub fn SvgRenderer::new(
   railroad_limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   data_tree_limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
   trace? : TraceHighlight,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> SvgRenderer {
   {
     theme,
@@ -726,15 +824,33 @@ pub fn SvgRenderer::new(
     railroad_limits,
     data_tree_limits,
     trace,
+    connectors,
   }
 }
 
 ///|
 pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
+  if !connector_options_valid(self.connectors) {
+    return @render.Rendered::failed("image/svg+xml", [
+      @diagrams.Diagnostic::error(
+        "connector/invalid-option", "Invalid connector options",
+      ),
+    ])
+  }
   match diagram {
     Sequence(s) => {
-      let (svg, diagnostics) = paint(s, self.theme, self.mode, self.id_prefix)
-      @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
+      let (svg, diagnostics) = paint(
+        s,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        connectors=self.connectors,
+      )
+      if diagnostics.iter().any(d => d.severity == Error) {
+        @render.Rendered::failed("image/svg+xml", diagnostics)
+      } else {
+        @render.Rendered::ok(svg, "image/svg+xml", diagnostics~)
+      }
     }
     Bpmn(b) =>
       paint_bpmn(
@@ -744,6 +860,7 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.id_prefix,
         self.bpmn_policy,
         self.bpmn_limits,
+        connectors=self.connectors,
       )
     Architecture(a) =>
       paint_architecture(
@@ -752,6 +869,7 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.mode,
         self.id_prefix,
         self.architecture_limits,
+        connectors=self.connectors,
       )
     Swimlane(s) =>
       paint_swimlane(
@@ -760,8 +878,17 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.mode,
         self.id_prefix,
         self.swimlane_limits,
+        connectors=self.connectors,
       )
-    Flowchart(view) => paint_flowchart(view, self.theme, self.mode, self.id_prefix, self.flowchart_limits)
+    Flowchart(view) =>
+      paint_flowchart(
+        view,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.flowchart_limits,
+        connectors=self.connectors,
+      )
     Regex(_) | Ebnf(_) => paint_railroad(diagram, self).rendered
     DataTree(tree) =>
       if self.trace is Some(_) {
@@ -773,6 +900,7 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
           self.mode,
           self.id_prefix,
           self.data_tree_limits,
+          connectors=self.connectors,
         )
       }
   }

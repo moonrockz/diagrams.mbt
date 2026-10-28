@@ -99,9 +99,9 @@ fabricated connection. Canonical static SVG SHALL exclude player state.
 
 Layout, checking and SVG writing SHALL obey explicit node, edge, depth, work,
 dimension and output limits. Exhaustion SHALL return a distinct diagnostic
-without partial successful output. Existing diagram models, public layout
-contracts and static SVG bytes SHALL remain unchanged for unchanged inputs and
-options.
+without partial successful output. Existing diagram models and public layout
+contracts SHALL remain unchanged. Static SVG bytes SHALL remain unchanged except
+reviewed connector changes under the connector-rendering contract.
 
 #### Scenario: Routing budget exhausted
 
@@ -111,4 +111,4 @@ options.
 #### Scenario: Existing static corpus
 
 - **WHEN** existing sequence, BPMN, swimlane, architecture, railroad and data-tree snapshots run
-- **THEN** their static SVG bytes remain unchanged on all four targets
+- **THEN** their content and semantics remain unchanged on all four targets, with reviewed deterministic updates limited to connector geometry and crossing treatment

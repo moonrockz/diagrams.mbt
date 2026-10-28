@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 400" width="768" height="400" role="img" data-diagram="flowchart" data-connector-options="{&#xa;  style: Some(Rounded),&#xa;  crossing: Plain,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-diagram">
+  <title>connector-crossing</title>
+  <desc>Flowchart with 5 nodes and 7 structural connections. Playback illustrates structure and does not execute a workflow.</desc>
+  <defs>
+    <marker id="sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="768" height="400" fill="#f4f5f7"/>
+  <g class="flowchart-backgrounds"/>
+  <g class="flowchart-connections">
+    <g class="flowchart-connection" data-flowchart-id="L_A_C_0" data-source="A" data-target="C" data-display-source="A" data-display-target="C">
+      <path class="flowchart-connector" d="M192 112 L352 112" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_A_C_0" data-connector-source="A" data-connector-target="C" data-connector-route="M192 112 L352 112" data-connector-key="0"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_B_D_0" data-source="B" data-target="D" data-display-source="B" data-display-target="D">
+      <path class="flowchart-connector" d="M192 336 L352 336" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_B_D_0" data-connector-source="B" data-connector-target="D" data-connector-route="M192 336 L352 336" data-connector-key="1"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_A_D_0" data-source="A" data-target="D" data-display-source="A" data-display-target="D">
+      <path class="flowchart-connector" d="M136 144 L136 168 Q136 176 144 176 L264 176 Q272 176 272 184 L272 264 Q272 272 280 272 L400 272 Q408 272 408 280 L408 304" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_A_D_0" data-connector-source="A" data-connector-target="D" data-connector-route="M136 144 L136 176 L272 176 L272 272 L408 272 L408 304" data-connector-key="2"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_B_C_0" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path class="flowchart-connector" d="M136 304 L136 232 Q136 224 144 224 L400 224 Q408 224 408 216 L408 144" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_B_C_0" data-connector-source="B" data-connector-target="C" data-connector-route="M136 304 L136 224 L408 224 L408 144" data-connector-key="3"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_C_E_0" data-source="C" data-target="E" data-display-source="C" data-display-target="E">
+      <path class="flowchart-connector" d="M464 112 L584 112 Q592 112 592 104 L592 96 Q592 88 600 88 L624 88" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_C_E_0" data-connector-source="C" data-connector-target="E" data-connector-route="M464 112 L592 112 L592 88 L624 88" data-connector-key="4"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_D_E_0" data-source="D" data-target="E" data-display-source="D" data-display-target="E">
+      <path class="flowchart-connector" d="M464 336 L576 336 Q584 336 584 328 L584 144 Q584 136 592 136 L624 136" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_D_E_0" data-connector-source="D" data-connector-target="E" data-connector-route="M464 336 L584 336 L584 136 L624 136" data-connector-key="5"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_E_A_0" data-source="E" data-target="A" data-display-source="E" data-display-target="A">
+      <path class="flowchart-connector" d="M680 80 L680 56 Q680 48 672 48 L144 48 Q136 48 136 56 L136 80" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-63-6f-6e-6e-65-63-74-6f-72-2d-72-6f-75-6e-64-65-64-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_E_A_0" data-connector-source="E" data-connector-target="A" data-connector-route="M680 80 L680 48 L136 48 L136 80" data-connector-key="6"/>
+    </g>
+  </g>
+  <g class="flowchart-nodes">
+    <g class="flowchart-node" data-flowchart-id="A" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M80 80 L192 80 L192 144 L80 144 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="A" x="136" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="136" y="116.5">Input A</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="C" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="352" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M352 80 L464 80 L464 144 L352 144 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="C" x="408" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="408" y="116.5">Output C</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="B" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="304" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M80 304 L192 304 L192 368 L80 368 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="B" x="136" y="340.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="136" y="340.5">Input B</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="D" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="352" y="304" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M352 304 L464 304 L464 368 L352 368 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="D" x="408" y="340.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="408" y="340.5">Output D</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="E" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="624" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M624 80 L736 80 L736 144 L624 144 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="E" x="680" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="680" y="116.5">After C</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,4 @@
+@startjson
+title API response
+{"ok":true,"data":{"id":42,"name":"Ada"},"page":{"next":null,"count":1}}
+@endjson

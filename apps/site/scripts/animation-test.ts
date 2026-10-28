@@ -47,6 +47,9 @@ async function expectSamples(page: Page, samples: Sample[]) {
       for (const group of root.querySelectorAll<SVGGElement>('.motion-overlay')) {
         const binding = config.paths.find((binding: { key: string }) => binding.key === group.dataset.key);
         const path = paths.get(binding.id)!;
+        for (const name of ['mask', 'clip-path']) {
+          if (group.getAttribute(name) !== path.getAttribute(name)) throw new Error('Motion overlay loses crossing separation');
+        }
         const dot = group.querySelector('circle')!;
         const p = path.getPointAtLength(path.getTotalLength() * (group.dataset.reversed === 'true' ? 1 - Number(group.dataset.progress) : Number(group.dataset.progress)));
         const actual = new DOMPoint(Number(dot.getAttribute('cx')), Number(dot.getAttribute('cy'))).matrixTransform(dot.getScreenCTM()!);
@@ -346,6 +349,64 @@ try {
   assert.equal(await reducedRailroad.locator('[data-diagram-viewer]').getAttribute('data-playing'), 'false');
   assert.ok(await position(reducedRailroad) > 0, 'reduced motion steps instead of playing');
   await reducedRailroad.close();
+  const styled = JSON.parse(await readFile('tests/animation-acceptance/__snapshot__/connectors.json', 'utf8')) as [string, string, string, string][];
+  assert.equal(styled.length, 30, 'all eight diagram kinds in each connector style and the six crossing comparisons');
+  for (const [name, style, canonical, html] of styled) {
+    for (const preference of ['light', 'dark'] as const) {
+      const view = await page(html, preference);
+      assert.equal(await view.locator('.motion-overlay').count(), 0, `${name}/${style} starts still`);
+      await view.locator('[data-diagram-viewer]').evaluate(root => {
+        const data = JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!);
+        const svg = root.querySelector('svg')!;
+        const visible = [...svg.querySelectorAll<SVGPathElement>('path[data-connector-route]')];
+        for (const binding of data.paths) {
+          const motion = svg.querySelector<SVGPathElement>(`#${CSS.escape(binding.id)}`)!;
+          if (!visible.some(path => path.getAttribute('d') === motion.getAttribute('d') && path.getAttribute('mask') === motion.getAttribute('mask'))) throw new Error('Styled motion differs from final canonical connector');
+        }
+      });
+      const samples: string[][] = [];
+      for (const time of [250, 750, 1250, 1750, 2250]) {
+        await seek(view, time);
+        assert.equal(await view.locator('.motion-overlay').count(), 1);
+        await view.locator('[data-diagram-viewer]').evaluate(root => {
+          const data = JSON.parse(root.querySelector('script[data-motion-data]')!.textContent!);
+          const overlay = root.querySelector<SVGGElement>('.motion-overlay')!;
+          const binding = data.paths.find((p: { key: string }) => p.key === overlay.dataset.key);
+          const path = root.querySelector<SVGPathElement>(`#${CSS.escape(binding.id)}`)!;
+          const progress = Number(overlay.dataset.progress);
+          const expected = path.getPointAtLength(path.getTotalLength() * (overlay.dataset.reversed === 'true' ? 1 - progress : progress));
+          const dot = overlay.querySelector('circle')!;
+          if (Math.abs(Number(dot.getAttribute('cx')) - expected.x) > .1 || Math.abs(Number(dot.getAttribute('cy')) - expected.y) > .1) throw new Error('Styled forward/reverse motion leaves its path');
+          if (overlay.querySelector('path')!.getAttribute('d') !== path.getAttribute('d')) throw new Error('Progress path differs from canonical geometry');
+          const dashOffset = Number(overlay.querySelector('path')!.getAttribute('stroke-dashoffset'));
+          const expectedOffset = (overlay.dataset.reversed === 'true' ? 1 : -1) * path.getTotalLength() * progress;
+          if (Math.abs(dashOffset - expectedOffset) > .1) throw new Error('Progress dash moves against the resolved traversal direction');
+          if (overlay.getAttribute('mask') !== path.getAttribute('mask')) throw new Error('Styled underpass mask lost');
+        });
+        samples.push(await view.locator('.motion-overlay circle').evaluate(dot => [dot.getAttribute('cx')!, dot.getAttribute('cy')!]));
+      }
+      assert.notDeepEqual(samples[0], samples[1], `${name}/${style} token moves`);
+      assert.deepEqual(samples[0], samples[3], 'reverse traversal returns through the same point');
+      assert.deepEqual(samples[1], samples[2], 'reverse traversal follows the visible path');
+      assert.deepEqual(samples[0], samples[4], 'repeated occurrence retains geometry');
+      assert.equal(await view.locator('.motion-overlay').getAttribute('data-ordinal'), '2', 'repeated occurrence keeps its ordinal');
+      await view.locator('[data-control="speed"]').selectOption('2');
+      const before = await position(view);
+      const key = await view.locator('.motion-overlay').getAttribute('data-key');
+      const pending = view.waitForEvent('download');
+      await view.getByRole('button', { name: 'Download SVG', exact: true }).click();
+      const stream = await (await pending).createReadStream(), chunks: Buffer[] = [];
+      for await (const chunk of stream!) chunks.push(Buffer.from(chunk));
+      assert.equal(Buffer.concat(chunks).toString('utf8'), canonical, `${name}/${style} exact canonical export`);
+      assert.equal(await position(view), before);
+      assert.equal(await view.locator('.motion-overlay').getAttribute('data-key'), key);
+      assert.equal(await view.locator('[data-control="speed"]').inputValue(), '2');
+      await view.emulateMedia({ media: 'print' });
+      assert.ok(await view.locator('.motion-overlay').evaluateAll(nodes => nodes.every(node => getComputedStyle(node).display === 'none')));
+      await view.close();
+    }
+  }
+  console.log(`Verified ${styled.length} styled players in both preferences, with final-path identity, forward/reverse/repeated motion, masks, print and exact state-preserving exports.`);
   console.log(`Verified ${plantumlPlayers.length} PlantUML players in both preferences, including canonical/display identity, term and row visits, connector paths, export during a visit, trace preservation and print.`);
   assert.deepEqual(requests, [], 'standalone artifacts stay offline'); assert.deepEqual(errors, [], 'standalone artifacts have no browser errors');
   console.log(`Verified ${sequenceScenes.length + bpmnScenes.length} canonical/display scene pairs and ${players.length} offline players in both preferences, including pure samples, paths, controls, exploration, print and exact SVG downloads.`);

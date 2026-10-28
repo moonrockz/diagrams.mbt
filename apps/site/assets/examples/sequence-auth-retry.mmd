@@ -1,0 +1,14 @@
+sequenceDiagram
+actor User
+participant API
+participant Auth
+User->>API: Sign in
+loop Up to three attempts
+API->>Auth: Verify credentials
+alt accepted
+Auth-->>API: Session
+else rejected
+Auth-->>API: Retry
+end
+end
+API-->>User: Result

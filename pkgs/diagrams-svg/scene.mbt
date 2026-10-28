@@ -3,6 +3,8 @@ pub struct PathBinding {
   occurrence : @animation.Occurrence
   id : String
   path : String
+  /// The scoped underpass mask of the canonical connector, if any.
+  mask : String?
 }
 
 ///|
@@ -203,6 +205,11 @@ pub fn SvgRenderer::scene(
       "animation/scene-limit", "Scene output limit must be positive",
     )
   }
+  if !connector_options_valid(self.connectors) {
+    return failed(
+      "connector/invalid-option", "Connector distances, radii and budgets must be valid",
+    )
+  }
   let catalog_result = match diagram {
     Architecture(view) => @animation.Catalog::architecture(view, limits~)
     Swimlane(view) => @animation.Catalog::swimlane(view, limits~)
@@ -223,7 +230,9 @@ pub fn SvgRenderer::scene(
     Architecture(view) => {
       let result = @architecture_layout.layout(
         view,
-        limits=self.architecture_limits,
+        limits=self.architecture_limits.with_minimum_approach(
+          self.connectors.minimum_approach,
+        ),
       )
       guard result.geometry is Some(geometry) else {
         return { scene: None, diagnostics: result.diagnostics, }
@@ -234,6 +243,7 @@ pub fn SvgRenderer::scene(
         self.mode,
         self.id_prefix,
         self.architecture_limits,
+        connectors=self.connectors,
         geometry~,
       )
       if rendered.output == None {
@@ -264,40 +274,83 @@ pub fn SvgRenderer::scene(
       (rendered, false)
     }
     Flowchart(view) => {
-      let result=@flowchart_layout.layout(view,limits=self.flowchart_limits)
-      guard result.geometry is Some(geometry) else { return {scene:None,diagnostics:result.diagnostics} }
-      let rendered=paint_flowchart(view,self.theme,self.mode,self.id_prefix,self.flowchart_limits,geometry~)
-      if rendered.output == None { return {scene:None,diagnostics:rendered.diagnostics} }
-      let edges=Map([])
-      for edge in geometry.connections { edges[edge.connection.id]=edge }
-      for occurrence in catalog.occurrences {
-        if occurrence.is_visit() { continue }
-        guard occurrence.kind is Flowchart(connection) && edges.get(connection.id) is Some(edge) else { return failed("animation/binding-mismatch","A flowchart connection has no visible rendered path") }
-        let path=flowchart_path(edge)
-        if path.length() > output_units { return failed("animation/scene-limit","Flowchart scene path exceeds output limit") }
-        paths.push((occurrence,path))
+      let result = @flowchart_layout.layout(
+        view,
+        limits=self.flowchart_limits.with_minimum_approach(
+          self.connectors.minimum_approach,
+        ),
+      )
+      guard result.geometry is Some(geometry) else {
+        return { scene: None, diagnostics: result.diagnostics, }
       }
-      let visible=Map(geometry.shapes.map(shape => (shape.id,true)))
+      let rendered = paint_flowchart(
+        view,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.flowchart_limits,
+        connectors=self.connectors,
+        geometry~,
+      )
+      if rendered.output == None {
+        return { scene: None, diagnostics: rendered.diagnostics, }
+      }
+      let edges = Map([])
+      for edge in geometry.connections {
+        edges[edge.connection.id] = edge
+      }
+      for occurrence in catalog.occurrences {
+        if occurrence.is_visit() {
+          continue
+        }
+        guard occurrence.kind is Flowchart(connection) &&
+          edges.get(connection.id) is Some(edge) else {
+          return failed(
+            "animation/binding-mismatch", "A flowchart connection has no visible rendered path",
+          )
+        }
+        let path = flowchart_path(edge)
+        if path.length() > output_units {
+          return failed(
+            "animation/scene-limit", "Flowchart scene path exceeds output limit",
+          )
+        }
+        paths.push((occurrence, path))
+      }
+      let visible = Map(geometry.shapes.map(shape => (shape.id, true)))
       for node in catalog.graph.nodes {
-        let anchor=match node.kind {
-          FlowchartRegion(_,anchor) => if visible.contains(anchor) { Some(anchor) } else { None }
+        let anchor = match node.kind {
+          FlowchartRegion(_, anchor) =>
+            if visible.contains(anchor) {
+              Some(anchor)
+            } else {
+              None
+            }
           _ => Some(node.id)
         }
         if anchor is Some(id) {
-          nodes.push({endpoint:node.id,kind:Flowchart(id)})
-          if node.occurrence is Some(key) { nodes.push({endpoint:key,kind:Flowchart(id)}) }
+          nodes.push({ endpoint: node.id, kind: Flowchart(id), })
+          if node.occurrence is Some(key) {
+            nodes.push({ endpoint: key, kind: Flowchart(id), })
+          }
         }
       }
-      (rendered,false)
+      (rendered, false)
     }
     Swimlane(view) => {
-      let geometry = @swimlane_layout.layout(view, limits=self.swimlane_limits)
+      let geometry = @swimlane_layout.layout(
+        view,
+        limits=self.swimlane_limits.with_minimum_approach(
+          self.connectors.minimum_approach,
+        ),
+      )
       let rendered = paint_swimlane(
         view,
         self.theme,
         self.mode,
         self.id_prefix,
         self.swimlane_limits,
+        connectors=self.connectors,
         precomputed=geometry,
       )
       guard geometry.geometry is Some(geometry) && rendered.output is Some(_) else {
@@ -331,7 +384,9 @@ pub fn SvgRenderer::scene(
       let geometry = @bpmn_layout.layout(
         view,
         policy=self.bpmn_policy,
-        limits=self.bpmn_limits,
+        limits=self.bpmn_limits.with_minimum_approach(
+          self.connectors.minimum_approach,
+        ),
       )
       let rendered = paint_bpmn(
         view,
@@ -340,6 +395,7 @@ pub fn SvgRenderer::scene(
         self.id_prefix,
         self.bpmn_policy,
         self.bpmn_limits,
+        connectors=self.connectors,
         precomputed=geometry,
       )
       guard geometry.geometry is Some(geometry) && rendered.output is Some(_) else {
@@ -375,14 +431,24 @@ pub fn SvgRenderer::scene(
           "animation/scene-limit", "Sequence scene input exceeds its node/text work bound",
         )
       }
-      let geometry = @layout.layout(sequence)
+      let geometry = @layout.layout(
+        sequence,
+        minimum_approach=self.connectors.minimum_approach,
+      )
       let (svg, diagnostics) = paint(
         sequence,
         self.theme,
         self.mode,
         self.id_prefix,
+        connectors=self.connectors,
         geometry~,
       )
+      if diagnostics.iter().any(d => d.severity == Error) {
+        return {
+          scene: None,
+          diagnostics: ReadOnlyArray::from_array(diagnostics),
+        }
+      }
       let messages = Map([])
       for message in geometry.messages {
         messages[message.index] = message
@@ -425,21 +491,57 @@ pub fn SvgRenderer::scene(
     }
   }
   let canonical = rendered.output.unwrap()
+  if canonical.length() > output_units {
+    return failed(
+      "animation/scene-limit", "Canonical SVG exceeds the scene output limit",
+    )
+  }
+  // Route strings identify the measured geometry. The finalizer's paths and
+  // masks are the sole source of display geometry for motion. Repeated equal
+  // routes are consumed in paint order, retaining parallel-edge occurrences.
+  let final_paths : Map[String, Array[(String, String?)]] = Map([])
+  for (route, path, mask) in final_connector_bindings(canonical) {
+    if final_paths.get(route) is Some(entries) {
+      entries.push((path, mask))
+    } else {
+      final_paths[route] = [(path, mask)]
+    }
+  }
+  let used_paths : Map[String, Int32] = Map([])
   let prefix = scene_prefix(canonical)
   let bindings : Array[PathBinding] = []
   let elements = []
   let mut units = canonical.length()
-  for i, (occurrence, path) in paths {
+  for i, (occurrence, route) in paths {
+    let used = used_paths.get(route).unwrap_or(0)
+    let (path, mask) = match
+      final_paths.get(route).bind(entries => entries.get(used)) {
+      Some(binding) => {
+        used_paths[route] = used + 1
+        binding
+      }
+      None =>
+        return failed(
+          "animation/binding-mismatch", "A measured route has no final canonical connector path",
+        )
+    }
     let id = prefix + i.to_string()
-    let element = @writer.element("path", attrs=[
+    let attrs = [
       ("id", id),
       ("d", path),
       ("fill", "none"),
       ("stroke", "none"),
       ("pointer-events", "none"),
       ("aria-hidden", "true"),
-    ])
-    let size = path.length() + id.length() + 256
+    ]
+    if mask is Some(value) {
+      attrs.push(("mask", value))
+    }
+    let element = @writer.element("path", attrs~)
+    let size = path.length() +
+      id.length() +
+      mask.map(m => m.length()).unwrap_or(0) +
+      256
     if size > output_units - units {
       return failed(
         "animation/scene-limit", "Scene bindings exceed their output limit",
@@ -447,7 +549,7 @@ pub fn SvgRenderer::scene(
     }
     units += size
     elements.push(element)
-    bindings.push({ occurrence, id, path, })
+    bindings.push({ occurrence, id, path, mask, })
   }
   let extra = @writer.to_string(
     @writer.element(

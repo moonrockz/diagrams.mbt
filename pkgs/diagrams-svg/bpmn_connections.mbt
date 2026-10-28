@@ -94,6 +94,7 @@ fn BpmnPaint::connection(
     attrs.push(("data-condition", condition))
   }
   let line_attrs = [
+    ("class", "bpmn-connector"),
     ("d", d),
     ("fill", "none"),
     ("stroke", stroke),

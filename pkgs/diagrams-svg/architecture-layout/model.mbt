@@ -6,6 +6,7 @@ pub struct Limits {
   work : Int32
   coordinate : Int32
   output_units : Int32
+  minimum_approach : Double
 } derive(Eq, Debug)
 
 ///|
@@ -16,8 +17,9 @@ pub fn Limits::new(
   work~ : Int32 = 1000000,
   coordinate~ : Int32 = 10000000,
   output_units~ : Int32 = 16777216,
+  minimum_approach~ : Double = 24.0,
 ) -> Limits {
-  { nodes, edges, depth, work, coordinate, output_units, }
+  { minimum_approach, nodes, edges, depth, work, coordinate, output_units, }
 }
 
 ///|
@@ -159,3 +161,12 @@ pub extend Finding with Eq::{equal, not_equal}
 
 ///|
 pub extend Finding with @debug.Debug::{to_repr}
+
+///|
+/// Retain resource limits while selecting the marked terminal reservation.
+pub fn Limits::with_minimum_approach(
+  self : Limits,
+  minimum_approach : Double,
+) -> Limits {
+  { ..self, minimum_approach, }
+}

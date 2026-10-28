@@ -1,14 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 539" width="406" height="539" role="img" data-diagram="sequence" id="seq-20e96aacbf5b97ab-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 406 539" width="406" height="539" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-6cdf14b0c5787376-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (Service, DB) and 3 messages.</desc>
   <defs>
-    <marker id="seq-20e96aacbf5b97ab-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-6cdf14b0c5787376-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#94a3b8" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-20e96aacbf5b97ab-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-6cdf14b0c5787376-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#94a3b8" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-20e96aacbf5b97ab-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-6cdf14b0c5787376-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#94a3b8" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -24,21 +24,21 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-external" data-index="0" data-from="Service" data-to="DB" data-sender-head="none" data-receiver-head="open">
-      <path class="m-line" d="M103 170 L297 170" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-20e96aacbf5b97ab-head-0-end)"/>
+      <path class="m-line" d="M103 170 L297 170" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-6cdf14b0c5787376-head-0-end)" data-connector-id="0" data-connector-source="Service" data-connector-target="DB" data-connector-route="M103 170 L297 170" data-connector-key="0"/>
       <rect class="mask" x="168" y="143" width="64" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="200" y="158" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
         <tspan x="200" y="158">connect</tspan>
       </text>
     </g>
     <g class="message f-external" data-index="1" data-from="Service" data-to="Service" data-sender-head="none" data-receiver-head="open">
-      <path class="m-line" d="M103 277 L197 277 L197 305 L103 305" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-20e96aacbf5b97ab-head-1-end)"/>
+      <path class="m-line" d="M103 277 L197 277 L197 305 L103 305" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-6cdf14b0c5787376-head-1-end)" data-connector-id="1" data-connector-source="Service" data-connector-target="Service" data-connector-route="M103 277 L197 277 L197 305 L103 305" data-connector-key="1"/>
       <rect class="mask" x="112" y="250" width="77" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="150" y="265" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
         <tspan x="150" y="265">Log error</tspan>
       </text>
     </g>
     <g class="message f-external" data-index="2" data-from="Service" data-to="Service" data-sender-head="none" data-receiver-head="open">
-      <path class="m-line" d="M103 411 L265 411 L265 439 L103 439" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-20e96aacbf5b97ab-head-2-end)"/>
+      <path class="m-line" d="M103 411 L265 411 L265 439 L103 439" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-6cdf14b0c5787376-head-2-end)" data-connector-id="2" data-connector-source="Service" data-connector-target="Service" data-connector-route="M103 411 L265 411 L265 439 L103 439" data-connector-key="2"/>
       <rect class="mask" x="112" y="384" width="145" height="23" rx="3" fill="#0f172a"/>
       <text class="m-label" x="184" y="399" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
         <tspan x="184" y="399">Log different error</tspan>

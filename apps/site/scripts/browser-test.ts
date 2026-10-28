@@ -3,6 +3,8 @@
 // SITE_ORIGIN and the base path of the tree in SITE_BASE, and runs this file with the pinned Node.
 // The checks cover client code that no other test runs: the islands and the Rabbita link capture.
 import { chromium, type Page } from 'playwright';
+import { readFile } from 'node:fs/promises';
+const galleryInventory = JSON.parse(await readFile('site/gallery.json', 'utf8')).entries as { id: string; family: string }[];
 
 const origin = process.env.SITE_ORIGIN ?? 'http://127.0.0.1:4174';
 const base = process.env.SITE_BASE ?? '/diagrams.mbt/';
@@ -167,13 +169,7 @@ try {
   check(landingText.includes('General PlantUML diagrams, Draw.io and Graphviz DOT are planned'), 'landing labels planned formats');
   check(landingText.includes('does not execute a process or simulate BPMN tokens'), 'landing states BPMN limits');
   check(landingText.includes('evidence supplied by an external engine'), 'landing states trace evidence provenance');
-  const examples = [
-    ['sequence-basic', 'sequence'], ['zenuml-symbols', 'ZenUML'], ['architecture-cloud', 'architecture'],
-    ['bpmn-process', 'BPMN'], ['bpmn-collaboration', 'BPMN'], ['swimlane-review', 'swimlane'],
-    ['regex-date', 'regex'], ['regex-evidence', 'regex'], ['ebnf-arithmetic', 'EBNF'],
-    ['ebnf-evidence', 'EBNF'], ['json-order', 'JSON'], ['yaml-service', 'YAML'],
-    ['flowchart-mermaid-review','flowchart'], ['flowchart-plantuml-modern','flowchart'], ['flowchart-plantuml-legacy','flowchart'],
-  ];
+  const examples = galleryInventory.map(entry => [entry.id, entry.family]);
   await page.goto(`${site}gallery/`);
   check((await page.locator('#content a[href^="#"]').count()) >= 9, 'gallery has family navigation');
   for (const [id, family] of examples) {
@@ -254,18 +250,18 @@ try {
       check(JSON.stringify(palette) === JSON.stringify(expected), `${colorScheme} shared Smithy palette on ${route || 'landing'}`);
     }
     const cards = specimen.locator('.gallery-card:visible');
-    check(await cards.count() === 15, `${colorScheme}: original 12 plus three flowchart preview cards`);
+    check(await cards.count() === examples.length, `${colorScheme}: all qualified gallery preview cards`);
     await specimen.getByRole('link', { name: 'BPMN', exact: true }).click();
-    check(await cards.count() === 2, `${colorScheme}: family filter selects two BPMN examples`);
+    check(await cards.count() === examples.filter(([,family]) => family === 'BPMN').length, `${colorScheme}: family filter selects all BPMN examples`);
     const filter = specimen.getByRole('searchbox', { name: 'Filter examples', exact: true });
-    await filter.fill('collaboration');
+    await filter.fill('Collaboration and message flows');
     check(await cards.count() === 1, `${colorScheme}: family and text filters combine`);
     check(await filter.evaluate(node => node === document.activeElement), `${colorScheme}: filtering retains focus`);
     await filter.fill('no-such-diagram-example');
     check(await cards.count() === 0, `${colorScheme}: empty results hide cards`);
     check(await specimen.getByText('No examples match these filters.', { exact: true }).isVisible(), `${colorScheme}: empty state visible`);
     await specimen.getByRole('button', { name: 'Reset filters', exact: true }).first().click();
-    check(await cards.count() === 15, `${colorScheme}: reset restores all examples`);
+    check(await cards.count() === examples.length, `${colorScheme}: reset restores all examples`);
 
     await specimen.goto(`${site}gallery/sequence-basic/`);
     const tabs = specimen.getByRole('tablist', { name: 'Example inspection' });

@@ -1,0 +1,15 @@
+swimlane-beta TB
+subgraph Operations [Operations]
+A[Receive]
+subgraph Reviewers [Reviewers]
+B[Check]
+C[Approve]
+end
+end
+subgraph Delivery [Delivery]
+D[Deliver]
+end
+A --> B
+B --> C
+C --> D
+C -->|revise| A

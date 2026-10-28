@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 336 632" width="336" height="632" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-diagram">
+  <title>Safe storage request</title>
+  <desc>Sequence diagram with 2 participants (API, Store) and 4 messages.</desc>
+  <defs>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#22d3ee" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0" fill="none" stroke="#22d3ee" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="336" height="632" rx="0" fill="#020617"/>
+  <g class="bands">
+    <rect class="band-mask" x="32" y="140" width="272" height="432" rx="6" fill="#020617"/>
+    <rect class="frame" x="32" y="140" width="272" height="432" rx="6" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+  </g>
+  <g class="lifelines">
+    <path class="lifeline" d="M96 112 V600" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M240 112 V600" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations"/>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M103 210 L233 210" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-0-end)" data-connector-id="0" data-connector-source="API" data-connector-target="Store" data-connector-route="M103 210 L233 210" data-connector-key="0"/>
+      <rect class="mask" x="143" y="183" width="50" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="168" y="198" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
+        <tspan x="168" y="198">query</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M233 317 L103 317" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-1-end)" data-connector-id="1" data-connector-source="Store" data-connector-target="API" data-connector-route="M233 317 L103 317" data-connector-key="1"/>
+      <rect class="mask" x="140" y="290" width="57" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="168" y="305" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="168" y="305">absent</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="2" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M233 424 L103 424" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-2-end)" data-connector-id="2" data-connector-source="Store" data-connector-target="API" data-connector-route="M233 424 L103 424" data-connector-key="2"/>
+      <rect class="mask" x="143" y="397" width="50" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="168" y="412" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="168" y="412">retry</tspan>
+      </text>
+    </g>
+    <g class="message f-frontend" data-index="3" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="async">
+      <path class="m-line" d="M103 531 L233 531" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-63-6c-65-61-6e-75-70-2d-64-61-72-6b-head-3-end)" data-connector-id="3" data-connector-source="API" data-connector-target="Store" data-connector-route="M103 531 L233 531" data-connector-key="3"/>
+      <rect class="mask" x="143" y="504" width="50" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="168" y="519" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
+        <tspan x="168" y="519">close</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="API">
+      <rect class="mask" x="48" y="64" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="48" y="64" width="96" height="48" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="p-label" x="96" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="96" y="92">API</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="Store">
+      <rect class="mask" x="192" y="64" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="192" y="64" width="96" height="48" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="p-label" x="240" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="240" y="92">Store</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations">
+    <rect class="mask" x="40" y="148" width="37" height="23" rx="3" fill="#0f172a"/>
+    <text class="frame-label" x="58" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#ffffff">
+      <tspan x="58" y="163">try</tspan>
+    </text>
+    <path class="section-divider" d="M32 247 L304 247" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="255" width="118" height="23" rx="3" fill="#0f172a"/>
+    <text class="section-label" x="99" y="270" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#ffffff">
+      <tspan x="99" y="270">catch (missing)</tspan>
+    </text>
+    <path class="section-divider" d="M32 354 L304 354" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="362" width="98" height="23" rx="3" fill="#0f172a"/>
+    <text class="section-label" x="89" y="377" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#ffffff">
+      <tspan x="89" y="377">catch (busy)</tspan>
+    </text>
+    <path class="section-divider" d="M32 461 L304 461" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4"/>
+    <rect class="mask" x="40" y="469" width="64" height="23" rx="3" fill="#0f172a"/>
+    <text class="section-label" x="72" y="484" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#ffffff">
+      <tspan x="72" y="484">finally</tspan>
+    </text>
+    <rect class="mask" x="32" y="16" width="272" height="32" rx="3" fill="#0f172a"/>
+    <text class="diagram-title" x="168" y="36" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+      <tspan x="168" y="36">Safe storage request</tspan>
+    </text>
+  </g>
+</svg>

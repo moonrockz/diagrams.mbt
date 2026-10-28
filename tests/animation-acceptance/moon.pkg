@@ -12,5 +12,6 @@ import {
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-plantuml" @plantuml,
   "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
 } for "test"

@@ -367,6 +367,1302 @@
         "path": "yaml-service-light.html",
         "media_type": "text/html"
       }
+    },
+    {
+      "id": "sequence-auth-retry",
+      "family": "sequence",
+      "title": "Authentication and retry",
+      "status": "implemented",
+      "description": "A retry loop with an alternative success response.",
+      "scope": "Implemented Mermaid sequence syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "sequence-auth-retry.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "sequence-auth-retry-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "sequence-auth-retry-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "sequence-auth-retry-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "sequence-auth-retry-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "sequence-auth-retry-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "sequence-worker-lifetime",
+      "family": "sequence",
+      "title": "Worker creation and destruction",
+      "status": "implemented",
+      "description": "Explicit participant lifetime around a short background job.",
+      "scope": "Implemented Mermaid sequence syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "sequence-worker-lifetime.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "sequence-worker-lifetime-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "sequence-worker-lifetime-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "sequence-worker-lifetime-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "sequence-worker-lifetime-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "sequence-worker-lifetime-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "sequence-parallel-checkout",
+      "family": "sequence",
+      "title": "Parallel checkout checks",
+      "status": "implemented",
+      "description": "Nested alternatives and parallel stock and payment calls.",
+      "scope": "Implemented Mermaid sequence syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "sequence-parallel-checkout.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "sequence-parallel-checkout-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "sequence-parallel-checkout-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "sequence-parallel-checkout-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "sequence-parallel-checkout-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "sequence-parallel-checkout-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "zenuml-nested-calls",
+      "family": "ZenUML",
+      "title": "Nested calls and returns",
+      "status": "implemented",
+      "description": "Call nesting with explicit return messages.",
+      "scope": "Implemented native Mermaid ZenUML syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "zenuml-nested-calls.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "zenuml-nested-calls-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "zenuml-nested-calls-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "zenuml-nested-calls-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "zenuml-nested-calls-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "zenuml-nested-calls-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "zenuml-cleanup",
+      "family": "ZenUML",
+      "title": "Exception cleanup",
+      "status": "implemented",
+      "description": "Typed exception sections retain their structural order.",
+      "scope": "Implemented native Mermaid ZenUML syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "zenuml-cleanup.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "zenuml-cleanup-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "zenuml-cleanup-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "zenuml-cleanup-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "zenuml-cleanup-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "zenuml-cleanup-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "zenuml-symbol-fanout",
+      "family": "ZenUML",
+      "title": "Asynchronous service fan-out",
+      "status": "implemented",
+      "description": "Participant symbols distinguish a queue, worker and store.",
+      "scope": "Implemented native Mermaid ZenUML syntax and illustrative playback. Calls are not executed.",
+      "sources": [
+        {
+          "path": "zenuml-symbol-fanout.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "zenuml-symbol-fanout-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "zenuml-symbol-fanout-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "zenuml-symbol-fanout-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "zenuml-symbol-fanout-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "zenuml-symbol-fanout-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "architecture-storage",
+      "family": "architecture",
+      "title": "Storage service group",
+      "status": "implemented",
+      "description": "A small authored service group with explicit ports.",
+      "scope": "Authored services, ports and structural connections. Deployment is not executed.",
+      "sources": [
+        {
+          "path": "architecture-storage.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "architecture-storage-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "architecture-storage-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "architecture-storage-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "architecture-storage-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "architecture-storage-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "architecture-boundary-ports",
+      "family": "architecture",
+      "title": "Connections at group boundaries",
+      "status": "implemented",
+      "description": "Two opposite connections retain their group-boundary attachment.",
+      "scope": "Authored services, ports and structural connections. Deployment is not executed.",
+      "sources": [
+        {
+          "path": "architecture-boundary-ports.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "architecture-boundary-ports-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "architecture-boundary-ports-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "architecture-boundary-ports-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "architecture-boundary-ports-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "architecture-boundary-ports-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "architecture-nested-network",
+      "family": "architecture",
+      "title": "Nested network and junction",
+      "status": "implemented",
+      "description": "Nested service ownership and a declared junction join.",
+      "scope": "Authored services, ports and structural connections. Deployment is not executed.",
+      "sources": [
+        {
+          "path": "architecture-nested-network.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "architecture-nested-network-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "architecture-nested-network-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "architecture-nested-network-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "architecture-nested-network-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "architecture-nested-network-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "bpmn-approval-loop",
+      "family": "BPMN",
+      "title": "Approval with a return route",
+      "status": "implemented",
+      "description": "An automatic process with a decision and a review return.",
+      "scope": "Process and collaboration structure only. No process execution or token simulation.",
+      "sources": [
+        {
+          "path": "bpmn-approval-loop.bpmn",
+          "media_type": "application/xml"
+        }
+      ],
+      "preview": {
+        "path": "bpmn-approval-loop-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "bpmn-approval-loop-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "bpmn-approval-loop-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "bpmn-approval-loop-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "bpmn-approval-loop-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "bpmn-pool-messages",
+      "family": "BPMN",
+      "title": "Cross-pool request and response",
+      "status": "implemented",
+      "description": "A collaboration with independent buyer and seller processes.",
+      "scope": "Process and collaboration structure only. No process execution or token simulation.",
+      "sources": [
+        {
+          "path": "bpmn-pool-messages.bpmn",
+          "media_type": "application/xml"
+        }
+      ],
+      "preview": {
+        "path": "bpmn-pool-messages-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "bpmn-pool-messages-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "bpmn-pool-messages-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "bpmn-pool-messages-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "bpmn-pool-messages-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "bpmn-subprocess-timeout",
+      "family": "BPMN",
+      "title": "Subprocess and boundary timeout",
+      "status": "implemented",
+      "description": "Nested activities and a boundary timer show structural exception paths.",
+      "scope": "Process and collaboration structure only. No process execution or token simulation.",
+      "sources": [
+        {
+          "path": "bpmn-subprocess-timeout.bpmn",
+          "media_type": "application/xml"
+        }
+      ],
+      "preview": {
+        "path": "bpmn-subprocess-timeout-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "bpmn-subprocess-timeout-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "bpmn-subprocess-timeout-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "bpmn-subprocess-timeout-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "bpmn-subprocess-timeout-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "swimlane-escalation",
+      "family": "swimlane",
+      "title": "Three-team escalation",
+      "status": "implemented",
+      "description": "Responsibility bands with a review loop and an escalation.",
+      "scope": "Native swimlane-beta responsibility bands and bounded structural exploration.",
+      "sources": [
+        {
+          "path": "swimlane-escalation.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "swimlane-escalation-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "swimlane-escalation-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "swimlane-escalation-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "swimlane-escalation-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "swimlane-escalation-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "swimlane-reverse-handoff",
+      "family": "swimlane",
+      "title": "Right-to-left handoff",
+      "status": "implemented",
+      "description": "A reverse direction route preserves its marked endpoints.",
+      "scope": "Native swimlane-beta responsibility bands and bounded structural exploration.",
+      "sources": [
+        {
+          "path": "swimlane-reverse-handoff.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "swimlane-reverse-handoff-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "swimlane-reverse-handoff-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "swimlane-reverse-handoff-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "swimlane-reverse-handoff-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "swimlane-reverse-handoff-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "swimlane-nested-ownership",
+      "family": "swimlane",
+      "title": "Nested ownership and return",
+      "status": "implemented",
+      "description": "Nested responsibility groups keep ownership and a return route.",
+      "scope": "Native swimlane-beta responsibility bands and bounded structural exploration.",
+      "sources": [
+        {
+          "path": "swimlane-nested-ownership.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "swimlane-nested-ownership-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "swimlane-nested-ownership-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "swimlane-nested-ownership-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "swimlane-nested-ownership-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "swimlane-nested-ownership-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "flowchart-mermaid-dispatch",
+      "family": "flowchart",
+      "title": "Mermaid dispatch decisions",
+      "status": "implemented",
+      "description": "Branching decisions, a return path and parallel delivery targets.",
+      "scope": "Mermaid or PlantUML activity structure and bounded exploration. Conditions are not evaluated and workflows are not executed.",
+      "sources": [
+        {
+          "path": "flowchart-mermaid-dispatch.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-mermaid-dispatch-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-mermaid-dispatch-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-mermaid-dispatch-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "flowchart-mermaid-dispatch-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "flowchart-mermaid-dispatch-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "flowchart-modern-parallel",
+      "family": "flowchart",
+      "title": "PlantUML parallel preparation",
+      "status": "implemented",
+      "description": "Modern activity syntax with repeat, fork and a nested partition.",
+      "scope": "Mermaid or PlantUML activity structure and bounded exploration. Conditions are not evaluated and workflows are not executed.",
+      "sources": [
+        {
+          "path": "flowchart-modern-parallel.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-modern-parallel-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-modern-parallel-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-modern-parallel-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "flowchart-modern-parallel-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "flowchart-modern-parallel-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "flowchart-legacy-return",
+      "family": "flowchart",
+      "title": "PlantUML legacy retry",
+      "status": "implemented",
+      "description": "Legacy activity aliases, a partition and an explicit return route.",
+      "scope": "Mermaid or PlantUML activity structure and bounded exploration. Conditions are not evaluated and workflows are not executed.",
+      "sources": [
+        {
+          "path": "flowchart-legacy-return.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-legacy-return-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-legacy-return-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-legacy-return-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "flowchart-legacy-return-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "flowchart-legacy-return-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "regex-identifier",
+      "family": "regex",
+      "title": "Identifier validation",
+      "status": "implemented",
+      "description": "Anchors and a bounded repeated character class.",
+      "scope": "Regex syntax and structural exploration only. Match evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "regex-identifier.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "regex-identifier-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "regex-identifier-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "regex-identifier-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "regex-identifier-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "regex-identifier-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "regex-alternatives",
+      "family": "regex",
+      "title": "Alternatives and repetition",
+      "status": "implemented",
+      "description": "Nested alternatives and optional repeated suffixes.",
+      "scope": "Regex syntax and structural exploration only. Match evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "regex-alternatives.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "regex-alternatives-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "regex-alternatives-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "regex-alternatives-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "regex-alternatives-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "regex-alternatives-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "regex-assertions",
+      "family": "regex",
+      "title": "Assertions and named capture",
+      "status": "implemented",
+      "description": "A named capture, lookahead and negative assertion.",
+      "scope": "Regex syntax and structural exploration only. Match evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "regex-assertions.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "regex-assertions-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "regex-assertions-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "regex-assertions-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "regex-assertions-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "regex-assertions-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "ebnf-command",
+      "family": "EBNF",
+      "title": "Command grammar",
+      "status": "implemented",
+      "description": "A command with a choice and an optional argument.",
+      "scope": "Grammar structure and bounded exploration only. Parse evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "ebnf-command.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "ebnf-command-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "ebnf-command-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "ebnf-command-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "ebnf-command-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "ebnf-command-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "ebnf-recursive-list",
+      "family": "EBNF",
+      "title": "Recursive nested lists",
+      "status": "implemented",
+      "description": "Recursive references describe nested list syntax.",
+      "scope": "Grammar structure and bounded exploration only. Parse evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "ebnf-recursive-list.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "ebnf-recursive-list-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "ebnf-recursive-list-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "ebnf-recursive-list-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "ebnf-recursive-list-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "ebnf-recursive-list-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "ebnf-protocol",
+      "family": "EBNF",
+      "title": "Protocol fields and choices",
+      "status": "implemented",
+      "description": "Optional and repeated fields with an explicit alternative.",
+      "scope": "Grammar structure and bounded exploration only. Parse evidence requires an external engine.",
+      "sources": [
+        {
+          "path": "ebnf-protocol.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "ebnf-protocol-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "ebnf-protocol-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "ebnf-protocol-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "ebnf-protocol-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "ebnf-protocol-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "json-api-response",
+      "family": "JSON",
+      "title": "API response data",
+      "status": "implemented",
+      "description": "Nested result and pagination objects preserve scalar types.",
+      "scope": "Native JSON data-tree rendering with exact scalar values and structural exploration.",
+      "sources": [
+        {
+          "path": "json-api-response.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "json-api-response-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "json-api-response-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "json-api-response-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "json-api-response-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "json-api-response-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "json-inventory",
+      "family": "JSON",
+      "title": "Inventory and empty collections",
+      "status": "implemented",
+      "description": "A list of records with empty object and array values.",
+      "scope": "Native JSON data-tree rendering with exact scalar values and structural exploration.",
+      "sources": [
+        {
+          "path": "json-inventory.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "json-inventory-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "json-inventory-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "json-inventory-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "json-inventory-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "json-inventory-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "json-exact-values",
+      "family": "JSON",
+      "title": "Repeated values and exact numbers",
+      "status": "implemented",
+      "description": "Repeated strings and large numeric tokens retain their source values.",
+      "scope": "Native JSON data-tree rendering with exact scalar values and structural exploration.",
+      "sources": [
+        {
+          "path": "json-exact-values.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "json-exact-values-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "json-exact-values-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "json-exact-values-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "json-exact-values-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "json-exact-values-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "yaml-deployment",
+      "family": "YAML",
+      "title": "Deployment configuration",
+      "status": "implemented",
+      "description": "Nested configuration maps with scalar and list values.",
+      "scope": "Native YAML data-tree rendering with string scalars and structural exploration. No YAML execution.",
+      "sources": [
+        {
+          "path": "yaml-deployment.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "yaml-deployment-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "yaml-deployment-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "yaml-deployment-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "yaml-deployment-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "yaml-deployment-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "yaml-service-list",
+      "family": "YAML",
+      "title": "A list of services",
+      "status": "implemented",
+      "description": "Service maps have different nested endpoint lists.",
+      "scope": "Native YAML data-tree rendering with string scalars and structural exploration. No YAML execution.",
+      "sources": [
+        {
+          "path": "yaml-service-list.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "yaml-service-list-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "yaml-service-list-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "yaml-service-list-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "yaml-service-list-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "yaml-service-list-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "yaml-mixed-collections",
+      "family": "YAML",
+      "title": "Flow and block collections",
+      "status": "implemented",
+      "description": "Flow collections and block text remain native data values.",
+      "scope": "Native YAML data-tree rendering with string scalars and structural exploration. No YAML execution.",
+      "sources": [
+        {
+          "path": "yaml-mixed-collections.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "yaml-mixed-collections-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "yaml-mixed-collections-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "yaml-mixed-collections-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "yaml-mixed-collections-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "yaml-mixed-collections-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-elbow-bridge",
+      "family": "flowchart",
+      "title": "Connector comparison: elbow / bridge",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Elbow, CrossingMode::Bridge; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-elbow-bridge-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-elbow-bridge-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-elbow-bridge-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-elbow-bridge-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-elbow-bridge-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-elbow-plain",
+      "family": "flowchart",
+      "title": "Connector comparison: elbow / plain",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Elbow, CrossingMode::Plain; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-elbow-plain-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-elbow-plain-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-elbow-plain-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-elbow-plain-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-elbow-plain-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-rounded-bridge",
+      "family": "flowchart",
+      "title": "Connector comparison: rounded / bridge",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Rounded, CrossingMode::Bridge; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-rounded-bridge-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-rounded-bridge-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-rounded-bridge-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-rounded-bridge-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-rounded-bridge-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-rounded-plain",
+      "family": "flowchart",
+      "title": "Connector comparison: rounded / plain",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Rounded, CrossingMode::Plain; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-rounded-plain-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-rounded-plain-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-rounded-plain-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-rounded-plain-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-rounded-plain-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-curved-bridge",
+      "family": "flowchart",
+      "title": "Connector comparison: curved / bridge",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Curved, CrossingMode::Bridge; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-curved-bridge-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-curved-bridge-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-curved-bridge-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-curved-bridge-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-curved-bridge-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "id": "connector-curved-plain",
+      "family": "flowchart",
+      "title": "Connector comparison: curved / plain",
+      "status": "implemented",
+      "description": "Same Mermaid source. ConnectorStyle::Curved, CrossingMode::Plain; minimum_approach=24.0, corner_radius=8.0, bridge_radius=5.0.",
+      "scope": "Display options for one source model. Crossings add no graph connectivity. Structural playback does not execute conditions or workflows.",
+      "sources": [
+        {
+          "path": "connector-crossing.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "connector-curved-plain-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "connector-curved-plain-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "connector-curved-plain-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "connector-curved-plain-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "connector-curved-plain-adaptive.svg",
+          "media_type": "image/svg+xml"
+        }
+      ]
     }
   ]
 }

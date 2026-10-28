@@ -1,5 +1,5 @@
 ///|
-let radius : Double = 10.0
+let natural_radius : Double = 10.0
 
 ///|
 let gap : Double = 20.0
@@ -17,15 +17,15 @@ let label_size : Double = 13.0
 let small_size : Double = 11.0
 
 ///|
-let wrap_units : Int = 40
+let wrap_units : Int32 = 40
 
 ///|
-fn cut(text : String, start : Int, end : Int) -> String {
+fn cut(text : String, start : Int32, end : Int32) -> String {
   text.view(start_offset=start, end_offset=end).to_owned()
 }
 
 ///|
-fn text_width(text : String, size : Double, weight : Int) -> Double {
+fn text_width(text : String, size : Double, weight : Int32) -> Double {
   let metrics = @metrics.FontMetrics::from_defaults(
     profile=Monospace,
     font_size=size.to_int(),
@@ -46,7 +46,11 @@ fn wrap_lines(text : String) -> Array[String] {
     let mut i = 0
     while i < line.length() {
       let c = line.code_unit_at(i).to_int()
-      let w = if c >= 0xd800 && c <= 0xdbff && i + 1 < line.length() { 2 } else { 1 }
+      let w = if c >= 0xd800 && c <= 0xdbff && i + 1 < line.length() {
+        2
+      } else {
+        1
+      }
       if count == wrap_units {
         out.push(cut(line, start, i))
         start = i
@@ -66,8 +70,8 @@ fn make_label(
   owner : String,
   center : Double,
   top : Double,
-  size? : Double = label_size,
-  weight? : Int = 400,
+  size~ : Double = label_size,
+  weight~ : Int32 = 400,
 ) -> Label {
   let lines = wrap_lines(text)
   let mut width = 0.0
@@ -80,13 +84,17 @@ fn make_label(
     x: center,
     size,
     weight,
-    box: { x: center - width / 2.0, y: top, width, height },
+    box: { x: center - width / 2.0, y: top, width, height, },
     owner,
   }
 }
 
 ///|
-fn label_extent(text : String, size : Double, weight : Int) -> (Double, Double) {
+fn label_extent(
+  text : String,
+  size : Double,
+  weight : Int32,
+) -> (Double, Double) {
   let lines = wrap_lines(text)
   let mut width = 0.0
   for line in lines {
@@ -155,12 +163,12 @@ priv struct Ctx {
   wires : Map[String, Wire]
   limits : Limits
   diagnostics : Array[@diagrams.Diagnostic]
-  mut work : Int
+  mut work : Int32
   mut failed : Bool
 }
 
 ///|
-fn Ctx::charge(self : Ctx, units : Int) -> Bool {
+fn Ctx::charge(self : Ctx, units : Int32) -> Bool {
   if self.failed {
     return false
   }
@@ -211,25 +219,48 @@ fn Ctx::wire(
 
 ///|
 fn Ctx::entry_of(self : Ctx, id : String) -> Point {
-  self.points.get(self.topology.entry(id).unwrap_or("")).unwrap_or({ x: 0.0, y: 0.0 })
+  self.points
+  .get(self.topology.entry(id).unwrap_or(""))
+  .unwrap_or({ x: 0.0, y: 0.0, })
 }
 
 ///|
 fn Ctx::exit_of(self : Ctx, id : String) -> Point {
-  self.points.get(self.topology.exit(id).unwrap_or("")).unwrap_or({ x: 0.0, y: 0.0 })
+  self.points
+  .get(self.topology.exit(id).unwrap_or(""))
+  .unwrap_or({ x: 0.0, y: 0.0, })
 }
 
 ///|
-fn Ctx::set_point(self : Ctx, id : String, side : String, x : Double, y : Double) -> Unit {
-  self.points[@trace.point_id(id, side)] = { x, y }
+fn Ctx::set_point(
+  self : Ctx,
+  id : String,
+  side : String,
+  x : Double,
+  y : Double,
+) -> Unit {
+  self.points[@trace.point_id(id, side)] = { x, y, }
 }
 
 ///|
-fn leaf_extent(shape : Shape, text : String, above : Array[String], below : Array[String]) -> Frag {
+fn leaf_extent(
+  shape : Shape,
+  text : String,
+  above : Array[String],
+  below : Array[String],
+) -> Frag {
   if shape == Dot {
-    return { w: 24.0, up: 8.0, down: 8.0 }
+    return { w: 24.0, up: 8.0, down: 8.0, }
   }
-  let (tw, th) = label_extent(text, label_size, if shape == Square { 600 } else { 400 })
+  let (tw, th) = label_extent(
+    text,
+    label_size,
+    if shape == Square {
+      600
+    } else {
+      400
+    },
+  )
   let mut w = Double::max(tw + 20.0, 28.0)
   let mut up = (th + 10.0) / 2.0
   let mut down = up
@@ -243,11 +274,12 @@ fn leaf_extent(shape : Shape, text : String, above : Array[String], below : Arra
     w = Double::max(w, nw + 8.0)
     down += nh + 4.0
   }
-  { w, up, down }
+  { w, up, down, }
 }
 
 ///|
-fn Ctx::measure(self : Ctx, id : String, depth : Int) -> Frag {
+fn Ctx::measure(self : Ctx, id : String, depth : Int32) -> Frag {
+  let radius = natural_radius.max(self.limits.minimum_approach + 8.0)
   if depth > self.limits.depth {
     if !self.failed {
       self.failed = true
@@ -257,14 +289,15 @@ fn Ctx::measure(self : Ctx, id : String, depth : Int) -> Frag {
         ),
       )
     }
-    return { w: 0.0, up: 0.0, down: 0.0 }
+    return { w: 0.0, up: 0.0, down: 0.0, }
   }
   if !self.charge(1) {
-    return { w: 0.0, up: 0.0, down: 0.0 }
+    return { w: 0.0, up: 0.0, down: 0.0, }
   }
   let frag : Frag = match self.views.get(id) {
-    None => { w: 0.0, up: 0.0, down: 0.0 }
-    Some(Leaf(shape, text, above, below)) => leaf_extent(shape, text, above, below)
+    None => { w: 0.0, up: 0.0, down: 0.0, }
+    Some(Leaf(shape, text, above, below)) =>
+      leaf_extent(shape, text, above, below)
     Some(Seq(items)) => {
       let mut w = 0.0
       let mut up = 0.0
@@ -275,7 +308,7 @@ fn Ctx::measure(self : Ctx, id : String, depth : Int) -> Frag {
         up = Double::max(up, f.up)
         down = Double::max(down, f.down)
       }
-      { w, up, down }
+      { w, up, down, }
     }
     Some(Alt(items)) => {
       let mut w = 0.0
@@ -291,7 +324,7 @@ fn Ctx::measure(self : Ctx, id : String, depth : Int) -> Frag {
           total += vertical + f.up + f.down
         }
       }
-      { w: w + 4.0 * radius, up, down: total }
+      { w: w + 4.0 * radius, up, down: total, }
     }
     Some(Wrap(child, bypass, back, label)) => {
       let f = self.measure(child, depth + 1)
@@ -345,10 +378,11 @@ fn Ctx::measure(self : Ctx, id : String, depth : Int) -> Frag {
 
 ///|
 fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
+  let radius = natural_radius.max(self.limits.minimum_approach + 8.0)
   if self.failed || !self.charge(1) {
     return
   }
-  let frag = self.frags.get(id).unwrap_or({ w: 0.0, up: 0.0, down: 0.0 })
+  let frag = self.frags.get(id).unwrap_or({ w: 0.0, up: 0.0, down: 0.0, })
   match self.views.get(id) {
     None => ()
     Some(Leaf(shape, text, above, below)) => {
@@ -366,7 +400,7 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
         label_extent(text, label_size, 0)
       }
       let box_h = if shape == Dot { 16.0 } else { th + 10.0 }
-      let rect : Rect = { x, y: y - box_h / 2.0, width: frag.w, height: box_h }
+      let rect : Rect = { x, y: y - box_h / 2.0, width: frag.w, height: box_h, }
       let label = make_label(
         text,
         id,
@@ -376,12 +410,18 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
       )
       let mut bottom = y + box_h / 2.0 + 4.0
       for note in below {
-        let label = make_label(note, id, x + frag.w / 2.0, bottom, size=small_size)
+        let label = make_label(
+          note,
+          id,
+          x + frag.w / 2.0,
+          bottom,
+          size=small_size,
+        )
         notes.push(label)
         bottom += label.box.height + 4.0
       }
-      self.points[term.entry] = { x, y }
-      self.points[term.exit] = { x: x + frag.w, y }
+      self.points[term.entry] = { x, y, }
+      self.points[term.exit] = { x: x + frag.w, y, }
       self.terms.push({
         term,
         shape,
@@ -420,20 +460,20 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
         let a = self.entry_of(item)
         let b = self.exit_of(item)
         if k == 0 {
-          self.wire(id, Split(k), [{ x, y }, a])
-          self.wire(id, Join(k), [b, { x: x + frag.w, y }])
+          self.wire(id, Split(k), [{ x, y, }, a])
+          self.wire(id, Join(k), [b, { x: x + frag.w, y, }])
         } else {
           self.wire(id, Split(k), [
-            { x, y },
-            { x: x + radius, y },
-            { x: x + radius, y: baseline },
+            { x, y, },
+            { x: x + radius, y, },
+            { x: x + radius, y: baseline, },
             a,
           ])
           self.wire(id, Join(k), [
             b,
-            { x: x + frag.w - radius, y: baseline },
-            { x: x + frag.w - radius, y },
-            { x: x + frag.w, y },
+            { x: x + frag.w - radius, y: baseline, },
+            { x: x + frag.w - radius, y, },
+            { x: x + frag.w, y, },
           ])
         }
       }
@@ -445,17 +485,17 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
       self.place(child, x + 2.0 * radius, y)
       let a = self.entry_of(child)
       let b = self.exit_of(child)
-      self.wire(id, Enter, [{ x, y }, a])
-      self.wire(id, Leave, [b, { x: x + frag.w, y }])
+      self.wire(id, Enter, [{ x, y, }, a])
+      self.wire(id, Leave, [b, { x: x + frag.w, y, }])
       if bypass {
         let top = y - f.up - vertical
         self.wire(id, Bypass, [
-          { x, y },
-          { x: x + radius, y },
-          { x: x + radius, y: top },
-          { x: x + frag.w - radius, y: top },
-          { x: x + frag.w - radius, y },
-          { x: x + frag.w, y },
+          { x, y, },
+          { x: x + radius, y, },
+          { x: x + radius, y: top, },
+          { x: x + frag.w - radius, y: top, },
+          { x: x + frag.w - radius, y, },
+          { x: x + frag.w, y, },
         ])
       }
       if back {
@@ -468,10 +508,10 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
           Return,
           [
             b,
-            { x: x + frag.w - radius, y: b.y },
-            { x: x + frag.w - radius, y: bottom },
-            { x: x + radius, y: bottom },
-            { x: x + radius, y: a.y },
+            { x: x + frag.w - radius, y: b.y, },
+            { x: x + frag.w - radius, y: bottom, },
+            { x: x + radius, y: bottom, },
+            { x: x + radius, y: a.y, },
             a,
           ],
           label?,
@@ -483,7 +523,12 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
         self.frames.push({
           owner: id,
           role: Group,
-          rect: { x: x + radius, y: y - f.up - 4.0, width: frag.w - 2.0 * radius, height: f.up + f.down + 8.0 + label.box.height },
+          rect: {
+            x: x + radius,
+            y: y - f.up - 4.0,
+            width: frag.w - 2.0 * radius,
+            height: f.up + f.down + 8.0 + label.box.height,
+          },
           label,
         })
       }
@@ -494,31 +539,51 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
       let f = self.frags[child]
       let (_, lh) = label_extent(text, small_size, 400)
       let top = y - f.up - frame_pad - lh
-      let label = make_label(text, id, x + frag.w / 2.0, top + 2.0, size=small_size)
+      let label = make_label(
+        text,
+        id,
+        x + frag.w / 2.0,
+        top + 2.0,
+        size=small_size,
+      )
       self.frames.push({
         owner: id,
         role: Group,
-        rect: { x, y: top, width: frag.w, height: frag.up + frag.down },
+        rect: { x, y: top, width: frag.w, height: frag.up + frag.down, },
         label,
       })
       self.place(child, x + frame_pad, y)
-      self.wire(id, Enter, [{ x, y }, self.entry_of(child)])
-      self.wire(id, Leave, [self.exit_of(child), { x: x + frag.w, y }])
+      self.wire(id, Enter, [{ x, y, }, self.entry_of(child)])
+      self.wire(id, Leave, [self.exit_of(child), { x: x + frag.w, y, }])
     }
     Some(Look(child, text)) => {
       guard self.topology.term(id) is Some(term) else { return }
       let f = self.frags[child]
-      let rect : Rect = { x, y: y - frag.up, width: frag.w, height: frag.up + frag.down }
-      let label = make_label(text, id, x + frag.w / 2.0, y - 8.0, size=small_size)
-      self.points[term.entry] = { x, y }
-      self.points[term.exit] = { x: x + frag.w, y }
-      self.terms.push({ term, shape: Lookaround, rect, label, notes: [] })
+      let rect : Rect = {
+        x,
+        y: y - frag.up,
+        width: frag.w,
+        height: frag.up + frag.down,
+      }
+      let label = make_label(
+        text,
+        id,
+        x + frag.w / 2.0,
+        y - 8.0,
+        size=small_size,
+      )
+      self.points[term.entry] = { x, y, }
+      self.points[term.exit] = { x: x + frag.w, y, }
+      self.terms.push({ term, shape: Lookaround, rect, label, notes: [], })
       let inner = y + 10.0 + frame_pad + f.up
       self.set_point(id, "inner-in", x + 4.0, inner)
       self.set_point(id, "inner-out", x + frag.w - 4.0, inner)
       self.place(child, x + frame_pad, inner)
-      self.wire(id, Enter, [{ x: x + 4.0, y: inner }, self.entry_of(child)])
-      self.wire(id, Leave, [self.exit_of(child), { x: x + frag.w - 4.0, y: inner }])
+      self.wire(id, Enter, [{ x: x + 4.0, y: inner, }, self.entry_of(child)])
+      self.wire(id, Leave, [
+        self.exit_of(child),
+        { x: x + frag.w - 4.0, y: inner, },
+      ])
     }
     Some(Excl(left, excluded)) => {
       let l = self.frags[left]
@@ -528,19 +593,28 @@ fn Ctx::place(self : Ctx, id : String, x : Double, y : Double) -> Unit {
       let frame_w = Double::max(e.w, lw) + 2.0 * frame_pad
       let top = y + l.down + vertical
       let height = lh + frame_pad + e.up + e.down + frame_pad
-      let label = make_label("except", id, x + frame_w / 2.0, top + 2.0, size=small_size)
+      let label = make_label(
+        "except",
+        id,
+        x + frame_w / 2.0,
+        top + 2.0,
+        size=small_size,
+      )
       self.frames.push({
         owner: id,
         role: Except,
-        rect: { x, y: top, width: frame_w, height },
+        rect: { x, y: top, width: frame_w, height, },
         label,
       })
       let inner = top + lh + frame_pad + e.up
       self.set_point(id, "except-in", x + 4.0, inner)
       self.set_point(id, "except-out", x + frame_w - 4.0, inner)
       self.place(excluded, x + frame_pad, inner)
-      self.wire(id, Enter, [{ x: x + 4.0, y: inner }, self.entry_of(excluded)])
-      self.wire(id, Leave, [self.exit_of(excluded), { x: x + frame_w - 4.0, y: inner }])
+      self.wire(id, Enter, [{ x: x + 4.0, y: inner, }, self.entry_of(excluded)])
+      self.wire(id, Leave, [
+        self.exit_of(excluded),
+        { x: x + frame_w - 4.0, y: inner, },
+      ])
     }
   }
 }
@@ -567,7 +641,11 @@ fn regex_views(model : @regex.Regex) -> Map[String, View] {
         )
       Repeat(bounds, child) => {
         let plain = !bounds.reluctant &&
-          (bounds.spelling == "*" || bounds.spelling == "+" || bounds.spelling == "?")
+          (
+            bounds.spelling == "*" ||
+            bounds.spelling == "+" ||
+            bounds.spelling == "?"
+          )
         Wrap(
           child,
           bounds.min == 0,
@@ -575,7 +653,10 @@ fn regex_views(model : @regex.Regex) -> Map[String, View] {
           if plain {
             None
           } else {
-            Some(bounds.spelling + (if bounds.reluctant { " reluctant" } else { "" }))
+            Some(
+              bounds.spelling +
+              (if bounds.reluctant { " reluctant" } else { "" }),
+            )
           },
         )
       }
@@ -612,7 +693,12 @@ fn ebnf_views(grammar : @ebnf.Grammar) -> Map[String, View] {
       ZeroOrMore(child) => Wrap(child, true, true, None)
       OneOrMore(child) => Wrap(child, false, true, None)
       Count(count, child) =>
-        Wrap(child, count == "0", count != "0" && count != "1", Some(count + "\u{d7}"))
+        Wrap(
+          child,
+          count == "0",
+          count != "0" && count != "1",
+          Some(count + "\u{d7}"),
+        )
       Exclusion(left, excluded) => Excl(left, excluded)
     }
     views[node.id] = view
@@ -631,9 +717,13 @@ priv struct Row {
 ///|
 /// Lay out a regex or grammar railroad. Rules stay in source order; each
 /// drawn connector of the topology gets one wire.
-pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
+pub fn layout(model : Model, limits~ : Limits = Limits::new()) -> Result {
+  let radius = natural_radius.max(limits.minimum_approach + 8.0)
   fn failed(code : String, message : String) -> Result {
-    { geometry: None, diagnostics: [@diagrams.Diagnostic::error(code, message)] }
+    {
+      geometry: None,
+      diagnostics: [@diagrams.Diagnostic::error(code, message)],
+    }
   }
   if limits.nodes <= 0 ||
     limits.depth <= 0 ||
@@ -646,16 +736,24 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
     Regex(m) =>
       @trace.Topology::regex(
         m,
-        limits=@regex.Limits::new(nodes=limits.nodes, depth=limits.depth, work=limits.work),
+        limits=@regex.Limits::new(
+          nodes=limits.nodes,
+          depth=limits.depth,
+          work=limits.work,
+        ),
       )
     Ebnf(g) =>
       @trace.Topology::ebnf(
         g,
-        limits=@ebnf.Limits::new(nodes=limits.nodes, depth=limits.depth, work=limits.work),
+        limits=@ebnf.Limits::new(
+          nodes=limits.nodes,
+          depth=limits.depth,
+          work=limits.work,
+        ),
       )
   }
   guard built.topology is Some(topology) else {
-    return { geometry: None, diagnostics: built.diagnostics }
+    return { geometry: None, diagnostics: built.diagnostics, }
   }
   let ctx = Ctx::{
     topology,
@@ -718,9 +816,15 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
     match entry {
       (id, Some(text)) => {
         let (w, h) = label_extent(text, small_size, 400)
-        let rect : Rect = { x: margin, y, width: w + 20.0, height: h + 12.0 }
-        let label = make_label(text, id, margin + rect.width / 2.0, y + 6.0, size=small_size)
-        notes.push({ id, rect, label })
+        let rect : Rect = { x: margin, y, width: w + 20.0, height: h + 12.0, }
+        let label = make_label(
+          text,
+          id,
+          margin + rect.width / 2.0,
+          y + 6.0,
+          size=small_size,
+        )
+        notes.push({ id, rect, label, })
         width = Double::max(width, rect.x + rect.width)
         y += rect.height + 24.0
       }
@@ -730,23 +834,39 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
         let (above, below) = rule_notes.get(id).unwrap_or((None, None))
         if above is Some(text) {
           let label = make_label(text, id, margin, y, size=small_size)
-          let shifted = { ..label, x: margin + label.box.width / 2.0, box: { ..label.box, x: margin } }
+          let shifted = {
+            ..label,
+            x: margin + label.box.width / 2.0,
+            box: { ..label.box, x: margin, },
+          }
           track_notes.push(shifted)
           y += label.box.height + 4.0
         }
         let name = make_label(
-          if model is Regex(_) { "pattern" } else { track.name },
+          if model is Regex(_) {
+            "pattern"
+          } else {
+            track.name
+          },
           id,
           margin,
           y,
           size=14.0,
           weight=700,
         )
-        let name = { ..name, x: margin + name.box.width / 2.0, box: { ..name.box, x: margin } }
+        let name = {
+          ..name,
+          x: margin + name.box.width / 2.0,
+          box: { ..name.box, x: margin, },
+        }
         y += name.box.height + 6.0
         if below is Some(text) {
           let label = make_label(text, id, margin, y, size=small_size)
-          let shifted = { ..label, x: margin + label.box.width / 2.0, box: { ..label.box, x: margin } }
+          let shifted = {
+            ..label,
+            x: margin + label.box.width / 2.0,
+            box: { ..label.box, x: margin, },
+          }
           track_notes.push(shifted)
           y += label.box.height + 4.0
         }
@@ -754,12 +874,18 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
         match bodies.get(id).unwrap_or(None) {
           None => {
             let by = y + 10.0
-            let start : Point = { x: x0, y: by }
-            let end : Point = { x: x0 + 2.0 * gap, y: by }
+            let start : Point = { x: x0, y: by, }
+            let end : Point = { x: x0 + 2.0 * gap, y: by, }
             ctx.points[track.start] = start
             ctx.points[track.end] = end
             ctx.wire(id, Empty, [start, end])
-            tracks.push({ track, label: name, start, end, notes: ReadOnlyArray::from_array(track_notes) })
+            tracks.push({
+              track,
+              label: name,
+              start,
+              end,
+              notes: ReadOnlyArray::from_array(track_notes),
+            })
             width = Double::max(width, end.x + 10.0)
             y = by + 10.0 + 24.0
           }
@@ -770,17 +896,26 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
             let rows : Array[Row] = []
             match ctx.views.get(body) {
               Some(Seq(items)) => {
-                let mut row : Row = { items: [], up: 0.0, down: 0.0, width: 0.0 }
+                let mut row : Row = {
+                  items: [],
+                  up: 0.0,
+                  down: 0.0,
+                  width: 0.0,
+                }
                 for item in items {
                   let f = ctx.frags[item]
                   let extra = if row.items.is_empty() { f.w } else { gap + f.w }
                   if !row.items.is_empty() &&
                     row.width + extra > limits.width.to_double() {
                     rows.push(row)
-                    row = { items: [], up: 0.0, down: 0.0, width: 0.0 }
+                    row = { items: [], up: 0.0, down: 0.0, width: 0.0, }
                   }
                   row.items.push(item)
-                  row.width += if row.items.length() == 1 { f.w } else { gap + f.w }
+                  row.width += if row.items.length() == 1 {
+                    f.w
+                  } else {
+                    gap + f.w
+                  }
                   row.up = Double::max(row.up, f.up)
                   row.down = Double::max(row.down, f.down)
                 }
@@ -789,12 +924,9 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
               _ => ()
             }
             let body_x = x0 + gap
-            let mut by = y + (if rows.length() > 1 {
-              rows[0].up
-            } else {
-              ctx.frags[body].up
-            })
-            let start : Point = { x: x0, y: by }
+            let mut by = y +
+              (if rows.length() > 1 { rows[0].up } else { ctx.frags[body].up })
+            let start : Point = { x: x0, y: by, }
             ctx.points[track.start] = start
             let mut last_x = 0.0
             let mut bottom = 0.0
@@ -820,7 +952,7 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
                 Some(Seq(items)) => items
                 _ => []
               }
-              let first_of_row : Map[String, Int] = Map([])
+              let first_of_row : Map[String, Int32] = Map([])
               for r, row in rows {
                 if r > 0 {
                   first_of_row[row.items[0]] = r
@@ -834,10 +966,10 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
                   let turn = Double::max(a.x, last_x) + radius
                   ctx.wire(items[k], Gap, [
                     a,
-                    { x: turn, y: a.y },
-                    { x: turn, y: mid },
-                    { x: body_x - radius, y: mid },
-                    { x: body_x - radius, y: b.y },
+                    { x: turn, y: a.y, },
+                    { x: turn, y: mid, },
+                    { x: body_x - radius, y: mid, },
+                    { x: body_x - radius, y: b.y, },
                     b,
                   ])
                 } else {
@@ -856,11 +988,20 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
               bottom = by + ctx.frags[body].down
             }
             let exit = ctx.exit_of(body)
-            let end : Point = { x: Double::max(last_x, exit.x) + gap, y: exit.y }
+            let end : Point = {
+              x: Double::max(last_x, exit.x) + gap,
+              y: exit.y,
+            }
             ctx.points[track.end] = end
             ctx.wire(id, Start, [start, ctx.entry_of(body)])
             ctx.wire(id, End, [exit, end])
-            tracks.push({ track, label: name, start, end, notes: ReadOnlyArray::from_array(track_notes) })
+            tracks.push({
+              track,
+              label: name,
+              start,
+              end,
+              notes: ReadOnlyArray::from_array(track_notes),
+            })
             for t in ctx.terms {
               width = Double::max(width, t.rect.x + t.rect.width)
             }
@@ -873,7 +1014,10 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
     }
   }
   if ctx.failed {
-    return { geometry: None, diagnostics: ReadOnlyArray::from_array(ctx.diagnostics) }
+    return {
+      geometry: None,
+      diagnostics: ReadOnlyArray::from_array(ctx.diagnostics),
+    }
   }
   for f in ctx.frames {
     width = Double::max(width, f.rect.x + f.rect.width)
@@ -886,7 +1030,8 @@ pub fn layout(model : Model, limits? : Limits = Limits::new()) -> Result {
   }
   let content_width = width + margin
   let total_width = match title_text {
-    Some(t) => Double::max(content_width, label_extent(t, 16.0, 700).0 + 2.0 * margin)
+    Some(t) =>
+      Double::max(content_width, label_extent(t, 16.0, 700).0 + 2.0 * margin)
     None => content_width
   }
   let title = title_text.map(t => {

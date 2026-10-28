@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 836 224" width="836" height="224" role="img" data-diagram="bpmn" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-diagram">
+  <title>Fulfilment</title>
+  <desc>BPMN view with 5 visible shapes and 4 connections. Structural flow is illustrative. Conditions, timers and execution outcomes are not evaluated.</desc>
+  <defs>
+    <marker id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-10 -5 L0 0 L-10 5 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-10 -5 L0 0 L-10 5" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <circle cx="0" cy="0" r="3.5" fill="#020617" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M0 0 L6 -4 L12 0 L6 4 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+    <marker id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M4 -5 L10 5" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="836" height="224" fill="#020617"/>
+  <g transform="translate(-32 -24)" class="bpmn-viewport">
+    <g class="bpmn-backgrounds"/>
+    <g class="bpmn-connections">
+      <g data-id="f1" data-source-id="f1" data-source-path="0/0/5" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-flow-2" class="bpmn-flow" data-kind="sequenceFlow" data-from="start" data-to="work">
+        <path class="bpmn-connector" d="M104 84 L208 84 L208 114 L240 114" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-sequence-head)" data-connector-id="f1" data-connector-source="start" data-connector-target="work" data-connector-route="M104 84 L208 84 L208 114 L240 114" data-connector-key="0"/>
+      </g>
+      <g data-id="f2" data-source-id="f2" data-source-path="0/0/6" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-flow-3" class="bpmn-flow" data-kind="sequenceFlow" data-from="work" data-to="end">
+        <path class="bpmn-connector" d="M384 114 L416 114 L416 56 L768 56 L768 72 L800 72" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-sequence-head)" data-connector-id="f2" data-connector-source="work" data-connector-target="end" data-connector-route="M384 114 L416 114 L416 56 L768 56 L768 72 L800 72" data-connector-key="1"/>
+      </g>
+      <g data-id="f3" data-source-id="f3" data-source-path="0/0/7" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-flow-4" class="bpmn-flow" data-kind="sequenceFlow" data-from="timeout" data-to="escalate">
+        <path class="bpmn-connector" d="M312 184 L312 216 L488 216 L488 114 L520 114" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-sequence-head)" data-connector-id="f3" data-connector-source="timeout" data-connector-target="escalate" data-connector-route="M312 184 L312 216 L488 216 L488 114 L520 114" data-connector-key="2"/>
+      </g>
+      <g data-id="f4" data-source-id="f4" data-source-path="0/0/8" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-flow-5" class="bpmn-flow" data-kind="sequenceFlow" data-from="escalate" data-to="end">
+        <path class="bpmn-connector" d="M660 114 L760 114 L760 96 L800 96" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-sequence-head)" data-connector-id="f4" data-connector-source="escalate" data-connector-target="end" data-connector-route="M660 114 L760 114 L760 96 L800 96" data-connector-key="3"/>
+      </g>
+    </g>
+    <g class="bpmn-nodes">
+      <g data-id="start" data-source-id="start" data-source-path="0/0/0" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-node-0" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="64" y="64" width="40" height="40" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(64 64) scale(40 40)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(64 64)" class="bpmn-markers">
+          <g transform="translate(9 9) scale(0.917)"/>
+        </g>
+      </g>
+      <g data-id="work" data-source-id="work" data-source-path="0/0/1" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-node-1" class="bpmn-shape" data-kind="subProcess" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="240" y="64" width="144" height="100" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(240 64) scale(144 100)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="#020617" stroke="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(240 64)" class="bpmn-markers">
+          <g transform="translate(10 8) scale(0.8)"/>
+          <g transform="translate(62 81) scale(0.65)">
+            <rect x="2" y="2" width="20" height="20" rx="0" fill="#020617" stroke="#34d399" stroke-width="1.5"/>
+            <path d="M6 12 H18 M12 6 V18" fill="none" stroke="#34d399" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="timeout" data-source-id="timeout" data-source-path="0/0/2" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-node-5" class="bpmn-shape" data-kind="boundaryEvent" data-expanded="false" data-black-box="false" data-attached-to="work" data-events="timer">
+        <rect class="bpmn-bounds" x="292" y="144" width="40" height="40" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(292 144) scale(40 40)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#fb923c" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(292 144)" class="bpmn-markers">
+          <g transform="translate(9 9) scale(0.917)">
+            <circle cx="12" cy="12" r="10.5" fill="none" stroke="#fb923c" stroke-width="1.5"/>
+            <path d="M12 5 V12 L17 15" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M12 2 L12 4" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M12 20 L12 22" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M2 12 L4 12" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M20 12 L22 12" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M5 5 L6 6" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18 18 L19 19" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M5 19 L6 18" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M18 6 L19 5" fill="none" stroke="#fb923c" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
+      </g>
+      <g data-id="escalate" data-source-id="escalate" data-source-path="0/0/3" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-node-6" class="bpmn-shape" data-kind="task" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="520" y="64" width="140" height="100" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(520 64) scale(140 100)" aria-hidden="true">
+          <g transform="scale(0.01 0.0125)">
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="#020617" stroke="none" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+            <rect x="0" y="0" width="100" height="80" rx="10" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(520 64)" class="bpmn-markers">
+          <g transform="translate(10 8) scale(0.8)"/>
+        </g>
+      </g>
+      <g data-id="end" data-source-id="end" data-source-path="0/0/4" id="bpmn-u-62-70-6d-6e-2d-73-75-62-70-72-6f-63-65-73-73-2d-74-69-6d-65-6f-75-74-2d-64-61-72-6b-node-7" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-events="">
+        <rect class="bpmn-bounds" x="796" y="64" width="40" height="40" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+        <g transform="translate(796 64) scale(40 40)" aria-hidden="true">
+          <g transform="scale(0.01 0.01)">
+            <circle cx="50" cy="50" r="50" fill="#020617" stroke="#fb923c" stroke-width="4" vector-effect="non-scaling-stroke"/>
+          </g>
+        </g>
+        <g transform="translate(796 64)" class="bpmn-markers">
+          <g transform="translate(9 9) scale(0.917)"/>
+        </g>
+      </g>
+    </g>
+    <g class="bpmn-labels">
+      <g class="bpmn-label" data-owner="work">
+        <text x="312" y="118.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">Fulfil order</text>
+      </g>
+      <g class="bpmn-label" data-owner="escalate">
+        <text x="590" y="118.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">Escalate</text>
+      </g>
+    </g>
+  </g>
+</svg>

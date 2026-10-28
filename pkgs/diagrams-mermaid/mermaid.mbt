@@ -36,7 +36,10 @@ pub fn to_sequence(diagram : @ast.Diagram) -> @sequence.Conversion {
 /// Read `source` and render it with archify's classic theme as adaptive SVG.
 /// The result has the diagnostics of reading, converting and rendering. A
 /// source without a diagram gives no output.
-pub fn render_svg(source : String) -> @render.Rendered {
+pub fn render_svg(
+  source : String,
+  renderer~ : @svg.SvgRenderer = @svg.SvgRenderer::new(),
+) -> @render.Rendered {
   let r = read_diagram(source)
   if r.ast == None &&
     r.diagnostics.iter().any(d => d.code == "mermaid/unsupported-diagram") {
@@ -96,7 +99,7 @@ pub fn render_svg(source : String) -> @render.Rendered {
   if diagnostics.iter().any(d => d.severity == @diagrams.Severity::Error) {
     return @render.Rendered::failed("image/svg+xml", diagnostics[:])
   }
-  let rendered = @render.Renderer::render(@svg.SvgRenderer::new(), model)
+  let rendered = @render.Renderer::render(renderer, model)
   for d in rendered.diagnostics {
     diagnostics.push(d)
   }

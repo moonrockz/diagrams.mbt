@@ -60,6 +60,13 @@
     if (binding.length === null) binding.length = binding.element.getTotalLength();
     const group = document.createElementNS(ns, 'g');
     group.setAttribute('class', 'motion-overlay'); group.setAttribute('aria-hidden', 'true'); group.dataset.ordinal = String(item.ordinal); group.dataset.key = item.key;
+    // Apply the final connector's local separation to the entire overlay,
+    // including the moving token. Copying only the path mask lets the token
+    // repaint an underpass as a joined crossing.
+    for (const name of ['mask', 'clip-path']) {
+      const value = binding.element.getAttribute(name);
+      if (value) group.setAttribute(name, value);
+    }
     const path = document.createElementNS(ns, 'path'); path.setAttribute('d', binding.element.getAttribute('d'));
     path.setAttribute('fill', 'none'); path.setAttribute('stroke', data.accent); path.setAttribute('stroke-width', '3'); path.setAttribute('stroke-opacity', '.5'); path.setAttribute('stroke-dasharray', '12 8');
     const dot = document.createElementNS(ns, 'circle'); dot.setAttribute('r', '4'); dot.setAttribute('fill', data.accent);
@@ -83,7 +90,7 @@
       const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
       const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
       overlay.dot.setAttribute('cx', String(point.x)); overlay.dot.setAttribute('cy', String(point.y));
-      overlay.path.setAttribute('stroke-dashoffset', String(-overlay.binding.length * progress));
+      overlay.path.setAttribute('stroke-dashoffset', String((item.reversed ? 1 : -1) * overlay.binding.length * progress));
       overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
     }
     for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }

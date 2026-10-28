@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>improve-connectors-and-expand-gallery</title>
+<!--
+  Agent document template (.agents/templates/agent-document.html). Specs, plans and reports that a person reviews
+  start from this file: copy it, keep the <head> as it is, and write the content inside the main element.
+  Styles and scripts are files in .agents/templates/assets/, referenced and not embedded. In a copy, change the
+  "assets/" prefix of each href and src to the relative path from the copy to that directory, for example
+  "../../.agents/templates/assets/" from .dev/beads-specs/. See AGENTS.md, "Specs and plans are HTML documents".
+  Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
+  list them in nav.toc.
+-->
+<link rel="stylesheet" href="../../../../.agents/templates/assets/agent-document.css">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script defer src="../../../../.agents/templates/assets/highlight/highlight.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/agent-document.js"></script>
+</head>
+<body>
+<main>
+<h1>improve-connectors-and-expand-gallery</h1>
+<p class="meta">2026-10-28 · Implemented · Epic diagrams-w16</p>
+<nav class="toc" aria-label="Contents"><ul>
+<li><a href="#context">Context</a></li>
+<li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#gallery">Gallery coverage</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li>
+<li><a href="#migration">Migration and verification</a></li>
+</ul></nav>
+
+<h2 id="context">Context</h2>
+<p>See <a href="proposal.md">proposal.md</a> for the problem and scope.
+The swimlane router also serves flowcharts. It reserves 12 px outside the
+endpoint outline. The BPMN router uses different offsets by side, including a
+2 px bottom offset. Architecture reserves 16 px plus a small parallel-edge
+offset. These offsets are not one marker-aware clearance rule.</p>
+<p>Graph painters and scene bindings build their path strings separately.
+Railroads already have some intrinsic curved geometry. The shared renderer has
+per-kind limits but no connector-style options. The published gallery has 15
+cards in ten families; the development gallery has more corpus cases, including
+38 sequence inputs. More published examples can reuse qualified inputs.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p>Use one immutable final path for drawing, checking and motion. Keep model
+identity and source route points separate from presentation. Keep source parsing,
+workflow meaning and the public layout types stable. Add final path inspection
+without removing existing route-point access.</p>
+<p>Do not add a general graph-layout service, a source-language style grammar,
+a whole legacy renderer or a new library UI dependency.</p>
+
+<h2 id="decisions">Decisions</h2>
+<h3 id="con-1">CON-1. Owner: clear crossings by default</h3>
+<p>The owner requests more space near arrowheads, default curved crossing hops,
+selectable curved lines and more gallery examples. A crossing remains a drawing
+feature. It never creates a junction or a route between unrelated edges.</p>
+<p>The owner confirmed the <strong>Bridge hop</strong> example during visual
+review: a small rounded arch carries one line over the other, with a clear
+underpass. This confirms the bridge's appearance. The numeric radius and the
+supplied-BPMN default remain author choices in CON-2 and CON-5.</p>
+
+<h3 id="con-2">CON-2. Call: typed renderer options</h3>
+<p>Add immutable connector options to <code>SvgRenderer</code>. Carry those options
+through public convenience calls that construct a renderer. Use an optional style
+with <code>Elbow</code>, <code>Rounded</code> and <code>Curved</code> alternatives.
+An omitted style uses the current kind's natural path form. Thus graph routes
+remain elbows by default and railroad loops keep their natural form. Crossing
+mode defaults to <code>Bridge</code>, with <code>Plain</code> as an explicit choice.</p>
+<p>Provide a minimum terminal length and bounded corner/bridge radii. Start with
+24 px minimum terminal length, 8 px corner radius and 5 px bridge radius. Derive
+the effective terminal reservation from the maximum of the caller's minimum and
+the marker/stroke/transition space. Treat these numbers as proposed author
+choices, to be checked by the first tracer. Reject negative or non-finite
+lengths and non-positive radii. Avoid string-valued options and implicit CSS. Include render options in automatic
+resource identity and retain explicit-prefix isolation for inline copies.</p>
+
+<h3 id="con-ports">CON-2a. Owner: spread attachments and use clear sides</h3>
+<p>Spread multiple connections that land on one component side evenly across its
+usable extent. Keep one attachment centred. Reserve corner and marker padding
+instead of clustering several attachments near the side's centre. Retain stable
+fan ordering and actual outline attachment.</p>
+<p>Automatic routing considers clear top and bottom approaches as well as left
+and right approaches. Use spare sides for return edges and congested bundles when
+that reduces clutter and keeps terminal corridors clear. Keep explicit authored
+ports and edge direction hints. Preserve supplied BPMN waypoints by default.
+Real junctions and grammar joins remain shared semantic points.</p>
+
+<h3 id="con-3">CON-3. Call: keep routing and final path geometry distinct</h3>
+<p>Add a pure connector geometry component under <code>pkgs/diagrams-svg</code>.
+Adapters map each kind's points and intrinsic path segments into a shared path
+value with move, line and curve commands. Preserve original route points for
+existing callers. Build the final path once and supply its serialization to the
+painter, scene bindings and configured trace overlays.</p>
+<p>Automatic routers reserve terminal stubs before searching for the middle
+route. Smooth curves use bounded control points inside routing corridors.
+Rounded elbows replace local corners; smooth curves retain continuous internal
+tangents and are not only rounded right angles. Validate the resulting geometry
+against outlines and labels. A fixed elbow path remains a valid explicit style,
+not a silent fallback for a failed curved request.</p>
+
+<figure>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 190" role="img" aria-labelledby="line-sketch-title">
+<title id="line-sketch-title">Design sketch of elbow, rounded elbow and smooth curve styles</title>
+<g fill="none" stroke="#3978c6" stroke-width="3">
+<path d="M20 30 H100 V100 H180"/>
+<path d="M220 30 H280 Q300 30 300 50 V80 Q300 100 320 100 H380"/>
+<path d="M420 30 H444 C485 30 495 100 536 100 H580"/>
+</g>
+<g fill="currentColor" font-size="15"><text x="20" y="145">Elbow</text><text x="220" y="145">Rounded elbow</text><text x="420" y="145">Smooth curve</text></g>
+</svg>
+<figcaption>Design sketch only. Implementation fixtures must show real renderer output.</figcaption>
+</figure>
+
+<h3 id="con-4">CON-4. Call: classify crossings before adding bridges</h3>
+<p>Keep connector identity, semantic junction keys and paint order in the shared
+input. Detect transverse interior intersections on the styled paths. Exclude
+shared endpoints and semantic branch points, shared trunks, borders, lifelines
+and hidden layout constraints. Treat collinear overlaps as a routing issue.
+Use stable connection order to select the overpass.</p>
+<p>Use bounded adaptive subdivision for curve intersection and clearance checks,
+with deterministic tolerances and numeric formatting on all four targets.
+Insert a local curved bridge and mask only the crossing underpass. Local scoped
+SVG masks avoid painting an opaque background patch over tinted groups or other
+content. These masks use generated definitions, not source markup. Keep dash and
+colour styles on the final path. Reduce bridge size within stroke-aware bounds
+or revise automatic routing when crossings are crowded; do not silently omit a
+bridge or intrude into labels, bends or terminal stubs.</p>
+<p>A pure per-call work budget covers intersection candidates, subdivisions,
+crossings, path segments and output. A spatial candidate index can reduce dense
+pair checks, but it must not evade work accounting. Exhaustion returns a distinct
+connector limit diagnostic. Unsafe geometry returns a routing conflict.</p>
+
+<h3 id="con-5">CON-5. Call: preserve supplied BPMN paths by default</h3>
+<p>The current BPMN contract preserves supplied bounds, labels and edge waypoints
+apart from a common viewport translation. Proposed default: do not add bridges,
+curves or longer terminal approaches to supplied paths automatically. Add an
+explicit supplied-path styling option. When enabled, expose separate final
+presentation paths while retaining the exact source points. Do not move supplied
+shapes or silently repair a short supplied approach. Keep existing imported
+geometry findings. Unsafe requested styling returns a diagnostic.</p>
+<p>This default is an author proposal, not an owner-approved exception. The
+pending owner question can change this default before implementation. It does
+not require a different shared-path architecture.</p>
+
+<h3 id="con-6">CON-6. Call: share path and crossing treatment with motion</h3>
+<p><code>AnimatedRenderer</code> already accepts an SVG renderer. Use that route
+for connector settings. Replace independently reconstructed scene paths with
+final shared paths. Bind generated mask/clip references to their connections so
+progress, selection, trace highlights and moving tokens retain the underpass
+when appropriate. Avoid an overlay that draws an uninterrupted straight line
+through the bridge. Keep reverse traversal and repeated occurrences source-bound.</p>
+<p>Static export is the direct styled canonical SVG, including its masks, with no
+viewer state. A download does not rebuild layout or change playback position.
+Graph queries keep their current semantic catalog. They do not use geometric
+intersections as edges.</p>
+
+<h2 id="gallery">Gallery coverage</h2>
+<h3 id="gal-1">GAL-1. Call: three additional sources per family</h3>
+<p>Use three additional distinct sources for each published family. Existing
+corpus cases can be promoted when they are readable and qualified; add source
+fixtures for gaps. Do not count colour variants, player variants or repeated
+trace views as additional sources. Retain all 15 existing IDs and routes.</p>
+<table><thead><tr><th>Family</th><th>Proposed additional cases</th></tr></thead><tbody>
+<tr><td>Sequence</td><td>Authentication and retry; creation and destruction; nested alternative and parallel messages</td></tr>
+<tr><td>ZenUML</td><td>Nested calls and returns; try/catch/finally; asynchronous fan-out with symbols</td></tr>
+<tr><td>Architecture</td><td>Nested service groups; junction grid with crossing routes; group-boundary ports and parallel connections</td></tr>
+<tr><td>BPMN</td><td>Automatic approval loop; cross-pool message collaboration; supplied-DI subprocess with boundary event</td></tr>
+<tr><td>Swimlane</td><td>Three-team escalation loop; reverse-direction handoff; nested ownership with a collapsed group</td></tr>
+<tr><td>Flowchart</td><td>Mermaid dense decision graph; modern PlantUML fork and repeat; legacy PlantUML partition and return</td></tr>
+<tr><td>Regex</td><td>Identifier validation; alternatives and repetition; assertions and named capture structure</td></tr>
+<tr><td>EBNF</td><td>Command grammar; recursive lists; choices with optional and repeated terms</td></tr>
+<tr><td>JSON</td><td>API response; nested inventory with empty collections; repeated values and exact numbers</td></tr>
+<tr><td>YAML</td><td>Deployment configuration; list of service maps; nested flow and block collections</td></tr>
+</tbody></table>
+<p>These example titles are author choices. Keep inputs inside current syntax
+profiles. Add at least one same-model comparison in all three styles and both
+crossing modes, with visible render settings. A comparison's style variants do
+not replace the three distinct source examples. The target is at least 45
+published cards, including at least 30 additional source examples.</p>
+<p>Extend the existing acceptance artifact producers and
+<code>scripts/gallery.mbtx</code> instead of adding a separate publisher. The
+published inventory remains generated and checked. Both local and site galleries
+show the new sources; site details keep root/next paths, no-script browsing,
+fixed-theme previews and qualified offline player links. Retain honest execution
+and external-evidence labels.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table><thead><tr><th>Risk</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Default options change existing SVG bytes</td><td>Review connector-only differences, document the visual change and update affected portable snapshots deliberately. No blanket promise of historical bytes.</td></tr>
+<tr><td>A curve or bridge intersects a label or marker</td><td>Check final geometry, reserve terminal stubs and bound bridge radii. Add tight-return and dense-crossing fixtures.</td></tr>
+<tr><td>False bridges at real joins</td><td>Use semantic endpoint and branch metadata in all adapters. Cover junctions, fan-out, railroad alternatives and lifelines.</td></tr>
+<tr><td>Quadratic crossing work or excessive subdivision</td><td>Explicit candidate, segment, crossing and output budgets; test distinct exhaustion findings.</td></tr>
+<tr><td>Masks vanish or clash in inline copies</td><td>Scope definitions by the renderer prefix and qualify fixed/adaptive themes, tinted groups, browser selection and export.</td></tr>
+<tr><td>A large gallery adds slow work to each check</td><td>Reuse stored qualified artifacts and the existing browser stages; do not add duplicate build jobs.</td></tr>
+</tbody></table>
+
+<h2 id="migration">Migration and verification</h2>
+<ol>
+<li>Prove one automatically routed crossing flowchart from source to curved SVG,
+scene and offline playback. Include a tight marked approach and a plain-crossing comparison.</li>
+<li>Complete kind adapters and automatic terminal clearance. Preserve original
+public route-point access and document new additive option/path values.</li>
+<li>Complete crossing classification, masks and limits, then integrate all
+selection, trace and playback overlays.</li>
+<li>Review updated SVG/HTML snapshots. Confirm labels, source IDs, model values,
+query results, graph connectivity, frozen source corpora and existing URLs remain stable.</li>
+<li>Qualify all four targets, fresh consumers, browser motion, direct export,
+all gallery artifacts and root/next site compatibility. Reuse current mise tasks.</li>
+<li>Land as one pull request when practical. The final task-group pull request
+archives the change and fixes HTML asset links. Close beads after merge, then
+sync the tracker and remove the delivered branch and stale generated backups.</li>
+</ol>
+<p>No release or publication is part of this change. Before merge, rollback is a
+normal branch revert. After merge, revert the coordinated renderer, snapshots
+and gallery updates together if a regression requires it; do not republish stale
+assets with incompatible scene paths.</p>
+</main>
+</body>
+</html>

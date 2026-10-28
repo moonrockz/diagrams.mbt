@@ -29,21 +29,25 @@ pub fn bpmn_geometry_path(@bpmn-layout.Connection, max_units? : Int32) -> String
 
 pub fn bpmn_path(@bpmn.Flow) -> String
 
+pub fn check_connectors(ArrayView[ResolvedConnector], ArrayView[ConnectorObstacle], width~ : Double, height~ : Double, limits? : ConnectorLimits) -> ReadOnlyArray[@diagrams.Diagnostic]
+
 pub fn flowchart_path(@flowchart-layout.Connection) -> String
 
-pub fn render_architecture(@architecture.Architecture, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @architecture-layout.Limits) -> @render.Rendered
+pub fn inspect_connectors(String) -> ReadOnlyArray[ResolvedConnector]
 
-pub fn render_data_tree(@data-tree.DataTree, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @data-tree-layout.Limits) -> @render.Rendered
+pub fn render_architecture(@architecture.Architecture, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @architecture-layout.Limits, connectors? : ConnectorOptions) -> @render.Rendered
 
-pub fn render_ebnf(@ebnf.Grammar, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight) -> @render.Rendered
+pub fn render_data_tree(@data-tree.DataTree, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @data-tree-layout.Limits, connectors? : ConnectorOptions) -> @render.Rendered
 
-pub fn render_flowchart(@flowchart.Flowchart, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @flowchart-layout.Limits) -> @render.Rendered
+pub fn render_ebnf(@ebnf.Grammar, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight, connectors? : ConnectorOptions) -> @render.Rendered
 
-pub fn render_regex(@regex.Regex, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight) -> @render.Rendered
+pub fn render_flowchart(@flowchart.Flowchart, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @flowchart-layout.Limits, connectors? : ConnectorOptions) -> @render.Rendered
 
-pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode, id_prefix? : String) -> String
+pub fn render_regex(@regex.Regex, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @railroad-layout.Limits, trace? : TraceHighlight, connectors? : ConnectorOptions) -> @render.Rendered
 
-pub fn render_swimlane(@swimlane.Swimlane, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @swimlane-layout.Limits) -> @render.Rendered
+pub fn render_sequence(@sequence.Sequence, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, connectors? : ConnectorOptions) -> String
+
+pub fn render_swimlane(@swimlane.Swimlane, theme? : @theme.Theme, mode? : Mode, id_prefix? : String, limits? : @swimlane-layout.Limits, connectors? : ConnectorOptions) -> @render.Rendered
 
 pub fn swimlane_path(@swimlane-layout.Connection) -> String
 
@@ -61,6 +65,96 @@ pub fn ChannelStyle::hidden() -> Self
 pub fn ChannelStyle::new(visible? : Bool, color? : @theme.Color, width? : Double, dashed? : Bool) -> Self
 pub fn ChannelStyle::not_equal(Self, Self) -> Bool
 pub fn ChannelStyle::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ConnectorCommand {
+  Move(ConnectorPoint)
+  Line(ConnectorPoint)
+  Quadratic(ConnectorPoint, ConnectorPoint)
+  Cubic(ConnectorPoint, ConnectorPoint, ConnectorPoint)
+} derive(Eq, @debug.Debug)
+pub fn ConnectorCommand::equal(Self, Self) -> Bool
+pub fn ConnectorCommand::not_equal(Self, Self) -> Bool
+pub fn ConnectorCommand::to_repr(Self) -> @debug.Repr
+
+pub struct ConnectorGeometry {
+  paths : ReadOnlyArray[ResolvedConnector]
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn ConnectorGeometry::equal(Self, Self) -> Bool
+pub fn ConnectorGeometry::not_equal(Self, Self) -> Bool
+pub fn ConnectorGeometry::to_repr(Self) -> @debug.Repr
+
+pub struct ConnectorLimits {
+  candidates : Int32
+  subdivisions : Int32
+  segments : Int32
+  crossings : Int32
+  output_units : Int32
+} derive(Eq, @debug.Debug)
+pub fn ConnectorLimits::equal(Self, Self) -> Bool
+pub fn ConnectorLimits::new(candidates? : Int32, subdivisions? : Int32, segments? : Int32, crossings? : Int32, output_units? : Int32) -> Self
+pub fn ConnectorLimits::not_equal(Self, Self) -> Bool
+pub fn ConnectorLimits::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ConnectorObstacle {
+  owner : String
+  x : Double
+  y : Double
+  width : Double
+  height : Double
+} derive(Eq, @debug.Debug)
+pub fn ConnectorObstacle::equal(Self, Self) -> Bool
+pub fn ConnectorObstacle::not_equal(Self, Self) -> Bool
+pub fn ConnectorObstacle::to_repr(Self) -> @debug.Repr
+
+pub struct ConnectorOptions {
+  style : ConnectorStyle?
+  crossing : CrossingMode
+  minimum_approach : Double
+  corner_radius : Double
+  bridge_radius : Double
+  style_supplied_bpmn : Bool
+  limits : ConnectorLimits
+} derive(Eq, @debug.Debug)
+pub fn ConnectorOptions::equal(Self, Self) -> Bool
+pub fn ConnectorOptions::new(style? : ConnectorStyle, crossing? : CrossingMode, minimum_approach? : Double, corner_radius? : Double, bridge_radius? : Double, style_supplied_bpmn? : Bool, limits? : ConnectorLimits) -> Self
+pub fn ConnectorOptions::not_equal(Self, Self) -> Bool
+pub fn ConnectorOptions::to_repr(Self) -> @debug.Repr
+
+pub struct ConnectorPath {
+  commands : ReadOnlyArray[ConnectorCommand]
+} derive(Eq, @debug.Debug)
+pub fn ConnectorPath::equal(Self, Self) -> Bool
+pub fn ConnectorPath::new(ArrayView[ConnectorCommand]) -> Self?
+pub fn ConnectorPath::not_equal(Self, Self) -> Bool
+pub fn ConnectorPath::parse(String) -> Self?
+pub fn ConnectorPath::svg(Self) -> String
+pub fn ConnectorPath::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ConnectorPoint {
+  x : Double
+  y : Double
+} derive(Eq, @debug.Debug)
+pub fn ConnectorPoint::equal(Self, Self) -> Bool
+pub fn ConnectorPoint::not_equal(Self, Self) -> Bool
+pub fn ConnectorPoint::to_repr(Self) -> @debug.Repr
+
+pub(all) enum ConnectorStyle {
+  Elbow
+  Rounded
+  Curved
+} derive(Eq, @debug.Debug)
+pub fn ConnectorStyle::equal(Self, Self) -> Bool
+pub fn ConnectorStyle::not_equal(Self, Self) -> Bool
+pub fn ConnectorStyle::to_repr(Self) -> @debug.Repr
+
+pub(all) enum CrossingMode {
+  Bridge
+  Plain
+} derive(Eq, @debug.Debug)
+pub fn CrossingMode::equal(Self, Self) -> Bool
+pub fn CrossingMode::not_equal(Self, Self) -> Bool
+pub fn CrossingMode::to_repr(Self) -> @debug.Repr
 
 pub(all) enum Mode {
   Adaptive
@@ -94,7 +188,20 @@ pub struct PathBinding {
   occurrence : @animation.Occurrence
   id : String
   path : String
+  mask : String?
 }
+
+pub struct ResolvedConnector {
+  id : String
+  source : String
+  target : String
+  route : ConnectorPath
+  path : ConnectorPath
+  mask : String?
+} derive(Eq, @debug.Debug)
+pub fn ResolvedConnector::equal(Self, Self) -> Bool
+pub fn ResolvedConnector::not_equal(Self, Self) -> Bool
+pub fn ResolvedConnector::to_repr(Self) -> @debug.Repr
 
 pub struct Scene {
   canonical_svg : String
@@ -120,9 +227,11 @@ pub struct SvgRenderer {
   flowchart_limits : @flowchart-layout.Limits
   railroad_limits : @railroad-layout.Limits
   data_tree_limits : @data-tree-layout.Limits
+  connectors : ConnectorOptions
   trace : TraceHighlight?
 }
-pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy, bpmn_limits? : @bpmn-layout.Limits, architecture_limits? : @architecture-layout.Limits, swimlane_limits? : @swimlane-layout.Limits, flowchart_limits? : @flowchart-layout.Limits, railroad_limits? : @railroad-layout.Limits, data_tree_limits? : @data-tree-layout.Limits, trace? : TraceHighlight) -> Self
+pub fn SvgRenderer::connector_geometry(Self, @render.Diagram) -> ConnectorGeometry
+pub fn SvgRenderer::new(theme? : @theme.Theme, mode? : Mode, id_prefix? : String, bpmn_policy? : @bpmn.GeometryPolicy, bpmn_limits? : @bpmn-layout.Limits, architecture_limits? : @architecture-layout.Limits, swimlane_limits? : @swimlane-layout.Limits, flowchart_limits? : @flowchart-layout.Limits, railroad_limits? : @railroad-layout.Limits, data_tree_limits? : @data-tree-layout.Limits, trace? : TraceHighlight, connectors? : ConnectorOptions) -> Self
 pub fn SvgRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub fn[P : @railroad-trace.RailroadTraceProvider] SvgRenderer::render_traced(Self, @render.Diagram, P, String, start_rule? : String, limits? : @railroad-trace.TraceLimits, attempts? : ArrayView[String], matched? : ChannelStyle, not_matched? : ChannelStyle, taken? : ChannelStyle, failure? : ChannelStyle) -> TracedRender
 pub fn SvgRenderer::scene(Self, @render.Diagram, sequence_view_id? : String, limits? : @animation.Limits, output_units? : Int32) -> SceneResult

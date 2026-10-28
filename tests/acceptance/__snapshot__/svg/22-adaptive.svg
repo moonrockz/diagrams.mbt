@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249 203" width="249" height="203" role="img" data-diagram="sequence" id="seq-f0df58c9a2157aa9-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 249 203" width="249" height="203" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-85fc4e3d30cdef8f-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 1 participant (John) and 0 messages.</desc>
   <defs>
     <style>
-svg#seq-f0df58c9a2157aa9-diagram {
+svg#seq-85fc4e3d30cdef8f-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg#seq-f0df58c9a2157aa9-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#seq-f0df58c9a2157aa9-diagram {
+  svg#seq-85fc4e3d30cdef8f-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg#seq-f0df58c9a2157aa9-diagram {
     --external-ink: #606f85;
   }
 }
-svg#seq-f0df58c9a2157aa9-diagram[data-theme="dark"] {
+svg#seq-85fc4e3d30cdef8f-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg#seq-f0df58c9a2157aa9-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#seq-f0df58c9a2157aa9-diagram[data-theme="light"] {
+svg#seq-85fc4e3d30cdef8f-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;

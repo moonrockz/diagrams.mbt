@@ -1,0 +1,8 @@
+@startebnf
+title Protocol line
+message = verb, " ", path, [ "?", query ];
+verb = "GET" | "POST" | "DELETE";
+path = "/", name, { "/", name };
+query = name, "=", name, { "&", name, "=", name };
+name = ? nonempty text ?;
+@endebnf

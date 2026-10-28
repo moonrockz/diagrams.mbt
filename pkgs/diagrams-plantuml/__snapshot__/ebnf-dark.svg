@@ -1,55 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 430" width="352" height="430" role="img" data-diagram="ebnf" id="rr-e6167c8ed5cd860e-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 528 430" width="528" height="430" role="img" data-diagram="ebnf" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="rr-1a17f2590b2760c2-diagram">
   <title>EBNF grammar</title>
   <desc>Railroad diagram of a grammar with 2 rules and 8 terms. References are not expanded. It shows structure; it does not parse input.</desc>
   <defs>
-    <marker id="rr-e6167c8ed5cd860e-rr-return" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="rr-1a17f2590b2760c2-rr-return" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="12" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-8 -4 L0 0 L-8 4 Z" fill="#94a3b8" stroke="none"/>
     </marker>
   </defs>
-  <rect class="bg" x="0" y="0" width="352" height="430" fill="#020617"/>
+  <rect class="bg" x="0" y="0" width="528" height="430" fill="#020617"/>
   <g class="rr-notes"/>
   <g class="rr-frames">
     <g class="rr-frame rr-except" data-owner="item-1/e.2.1">
-      <rect class="rr-frame-box" x="70" y="340" width="69" height="70" rx="8" fill="none" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="5 4"/>
-      <text class="rr-frame-label" x="104.5" y="351" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#fb7185">
-        <tspan x="104.5" y="351">except</tspan>
+      <rect class="rr-frame-box" x="114" y="340" width="69" height="70" rx="8" fill="none" stroke="#fb7185" stroke-width="1.2" stroke-dasharray="5 4"/>
+      <text class="rr-frame-label" x="148.5" y="351" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#fb7185">
+        <tspan x="148.5" y="351">except</tspan>
       </text>
     </g>
   </g>
   <g class="rr-connectors">
-    <path class="rr-connector rr-start" data-connector="c6:item-0:start" data-role="start" data-owner="item-0" d="M30 69.5 L50 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-gap" data-connector="c10:item-0/e.1:gap" data-role="gap" data-owner="item-0/e.1" d="M102 69.5 L122 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-enter" data-connector="c10:item-0/e.1:enter" data-role="enter" data-owner="item-0/e.1" d="M122 69.5 L142 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-leave" data-connector="c10:item-0/e.1:leave" data-role="leave" data-owner="item-0/e.1" d="M282 69.5 L302 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-bypass" data-connector="c10:item-0/e.1:bypass" data-role="bypass" data-owner="item-0/e.1" d="M122 69.5 L127 69.5 Q132 69.5 132 64.5 L132 52 Q132 44 140 44 L284 44 Q292 44 292 52 L292 64.5 Q292 69.5 297 69.5 L302 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-return" data-connector="c10:item-0/e.1:return" data-role="return" data-owner="item-0/e.1" d="M282 69.5 L287 69.5 Q292 69.5 292 74.5 L292 126 Q292 134 284 134 L140 134 Q132 134 132 126 L132 74.5 Q132 69.5 137 69.5 L142 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-e6167c8ed5cd860e-rr-return)"/>
-    <path class="rr-connector rr-gap" data-connector="c14:item-0/e.1.0.1:gap" data-role="gap" data-owner="item-0/e.1.0.1" d="M210 69.5 L230 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-split-0" data-connector="c14:item-0/e.1.0.0:split-0" data-role="split-0" data-owner="item-0/e.1.0.0" d="M142 69.5 L162 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-join-0" data-connector="c14:item-0/e.1.0.0:join-0" data-role="join-0" data-owner="item-0/e.1.0.0" d="M190 69.5 L210 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-split-1" data-connector="c14:item-0/e.1.0.0:split-1" data-role="split-1" data-owner="item-0/e.1.0.0" d="M142 69.5 L147 69.5 Q152 69.5 152 74.5 L152 103.5 Q152 108.5 157 108.5 L162 108.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-join-1" data-connector="c14:item-0/e.1.0.0:join-1" data-role="join-1" data-owner="item-0/e.1.0.0" d="M190 108.5 L195 108.5 Q200 108.5 200 103.5 L200 74.5 Q200 69.5 205 69.5 L210 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-end" data-connector="c6:item-0:end" data-role="end" data-owner="item-0" d="M302 69.5 L322 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-start" data-connector="c6:item-1:start" data-role="start" data-owner="item-1" d="M30 195.5 L50 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-split-0" data-connector="c8:item-1/e:split-0" data-role="split-0" data-owner="item-1/e" d="M50 195.5 L70 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-join-0" data-connector="c8:item-1/e:join-0" data-role="join-0" data-owner="item-1/e" d="M138 195.5 L159 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-split-1" data-connector="c8:item-1/e:split-1" data-role="split-1" data-owner="item-1/e" d="M50 195.5 L55 195.5 Q60 195.5 60 200.5 L60 270.5 Q60 275.5 65 275.5 L70 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-join-1" data-connector="c8:item-1/e:join-1" data-role="join-1" data-owner="item-1/e" d="M138 275.5 L143.5 275.5 Q149 275.5 149 270 L149 200.5 Q149 195.5 154 195.5 L159 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-split-2" data-connector="c8:item-1/e:split-2" data-role="split-2" data-owner="item-1/e" d="M50 195.5 L55 195.5 Q60 195.5 60 200.5 L60 309.5 Q60 314.5 65 314.5 L70 314.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-join-2" data-connector="c8:item-1/e:join-2" data-role="join-2" data-owner="item-1/e" d="M98 314.5 L141 314.5 Q149 314.5 149 306.5 L149 200.5 Q149 195.5 154 195.5 L159 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-enter" data-connector="c10:item-1/e.0:enter" data-role="enter" data-owner="item-1/e.0" d="M70 195.5 L90 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-leave" data-connector="c10:item-1/e.0:leave" data-role="leave" data-owner="item-1/e.0" d="M118 195.5 L138 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-0:start" data-role="start" data-owner="item-0" d="M30 69.5 L50 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c6:item-0:start" data-connector-source="" data-connector-target="" data-connector-route="M30 69.5 L50 69.5" data-connector-key="0"/>
+    <path class="rr-connector rr-gap" data-connector="c10:item-0/e.1:gap" data-role="gap" data-owner="item-0/e.1" d="M102 69.5 L122 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-0/e.1:gap" data-connector-source="" data-connector-target="" data-connector-route="M102 69.5 L122 69.5" data-connector-key="1"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-0/e.1:enter" data-role="enter" data-owner="item-0/e.1" d="M122 69.5 L186 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-0/e.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M122 69.5 L186 69.5" data-connector-key="2"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-0/e.1:leave" data-role="leave" data-owner="item-0/e.1" d="M414 69.5 L478 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-0/e.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M414 69.5 L478 69.5" data-connector-key="3"/>
+    <path class="rr-connector rr-bypass" data-connector="c10:item-0/e.1:bypass" data-role="bypass" data-owner="item-0/e.1" d="M122 69.5 L146 69.5 Q154 69.5 154 61.5 L154 52 Q154 44 162 44 L438 44 Q446 44 446 52 L446 61.5 Q446 69.5 454 69.5 L478 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-0/e.1:bypass" data-connector-source="" data-connector-target="" data-connector-route="M122 69.5 L146 69.5 Q154 69.5 154 61.5 L154 52 Q154 44 162 44 L438 44 Q446 44 446 52 L446 61.5 Q446 69.5 454 69.5 L478 69.5" data-connector-key="4"/>
+    <path class="rr-connector rr-return" data-connector="c10:item-0/e.1:return" data-role="return" data-owner="item-0/e.1" d="M414 69.5 L438 69.5 Q446 69.5 446 77.5 L446 126 Q446 134 438 134 L162 134 Q154 134 154 126 L154 77.5 Q154 69.5 162 69.5 L186 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-1a17f2590b2760c2-rr-return)" data-connector-id="c10:item-0/e.1:return" data-connector-source="" data-connector-target="" data-connector-route="M414 69.5 L438 69.5 Q446 69.5 446 77.5 L446 126 Q446 134 438 134 L162 134 Q154 134 154 126 L154 77.5 Q154 69.5 162 69.5 L186 69.5" data-connector-key="5"/>
+    <path class="rr-connector rr-gap" data-connector="c14:item-0/e.1.0.1:gap" data-role="gap" data-owner="item-0/e.1.0.1" d="M342 69.5 L362 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c14:item-0/e.1.0.1:gap" data-connector-source="" data-connector-target="" data-connector-route="M342 69.5 L362 69.5" data-connector-key="6"/>
+    <path class="rr-connector rr-split-0" data-connector="c14:item-0/e.1.0.0:split-0" data-role="split-0" data-owner="item-0/e.1.0.0" d="M186 69.5 L250 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c14:item-0/e.1.0.0:split-0" data-connector-source="" data-connector-target="" data-connector-route="M186 69.5 L250 69.5" data-connector-key="7"/>
+    <path class="rr-connector rr-join-0" data-connector="c14:item-0/e.1.0.0:join-0" data-role="join-0" data-owner="item-0/e.1.0.0" d="M278 69.5 L342 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c14:item-0/e.1.0.0:join-0" data-connector-source="" data-connector-target="" data-connector-route="M278 69.5 L342 69.5" data-connector-key="8"/>
+    <path class="rr-connector rr-split-1" data-connector="c14:item-0/e.1.0.0:split-1" data-role="split-1" data-owner="item-0/e.1.0.0" d="M186 69.5 L210 69.5 Q218 69.5 218 77.5 L218 100.5 Q218 108.5 226 108.5 L250 108.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c14:item-0/e.1.0.0:split-1" data-connector-source="" data-connector-target="" data-connector-route="M186 69.5 L210 69.5 Q218 69.5 218 77.5 L218 100.5 Q218 108.5 226 108.5 L250 108.5" data-connector-key="9"/>
+    <path class="rr-connector rr-join-1" data-connector="c14:item-0/e.1.0.0:join-1" data-role="join-1" data-owner="item-0/e.1.0.0" d="M278 108.5 L302 108.5 Q310 108.5 310 100.5 L310 77.5 Q310 69.5 318 69.5 L342 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c14:item-0/e.1.0.0:join-1" data-connector-source="" data-connector-target="" data-connector-route="M278 108.5 L302 108.5 Q310 108.5 310 100.5 L310 77.5 Q310 69.5 318 69.5 L342 69.5" data-connector-key="10"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-0:end" data-role="end" data-owner="item-0" d="M478 69.5 L498 69.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c6:item-0:end" data-connector-source="" data-connector-target="" data-connector-route="M478 69.5 L498 69.5" data-connector-key="11"/>
+    <path class="rr-connector rr-start" data-connector="c6:item-1:start" data-role="start" data-owner="item-1" d="M30 195.5 L50 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c6:item-1:start" data-connector-source="" data-connector-target="" data-connector-route="M30 195.5 L50 195.5" data-connector-key="12"/>
+    <path class="rr-connector rr-split-0" data-connector="c8:item-1/e:split-0" data-role="split-0" data-owner="item-1/e" d="M50 195.5 L114 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:split-0" data-connector-source="" data-connector-target="" data-connector-route="M50 195.5 L114 195.5" data-connector-key="13"/>
+    <path class="rr-connector rr-join-0" data-connector="c8:item-1/e:join-0" data-role="join-0" data-owner="item-1/e" d="M270 195.5 L334 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:join-0" data-connector-source="" data-connector-target="" data-connector-route="M270 195.5 L334 195.5" data-connector-key="14"/>
+    <path class="rr-connector rr-split-1" data-connector="c8:item-1/e:split-1" data-role="split-1" data-owner="item-1/e" d="M50 195.5 L74 195.5 Q82 195.5 82 203.5 L82 267.5 Q82 275.5 90 275.5 L114 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:split-1" data-connector-source="" data-connector-target="" data-connector-route="M50 195.5 L74 195.5 Q82 195.5 82 203.5 L82 267.5 Q82 275.5 90 275.5 L114 275.5" data-connector-key="15"/>
+    <path class="rr-connector rr-join-1" data-connector="c8:item-1/e:join-1" data-role="join-1" data-owner="item-1/e" d="M270 275.5 L294 275.5 Q302 275.5 302 267.5 L302 203.5 Q302 195.5 310 195.5 L334 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:join-1" data-connector-source="" data-connector-target="" data-connector-route="M270 275.5 L294 275.5 Q302 275.5 302 267.5 L302 203.5 Q302 195.5 310 195.5 L334 195.5" data-connector-key="16"/>
+    <path class="rr-connector rr-split-2" data-connector="c8:item-1/e:split-2" data-role="split-2" data-owner="item-1/e" d="M50 195.5 L74 195.5 Q82 195.5 82 203.5 L82 306.5 Q82 314.5 90 314.5 L114 314.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:split-2" data-connector-source="" data-connector-target="" data-connector-route="M50 195.5 L74 195.5 Q82 195.5 82 203.5 L82 306.5 Q82 314.5 90 314.5 L114 314.5" data-connector-key="17"/>
+    <path class="rr-connector rr-join-2" data-connector="c8:item-1/e:join-2" data-role="join-2" data-owner="item-1/e" d="M142 314.5 L294 314.5 Q302 314.5 302 306.5 L302 203.5 Q302 195.5 310 195.5 L334 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c8:item-1/e:join-2" data-connector-source="" data-connector-target="" data-connector-route="M142 314.5 L294 314.5 Q302 314.5 302 306.5 L302 203.5 Q302 195.5 310 195.5 L334 195.5" data-connector-key="18"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-1/e.0:enter" data-role="enter" data-owner="item-1/e.0" d="M114 195.5 L178 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-1/e.0:enter" data-connector-source="" data-connector-target="" data-connector-route="M114 195.5 L178 195.5" data-connector-key="19"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-1/e.0:leave" data-role="leave" data-owner="item-1/e.0" d="M206 195.5 L270 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-1/e.0:leave" data-connector-source="" data-connector-target="" data-connector-route="M206 195.5 L270 195.5" data-connector-key="20"/>
     <g class="rr-wire">
-      <path class="rr-connector rr-return" data-connector="c10:item-1/e.0:return" data-role="return" data-owner="item-1/e.0" d="M118 195.5 L123 195.5 Q128 195.5 128 200.5 L128 213 Q128 221 120 221 L88 221 Q80 221 80 213 L80 200.5 Q80 195.5 85 195.5 L90 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-e6167c8ed5cd860e-rr-return)"/>
-      <text class="rr-bounds" x="104" y="232" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
-        <tspan x="104" y="232">3×</tspan>
+      <path class="rr-connector rr-return" data-connector="c10:item-1/e.0:return" data-role="return" data-owner="item-1/e.0" d="M206 195.5 L230 195.5 Q238 195.5 238 203.5 L238 213 Q238 221 230 221 L154 221 Q146 221 146 213 L146 203.5 Q146 195.5 154 195.5 L178 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#rr-1a17f2590b2760c2-rr-return)" data-connector-id="c10:item-1/e.0:return" data-connector-source="" data-connector-target="" data-connector-route="M206 195.5 L230 195.5 Q238 195.5 238 203.5 L238 213 Q238 221 230 221 L154 221 Q146 221 146 213 L146 203.5 Q146 195.5 154 195.5 L178 195.5" data-connector-key="21"/>
+      <text class="rr-bounds" x="192" y="232" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="192" y="232">3×</tspan>
       </text>
     </g>
-    <path class="rr-connector rr-enter" data-connector="c10:item-1/e.1:enter" data-role="enter" data-owner="item-1/e.1" d="M70 275.5 L90 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-leave" data-connector="c10:item-1/e.1:leave" data-role="leave" data-owner="item-1/e.1" d="M118 275.5 L138 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-bypass" data-connector="c10:item-1/e.1:bypass" data-role="bypass" data-owner="item-1/e.1" d="M70 275.5 L75 275.5 Q80 275.5 80 270.5 L80 258 Q80 250 88 250 L120 250 Q128 250 128 258 L128 270.5 Q128 275.5 133 275.5 L138 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-    <path class="rr-connector rr-enter" data-connector="c12:item-1/e.2.1:enter" data-role="enter" data-owner="item-1/e.2.1" d="M74 382.5 L84 382.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
-    <path class="rr-connector rr-leave" data-connector="c12:item-1/e.2.1:leave" data-role="leave" data-owner="item-1/e.2.1" d="M112 382.5 L135 382.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3"/>
-    <path class="rr-connector rr-end" data-connector="c6:item-1:end" data-role="end" data-owner="item-1" d="M159 195.5 L179 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <path class="rr-connector rr-enter" data-connector="c10:item-1/e.1:enter" data-role="enter" data-owner="item-1/e.1" d="M114 275.5 L178 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-1/e.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M114 275.5 L178 275.5" data-connector-key="22"/>
+    <path class="rr-connector rr-leave" data-connector="c10:item-1/e.1:leave" data-role="leave" data-owner="item-1/e.1" d="M206 275.5 L270 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-1/e.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M206 275.5 L270 275.5" data-connector-key="23"/>
+    <path class="rr-connector rr-bypass" data-connector="c10:item-1/e.1:bypass" data-role="bypass" data-owner="item-1/e.1" d="M114 275.5 L138 275.5 Q146 275.5 146 267.5 L146 258 Q146 250 154 250 L230 250 Q238 250 238 258 L238 267.5 Q238 275.5 246 275.5 L270 275.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c10:item-1/e.1:bypass" data-connector-source="" data-connector-target="" data-connector-route="M114 275.5 L138 275.5 Q146 275.5 146 267.5 L146 258 Q146 250 154 250 L230 250 Q238 250 238 258 L238 267.5 Q238 275.5 246 275.5 L270 275.5" data-connector-key="24"/>
+    <path class="rr-connector rr-enter" data-connector="c12:item-1/e.2.1:enter" data-role="enter" data-owner="item-1/e.2.1" d="M118 382.5 L128 382.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c12:item-1/e.2.1:enter" data-connector-source="" data-connector-target="" data-connector-route="M118 382.5 L128 382.5" data-connector-key="25"/>
+    <path class="rr-connector rr-leave" data-connector="c12:item-1/e.2.1:leave" data-role="leave" data-owner="item-1/e.2.1" d="M156 382.5 L179 382.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-constraint="true" stroke-dasharray="4 3" data-connector-id="c12:item-1/e.2.1:leave" data-connector-source="" data-connector-target="" data-connector-route="M156 382.5 L179 382.5" data-connector-key="26"/>
+    <path class="rr-connector rr-end" data-connector="c6:item-1:end" data-role="end" data-owner="item-1" d="M334 195.5 L354 195.5" fill="none" stroke="#94a3b8" stroke-width="1.5" data-connector-id="c6:item-1:end" data-connector-source="" data-connector-target="" data-connector-route="M334 195.5 L354 195.5" data-connector-key="27"/>
   </g>
   <g class="rr-terms">
     <g class="rr-term rr-reference" data-term="item-0/e.0" data-role="reference" data-rule="item-0" data-target="item-1">
@@ -59,48 +59,48 @@
       </text>
     </g>
     <g class="rr-term rr-terminal" data-term="item-0/e.1.0.0.0" data-role="consumed" data-rule="item-0">
-      <rect class="rr-box" x="162" y="56" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
-      <text class="rr-label" x="176" y="72" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
-        <tspan x="176" y="72">+</tspan>
+      <rect class="rr-box" x="250" y="56" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="264" y="72" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="264" y="72">+</tspan>
       </text>
     </g>
     <g class="rr-term rr-terminal" data-term="item-0/e.1.0.0.1" data-role="consumed" data-rule="item-0">
-      <rect class="rr-box" x="162" y="95" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
-      <text class="rr-label" x="176" y="111" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
-        <tspan x="176" y="111">-</tspan>
+      <rect class="rr-box" x="250" y="95" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="264" y="111" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="264" y="111">-</tspan>
       </text>
     </g>
     <g class="rr-term rr-reference" data-term="item-0/e.1.0.1" data-role="reference" data-rule="item-0" data-target="item-1">
-      <rect class="rr-box" x="230" y="56" width="52" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
-      <text class="rr-label" x="256" y="72" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
-        <tspan x="256" y="72">term</tspan>
+      <rect class="rr-box" x="362" y="56" width="52" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="rr-label" x="388" y="72" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="388" y="72">term</tspan>
       </text>
     </g>
     <g class="rr-term rr-terminal" data-term="item-1/e.0.0" data-role="consumed" data-rule="item-1">
-      <rect class="rr-box" x="90" y="182" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
-      <text class="rr-label" x="104" y="198" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
-        <tspan x="104" y="198">x</tspan>
+      <rect class="rr-box" x="178" y="182" width="28" height="27" rx="13.5" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="rr-label" x="192" y="198" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="192" y="198">x</tspan>
       </text>
     </g>
     <g class="rr-term rr-reference" data-term="item-1/e.1.0" data-role="reference" data-rule="item-1" data-resolution="unresolved">
       <title>Undefined rule y</title>
-      <rect class="rr-box" x="90" y="262" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text class="rr-label" x="104" y="278" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
-        <tspan x="104" y="278">y</tspan>
+      <rect class="rr-box" x="178" y="262" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text class="rr-label" x="192" y="278" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="192" y="278">y</tspan>
       </text>
     </g>
     <g class="rr-term rr-reference" data-term="item-1/e.2.0" data-role="reference" data-rule="item-1" data-resolution="unresolved">
       <title>Undefined rule a</title>
-      <rect class="rr-box" x="70" y="301" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text class="rr-label" x="84" y="317" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
-        <tspan x="84" y="317">a</tspan>
+      <rect class="rr-box" x="114" y="301" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text class="rr-label" x="128" y="317" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="128" y="317">a</tspan>
       </text>
     </g>
     <g class="rr-term rr-reference" data-term="item-1/e.2.1.0" data-role="reference" data-rule="item-1" data-constraint="true" data-resolution="unresolved">
       <title>Undefined rule b</title>
-      <rect class="rr-box" x="84" y="369" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text class="rr-label" x="98" y="385" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
-        <tspan x="98" y="385">b</tspan>
+      <rect class="rr-box" x="128" y="369" width="28" height="27" rx="2" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text class="rr-label" x="142" y="385" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#ffffff">
+        <tspan x="142" y="385">b</tspan>
       </text>
     </g>
   </g>
@@ -110,16 +110,16 @@
         <tspan x="20" y="32">expr</tspan>
       </text>
       <circle class="rr-start" cx="25" cy="69.5" r="5" fill="#94a3b8"/>
-      <circle class="rr-end" cx="328" cy="69.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-      <circle cx="328" cy="69.5" r="3" fill="#94a3b8"/>
+      <circle class="rr-end" cx="504" cy="69.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="504" cy="69.5" r="3" fill="#94a3b8"/>
     </g>
     <g class="rr-track" data-rule="item-1">
       <text class="rr-rule-name" x="20" y="170" text-anchor="start" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="14" font-weight="700" fill="#ffffff">
         <tspan x="20" y="170">term</tspan>
       </text>
       <circle class="rr-start" cx="25" cy="195.5" r="5" fill="#94a3b8"/>
-      <circle class="rr-end" cx="185" cy="195.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-      <circle cx="185" cy="195.5" r="3" fill="#94a3b8"/>
+      <circle class="rr-end" cx="360" cy="195.5" r="6" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+      <circle cx="360" cy="195.5" r="3" fill="#94a3b8"/>
     </g>
   </g>
 </svg>

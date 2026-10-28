@@ -43,6 +43,19 @@ stay within that scope. Cross-pool messages keep their declared visible endpoint
 Connection labels avoid shapes, other labels and previously routed segments;
 subsequent connections route around them. No external layout service is used.
 
+`Limits::new(minimum_approach=24.0)` reserves straight terminal corridors before
+any middle route or connection label is placed. The router also reserves space
+for a curve transition, separates independent collinear channels and avoids
+existing bends. A later edge's approach cannot be occupied by an earlier route
+or label. Larger minima increase automatic gaps and scope padding. Boundary
+event labels sit to one side of their outgoing bottom corridor. Supplied DI
+points keep their exact coordinates; these routing reservations apply to
+automatic geometry.
+
+The coordinate-grid search indexes obstacles by row and column and caches
+segment checks. Index construction and lookups consume the same explicit work
+budget as routing. It does not increase the default work limit for dense cases.
+
 The default bounds are 10,000 visible nodes, 50,000 connections, one million work
 units and 16 Mi UTF-16 output units. Increase `Limits` explicitly for larger
 searches. A dense graph can exhaust search before it reaches a node/edge bound;
@@ -66,14 +79,21 @@ The sequence renderer continues to use its existing palettes and layout package.
 ```mbt check
 ///|
 test "compute and check a semantic view without DI" {
-  let view=@model.Bpmn::new("P",[
-    @model.Node::new("Start",StartEvent,label="Start"),
-    @model.Node::new("Review",UserTask,label="Review request"),
-  ],[@model.Flow::new("Request","Start","Review",label="request")])
-  let result=@layout.layout(view,policy=Automatic)
-  let geometry=result.geometry.unwrap()
-  assert_eq(result.diagnostics,[])
-  assert_eq(geometry.source,Automatic)
-  assert_eq(@layout.check(geometry,@layout.bpmn_palette(@theme.Theme::classic().dark)),[])
+  let view = @model.Bpmn::new(
+    "P",
+    [
+      @model.Node::new("Start", StartEvent, label="Start"),
+      @model.Node::new("Review", UserTask, label="Review request"),
+    ],
+    [@model.Flow::new("Request", "Start", "Review", label="request")],
+  )
+  let result = @layout.layout(view, policy=Automatic)
+  let geometry = result.geometry.unwrap()
+  assert_eq(result.diagnostics, [])
+  assert_eq(geometry.source, Automatic)
+  assert_eq(
+    @layout.check(geometry, @layout.bpmn_palette(@theme.Theme::classic().dark)),
+    [],
+  )
 }
 ```

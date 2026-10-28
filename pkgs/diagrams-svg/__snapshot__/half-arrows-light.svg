@@ -1,77 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304 828" width="304" height="828" role="img" data-diagram="sequence" id="seq-1633913a409b8e5a-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 304 828" width="304" height="828" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-9a391a5587bae55a-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (A, B) and 12 messages.</desc>
   <defs>
-    <marker id="seq-1633913a409b8e5a-head-0-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-0-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-2-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-2-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-3-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-3-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-4-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-4-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-5-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-5-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-6-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-6-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-7-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-7-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-8-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-8-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-8-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-8-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-9-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-9-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-9-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-9-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-10-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-10-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-10-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-10-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-11-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-11-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-1633913a409b8e5a-head-11-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-9a391a5587bae55a-head-11-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -84,7 +84,7 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="A" data-to="B" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
-      <path class="m-line" d="M87 127 L217 127" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-0-start)" marker-end="url(#seq-1633913a409b8e5a-head-0-end)"/>
+      <path class="m-line" d="M87 127 L217 127" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-0-start)" marker-end="url(#seq-9a391a5587bae55a-head-0-end)" data-connector-id="0" data-connector-source="A" data-connector-target="B" data-connector-route="M87 127 L217 127" data-connector-key="0"/>
       <rect class="mask" x="124" y="100" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="152" y="115">A to B</tspan>
@@ -92,7 +92,7 @@
       <circle class="central-connection" cx="224" cy="127" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-backend" data-index="1" data-from="B" data-to="A" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
-      <path class="m-line" d="M217 175 L87 175" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-1-start)" marker-end="url(#seq-1633913a409b8e5a-head-1-end)"/>
+      <path class="m-line" d="M217 175 L87 175" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-1-start)" marker-end="url(#seq-9a391a5587bae55a-head-1-end)" data-connector-id="1" data-connector-source="B" data-connector-target="A" data-connector-route="M217 175 L87 175" data-connector-key="1"/>
       <rect class="mask" x="124" y="148" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="152" y="163">B to A</tspan>
@@ -100,7 +100,7 @@
       <circle class="central-connection" cx="80" cy="175" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="2" data-from="A" data-to="A" data-sender-head="half-upper-filled" data-receiver-head="central-half-upper-filled">
-      <path class="m-line" d="M87 223 L161 223 L161 251 L87 251" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-2-start)" marker-end="url(#seq-1633913a409b8e5a-head-2-end)"/>
+      <path class="m-line" d="M87 223 L161 223 L161 251 L87 251" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-2-start)" marker-end="url(#seq-9a391a5587bae55a-head-2-end)" data-connector-id="2" data-connector-source="A" data-connector-target="A" data-connector-route="M87 223 L161 223 L161 251 L87 251" data-connector-key="2"/>
       <rect class="mask" x="96" y="196" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="124" y="211" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="124" y="211">A to A</tspan>
@@ -108,7 +108,7 @@
       <circle class="central-connection" cx="80" cy="251" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="3" data-from="A" data-to="B" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
-      <path class="m-line" d="M87 298 L217 298" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-3-start)" marker-end="url(#seq-1633913a409b8e5a-head-3-end)"/>
+      <path class="m-line" d="M87 298 L217 298" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-3-start)" marker-end="url(#seq-9a391a5587bae55a-head-3-end)" data-connector-id="3" data-connector-source="A" data-connector-target="B" data-connector-route="M87 298 L217 298" data-connector-key="3"/>
       <rect class="mask" x="124" y="271" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="286" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="152" y="286">A to B</tspan>
@@ -116,7 +116,7 @@
       <circle class="central-connection" cx="224" cy="298" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-backend" data-index="4" data-from="B" data-to="A" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
-      <path class="m-line" d="M217 346 L87 346" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-4-start)" marker-end="url(#seq-1633913a409b8e5a-head-4-end)"/>
+      <path class="m-line" d="M217 346 L87 346" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-4-start)" marker-end="url(#seq-9a391a5587bae55a-head-4-end)" data-connector-id="4" data-connector-source="B" data-connector-target="A" data-connector-route="M217 346 L87 346" data-connector-key="4"/>
       <rect class="mask" x="124" y="319" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="334" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="152" y="334">B to A</tspan>
@@ -124,7 +124,7 @@
       <circle class="central-connection" cx="80" cy="346" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="5" data-from="A" data-to="A" data-sender-head="half-upper-open" data-receiver-head="central-half-upper-open">
-      <path class="m-line" d="M87 394 L161 394 L161 422 L87 422" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-5-start)" marker-end="url(#seq-1633913a409b8e5a-head-5-end)"/>
+      <path class="m-line" d="M87 394 L161 394 L161 422 L87 422" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-5-start)" marker-end="url(#seq-9a391a5587bae55a-head-5-end)" data-connector-id="5" data-connector-source="A" data-connector-target="A" data-connector-route="M87 394 L161 394 L161 422 L87 422" data-connector-key="5"/>
       <rect class="mask" x="96" y="367" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="124" y="382" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="124" y="382">A to A</tspan>
@@ -132,7 +132,7 @@
       <circle class="central-connection" cx="80" cy="422" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="6" data-from="A" data-to="B" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
-      <path class="m-line" d="M87 469 L217 469" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-6-start)" marker-end="url(#seq-1633913a409b8e5a-head-6-end)"/>
+      <path class="m-line" d="M87 469 L217 469" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-6-start)" marker-end="url(#seq-9a391a5587bae55a-head-6-end)" data-connector-id="6" data-connector-source="A" data-connector-target="B" data-connector-route="M87 469 L217 469" data-connector-key="6"/>
       <rect class="mask" x="124" y="442" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="457" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="152" y="457">A to B</tspan>
@@ -140,7 +140,7 @@
       <circle class="central-connection" cx="224" cy="469" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-backend" data-index="7" data-from="B" data-to="A" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
-      <path class="m-line" d="M217 517 L87 517" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-7-start)" marker-end="url(#seq-1633913a409b8e5a-head-7-end)"/>
+      <path class="m-line" d="M217 517 L87 517" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-7-start)" marker-end="url(#seq-9a391a5587bae55a-head-7-end)" data-connector-id="7" data-connector-source="B" data-connector-target="A" data-connector-route="M217 517 L87 517" data-connector-key="7"/>
       <rect class="mask" x="124" y="490" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="505" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="152" y="505">B to A</tspan>
@@ -148,7 +148,7 @@
       <circle class="central-connection" cx="80" cy="517" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="8" data-from="A" data-to="A" data-sender-head="half-lower-filled" data-receiver-head="central-half-lower-filled">
-      <path class="m-line" d="M87 565 L161 565 L161 593 L87 593" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-8-start)" marker-end="url(#seq-1633913a409b8e5a-head-8-end)"/>
+      <path class="m-line" d="M87 565 L161 565 L161 593 L87 593" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-8-start)" marker-end="url(#seq-9a391a5587bae55a-head-8-end)" data-connector-id="8" data-connector-source="A" data-connector-target="A" data-connector-route="M87 565 L161 565 L161 593 L87 593" data-connector-key="8"/>
       <rect class="mask" x="96" y="538" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="124" y="553" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="124" y="553">A to A</tspan>
@@ -156,7 +156,7 @@
       <circle class="central-connection" cx="80" cy="593" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="9" data-from="A" data-to="B" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
-      <path class="m-line" d="M87 640 L217 640" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-9-start)" marker-end="url(#seq-1633913a409b8e5a-head-9-end)"/>
+      <path class="m-line" d="M87 640 L217 640" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-9-start)" marker-end="url(#seq-9a391a5587bae55a-head-9-end)" data-connector-id="9" data-connector-source="A" data-connector-target="B" data-connector-route="M87 640 L217 640" data-connector-key="9"/>
       <rect class="mask" x="124" y="613" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="628" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="152" y="628">A to B</tspan>
@@ -164,7 +164,7 @@
       <circle class="central-connection" cx="224" cy="640" r="5" fill="#ffffff" stroke="#0891b2" stroke-width="1.4"/>
     </g>
     <g class="message f-backend" data-index="10" data-from="B" data-to="A" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
-      <path class="m-line" d="M217 688 L87 688" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-10-start)" marker-end="url(#seq-1633913a409b8e5a-head-10-end)"/>
+      <path class="m-line" d="M217 688 L87 688" fill="none" stroke="#059669" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-10-start)" marker-end="url(#seq-9a391a5587bae55a-head-10-end)" data-connector-id="10" data-connector-source="B" data-connector-target="A" data-connector-route="M217 688 L87 688" data-connector-key="10"/>
       <rect class="mask" x="124" y="661" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="152" y="676" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="152" y="676">B to A</tspan>
@@ -172,7 +172,7 @@
       <circle class="central-connection" cx="80" cy="688" r="5" fill="#ffffff" stroke="#059669" stroke-width="1.4"/>
     </g>
     <g class="message f-frontend" data-index="11" data-from="A" data-to="A" data-sender-head="half-lower-open" data-receiver-head="central-half-lower-open">
-      <path class="m-line" d="M87 736 L161 736 L161 764 L87 764" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-1633913a409b8e5a-head-11-start)" marker-end="url(#seq-1633913a409b8e5a-head-11-end)"/>
+      <path class="m-line" d="M87 736 L161 736 L161 764 L87 764" fill="none" stroke="#0891b2" stroke-width="1.4" marker-start="url(#seq-9a391a5587bae55a-head-11-start)" marker-end="url(#seq-9a391a5587bae55a-head-11-end)" data-connector-id="11" data-connector-source="A" data-connector-target="A" data-connector-route="M87 736 L161 736 L161 764 L87 764" data-connector-key="11"/>
       <rect class="mask" x="96" y="709" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="124" y="724" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="124" y="724">A to A</tspan>

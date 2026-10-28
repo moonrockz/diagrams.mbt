@@ -52,6 +52,20 @@ that cross a collapsed boundary attach to that ancestor while their stored
 connection keeps its logical endpoints. Hidden internal edges are omitted.
 Invisible connections constrain placement but do not paint or animate.
 
+`Limits::new(minimum_approach=24.0)` reserves every straight endpoint corridor
+before routing middle segments or placing connection labels. This prevents an
+earlier edge from blocking a later marker approach. Return and parallel routes
+use separate collinear channels, while transverse crossings remain available
+for display bridges. Compact symbols with external labels use a clear side;
+concave silhouettes retain their actual outline attachment. Larger minima
+increase the automatic scope spacing. Existing route points remain available
+separately from the renderer's final styled paths.
+
+Side ports follow the other endpoints' cross-axis order, with declaration order
+breaking ties for parallel identities. The bounded grid search indexes obstacle
+rows and columns and caches segment checks. Optional channels keep room beside
+existing spans for safe bends and bridges; actual endpoint coordinates stay fixed.
+
 `Limits::new` defaults to 10,000 elements, 50,000 connections, depth 256,
 1,000,000 work units and 16 Mi UTF-16 output units. Ownership or reference errors,
 unsupported shapes and exhausted work return no partial geometry. Routing can

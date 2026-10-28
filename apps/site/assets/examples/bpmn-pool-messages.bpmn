@@ -1,0 +1,5 @@
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="urn:gallery:expanded">
+<b:process id="Buyer"><b:startEvent id="bs"/><b:sendTask id="request" name="Request"/><b:receiveTask id="receive" name="Receive"/><b:endEvent id="be"/><b:sequenceFlow id="b1" sourceRef="bs" targetRef="request"/><b:sequenceFlow id="b2" sourceRef="request" targetRef="receive"/><b:sequenceFlow id="b3" sourceRef="receive" targetRef="be"/></b:process>
+<b:process id="Seller"><b:startEvent id="ss"/><b:serviceTask id="handle" name="Handle"/><b:endEvent id="se"/><b:sequenceFlow id="s1" sourceRef="ss" targetRef="handle"/><b:sequenceFlow id="s2" sourceRef="handle" targetRef="se"/></b:process>
+<b:collaboration id="Trade"><b:participant id="buyer" name="Buyer" processRef="Buyer"/><b:participant id="seller" name="Seller" processRef="Seller"/><b:messageFlow id="order" sourceRef="request" targetRef="handle"/><b:messageFlow id="receipt" sourceRef="handle" targetRef="receive"/></b:collaboration>
+</b:definitions>
