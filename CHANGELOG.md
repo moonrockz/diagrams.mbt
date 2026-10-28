@@ -2,8 +2,23 @@
 
 ## Unreleased
 
+## 0.3.0 - 2026-10-28
+
+Native PlantUML, Mermaid flowcharts, ZenUML and architecture diagrams, with
+clearer connectors and an expanded gallery.
+
 ### Added
 
+- `moonrockz/diagrams-plantuml`: native PlantUML 1.2026.9 regex, EBNF, JSON,
+  YAML and modern/legacy activity readers, canonical printers and conversion.
+  The published library needs no Java, Graphviz or rendering service.
+- Regex and EBNF railroad models, ordered JSON/YAML data trees, themed SVG,
+  structural exploration, node visits and offline players. Regex matching and
+  grammar parsing evidence comes from an explicit external trace provider.
+- Mermaid `zenuml` interactions with nested calls, returns, creation,
+  try/catch/finally sections and the pinned 523-key participant symbol catalog.
+- Mermaid `architecture-beta` groups, services, junctions, explicit ports,
+  labelled connections, ordered alignments, SVG and structural playback.
 - Native Mermaid 12.2.0 flowchart/graph reading, lossless source trees, typed ASTs,
   canonical printing and independent upstream compatibility fixtures.
 - PlantUML 1.2026.9 modern and legacy activity diagrams with typed branches,
@@ -13,14 +28,39 @@
   offline players and canonical SVG export.
 - Source, theme and player gallery examples, portable corpus rendering gates,
   independent source/canonical reference checks and fresh consumer checks.
+- Typed connector options for elbow, rounded-elbow and smooth curved paths,
+  default rounded bridge hops at unrelated crossings, optional plain crossings,
+  final path inspection and bounded geometry checks.
+- Thirty additional distinct gallery sources across all ten diagram families,
+  plus six connector comparison views, for 51 published gallery cards.
+- A versioned documentation site built with Telescope, with source inspection,
+  stable gallery detail routes, downloads and offline player links.
 
 ### Changed
 
 - **Breaking:** exhaustive matches on diagram, Mermaid dispatch, PlantUML
-  document/kind, animation and SVG scene enums must handle flowcharts and activity
-  documents. Existing entry points retain their contracts.
-- The shared offline player supports flowchart visits and direction-aware routes.
-  Static SVG output for existing diagram kinds remains unchanged.
+  document/kind, sequence frame, animation and SVG scene enums must handle the
+  added diagram, activity and exception variants.
+- **Breaking visual change:** default crossing bridges and longer marker
+  approaches intentionally change affected SVG and HTML output. Omitted line
+  style keeps each diagram family's natural form. `Plain` disables bridges.
+- Shared offline playback follows the final styled paths and underpass masks,
+  including reverse routes, repeated occurrences and configured trace highlights.
+  Static downloads equal direct rendering and preserve viewer state.
+- Automatic graph routing reserves readable arrow approaches, spreads shared-side
+  attachments and uses clear alternate sides for congested routes. Authored
+  ports and direction hints retain their sides.
+- All seven public modules use the shared version `0.3.0`.
+
+### Scope
+
+- Playback illustrates structure and caller-supplied scenarios. It does not
+  execute workflows, evaluate branch conditions or simulate BPMN tokens.
+- Complete supplied BPMN geometry stays unchanged by default. Display curves
+  and bridges require explicit `style_supplied_bpmn=true`; source waypoints
+  remain available and unchanged.
+- Frozen source profiles, unsupported assets and preprocessing forms retain
+  explicit diagnostics without fetching resources or running source content.
 
 ## 0.2.0 - 2026-10-25
 

@@ -1,15 +1,15 @@
 name = "moonrockz/diagrams-tests"
 
-version = "0.2.0"
+version = "0.3.0"
 
 import {
-  "moonrockz/bpmn@0.2.0",
-  "moonrockz/diagrams-bpmn@0.2.0",
-  "moonrockz/diagrams-animated@0.2.0",
-  "moonrockz/diagrams@0.2.0",
-  "moonrockz/diagrams-mermaid@0.2.0",
-  "moonrockz/diagrams-plantuml@0.2.0",
-  "moonrockz/diagrams-svg@0.2.0",
+  "moonrockz/bpmn@0.3.0",
+  "moonrockz/diagrams-bpmn@0.3.0",
+  "moonrockz/diagrams-animated@0.3.0",
+  "moonrockz/diagrams@0.3.0",
+  "moonrockz/diagrams-mermaid@0.3.0",
+  "moonrockz/diagrams-plantuml@0.3.0",
+  "moonrockz/diagrams-svg@0.3.0",
   "moonbitlang/x@0.5.5",
 }
 

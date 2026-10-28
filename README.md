@@ -86,7 +86,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 
 ## Layout
 
-- `moon.mod` holds the shared version, currently `0.2.0`.
+- `moon.mod` holds the shared version, currently `0.3.0`.
 - `moon.work` lists the workspace members.
 - `pkgs/bpmn/` is the independent BPMN document module, with MoonBit core dependencies only.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.

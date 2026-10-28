@@ -1,10 +1,10 @@
 name = "moonrockz/diagrams-plantuml"
 
-version = "0.2.0"
+version = "0.3.0"
 
 import {
-  "moonrockz/diagrams@0.2.0",
-  "moonrockz/diagrams-svg@0.2.0",
+  "moonrockz/diagrams@0.3.0",
+  "moonrockz/diagrams-svg@0.3.0",
 }
 
 description = "PlantUML for diagrams.mbt: native activity, regex, EBNF, JSON and YAML readers, writers and conversion to diagram models"
