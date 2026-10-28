@@ -1,0 +1,13 @@
+@startuml
+start
+partition "**process** HelloWorld" {
+    note
+        This is my note
+        ----
+        //Creole test//
+    end note
+    :Ready;
+    :HelloWorld(i); <<output>>
+    :Hello-Sent;
+}
+@enduml

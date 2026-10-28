@@ -214,7 +214,7 @@ pub fn PlaybackPlan::illustrative(
     }
     let selected = match occurrence.kind {
       SequenceMessage => true
-      Swimlane(_) | Architecture(_) => true
+      Swimlane(_) | Architecture(_) | Flowchart(_) => true
       Railroad(_) | DataConnector | Visit(_) => true
       Bpmn(kind) => selected_kinds.contains(kind)
     }
@@ -226,6 +226,7 @@ pub fn PlaybackPlan::illustrative(
       match occurrence.kind {
         Swimlane(Backward) =>
           actions.push(Motion::OrientedStep(occurrence.key, duration_ms, true))
+        Flowchart(edge) => actions.push(Motion::OrientedStep(occurrence.key, duration_ms, edge.direction == Backward))
         Architecture(edge) =>
           actions.push(
             Motion::OrientedStep(

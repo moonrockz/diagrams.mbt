@@ -1,0 +1,15 @@
+import {
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/flowchart-layout" @layout,
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams-tests/flowchart-mermaid-acceptance" @corpus,
+  "moonbitlang/core/json",
+  "moonbitlang/core/test",
+  "moonrockz/diagrams/flowchart" @model,
+  "moonrockz/diagrams-mermaid/swimlane-syntax" @shared,
+  "moonrockz/diagrams-mermaid/flowchart-ast" @ast,
+  "moonrockz/diagrams-mermaid/flowchart-syntax" @syntax,
+  "moonrockz/diagrams-mermaid/flowchart-printer" @printer,
+  "moonrockz/diagrams-mermaid/flowchart" @conversion,
+} for "test"

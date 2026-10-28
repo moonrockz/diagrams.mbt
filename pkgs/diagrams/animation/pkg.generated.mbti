@@ -8,6 +8,7 @@ import {
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/data-tree",
   "moonrockz/diagrams/ebnf",
+  "moonrockz/diagrams/flowchart",
   "moonrockz/diagrams/railroad-trace",
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/render",
@@ -53,6 +54,7 @@ pub fn Catalog::connection(Self, String) -> Occurrence?
 pub fn Catalog::data_tree(@data-tree.DataTree, limits? : Limits) -> CatalogResult
 pub fn Catalog::ebnf(@ebnf.Grammar, limits? : Limits) -> CatalogResult
 pub fn Catalog::flow(Self, String) -> Occurrence?
+pub fn Catalog::flowchart(@flowchart.Flowchart, limits? : Limits) -> CatalogResult
 pub fn Catalog::motion(Self, String, Int64, Bool) -> Motion
 pub fn Catalog::occurrence(Self, String) -> Occurrence?
 pub fn Catalog::reference_target(Self, String) -> String?
@@ -97,6 +99,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  FlowchartFlow
   ArchitectureFlow
   Undirected
   Railroad
@@ -207,6 +210,11 @@ pub(all) enum NodeKind {
   Start
   End
   SwimlaneNode
+  FlowchartNode(@flowchart.Node)
+  FlowchartGroup
+  FlowchartLane
+  FlowchartNote(@flowchart.Note)
+  FlowchartRegion(@flowchart.Region, String)
   SwimlaneGroup
   SwimlaneLane
   ArchitectureService
@@ -242,6 +250,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  Flowchart(@flowchart.Connection)
   Architecture(@architecture.Connection)
   Railroad(@railroad-trace.ConnectorRole)
   DataConnector
@@ -363,6 +372,8 @@ pub fn Selection::not_equal(Self, Self) -> Bool
 pub fn Selection::to_repr(Self) -> @debug.Repr
 
 pub(all) enum VisitKind {
+  FlowchartNode(@flowchart.Role)
+  FlowchartNote
   RailroadTerm(@railroad-trace.TermKind)
   DataRow
   DataBox

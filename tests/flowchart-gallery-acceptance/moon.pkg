@@ -1,0 +1,12 @@
+import {
+  "moonbitlang/core/test",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/flowchart",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/flowchart-layout" @layout,
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-plantuml" @plantuml,
+} for "test"

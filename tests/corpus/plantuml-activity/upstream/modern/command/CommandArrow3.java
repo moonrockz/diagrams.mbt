@@ -1,0 +1,122 @@
+/* ========================================================================
+ * PlantUML : a free UML diagram generator
+ * ========================================================================
+ *
+ * (C) Copyright 2009-2024, Arnaud Roques
+ *
+ * Project Info:  https://plantuml.com
+ * 
+ * If you like this project or if you find it useful, you can support us at:
+ * 
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
+ * 
+ * This file is part of PlantUML.
+ *
+ * PlantUML is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PlantUML distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ *
+ * Original Author:  Arnaud Roques
+ *
+ *
+ */
+package net.sourceforge.plantuml.activitydiagram3.command;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import net.sourceforge.plantuml.activitydiagram3.ActivityDiagram3;
+import net.sourceforge.plantuml.annotation.Explain;
+import net.sourceforge.plantuml.command.CommandExecutionResult;
+import net.sourceforge.plantuml.command.ParserPass;
+import net.sourceforge.plantuml.command.SingleLineCommand2;
+import net.sourceforge.plantuml.decoration.Rainbow;
+import net.sourceforge.plantuml.descdiagram.command.CommandLinkElement;
+import net.sourceforge.plantuml.klimt.color.NoSuchColorException;
+import net.sourceforge.plantuml.klimt.creole.Display;
+import net.sourceforge.plantuml.regex.IRegex;
+import net.sourceforge.plantuml.regex.RegexConcat;
+import net.sourceforge.plantuml.regex.RegexLeaf;
+import net.sourceforge.plantuml.regex.RegexOr;
+import net.sourceforge.plantuml.regex.RegexResult;
+import net.sourceforge.plantuml.utils.LineLocation;
+
+public class CommandArrow3 extends SingleLineCommand2<ActivityDiagram3> {
+
+	private static final Collection<String> FIRST_TOKENS = Arrays.asList("-");
+
+	public CommandArrow3() {
+		super(getRegexConcat());
+	}
+
+	static IRegex getRegexConcat() {
+		return RegexConcat.build(CommandArrow3.class.getName(), RegexLeaf.start(), //
+				new RegexOr(//
+						new RegexLeaf("->"), //
+						new RegexLeaf(1, "COLOR", CommandLinkElement.STYLE_COLORS_MULTIPLES)), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexOr(//
+						new RegexLeaf(1, "LABEL", "(.*);"), //
+						new RegexLeaf("")), //
+				RegexLeaf.end());
+	}
+
+	@Override
+	@Explain
+	protected String explainArg(LineLocation location, RegexResult arg) {
+		// This command does not draw anything by itself: it sets the label
+		// and/or the color and style of the next arrow, that is the connection
+		// to the upcoming activity. Several colors separated by ';' make a
+		// rainbow arrow (see Rainbow).
+		final String color = arg.get("COLOR", 0);
+		final String label = arg.get("LABEL", 0);
+		final boolean hasLabel = label != null && label.length() > 0;
+
+		if (hasLabel && color != null)
+			return "Labelling the next arrow \"" + label + "\", with color or style '" + color + "'";
+
+		if (hasLabel)
+			return "Labelling the next arrow \"" + label + "\"";
+
+		if (color != null)
+			return "Setting the color or style of the next arrow to '" + color + "'";
+
+		return "Plain arrow, with no effect";
+	}
+
+	@Override
+	protected CommandExecutionResult executeArg(ActivityDiagram3 diagram, LineLocation location, RegexResult arg, ParserPass currentPass)
+			throws NoSuchColorException {
+
+		final String colorString = arg.get("COLOR", 0);
+		if (colorString != null) {
+			final Rainbow rainbow = Rainbow.build(diagram.getSkinParam(), colorString,
+					diagram.getSkinParam().colorArrowSeparationSpace());
+			diagram.setColorNextArrow(rainbow);
+		}
+		final String label = arg.get("LABEL", 0);
+		if (label != null && label.length() > 0)
+			diagram.setLabelNextArrow(Display.getWithNewlines(diagram.getPragma(), label));
+
+		return CommandExecutionResult.ok();
+	}
+
+	@Override
+	public Collection<String> mandatoryFirstTokensFast() {
+		return FIRST_TOKENS;
+	}
+
+}

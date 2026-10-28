@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/flowchart"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/flowchart-ast",
+  "moonrockz/diagrams-mermaid/swimlane-syntax",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn to_flowchart(@flowchart-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  flowchart : @moonrockz/diagrams/flowchart.Flowchart?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+} derive(Eq, @debug.Debug)
+pub fn Conversion::equal(Self, Self) -> Bool
+pub fn Conversion::not_equal(Self, Self) -> Bool
+pub fn Conversion::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

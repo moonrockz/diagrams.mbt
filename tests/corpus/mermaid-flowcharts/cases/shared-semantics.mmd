@@ -1,0 +1,24 @@
+flowchart LR
+subgraph sales [Sales team]
+direction TB
+A[Original]
+subgraph nested [Nested work]
+ B{Ready?}
+end
+end
+subgraph sales [Ignored repeated title]
+direction RL
+ C([Later])
+end
+subgraph other [Other]
+ A
+ D
+end
+A[Revised]
+A & B --> C & D --> E
+A -->|parallel| C
+E -.-> A
+D <--> B
+B --- C
+E ~~~ D
+A & B expanded@-->|expanded identified| C & D

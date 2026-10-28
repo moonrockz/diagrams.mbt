@@ -1,0 +1,27 @@
+test "fresh native readers print and convert without root rendering imports" {
+  let source = "graph LR\nsubgraph Work\nA[Read] --> B[Save]\nend\n"
+  let read = @syntax.read(source)
+  assert_eq(read.tree.text(), source)
+  assert_eq(read.diagnostics, [])
+  let ast = read.ast.unwrap()
+  let printed = @printer.print(ast).output.unwrap()
+  assert_eq(@syntax.read(printed).ast, Some(ast))
+  let graph = @conversion.to_flowchart(ast).flowchart.unwrap()
+  assert_eq(graph.lanes.length(), 0)
+  assert_eq(graph.groups.length(), 1)
+  for source in [
+    "@startuml\nstart\n:Read;\n:Save;\nstop\n@enduml\n",
+    "@startuml\n(*) --> \"Read\"\n--> \"Save\"\n--> (*)\n@enduml\n",
+  ] {
+    let scan = @envelope.scan(source)
+    let read = @activity.read(scan)
+    assert_eq(read.diagnostics, [])
+    assert_eq(scan.document(read.nodes[:]).text(), source)
+    let document = read.document.unwrap()
+    let body = @activity.print_body(document).unwrap()
+    let reread = @activity.read(@envelope.scan_body(Activity, body), dialect=document.dialect)
+    assert_eq(reread.diagnostics, [])
+    assert_true(document.logical_equal(reread.document.unwrap()))
+    assert_true(@activity.to_flowchart(document).flowchart != None)
+  }
+}

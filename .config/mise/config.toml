@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -293,3 +293,36 @@ run = "moonx scripts/site-compatibility.mbtx"
 [tasks."test:site-consumer"]
 description = "Qualify released Telescope root/next builds, legacy routes and exact gallery bytes (args: --existing-output)"
 run = "moonx scripts/site-consumer.mbtx"
+
+[tasks."flowchart-mermaid-corpus:generate"]
+description = "Embed frozen Mermaid flowchart inputs and independent graph fixtures"
+run = "moonx scripts/flowchart-mermaid-corpus.mbtx generate"
+
+[tasks."validate:flowchart-mermaid-corpus"]
+description = "Check frozen Mermaid flowchart digests and portable graph fixtures"
+run = "moonx scripts/flowchart-mermaid-corpus.mbtx check"
+
+[tasks."flowchart-mermaid-corpus:reference"]
+description = "Qualify flowchart source and canonical output against pinned Mermaid 12.2.0"
+run = "moonx scripts/flowchart-mermaid-reference.mbtx"
+
+[tasks."activity-corpus:reference"]
+description = "Qualify activity source and topology with the pinned PlantUML JAR and JDK"
+tools = { java = "temurin-21.0.13+9.0.LTS" }
+run = "moonx scripts/activity-reference.mbtx"
+
+[tasks."activity-corpus:generate"]
+description = "Embed frozen modern and legacy activity inputs and upstream topology"
+run = "moonx scripts/activity-corpus.mbtx generate"
+
+[tasks."validate:activity-corpus"]
+description = "Check frozen activity digests and portable reference embedding without Java"
+run = "moonx scripts/activity-corpus.mbtx check"
+
+[tasks."test:flowchart"]
+description = "Qualify stored flowchart SVG and offline players in Chromium"
+run = "moonx scripts/test-flowchart.mbtx"
+
+[tasks."test:flowchart-consumer"]
+description = "Qualify fresh flowchart model, reader and renderer/player consumers on all targets"
+run = "moonx scripts/test-flowchart-consumer.mbtx"

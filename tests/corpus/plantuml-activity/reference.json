@@ -1,0 +1,5673 @@
+{
+ "plantuml": "1.2026.9",
+ "jdk": "temurin-21.0.13+9.0.LTS",
+ "jar_sha256": "aa4a1d06f8911c4b842beff4828dd955be431692b631a312d04c0e9fab9581de",
+ "adapter_sha256": "6cd86c47dbe190c057bd6b2e112b0cb8a930f86ba15fad27c886eaa578eee729",
+ "fixtures_digest": "373b0313d055fc290320d81ed9afef9b80c7394011a000c0c8181e85bff8cbcf",
+ "fixtures": [
+  {
+   "name": "legacy/branch.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Read",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 3,
+     "label": "Write",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "Wait",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": "yes"
+    },
+    {
+     "source": 2,
+     "target": 4,
+     "label": "no"
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/01.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "First Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/02.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "First Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "Second Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": "You can put also labels"
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/03.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "First Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "Second Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "Third Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/04.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Initialization",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 3,
+     "label": "Some Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "Another Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "end",
+     "role": "CIRCLE_END"
+    },
+    {
+     "id": 6,
+     "label": "Something else",
+     "role": "ACTIVITY"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": "true"
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 6,
+     "label": "false"
+    },
+    {
+     "source": 6,
+     "target": 5,
+     "label": "Ending process"
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/05.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "check input",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 3,
+     "label": "turn on verbosity",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "run command",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": "Yes"
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/06.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 2,
+     "label": "action 1",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 4,
+     "label": "action 3",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 6,
+     "label": "action 5",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 7,
+     "label": "action 6",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 8,
+     "label": "action 2",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 9,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 10,
+     "label": "action 7",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 11,
+     "label": "action 8",
+     "role": "ACTIVITY"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": "true"
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 5,
+     "target": 6,
+     "label": ""
+    },
+    {
+     "source": 5,
+     "target": 7,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 8,
+     "label": "false"
+    },
+    {
+     "source": 4,
+     "target": 9,
+     "label": ""
+    },
+    {
+     "source": 9,
+     "target": 10,
+     "label": ""
+    },
+    {
+     "source": 9,
+     "target": 11,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/07.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "B1",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 2,
+     "label": "Parallel Action 1",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "B2",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 4,
+     "label": "Parallel Action 2",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 5,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/08.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "this <size:20>action</size>\nis <b>very</b> <color:red>long2</color>\nand defined on several lines\nthat contains many <i>text</i>",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "Another action\n on several lines",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "Short action <img:https://plantuml.com/logo3.png>",
+     "role": "ACTIVITY"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 3,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/09.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Some action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "This action has to be defined",
+     "role": "NOTE"
+    },
+    {
+     "id": 3,
+     "label": "end",
+     "role": "CIRCLE_END"
+    },
+    {
+     "id": 4,
+     "label": "This note is on\nseveral lines",
+     "role": "NOTE"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 3,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/10.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Climbs on Platform",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "S1",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 3,
+     "label": "Bows",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "Applauds",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "S2",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 6,
+     "label": "WavesArmes",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 7,
+     "label": "Introduction",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 8,
+     "label": "Play music",
+     "role": "ACTIVITY"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 5,
+     "target": 6,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 6,
+     "target": 7,
+     "label": ""
+    },
+    {
+     "source": 7,
+     "target": 8,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/11.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Climbs on Platform",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "S1",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 3,
+     "label": "Bows",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "S2",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 5,
+     "label": "WavesArmes",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 6,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 5,
+     "target": 6,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/12.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "First Action",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/docs/13.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "ClickServlet.handleRequest()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "new Page",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 4,
+     "label": "Page.onInit()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 6,
+     "label": "Process controls",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 7,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 8,
+     "label": "RENDERING",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 9,
+     "label": "REDIRECT_CHECK",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 10,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 11,
+     "label": "Page.onPost()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 12,
+     "label": "Page.onRender()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 13,
+     "label": "Page.onGet()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 14,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 15,
+     "label": "redirect request",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 16,
+     "label": "BEFORE_DESTROY",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 17,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 18,
+     "label": "Forward request",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 19,
+     "label": "Render page template",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 20,
+     "label": "Page.onDestroy()",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 21,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": "true"
+    },
+    {
+     "source": 4,
+     "target": 5,
+     "label": ""
+    },
+    {
+     "source": 5,
+     "target": 6,
+     "label": "no"
+    },
+    {
+     "source": 6,
+     "target": 7,
+     "label": ""
+    },
+    {
+     "source": 7,
+     "target": 8,
+     "label": "yes"
+    },
+    {
+     "source": 7,
+     "target": 9,
+     "label": "no"
+    },
+    {
+     "source": 5,
+     "target": 8,
+     "label": "yes"
+    },
+    {
+     "source": 8,
+     "target": 10,
+     "label": ""
+    },
+    {
+     "source": 10,
+     "target": 11,
+     "label": "yes"
+    },
+    {
+     "source": 11,
+     "target": 12,
+     "label": ""
+    },
+    {
+     "source": 12,
+     "target": 9,
+     "label": ""
+    },
+    {
+     "source": 10,
+     "target": 13,
+     "label": "no"
+    },
+    {
+     "source": 13,
+     "target": 12,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 9,
+     "label": "false"
+    },
+    {
+     "source": 9,
+     "target": 14,
+     "label": ""
+    },
+    {
+     "source": 14,
+     "target": 15,
+     "label": "yes"
+    },
+    {
+     "source": 15,
+     "target": 16,
+     "label": ""
+    },
+    {
+     "source": 14,
+     "target": 17,
+     "label": ""
+    },
+    {
+     "source": 17,
+     "target": 18,
+     "label": "yes"
+    },
+    {
+     "source": 18,
+     "target": 16,
+     "label": ""
+    },
+    {
+     "source": 17,
+     "target": 19,
+     "label": "no"
+    },
+    {
+     "source": 19,
+     "target": 16,
+     "label": ""
+    },
+    {
+     "source": 16,
+     "target": 20,
+     "label": ""
+    },
+    {
+     "source": 20,
+     "target": 21,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/gallery.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Read request",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "",
+     "role": "BRANCH"
+    },
+    {
+     "id": 3,
+     "label": "Process",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 4,
+     "label": "Complete",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "Reject",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 6,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": "yes"
+    },
+    {
+     "source": 3,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 5,
+     "label": "no"
+    },
+    {
+     "source": 5,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 6,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/loop.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "Read",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 2,
+     "label": "Write",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "legacy/parallel.puml",
+   "class": "ActivityDiagram",
+   "status": "accepted",
+   "nodes": [
+    {
+     "id": 0,
+     "label": "start",
+     "role": "CIRCLE_START"
+    },
+    {
+     "id": 1,
+     "label": "B1",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 2,
+     "label": "Read",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 3,
+     "label": "B2",
+     "role": "SYNCHRO_BAR"
+    },
+    {
+     "id": 4,
+     "label": "Write",
+     "role": "ACTIVITY"
+    },
+    {
+     "id": 5,
+     "label": "end",
+     "role": "CIRCLE_END"
+    }
+   ],
+   "edges": [
+    {
+     "source": 0,
+     "target": 1,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 2,
+     "label": ""
+    },
+    {
+     "source": 2,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 1,
+     "target": 4,
+     "label": ""
+    },
+    {
+     "source": 4,
+     "target": 3,
+     "label": ""
+    },
+    {
+     "source": 3,
+     "target": 5,
+     "label": ""
+    }
+   ]
+  },
+  {
+   "name": "modern/branch.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "Ready?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Read",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Wait",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/01.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Hello world",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "This is defined on\nseveral **lines**",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/02.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/03.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/04.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "* Sub-Action 1.1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "* Sub-Action 1.2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "** Sub-Action 1.2.1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "** Sub-Action 1.2.2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Action 2",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/05.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Hello world",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "This is defined on\nseveral **lines**",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/06.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Hello world",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "This is defined on\nseveral **lines**",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/07.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "Graphviz installed?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "process all\ndiagrams",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "process only\n__sequence__ and __activity__ diagrams",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/08.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "color?",
+        "labelPositive": "<color:red>red",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "print red",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "print not red",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/09.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "counter?",
+        "labelPositive": "5",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "print 5",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "print not 5",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/10.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition A",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 1",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition B",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 2",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionStop"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition C",
+        "labelPositive": "yes",
+        "inlabel": "no",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 3",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition D",
+        "labelPositive": "yes",
+        "inlabel": "no",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 4",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "nothing",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Text else",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/11.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition A",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 1",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition B",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 2",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionStop"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition C",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 3",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "condition D",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 4",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "nothing",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Text else",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/12.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSwitch",
+      "labelTest": "test?",
+      "switches": [
+       {
+        "kind": "Branch",
+        "labelTest": " condition A ",
+        "labelPositive": " condition A ",
+        "inlabel": " condition A ",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 1",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": " condition B ",
+        "labelPositive": " condition B ",
+        "inlabel": " condition B ",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 2",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": " condition C ",
+        "labelPositive": " condition C ",
+        "inlabel": " condition C ",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 3",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": " condition D ",
+        "labelPositive": " condition D ",
+        "inlabel": " condition D ",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 4",
+           "killed": "false"
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": " condition E ",
+        "labelPositive": " condition E ",
+        "inlabel": " condition E ",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Text 5",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/13.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition?",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "error",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionStop"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "action",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/14.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition?",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "error",
+           "killed": "true"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "action",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/15.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition?",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "error",
+           "killed": "true"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "action",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/16.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "more data?",
+      "startLabel": "",
+      "backward": "",
+      "yes": "yes",
+      "out": "no",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read data",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "generate diagrams",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/17.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "more data?",
+      "startLabel": "foo as starting label",
+      "backward": "This is backward",
+      "yes": "yes",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read data",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "generate diagrams",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/18.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "Something went wrong with long text?",
+      "startLabel": "",
+      "backward": "",
+      "yes": "yes",
+      "out": "no",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Test something",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionIf",
+         "outColor": "",
+         "thens": [
+          {
+           "kind": "Branch",
+           "labelTest": "Something went wrong?",
+           "labelPositive": "no",
+           "inlabel": "",
+           "list": {
+            "kind": "InstructionList",
+            "all": [
+             {
+              "kind": "InstructionSimple",
+              "label": "OK",
+              "killed": "false"
+             },
+             {
+              "kind": "InstructionBreak"
+             }
+            ]
+           }
+          }
+         ],
+         "elseBranch": {
+          "kind": "Branch",
+          "labelTest": "",
+          "labelPositive": "",
+          "inlabel": "",
+          "list": {
+           "kind": "InstructionList",
+           "all": []
+          }
+         }
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "Alert \"Error with long text\"",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Alert \"Success\"",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/19.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "Test Question?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionLabel",
+           "name": "sp_lab0"
+          },
+          {
+           "kind": "InstructionLabel",
+           "name": "sp_lab1"
+          },
+          {
+           "kind": "InstructionLabel",
+           "name": "lab"
+          },
+          {
+           "kind": "InstructionSimple",
+           "label": "shared",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionIf",
+          "outColor": "",
+          "thens": [
+           {
+            "kind": "Branch",
+            "labelTest": "Second Test Question?",
+            "labelPositive": "yes",
+            "inlabel": "",
+            "list": {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionLabel",
+               "name": "sp_lab2"
+              },
+              {
+               "kind": "InstructionGoto",
+               "name": "sp_lab1"
+              }
+             ]
+            }
+           }
+          ],
+          "elseBranch": {
+           "kind": "Branch",
+           "labelTest": "",
+           "labelPositive": "",
+           "inlabel": "",
+           "list": {
+            "kind": "InstructionList",
+            "all": [
+             {
+              "kind": "InstructionSimple",
+              "label": "nonShared",
+              "killed": "false"
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "merge",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/20.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionWhile",
+      "test": "data available?",
+      "backward": "",
+      "yes": "",
+      "outColor": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read data",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "generate diagrams",
+         "killed": "false"
+        }
+       ]
+      },
+      "specialOut": {
+       "kind": "InstructionStop"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/21.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionWhile",
+      "test": "check filesize ?",
+      "backward": "",
+      "yes": "not empty",
+      "outColor": "empty",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read file",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "close file",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/22.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionWhile",
+      "test": "check filesize ?",
+      "backward": "log",
+      "yes": "not empty",
+      "outColor": "empty",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read file",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "close file",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/23.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Step 1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "condition1",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionWhile",
+           "test": "loop forever",
+           "backward": "",
+           "yes": "",
+           "outColor": "",
+           "killed": "true",
+           "repeatList": {
+            "kind": "InstructionList",
+            "all": [
+             {
+              "kind": "InstructionSimple",
+              "label": "Step 2",
+              "killed": "false"
+             }
+            ]
+           }
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "end normally",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionStop"
+         }
+        ]
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/24.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 1",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 2",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/25.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "MERGE",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 1",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 2",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/26.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "MERGE",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 1",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 2",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 3",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 4",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/27.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "MERGE",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 1",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action 2",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionEnd"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/28.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "label": "{or}",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action A",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action B",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/29.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "label": "{and}",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action A",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "action B",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/30.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "multiprocessor?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionFork",
+           "style": "FORK",
+           "forks": [
+            {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionSimple",
+               "label": "Treatment 1",
+               "killed": "false"
+              }
+             ]
+            },
+            {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionSimple",
+               "label": "Treatment 2",
+               "killed": "false"
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "monoproc",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Treatment 1",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "Treatment 2",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/31.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "A",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "B",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "C",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "a",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "b",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "D",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/32.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "A",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "B",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "C",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "D",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/33.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "A",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "a",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "b",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSpot",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "D",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/34.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "A",
+          "killed": "true"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "B",
+          "killed": "true"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "C",
+          "killed": "true"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/35.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "A",
+          "killed": "true"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "b",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "c",
+          "killed": "true"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSpot",
+          "killed": "true"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionEnd"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionStop"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/36.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/37.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "Valid?",
+      "startLabel": "Enter data",
+      "backward": "Warning",
+      "yes": "No",
+      "out": "Yes",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Submit",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/38.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Ready",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "HelloWorld(i)",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "Hello-Sent",
+         "killed": "false"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/39.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "starting progress",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "reading configuration files\nThese files should be edited at this point!",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "ending of the process",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/40.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "testActivity",
+         "killed": "false"
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/41.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Hello world",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "This is on defined on\nseveral **lines**",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/42.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "Valid?",
+      "startLabel": "Enter data",
+      "backward": "Warning",
+      "yes": "No",
+      "out": "Yes",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Submit",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/43.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "foo1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "test",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "foo2",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionSimple",
+           "label": "foo3",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo4",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo5",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/44.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "a",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "b",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/45.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "a?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "activity",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionIf",
+           "outColor": "",
+           "thens": [
+            {
+             "kind": "Branch",
+             "labelTest": "c?",
+             "labelPositive": "yes",
+             "inlabel": "",
+             "list": {
+              "kind": "InstructionList",
+              "all": []
+             }
+            }
+           ],
+           "elseBranch": {
+            "kind": "Branch",
+            "labelTest": "",
+            "labelPositive": "no",
+            "inlabel": "",
+            "list": {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionIf",
+               "outColor": "",
+               "thens": [
+                {
+                 "kind": "Branch",
+                 "labelTest": "b?",
+                 "labelPositive": "yes",
+                 "inlabel": "",
+                 "list": {
+                  "kind": "InstructionList",
+                  "all": []
+                 }
+                }
+               ],
+               "elseBranch": {
+                "kind": "Branch",
+                "labelTest": "",
+                "labelPositive": "no",
+                "inlabel": "",
+                "list": {
+                 "kind": "InstructionList",
+                 "all": [
+                  {
+                   "kind": "InstructionSimple",
+                   "label": "do a",
+                   "killed": "false"
+                  },
+                  {
+                   "kind": "InstructionSimple",
+                   "label": "do b",
+                   "killed": "false"
+                  }
+                 ]
+                }
+               }
+              }
+             ]
+            }
+           }
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "e?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionIf",
+           "outColor": "",
+           "thens": [
+            {
+             "kind": "Branch",
+             "labelTest": "c?",
+             "labelPositive": "yes",
+             "inlabel": "",
+             "list": {
+              "kind": "InstructionList",
+              "all": []
+             }
+            }
+           ],
+           "elseBranch": {
+            "kind": "Branch",
+            "labelTest": "",
+            "labelPositive": "no",
+            "inlabel": "",
+            "list": {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionIf",
+               "outColor": "",
+               "thens": [
+                {
+                 "kind": "Branch",
+                 "labelTest": "d?",
+                 "labelPositive": "yes",
+                 "inlabel": "",
+                 "list": {
+                  "kind": "InstructionList",
+                  "all": []
+                 }
+                }
+               ],
+               "elseBranch": {
+                "kind": "Branch",
+                "labelTest": "",
+                "labelPositive": "no",
+                "inlabel": "",
+                "list": {
+                 "kind": "InstructionList",
+                 "all": [
+                  {
+                   "kind": "InstructionSimple",
+                   "label": "do something",
+                   "killed": "false"
+                  }
+                 ]
+                }
+               }
+              },
+              {
+               "kind": "InstructionGroup",
+               "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+               "list": {
+                "kind": "InstructionList",
+                "all": [
+                 {
+                  "kind": "InstructionSimple",
+                  "label": "some function",
+                  "killed": "false"
+                 }
+                ]
+               }
+              }
+             ]
+            }
+           }
+          }
+         ]
+        }
+       },
+       {
+        "kind": "Branch",
+        "labelTest": "f?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "activity",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/46.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Some activity",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSpot",
+      "killed": "true"
+     },
+     {
+      "kind": "InstructionSpot",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Other activity",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/47.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "The connector below\nwishes he was blue",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSpot",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "This next connector\nfeels that she would\nbe better off green",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSpot",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/48.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSpot",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "a",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSpot",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/49.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, group, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read config file",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "init internal variable",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, group, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "wait for user interaction",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "print information",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/50.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read config file",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "init internal variable",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "wait for user interaction",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "print information",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/51.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read config file",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "init internal variable",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "wait for user interaction",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "print information",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/52.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "read doc. on [[http://plantuml.com plantuml_website]]",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "test diagram",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/53.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, group, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Activity",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Activity",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Activity",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Activity",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/null (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Activity",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/54.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo1",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo2",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo3",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo4",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo5",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/55.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "color?",
+        "labelPositive": "red",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "**action red**",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionSimple",
+           "label": "foo1",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "not red",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "**action not red**",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "foo2",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo3",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo4",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo5",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/56.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "go fish",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "fry fish",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "eat fish",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/57.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "start",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo1",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "foo2",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo3",
+          "killed": "true"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "foo4",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "foo5",
+           "killed": "true"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo6",
+      "killed": "true"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo7",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/58.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "start",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo1",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "foo2",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo3",
+          "killed": "true"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "foo4",
+        "labelPositive": "",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "foo5",
+           "killed": "true"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo6",
+      "killed": "true"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "foo7",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/59.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionWhile",
+      "test": "<:cloud_with_rain:>",
+      "backward": "",
+      "yes": "",
+      "outColor": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "<:umbrella:>",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "<:closed_umbrella:>",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/60.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "SDL Shape",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "input",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "output",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "procedure",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "load",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "save",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "continuous",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "task",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/61.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Ready",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "next(o)",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Receiving",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSplit",
+      "splits": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "nak(i)",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "ack(o)",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "ack(i)",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "next(o)\non several lines",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "i := i + 1",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "ack(o)",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "err(i)",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionSimple",
+          "label": "nak(o)",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "foo",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "bar",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "i > 5",
+          "killed": "false"
+         },
+         {
+          "kind": "InstructionStop"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "finish",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/62.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "action",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "object",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "ObjectNode\ntyped by signal",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "AcceptEventAction\nwithout TimeEvent trigger",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "SendSignalAction",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "SendObjectAction\nwith signal type",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Trigger",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "\\t\\t\\t\\t\\t\\tAcceptEventAction\n\\t\\t\\t\\t\\t\\twith TimeEvent trigger",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "an action",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/63.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "ClickServlet.handleRequest()",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "new page",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "Page.onSecurityCheck",
+        "labelPositive": "true",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "Page.onInit()",
+           "killed": "false"
+          },
+          {
+           "kind": "InstructionIf",
+           "outColor": "",
+           "thens": [
+            {
+             "kind": "Branch",
+             "labelTest": "isForward?",
+             "labelPositive": "no",
+             "inlabel": "",
+             "list": {
+              "kind": "InstructionList",
+              "all": [
+               {
+                "kind": "InstructionSimple",
+                "label": "Process controls",
+                "killed": "false"
+               },
+               {
+                "kind": "InstructionIf",
+                "outColor": "",
+                "thens": [
+                 {
+                  "kind": "Branch",
+                  "labelTest": "continue processing?",
+                  "labelPositive": "no",
+                  "inlabel": "",
+                  "list": {
+                   "kind": "InstructionList",
+                   "all": [
+                    {
+                     "kind": "InstructionStop"
+                    }
+                   ]
+                  }
+                 }
+                ],
+                "elseBranch": {
+                 "kind": "Branch",
+                 "labelTest": "",
+                 "labelPositive": "",
+                 "inlabel": "",
+                 "list": {
+                  "kind": "InstructionList",
+                  "all": []
+                 }
+                }
+               },
+               {
+                "kind": "InstructionIf",
+                "outColor": "",
+                "thens": [
+                 {
+                  "kind": "Branch",
+                  "labelTest": "isPost?",
+                  "labelPositive": "yes",
+                  "inlabel": "",
+                  "list": {
+                   "kind": "InstructionList",
+                   "all": [
+                    {
+                     "kind": "InstructionSimple",
+                     "label": "Page.onPost()",
+                     "killed": "false"
+                    }
+                   ]
+                  }
+                 }
+                ],
+                "elseBranch": {
+                 "kind": "Branch",
+                 "labelTest": "",
+                 "labelPositive": "no",
+                 "inlabel": "",
+                 "list": {
+                  "kind": "InstructionList",
+                  "all": [
+                   {
+                    "kind": "InstructionSimple",
+                    "label": "Page.onGet()",
+                    "killed": "false"
+                   }
+                  ]
+                 }
+                }
+               },
+               {
+                "kind": "InstructionSimple",
+                "label": "Page.onRender()",
+                "killed": "false"
+               }
+              ]
+             }
+            }
+           ],
+           "elseBranch": {
+            "kind": "Branch",
+            "labelTest": "",
+            "labelPositive": "",
+            "inlabel": "",
+            "list": {
+             "kind": "InstructionList",
+             "all": []
+            }
+           }
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "false",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "do redirect?",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "redirect process",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionIf",
+          "outColor": "",
+          "thens": [
+           {
+            "kind": "Branch",
+            "labelTest": "do forward?",
+            "labelPositive": "yes",
+            "inlabel": "",
+            "list": {
+             "kind": "InstructionList",
+             "all": [
+              {
+               "kind": "InstructionSimple",
+               "label": "Forward request",
+               "killed": "false"
+              }
+             ]
+            }
+           }
+          ],
+          "elseBranch": {
+           "kind": "Branch",
+           "labelTest": "",
+           "labelPositive": "no",
+           "inlabel": "",
+           "list": {
+            "kind": "InstructionList",
+            "all": [
+             {
+              "kind": "InstructionSimple",
+              "label": "Render page template",
+              "killed": "false"
+             }
+            ]
+           }
+          }
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/64.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "<b>end",
+      "startLabel": "",
+      "backward": "",
+      "yes": "",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "act1",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "act2",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "act3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/65.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "<b>end",
+      "startLabel": "",
+      "backward": "",
+      "yes": "",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "act1",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "act2",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "act3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/66.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "<b>end",
+      "startLabel": "",
+      "backward": "",
+      "yes": "",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "act1",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "act2",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "act3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/67.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "<b>end",
+      "startLabel": "",
+      "backward": "",
+      "yes": "",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "act1",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "act2",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "act3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/68.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "<b>end",
+      "startLabel": "",
+      "backward": "",
+      "yes": "",
+      "out": "",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "act1",
+         "killed": "false"
+        },
+        {
+         "kind": "InstructionSimple",
+         "label": "act2",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "act3",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/69.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "A",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "decision",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "B1",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "C",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/70.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "A",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "decision",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "B1",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "B2",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "C",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/71.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "A",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "decision",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "B1",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": []
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "C",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/72.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "A",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "decision",
+        "labelPositive": "yes",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "B1",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "no",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "B2",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "C",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/73.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "init",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "color?",
+        "labelPositive": "<color:red>red",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "print red",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "print not red",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "end",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/74.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "init",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionIf",
+      "outColor": "",
+      "thens": [
+       {
+        "kind": "Branch",
+        "labelTest": "color?",
+        "labelPositive": "<color:red>red",
+        "inlabel": "",
+        "list": {
+         "kind": "InstructionList",
+         "all": [
+          {
+           "kind": "InstructionSimple",
+           "label": "print red",
+           "killed": "false"
+          }
+         ]
+        }
+       }
+      ],
+      "elseBranch": {
+       "kind": "Branch",
+       "labelTest": "",
+       "labelPositive": "",
+       "inlabel": "",
+       "list": {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "print not red",
+          "killed": "false"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=arial/null (329), FontColor=green/null (339), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=PeachPuff/null (341), RoundCorner=10/null (340), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=red/white (338), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "end",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionEnd"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/docs/75.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionSimple",
+      "label": "Creole:\n  wave: ~~wave~~\n  bold: **bold**\n  italics: //italics//\n  monospaced: \"\"monospaced\"\"\n  stricken-out: --stricken-out--\n  underlined: __underlined__\n  not-underlined: ~__not underlined__\n  wave-underlined: ~~wave-underlined~~",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "HTML Creole:\n  bold: <b>bold\n  italics: <i>italics\n  monospaced: <font:monospaced>monospaced\n  stroked: <s>stroked\n  underlined: <u>underlined\n  waved: <w>waved\n  green-stroked: <s:green>stroked\n  red-underlined: <u:red>underlined\n  blue-waved: <w:#0000FF>waved\n  Blue: <color:blue>Blue\n  Orange: <back:orange>Orange background\n  big: <size:20>big",
+      "killed": "false"
+     },
+     {
+      "kind": "InstructionSimple",
+      "label": "Graphic:\n  OpenIconic: account-login <&account-login> \n  Unicode: This is <U+221E> long\n  Emoji: <:calendar:> Calendar\n  Image:\n  <img:https://plantuml.com/logo3.png>",
+      "killed": "false"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/gallery.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionGroup",
+      "style": "[activityDiagram, composite, element, partition, root]  {Shadowing=0.0/null (53), FontName=SansSerif/null (1), FontColor=black/white (4), FontSize=14/null (5), FontStyle=plain/null (6), BackGroundColor=transparent/null (168), RoundCorner=0/null (8), LineThickness=1.5/null (169), DiagonalCorner=0/null (9), HyperLinkColor=blue/blue (2), HyperlinkUnderlineThickness=1/null (3), LineColor=black/white (167), HorizontalAlignment=left/null (7)}",
+      "list": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Submit order",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionRepeat",
+      "test": "Retry?",
+      "startLabel": "",
+      "backward": "",
+      "yes": "yes",
+      "out": "no",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Review",
+         "killed": "false"
+        }
+       ]
+      }
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Save",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Notify",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/loop.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionWhile",
+      "test": "More?",
+      "backward": "",
+      "yes": "yes",
+      "outColor": "no",
+      "killed": "false",
+      "repeatList": {
+       "kind": "InstructionList",
+       "all": [
+        {
+         "kind": "InstructionSimple",
+         "label": "Read",
+         "killed": "false"
+        }
+       ]
+      },
+      "specialOut": {
+       "kind": "InstructionStop"
+      }
+     }
+    ]
+   }
+  },
+  {
+   "name": "modern/parallel.puml",
+   "class": "ActivityDiagram3",
+   "status": "accepted",
+   "instructions": {
+    "kind": "InstructionList",
+    "all": [
+     {
+      "kind": "InstructionStart"
+     },
+     {
+      "kind": "InstructionFork",
+      "style": "FORK",
+      "forks": [
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Read",
+          "killed": "false"
+         }
+        ]
+       },
+       {
+        "kind": "InstructionList",
+        "all": [
+         {
+          "kind": "InstructionSimple",
+          "label": "Write",
+          "killed": "false"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "kind": "InstructionStop"
+     }
+    ]
+   }
+  }
+ ]
+}

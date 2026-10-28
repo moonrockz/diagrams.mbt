@@ -1,0 +1,177 @@
+/* ========================================================================
+ * PlantUML : a free UML diagram generator
+ * ========================================================================
+ *
+ * (C) Copyright 2009-2024, Arnaud Roques
+ *
+ * Project Info:  https://plantuml.com
+ * 
+ * If you like this project or if you find it useful, you can support us at:
+ * 
+ * https://plantuml.com/patreon (only 1$ per month!)
+ * https://plantuml.com/paypal
+ * 
+ * This file is part of PlantUML.
+ *
+ * PlantUML is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * PlantUML distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ *
+ * Original Author:  Arnaud Roques
+ *
+ *
+ */
+package net.sourceforge.plantuml.activitydiagram3.command;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import net.sourceforge.plantuml.activitydiagram3.ActivityDiagram3;
+import net.sourceforge.plantuml.annotation.Explain;
+import net.sourceforge.plantuml.command.CommandExecutionResult;
+import net.sourceforge.plantuml.command.ParserPass;
+import net.sourceforge.plantuml.command.SingleLineCommand2;
+import net.sourceforge.plantuml.decoration.Rainbow;
+import net.sourceforge.plantuml.descdiagram.command.CommandLinkElement;
+import net.sourceforge.plantuml.klimt.color.NoSuchColorException;
+import net.sourceforge.plantuml.klimt.creole.Display;
+import net.sourceforge.plantuml.regex.IRegex;
+import net.sourceforge.plantuml.regex.RegexConcat;
+import net.sourceforge.plantuml.regex.RegexLeaf;
+import net.sourceforge.plantuml.regex.RegexOptional;
+import net.sourceforge.plantuml.regex.RegexOr;
+import net.sourceforge.plantuml.regex.RegexResult;
+import net.sourceforge.plantuml.stereo.Stereogroup;
+import net.sourceforge.plantuml.utils.LineLocation;
+
+public class CommandRepeatWhile3 extends SingleLineCommand2<ActivityDiagram3> {
+
+	private static final Collection<String> FIRST_TOKENS = Arrays.asList("repeat", "repeatwhile");
+
+	public CommandRepeatWhile3() {
+		super(getRegexConcat());
+	}
+
+	static IRegex getRegexConcat() {
+		return RegexConcat.build(CommandRepeatWhile3.class.getName(), RegexLeaf.start(), //
+				new RegexLeaf("repeat"), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexLeaf("while"), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexOr(//
+						new RegexConcat(new RegexLeaf(1, "TEST3", "\\((.*?)\\)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "(is|equals?)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "WHEN3", "\\((.+?)\\)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "(not)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "OUT3", "\\((.+?)\\)")), //
+						new RegexConcat(new RegexLeaf(1, "TEST4", "\\((.*?)\\)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "(not)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "OUT4", "\\((.+?)\\)")), //
+						new RegexConcat(new RegexLeaf(1, "TEST2", "\\((.*?)\\)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "(is|equals?)"), //
+								RegexLeaf.spaceZeroOrMore(), //
+								new RegexLeaf(1, "WHEN2", "\\((.+?)\\)") //
+						), //
+						new RegexOptional(new RegexLeaf(1, "TEST1", "\\((.*)\\)")) //
+				), //
+				RegexLeaf.spaceZeroOrMore(), //
+				new RegexOptional(new RegexConcat( //
+						new RegexOr(//
+								new RegexLeaf("->"), //
+								new RegexLeaf(1, "XCOLOR", CommandLinkElement.STYLE_COLORS_MULTIPLES)), //
+						RegexLeaf.spaceZeroOrMore(), //
+						new RegexOr(//
+								new RegexLeaf(1, "LABEL", "(.*)"), //
+								new RegexLeaf("")) //
+				)), //
+				new RegexLeaf(";?"), //
+				RegexLeaf.spaceZeroOrMore(), //
+				Stereogroup.optionalStereogroup(), //
+				RegexLeaf.end());
+	}
+
+	@Override
+	@Explain
+	protected String explainArg(LineLocation location, RegexResult arg) {
+		final StringBuilder sb = new StringBuilder();
+
+		// 'repeat while (test) is (yes) not (no)' closes the repeat loop
+		// opened by 'repeat': while the test holds, the flow loops back.
+		// 'is (...)' labels the loop-back arrow, 'not (...)' the exit arrow,
+		// and the lazzy lookups unify the four syntax variants, like in
+		// executeArg.
+		sb.append("Closing the repeat loop");
+
+		final String test = arg.getLazzy("TEST", 0);
+		if (test != null && test.isEmpty() == false)
+			sb.append(", looping back while \"").append(test).append("\"");
+
+		final String when = arg.getLazzy("WHEN", 0);
+		if (when != null)
+			sb.append(", loop-back arrow labelled \"").append(when).append("\"");
+
+		final String out = arg.getLazzy("OUT", 0);
+		if (out != null)
+			sb.append(", exit arrow labelled \"").append(out).append("\"");
+
+		final String color = arg.get("XCOLOR", 0);
+		if (color != null)
+			sb.append(", exit arrow color or style '").append(color).append("'");
+
+		final String label = arg.get("LABEL", 0);
+		if (label != null && label.isEmpty() == false)
+			sb.append(", arrow labelled \"").append(label).append("\"");
+
+		final Stereogroup stereogroup = Stereogroup.build(arg);
+		if (stereogroup.isEmpty() == false)
+			sb.append(", stereotyped ").append(arg.get("STEREOGROUP", 0));
+
+		return sb.toString();
+	}
+
+	@Override
+	protected CommandExecutionResult executeArg(ActivityDiagram3 diagram, LineLocation location, RegexResult arg,
+			ParserPass currentPass) throws NoSuchColorException {
+		final Display test = Display.getWithNewlines(diagram.getPragma(), arg.getLazzy("TEST", 0));
+		final Display yes = Display.getWithNewlines(diagram.getPragma(), arg.getLazzy("WHEN", 0));
+		final Display out = Display.getWithNewlines(diagram.getPragma(), arg.getLazzy("OUT", 0));
+
+		final String colorString = arg.get("XCOLOR", 0);
+		final Rainbow rainbow;
+		if (colorString == null)
+			rainbow = Rainbow.none();
+		else
+			rainbow = Rainbow.build(diagram.getSkinParam(), colorString,
+					diagram.getSkinParam().colorArrowSeparationSpace());
+
+		final Stereogroup stereogroup = Stereogroup.build(arg);
+
+		final Display linkLabel = Display.getWithNewlines(diagram.getPragma(), arg.get("LABEL", 0));
+		return diagram.repeatWhile(test, yes, out, linkLabel, rainbow, stereogroup);
+	}
+
+	@Override
+	public Collection<String> mandatoryFirstTokensFast() {
+		return FIRST_TOKENS;
+	}
+
+}

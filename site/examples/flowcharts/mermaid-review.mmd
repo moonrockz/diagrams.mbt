@@ -1,0 +1,15 @@
+---
+title: Request review
+---
+flowchart LR
+  accTitle: Request validation and retry
+  accDescr: Structural branches and a return path, without condition evaluation
+  subgraph Intake
+    subgraph Validation
+      Read[Read request] --> Complete{Complete?}
+    end
+  end
+  Complete -->|yes| Save[Save]
+  Complete -->|no| Read
+  Save --> Notify[Notify]
+  Inspect[Manual inspection]

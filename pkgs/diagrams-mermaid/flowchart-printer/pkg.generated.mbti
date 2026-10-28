@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/flowchart-printer"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/flowchart-ast",
+  "moonrockz/diagrams-mermaid/swimlane-syntax",
+}
+
+// Values
+pub fn print(@flowchart-ast.Diagram, limits? : @swimlane-syntax.Limits) -> Printed
+
+// Errors
+
+// Types and methods
+pub struct Printed {
+  output : String?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

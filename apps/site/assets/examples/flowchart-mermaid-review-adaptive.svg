@@ -1,0 +1,207 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 492" width="1024" height="492" role="img" data-diagram="flowchart" id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-diagram">
+  <title>Request validation and retry</title>
+  <desc>Structural branches and a return path, without condition evaluation</desc>
+  <defs>
+    <style>
+svg#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-diagram {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+@media (prefers-color-scheme: light) {
+  svg#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-diagram {
+    --bg: #f4f5f7;
+    --text: #111827;
+    --muted: #5b6474;
+    --mask: #ffffff;
+    --arrow: #64748b;
+    --frontend-fill: rgba(34, 211, 238, 0.15);
+    --frontend-stroke: #0891b2;
+    --frontend-ink: #07718b;
+    --backend-fill: rgba(52, 211, 153, 0.18);
+    --backend-stroke: #059669;
+    --backend-ink: #047351;
+    --database-fill: rgba(167, 139, 250, 0.2);
+    --database-stroke: #7c3aed;
+    --database-ink: #7935ed;
+    --cloud-fill: rgba(251, 191, 36, 0.18);
+    --cloud-stroke: #d97706;
+    --cloud-ink: #9d5705;
+    --security-fill: rgba(251, 113, 133, 0.15);
+    --security-stroke: #e11d48;
+    --security-ink: #c61a3f;
+    --messagebus-fill: rgba(251, 146, 60, 0.15);
+    --messagebus-stroke: #ea580c;
+    --messagebus-ink: #b44409;
+    --external-fill: rgba(148, 163, 184, 0.18);
+    --external-stroke: #64748b;
+    --external-ink: #5a687c;
+  }
+}
+svg#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-diagram[data-theme="dark"] {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+svg#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-diagram[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #111827;
+  --muted: #5b6474;
+  --mask: #ffffff;
+  --arrow: #64748b;
+  --frontend-fill: rgba(34, 211, 238, 0.15);
+  --frontend-stroke: #0891b2;
+  --frontend-ink: #07718b;
+  --backend-fill: rgba(52, 211, 153, 0.18);
+  --backend-stroke: #059669;
+  --backend-ink: #047351;
+  --database-fill: rgba(167, 139, 250, 0.2);
+  --database-stroke: #7c3aed;
+  --database-ink: #7935ed;
+  --cloud-fill: rgba(251, 191, 36, 0.18);
+  --cloud-stroke: #d97706;
+  --cloud-ink: #9d5705;
+  --security-fill: rgba(251, 113, 133, 0.15);
+  --security-stroke: #e11d48;
+  --security-ink: #c61a3f;
+  --messagebus-fill: rgba(251, 146, 60, 0.15);
+  --messagebus-stroke: #ea580c;
+  --messagebus-ink: #b44409;
+  --external-fill: rgba(148, 163, 184, 0.18);
+  --external-stroke: #64748b;
+  --external-ink: #5a687c;
+}
+</style>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1024" height="492" fill="var(--bg)"/>
+  <g class="flowchart-backgrounds">
+    <g class="flowchart-group" data-flowchart-id="Intake" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="64" y="64" width="544" height="252" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M64 64 L608 64 L608 316 L64 316 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="Intake" x="104" y="89" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="104" y="89">Intake</tspan>
+      </text>
+    </g>
+    <g class="flowchart-group" data-flowchart-id="Validation" data-shape="rect" data-expanded="true" data-parent="Intake">
+      <rect class="flowchart-bounds" x="96" y="121" width="480" height="163" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M96 121 L576 121 L576 284 L96 284 Z" fill="var(--bg)" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="Validation" x="152" y="146" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="var(--text)">
+        <tspan x="152" y="146">Validation</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="flowchart-connections">
+    <g class="flowchart-connection" data-flowchart-id="L_Read_Complete_0" data-source="Read" data-target="Complete" data-display-source="Read" data-display-target="Complete">
+      <path d="M272 203.6 L340 203.6 L340 207.6 L371.2 207.6" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-arrow)"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Complete_Save_0" data-source="Complete" data-target="Save" data-display-source="Complete" data-display-target="Save">
+      <path d="M544 215 L676 215 L676 96 L688 96" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-arrow)"/>
+      <rect x="594" y="186" width="32" height="21" rx="3" fill="var(--bg)"/>
+      <text class="flowchart-label" data-label-owner="L_Complete_Save_0" x="610" y="201" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="610" y="201">yes</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Complete_Read_0" data-source="Complete" data-target="Read" data-display-source="Complete" data-display-target="Read">
+      <path d="M371.2 222.4 L284 222.4 L284 216.4 L272 216.4" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-arrow)"/>
+      <rect x="315.6" y="230.4" width="24" height="21" rx="3" fill="var(--bg)"/>
+      <text class="flowchart-label" data-label-owner="L_Complete_Read_0" x="327.6" y="245.4" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="327.6" y="245.4">no</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Save_Notify_0" data-source="Save" data-target="Notify" data-display-source="Save" data-display-target="Notify">
+      <path d="M800 96 L880 96" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-61-64-61-70-74-69-76-65-sl-arrow)"/>
+    </g>
+  </g>
+  <g class="flowchart-nodes">
+    <g class="flowchart-node" data-flowchart-id="Read" data-shape="rect" data-expanded="true" data-parent="Validation">
+      <rect class="flowchart-bounds" x="128" y="178" width="144" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M128 178 L272 178 L272 242 L128 242 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Read" x="200" y="214.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="200" y="214.5">Read request</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Complete" data-shape="diamond" data-expanded="true" data-parent="Validation">
+      <rect class="flowchart-bounds" x="352" y="178" width="192" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M448 178 L544 215 L448 252 L352 215 Z" fill="var(--cloud-fill)" stroke="var(--cloud-stroke)" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Complete" x="448" y="219.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--cloud-ink)">
+        <tspan x="448" y="219.5">Complete?</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Save" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="688" y="64" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M688 64 L800 64 L800 128 L688 128 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Save" x="744" y="100.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="744" y="100.5">Save</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Notify" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="880" y="64" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M880 64 L992 64 L992 128 L880 128 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Notify" x="936" y="100.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="936" y="100.5">Notify</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Inspect" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="64" y="396" width="184" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M64 396 L248 396 L248 460 L64 460 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Inspect" x="156" y="432.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="156" y="432.5">Manual inspection</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

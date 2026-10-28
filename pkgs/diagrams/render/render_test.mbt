@@ -16,6 +16,7 @@ impl @render.Renderer for Count with fn render(_, diagram) {
   match diagram {
     Bpmn(_)
     | Swimlane(_)
+    | Flowchart(_)
     | Architecture(_)
     | Regex(_)
     | Ebnf(_)

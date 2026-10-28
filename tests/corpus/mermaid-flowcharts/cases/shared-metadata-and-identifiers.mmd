@@ -1,0 +1,27 @@
+flowchart LR
+direction BT
+subgraph Owner
+ style Missing fill:red
+ A&B
+ 123
+ A:B
+end
+A&B --> 123 --> A:B
+click Missing callback
+click Missing callback "tooltip"
+click Missing call callback()
+click Missing call callback("x", 1) "tooltip"
+click Missing href "https://example.com"
+click Missing href "https://example.com" "tooltip"
+click Missing href "https://example.com" _blank
+click Missing href "https://example.com" "tooltip" _self
+click Missing "https://example.com"
+click Missing "https://example.com" "tooltip"
+click Missing "https://example.com" _parent
+click Missing "https://example.com" "tooltip" _top
+linkStyle 0 stroke:blue
+linkStyle default stroke:green
+linkStyle 0 interpolate basis stroke:blue
+linkStyle default interpolate linear
+linkStyle 0 interpolate linear
+classDef custom fill:#fff,stroke-width:2px,font-size:12px,opacity:50%

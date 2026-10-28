@@ -151,6 +151,84 @@
       }
     },
     {
+      "id": "flowchart-mermaid-review",
+      "family": "flowchart",
+      "title": "Mermaid request review",
+      "status": "implemented",
+      "description": "Mermaid flowchart with nested groups, labelled branches and a return path.",
+      "scope": "Mermaid 12.2.0 flowchart/graph syntax with structural playback and bounded exploration; conditions are not evaluated.",
+      "sources": [
+        {
+          "path": "flowchart-mermaid-review.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-mermaid-review-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-mermaid-review-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-mermaid-review-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "flowchart-plantuml-modern",
+      "family": "flowchart",
+      "title": "PlantUML modern order activity",
+      "status": "implemented",
+      "description": "Modern PlantUML activity syntax with an explicit partition, lanes, repeat loop and parallel branches.",
+      "scope": "PlantUML 1.2026.9 modern activity syntax with structural scenarios; actions and fork synchronization are not executed.",
+      "sources": [
+        {
+          "path": "flowchart-plantuml-modern.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-plantuml-modern-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-plantuml-modern-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-plantuml-modern-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
+      "id": "flowchart-plantuml-legacy",
+      "family": "flowchart",
+      "title": "PlantUML legacy request activity",
+      "status": "implemented",
+      "description": "Legacy PlantUML activity syntax with an activity alias, partition and labelled branches.",
+      "scope": "PlantUML 1.2026.9 legacy activity syntax with structural playback and bounded exploration; no workflow execution.",
+      "sources": [
+        {
+          "path": "flowchart-plantuml-legacy.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "flowchart-plantuml-legacy-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "flowchart-plantuml-legacy-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "flowchart-plantuml-legacy-light.html",
+        "media_type": "text/html"
+      }
+    },
+    {
       "id": "regex-date",
       "family": "regex",
       "title": "Date pattern railroad",

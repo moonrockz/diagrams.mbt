@@ -1,0 +1,24 @@
+flowchart RL
+subgraph "Quoted title"
+A["#quot;Hello#quot; #amp; #amp; #9829; #x1f600;"]
+B["Line<br>two<br>three"]
+C["Bob's quoted label"]
+D@{
+shape: rect
+label: "Multiline metadata"
+}
+E["First
+second"]
+end
+A edge@-->|twice #amp; #amp;| B
+edge@{ animate: true, animation: fast }
+A -->|"`**Markdown edge**`"| B
+A -- "`**Inline Markdown**`" --> C
+M[Multiline
+unquoted]
+N{Multiline
+decision}
+P@{ label: "First
+ second", shape: rect }
+Q@{ label: "C:\\", shape: rect }
+accTitle: A title; with semicolons

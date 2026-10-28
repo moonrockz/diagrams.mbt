@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 492" width="1024" height="492" role="img" data-diagram="flowchart" id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-diagram">
+  <title>Request validation and retry</title>
+  <desc>Structural branches and a return path, without condition evaluation</desc>
+  <defs>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1024" height="492" fill="#f4f5f7"/>
+  <g class="flowchart-backgrounds">
+    <g class="flowchart-group" data-flowchart-id="Intake" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="64" y="64" width="544" height="252" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M64 64 L608 64 L608 316 L64 316 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="Intake" x="104" y="89" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="104" y="89">Intake</tspan>
+      </text>
+    </g>
+    <g class="flowchart-group" data-flowchart-id="Validation" data-shape="rect" data-expanded="true" data-parent="Intake">
+      <rect class="flowchart-bounds" x="96" y="121" width="480" height="163" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M96 121 L576 121 L576 284 L96 284 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="Validation" x="152" y="146" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="152" y="146">Validation</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="flowchart-connections">
+    <g class="flowchart-connection" data-flowchart-id="L_Read_Complete_0" data-source="Read" data-target="Complete" data-display-source="Read" data-display-target="Complete">
+      <path d="M272 203.6 L340 203.6 L340 207.6 L371.2 207.6" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-arrow)"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Complete_Save_0" data-source="Complete" data-target="Save" data-display-source="Complete" data-display-target="Save">
+      <path d="M544 215 L676 215 L676 96 L688 96" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-arrow)"/>
+      <rect x="594" y="186" width="32" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="flowchart-label" data-label-owner="L_Complete_Save_0" x="610" y="201" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="610" y="201">yes</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Complete_Read_0" data-source="Complete" data-target="Read" data-display-source="Complete" data-display-target="Read">
+      <path d="M371.2 222.4 L284 222.4 L284 216.4 L272 216.4" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-arrow)"/>
+      <rect x="315.6" y="230.4" width="24" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="flowchart-label" data-label-owner="L_Complete_Read_0" x="327.6" y="245.4" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="327.6" y="245.4">no</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_Save_Notify_0" data-source="Save" data-target="Notify" data-display-source="Save" data-display-target="Notify">
+      <path d="M800 96 L880 96" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-72-65-76-69-65-77-2d-6c-69-67-68-74-sl-arrow)"/>
+    </g>
+  </g>
+  <g class="flowchart-nodes">
+    <g class="flowchart-node" data-flowchart-id="Read" data-shape="rect" data-expanded="true" data-parent="Validation">
+      <rect class="flowchart-bounds" x="128" y="178" width="144" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M128 178 L272 178 L272 242 L128 242 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Read" x="200" y="214.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="200" y="214.5">Read request</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Complete" data-shape="diamond" data-expanded="true" data-parent="Validation">
+      <rect class="flowchart-bounds" x="352" y="178" width="192" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M448 178 L544 215 L448 252 L352 215 Z" fill="rgba(251, 191, 36, 0.18)" stroke="#d97706" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Complete" x="448" y="219.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#9d5705">
+        <tspan x="448" y="219.5">Complete?</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Save" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="688" y="64" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M688 64 L800 64 L800 128 L688 128 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Save" x="744" y="100.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="744" y="100.5">Save</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Notify" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="880" y="64" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M880 64 L992 64 L992 128 L880 128 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Notify" x="936" y="100.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="936" y="100.5">Notify</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="Inspect" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="64" y="396" width="184" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M64 396 L248 396 L248 460 L64 460 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="Inspect" x="156" y="432.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="156" y="432.5">Manual inspection</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

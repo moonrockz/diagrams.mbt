@@ -153,6 +153,9 @@ flowchart LR
 ```
 ````
 
+<!-- Preserve fragment targets from the previously published diagram SVG. -->
+<a id="arrowhead"></a><a id="arrowhead-start"></a><a id="seq-arrow"></a><a id="seq-arrow-open"></a><a id="class-arrow"></a><a id="class-inherit"></a><a id="class-aggregation"></a><a id="class-composition"></a>
+
 ```mermaid
 flowchart LR
   Source[Markdown source] --> Build[build:site]

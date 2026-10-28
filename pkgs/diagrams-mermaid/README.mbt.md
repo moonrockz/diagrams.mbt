@@ -1,9 +1,9 @@
 # moonrockz/diagrams-mermaid
 
-Mermaid for diagrams.mbt. This module reads Mermaid sequence and native swimlane
+Mermaid for diagrams.mbt. This module reads Mermaid sequence, native swimlane, flowchart, ZenUML and architecture
 diagrams into lossless syntax and typed AST values, prints canonical Mermaid,
 and converts them to format-independent models in `moonrockz/diagrams`.
-`render_svg` dispatches both supported kinds to `moonrockz/diagrams-svg`. Existing
+`render_svg` dispatches supported kinds to `moonrockz/diagrams-svg`. Existing
 `read`, `print`, `ReadResult` and `to_sequence` remain sequence-specific.
 
 The reader follows the sequence diagram grammar of Mermaid 12.2.0. The syntax
@@ -236,10 +236,10 @@ The native header is `swimlane-beta`. The compatibility profile is Mermaid
 12.2.0, with global `TB` by default, `TD` as its alias, and `BT`, `LR` and `RL`.
 Top-level subgraphs become ordered responsibility lanes; nested groups keep their
 own ownership. Unowned nodes remain outside lanes. Ordinary `flowchart` and
-`graph` inputs return `mermaid/unsupported-diagram` from the new dispatch API.
+`graph` inputs use the separate flowchart variant and keep all subgraphs as groups.
 
-`read_diagram` returns a `ParsedDiagram::Sequence` or `ParsedDiagram::Swimlane`
-AST with the corresponding `DiagramTree` and diagnostics. `tree.text()` always
+`read_diagram` returns a typed `Sequence`, `Swimlane`, `Flowchart`, `Zenuml` or
+`Architecture` AST with the corresponding `DiagramTree` and diagnostics. `tree.text()` always
 reproduces the complete source. `print_diagram` returns optional canonical text
 and diagnostics. `to_swimlane` converts the swimlane AST to immutable model values.
 Syntax locations use half-open UTF-16 offsets and one-based line/column values.
@@ -427,3 +427,55 @@ retained with `architecture/metadata-option`; it never controls library layout.
 
 See [the architecture guide](../../docs/guides/mermaid-architecture.md) for the
 frozen reference profile, symbols, rendering limits, playback and enum migration.
+
+
+## Native flowcharts
+
+The Mermaid 12.2.0 flowchart profile accepts `flowchart`, `graph` and
+`flowchart-elk`. Header aliases and `TD` spelling survive canonical printing.
+The ELK alias is retained as a presentation request. Layout uses explicit
+library options and does not load upstream JavaScript.
+
+`ParsedDiagram::Flowchart` holds a flowchart AST whose statements use the shared
+flowchart grammar types. `to_flowchart` produces immutable values in
+`moonrockz/diagrams/flowchart`. All subgraphs remain groups, including top-level
+subgraphs. Lanes are not inferred. Nodes keep generic control roles even when a
+shape is a diamond. The model keeps labels, shape identities, both edge markers,
+parallel edge identities, nested ownership, front-matter title and accessibility
+fields. Source bindings on nodes and connections use UTF-16 spans.
+
+```mbt check
+///|
+test "native flowchart read print convert and render" {
+  let source = "graph LR\nsubgraph Checks\nA[Read] --> B{Valid?}\nend\nB -->|yes| C[Save]\nB -->|no| A\n"
+  let read = @mermaid.read_diagram(source)
+  assert_eq(read.tree.text(), source)
+  guard read.ast is Some(Flowchart(ast)) else { fail("missing flowchart") }
+  let printed = @mermaid.print_diagram(Flowchart(ast)).output.unwrap()
+  assert_eq(@mermaid.read_diagram(printed).ast, read.ast)
+  let model = @mermaid.to_flowchart(ast).flowchart.unwrap()
+  assert_eq(model.lanes.length(), 0)
+  assert_eq(model.groups.length(), 1)
+  assert_eq(model.connections.length(), 3)
+  assert_true(@mermaid.render_svg(source).output != None)
+}
+```
+
+Classes, styles, callbacks, renderer configuration and unknown metadata remain
+source data. Conversion reports presentation behavior it does not apply. `click`
+URL declarations are retained as model links under the renderer's link policy;
+callbacks never run. Image and icon requests retain their asset identities so
+the renderer can reject unsupported assets explicitly, without a network fetch.
+All built-in vector shapes use the shared shape registry.
+
+The shared flowchart catalog, motion plans and standalone HTML player provide
+finite illustrations, explicit branch/loop/concurrent scenarios and bounded
+route/reachability queries. Playback illustrates drawn structure and never
+evaluates guards or executes actions. Downloaded SVG equals direct static SVG
+without transient selection or progress. See [the flowchart guide](../../docs/guides/mermaid-flowcharts.md)
+for scope, migration and qualification commands.
+
+Flowchart reader/printer `nodes` and `edges` limits count AST declaration/group
+records and link records. Conversion bounds normalized distinct elements and
+expanded connections separately. On exhaustion the source tree remains exact,
+but that phase returns no complete AST, model or output.

@@ -1,0 +1,11 @@
+import {
+  "moonrockz/diagrams/flowchart" @model,
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/flowchart-layout" @layout,
+  "moonrockz/diagrams-svg/theme",
+  "moonbitlang/core/json",
+  "moonbitlang/core/test",
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonrockz/diagrams-tests/plantuml-activity-acceptance" @corpus,
+} for "test"

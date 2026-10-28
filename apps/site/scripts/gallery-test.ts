@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
+const flowcharts = JSON.parse(await readFile('tests/flowchart-gallery-acceptance/__snapshot__/flowchart-gallery.json','utf8')) as [string,string,string][];
 const root = pathToFileURL(resolve('_gallery/index.html')).href;
 const browser = await chromium.launch({ headless: true });
 const errors: string[] = [], external: string[] = [];
@@ -26,7 +27,8 @@ try {
       for (const node of nodes) { node.loading = 'eager'; await node.decode(); if (!node.naturalWidth || !node.naturalHeight) throw new Error('Empty gallery image'); }
       return nodes.map(node => node.getAttribute('src')!);
     });
-    assert.equal(images.length, 120);
+    assert.equal(images.length, 120 + flowcharts.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length);
+    for (const [name,mime] of flowcharts) if (mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)) assert.ok(images.includes(name));
     for (const file of images) {
       const svg = await readFile(fileURLToPath(new URL(file, root)), 'utf8');
       await page.evaluate(svg => {
@@ -36,9 +38,9 @@ try {
     }
     assert.equal(new Set(references.filter(reference => reference.endsWith(".bpmn"))).size, 7);
     const players = references.filter(reference => reference.endsWith('.html'));
-    assert.equal(players.length, 46);
-    assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7);
-    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6);
+    assert.equal(players.length, 46 + flowcharts.filter(([,mime]) => mime === 'text/html').length);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7 + flowcharts.filter(([name]) => name.endsWith('.puml')).length);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6 + flowcharts.filter(([name]) => name.endsWith('.mmd')).length);
     for (const file of players) {
       await page.goto(new URL(file, root).href);
       await page.locator('[data-motion-ready="true"]').waitFor();
@@ -49,5 +51,5 @@ try {
     await page.close();
   }
   assert.deepEqual(external, []); assert.deepEqual(errors, []);
-  console.log('Gallery: 120 fixed-theme SVGs, 7 BPMN XML, 7 PlantUML and 6 native Mermaid sources, 46 offline players and all links verified in both preferences.');
+  console.log('Gallery: original 120 fixed-theme SVGs, 7 BPMN XML, 7 PlantUML and 6 native Mermaid sources, 46 players plus all qualified flowchart artifacts and links verified in both preferences.');
 } finally { await browser.close(); }

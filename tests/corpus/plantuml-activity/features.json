@@ -1,0 +1,66 @@
+{
+  "baseline": "PlantUML 1.2026.9",
+  "modern": [
+    "actions",
+    "multiline-actions",
+    "action-lists",
+    "start-stop-end",
+    "if-elseif-else",
+    "incoming-elseif-labels",
+    "switch-case",
+    "repeat-backward-break",
+    "while-endwhile",
+    "fork-end-fork-end-merge",
+    "split",
+    "kill-detach",
+    "connectors",
+    "label-goto",
+    "groups-partitions-packages-rectangles-cards",
+    "explicit-lanes-aliases",
+    "notes-and-notes-on-links",
+    "arrow-labels-styles",
+    "source-colors-stereotypes-styles"
+  ],
+  "legacy": [
+    "start-final-and-top-start",
+    "quoted-multiline-and-bare-actions",
+    "aliases-and-implicit-previous-activity",
+    "four-direction-arrow-hints",
+    "labelled-arrows",
+    "nested-conditionals-and-explicit-conditional-arrows",
+    "named-synchronization-bars",
+    "partitions",
+    "notes",
+    "stereotypes-and-presentation-data"
+  ],
+  "native_refusals": [],
+  "library_refusals": {
+    "modern/docs/70.puml": {
+      "category": "library-refusal",
+      "reason": "The frozen documentation example repeats @enduml. The upstream reader ignores trailing text; the library requires exactly one block and diagnoses plantuml/text-outside-block.",
+      "stage": "read",
+      "code": "plantuml/text-outside-block"
+    },
+    "modern/docs/72.puml": {
+      "category": "library-refusal",
+      "reason": "The frozen documentation example repeats @enduml. The upstream reader ignores trailing text; the library requires exactly one block and diagnoses plantuml/text-outside-block.",
+      "stage": "read",
+      "code": "plantuml/text-outside-block"
+    },
+    "legacy/docs/08.puml": {
+      "category": "library-refusal",
+      "stage": "conversion",
+      "code": "activity/external-asset",
+      "reason": "The example requests an external image. Reading and printing retain its text, while conversion refuses asset loading and no file or network access occurs."
+    },
+    "modern/docs/75.puml": {
+      "category": "library-refusal",
+      "stage": "conversion",
+      "code": "activity/external-asset",
+      "reason": "The example requests an external image. Reading and printing retain its text, while conversion refuses asset loading and no file or network access occurs."
+    }
+  },
+  "presentation": "Author skins, colors, stereotypes and styles are retained for source printing. Library themes paint the result. Unapplied settings produce findings.",
+  "runtime": "No Java, Graphviz, external files/network, source callbacks, preprocessing or workflow execution.",
+  "coverage": "Every captured documentation example has a source fixture and upstream result. Project fixtures cover independent branch/loop/parallel extraction and the exact gallery examples."
+}

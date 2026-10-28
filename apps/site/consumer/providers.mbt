@@ -17,7 +17,7 @@ fn render_mermaid(
 ) -> Result[@extensions.RenderOutput, @extensions.AdapterError] {
   let parsed = @native_mermaid.read_diagram(input.body)
   let native_kind = match parsed.tree {
-    Swimlane(_) | Zenuml(_) | Architecture(_) => true
+    Swimlane(_) | Zenuml(_) | Architecture(_) | Flowchart(_) => true
     _ => false
   }
   if !native_kind {
@@ -31,6 +31,11 @@ fn render_mermaid(
   }
   let diagnostics = parsed.diagnostics.iter().to_array()
   let model = match parsed.ast {
+    Some(Flowchart(ast)) => {
+      let result = @native_mermaid.to_flowchart(ast)
+      diagnostics.append(result.diagnostics)
+      result.flowchart.map(model => @render.Diagram::Flowchart(model))
+    }
     Some(Swimlane(ast)) => {
       let result = @native_mermaid.to_swimlane(ast)
       diagnostics.append(result.diagnostics)

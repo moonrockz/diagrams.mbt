@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Native Mermaid 12.2.0 flowchart/graph reading, lossless source trees, typed ASTs,
+  canonical printing and independent upstream compatibility fixtures.
+- PlantUML 1.2026.9 modern and legacy activity diagrams with typed branches,
+  loops, forks, merges, lanes, partitions, notes and directional hints.
+- Immutable shared flowchart values, bounded validation, themed standalone SVG,
+  public geometry checks, finite motion plans, route/reachability exploration,
+  offline players and canonical SVG export.
+- Source, theme and player gallery examples, portable corpus rendering gates,
+  independent source/canonical reference checks and fresh consumer checks.
+
+### Changed
+
+- **Breaking:** exhaustive matches on diagram, Mermaid dispatch, PlantUML
+  document/kind, animation and SVG scene enums must handle flowcharts and activity
+  documents. Existing entry points retain their contracts.
+- The shared offline player supports flowchart visits and direction-aware routes.
+  Static SVG output for existing diagram kinds remains unchanged.
+
 ## 0.2.0 - 2026-10-25
 
 BPMN documents, diagrams and playback, plus native Mermaid swimlanes.

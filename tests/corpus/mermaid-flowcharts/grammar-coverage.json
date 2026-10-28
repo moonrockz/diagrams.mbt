@@ -1,0 +1,806 @@
+{
+  "grammar": "upstream/flow.jison",
+  "profile": "Mermaid 12.2.0 flowchart grammar under flowchart and graph",
+  "productions": [
+    {
+      "nonterminal": "start",
+      "line": 303,
+      "production": ": graphConfig document",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "document",
+      "line": 308,
+      "production": ": /* empty */",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "document",
+      "line": 310,
+      "production": "| document line",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "line",
+      "line": 319,
+      "production": ": statement",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "line",
+      "line": 321,
+      "production": "| SEMI",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "line",
+      "line": 322,
+      "production": "| NEWLINE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "line",
+      "line": 323,
+      "production": "| SPACE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "line",
+      "line": 324,
+      "production": "| EOF",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "graphConfig",
+      "line": 328,
+      "production": ": SPACE graphConfig",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "graphConfig",
+      "line": 329,
+      "production": "| NEWLINE graphConfig",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "graphConfig",
+      "line": 330,
+      "production": "| GRAPH NODIR",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "graphConfig",
+      "line": 332,
+      "production": "| GRAPH DIR FirstStmtSeparator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "ending",
+      "line": 344,
+      "production": "ending: endToken ending",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "ending",
+      "line": 345,
+      "production": "| endToken",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "endToken",
+      "line": 348,
+      "production": "endToken: NEWLINE | SPACE | EOF;",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "FirstStmtSeparator",
+      "line": 351,
+      "production": ": SEMI | NEWLINE | spaceList NEWLINE ;",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceListNewline",
+      "line": 355,
+      "production": ": SPACE spaceListNewline",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceListNewline",
+      "line": 356,
+      "production": "| NEWLINE spaceListNewline",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceListNewline",
+      "line": 357,
+      "production": "| NEWLINE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceListNewline",
+      "line": 358,
+      "production": "| SPACE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceList",
+      "line": 363,
+      "production": ": SPACE spaceList",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "spaceList",
+      "line": 364,
+      "production": "| SPACE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 368,
+      "production": ": vertexStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 370,
+      "production": "| styleStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 372,
+      "production": "| linkStyleStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 374,
+      "production": "| classDefStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 376,
+      "production": "| classStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 378,
+      "production": "| clickStatement separator",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 380,
+      "production": "| subgraph SPACE textNoTags SQS text SQE separator document end",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 382,
+      "production": "| subgraph SPACE textNoTags separator document end",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 386,
+      "production": "| subgraph separator document end",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 388,
+      "production": "| direction",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 389,
+      "production": "| acc_title acc_title_value  { $$=$acc_title_value.trim();yy.setAccTitle($$); }",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 390,
+      "production": "| acc_descr acc_descr_value  { $$=$acc_descr_value.trim();yy.setAccDescription($$); }",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "statement",
+      "line": 391,
+      "production": "| acc_descr_multiline_value { $$=$acc_descr_multiline_value.trim();yy.setAccDescription($$); }",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "separator",
+      "line": 394,
+      "production": "separator: NEWLINE | SEMI | EOF ;",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "shapeData",
+      "line": 399,
+      "production": "| SHAPE_DATA",
+      "fixture": "cases/shared-yaml-metadata.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 403,
+      "production": "vertexStatement: vertexStatement link node shapeData",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 405,
+      "production": "| vertexStatement link node",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 407,
+      "production": "|  vertexStatement link node spaceList",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 409,
+      "production": "|node spaceList { /*console.warn('vertexStatement: node spaceList', $node);*/ $$ = {stmt: $node, nodes:$node }}",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 410,
+      "production": "|node shapeData {",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertexStatement",
+      "line": 415,
+      "production": "|node { /* console.warn('vertexStatement: single node', $node); */ $$ = {stmt: $node, nodes:$node }}",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "node",
+      "line": 418,
+      "production": "node: styledVertex",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "node",
+      "line": 420,
+      "production": "| node shapeData spaceList AMP spaceList styledVertex",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "node",
+      "line": 422,
+      "production": "| node spaceList AMP spaceList styledVertex",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "styledVertex",
+      "line": 426,
+      "production": "styledVertex: vertex",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "styledVertex",
+      "line": 428,
+      "production": "| vertex STYLE_SEPARATOR idString",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 432,
+      "production": "vertex:  idString SQS text SQE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 434,
+      "production": "| idString DOUBLECIRCLESTART text DOUBLECIRCLEEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 436,
+      "production": "| idString PS PS text PE PE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 438,
+      "production": "| idString '(-' text '-)'",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 440,
+      "production": "| idString STADIUMSTART text STADIUMEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 442,
+      "production": "| idString SUBROUTINESTART text SUBROUTINEEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 444,
+      "production": "| idString VERTEX_WITH_PROPS_START NODE_STRING\\[field] COLON NODE_STRING\\[value] PIPE text SQE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 446,
+      "production": "| idString CYLINDERSTART text CYLINDEREND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 448,
+      "production": "| idString PS text PE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 450,
+      "production": "| idString DIAMOND_START text DIAMOND_STOP",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 452,
+      "production": "| idString DIAMOND_START DIAMOND_START text DIAMOND_STOP DIAMOND_STOP",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 454,
+      "production": "| idString TAGEND text SQE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 456,
+      "production": "| idString TRAPSTART text TRAPEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 458,
+      "production": "| idString INVTRAPSTART text INVTRAPEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 460,
+      "production": "| idString TRAPSTART text INVTRAPEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 462,
+      "production": "| idString INVTRAPSTART text TRAPEND",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "vertex",
+      "line": 464,
+      "production": "| idString",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 470,
+      "production": "link: linkStatement arrowText",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 472,
+      "production": "| linkStatement TESTSTR SPACE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 474,
+      "production": "| linkStatement arrowText SPACE",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 476,
+      "production": "| linkStatement",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 478,
+      "production": "| START_LINK edgeText LINK",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "link",
+      "line": 480,
+      "production": "| LINK_ID START_LINK edgeText LINK",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "edgeText",
+      "line": 484,
+      "production": "edgeText: edgeTextToken",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "edgeText",
+      "line": 486,
+      "production": "| edgeText edgeTextToken",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "edgeText",
+      "line": 488,
+      "production": "|STR",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "edgeText",
+      "line": 490,
+      "production": "| MD_STR",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "linkStatement",
+      "line": 495,
+      "production": "linkStatement: LINK",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "linkStatement",
+      "line": 497,
+      "production": "| LINK_ID LINK",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "text",
+      "line": 506,
+      "production": "text: textToken",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "text",
+      "line": 508,
+      "production": "| text textToken",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "text",
+      "line": 510,
+      "production": "| STR",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "text",
+      "line": 512,
+      "production": "| MD_STR",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "keywords",
+      "line": 519,
+      "production": ": STYLE | LINKSTYLE | CLASSDEF | CLASS | CLICK | GRAPH | DIR | subgraph | end | DOWN | UP;",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "textNoTags",
+      "line": 522,
+      "production": "textNoTags: textNoTagsToken",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "textNoTags",
+      "line": 524,
+      "production": "| textNoTags textNoTagsToken",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "textNoTags",
+      "line": 526,
+      "production": "| STR",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "textNoTags",
+      "line": 528,
+      "production": "| MD_STR",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "classDefStatement",
+      "line": 533,
+      "production": "classDefStatement:CLASSDEF SPACE idString SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "classStatement",
+      "line": 537,
+      "production": "classStatement:CLASS SPACE idString\\[vertex] SPACE idString\\[class]",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 542,
+      "production": ": CLICK CALLBACKNAME                                    {$$ = $CLICK;yy.setClickEvent($CLICK, $CALLBACKNAME);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 543,
+      "production": "| CLICK CALLBACKNAME SPACE STR                          {$$ = $CLICK;yy.setClickEvent($CLICK, $CALLBACKNAME);yy.setTooltip($CLICK, $STR);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 544,
+      "production": "| CLICK CALLBACKNAME CALLBACKARGS                       {$$ = $CLICK;yy.setClickEvent($CLICK, $CALLBACKNAME, $CALLBACKARGS);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 545,
+      "production": "| CLICK CALLBACKNAME CALLBACKARGS SPACE STR             {$$ = $CLICK;yy.setClickEvent($CLICK, $CALLBACKNAME, $CALLBACKARGS);yy.setTooltip($CLICK, $STR);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 546,
+      "production": "| CLICK HREF STR                                        {$$ = $CLICK;yy.setLink($CLICK, $STR);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 547,
+      "production": "| CLICK HREF STR SPACE STR                              {$$ = $CLICK;yy.setLink($CLICK, $STR1);yy.setTooltip($CLICK, $STR2);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 548,
+      "production": "| CLICK HREF STR SPACE LINK_TARGET                      {$$ = $CLICK;yy.setLink($CLICK, $STR, $LINK_TARGET);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 549,
+      "production": "| CLICK HREF STR\\[link] SPACE STR\\[tooltip] SPACE LINK_TARGET      {$$ = $CLICK;yy.setLink($CLICK, $link, $LINK_TARGET);yy.setTooltip($CLICK, $tooltip);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 550,
+      "production": "| CLICK alphaNum                                        {$$ = $CLICK;yy.setClickEvent($CLICK, $alphaNum);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 551,
+      "production": "| CLICK alphaNum SPACE STR                              {$$ = $CLICK;yy.setClickEvent($CLICK, $alphaNum);yy.setTooltip($CLICK, $STR);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 552,
+      "production": "| CLICK STR                                             {$$ = $CLICK;yy.setLink($CLICK, $STR);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 553,
+      "production": "| CLICK STR\\[link] SPACE STR\\[tooltip]                  {$$ = $CLICK;yy.setLink($CLICK, $link);yy.setTooltip($CLICK, $tooltip);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 554,
+      "production": "| CLICK STR SPACE LINK_TARGET                           {$$ = $CLICK;yy.setLink($CLICK, $STR, $LINK_TARGET);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "clickStatement",
+      "line": 555,
+      "production": "| CLICK STR\\[link] SPACE STR\\[tooltip] SPACE LINK_TARGET    {$$ = $CLICK;yy.setLink($CLICK, $link, $LINK_TARGET);yy.setTooltip($CLICK, $tooltip);}",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "styleStatement",
+      "line": 558,
+      "production": "styleStatement:STYLE SPACE idString SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 563,
+      "production": ": LINKSTYLE SPACE DEFAULT SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 565,
+      "production": "| LINKSTYLE SPACE numList SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 567,
+      "production": "| LINKSTYLE SPACE DEFAULT SPACE INTERPOLATE SPACE alphaNum SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 569,
+      "production": "| LINKSTYLE SPACE numList SPACE INTERPOLATE SPACE alphaNum SPACE stylesOpt",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 571,
+      "production": "| LINKSTYLE SPACE DEFAULT SPACE INTERPOLATE SPACE alphaNum",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "linkStyleStatement",
+      "line": 573,
+      "production": "| LINKSTYLE SPACE numList SPACE INTERPOLATE SPACE alphaNum",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "numList",
+      "line": 577,
+      "production": "numList: NUM",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "numList",
+      "line": 579,
+      "production": "| numList COMMA NUM",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "stylesOpt",
+      "line": 583,
+      "production": "stylesOpt: style",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "stylesOpt",
+      "line": 585,
+      "production": "| stylesOpt COMMA style",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "style",
+      "line": 589,
+      "production": "style: styleComponent",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "style",
+      "line": 590,
+      "production": "|style styleComponent",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "styleComponent",
+      "line": 594,
+      "production": "styleComponent: NUM | NODE_STRING| COLON | UNIT | SPACE | BRKT | STYLE | PCT ;",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "idStringToken",
+      "line": 597,
+      "production": "idStringToken  :  NUM | NODE_STRING | DOWN | MINUS | DEFAULT | COMMA | COLON | AMP | BRKT | MULT | UNICODE_TEXT;",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "textToken",
+      "line": 599,
+      "production": "textToken      :   TEXT | TAGSTART | TAGEND | UNICODE_TEXT;",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "textNoTagsToken",
+      "line": 601,
+      "production": "textNoTagsToken: NUM | NODE_STRING | SPACE | MINUS | AMP | UNICODE_TEXT | COLON | MULT | BRKT | keywords | START_LINK ;",
+      "fixture": "cases/shared-grammar.mmd"
+    },
+    {
+      "nonterminal": "edgeTextToken",
+      "line": 603,
+      "production": "edgeTextToken  :  EDGE_TEXT | UNICODE_TEXT ;",
+      "fixture": "cases/shared-labels.mmd"
+    },
+    {
+      "nonterminal": "alphaNumToken",
+      "line": 605,
+      "production": "alphaNumToken  :  NUM | UNICODE_TEXT | NODE_STRING | DIR | DOWN | MINUS | COMMA | COLON | AMP | BRKT | MULT;",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "idString",
+      "line": 608,
+      "production": ":idStringToken",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "idString",
+      "line": 610,
+      "production": "| idString idStringToken",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "alphaNum",
+      "line": 615,
+      "production": ": alphaNumToken",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "alphaNum",
+      "line": 617,
+      "production": "| alphaNum alphaNumToken",
+      "fixture": "cases/shared-metadata-and-identifiers.mmd"
+    },
+    {
+      "nonterminal": "direction",
+      "line": 623,
+      "production": ": direction_tb",
+      "fixture": "cases/shared-direction-tb.mmd"
+    },
+    {
+      "nonterminal": "direction",
+      "line": 625,
+      "production": "| direction_bt",
+      "fixture": "cases/shared-direction-tb.mmd"
+    },
+    {
+      "nonterminal": "direction",
+      "line": 627,
+      "production": "| direction_rl",
+      "fixture": "cases/shared-direction-tb.mmd"
+    },
+    {
+      "nonterminal": "direction",
+      "line": 629,
+      "production": "| direction_lr",
+      "fixture": "cases/shared-direction-tb.mmd"
+    },
+    {
+      "nonterminal": "direction",
+      "line": 631,
+      "production": "| direction_td",
+      "fixture": "cases/shared-direction-tb.mmd"
+    }
+  ],
+  "lexicalCoverage": {
+    "directions": [
+      "cases/shared-direction-tb.mmd",
+      "cases/shared-direction-td.mmd",
+      "cases/shared-direction-bt.mmd",
+      "cases/shared-direction-lr.mmd",
+      "cases/shared-direction-rl.mmd"
+    ],
+    "quotedMarkdownHtmlEntitiesUnicodeMultiline": "cases/shared-labels.mmd",
+    "tabs": "cases/shared-tabs.mmd",
+    "frontMatter": "cases/swimlane-doc-02.mmd",
+    "shapeDataBlocksAnchorsAliasesAndScalarTypes": "cases/shared-yaml-metadata.mmd",
+    "repeatedAndSelfNestedGroups": "cases/shared-membership.mmd",
+    "expandedAndNativeConnectionIDs": "cases/shared-semantics.mmd"
+  },
+  "notes": [
+    "Helper productions are exercised by the listed complete native sources.",
+    "The grammar-only anonymous empty subgraph branch is read directly in the recovery tests; upstream database registration dereferences an absent title.",
+    "Undocumented header directions BR,<,>,^,v are retained in AST and explicitly refused by conversion."
+  ]
+}

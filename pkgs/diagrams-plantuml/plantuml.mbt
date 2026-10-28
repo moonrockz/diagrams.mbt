@@ -13,6 +13,7 @@ pub(all) enum Document {
   Ebnf(@ebnf_syntax.Document)
   Json(@json_syntax.Document)
   Yaml(@yaml_syntax.Document)
+  Activity(@activity.Document)
 } derive(Eq, Debug)
 
 ///|
@@ -28,12 +29,14 @@ pub fn Document::kind(self : Document) -> @envelope.Kind {
     Ebnf(_) => Ebnf
     Json(_) => Json
     Yaml(_) => Yaml
+    Activity(_) => Activity
   }
 }
 
 ///|
-/// The result of reading. `tree` reproduces every input code unit; `document`
-/// is absent when an error was found.
+/// The result of reading. `tree` reproduces every input code unit. Activity
+/// recovery can retain a partial `document`; diagnostics determine validity.
+/// The other native readers return no document after an error.
 pub struct ReadResult {
   tree : @cst.Node
   document : Document?
@@ -47,7 +50,7 @@ fn finish(
   document : Document?,
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic],
 ) -> ReadResult {
-  { tree: scan.document(nodes), document, diagnostics }
+  { tree: scan.document(nodes), document, diagnostics, }
 }
 
 ///|
@@ -69,8 +72,19 @@ fn read_scan(scan : @envelope.Scan, limits : @envelope.Limits) -> ReadResult {
       let r = @yaml_syntax.read(scan, limits~)
       finish(scan, r.nodes, r.document.map(d => Yaml(d)), r.diagnostics)
     }
+    Some(Activity) => {
+      let r = @activity.read(scan, limits~)
+      finish(
+        scan,
+        r.nodes.iter().to_array(),
+        r.document.map(d => Activity(d)),
+        r.diagnostics,
+      )
+    }
     _ => {
-      let nodes = scan.line_nodes(line => Some(@cst.Node::new(Error, line.tokens(Error))))
+      let nodes = scan.line_nodes(line => {
+        Some(@cst.Node::new(Error, line.tokens(Error)))
+      })
       let diagnostics = scan.diagnostics.iter().collect()
       if !diagnostics.iter().any(d => d.severity == Error) {
         diagnostics.push(
@@ -85,12 +99,12 @@ fn read_scan(scan : @envelope.Scan, limits : @envelope.Limits) -> ReadResult {
 }
 
 ///|
-/// Read one native block: `@startregex`, `@startebnf`, `@startjson` or
-/// `@startyaml` with its matching end marker. Other kinds, extra blocks and
-/// text outside the block are errors.
+/// Read one regex, EBNF, JSON, YAML or modern/legacy activity block with its
+/// matching end marker. Activities use `@startuml` and `@enduml`. Other UML
+/// kinds, extra blocks and text outside the block are errors.
 pub fn read(
   source : String,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> ReadResult {
   read_scan(@envelope.scan(source, limits~), limits)
 }
@@ -100,9 +114,33 @@ pub fn read(
 pub fn read_body(
   kind : @envelope.Kind,
   body : String,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  dialect? : @activity.Dialect,
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> ReadResult {
-  read_scan(@envelope.scan_body(kind, body, limits~), limits)
+  let scan = @envelope.scan_body(kind, body, limits~)
+  if kind == Activity {
+    if dialect == None {
+      return finish(
+        scan,
+        scan.line_nodes(line => Some(@cst.Node::new(Data, line.tokens(Text)))),
+        None,
+        [
+          @diagrams.Diagnostic::error(
+            "activity/missing-dialect", "Activity body reading requires an explicit dialect",
+          ),
+        ],
+      )
+    }
+    let r = @activity.read(scan, limits~, dialect?)
+    finish(
+      scan,
+      r.nodes.iter().to_array(),
+      r.document.map(d => Activity(d)),
+      r.diagnostics,
+    )
+  } else {
+    read_scan(scan, limits)
+  }
 }
 
 ///|
@@ -124,6 +162,7 @@ fn statements_of(document : Document) -> ReadOnlyArray[@envelope.Statement] {
     Ebnf(d) => d.statements
     Json(d) => d.statements
     Yaml(d) => d.statements
+    Activity(d) => d.statements
   }
 }
 
@@ -134,6 +173,7 @@ fn name_of(document : Document) -> String? {
     Ebnf(d) => d.name
     Json(d) => d.name
     Yaml(d) => d.name
+    Activity(d) => d.name
   }
 }
 
@@ -141,17 +181,18 @@ fn name_of(document : Document) -> String? {
 /// Write only the body of a document, from its typed values.
 pub fn print_body(
   document : Document,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> PrintResult {
   let result = match document {
     Regex(d) => @regex_syntax.print_body(d, limits~)
     Ebnf(d) => @ebnf_syntax.print_body(d, limits~)
     Json(d) => @json_syntax.print_body(d, limits~)
     Yaml(d) => @yaml_syntax.print_body(d, limits~)
+    Activity(d) => @activity.print_body(d, limits~)
   }
   match result {
-    Ok(text) => { output: Some(text), diagnostics: [] }
-    Err(diagnostics) => { output: None, diagnostics }
+    Ok(text) => { output: Some(text), diagnostics: [], }
+    Err(diagnostics) => { output: None, diagnostics, }
   }
 }
 
@@ -160,7 +201,7 @@ pub fn print_body(
 /// body and the end marker. The output limit applies to the whole text.
 pub fn print(
   document : Document,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> PrintResult {
   let body = print_body(document, limits~)
   guard body.output is Some(text) else { return body }
@@ -184,11 +225,13 @@ pub fn print(
     return {
       output: None,
       diagnostics: [
-        @diagrams.Diagnostic::error("plantuml/print-limit", "Output limit exceeded"),
+        @diagrams.Diagnostic::error(
+          "plantuml/print-limit", "Output limit exceeded",
+        ),
       ],
     }
   }
-  { output: Some(output), diagnostics: [] }
+  { output: Some(output), diagnostics: [], }
 }
 
 ///|
@@ -202,24 +245,31 @@ pub struct Conversion {
 pub fn to_diagram(
   document : Document,
   id? : String,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Conversion {
   match document {
     Regex(d) => {
       let c = @regex_syntax.to_regex(d, id=id.unwrap_or("regex"), limits~)
-      { diagram: c.regex.map(m => Regex(m)), diagnostics: c.diagnostics }
+      { diagram: c.regex.map(m => Regex(m)), diagnostics: c.diagnostics, }
     }
     Ebnf(d) => {
       let c = @ebnf_syntax.to_grammar(d, id=id.unwrap_or("ebnf"), limits~)
-      { diagram: c.grammar.map(g => Ebnf(g)), diagnostics: c.diagnostics }
+      { diagram: c.grammar.map(g => Ebnf(g)), diagnostics: c.diagnostics, }
     }
     Json(d) => {
       let c = @json_syntax.to_data_tree(d, id=id.unwrap_or("json"), limits~)
-      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics }
+      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics, }
+    }
+    Activity(d) => {
+      let c = @activity.to_flowchart(d, id=id.unwrap_or("activity"), limits~)
+      {
+        diagram: c.flowchart.map(m => Flowchart(m)),
+        diagnostics: c.diagnostics,
+      }
     }
     Yaml(d) => {
       let c = @yaml_syntax.to_data_tree(d, id=id.unwrap_or("yaml"), limits~)
-      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics }
+      { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics, }
     }
   }
 }
@@ -230,12 +280,15 @@ pub fn to_diagram(
 /// Diagnostics accumulate; any error gives no output.
 pub fn render_svg(
   source : String,
-  renderer? : @svg.SvgRenderer = @svg.SvgRenderer::new(),
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  renderer~ : @svg.SvgRenderer = @svg.SvgRenderer::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
   id? : String,
 ) -> @render.Rendered {
   let read = read(source, limits~)
   let diagnostics = read.diagnostics.iter().collect()
+  if diagnostics.iter().any(d => d.severity == Error) {
+    return @render.Rendered::failed("image/svg+xml", diagnostics)
+  }
   guard read.document is Some(document) else {
     return @render.Rendered::failed("image/svg+xml", diagnostics)
   }
@@ -262,19 +315,23 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] render_traced_svg(
   provider : P,
   input : String,
   start_rule? : String,
-  renderer? : @svg.SvgRenderer = @svg.SvgRenderer::new(),
-  limits? : @envelope.Limits = @envelope.Limits::new(),
-  trace_limits? : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
-  matched? : @svg.ChannelStyle = @svg.ChannelStyle::new(),
-  not_matched? : @svg.ChannelStyle = @svg.ChannelStyle::new(dashed=true),
-  taken? : @svg.ChannelStyle = @svg.ChannelStyle::hidden(),
-  failure? : @svg.ChannelStyle = @svg.ChannelStyle::new(),
+  renderer~ : @svg.SvgRenderer = @svg.SvgRenderer::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
+  trace_limits~ : @railroad_trace.TraceLimits = @railroad_trace.TraceLimits::new(),
+  matched~ : @svg.ChannelStyle = @svg.ChannelStyle::new(),
+  not_matched~ : @svg.ChannelStyle = @svg.ChannelStyle::new(dashed=true),
+  taken~ : @svg.ChannelStyle = @svg.ChannelStyle::hidden(),
+  failure~ : @svg.ChannelStyle = @svg.ChannelStyle::new(),
 ) -> @svg.TracedRender {
-  fn refused(diagnostics : ArrayView[@diagrams.Diagnostic]) -> @svg.TracedRender {
+  fn refused(
+    diagnostics : ArrayView[@diagrams.Diagnostic],
+  ) -> @svg.TracedRender {
     @svg.TracedRender::refused(diagnostics)
   }
   let read = read(source, limits~)
-  guard read.document is Some(document) else { return refused(read.diagnostics) }
+  guard read.document is Some(document) else {
+    return refused(read.diagnostics)
+  }
   let converted = to_diagram(document, limits~)
   guard converted.diagram is Some(diagram) else {
     return refused(converted.diagnostics)
@@ -287,13 +344,15 @@ pub fn[P : @railroad_trace.RailroadTraceProvider] render_traced_svg(
         [] =>
           return refused([
             @diagrams.Diagnostic::error(
-              "trace/invalid-request", "No rule is named '\{name}'",
+              "trace/invalid-request",
+              "No rule is named '\{name}'",
             ),
           ])
         _ =>
           return refused([
             @diagrams.Diagnostic::error(
-              "trace/invalid-request", "More than one rule is named '\{name}'",
+              "trace/invalid-request",
+              "More than one rule is named '\{name}'",
             ),
           ])
       }

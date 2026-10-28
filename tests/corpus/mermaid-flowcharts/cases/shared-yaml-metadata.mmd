@@ -1,0 +1,31 @@
+flowchart LR
+subgraph Metadata
+A@{
+shape: rect
+label: |-
+  Literal
+  label
+}
+B@{ seed: &shared "Anchored", label: *shared, shape: doc }
+C@{
+shape: stadium
+label: >-
+  Folded
+  label
+}
+D@{ shape: rect, label: 0 }
+E@{ shape: rect, label: false }
+F@{ shape: rect, label: "false" }
+G@{ shape: rect, label: true }
+H@{ shape: rect, label: null }
+I@{ shape: rect, label: "" }
+J@{ shape: rect, label: !!str 123 }
+K@{ shape: circle, custom: [one, two, 42] }
+end
+A --> B --> C
+Quoted@{ label: '"Hello"', shape: rect, custom: "One \u0022quote\u007d" }
+Clipped@{
+shape: rect
+label: |
+  Clipped line
+}

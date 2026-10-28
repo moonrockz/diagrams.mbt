@@ -1,0 +1,15 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-tests/flowchart-mermaid-acceptance"
+
+// Values
+pub let reference : String
+
+pub let shapes : String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

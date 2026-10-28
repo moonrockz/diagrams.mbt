@@ -1,0 +1,9 @@
+@startuml
+start
+if (Ready?) then (yes)
+:Read;
+else (no)
+:Wait;
+endif
+stop
+@enduml

@@ -1,6 +1,8 @@
 ///|
 priv struct SwimlanePaint {
   paint : Paint
+  kind : String
+  parent_overrides : Map[String,String?]
   diagnostics : Array[@diagrams.Diagnostic]
   limit : Int32
   mut used : Int32
@@ -198,7 +200,7 @@ fn SwimlanePaint::label(
   self.element(
     "text",
     attrs=[
-      ("class", "swimlane-label"),
+      ("class", self.kind + "-label"),
       ("data-label-owner", label.owner),
       ("x", swimlane_number(label.box.x + label.box.width / 2.0)),
       ("y", swimlane_number(label.box.y + label.size)),
@@ -376,16 +378,16 @@ fn SwimlanePaint::shape(
   let attrs = [
     (
       "class",
-      "swimlane-\{match shape.kind { Lane => "lane"; Group => "group"; Node => "node" }}",
+      "\{self.kind}-\{match shape.kind { Lane => "lane"; Group => "group"; Node => "node" }}",
     ),
-    ("data-swimlane-id", shape.id),
+    ("data-" + self.kind + "-id", shape.id),
     ("data-shape", shape.shape),
     ("data-expanded", if shape.expanded { "true" } else { "false" }),
   ]
   if shape.lane is Some(lane) {
     attrs.push(("data-lane", lane))
   }
-  if shape.parent is Some(parent) {
+  if self.parent_overrides.get(shape.id).unwrap_or(shape.parent) is Some(parent) {
     attrs.push(("data-parent", parent))
   }
   if node.bind(n => n.properties) is Some(properties) {
@@ -405,7 +407,7 @@ fn SwimlanePaint::shape(
     }
   }
   let outline_attrs = [
-    ("class", "swimlane-outline"),
+    ("class", self.kind + "-outline"),
     ("d", swimlane_outline(shape)),
     ("fill", if empty { "none" } else { fill }),
     ("stroke", if empty { "none" } else { stroke }),
@@ -417,7 +419,7 @@ fn SwimlanePaint::shape(
   let box = shape.box
   let children = [
     self.element("rect", attrs=[
-      ("class", "swimlane-bounds"),
+      ("class", self.kind + "-bounds"),
       ("x", swimlane_number(box.x)),
       ("y", swimlane_number(box.y)),
       ("width", swimlane_number(box.width)),
@@ -490,8 +492,8 @@ fn SwimlanePaint::connection(
   self.element(
     "g",
     attrs=[
-      ("class", "swimlane-connection"),
-      ("data-swimlane-id", flow.id),
+      ("class", self.kind + "-connection"),
+      ("data-" + self.kind + "-id", flow.id),
       ("data-source", flow.source),
       ("data-target", flow.target),
       ("data-display-source", edge.source),
@@ -509,6 +511,10 @@ fn paint_swimlane(
   id_prefix : String?,
   limits : @swimlane_layout.Limits,
   precomputed? : @swimlane_layout.Result,
+  kind~ : String = "swimlane",
+  intentional_containment~ : ArrayView[(String,String)] = [],
+  hidden_containers~ : ArrayView[String] = [],
+  parent_overrides~ : ArrayView[(String,String?)] = [],
 ) -> @render.Rendered {
   let result = precomputed.unwrap_or_else(() => {
     @swimlane_layout.layout(view, limits~)
@@ -522,6 +528,8 @@ fn paint_swimlane(
     light: @swimlane_layout.palette(theme.light),
   }
   let c = SwimlanePaint::{
+    kind,
+    parent_overrides:Map(parent_overrides),
     paint: Paint::{ theme, mode, },
     diagnostics,
     limit: limits.output_units,
@@ -588,7 +596,9 @@ fn paint_swimlane(
       area
     }
   })
+  let hidden=Map(hidden_containers.map(id => (id,true)))
   for shape in ordered {
+    if hidden.contains(shape.id) { continue }
     if c.failed {
       break
     }
@@ -606,9 +616,11 @@ fn paint_swimlane(
     .map(value => Some(value))
     .unwrap_or(view.title)
     .unwrap_or(view.id)
-  let description = view.accessibility_description.unwrap_or(
-    "Swimlane diagram with \{view.lanes.length()} responsibility lanes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a process.",
-  )
+  let description = view.accessibility_description.unwrap_or(if kind == "flowchart" {
+    "Flowchart with \{view.nodes.length()} nodes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a workflow."
+  } else {
+    "Swimlane diagram with \{view.lanes.length()} responsibility lanes and \{view.connections.length()} structural connections. Playback illustrates structure and does not execute a process."
+  })
   let root = c.element(
     "svg",
     attrs=[
@@ -617,7 +629,7 @@ fn paint_swimlane(
       ("width", geometry.width.to_string()),
       ("height", geometry.height.to_string()),
       ("role", "img"),
-      ("data-diagram", "swimlane"),
+      ("data-diagram", kind),
     ],
     children=[
       c.element("title", children=[c.text(title)]),
@@ -633,15 +645,15 @@ fn paint_swimlane(
       ]),
       c.element(
         "g",
-        attrs=[("class", "swimlane-backgrounds")],
+        attrs=[("class", kind + "-backgrounds")],
         children=backgrounds,
       ),
       c.element(
         "g",
-        attrs=[("class", "swimlane-connections")],
+        attrs=[("class", kind + "-connections")],
         children=connections,
       ),
-      c.element("g", attrs=[("class", "swimlane-nodes")], children=nodes),
+      c.element("g", attrs=[("class", kind + "-nodes")], children=nodes),
     ],
   )
   if c.failed {
@@ -727,6 +739,7 @@ fn paint_swimlane(
         geometry,
         palette,
         work_limit=limits.work,
+        intentional_containment~,
       ) {
       if finding.rule == Limit {
         diagnostics.push(

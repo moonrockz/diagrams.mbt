@@ -11,7 +11,7 @@ import {
 // Values
 pub let diagnostic_codes : ReadOnlyArray[String]
 
-pub fn print(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits) -> Printed
+pub fn print(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, header? : String, diagnostic_prefix? : String) -> Printed
 
 // Errors
 

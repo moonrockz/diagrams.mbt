@@ -47,7 +47,7 @@
 <label><input data-control="messages" type="checkbox">Include message flows</label>
 <label><input data-control="undirected" type="checkbox">Include unheaded connections</label>
 <button type="button" data-control="route">Show route</button>
-<label>Connection <select data-control="connection" aria-label="Select a swimlane connection"></select></label>
+<label>Connection <select data-control="connection" aria-label="Select a diagram connection"></select></label>
 <button type="button" data-control="show-connection">Show connection</button>
 <label>Direction <select data-control="direction" aria-label="Reachability direction"><option value="forward">Downstream</option><option value="reverse">Upstream</option><option value="both">Both directions</option></select></label>
 <button type="button" data-control="reach">Show reachability</button>
@@ -279,7 +279,8 @@ SOFTWARE.
   const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
   const nodeElements = new Map();
   const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
-  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id'),element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id], .flowchart-connection[data-flowchart-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id') ?? element.getAttribute('data-flowchart-id'),element]));
+  const flowchartElements = new Map([...svg.querySelectorAll('.flowchart-node[data-flowchart-id], .flowchart-group[data-flowchart-id], .flowchart-lane[data-flowchart-id]')].map(element => [element.getAttribute('data-flowchart-id'),element]));
   const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
   const architectureElements = new Map([...svg.querySelectorAll('.architecture-service[data-id], .architecture-junction[data-id], .architecture-group[data-id]')].map(element => [element.getAttribute('data-id'),element]));
   const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
@@ -288,9 +289,9 @@ SOFTWARE.
   const termElements = byData('.rr-term[data-term]', 'data-term'), rowElements = byData('.data-row[data-member]', 'data-member'), boxElements = byData('.data-box[data-node]', 'data-node');
   const visitKeys = new Set();
   for (const binding of data.node_bindings) {
-    const element = binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
+    const element = binding.kind === 'flowchart' ? flowchartElements.get(binding.id) : binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
     if (element) nodeElements.set(binding.endpoint, element);
-    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box') visitKeys.add(binding.endpoint);
+    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box' || (binding.kind === 'flowchart' && binding.endpoint !== binding.id)) visitKeys.add(binding.endpoint);
   }
   const structural = data.kind === 'regex' || data.kind === 'ebnf' || data.kind === 'data-tree';
   function decode(plan) {
@@ -421,7 +422,7 @@ SOFTWARE.
     const limits = data.query_limits;
     const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
     if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
-    const kinds = ['sequence', 'order', 'swimlane', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const kinds = ['sequence', 'order', 'swimlane', 'flowchart', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
     const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
     if (!reach && start === target) return { nodes: [start], edges: [] };
     while (at < queue.length) {
@@ -442,16 +443,16 @@ SOFTWARE.
     return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
   }
   for (const node of data.graph.nodes) {
-    if (node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
+    if (node.kind !== 'flowchart' && node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
     for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
   }
-  if ((data.kind === 'swimlane' || data.kind === 'architecture')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
+  if ((data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
   if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
   messageKinds.closest('label').hidden = data.kind !== 'bpmn';
-  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture');
-  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture');
+  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart');
+  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart');
   for (const binding of data.paths) {
-    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture') continue;
+    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture' && binding.kind !== 'flowchart') continue;
     const option=document.createElement('option'); option.value=binding.key;
     option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
   }
@@ -468,7 +469,7 @@ SOFTWARE.
   });
   control('route').addEventListener('click', () => {
     delete root.dataset.connection;
-    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture') ? direction.value : 'forward', false);
+    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart') ? direction.value : 'forward', false);
     if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
     if (structural) {
       // Railroad routes follow drawn connectors and term visits. Hierarchy
@@ -487,11 +488,17 @@ SOFTWARE.
       highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(items.map(item => item.key));
       return;
     }
+    if (data.kind === 'flowchart' && result.edges.length === 0) {
+      const node = data.graph.nodes[result.nodes[0]];
+      const steps = node.occurrence ? [{ordinal:0,key:node.occurrence,start:0,duration:1000,groups:[],reversed:false,visit:true}] : [];
+      replace({mode:'finite',duration:steps.length*1000,steps},'Structural node visit. No action is executed.');
+      highlight([node.id]); root.dataset.route=JSON.stringify(steps.map(item=>item.key)); return;
+    }
     const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
     if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
     const steps = keys.map((key, ordinal) => {
       const edge = data.graph.edges[result.edges[ordinal]];
-      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
       return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
     });
     replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);

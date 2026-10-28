@@ -11,6 +11,7 @@ pub(all) enum NodeBindingKind {
   Message(Int32)
   Frame(Int32)
   Swimlane(String)
+  Flowchart(String)
   Architecture(String)
   /// A railroad term group, by term identity.
   RailroadTerm(String)
@@ -205,6 +206,7 @@ pub fn SvgRenderer::scene(
   let catalog_result = match diagram {
     Architecture(view) => @animation.Catalog::architecture(view, limits~)
     Swimlane(view) => @animation.Catalog::swimlane(view, limits~)
+    Flowchart(view) => @animation.Catalog::flowchart(view, limits~)
     Bpmn(view) => @animation.Catalog::bpmn(view, limits~)
     Sequence(sequence) =>
       @animation.Catalog::sequence(sequence, view_id=sequence_view_id, limits~)
@@ -260,6 +262,33 @@ pub fn SvgRenderer::scene(
         nodes.push({ endpoint: node.id, kind: Architecture(node.id), })
       }
       (rendered, false)
+    }
+    Flowchart(view) => {
+      let result=@flowchart_layout.layout(view,limits=self.flowchart_limits)
+      guard result.geometry is Some(geometry) else { return {scene:None,diagnostics:result.diagnostics} }
+      let rendered=paint_flowchart(view,self.theme,self.mode,self.id_prefix,self.flowchart_limits,geometry~)
+      if rendered.output == None { return {scene:None,diagnostics:rendered.diagnostics} }
+      let edges=Map([])
+      for edge in geometry.connections { edges[edge.connection.id]=edge }
+      for occurrence in catalog.occurrences {
+        if occurrence.is_visit() { continue }
+        guard occurrence.kind is Flowchart(connection) && edges.get(connection.id) is Some(edge) else { return failed("animation/binding-mismatch","A flowchart connection has no visible rendered path") }
+        let path=flowchart_path(edge)
+        if path.length() > output_units { return failed("animation/scene-limit","Flowchart scene path exceeds output limit") }
+        paths.push((occurrence,path))
+      }
+      let visible=Map(geometry.shapes.map(shape => (shape.id,true)))
+      for node in catalog.graph.nodes {
+        let anchor=match node.kind {
+          FlowchartRegion(_,anchor) => if visible.contains(anchor) { Some(anchor) } else { None }
+          _ => Some(node.id)
+        }
+        if anchor is Some(id) {
+          nodes.push({endpoint:node.id,kind:Flowchart(id)})
+          if node.occurrence is Some(key) { nodes.push({endpoint:key,kind:Flowchart(id)}) }
+        }
+      }
+      (rendered,false)
     }
     Swimlane(view) => {
       let geometry = @swimlane_layout.layout(view, limits=self.swimlane_limits)

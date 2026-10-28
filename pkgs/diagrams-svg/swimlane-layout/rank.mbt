@@ -114,7 +114,9 @@ fn weighted_ranks(
   members : ArrayView[Int32],
   links : ArrayView[(Int32, Int32, Int32)],
   budget : Budget,
+  break_cycles~ : Bool = false,
 ) -> Map[Int32, Int32] {
+  let links=if break_cycles { cycle_free_links(links,budget) } else { links.to_owned() }
   let pairs = []
   let outgoing : Map[Int32, Array[(Int32, Int32)]] = Map([])
   for (a, b, length) in links {
@@ -166,4 +168,30 @@ fn weighted_ranks(
     }
   }
   result
+}
+
+///|
+// Keep authored forward constraints and route later cycle-closing connections
+// as feedback. This is opt-in so existing swimlane geometry remains unchanged.
+fn cycle_free_links(links : ArrayView[(Int,Int,Int)], budget : Budget) -> Array[(Int,Int,Int)] {
+  let accepted=[]
+  let outgoing : Map[Int,Array[Int]]=Map([])
+  for (a,b,length) in links {
+    if !budget.charge(1) { return [] }
+    if a == b { continue }
+    let stack=[b]; let seen : Map[Int,Bool]=Map([]); let mut cycle=false
+    while stack.pop() is Some(current) {
+      if !budget.charge(1) { return [] }
+      if current == a { cycle=true;break }
+      if seen.contains(current) { continue }; seen[current]=true
+      for next in outgoing.get(current).unwrap_or([]) {
+        if !budget.charge(1) { return [] };stack.push(next)
+      }
+    }
+    if !cycle {
+      accepted.push((a,b,length))
+      match outgoing.get(a) { Some(values) => values.push(b); None => outgoing[a]=[b] }
+    }
+  }
+  accepted
 }

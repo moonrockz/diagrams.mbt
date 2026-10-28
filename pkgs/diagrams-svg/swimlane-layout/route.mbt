@@ -246,18 +246,22 @@ fn route_connections(
   shapes : ArrayView[Shape],
   parents : ArrayView[Int32],
   budget : Budget,
+  direction_hints~ : ArrayView[(String,@model.Direction)] = [],
 ) -> Array[Connection] {
   let by_index = Map([])
   for shape in shapes {
     by_index[shape.index] = shape
   }
+  let hints : Map[String,@model.Direction]=Map(direction_hints)
   let counts : Map[(Int32, Int32), Int32] = Map([])
   let sides = []
-  for (_, a, b) in selected {
+  for (edge_index, a, b) in selected {
     let source = by_index[a]
     let target = by_index[b]
-    let from = if a == b { 0 } else { side(source, target, true) }
-    let to = if a == b { 3 } else { side(target, source, false) }
+    let explicit=hints.get(view.connections[edge_index].id)
+    let (from,to)=if a != b && explicit is Some(dir) {
+      match dir { LR => (0,2);RL => (2,0);TB => (1,3);BT => (3,1) }
+    } else { (if a == b { 0 } else { side(source,target,true) },if a == b { 3 } else { side(target,source,false) }) }
     sides.push((from, to))
     counts[(a, from)] = counts.get((a, from)).unwrap_or(0) + 1
     counts[(b, to)] = counts.get((b, to)).unwrap_or(0) + 1

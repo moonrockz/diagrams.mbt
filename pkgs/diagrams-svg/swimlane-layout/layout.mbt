@@ -18,6 +18,8 @@ fn reversed(direction : @model.Direction) -> Bool {
 pub fn layout(
   view : @model.Swimlane,
   limits~ : Limits = Limits::new(),
+  flowchart~ : Bool = false,
+  direction_hints~ : ArrayView[(String,@model.Direction)] = [],
 ) -> Result {
   let diagnostics = []
   let budget = Budget::{ limits, diagnostics, work: 0, failed: false, }
@@ -91,6 +93,8 @@ pub fn layout(
       }
     }
   }
+  for (id,_) in direction_hints { if !budget.charge(id.length()+1) { return layout_failure(diagnostics) } }
+  let hints : Map[String,@model.Direction]=Map(direction_hints)
   let parents = Array::make(count, -1)
   let visible = Array::make(count, true)
   let ids : Map[String, Int32] = Map([])
@@ -290,10 +294,10 @@ pub fn layout(
       continue
     }
     selected.push((i, a, b))
-    graph_links.push((a, b, edge.min_length))
+    graph_links.push(if flowchart && edge.direction == Backward { (b,a,edge.min_length) } else { (a,b,edge.min_length) })
   }
   let members = Array::makei(count, i => i).filter(i => visible[i])
-  let global_ranks = weighted_ranks(members, graph_links, budget)
+  let global_ranks = weighted_ranks(members, graph_links, budget,break_cycles=flowchart)
   let subtree_rank = Array::make(count, 0)
   for i in members {
     subtree_rank[i] = global_ranks.get(i).unwrap_or(0)
@@ -421,10 +425,29 @@ pub fn layout(
     }
     for (edge, a, b) in selected {
       if child(a) is Some(a) && child(b) is Some(b) && a != b {
-        projected.push((a, b, view.connections[edge].min_length))
+        projected.push(if flowchart && view.connections[edge].direction == Backward { (b,a,view.connections[edge].min_length) } else { (a,b,view.connections[edge].min_length) })
       }
     }
-    let ranks = weighted_ranks(items, projected, budget)
+    let local_hints=[]
+    let mut authored_hint=false
+    for (edge,a,b) in selected {
+      if child(a) is Some(a) && child(b) is Some(b) && a != b {
+        let connection=view.connections[edge]
+        if hints.contains(connection.id) { authored_hint=true }
+        local_hints.push(if !hints.contains(connection.id) && connection.direction == Backward { (b,a,connection.min_length,dir) } else { (a,b,connection.min_length,hints.get(connection.id).unwrap_or(dir)) })
+      }
+    }
+    if authored_hint {
+      let (positions,body_w,body_h)=directional_offsets(items,local_hints,sizes,dir,gap,budget)
+      let (header_w,header_h)=if scope == unowned { (0.0,0.0) } else { measure(plain_text(texts[scope]),weight=700) }
+      let pad_y=if scope == unowned { 32.0 } else { header_h+40.0 }
+      sizes[scope]=(Double::max(header_w+40.0,body_w+64.0),body_h+pad_y+32.0)
+      for item in items { let point=positions.get(item).unwrap_or({x:0.0,y:0.0});offsets[item]={x:point.x+32.0,y:point.y+pad_y} }
+      let mut first=true
+      for item in items { if first || subtree_rank[item] < subtree_rank[scope] { subtree_rank[scope]=subtree_rank[item];first=false } }
+      continue
+    }
+    let ranks = weighted_ranks(items, projected, budget,break_cycles=flowchart)
     let rows : Map[Int32, Array[Int32]] = Map([])
     let row_order = []
     for item in items {
@@ -638,7 +661,7 @@ pub fn layout(
     height = Double::max(height, box.y + box.height + 32.0)
   }
   let connections = route_connections(
-    view, selected, result_shapes, parents, budget,
+    view, selected, result_shapes, parents, budget, direction_hints~,
   )
   if budget.failed {
     return layout_failure(diagnostics)

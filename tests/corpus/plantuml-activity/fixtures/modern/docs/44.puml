@@ -1,0 +1,5 @@
+@startuml
+:a;
+link #blue
+:b;
+@enduml

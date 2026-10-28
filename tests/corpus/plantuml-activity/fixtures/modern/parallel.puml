@@ -1,0 +1,9 @@
+@startuml
+start
+fork
+:Read;
+fork again
+:Write;
+end fork
+stop
+@enduml
