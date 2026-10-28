@@ -32,6 +32,7 @@ pub struct Geometry {
   height : Int
   priv drawing : @geometry.Geometry
   priv drawing_result : @geometry.Result
+  priv prior_diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
   priv intentional : ReadOnlyArray[(String,String)]
   priv hidden_containers : ReadOnlyArray[String]
 } derive(Eq, Debug)
@@ -189,6 +190,7 @@ pub fn layout(view : @model.Flowchart, limits~ : Limits = Limits::new()) -> Resu
   let direction_hints=view.connections.iter().filter_map(e => e.direction_hint.map(d => (e.id,vector_direction(d)))).to_array()
   let geometry_limits=@geometry.Limits::new(nodes=limits.nodes,edges=limits.edges,depth=limits.depth,work=limits.work,output_units=limits.output_units)
   let initial=@geometry.layout(vector,limits=geometry_limits,flowchart=true,direction_hints~)
+  let mut overlay_applied=false
   let framed=match initial.geometry {
     Some(drawing) => {
       let overlays=[]
@@ -198,7 +200,7 @@ pub fn layout(view : @model.Flowchart, limits~ : Limits = Limits::new()) -> Resu
         let members=group_members[group.id].iter().concat(group_children[group.id].iter()).to_array()
         overlays.push(@geometry.Overlay::new(group.id,members[:],parent?=group.parent))
       }
-      if overlays.is_empty() { initial } else { drawing.overlay(overlays[:],limits=geometry_limits,direction_hints~) }
+      if overlays.is_empty() { initial } else { overlay_applied=true; drawing.overlay(overlays[:],limits=geometry_limits,direction_hints~) }
     }
     None => initial
   }
@@ -214,13 +216,16 @@ pub fn layout(view : @model.Flowchart, limits~ : Limits = Limits::new()) -> Resu
       connections.push(@model.Connection::new(id,target,note.id,style=Dotted,target_marker=None,role=NoteAttachment))
     }
   }
+  let prior=if overlay_applied { initial.diagnostics.iter().to_array() } else { [] }
+  if !annotations.is_empty() && framed.geometry is Some(_) { prior.append(framed.diagnostics) }
   let result=if annotations.is_empty() { framed } else { match framed.geometry { Some(drawing) => drawing.annotate(annotations[:],limits=geometry_limits);None => framed } }
-  guard result.geometry is Some(drawing) else { return {geometry:None,diagnostics:diagnostics(result.diagnostics[:])} }
+  let accumulated=diagnostics(prior.iter().concat(result.diagnostics.iter()).to_array()[:])
+  guard result.geometry is Some(drawing) else { return {geometry:None,diagnostics:accumulated} }
   if drawing.width > limits.width || drawing.height > limits.height { return failed("flowchart/layout-limit","Flowchart dimensions exceed the configured bounds") }
   let by_id : Map[String,@model.Connection]=Map([])
   for edge in connections { by_id[edge.id]=edge }
   let routed= drawing.connections.map(e => Connection::{connection:by_id[e.connection.id],index:e.index,source:e.source,target:e.target,line:e.line,label:e.label})
-  {geometry:Some({view,shapes:drawing.shapes,connections:routed,width:drawing.width,height:drawing.height,drawing,drawing_result:result,intentional:ReadOnlyArray::from_array(intentional),hidden_containers:ReadOnlyArray::from_array(hidden_containers)}),diagnostics:diagnostics(result.diagnostics[:])}
+  {geometry:Some({view,shapes:drawing.shapes,connections:routed,width:drawing.width,height:drawing.height,drawing,drawing_result:result,prior_diagnostics:ReadOnlyArray::from_array(prior),intentional:ReadOnlyArray::from_array(intentional),hidden_containers:ReadOnlyArray::from_array(hidden_containers)}),diagnostics:accumulated}
 }
 ///|
 /// Shared low-level geometry for the vector painter, separate from the model.
@@ -258,3 +263,7 @@ pub fn Geometry::intentional_containment(self : Geometry) -> ReadOnlyArray[(Stri
 
 ///|
 pub fn Geometry::hidden_containers(self : Geometry) -> ReadOnlyArray[String] { self.hidden_containers }
+
+///|
+/// Findings from geometry phases before the final shared drawing phase.
+pub fn Geometry::prior_diagnostics(self : Geometry) -> ReadOnlyArray[@diagrams.Diagnostic] { self.prior_diagnostics }

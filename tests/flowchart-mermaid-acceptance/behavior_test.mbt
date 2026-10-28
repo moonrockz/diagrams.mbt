@@ -199,3 +199,12 @@ test "read and print AST budgets are separate from normalized expansion budgets"
     None,
   )
 }
+
+///|
+test "structural nesting and metadata nesting have independent limits" {
+  let ast = @syntax.read("flowchart\nsubgraph A\nsubgraph B\nC\nend\nend", limits=@shared.Limits::new(depth=256,metadata_depth=1)).ast.unwrap()
+  let converted = @conversion.to_flowchart(ast, limits=@shared.Limits::new(depth=256,metadata_depth=1))
+  assert_true(converted.flowchart is Some(_))
+  assert_eq(converted.diagnostics, [])
+  assert_eq(@conversion.to_flowchart(ast, limits=@shared.Limits::new(depth=1,metadata_depth=256)).flowchart,None)
+}

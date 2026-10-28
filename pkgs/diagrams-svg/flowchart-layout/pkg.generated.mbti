@@ -45,6 +45,7 @@ pub fn Geometry::equal(Self, Self) -> Bool
 pub fn Geometry::hidden_containers(Self) -> ReadOnlyArray[String]
 pub fn Geometry::intentional_containment(Self) -> ReadOnlyArray[(String, String)]
 pub fn Geometry::not_equal(Self, Self) -> Bool
+pub fn Geometry::prior_diagnostics(Self) -> ReadOnlyArray[@diagrams.Diagnostic]
 pub fn Geometry::to_repr(Self) -> @debug.Repr
 
 pub struct Limits {

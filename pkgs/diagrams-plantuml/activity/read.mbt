@@ -436,14 +436,16 @@ pub fn read(
     if text.has_prefix("note ") ||
       text == "note" ||
       text.has_prefix("floating note") {
-      let placement = if text.has_prefix("floating note") {
+      let header = if text.find(":") is Some(at) {
+        trim(part(text, 0, at))
+      } else {
+        text
+      }
+      let words = header.split(" ").filter(word => !word.is_empty()).to_array()
+      let placement = if header.has_prefix("floating note") {
         "floating"
-      } else if text.contains("left") {
-        "left"
-      } else if text.contains("top") {
-        "top"
-      } else if text.contains("bottom") {
-        "bottom"
+      } else if words.length() > 1 && ["left", "right", "top", "bottom"].contains(words[1].to_owned()) {
+        words[1].to_owned()
       } else {
         "right"
       }
@@ -471,11 +473,6 @@ pub fn read(
         if !closed {
           error("activity/syntax", "Unclosed note", Some(span))
         }
-      }
-      let header = if text.find(":") is Some(at) {
-        trim(part(text, 0, at))
-      } else {
-        text
       }
       let decoration = if header.find("#") is Some(at) {
         trim(part(header, at, header.length()))

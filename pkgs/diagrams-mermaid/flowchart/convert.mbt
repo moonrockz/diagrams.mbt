@@ -679,7 +679,7 @@ pub fn to_flowchart(
     model,
     nodes_limit=limits.nodes,
     edges_limit=limits.edges,
-    depth_limit=limits.metadata_depth,
+    depth_limit=limits.depth,
     work_limit=(limits.work - work).max(0),
   )
   for finding in validation {

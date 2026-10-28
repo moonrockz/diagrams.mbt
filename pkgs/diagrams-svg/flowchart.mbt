@@ -27,7 +27,7 @@ fn paint_flowchart(
     @swimlane_layout.Limits::new(nodes=limits.nodes,edges=limits.edges,depth=limits.depth,work=limits.work,output_units=limits.output_units),
     precomputed=geometry.drawing_result(),kind="flowchart",intentional_containment=geometry.intentional_containment()[:],hidden_containers=geometry.hidden_containers()[:],parent_overrides=parents[:],
   )
-  let diagnostics=@flowchart_layout.diagnostics(rendered.diagnostics[:])
+  let diagnostics=@flowchart_layout.diagnostics(geometry.prior_diagnostics().iter().concat(rendered.diagnostics.iter()).to_array()[:])
   match rendered.output {
     Some(output) => @render.Rendered::ok(output,"image/svg+xml",diagnostics=diagnostics[:])
     None => @render.Rendered::failed("image/svg+xml",diagnostics[:])

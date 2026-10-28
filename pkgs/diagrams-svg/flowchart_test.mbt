@@ -140,3 +140,23 @@ test "control region scene binding names its real entry shape" {
   assert_true(scene.nodes.any(binding => binding.endpoint == "r" && binding.kind == Flowchart("entry")))
   assert_eq(scene.paths.length(),0)
 }
+
+///|
+test "layout warnings survive crossing containers and connection notes" {
+  for crossing in [false,true] {
+    let model=@flowchart.Flowchart::new("warnings",[
+      @flowchart.Node::new("a",label="<b>Read</b>",label_kind=Html,groups=if crossing { ["partition"] } else { [] },lane?=if crossing { Some("customer") } else { None }),
+      @flowchart.Node::new("b",label="Write",groups=if crossing { ["partition"] } else { [] },lane?=if crossing { Some("support") } else { None }),
+    ],[@flowchart.Connection::new("ab","a","b")],
+      groups=if crossing { [@flowchart.Group::new("partition")] } else { [] },
+      lanes=if crossing { [@flowchart.Lane::new("customer"),@flowchart.Lane::new("support")] } else { [] },
+      notes=[@flowchart.Note::new("note","Explain",connection_targets=["ab"])],
+    )
+    let layout=@flowchart_layout.layout(model)
+    assert_true(layout.geometry is Some(_),msg=@debug.to_string(layout.diagnostics))
+    assert_eq(layout.diagnostics.iter().filter(d => d.code == "flowchart/plain-text-label").count(),1)
+    let rendered=@svg.render_flowchart(model)
+    assert_true(rendered.output is Some(_),msg=@debug.to_string(rendered.diagnostics))
+    assert_eq(rendered.diagnostics.iter().filter(d => d.code == "flowchart/plain-text-label").count(),1)
+  }
+}

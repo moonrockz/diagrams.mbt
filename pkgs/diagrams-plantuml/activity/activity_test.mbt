@@ -228,3 +228,17 @@ test "action semicolons hyperlinks and inert suffix presentation round trip" {
     Some("https://example.com/docs"),
   )
 }
+
+///|
+test "note content and aliases do not override header placement" {
+  for placement in ["left", "right", "top", "bottom"] {
+    let ast = parsed("start\n:Read;\nnote " + placement + ": Check the left top bottom right input\nstop")
+    assert_true(ast.items.iter().any(s => s.kind == Note(placement, "Check the left top bottom right input", None, "")))
+    let model = @activity.to_flowchart(ast).flowchart.unwrap()
+    assert_eq(model.notes[0].placement, placement)
+    let printed = @activity.print_body(ast).unwrap()
+    assert_true(printed.contains("note " + placement))
+  }
+  let ast = parsed("start\n:Read;\nnote right as leftInput\nCheck bottom input\nend note\nstop")
+  assert_true(ast.items.iter().any(s => s.kind == Note("right", "Check bottom input", Some("leftInput"), "")))
+}
