@@ -4,26 +4,38 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Change name: design</title>
-<!--
-  Agent document template (.agents/templates/agent-document.html). Specs, plans and reports that a person reviews
-  start from this file: copy it, keep the <head> as it is, and write the content inside the main element.
-  Styles and scripts are files in .agents/templates/assets/, referenced and not embedded. In a copy, change the
-  "assets/" prefix of each href and src to the relative path from the copy to that directory, for example
-  "../../.agents/templates/assets/" from .dev/beads-specs/. See AGENTS.md, "Specs and plans are HTML documents".
-  Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
-  list them in nav.toc.
--->
-<link rel="stylesheet" href="../../../.agents/templates/assets/agent-document.css">
-<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
-<link rel="stylesheet" href="../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
-<script defer src="../../../.agents/templates/assets/highlight/highlight.min.js"></script>
-<script defer src="../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
-<script defer src="../../../.agents/templates/assets/agent-document.js"></script>
+<meta name="color-scheme" content="light dark">
+<style>
+:root { color-scheme: light dark; --bg: #fafafa; --fg: #18212f; --muted: #526071;
+  --line: #cbd5e1; --panel: #eef2f6; --link: #075caa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111827; --fg: #e5e7eb; --muted: #b0bdce;
+    --line: #475569; --panel: #1e293b; --link: #8cc8ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 1rem/1.6 system-ui, sans-serif; }
+main { max-width: 70rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); }
+h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
+h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+a { color: var(--link); }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.meta { color: var(--muted); }
+.toc, pre, details { background: var(--panel); border: 1px solid var(--line);
+  border-radius: .4rem; padding: 1rem; }
+code { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+pre { overflow-x: auto; } pre code { overflow-wrap: normal; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid var(--line); padding: .6rem; text-align: left;
+  overflow-wrap: anywhere; }
+svg { max-width: 100%; height: auto; }
+@media print { main { max-width: none; padding: 0; } pre, tr { break-inside: avoid; } }
+</style>
 </head>
 <body>
 <main>
 <h1>Change name: design</h1>
-<p class="meta">OpenSpec change · Bead <code>epic-id</code> · date · status</p>
+<p class="meta">OpenSpec change | date | status</p>
 
 <nav class="toc" aria-label="Contents">
 <ul>

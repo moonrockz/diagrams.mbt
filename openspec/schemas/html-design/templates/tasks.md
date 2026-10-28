@@ -2,12 +2,11 @@
 
 ## 1. First task group
 
-Bead: pending approval
+<!-- Add repository-local tracking links as required by AGENTS.md. -->
 
-- [ ] 1.1 Task description and verification.
+- [ ] 1.1 Implement a thin end-to-end path and state how to verify it.
+- [ ] 1.2 Add this group's tests and documentation and verify them.
 
-## 2. Next task group
+## Workflow follow-up
 
-Bead: pending approval
-
-- [ ] 2.1 Task description and verification.
+- Follow AGENTS.md for review, archive, tracker closure and release approval.

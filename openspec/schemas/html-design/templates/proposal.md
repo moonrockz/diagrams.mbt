@@ -29,9 +29,9 @@
      satisfy validation. -->
 - `<existing-capability-path>`: <what requirement is changing>
 
-## Beads
+## Tracking
 
-Tracking pending maintainer approval. Each numbered task group becomes one story.
+<!-- Follow AGENTS.md for repository-local tracking. Link existing work; do not invent IDs. -->
 
 ## Impact
 
