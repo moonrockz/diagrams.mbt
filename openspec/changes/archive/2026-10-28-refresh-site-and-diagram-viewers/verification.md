@@ -19,7 +19,7 @@ workstation publication was used.
 `mise run format`, `mise run check`, strict OpenSpec validation, stored SVG and
 animation browser suites, fresh portable raster/flowchart/state consumers, and
 root/next site consumer checks passed. The final local gate had 926 tests on
-each portable backend, 937 on native and 27 task-script suites. Source/static
+each portable backend, 937 on native and 28 task-script suites. Source/static
 SVG inventory remained exact; historical archive assembly code was unchanged.
 
 Independent review's glyph allocation, cmap expansion and signed-wrap findings
@@ -35,3 +35,7 @@ its schedule.
 Offline generated HTML and JavaScript include complete converter/font license
 notices. Exact source copies are retained; generated comments use LF so HTML
 parsing and cross-checkout asset validation preserve their text.
+
+The existing Zig CI gate has optional bounded Linux resource/process diagnostics
+for runner shutdown investigation. It keeps the exact pinned full native test
+command, propagates its exit status and excludes process arguments/environment.

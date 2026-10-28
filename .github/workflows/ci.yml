@@ -82,7 +82,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Test using the external zig-cross tool
-        run: mise run test:native-zig
+        run: mise run test:native-zig -- --diagnostics
 
   test-scripts:
     name: Test task scripts
