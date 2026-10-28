@@ -1,0 +1,16 @@
+stateDiagram-v2
+    [*] --> Work
+    state Work {
+        state Fork <<fork>>
+        state Join <<join>>
+        [*] --> Fork
+        Fork --> Validate
+        Fork --> Package
+        Validate --> Join
+        Package --> Join
+        Join --> [*]
+        --
+        [*] --> Monitor
+        Monitor --> Monitor : sample
+    }
+    Work --> [*]

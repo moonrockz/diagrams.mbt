@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1104 1223" width="1104" height="1223" role="img" data-diagram="state" data-connector-options="{&#xa;  style: Some(Rounded),&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-diagram">
+  <title>state-plantuml-lifecycle</title>
+  <desc>State structure and supplied scenarios. Guards, actions and history remain descriptive data.</desc>
+  <defs>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1104" height="1223" fill="#f4f5f7"/>
+  <g class="state-backgrounds">
+    <g class="state-group" data-state-id="root">
+      <rect class="state-bounds" x="0" y="0" width="1104" height="1223" fill="none" stroke="none"/>
+    </g>
+  </g>
+  <g class="state-connections">
+    <g class="state-connection" data-state-id="transition/2" data-source="*start*" data-target="Ready" data-display-source="*start*" data-display-target="Ready">
+      <path class="state-connector" d="M124 136 L124 160 Q124 168 132 168 L292 168 Q300 168 300 176 L300 490" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/2" data-connector-source="*start*" data-connector-target="Ready" data-connector-route="M124 136 L124 168 L300 168 L300 490" data-connector-key="0"/>
+    </g>
+    <g class="state-connection" data-state-id="transition/5" data-source="Ready" data-target="Running" data-display-source="Ready" data-display-target="Running">
+      <path class="state-connector" d="M300 581 L300 605 Q300 613 292 613 L224 613 Q216 613 216 621 L216 862.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/5" data-connector-source="Ready" data-connector-target="Running" data-connector-route="M300 581 L300 613 L216 613 L216 862.734" data-connector-key="1"/>
+      <rect x="192" y="708.867" width="48" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/5" x="216" y="723.867" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="216" y="723.867">start</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/6" data-source="Running" data-target="Running" data-display-source="Running" data-display-target="Running">
+      <path class="state-connector" d="M224 894 L248 894 Q256 894 256 886 L256 821.734 Q256 813.734 248 813.734 L128 813.734 Q120 813.734 120 821.734 L120 862.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/6" data-connector-source="Running" data-connector-target="Running" data-connector-route="M224 894 L256 894 L256 813.734 L120 813.734 L120 862.734" data-connector-key="2"/>
+      <rect x="168" y="784.734" width="40" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/6" x="188" y="799.734" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="188" y="799.734">tick</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/7" data-source="Running" data-target="*end*" data-display-source="Running" data-display-target="*end*">
+      <path class="state-connector" d="M168 926 L168 950 Q168 958 160 958 L136 958 Q128 958 128 966 L128 1110" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/7" data-connector-source="Running" data-connector-target="*end*" data-connector-route="M168 926 L168 958 L128 958 L128 1110" data-connector-key="3"/>
+      <rect x="100" y="1005" width="56" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/7" x="128" y="1020" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="128" y="1020">finish</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="~note:0:0" data-source="Ready" data-target="note/8" data-display-source="Ready" data-display-target="note/8">
+      <path class="state-connector" d="M408 535.5 L555.75 535.5 Q560 535.5 560 539.75 L560 539.75 Q560 544 564.25 544 L592 544" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4 4" data-connector-id="~note:0:0" data-connector-source="Ready" data-connector-target="note/8" data-connector-route="M408 535.5 L560 535.5 L560 544 L592 544" data-connector-key="4"/>
+    </g>
+  </g>
+  <g class="state-nodes">
+    <g class="state-node" data-state-id="Ready" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="192" y="490" width="216" height="91" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M396 490 L398.341 490.231 L400.592 490.913 L402.667 492.022 L404.485 493.515 L405.978 495.333 L407.087 497.408 L407.769 499.659 L408 502 L408 569 L407.769 571.341 L407.087 573.592 L405.978 575.667 L404.485 577.485 L402.667 578.978 L400.592 580.087 L398.341 580.769 L396 581 L204 581 L201.659 580.769 L199.408 580.087 L197.333 578.978 L195.515 577.485 L194.022 575.667 L192.913 573.592 L192.231 571.341 L192 569 L192 502 L192.231 499.659 L192.913 497.408 L194.022 495.333 L195.515 493.515 L197.333 492.022 L199.408 490.913 L201.659 490.231 L204 490 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <path class="state-compartment" d="M192 530 L408 530" stroke="#059669" fill="none"/>
+      <text class="state-label" data-label-owner="Ready" x="300" y="523" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="300" y="523">Ready</tspan>
+        <tspan x="300" y="540">entry / prepare</tspan>
+        <tspan x="300" y="557">tick [pending] / wait</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Running" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="112" y="862" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M212 862 L214.341 862.231 L216.592 862.913 L218.667 864.022 L220.485 865.515 L221.978 867.333 L223.087 869.408 L223.769 871.659 L224 874 L224 914 L223.769 916.341 L223.087 918.592 L221.978 920.667 L220.485 922.485 L218.667 923.978 L216.592 925.087 L214.341 925.769 L212 926 L124 926 L121.659 925.769 L119.408 925.087 L117.333 923.978 L115.515 922.485 L114.022 920.667 L112.913 918.592 L112.231 916.341 L112 914 L112 874 L112.231 871.659 L112.913 869.408 L114.022 867.333 L115.515 865.515 L117.333 864.022 L119.408 862.913 L121.659 862.231 L124 862 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Running" x="168" y="898.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="168" y="898.5">Running</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="*start*" data-shape="f-circ" data-expanded="true" data-parent="root" data-role="Initial">
+      <rect class="state-bounds" x="112" y="112" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M136 124 L135.942 125.176 L135.769 126.341 L135.483 127.483 L135.087 128.592 L134.583 129.657 L133.978 130.667 L133.276 131.613 L132.485 132.485 L131.613 133.276 L130.667 133.978 L129.657 134.583 L128.592 135.087 L127.483 135.483 L126.341 135.769 L125.176 135.942 L124 136 L122.824 135.942 L121.659 135.769 L120.517 135.483 L119.408 135.087 L118.343 134.583 L117.333 133.978 L116.387 133.276 L115.515 132.485 L114.724 131.613 L114.022 130.667 L113.417 129.657 L112.913 128.592 L112.517 127.483 L112.231 126.341 L112.058 125.176 L112 124 L112.058 122.824 L112.231 121.659 L112.517 120.517 L112.913 119.408 L113.417 118.343 L114.022 117.333 L114.724 116.387 L115.515 115.515 L116.387 114.724 L117.333 114.022 L118.343 113.417 L119.408 112.913 L120.517 112.517 L121.659 112.231 L122.824 112.058 L124 112 L125.176 112.058 L126.341 112.231 L127.483 112.517 L128.592 112.913 L129.657 113.417 L130.667 114.022 L131.613 114.724 L132.485 115.515 L133.276 116.387 L133.978 117.333 L134.583 118.343 L135.087 119.408 L135.483 120.517 L135.769 121.659 L135.942 122.824 L136 124 Z" fill="#b44409" stroke="#ea580c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="*end*" data-shape="fr-circ" data-expanded="true" data-parent="root" data-role="Final">
+      <rect class="state-bounds" x="112" y="1110" width="32" height="81" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M144 1126 L143.923 1127.568 L143.693 1129.121 L143.311 1130.645 L142.782 1132.123 L142.111 1133.542 L141.304 1134.889 L140.368 1136.15 L139.314 1137.314 L138.15 1138.368 L136.889 1139.304 L135.542 1140.111 L134.123 1140.782 L132.645 1141.311 L131.121 1141.693 L129.568 1141.923 L128 1142 L126.432 1141.923 L124.879 1141.693 L123.355 1141.311 L121.877 1140.782 L120.458 1140.111 L119.111 1139.304 L117.85 1138.368 L116.686 1137.314 L115.632 1136.15 L114.696 1134.889 L113.889 1133.542 L113.218 1132.123 L112.689 1130.645 L112.307 1129.121 L112.077 1127.568 L112 1126 L112.077 1124.432 L112.307 1122.879 L112.689 1121.355 L113.218 1119.877 L113.889 1118.458 L114.696 1117.111 L115.632 1115.85 L116.686 1114.686 L117.85 1113.632 L119.111 1112.696 L120.458 1111.889 L121.877 1111.218 L123.355 1110.689 L124.879 1110.307 L126.432 1110.077 L128 1110 L129.568 1110.077 L131.121 1110.307 L132.645 1110.689 L134.123 1111.218 L135.542 1111.889 L136.889 1112.696 L138.15 1113.632 L139.314 1114.686 L140.368 1115.85 L141.304 1117.111 L142.111 1118.458 L142.782 1119.877 L143.311 1121.355 L143.693 1122.879 L143.923 1124.432 L144 1126 Z" fill="rgba(251, 146, 60, 0.15)" stroke="#ea580c" stroke-width="1.5"/>
+      <ellipse cx="128" cy="1126" rx="10" ry="10" fill="#b44409" stroke="#ea580c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="note/8" data-shape="note" data-expanded="true" data-parent="root">
+      <rect class="state-bounds" x="592" y="490" width="400" height="108" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M592 490 L932 490 L992 511.6 L992 598 L592 598 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <path d="M974 490 V508 H992" fill="none" stroke="#059669" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="note/8" x="792" y="540" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="792" y="540">Descriptions are data.</tspan>
+        <tspan x="792" y="557">No actions execute.</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

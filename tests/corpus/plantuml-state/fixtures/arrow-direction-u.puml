@@ -1,0 +1,5 @@
+@startuml
+state A
+state B
+A -[#blue,dashed]u-> B : u
+@enduml

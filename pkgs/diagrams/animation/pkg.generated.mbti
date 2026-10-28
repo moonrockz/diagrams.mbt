@@ -13,6 +13,7 @@ import {
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/state",
   "moonrockz/diagrams/swimlane",
 }
 
@@ -60,6 +61,7 @@ pub fn Catalog::occurrence(Self, String) -> Occurrence?
 pub fn Catalog::reference_target(Self, String) -> String?
 pub fn Catalog::regex(@regex.Regex, limits? : Limits) -> CatalogResult
 pub fn Catalog::sequence(@sequence.Sequence, view_id? : String, limits? : Limits) -> CatalogResult
+pub fn Catalog::state(@state.StateDiagram, limits? : Limits) -> CatalogResult
 pub fn Catalog::swimlane(@swimlane.Swimlane, limits? : Limits) -> CatalogResult
 
 pub struct CatalogResult {
@@ -99,6 +101,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  StateTransition
   FlowchartFlow
   ArchitectureFlow
   Undirected
@@ -210,6 +213,9 @@ pub(all) enum NodeKind {
   Start
   End
   SwimlaneNode
+  StateNode(@state.State)
+  StateRegion(@state.Region)
+  StateNote(@state.Note)
   FlowchartNode(@flowchart.Node)
   FlowchartGroup
   FlowchartLane
@@ -250,6 +256,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  State(@state.Transition)
   Flowchart(@flowchart.Connection)
   Architecture(@architecture.Connection)
   Railroad(@railroad-trace.ConnectorRole)
@@ -372,6 +379,8 @@ pub fn Selection::not_equal(Self, Self) -> Bool
 pub fn Selection::to_repr(Self) -> @debug.Repr
 
 pub(all) enum VisitKind {
+  StateNode(@state.Role)
+  StateNote
   FlowchartNode(@flowchart.Role)
   FlowchartNote
   RailroadTerm(@railroad-trace.TermKind)

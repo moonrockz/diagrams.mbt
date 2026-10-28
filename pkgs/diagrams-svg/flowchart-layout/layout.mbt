@@ -114,6 +114,9 @@ pub fn diagnostics(
 pub fn layout(
   view : @model.Flowchart,
   limits~ : Limits = Limits::new(),
+  ordered_scopes~ : ArrayView[(String,@model.Direction)] = [],
+  region_directions~ : ArrayView[(String,@model.Direction)] = [],
+  scope_padding~ : Double = 0.0,
 ) -> Result {
   fn failed(code : String, message : String) -> Result {
     {
@@ -534,6 +537,9 @@ pub fn layout(
     vector,
     limits=geometry_limits,
     flowchart=true,
+    ordered_scopes=ordered_scopes.map(p => (p.0,vector_direction(p.1))),
+    scope_padding~,
+    region_directions=region_directions.map(p => (p.0,vector_direction(p.1))),
     direction_hints~,
   )
   let mut overlay_applied = false

@@ -123,6 +123,10 @@ pub impl @render.Renderer for AnimatedRenderer with fn render(self, diagram) {
   }
   let encoded = safe_script_json(data)
   let explanation = match (diagram, plan.mode) {
+    (State(_), Illustrative) =>
+      "State structure illustration. Each authored transition and visible state is shown in a finite ordered period. Guards, actions and history are descriptive data; no active state configuration is inferred."
+    (State(_), Finite) =>
+      "Supplied state scenario. Selected transitions and node visits follow caller timing. Guards and actions are not evaluated, history is not restored and no state machine is executed."
     (Regex(_) | Ebnf(_), Illustrative) =>
       "Illustrative structure. The walk visits every term and connector in drawing order; no input is matched or parsed."
     (Regex(_) | Ebnf(_), Finite) =>

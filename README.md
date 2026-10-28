@@ -1,7 +1,7 @@
 # diagrams.mbt
 
-diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid sequence and
-native `swimlane-beta`, `zenuml` and `architecture-beta` diagrams, BPMN XML, and native PlantUML 1.2026.9 regex,
+diagrams.mbt is a MoonBit library for diagrams. It reads Mermaid state, sequence and
+native `swimlane-beta`, `zenuml` and `architecture-beta` diagrams, BPMN XML, and native PlantUML 1.2026.9 state, regex,
 EBNF, JSON and YAML blocks. It renders script-free SVG and generates offline HTML
 with illustrative playback and bounded structural exploration. Regex and EBNF
 railroads can show match and parse evidence that an external engine supplies.
@@ -86,7 +86,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 
 ## Layout
 
-- `moon.mod` holds the shared version, currently `0.3.0`.
+- `moon.mod` holds the shared version, currently `0.4.0`.
 - `moon.work` lists the workspace members.
 - `pkgs/bpmn/` is the independent BPMN document module, with MoonBit core dependencies only.
 - `pkgs/diagrams-bpmn/` selects document views and adapts them to the shared BPMN model.
@@ -122,7 +122,7 @@ from stored snapshots without compiling. `--check` compares existing artifacts;
 Run `mise run test:animation` for offline player qualification.
 
 Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`,
-`Swimlane`, `Flowchart`, `Regex`, `Ebnf`, `DataTree` and `Architecture` cases. Default bridge hops and marker approaches update affected static SVG bytes;
+`Swimlane`, `Flowchart`, `Regex`, `Ebnf`, `DataTree` `Architecture` and `State` cases. Default bridge hops and marker approaches update affected static SVG bytes;
 source identities and model semantics remain stable.
 See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
 and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
@@ -156,3 +156,17 @@ Run `mise run flowchart-mermaid-corpus:reference -- --check` and
 canonical-output qualification. `mise run test:flowchart` checks stored SVG and
 players in Chromium; `mise run test:flowchart-consumer` checks fresh model,
 reader and renderer/player consumers on all four targets.
+
+Mermaid `stateDiagram`/`stateDiagram-v2` and PlantUML state blocks share immutable
+state values with composite and concurrent regions, typed pseudostates, scoped
+history and boundary symbols. Native readers preserve source and print edited
+typed values. Rendering provides standalone themed SVG, checked geometry,
+connector options and offline finite scenarios with visits and structural
+queries. Descriptions, guards, actions and history remain data.
+
+See [state construction and playback](docs/guides/states-and-animation.md),
+[Mermaid states](docs/guides/mermaid-states.md) and
+[PlantUML states](docs/guides/plantuml-states.md). Run `mise run test:state`,
+`mise run test:state-consumer`, `mise run state-mermaid-corpus:reference -- --check`
+and `mise run state-plantuml-corpus:reference -- --check` for stored browser,
+fresh consumer and independent pinned-reference qualification.

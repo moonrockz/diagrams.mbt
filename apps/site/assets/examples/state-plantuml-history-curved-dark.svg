@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1275 2454" width="1275" height="2454" role="img" data-diagram="state" data-connector-options="{&#xa;  style: Some(Curved),&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-diagram">
+  <title>state-plantuml-history</title>
+  <desc>State structure and supplied scenarios. Guards, actions and history remain descriptive data.</desc>
+  <defs>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1275" height="2454" fill="#020617"/>
+  <g class="state-backgrounds">
+    <g class="state-group" data-state-id="root">
+      <rect class="state-bounds" x="0" y="0" width="1275" height="2454" fill="none" stroke="none"/>
+    </g>
+    <g class="state-group" data-state-id="Service" data-shape="rect" data-expanded="true" data-parent="root" data-role="Composite">
+      <rect class="state-bounds" x="152" y="449" width="1090.134" height="1685" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M1230.134 449 L1232.475 449.231 L1234.726 449.913 L1236.8 451.022 L1238.619 452.515 L1240.111 454.333 L1241.22 456.408 L1241.903 458.659 L1242.134 461 L1242.134 2122 L1241.903 2124.341 L1241.22 2126.592 L1240.111 2128.667 L1238.619 2130.485 L1236.8 2131.978 L1234.726 2133.087 L1232.475 2133.769 L1230.134 2134 L164 2134 L161.659 2133.769 L159.408 2133.087 L157.333 2131.978 L155.515 2130.485 L154.022 2128.667 L152.913 2126.592 L152.231 2124.341 L152 2122 L152 461 L152.231 458.659 L152.913 456.408 L154.022 454.333 L155.515 452.515 L157.333 451.022 L159.408 449.913 L161.659 449.231 L164 449 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Service" x="196" y="474" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">
+        <tspan x="196" y="474">Service</tspan>
+      </text>
+    </g>
+    <g class="state-group" data-state-id="Service::region0" data-shape="rect" data-expanded="true" data-parent="Service">
+      <rect class="state-bounds" x="272" y="610" width="850.134" height="642" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+    </g>
+    <g class="state-group" data-state-id="Service.CONC1::region0" data-shape="rect" data-expanded="true" data-parent="Service">
+      <rect class="state-bounds" x="272" y="1372" width="352" height="642" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M248 1312 L1242.134 1312" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+    </g>
+  </g>
+  <g class="state-connections">
+    <g class="state-connection" data-state-id="transition/2" data-source="Service.*start*Service" data-target="Service.Worker" data-display-source="Service.*start*Service" data-display-target="Service.Worker">
+      <path class="state-connector" d="M404 795 L404 825 C404 826.333 403.333 827 402 827 L402 827 C400.667 827 400 827.667 400 829 L400 1068.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/2" data-connector-source="Service.*start*Service" data-connector-target="Service.Worker" data-connector-route="M404 795 L404 827 L400 827 L400 1068.734" data-connector-key="0"/>
+    </g>
+    <g class="state-connection" data-state-id="transition/3" data-source="Service.Worker" data-target="Service.Worker" data-display-source="Service.Worker" data-display-target="Service.Worker">
+      <path class="state-connector" d="M504 1100 L520 1100 C530.667 1100 536 1094.667 536 1084 L536 1048.734 C536 1035.401 529.333 1028.734 516 1028.734 L512 1028.734 C501.333 1028.734 496 1034.067 496 1044.734 L496 1068.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/3" data-connector-source="Service.Worker" data-connector-target="Service.Worker" data-connector-route="M504 1100 L536 1100 L536 1028.734 L496 1028.734 L496 1068.734" data-connector-key="1"/>
+      <rect x="516" y="1035.367" width="40" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/3" x="536" y="1050.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="536" y="1050.367">work</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/6" data-source="Service.CONC1.*start*CONC1" data-target="Service.CONC1.Monitor" data-display-source="Service.CONC1.*start*CONC1" data-display-target="Service.CONC1.Monitor">
+      <path class="state-connector" d="M404 1557 L404 1587 C404 1588.333 403.333 1589 402 1589 L402 1589 C400.667 1589 400 1589.667 400 1591 L400 1830.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/6" data-connector-source="Service.CONC1.*start*CONC1" data-connector-target="Service.CONC1.Monitor" data-connector-route="M404 1557 L404 1589 L400 1589 L400 1830.734" data-connector-key="2"/>
+    </g>
+    <g class="state-connection" data-state-id="transition/7" data-source="Service.CONC1.Monitor" data-target="Service.CONC1.Monitor" data-display-source="Service.CONC1.Monitor" data-display-target="Service.CONC1.Monitor">
+      <path class="state-connector" d="M504 1862 L520 1862 C530.667 1862 536 1856.667 536 1846 L536 1810.734 C536 1797.401 529.333 1790.734 516 1790.734 L512 1790.734 C501.333 1790.734 496 1796.067 496 1806.734 L496 1830.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/7" data-connector-source="Service.CONC1.Monitor" data-connector-target="Service.CONC1.Monitor" data-connector-route="M504 1862 L536 1862 L536 1790.734 L496 1790.734 L496 1830.734" data-connector-key="3"/>
+      <rect x="512" y="1797.367" width="48" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/7" x="536" y="1812.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="536" y="1812.367">check</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/10" data-source="*start*" data-target="Service" data-display-source="*start*" data-display-target="Service">
+      <path class="state-connector" d="M164 176 L164 192 C164 202.667 169.333 208 180 208 L576.567 208 C656.9 208 697.067 248.167 697.067 328.5 L697.067 449" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/10" data-connector-source="*start*" data-connector-target="Service" data-connector-route="M164 176 L164 208 L697.067 208 L697.067 449" data-connector-key="4"/>
+    </g>
+    <g class="state-connection" data-state-id="transition/11" data-source="Service" data-target="Paused" data-display-source="Service" data-display-target="Paused">
+      <path class="state-connector" d="M697.067 2134 L697.067 2150 C697.067 2160.667 691.734 2166 681.067 2166 L256.367 2166 C192.122 2166 160 2198.122 160 2262.367 L160 2358.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/11" data-connector-source="Service" data-connector-target="Paused" data-connector-route="M697.067 2134 L697.067 2166 L160 2166 L160 2358.734" data-connector-key="5" mask="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-connector-underpass-5)"/>
+      <rect x="404.533" y="2137" width="48" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/11" x="428.533" y="2152" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="428.533" y="2152">pause</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/12" data-source="Paused" data-target="Service.*historical*Service" data-display-source="Paused" data-display-target="Service.*historical*Service">
+      <path class="state-connector" d="M264 2390 L436 2390 C550.667 2390 608 2332.667 608 2218 L608 2171 C608 2168.5 603 2168.5 603 2166 C603 2163.5 608 2163.5 608 2161 L608 812.394 C608 807.061 610.667 804.394 616 804.394 L640 804.394" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/12" data-connector-source="Paused" data-connector-target="Service.*historical*Service" data-connector-route="M264 2390 L608 2390 L608 804.394 L640 804.394" data-connector-key="6" mask="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-connector-underpass-6)"/>
+      <rect x="580" y="1568.197" width="56" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/12" x="608" y="1583.197" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="608" y="1583.197">resume</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition/13" data-source="Paused" data-target="Service.*deephistory*Service" data-display-source="Paused" data-display-target="Service.*deephistory*Service">
+      <path class="state-connector" d="M256 2358.734 L256 2338.734 C256 2325.401 262.667 2318.734 276 2318.734 L581.153 2318.734 C583.653 2318.734 583.653 2313.734 586.153 2313.734 C588.653 2313.734 588.653 2318.734 591.153 2318.734 L611.231 2318.734 C848.051 2318.734 966.461 2200.324 966.461 1963.503 L966.461 842.345" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/13" data-connector-source="Paused" data-connector-target="Service.*deephistory*Service" data-connector-route="M256 2358.734 L256 2318.734 L966.461 2318.734 L966.461 842.345" data-connector-key="7"/>
+      <rect x="918.461" y="1551.54" width="96" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/13" x="966.461" y="1566.54" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="966.461" y="1566.54">deep resume</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="state-nodes">
+    <g class="state-node" data-state-id="Service.Worker" data-shape="rounded" data-expanded="true" data-parent="Service::region0" data-role="Simple">
+      <rect class="state-bounds" x="392" y="1068" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M492 1068 L494.341 1068.231 L496.592 1068.913 L498.667 1070.022 L500.485 1071.515 L501.978 1073.333 L503.087 1075.408 L503.769 1077.659 L504 1080 L504 1120 L503.769 1122.341 L503.087 1124.592 L501.978 1126.667 L500.485 1128.485 L498.667 1129.978 L496.592 1131.087 L494.341 1131.769 L492 1132 L404 1132 L401.659 1131.769 L399.408 1131.087 L397.333 1129.978 L395.515 1128.485 L394.022 1126.667 L392.913 1124.592 L392.231 1122.341 L392 1120 L392 1080 L392.231 1077.659 L392.913 1075.408 L394.022 1073.333 L395.515 1071.515 L397.333 1070.022 L399.408 1068.913 L401.659 1068.231 L404 1068 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Service.Worker" x="448" y="1104.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="448" y="1104.5">Worker</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Service.*start*Service" data-shape="f-circ" data-expanded="true" data-parent="Service::region0" data-role="Initial">
+      <rect class="state-bounds" x="392" y="771" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M416 783 L415.942 784.176 L415.769 785.341 L415.483 786.483 L415.087 787.592 L414.583 788.657 L413.978 789.667 L413.276 790.613 L412.485 791.485 L411.613 792.276 L410.667 792.978 L409.657 793.583 L408.592 794.087 L407.483 794.483 L406.341 794.769 L405.176 794.942 L404 795 L402.824 794.942 L401.659 794.769 L400.517 794.483 L399.408 794.087 L398.343 793.583 L397.333 792.978 L396.387 792.276 L395.515 791.485 L394.724 790.613 L394.022 789.667 L393.417 788.657 L392.913 787.592 L392.517 786.483 L392.231 785.341 L392.058 784.176 L392 783 L392.058 781.824 L392.231 780.659 L392.517 779.517 L392.913 778.408 L393.417 777.343 L394.022 776.333 L394.724 775.387 L395.515 774.515 L396.387 773.724 L397.333 773.022 L398.343 772.417 L399.408 771.913 L400.517 771.517 L401.659 771.231 L402.824 771.058 L404 771 L405.176 771.058 L406.341 771.231 L407.483 771.517 L408.592 771.913 L409.657 772.417 L410.667 773.022 L411.613 773.724 L412.485 774.515 L413.276 775.387 L413.978 776.333 L414.583 777.343 L415.087 778.408 L415.483 779.517 L415.769 780.659 L415.942 781.824 L416 783 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Service.CONC1.Monitor" data-shape="rounded" data-expanded="true" data-parent="Service.CONC1::region0" data-role="Simple">
+      <rect class="state-bounds" x="392" y="1830" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M492 1830 L494.341 1830.231 L496.592 1830.913 L498.667 1832.022 L500.485 1833.515 L501.978 1835.333 L503.087 1837.408 L503.769 1839.659 L504 1842 L504 1882 L503.769 1884.341 L503.087 1886.592 L501.978 1888.667 L500.485 1890.485 L498.667 1891.978 L496.592 1893.087 L494.341 1893.769 L492 1894 L404 1894 L401.659 1893.769 L399.408 1893.087 L397.333 1891.978 L395.515 1890.485 L394.022 1888.667 L392.913 1886.592 L392.231 1884.341 L392 1882 L392 1842 L392.231 1839.659 L392.913 1837.408 L394.022 1835.333 L395.515 1833.515 L397.333 1832.022 L399.408 1830.913 L401.659 1830.231 L404 1830 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Service.CONC1.Monitor" x="448" y="1866.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="448" y="1866.5">Monitor</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Service.CONC1.*start*CONC1" data-shape="f-circ" data-expanded="true" data-parent="Service.CONC1::region0" data-role="Initial">
+      <rect class="state-bounds" x="392" y="1533" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M416 1545 L415.942 1546.176 L415.769 1547.341 L415.483 1548.483 L415.087 1549.592 L414.583 1550.657 L413.978 1551.667 L413.276 1552.613 L412.485 1553.485 L411.613 1554.276 L410.667 1554.978 L409.657 1555.583 L408.592 1556.087 L407.483 1556.483 L406.341 1556.769 L405.176 1556.942 L404 1557 L402.824 1556.942 L401.659 1556.769 L400.517 1556.483 L399.408 1556.087 L398.343 1555.583 L397.333 1554.978 L396.387 1554.276 L395.515 1553.485 L394.724 1552.613 L394.022 1551.667 L393.417 1550.657 L392.913 1549.592 L392.517 1548.483 L392.231 1547.341 L392.058 1546.176 L392 1545 L392.058 1543.824 L392.231 1542.659 L392.517 1541.517 L392.913 1540.408 L393.417 1539.343 L394.022 1538.333 L394.724 1537.387 L395.515 1536.515 L396.387 1535.724 L397.333 1535.022 L398.343 1534.417 L399.408 1533.913 L400.517 1533.517 L401.659 1533.231 L402.824 1533.058 L404 1533 L405.176 1533.058 L406.341 1533.231 L407.483 1533.517 L408.592 1533.913 L409.657 1534.417 L410.667 1535.022 L411.613 1535.724 L412.485 1536.515 L413.276 1537.387 L413.978 1538.333 L414.583 1539.343 L415.087 1540.408 L415.483 1541.517 L415.769 1542.659 L415.942 1543.824 L416 1545 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Paused" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="152" y="2358" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M252 2358 L254.341 2358.231 L256.592 2358.913 L258.667 2360.022 L260.485 2361.515 L261.978 2363.333 L263.087 2365.408 L263.769 2367.659 L264 2370 L264 2410 L263.769 2412.341 L263.087 2414.592 L261.978 2416.667 L260.485 2418.485 L258.667 2419.978 L256.592 2421.087 L254.341 2421.769 L252 2422 L164 2422 L161.659 2421.769 L159.408 2421.087 L157.333 2419.978 L155.515 2418.485 L154.022 2416.667 L152.913 2414.592 L152.231 2412.341 L152 2410 L152 2370 L152.231 2367.659 L152.913 2365.408 L154.022 2363.333 L155.515 2361.515 L157.333 2360.022 L159.408 2358.913 L161.659 2358.231 L164 2358 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Paused" x="208" y="2394.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="208" y="2394.5">Paused</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="*start*" data-shape="f-circ" data-expanded="true" data-parent="root" data-role="Initial">
+      <rect class="state-bounds" x="152" y="152" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M176 164 L175.942 165.176 L175.769 166.341 L175.483 167.483 L175.087 168.592 L174.583 169.657 L173.978 170.667 L173.276 171.613 L172.485 172.485 L171.613 173.276 L170.667 173.978 L169.657 174.583 L168.592 175.087 L167.483 175.483 L166.341 175.769 L165.176 175.942 L164 176 L162.824 175.942 L161.659 175.769 L160.517 175.483 L159.408 175.087 L158.343 174.583 L157.333 173.978 L156.387 173.276 L155.515 172.485 L154.724 171.613 L154.022 170.667 L153.417 169.657 L152.913 168.592 L152.517 167.483 L152.231 166.341 L152.058 165.176 L152 164 L152.058 162.824 L152.231 161.659 L152.517 160.517 L152.913 159.408 L153.417 158.343 L154.022 157.333 L154.724 156.387 L155.515 155.515 L156.387 154.724 L157.333 154.022 L158.343 153.417 L159.408 152.913 L160.517 152.517 L161.659 152.231 L162.824 152.058 L164 152 L165.176 152.058 L166.341 152.231 L167.483 152.517 L168.592 152.913 L169.657 153.417 L170.667 154.022 L171.613 154.724 L172.485 155.515 L173.276 156.387 L173.978 157.333 L174.583 158.343 L175.087 159.408 L175.483 160.517 L175.769 161.659 L175.942 162.824 L176 164 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Service.*historical*Service" data-shape="circle" data-expanded="true" data-parent="Service::region0" data-role="ShallowHistory">
+      <rect class="state-bounds" x="640" y="771" width="66.788" height="66.788" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M706.788 804.394 L706.627 807.667 L706.147 810.909 L705.35 814.088 L704.246 817.174 L702.845 820.136 L701.16 822.947 L699.208 825.579 L697.007 828.007 L694.579 830.208 L691.947 832.16 L689.136 833.845 L686.174 835.246 L683.088 836.35 L679.909 837.147 L676.667 837.627 L673.394 837.788 L670.121 837.627 L666.879 837.147 L663.7 836.35 L660.615 835.246 L657.652 833.845 L654.841 832.16 L652.209 830.208 L649.781 828.007 L647.58 825.579 L645.628 822.947 L643.943 820.136 L642.542 817.174 L641.438 814.088 L640.642 810.909 L640.161 807.667 L640 804.394 L640.161 801.121 L640.642 797.879 L641.438 794.7 L642.542 791.615 L643.943 788.652 L645.628 785.841 L647.58 783.209 L649.781 780.781 L652.209 778.58 L654.841 776.628 L657.652 774.943 L660.615 773.542 L663.7 772.438 L666.879 771.642 L670.121 771.161 L673.394 771 L676.667 771.161 L679.909 771.642 L683.088 772.438 L686.174 773.542 L689.136 774.943 L691.947 776.628 L694.579 778.58 L697.007 780.781 L699.208 783.209 L701.16 785.841 L702.845 788.652 L704.246 791.615 L705.35 794.7 L706.147 797.879 L706.627 801.121 L706.788 804.394 Z" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Service.*historical*Service" x="673.394" y="808.894" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">
+        <tspan x="673.394" y="808.894">H</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Service.*deephistory*Service" data-shape="circle" data-expanded="true" data-parent="Service::region0" data-role="DeepHistory">
+      <rect class="state-bounds" x="930.788" y="771" width="71.345" height="71.345" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M1002.134 806.673 L1001.962 810.169 L1001.448 813.632 L1000.597 817.028 L999.418 820.324 L997.921 823.489 L996.122 826.491 L994.036 829.303 L991.685 831.897 L989.091 834.248 L986.28 836.333 L983.277 838.133 L980.112 839.63 L976.816 840.809 L973.42 841.66 L969.957 842.173 L966.461 842.345 L962.964 842.173 L959.502 841.66 L956.106 840.809 L952.81 839.63 L949.645 838.133 L946.642 836.333 L943.83 834.248 L941.237 831.897 L938.886 829.303 L936.8 826.491 L935 823.489 L933.504 820.324 L932.324 817.028 L931.474 813.632 L930.96 810.169 L930.788 806.673 L930.96 803.176 L931.474 799.713 L932.324 796.317 L933.504 793.021 L935 789.857 L936.8 786.854 L938.886 784.042 L941.237 781.448 L943.83 779.097 L946.642 777.012 L949.645 775.212 L952.81 773.715 L956.106 772.536 L959.502 771.685 L962.964 771.172 L966.461 771 L969.957 771.172 L973.42 771.685 L976.816 772.536 L980.112 773.715 L983.277 775.212 L986.28 777.012 L989.091 779.097 L991.685 781.448 L994.036 784.042 L996.122 786.854 L997.921 789.857 L999.418 793.021 L1000.597 796.317 L1001.448 799.713 L1001.962 803.176 L1002.134 806.673 Z" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Service.*deephistory*Service" x="966.461" y="811.173" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fb923c">
+        <tspan x="966.461" y="811.173">H*</tspan>
+      </text>
+    </g>
+  </g>
+  <defs>
+    <mask id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-connector-underpass-5" maskUnits="userSpaceOnUse" x="0" y="0" width="1275" height="2454">
+      <rect x="0" y="0" width="1275" height="2454" fill="white"/>
+      <circle cx="608" cy="2166" r="10" fill="black"/>
+    </mask>
+    <mask id="sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-63-75-72-76-65-64-2d-64-61-72-6b-connector-underpass-6" maskUnits="userSpaceOnUse" x="0" y="0" width="1275" height="2454">
+      <rect x="0" y="0" width="1275" height="2454" fill="white"/>
+      <circle cx="586.153" cy="2318.734" r="10" fill="black"/>
+    </mask>
+  </defs>
+</svg>

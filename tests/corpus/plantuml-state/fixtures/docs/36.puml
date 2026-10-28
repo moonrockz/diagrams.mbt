@@ -1,0 +1,13 @@
+@startuml
+state "A" as stateA
+state "C" as stateC {
+ state B
+}
+
+json jsonJ {
+   "fruit":"Apple",
+   "size":"Large",
+   "color": ["Red", "Green"]
+}
+@enduml
+

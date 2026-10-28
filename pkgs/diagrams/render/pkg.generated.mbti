@@ -11,6 +11,7 @@ import {
   "moonrockz/diagrams/flowchart",
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/sequence",
+  "moonrockz/diagrams/state",
   "moonrockz/diagrams/swimlane",
 }
 
@@ -23,6 +24,7 @@ pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
   Swimlane(@swimlane.Swimlane)
+  State(@state.StateDiagram)
   Flowchart(@flowchart.Flowchart)
   Architecture(@architecture.Architecture)
   Regex(@regex.Regex)

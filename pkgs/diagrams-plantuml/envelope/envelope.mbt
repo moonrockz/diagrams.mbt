@@ -6,6 +6,7 @@ pub(all) enum Kind {
   Json
   Yaml
   Activity
+  State
 } derive(Eq, Debug)
 
 ///|
@@ -22,7 +23,7 @@ pub fn Kind::word(self : Kind) -> String {
     Ebnf => "ebnf"
     Json => "json"
     Yaml => "yaml"
-    Activity => "uml"
+    Activity | State => "uml"
   }
 }
 
@@ -45,6 +46,7 @@ pub struct Limits {
   output : Int32
   depth : Int32
   nodes : Int32
+  regions : Int32
   edges : Int32
   work : Int32
   diagnostics : Int32
@@ -62,11 +64,12 @@ pub fn Limits::new(
   output~ : Int32 = 4194304,
   depth~ : Int32 = 256,
   nodes~ : Int32 = 100000,
+  regions~ : Int32 = 100000,
   edges~ : Int32 = 100000,
   work~ : Int32 = 4000000,
   diagnostics~ : Int32 = 64,
 ) -> Limits {
-  { source, output, depth, nodes, edges, work, diagnostics, }
+  { source, output, depth, nodes, regions, edges, work, diagnostics, }
 }
 
 ///|
@@ -75,6 +78,7 @@ pub fn Limits::valid(self : Limits) -> Bool {
   self.output > 0 &&
   self.depth > 0 &&
   self.nodes > 0 &&
+  self.regions > 0 &&
   self.edges > 0 &&
   self.work > 0 &&
   self.diagnostics > 0
@@ -226,7 +230,7 @@ pub struct Scan {
 ///|
 /// The stable diagnostic codes of envelope scanning.
 pub let diagnostic_codes : ReadOnlyArray[String] = [
-  "plantuml/source-limit", "plantuml/invalid-limits", "plantuml/missing-start-marker",
+  "plantuml/ambiguous-kind", "plantuml/source-limit", "plantuml/invalid-limits", "plantuml/missing-start-marker",
   "plantuml/unsupported-diagram", "plantuml/missing-end-marker", "plantuml/wrong-end-marker",
   "plantuml/multiple-blocks", "plantuml/text-outside-block", "plantuml/unsupported-directive",
   "plantuml/unsupported-preprocessing", "plantuml/unsupported-statement", "plantuml/unclosed-block",
@@ -614,6 +618,73 @@ pub fn scan(source : String, limits~ : Limits = Limits::new()) -> Scan {
       }
     }
   }
+  if kind == Some(Activity) {
+    let mut state_seen = false
+    let mut activity_seen = false
+    let mut note = false
+    let mut comment = false
+    let mut shared_end : String? = None
+    let mut action_text = false
+    for raw in body_raws {
+      let t = trim(raw.text)
+      if comment {
+        if t.has_suffix("'/") { comment = false }
+        continue
+      }
+      if shared_end is Some(end) {
+        if t == end { shared_end = None }
+        continue
+      }
+      if note {
+        if t == "end note" || t == "endnote" { note = false }
+        continue
+      }
+      if action_text {
+        if t.contains(";") { action_text = false }
+        continue
+      }
+      if t.has_prefix("/'") {
+        comment = !t.has_suffix("'/")
+        continue
+      }
+      if t.has_prefix("'") { continue }
+      if t == "<style>" { shared_end = Some("</style>"); continue }
+      if t.has_prefix("skinparam ") && t.has_suffix("{") { shared_end = Some("}"); continue }
+      if t == "legend" || t.has_prefix("legend ") { shared_end = Some("endlegend"); continue }
+      if t.has_prefix("note ") || t == "note" || t.has_prefix("floating note") {
+        note = !t.contains(":") && !t.has_prefix("note \"" )
+        continue
+      }
+      if t.has_prefix(":") && !t.contains(";") && !t.has_suffix(")") {
+        activity_seen = true
+        action_text = true
+        continue
+      }
+      if has_word(t.to_lower(), "state") || t.has_prefix("[*]") ||
+        t.contains("[H]") || t.contains("[H*]") ||
+        (t.contains("-->") && t.has_suffix("[*]")) {
+        state_seen = true
+      }
+      if t == "start" || t == "stop" || t == "end" ||
+        t.has_prefix(":") || t.has_prefix("- ") || t.has_prefix("* ") ||
+        t.has_prefix("** ") || t.has_prefix("-- ") || t.has_prefix("(*)") ||
+        t.has_prefix("(*top)") || has_word(t, "while") ||
+        has_word(t, "repeat") || has_word(t, "fork") ||
+        (t.has_prefix("if ") && !t.has_prefix("state ")) ||
+        (t.has_prefix("|") && !t.has_prefix("||")) {
+        activity_seen = true
+      }
+    }
+    if state_seen && activity_seen {
+      error("plantuml/ambiguous-kind", "Mixed UML families; use an explicit supported body kind", 0, source.length())
+      kind = None
+    } else if state_seen {
+      kind = Some(State)
+    } else if !activity_seen {
+      error("plantuml/unsupported-diagram", "Unsupported or ambiguous UML body; use read_body(State, body) for state arrows", 0, source.length())
+      kind = None
+    }
+  }
   let (lines, statements) = classify(
     kind.unwrap_or(Regex),
     body_raws,
@@ -727,7 +798,7 @@ fn classify(
     let (start, end) = whole(i)
     // Activity labels and notes can contain words that otherwise introduce
     // envelope metadata. Keep those lines in their body construct.
-    if kind == Activity {
+    if kind == Activity || kind == State {
       if activity_text != 0 {
         lines.push(line(i, Body))
         if (activity_text == 1 && t.contains(";")) ||
@@ -926,7 +997,7 @@ fn classify(
         continue
       }
       for word in ["sprite", "rotate", "page", "minwidth", "mainframe"] {
-        if has_word(t, word) {
+        if has_word(t, word) && !(kind == State && word == "mainframe") {
           matched = true
         }
       }

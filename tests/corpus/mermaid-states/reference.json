@@ -1,0 +1,4024 @@
+{
+  "reference": "mermaid@12.2.0",
+  "configuration": {
+    "securityLevel": "strict",
+    "maxEdges": 50000
+  },
+  "normalizations": [
+    "Pinned database node/edge projection; generated divider and note IDs normalized by occurrence.",
+    "Labels retain pinned sanitization; source AST independently preserves raw text.",
+    "Source trivia, UTF-16 diagnostics, canonical bytes, model IDs and layout have separate portable checks."
+  ],
+  "fixtures": [
+    {
+      "name": "docs/001.mmd",
+      "source": "---\ntitle: Simple sample\n---\nstateDiagram-v2\n    [*] --> Still\n    Still --> [*]\n\n    Still --> Moving\n    Moving --> Still\n    Moving --> Crash\n    Crash --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Still",
+            "label": "Still",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "Moving",
+            "label": "Moving",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Crash",
+            "label": "Crash",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Still",
+              "root::final",
+              "Moving",
+              "Crash"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "Moving",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Crash",
+            "label": ""
+          },
+          {
+            "source": "Crash",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/002.mmd",
+      "source": "stateDiagram\n    [*] --> Still\n    Still --> [*]\n\n    Still --> Moving\n    Moving --> Still\n    Moving --> Crash\n    Crash --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Still",
+            "label": "Still",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "Moving",
+            "label": "Moving",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Crash",
+            "label": "Crash",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Still",
+              "root::final",
+              "Moving",
+              "Crash"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "Moving",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Crash",
+            "label": ""
+          },
+          {
+            "source": "Crash",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/003.mmd",
+      "source": "stateDiagram-v2\n  [*] --> Draft\n  Draft --> Submitted : submit\n  state Review {\n    [*] --> Screening\n    Screening --> Decision\n  }\n  Submitted --> Review\n  Review --> Published : approved\n  Review --> Draft : rejected\n  Published --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Draft",
+            "label": "Draft",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Submitted",
+            "label": "Submitted",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Review",
+            "label": "Review",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Review::region-0::initial",
+            "label": "Review::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Screening",
+            "label": "Screening",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Decision",
+            "label": "Decision",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Published",
+            "label": "Published",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Draft",
+              "Submitted",
+              "Review",
+              "Published",
+              "root::final"
+            ]
+          },
+          {
+            "id": "Review::region-0",
+            "owner": "Review",
+            "members": [
+              "Review::region-0::initial",
+              "Screening",
+              "Decision"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Draft",
+            "label": ""
+          },
+          {
+            "source": "Draft",
+            "target": "Submitted",
+            "label": "submit"
+          },
+          {
+            "source": "Review::region-0::initial",
+            "target": "Screening",
+            "label": ""
+          },
+          {
+            "source": "Screening",
+            "target": "Decision",
+            "label": ""
+          },
+          {
+            "source": "Submitted",
+            "target": "Review",
+            "label": ""
+          },
+          {
+            "source": "Review",
+            "target": "Published",
+            "label": "approved"
+          },
+          {
+            "source": "Review",
+            "target": "Draft",
+            "label": "rejected"
+          },
+          {
+            "source": "Published",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/004.mmd",
+      "source": "---\nconfig:\n  theme: default\n  look: classic\n  layout: dagre\n---\nstateDiagram-v2\n  [*] --> Draft\n  Draft --> Submitted : submit\n  state Review {\n    [*] --> Screening\n    Screening --> Decision\n  }\n  Submitted --> Review\n  Review --> Published : approved\n  Review --> Draft : rejected\n  Published --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Draft",
+            "label": "Draft",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Submitted",
+            "label": "Submitted",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Review",
+            "label": "Review",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Review::region-0::initial",
+            "label": "Review::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Screening",
+            "label": "Screening",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Decision",
+            "label": "Decision",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Published",
+            "label": "Published",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Draft",
+              "Submitted",
+              "Review",
+              "Published",
+              "root::final"
+            ]
+          },
+          {
+            "id": "Review::region-0",
+            "owner": "Review",
+            "members": [
+              "Review::region-0::initial",
+              "Screening",
+              "Decision"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Draft",
+            "label": ""
+          },
+          {
+            "source": "Draft",
+            "target": "Submitted",
+            "label": "submit"
+          },
+          {
+            "source": "Review::region-0::initial",
+            "target": "Screening",
+            "label": ""
+          },
+          {
+            "source": "Screening",
+            "target": "Decision",
+            "label": ""
+          },
+          {
+            "source": "Submitted",
+            "target": "Review",
+            "label": ""
+          },
+          {
+            "source": "Review",
+            "target": "Published",
+            "label": "approved"
+          },
+          {
+            "source": "Review",
+            "target": "Draft",
+            "label": "rejected"
+          },
+          {
+            "source": "Published",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/005.mmd",
+      "source": "stateDiagram-v2\n    stateId\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "stateId",
+            "label": "stateId",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "stateId"
+            ]
+          }
+        ],
+        "transitions": [],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/006.mmd",
+      "source": "stateDiagram-v2\n    state \"This is a state description\" as s2\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "s2",
+            "label": "This is a state description",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "s2"
+            ]
+          }
+        ],
+        "transitions": [],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/007.mmd",
+      "source": "stateDiagram-v2\n    s2 : This is a state description\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "s2",
+            "label": "This is a state description",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "s2"
+            ]
+          }
+        ],
+        "transitions": [],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/008.mmd",
+      "source": "stateDiagram-v2\n    s1 --> s2\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "s1",
+            "label": "s1",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "s2",
+            "label": "s2",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "s1",
+              "s2"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "s1",
+            "target": "s2",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/009.mmd",
+      "source": "stateDiagram-v2\n    s1 --> s2: A transition\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "s1",
+            "label": "s1",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "s2",
+            "label": "s2",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "s1",
+              "s2"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "s1",
+            "target": "s2",
+            "label": "A transition"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/010.mmd",
+      "source": "stateDiagram-v2\n    [*] --> s1\n    s1 --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "s1",
+            "label": "s1",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "s1",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "s1",
+            "label": ""
+          },
+          {
+            "source": "s1",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/011.mmd",
+      "source": "stateDiagram-v2\n    [*] --> First\n    state First {\n        [*] --> second\n        second --> [*]\n    }\n\n    [*] --> NamedComposite\n    NamedComposite: Another Composite\n    state NamedComposite {\n        [*] --> namedSimple\n        namedSimple --> [*]\n        namedSimple: Another simple\n    }\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "First",
+            "label": "First",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "First::region-0::initial",
+            "label": "First::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "First::region-0"
+          },
+          {
+            "id": "second",
+            "label": "second",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "First::region-0"
+          },
+          {
+            "id": "First::region-0::final",
+            "label": "First::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "First::region-0"
+          },
+          {
+            "id": "NamedComposite",
+            "label": "Another Composite",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "NamedComposite::region-0::initial",
+            "label": "NamedComposite::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "NamedComposite::region-0"
+          },
+          {
+            "id": "namedSimple",
+            "label": "Another simple",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "NamedComposite::region-0"
+          },
+          {
+            "id": "NamedComposite::region-0::final",
+            "label": "NamedComposite::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "NamedComposite::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "First",
+              "NamedComposite"
+            ]
+          },
+          {
+            "id": "First::region-0",
+            "owner": "First",
+            "members": [
+              "First::region-0::initial",
+              "second",
+              "First::region-0::final"
+            ]
+          },
+          {
+            "id": "NamedComposite::region-0",
+            "owner": "NamedComposite",
+            "members": [
+              "NamedComposite::region-0::initial",
+              "namedSimple",
+              "NamedComposite::region-0::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "First",
+            "label": ""
+          },
+          {
+            "source": "First::region-0::initial",
+            "target": "second",
+            "label": ""
+          },
+          {
+            "source": "second",
+            "target": "First::region-0::final",
+            "label": ""
+          },
+          {
+            "source": "root::initial",
+            "target": "NamedComposite",
+            "label": ""
+          },
+          {
+            "source": "NamedComposite::region-0::initial",
+            "target": "namedSimple",
+            "label": ""
+          },
+          {
+            "source": "namedSimple",
+            "target": "NamedComposite::region-0::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/012.mmd",
+      "source": "stateDiagram-v2\n    [*] --> First\n\n    state First {\n        [*] --> Second\n\n        state Second {\n            [*] --> second\n            second --> Third\n\n            state Third {\n                [*] --> third\n                third --> [*]\n            }\n        }\n    }\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "First",
+            "label": "First",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "First::region-0::initial",
+            "label": "First::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "First::region-0"
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "First::region-0"
+          },
+          {
+            "id": "Second::region-0::initial",
+            "label": "Second::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "second",
+            "label": "second",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "Third",
+            "label": "Third",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "Third::region-0::initial",
+            "label": "Third::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Third::region-0"
+          },
+          {
+            "id": "third",
+            "label": "third",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Third::region-0"
+          },
+          {
+            "id": "Third::region-0::final",
+            "label": "Third::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "Third::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "First"
+            ]
+          },
+          {
+            "id": "First::region-0",
+            "owner": "First",
+            "members": [
+              "First::region-0::initial",
+              "Second"
+            ]
+          },
+          {
+            "id": "Second::region-0",
+            "owner": "Second",
+            "members": [
+              "Second::region-0::initial",
+              "second",
+              "Third"
+            ]
+          },
+          {
+            "id": "Third::region-0",
+            "owner": "Third",
+            "members": [
+              "Third::region-0::initial",
+              "third",
+              "Third::region-0::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "First",
+            "label": ""
+          },
+          {
+            "source": "First::region-0::initial",
+            "target": "Second",
+            "label": ""
+          },
+          {
+            "source": "Second::region-0::initial",
+            "target": "second",
+            "label": ""
+          },
+          {
+            "source": "second",
+            "target": "Third",
+            "label": ""
+          },
+          {
+            "source": "Third::region-0::initial",
+            "target": "third",
+            "label": ""
+          },
+          {
+            "source": "third",
+            "target": "Third::region-0::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/013.mmd",
+      "source": "stateDiagram-v2\n    [*] --> First\n    First --> Second\n    First --> Third\n\n    state First {\n        [*] --> fir\n        fir --> [*]\n    }\n    state Second {\n        [*] --> sec\n        sec --> [*]\n    }\n    state Third {\n        [*] --> thi\n        thi --> [*]\n    }\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "First",
+            "label": "First",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Second",
+            "label": "Second",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Third",
+            "label": "Third",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "First::region-0::initial",
+            "label": "First::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "First::region-0"
+          },
+          {
+            "id": "fir",
+            "label": "fir",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "First::region-0"
+          },
+          {
+            "id": "First::region-0::final",
+            "label": "First::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "First::region-0"
+          },
+          {
+            "id": "Second::region-0::initial",
+            "label": "Second::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "sec",
+            "label": "sec",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "Second::region-0::final",
+            "label": "Second::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "Second::region-0"
+          },
+          {
+            "id": "Third::region-0::initial",
+            "label": "Third::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Third::region-0"
+          },
+          {
+            "id": "thi",
+            "label": "thi",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Third::region-0"
+          },
+          {
+            "id": "Third::region-0::final",
+            "label": "Third::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "Third::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "First",
+              "Second",
+              "Third"
+            ]
+          },
+          {
+            "id": "First::region-0",
+            "owner": "First",
+            "members": [
+              "First::region-0::initial",
+              "fir",
+              "First::region-0::final"
+            ]
+          },
+          {
+            "id": "Second::region-0",
+            "owner": "Second",
+            "members": [
+              "Second::region-0::initial",
+              "sec",
+              "Second::region-0::final"
+            ]
+          },
+          {
+            "id": "Third::region-0",
+            "owner": "Third",
+            "members": [
+              "Third::region-0::initial",
+              "thi",
+              "Third::region-0::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "First",
+            "label": ""
+          },
+          {
+            "source": "First",
+            "target": "Second",
+            "label": ""
+          },
+          {
+            "source": "First",
+            "target": "Third",
+            "label": ""
+          },
+          {
+            "source": "First::region-0::initial",
+            "target": "fir",
+            "label": ""
+          },
+          {
+            "source": "fir",
+            "target": "First::region-0::final",
+            "label": ""
+          },
+          {
+            "source": "Second::region-0::initial",
+            "target": "sec",
+            "label": ""
+          },
+          {
+            "source": "sec",
+            "target": "Second::region-0::final",
+            "label": ""
+          },
+          {
+            "source": "Third::region-0::initial",
+            "target": "thi",
+            "label": ""
+          },
+          {
+            "source": "thi",
+            "target": "Third::region-0::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/014.mmd",
+      "source": "stateDiagram-v2\n    state if_state <<choice>>\n    [*] --> IsPositive\n    IsPositive --> if_state\n    if_state --> False: if n < 0\n    if_state --> True : if n >= 0\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "if_state",
+            "label": "if_state",
+            "descriptions": [],
+            "role": "Choice",
+            "region": "root"
+          },
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "IsPositive",
+            "label": "IsPositive",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "False",
+            "label": "False",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "True",
+            "label": "True",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "if_state",
+              "root::initial",
+              "IsPositive",
+              "False",
+              "True"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "IsPositive",
+            "label": ""
+          },
+          {
+            "source": "IsPositive",
+            "target": "if_state",
+            "label": ""
+          },
+          {
+            "source": "if_state",
+            "target": "False",
+            "label": "if n < 0"
+          },
+          {
+            "source": "if_state",
+            "target": "True",
+            "label": "if n >= 0"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/015.mmd",
+      "source": "   stateDiagram-v2\n    state fork_state <<fork>>\n      [*] --> fork_state\n      fork_state --> State2\n      fork_state --> State3\n\n      state join_state <<join>>\n      State2 --> join_state\n      State3 --> join_state\n      join_state --> State4\n      State4 --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "fork_state",
+            "label": "fork_state",
+            "descriptions": [],
+            "role": "Fork",
+            "region": "root"
+          },
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "State2",
+            "label": "State2",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "State3",
+            "label": "State3",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "join_state",
+            "label": "join_state",
+            "descriptions": [],
+            "role": "Join",
+            "region": "root"
+          },
+          {
+            "id": "State4",
+            "label": "State4",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "fork_state",
+              "root::initial",
+              "State2",
+              "State3",
+              "join_state",
+              "State4",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "fork_state",
+            "label": ""
+          },
+          {
+            "source": "fork_state",
+            "target": "State2",
+            "label": ""
+          },
+          {
+            "source": "fork_state",
+            "target": "State3",
+            "label": ""
+          },
+          {
+            "source": "State2",
+            "target": "join_state",
+            "label": ""
+          },
+          {
+            "source": "State3",
+            "target": "join_state",
+            "label": ""
+          },
+          {
+            "source": "join_state",
+            "target": "State4",
+            "label": ""
+          },
+          {
+            "source": "State4",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/016.mmd",
+      "source": "    stateDiagram-v2\n        State1: The state with a note\n        note right of State1\n            Important information! You can write\n            notes.\n        end note\n        State1 --> State2\n        note left of State2 : This is the note to the left.\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "State1",
+            "label": "The state with a note",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "State2",
+            "label": "State2",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "State1",
+              "State2"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "State1",
+            "target": "State2",
+            "label": ""
+          }
+        ],
+        "notes": [
+          {
+            "target": "State1",
+            "text": "Important information! You can write\n            notes.",
+            "placement": "right"
+          },
+          {
+            "target": "State2",
+            "text": "This is the note to the left.",
+            "placement": "left"
+          }
+        ],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/017.mmd",
+      "source": "stateDiagram-v2\n    [*] --> Active\n\n    state Active {\n        [*] --> NumLockOff\n        NumLockOff --> NumLockOn : EvNumLockPressed\n        NumLockOn --> NumLockOff : EvNumLockPressed\n        --\n        [*] --> CapsLockOff\n        CapsLockOff --> CapsLockOn : EvCapsLockPressed\n        CapsLockOn --> CapsLockOff : EvCapsLockPressed\n        --\n        [*] --> ScrollLockOff\n        ScrollLockOff --> ScrollLockOn : EvScrollLockPressed\n        ScrollLockOn --> ScrollLockOff : EvScrollLockPressed\n    }\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Active",
+            "label": "Active",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Active::region-0::initial",
+            "label": "Active::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "NumLockOff",
+            "label": "NumLockOff",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "NumLockOn",
+            "label": "NumLockOn",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "Active::region-1::initial",
+            "label": "Active::region-1::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "CapsLockOff",
+            "label": "CapsLockOff",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "CapsLockOn",
+            "label": "CapsLockOn",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "Active::region-2::initial",
+            "label": "Active::region-2::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Active::region-2"
+          },
+          {
+            "id": "ScrollLockOff",
+            "label": "ScrollLockOff",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-2"
+          },
+          {
+            "id": "ScrollLockOn",
+            "label": "ScrollLockOn",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-2"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Active"
+            ]
+          },
+          {
+            "id": "Active::region-0",
+            "owner": "Active",
+            "members": [
+              "Active::region-0::initial",
+              "NumLockOff",
+              "NumLockOn"
+            ]
+          },
+          {
+            "id": "Active::region-1",
+            "owner": "Active",
+            "members": [
+              "Active::region-1::initial",
+              "CapsLockOff",
+              "CapsLockOn"
+            ]
+          },
+          {
+            "id": "Active::region-2",
+            "owner": "Active",
+            "members": [
+              "Active::region-2::initial",
+              "ScrollLockOff",
+              "ScrollLockOn"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Active",
+            "label": ""
+          },
+          {
+            "source": "Active::region-0::initial",
+            "target": "NumLockOff",
+            "label": ""
+          },
+          {
+            "source": "NumLockOff",
+            "target": "NumLockOn",
+            "label": "EvNumLockPressed"
+          },
+          {
+            "source": "NumLockOn",
+            "target": "NumLockOff",
+            "label": "EvNumLockPressed"
+          },
+          {
+            "source": "Active::region-1::initial",
+            "target": "CapsLockOff",
+            "label": ""
+          },
+          {
+            "source": "CapsLockOff",
+            "target": "CapsLockOn",
+            "label": "EvCapsLockPressed"
+          },
+          {
+            "source": "CapsLockOn",
+            "target": "CapsLockOff",
+            "label": "EvCapsLockPressed"
+          },
+          {
+            "source": "Active::region-2::initial",
+            "target": "ScrollLockOff",
+            "label": ""
+          },
+          {
+            "source": "ScrollLockOff",
+            "target": "ScrollLockOn",
+            "label": "EvScrollLockPressed"
+          },
+          {
+            "source": "ScrollLockOn",
+            "target": "ScrollLockOff",
+            "label": "EvScrollLockPressed"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/018.mmd",
+      "source": "stateDiagram\n    direction LR\n    [*] --> A\n    A --> B\n    B --> C\n    state B {\n      direction LR\n      a --> b\n    }\n    B --> D\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "LR",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "a",
+            "label": "a",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "B::region-0"
+          },
+          {
+            "id": "b",
+            "label": "b",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "B::region-0"
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "A",
+              "B",
+              "C",
+              "D"
+            ]
+          },
+          {
+            "id": "B::region-0",
+            "owner": "B",
+            "members": [
+              "a",
+              "b"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "A",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "B",
+            "target": "C",
+            "label": ""
+          },
+          {
+            "source": "a",
+            "target": "b",
+            "label": ""
+          },
+          {
+            "source": "B",
+            "target": "D",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/019.mmd",
+      "source": "stateDiagram-v2\n    [*] --> Still\n    Still --> [*]\n%% this is a comment\n    Still --> Moving\n    Moving --> Still %% another comment\n    Moving --> Crash\n    Crash --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Still",
+            "label": "Still",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "Moving",
+            "label": "Moving",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Crash",
+            "label": "Crash",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Still",
+              "root::final",
+              "Moving",
+              "Crash"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "Moving",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Crash",
+            "label": ""
+          },
+          {
+            "source": "Crash",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/020.mmd",
+      "source": "   stateDiagram\n   direction TB\n\n   accTitle: This is the accessible title\n   accDescr: This is an accessible description\n\n   classDef notMoving fill:white\n   classDef movement font-style:italic\n   classDef badBadEvent fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow\n\n   [*]--> Still\n   Still --> [*]\n   Still --> Moving\n   Moving --> Still\n   Moving --> Crash\n   Crash --> [*]\n\n   class Still notMoving\n   class Moving, Crash movement\n   class Crash badBadEvent\n   class end badBadEvent\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Still",
+            "label": "Still",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "Moving",
+            "label": "Moving",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Crash",
+            "label": "Crash",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Still",
+              "root::final",
+              "Moving",
+              "Crash"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "Moving",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Crash",
+            "label": ""
+          },
+          {
+            "source": "Crash",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "This is the accessible title",
+        "accessibilityDescription": "This is an accessible description",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/021.mmd",
+      "source": "stateDiagram\n   direction TB\n\n   accTitle: This is the accessible title\n   accDescr: This is an accessible description\n\n   classDef notMoving fill:white\n   classDef movement font-style:italic;\n   classDef badBadEvent fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow\n\n   [*] --> Still:::notMoving\n   Still --> [*]\n   Still --> Moving:::movement\n   Moving --> Still\n   Moving --> Crash:::movement\n   Crash:::badBadEvent --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Still",
+            "label": "Still",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "Moving",
+            "label": "Moving",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Crash",
+            "label": "Crash",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Still",
+              "root::final",
+              "Moving",
+              "Crash"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "Still",
+            "target": "Moving",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Still",
+            "label": ""
+          },
+          {
+            "source": "Moving",
+            "target": "Crash",
+            "label": ""
+          },
+          {
+            "source": "Crash",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "This is the accessible title",
+        "accessibilityDescription": "This is an accessible description",
+        "title": ""
+      }
+    },
+    {
+      "name": "docs/022.mmd",
+      "source": "stateDiagram\n    classDef yourState font-style:italic,font-weight:bold,fill:white\n\n    yswsii: Your state with spaces in it\n    [*] --> yswsii:::yourState\n    [*] --> SomeOtherState\n    SomeOtherState --> YetAnotherState\n    yswsii --> YetAnotherState\n    YetAnotherState --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "yswsii",
+            "label": "Your state with spaces in it",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "SomeOtherState",
+            "label": "SomeOtherState",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "YetAnotherState",
+            "label": "YetAnotherState",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "yswsii",
+              "root::initial",
+              "SomeOtherState",
+              "YetAnotherState",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "yswsii",
+            "label": ""
+          },
+          {
+            "source": "root::initial",
+            "target": "SomeOtherState",
+            "label": ""
+          },
+          {
+            "source": "SomeOtherState",
+            "target": "YetAnotherState",
+            "label": ""
+          },
+          {
+            "source": "yswsii",
+            "target": "YetAnotherState",
+            "label": ""
+          },
+          {
+            "source": "YetAnotherState",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/alias-with-description.mmd",
+      "source": "stateDiagram-v2\nstate \"Label\" as A: entry / record\nA --> B : event {text}\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "Label",
+            "descriptions": [
+              " entry / record"
+            ],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "event {text}"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/aliases-descriptions-notes.mmd",
+      "source": "stateDiagram-v2\nstate \"Idle label\" as Idle\nIdle : entry / log\nIdle : event [guard] / action\nnote right of Idle\nmultiline note\nwith details\nend note\nIdle --> Running : start [ready] / begin\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Idle",
+            "label": "Idle label",
+            "descriptions": [
+              "entry / log",
+              "event [guard] / action"
+            ],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Running",
+            "label": "Running",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Idle",
+              "Running"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "Idle",
+            "target": "Running",
+            "label": "start [ready] / begin"
+          }
+        ],
+        "notes": [
+          {
+            "target": "Idle",
+            "text": "multiline note\nwith details",
+            "placement": "right"
+          }
+        ],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/arrow-refusal.mmd",
+      "source": "stateDiagram-v2\nA -> B\n",
+      "accepted": false,
+      "error": "page.evaluate: Error: Parse error on line 2:"
+    },
+    {
+      "name": "cases/bare-stars.mmd",
+      "source": "stateDiagram-v2\n[*]\n[*] --> A\nA --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "A",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "A",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/boundary-refusal.mmd",
+      "source": "stateDiagram-v2\nstate entry <<entryPoint>>\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": []
+          }
+        ],
+        "transitions": [],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/case-insensitive.mmd",
+      "source": "stateDiagram-v2\nSTATE \"Alias\" AS A\nSTATE C <<CHOICE>>\nDIRECTION LR\nA --> C\nNOTE RIGHT OF A : Text\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "LR",
+        "states": [
+          {
+            "id": "A",
+            "label": "Alias",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "descriptions": [],
+            "role": "Choice",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "C"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "C",
+            "label": ""
+          }
+        ],
+        "notes": [
+          {
+            "target": "A",
+            "text": "Text",
+            "placement": "right"
+          }
+        ],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/choice-fork-join.mmd",
+      "source": "stateDiagram-v2\nstate decide <<choice>>\nstate fork <<fork>>\nstate join <<join>>\n[*] --> decide\ndecide --> fork : accepted\nfork --> A\nfork --> B\nA --> join\nB --> join\njoin --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "decide",
+            "label": "decide",
+            "descriptions": [],
+            "role": "Choice",
+            "region": "root"
+          },
+          {
+            "id": "fork",
+            "label": "fork",
+            "descriptions": [],
+            "role": "Fork",
+            "region": "root"
+          },
+          {
+            "id": "join",
+            "label": "join",
+            "descriptions": [],
+            "role": "Join",
+            "region": "root"
+          },
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "decide",
+              "fork",
+              "join",
+              "root::initial",
+              "A",
+              "B",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "decide",
+            "label": ""
+          },
+          {
+            "source": "decide",
+            "target": "fork",
+            "label": "accepted"
+          },
+          {
+            "source": "fork",
+            "target": "A",
+            "label": ""
+          },
+          {
+            "source": "fork",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "join",
+            "label": ""
+          },
+          {
+            "source": "B",
+            "target": "join",
+            "label": ""
+          },
+          {
+            "source": "join",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/cross-composite.mmd",
+      "source": "stateDiagram-v2\nstate Left {\na\n}\nstate Right {\nb\n}\na --> b\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Left",
+            "label": "Left",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "a",
+            "label": "a",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Left::region-0"
+          },
+          {
+            "id": "Right",
+            "label": "Right",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "b",
+            "label": "b",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Right::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Left",
+              "Right"
+            ]
+          },
+          {
+            "id": "Left::region-0",
+            "owner": "Left",
+            "members": [
+              "a"
+            ]
+          },
+          {
+            "id": "Right::region-0",
+            "owner": "Right",
+            "members": [
+              "b"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "a",
+            "target": "b",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/deep-regions.mmd",
+      "source": "stateDiagram-v2\nstate A {\nstate B {\nstate C {\n[*] --> Ready\n}\n}\n}\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "A::region-0"
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "B::region-0"
+          },
+          {
+            "id": "C::region-0::initial",
+            "label": "C::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "C::region-0"
+          },
+          {
+            "id": "Ready",
+            "label": "Ready",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "C::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A"
+            ]
+          },
+          {
+            "id": "A::region-0",
+            "owner": "A",
+            "members": [
+              "B"
+            ]
+          },
+          {
+            "id": "B::region-0",
+            "owner": "B",
+            "members": [
+              "C"
+            ]
+          },
+          {
+            "id": "C::region-0",
+            "owner": "C",
+            "members": [
+              "C::region-0::initial",
+              "Ready"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "C::region-0::initial",
+            "target": "Ready",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/duplicate-labels.mmd",
+      "source": "stateDiagram-v2\nstate \"Equal\" as A\nstate \"Equal\" as B\nA --> B\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "Equal",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "Equal",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/empty-composite.mmd",
+      "source": "stateDiagram-v2\nstate Empty {\n}\n[*] --> Empty\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Empty",
+            "label": "Empty",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Empty",
+              "root::initial"
+            ]
+          },
+          {
+            "id": "Empty::region-0",
+            "owner": "Empty",
+            "members": []
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Empty",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/floating-note.mmd",
+      "source": "stateDiagram-v2\nA\nnote \"Floating text\" as N\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A"
+            ]
+          }
+        ],
+        "transitions": [],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/four-directions.mmd",
+      "source": "stateDiagram-v2\ndirection BT\nA --> B\nstate Group {\ndirection RL\nC --> D\n}\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "BT",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Group",
+            "label": "Group",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Group::region-0"
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Group::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B",
+              "Group"
+            ]
+          },
+          {
+            "id": "Group::region-0",
+            "owner": "Group",
+            "members": [
+              "C",
+              "D"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "C",
+            "target": "D",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/gallery-composite-choice.mmd",
+      "source": "stateDiagram-v2\n    [*] --> Review\n    state Review {\n        [*] --> Draft\n        Draft --> Decision : submit\n        state Decision <<choice>>\n        Decision --> Approved : accepted\n        Decision --> Draft : revise\n        Approved --> [*]\n    }\n    Review --> Published : publish\n    Published --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Review",
+            "label": "Review",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Review::region-0::initial",
+            "label": "Review::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Draft",
+            "label": "Draft",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Decision",
+            "label": "Decision",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Approved",
+            "label": "Approved",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Review::region-0::final",
+            "label": "Review::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "Review::region-0"
+          },
+          {
+            "id": "Published",
+            "label": "Published",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Review",
+              "Published",
+              "root::final"
+            ]
+          },
+          {
+            "id": "Review::region-0",
+            "owner": "Review",
+            "members": [
+              "Review::region-0::initial",
+              "Draft",
+              "Decision",
+              "Approved",
+              "Review::region-0::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Review",
+            "label": ""
+          },
+          {
+            "source": "Review::region-0::initial",
+            "target": "Draft",
+            "label": ""
+          },
+          {
+            "source": "Draft",
+            "target": "Decision",
+            "label": "submit"
+          },
+          {
+            "source": "Decision",
+            "target": "Approved",
+            "label": "accepted"
+          },
+          {
+            "source": "Decision",
+            "target": "Draft",
+            "label": "revise"
+          },
+          {
+            "source": "Approved",
+            "target": "Review::region-0::final",
+            "label": ""
+          },
+          {
+            "source": "Review",
+            "target": "Published",
+            "label": "publish"
+          },
+          {
+            "source": "Published",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/gallery-concurrent-fork-join.mmd",
+      "source": "stateDiagram-v2\n    [*] --> Work\n    state Work {\n        state Fork <<fork>>\n        state Join <<join>>\n        [*] --> Fork\n        Fork --> Validate\n        Fork --> Package\n        Validate --> Join\n        Package --> Join\n        Join --> [*]\n        --\n        [*] --> Monitor\n        Monitor --> Monitor : sample\n    }\n    Work --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Work",
+            "label": "Work",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Fork",
+            "label": "Fork",
+            "descriptions": [],
+            "role": "Fork",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Join",
+            "label": "Join",
+            "descriptions": [],
+            "role": "Join",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Work::region-0::initial",
+            "label": "Work::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Validate",
+            "label": "Validate",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Package",
+            "label": "Package",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Work::region-0::final",
+            "label": "Work::region-0::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "Work::region-0"
+          },
+          {
+            "id": "Work::region-1::initial",
+            "label": "Work::region-1::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Work::region-1"
+          },
+          {
+            "id": "Monitor",
+            "label": "Monitor",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Work::region-1"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Work",
+              "root::final"
+            ]
+          },
+          {
+            "id": "Work::region-0",
+            "owner": "Work",
+            "members": [
+              "Fork",
+              "Join",
+              "Work::region-0::initial",
+              "Validate",
+              "Package",
+              "Work::region-0::final"
+            ]
+          },
+          {
+            "id": "Work::region-1",
+            "owner": "Work",
+            "members": [
+              "Work::region-1::initial",
+              "Monitor"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Work",
+            "label": ""
+          },
+          {
+            "source": "Work::region-0::initial",
+            "target": "Fork",
+            "label": ""
+          },
+          {
+            "source": "Fork",
+            "target": "Validate",
+            "label": ""
+          },
+          {
+            "source": "Fork",
+            "target": "Package",
+            "label": ""
+          },
+          {
+            "source": "Validate",
+            "target": "Join",
+            "label": ""
+          },
+          {
+            "source": "Package",
+            "target": "Join",
+            "label": ""
+          },
+          {
+            "source": "Join",
+            "target": "Work::region-0::final",
+            "label": ""
+          },
+          {
+            "source": "Work::region-1::initial",
+            "target": "Monitor",
+            "label": ""
+          },
+          {
+            "source": "Monitor",
+            "target": "Monitor",
+            "label": "sample"
+          },
+          {
+            "source": "Work",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/grammar-presentation.mmd",
+      "source": "stateDiagram-v2\nscale 350 width\nhide empty description\nA\n# hash comment\nstate \"Label\" as B\nB --> A\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "Label",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "B",
+            "target": "A",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/group-description-refusal.mmd",
+      "source": "stateDiagram-v2\nstate Group {\nA\n}\nGroup : First\nGroup : Second\n",
+      "accepted": false,
+      "error": "page.evaluate: Error: Group nodes can only have label. Remove the additional description for node [Group]"
+    },
+    {
+      "name": "cases/hostile.mmd",
+      "source": "stateDiagram-v2\nstate \"<script>alert(1)</script>\" as A\nA --> B : <img src=x onerror=alert(1)>\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": "<img src=\"x\">"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/inline-composite.mmd",
+      "source": "stateDiagram-v2\nstate Outer { A --> B }\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Outer",
+            "label": "Outer",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Outer::region-0"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Outer::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Outer"
+            ]
+          },
+          {
+            "id": "Outer::region-0",
+            "owner": "Outer",
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/legacy-scoped-stars.mmd",
+      "source": "stateDiagram\n[*] --> A\nA --> [*]\n[*] --> B\nB --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "A",
+              "root::final",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "A",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "root::final",
+            "label": ""
+          },
+          {
+            "source": "root::initial",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "B",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/lifecycle.mmd",
+      "source": "stateDiagram-v2\n[*] --> Idle\nIdle --> Running : start\nRunning --> Running : retry\nRunning --> [*]\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "root::initial",
+            "label": "root::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "root"
+          },
+          {
+            "id": "Idle",
+            "label": "Idle",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Running",
+            "label": "Running",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "root::final",
+            "label": "root::final",
+            "descriptions": [],
+            "role": "Final",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "root::initial",
+              "Idle",
+              "Running",
+              "root::final"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root::initial",
+            "target": "Idle",
+            "label": ""
+          },
+          {
+            "source": "Idle",
+            "target": "Running",
+            "label": "start"
+          },
+          {
+            "source": "Running",
+            "target": "Running",
+            "label": "retry"
+          },
+          {
+            "source": "Running",
+            "target": "root::final",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/metadata.mmd",
+      "source": "---\ntitle: Metadata title\nconfig:\n  theme: dark\n---\nstateDiagram-v2\naccTitle: Accessible title\naccDescr {\nAccessible description\nsecond line\n}\ndirection RL\nA --> B\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "RL",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "Accessible title",
+        "accessibilityDescription": "Accessible description\nsecond line",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/multiline-alias.mmd",
+      "source": "stateDiagram-v2\nstate \"Label line one\nline two\" as A\nA --> B\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "Label line one\nline two",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/nested-concurrent.mmd",
+      "source": "stateDiagram-v2\nstate Active {\n[*] --> A\nA --> B\n--\n[*] --> C\nstate Nested {\n[*] --> D\n}\nC --> Nested\n}\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Active",
+            "label": "Active",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Active::region-0::initial",
+            "label": "Active::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-0"
+          },
+          {
+            "id": "Active::region-1::initial",
+            "label": "Active::region-1::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "C",
+            "label": "C",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "Nested",
+            "label": "Nested",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "Active::region-1"
+          },
+          {
+            "id": "Nested::region-0::initial",
+            "label": "Nested::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Nested::region-0"
+          },
+          {
+            "id": "D",
+            "label": "D",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Nested::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Active"
+            ]
+          },
+          {
+            "id": "Active::region-0",
+            "owner": "Active",
+            "members": [
+              "Active::region-0::initial",
+              "A",
+              "B"
+            ]
+          },
+          {
+            "id": "Active::region-1",
+            "owner": "Active",
+            "members": [
+              "Active::region-1::initial",
+              "C",
+              "Nested"
+            ]
+          },
+          {
+            "id": "Nested::region-0",
+            "owner": "Nested",
+            "members": [
+              "Nested::region-0::initial",
+              "D"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "Active::region-0::initial",
+            "target": "A",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "Active::region-1::initial",
+            "target": "C",
+            "label": ""
+          },
+          {
+            "source": "Nested::region-0::initial",
+            "target": "D",
+            "label": ""
+          },
+          {
+            "source": "C",
+            "target": "Nested",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/presentation.mmd",
+      "source": "stateDiagram-v2\nclassDef movement fill:red\nstyle A stroke:blue\nclass A movement\nA:::movement --> B\nclick A href \"https://example.com\"\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/qualified-identifiers.mmd",
+      "source": "stateDiagram-v2\nLeft.Child --> Right.Child\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Left.Child",
+            "label": "Left.Child",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "Right.Child",
+            "label": "Right.Child",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Left.Child",
+              "Right.Child"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "Left.Child",
+            "target": "Right.Child",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/redeclarations.mmd",
+      "source": "stateDiagram-v2\nA --> B\nstate \"First label\" as A\nA : Second line\nstate A <<choice>>\nA --> B : again\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "First label",
+            "descriptions": [
+              "Second line"
+            ],
+            "role": "Simple",
+            "region": "root"
+          },
+          {
+            "id": "B",
+            "label": "B",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A",
+              "B"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "A",
+            "target": "B",
+            "label": ""
+          },
+          {
+            "source": "A",
+            "target": "B",
+            "label": "again"
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/reserved-root.mmd",
+      "source": "stateDiagram-v2\nroot --> A\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "A",
+            "label": "A",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "A"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "root",
+            "target": "A",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/scoped-equal-identifiers.mmd",
+      "source": "stateDiagram-v2\nstate Left {\n[*] --> Same\n}\nstate Right {\n[*] --> Same\n}\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "Left",
+            "label": "Left",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Left::region-0::initial",
+            "label": "Left::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Left::region-0"
+          },
+          {
+            "id": "Same",
+            "label": "Same",
+            "descriptions": [],
+            "role": "Simple",
+            "region": "Right::region-0"
+          },
+          {
+            "id": "Right",
+            "label": "Right",
+            "descriptions": [],
+            "role": "Composite",
+            "region": "root"
+          },
+          {
+            "id": "Right::region-0::initial",
+            "label": "Right::region-0::initial",
+            "descriptions": [],
+            "role": "Initial",
+            "region": "Right::region-0"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "Left",
+              "Right"
+            ]
+          },
+          {
+            "id": "Left::region-0",
+            "owner": "Left",
+            "members": [
+              "Left::region-0::initial"
+            ]
+          },
+          {
+            "id": "Right::region-0",
+            "owner": "Right",
+            "members": [
+              "Same",
+              "Right::region-0::initial"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "Left::region-0::initial",
+            "target": "Same",
+            "label": ""
+          },
+          {
+            "source": "Right::region-0::initial",
+            "target": "Same",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/shorthand-roles.mmd",
+      "source": "stateDiagram-v2\nstate c [[choice]]\nstate f [[fork]]\nstate j [[join]]\nc --> f\nf --> j\n",
+      "accepted": true,
+      "normalized": {
+        "direction": "TB",
+        "states": [
+          {
+            "id": "c",
+            "label": "c",
+            "descriptions": [],
+            "role": "Choice",
+            "region": "root"
+          },
+          {
+            "id": "f",
+            "label": "f",
+            "descriptions": [],
+            "role": "Fork",
+            "region": "root"
+          },
+          {
+            "id": "j",
+            "label": "j",
+            "descriptions": [],
+            "role": "Join",
+            "region": "root"
+          }
+        ],
+        "regions": [
+          {
+            "id": "root",
+            "owner": null,
+            "members": [
+              "c",
+              "f",
+              "j"
+            ]
+          }
+        ],
+        "transitions": [
+          {
+            "source": "c",
+            "target": "f",
+            "label": ""
+          },
+          {
+            "source": "f",
+            "target": "j",
+            "label": ""
+          }
+        ],
+        "notes": [],
+        "accessibilityTitle": "",
+        "accessibilityDescription": "",
+        "title": ""
+      }
+    },
+    {
+      "name": "cases/top-concurrent.mmd",
+      "source": "stateDiagram-v2\n[*] --> A\n--\n[*] --> B\n",
+      "accepted": false,
+      "error": "page.evaluate: Error: Parse error on line 3:"
+    }
+  ]
+}

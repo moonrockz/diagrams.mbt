@@ -1,0 +1,9 @@
+{
+  "plantuml": "1.2026.9",
+  "commit": "18d0aae311a4f1eb3723bb4b0ad939185e22f166",
+  "documentation": "https://plantuml.com/state-diagram",
+  "frozen": "2026-10-28",
+  "documentation_examples": 45,
+  "driver": "tests/plantuml-state-reference/Reference.java",
+  "canonical": "Produced from typed native AST values by tests/plantuml-state-canonical, then independently checked by the same pinned Java driver."
+}

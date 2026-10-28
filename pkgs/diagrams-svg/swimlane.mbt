@@ -2,6 +2,10 @@
 priv struct SwimlanePaint {
   paint : Paint
   kind : String
+  state_roles : Map[String, @state.State]
+  state_regions : Map[String, @state.Region]
+  state_separators : Map[String, (@state.Separator, String)]
+  state_bounds : Map[String, @swimlane_layout.Shape]
   parent_overrides : Map[String, String?]
   diagnostics : Array[@diagrams.Diagnostic]
   limit : Int32
@@ -413,8 +417,49 @@ fn SwimlanePaint::shape(
     ("stroke", if empty { "none" } else { stroke }),
     ("stroke-width", if shape.kind == Lane { "2" } else { "1.5" }),
   ]
-  if shape.kind == Group {
+  if shape.kind == Group && self.kind != "state" {
     outline_attrs.push(("stroke-dasharray", "6 4"))
+  }
+  if self.kind == "state" {
+    if self.state_roles.get(shape.id) is Some(state) {
+      attrs.push(("data-role", @debug.to_string(state.role)))
+      if state.role == Composite {
+        outline_attrs[1] = ("d", state_rounded_outline(shape.outline_box))
+      }
+    } else if self.state_regions.contains(shape.id) {
+      let b = shape.box
+      let d = match self.state_separators.get(shape.id) {
+        Some((orientation, previous)) => {
+          let old = self.state_bounds[previous].box
+          let parent = self.state_bounds[self.state_regions[shape.id].owner.unwrap()].box
+          if orientation == Vertical {
+            let x = (old.x + old.width + b.x) / 2.0
+            "M" +
+            swimlane_number(x) +
+            " " +
+            swimlane_number((old.y.min(b.y) - 24.0).max(parent.y + 48.0)) +
+            " L" +
+            swimlane_number(x) +
+            " " +
+            swimlane_number(parent.y + parent.height)
+          } else {
+            let y = (old.y + old.height + b.y) / 2.0
+            "M" +
+            swimlane_number((old.x.min(b.x) - 24.0).max(parent.x)) +
+            " " +
+            swimlane_number(y) +
+            " L" +
+            swimlane_number(parent.x + parent.width) +
+            " " +
+            swimlane_number(y)
+          }
+        }
+        None => ""
+      }
+      outline_attrs[1] = ("d", d)
+      outline_attrs[2] = ("fill", "none")
+      outline_attrs.push(("stroke-dasharray", "6 4"))
+    }
   }
   let box = shape.box
   let children = [
@@ -432,6 +477,34 @@ fn SwimlanePaint::shape(
     self.element("path", attrs=outline_attrs),
   ]
   children.append(self.decorations(shape, stroke))
+  if self.kind == "state" &&
+    self.state_roles.get(shape.id) is Some(state) &&
+    !state.descriptions.is_empty() {
+    let b = shape.outline_box
+    let y = if shape.kind == Group {
+      b.y + 35.0
+    } else {
+      shape.label.map(l => l.box.y + 20.0).unwrap_or(b.y + 30.0)
+    }
+    children.push(
+      self.element("path", attrs=[
+        ("class", "state-compartment"),
+        (
+          "d",
+          "M" +
+          swimlane_number(b.x) +
+          " " +
+          swimlane_number(y) +
+          " L" +
+          swimlane_number(b.x + b.width) +
+          " " +
+          swimlane_number(y),
+        ),
+        ("stroke", stroke),
+        ("fill", "none"),
+      ]),
+    )
+  }
   if shape.label is Some(label) {
     children.push(
       self.label(
@@ -513,7 +586,9 @@ fn paint_swimlane(
   limits : @swimlane_layout.Limits,
   precomputed? : @swimlane_layout.Result,
   kind~ : String = "swimlane",
+  state_view? : @state.StateDiagram,
   intentional_containment~ : ArrayView[(String, String)] = [],
+  boundary_attachments~ : ArrayView[(String, String)] = [],
   hidden_containers~ : ArrayView[String] = [],
   parent_overrides~ : ArrayView[(String, String?)] = [],
   connectors~ : ConnectorOptions = ConnectorOptions::new(),
@@ -537,8 +612,32 @@ fn paint_swimlane(
     dark: @swimlane_layout.palette(theme.dark),
     light: @swimlane_layout.palette(theme.light),
   }
+  let state_separators = Map([])
+  if state_view is Some(view) {
+    let seen = Map([])
+    for r in view.regions {
+      if r.owner is Some(owner) {
+        if seen.get(owner) is Some(previous) {
+          state_separators[r.id] = (r.separator, previous)
+        }
+        seen[owner] = r.id
+      }
+    }
+  }
   let c = SwimlanePaint::{
     kind,
+    state_separators,
+    state_bounds: Map(geometry.shapes.map(s => (s.id, s))),
+    state_roles: Map(
+      state_view
+      .map(v => v.states.map(s => (s.id, s)).iter().to_array())
+      .unwrap_or([]),
+    ),
+    state_regions: Map(
+      state_view
+      .map(v => v.regions.map(r => (r.id, r)).iter().to_array())
+      .unwrap_or([]),
+    ),
     parent_overrides: Map(parent_overrides),
     paint: Paint::{ theme, mode, },
     diagnostics,
@@ -587,6 +686,29 @@ fn paint_swimlane(
   }
   let backgrounds = []
   let nodes = []
+  if state_view is Some(view) {
+    for r in view.regions {
+      if r.owner == None {
+        backgrounds.push(
+          c.element(
+            "g",
+            attrs=[("class", "state-group"), ("data-state-id", r.id)],
+            children=[
+              c.element("rect", attrs=[
+                ("class", "state-bounds"),
+                ("x", "0"),
+                ("y", "0"),
+                ("width", geometry.width.to_string()),
+                ("height", geometry.height.to_string()),
+                ("fill", "none"),
+                ("stroke", "none"),
+              ]),
+            ],
+          ),
+        )
+      }
+    }
+  }
   let connections = []
   for shape in geometry.shapes {
     if c.failed {
@@ -804,6 +926,7 @@ fn paint_swimlane(
         palette,
         work_limit=limits.work,
         intentional_containment~,
+        boundary_attachments~,
       ) {
       if finding.rule == Limit {
         diagnostics.push(
@@ -833,4 +956,20 @@ pub fn render_swimlane(
   connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
   paint_swimlane(view, theme, mode, id_prefix, limits, connectors~)
+}
+
+///|
+fn state_rounded_outline(box : @swimlane_layout.Rect) -> String {
+  let points = @swimlane_layout.outline("rounded", box)
+  let out = StringBuilder()
+  for i, p in points {
+    out.write_string(
+      (if i == 0 { "M" } else { " L" }) +
+      swimlane_number(p.x) +
+      " " +
+      swimlane_number(p.y),
+    )
+  }
+  out.write_string(" Z")
+  out.to_string()
 }

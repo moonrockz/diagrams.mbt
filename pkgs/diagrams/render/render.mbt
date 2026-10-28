@@ -4,6 +4,7 @@ pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
   Swimlane(@swimlane.Swimlane)
+  State(@state.StateDiagram)
   Flowchart(@flowchart.Flowchart)
   Architecture(@architecture.Architecture)
   Regex(@regex.Regex)
@@ -24,6 +25,7 @@ pub fn Diagram::kind_name(self : Diagram) -> String {
     Sequence(_) => "sequence"
     Bpmn(_) => "bpmn"
     Swimlane(_) => "swimlane"
+    State(_) => "state"
     Flowchart(_) => "flowchart"
     Architecture(_) => "architecture"
     Regex(_) => "regex"

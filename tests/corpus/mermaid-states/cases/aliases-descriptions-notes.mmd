@@ -1,0 +1,9 @@
+stateDiagram-v2
+state "Idle label" as Idle
+Idle : entry / log
+Idle : event [guard] / action
+note right of Idle
+multiline note
+with details
+end note
+Idle --> Running : start [ready] / begin

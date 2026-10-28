@@ -1,0 +1,18 @@
+@startuml
+state Session {
+state Enter <<entryPoint>>
+state Active
+state Leave <<exitPoint>>
+[*] --> Enter
+Enter --> Active : begin
+Active --> Leave : done
+}
+state Recovery {
+state Waiting
+state Complete
+[*] --> Waiting
+Waiting --> Complete
+}
+Session.Active --> Recovery.Waiting : recover
+Recovery.Complete --> Session.Active : retry
+@enduml

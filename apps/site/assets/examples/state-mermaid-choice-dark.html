@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Diagram flow illustration</title><style>body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 system-ui, sans-serif; }
+[data-diagram-viewer] { --viewer-bg: #f4f5f7; --viewer-ink: #0f172a; --viewer-border: #64748b; max-width: 90rem; margin: auto; }
+[data-diagram-viewer] .diagram-canvas { overflow: auto; border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] .diagram-canvas > svg { display: block; max-width: 100%; height: auto; }
+[data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin: .8rem 0; }
+[data-diagram-viewer] fieldset { border: 1px solid var(--viewer-border); border-radius: .4rem; }
+[data-diagram-viewer] button, [data-diagram-viewer] select, [data-diagram-viewer] input { font: inherit; }
+[data-diagram-viewer] button, [data-diagram-viewer] select { padding: .35rem .6rem; border: 1px solid var(--viewer-border); border-radius: .3rem; background: var(--viewer-bg); color: var(--viewer-ink); }
+[data-diagram-viewer] [hidden] { display: none !important; }
+[data-diagram-viewer] label { display: inline-flex; align-items: center; gap: .35rem; }
+[data-diagram-viewer] select { max-width: 20rem; }
+[data-diagram-viewer] [data-control="seek"] { width: min(22rem, 60vw); }
+[data-diagram-viewer] :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+[data-diagram-viewer] [data-control="status"] { min-height: 1.5em; }
+[data-diagram-viewer] .motion-overlay { pointer-events: none; }
+@media screen {
+  [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) { filter: none; }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
+  [data-diagram-viewer] .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
+}
+@media (prefers-color-scheme: dark) {
+  body { background: #10131a; color: #e2e8f0; }
+  [data-diagram-viewer] { --viewer-bg: #10131a; --viewer-ink: #e2e8f0; --viewer-border: #94a3b8; }
+}
+@media print {
+  body { margin: 0; background: white; }
+  [data-diagram-viewer] .motion-controls, [data-diagram-viewer] fieldset, [data-diagram-viewer] [data-control="status"], [data-diagram-viewer] .motion-overlay { display: none !important; }
+  [data-diagram-viewer] .motion-visit, [data-diagram-viewer] .motion-selected, [data-diagram-viewer] .motion-selected > path { filter: none !important; }
+  [data-diagram-viewer] .diagram-canvas { overflow: visible; border: none; }
+}
+[data-diagram-viewer] .motion-controls output { min-width: 24ch; font-variant-numeric: tabular-nums; }
+</style></head><body>
+<main data-diagram-viewer aria-label="Diagram flow viewer">
+<p>Supplied state scenario. Selected transitions and node visits follow caller timing. Guards and actions are not evaluated, history is not restored and no state machine is executed.</p>
+<section class="motion-controls" aria-label="Playback controls">
+<button type="button" data-control="play" aria-pressed="false">Play</button>
+<button type="button" data-control="restart">Restart</button>
+<button type="button" data-control="step">Step</button>
+<label>Speed <select data-control="speed" aria-label="Playback speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="4">4×</option></select></label>
+<label>Position <input data-control="seek" aria-label="Playback position" type="range" min="0" max="3000" value="0" step="1"></label>
+<output data-control="position">0 / 3000 ms</output>
+<button type="button" data-control="download">Download SVG</button>
+</section>
+<fieldset><legend>Structural exploration</legend>
+<label>From <select data-control="from" aria-label="Route from"></select></label>
+<label>To <select data-control="to" aria-label="Route to"></select></label>
+<label><input data-control="messages" type="checkbox">Include message flows</label>
+<label><input data-control="undirected" type="checkbox">Include unheaded connections</label>
+<button type="button" data-control="route">Show route</button>
+<label>Connection <select data-control="connection" aria-label="Select a diagram connection"></select></label>
+<button type="button" data-control="show-connection">Show connection</button>
+<label>Direction <select data-control="direction" aria-label="Reachability direction"><option value="forward">Downstream</option><option value="reverse">Upstream</option><option value="both">Both directions</option></select></label>
+<button type="button" data-control="reach">Show reachability</button>
+<button type="button" data-control="clear">Reset view</button>
+</fieldset>
+<p data-control="status" role="status" aria-live="polite">Paused</p>
+<div class="diagram-canvas"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 656 2590" width="656" height="2590" role="img" data-diagram="state" data-connector-options="{&#xa;  style: Some(Rounded),&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-diagram">
+  <title>state-mermaid-choice</title>
+  <desc>State structure and supplied scenarios. Guards, actions and history remain descriptive data.</desc>
+  <defs>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="656" height="2590" fill="#020617"/>
+  <g class="state-backgrounds">
+    <g class="state-group" data-state-id="root">
+      <rect class="state-bounds" x="0" y="0" width="656" height="2590" fill="none" stroke="none"/>
+    </g>
+    <g class="state-group" data-state-id="Review" data-shape="rect" data-expanded="true" data-parent="root" data-role="Composite">
+      <rect class="state-bounds" x="128" y="401" width="496" height="1612" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M612 401 L614.341 401.231 L616.592 401.913 L618.667 403.022 L620.485 404.515 L621.978 406.333 L623.087 408.408 L623.769 410.659 L624 413 L624 2001 L623.769 2003.341 L623.087 2005.592 L621.978 2007.667 L620.485 2009.485 L618.667 2010.978 L616.592 2012.087 L614.341 2012.769 L612 2013 L140 2013 L137.659 2012.769 L135.408 2012.087 L133.333 2010.978 L131.515 2009.485 L130.022 2007.667 L128.913 2005.592 L128.231 2003.341 L128 2001 L128 413 L128.231 410.659 L128.913 408.408 L130.022 406.333 L131.515 404.515 L133.333 403.022 L135.408 401.913 L137.659 401.231 L140 401 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Review" x="168" y="426" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">
+        <tspan x="168" y="426">Review</tspan>
+      </text>
+    </g>
+    <g class="state-group" data-state-id="Review::region-0" data-shape="rect" data-expanded="true" data-parent="Review">
+      <rect class="state-bounds" x="224" y="538" width="304" height="1379" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+    </g>
+  </g>
+  <g class="state-connections">
+    <g class="state-connection" data-state-id="transition-0" data-source="root::initial" data-target="Review" data-display-source="root::initial" data-display-target="Review">
+      <path class="state-connector" d="M140 152 L140 176 Q140 184 148 184 L368 184 Q376 184 376 192 L376 401" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-0" data-connector-source="root::initial" data-connector-target="Review" data-connector-route="M140 152 L140 184 L376 184 L376 401" data-connector-key="0"/>
+    </g>
+    <g class="state-connection" data-state-id="transition-1" data-source="Review::region-0::initial" data-target="Draft" data-display-source="Review::region-0::initial" data-display-target="Draft">
+      <path class="state-connector" d="M332 699 L332 723 Q332 731 340 731 L368 731 Q376 731 376 739 L376 948" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-1" data-connector-source="Review::region-0::initial" data-connector-target="Draft" data-connector-route="M332 699 L332 731 L376 731 L376 948" data-connector-key="1"/>
+    </g>
+    <g class="state-connection" data-state-id="transition-2" data-source="Draft" data-target="Decision" data-display-source="Draft" data-display-target="Decision">
+      <path class="state-connector" d="M376 1012 L376 1212" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-2" data-connector-source="Draft" data-connector-target="Decision" data-connector-route="M376 1012 L376 1212" data-connector-key="2"/>
+      <rect x="348" y="1083" width="56" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition-2" x="376" y="1098" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="376" y="1098">submit</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-3" data-source="Decision" data-target="Approved" data-display-source="Decision" data-display-target="Approved">
+      <path class="state-connector" d="M376 1276 L376 1476" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-3" data-connector-source="Decision" data-connector-target="Approved" data-connector-route="M376 1276 L376 1476" data-connector-key="3"/>
+      <rect x="340" y="1347" width="72" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition-3" x="376" y="1362" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="376" y="1362">accepted</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-4" data-source="Decision" data-target="Draft" data-display-source="Decision" data-display-target="Draft">
+      <path class="state-connector" d="M320 1244 L296 1244 Q288 1244 288 1236 L288 988 Q288 980 296 980 L320 980" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-4" data-connector-source="Decision" data-connector-target="Draft" data-connector-route="M320 1244 L288 1244 L288 980 L320 980" data-connector-key="4"/>
+      <rect x="260" y="1083" width="56" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition-4" x="288" y="1098" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="288" y="1098">revise</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-5" data-source="Approved" data-target="Review::region-0::final" data-display-source="Approved" data-display-target="Review::region-0::final">
+      <path class="state-connector" d="M376 1540 L376 1564 Q376 1572 368 1572 L344 1572 Q336 1572 336 1580 L336 1740" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-5" data-connector-source="Approved" data-connector-target="Review::region-0::final" data-connector-route="M376 1540 L376 1572 L336 1572 L336 1740" data-connector-key="5"/>
+    </g>
+    <g class="state-connection" data-state-id="transition-6" data-source="Review" data-target="Published" data-display-source="Review" data-display-target="Published">
+      <path class="state-connector" d="M376 2013 L376 2037 Q376 2045 368 2045 L196 2045 Q188 2045 188 2053 L188 2213" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-6" data-connector-source="Review" data-connector-target="Published" data-connector-route="M376 2013 L376 2045 L188 2045 L188 2213" data-connector-key="6"/>
+      <rect x="250" y="2016" width="64" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition-6" x="282" y="2031" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="282" y="2031">publish</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-7" data-source="Published" data-target="root::final" data-display-source="Published" data-display-target="root::final">
+      <path class="state-connector" d="M188 2277 L188 2301 Q188 2309 180 2309 L152 2309 Q144 2309 144 2317 L144 2477" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition-7" data-connector-source="Published" data-connector-target="root::final" data-connector-route="M188 2277 L188 2309 L144 2309 L144 2477" data-connector-key="7"/>
+    </g>
+  </g>
+  <g class="state-nodes">
+    <g class="state-node" data-state-id="root::initial" data-shape="f-circ" data-expanded="true" data-parent="root" data-role="Initial">
+      <rect class="state-bounds" x="128" y="128" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M152 140 L151.942 141.176 L151.769 142.341 L151.483 143.483 L151.087 144.592 L150.583 145.657 L149.978 146.667 L149.276 147.613 L148.485 148.485 L147.613 149.276 L146.667 149.978 L145.657 150.583 L144.592 151.087 L143.483 151.483 L142.341 151.769 L141.176 151.942 L140 152 L138.824 151.942 L137.659 151.769 L136.517 151.483 L135.408 151.087 L134.343 150.583 L133.333 149.978 L132.387 149.276 L131.515 148.485 L130.724 147.613 L130.022 146.667 L129.417 145.657 L128.913 144.592 L128.517 143.483 L128.231 142.341 L128.058 141.176 L128 140 L128.058 138.824 L128.231 137.659 L128.517 136.517 L128.913 135.408 L129.417 134.343 L130.022 133.333 L130.724 132.387 L131.515 131.515 L132.387 130.724 L133.333 130.022 L134.343 129.417 L135.408 128.913 L136.517 128.517 L137.659 128.231 L138.824 128.058 L140 128 L141.176 128.058 L142.341 128.231 L143.483 128.517 L144.592 128.913 L145.657 129.417 L146.667 130.022 L147.613 130.724 L148.485 131.515 L149.276 132.387 L149.978 133.333 L150.583 134.343 L151.087 135.408 L151.483 136.517 L151.769 137.659 L151.942 138.824 L152 140 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Review::region-0::initial" data-shape="f-circ" data-expanded="true" data-parent="Review::region-0" data-role="Initial">
+      <rect class="state-bounds" x="320" y="675" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M344 687 L343.942 688.176 L343.769 689.341 L343.483 690.483 L343.087 691.592 L342.583 692.657 L341.978 693.667 L341.276 694.613 L340.485 695.485 L339.613 696.276 L338.667 696.978 L337.657 697.583 L336.592 698.087 L335.483 698.483 L334.341 698.769 L333.176 698.942 L332 699 L330.824 698.942 L329.659 698.769 L328.517 698.483 L327.408 698.087 L326.343 697.583 L325.333 696.978 L324.387 696.276 L323.515 695.485 L322.724 694.613 L322.022 693.667 L321.417 692.657 L320.913 691.592 L320.517 690.483 L320.231 689.341 L320.058 688.176 L320 687 L320.058 685.824 L320.231 684.659 L320.517 683.517 L320.913 682.408 L321.417 681.343 L322.022 680.333 L322.724 679.387 L323.515 678.515 L324.387 677.724 L325.333 677.022 L326.343 676.417 L327.408 675.913 L328.517 675.517 L329.659 675.231 L330.824 675.058 L332 675 L333.176 675.058 L334.341 675.231 L335.483 675.517 L336.592 675.913 L337.657 676.417 L338.667 677.022 L339.613 677.724 L340.485 678.515 L341.276 679.387 L341.978 680.333 L342.583 681.343 L343.087 682.408 L343.483 683.517 L343.769 684.659 L343.942 685.824 L344 687 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Draft" data-shape="rounded" data-expanded="true" data-parent="Review::region-0" data-role="Simple">
+      <rect class="state-bounds" x="320" y="948" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M420 948 L422.341 948.231 L424.592 948.913 L426.667 950.022 L428.485 951.515 L429.978 953.333 L431.087 955.408 L431.769 957.659 L432 960 L432 1000 L431.769 1002.341 L431.087 1004.592 L429.978 1006.667 L428.485 1008.485 L426.667 1009.978 L424.592 1011.087 L422.341 1011.769 L420 1012 L332 1012 L329.659 1011.769 L327.408 1011.087 L325.333 1009.978 L323.515 1008.485 L322.022 1006.667 L320.913 1004.592 L320.231 1002.341 L320 1000 L320 960 L320.231 957.659 L320.913 955.408 L322.022 953.333 L323.515 951.515 L325.333 950.022 L327.408 948.913 L329.659 948.231 L332 948 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Draft" x="376" y="984.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="376" y="984.5">Draft</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Decision" data-shape="rounded" data-expanded="true" data-parent="Review::region-0" data-role="Simple">
+      <rect class="state-bounds" x="320" y="1212" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M420 1212 L422.341 1212.231 L424.592 1212.913 L426.667 1214.022 L428.485 1215.515 L429.978 1217.333 L431.087 1219.408 L431.769 1221.659 L432 1224 L432 1264 L431.769 1266.341 L431.087 1268.592 L429.978 1270.667 L428.485 1272.485 L426.667 1273.978 L424.592 1275.087 L422.341 1275.769 L420 1276 L332 1276 L329.659 1275.769 L327.408 1275.087 L325.333 1273.978 L323.515 1272.485 L322.022 1270.667 L320.913 1268.592 L320.231 1266.341 L320 1264 L320 1224 L320.231 1221.659 L320.913 1219.408 L322.022 1217.333 L323.515 1215.515 L325.333 1214.022 L327.408 1212.913 L329.659 1212.231 L332 1212 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Decision" x="376" y="1248.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="376" y="1248.5">Decision</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Approved" data-shape="rounded" data-expanded="true" data-parent="Review::region-0" data-role="Simple">
+      <rect class="state-bounds" x="320" y="1476" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M420 1476 L422.341 1476.231 L424.592 1476.913 L426.667 1478.022 L428.485 1479.515 L429.978 1481.333 L431.087 1483.408 L431.769 1485.659 L432 1488 L432 1528 L431.769 1530.341 L431.087 1532.592 L429.978 1534.667 L428.485 1536.485 L426.667 1537.978 L424.592 1539.087 L422.341 1539.769 L420 1540 L332 1540 L329.659 1539.769 L327.408 1539.087 L325.333 1537.978 L323.515 1536.485 L322.022 1534.667 L320.913 1532.592 L320.231 1530.341 L320 1528 L320 1488 L320.231 1485.659 L320.913 1483.408 L322.022 1481.333 L323.515 1479.515 L325.333 1478.022 L327.408 1476.913 L329.659 1476.231 L332 1476 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Approved" x="376" y="1512.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="376" y="1512.5">Approved</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Review::region-0::final" data-shape="fr-circ" data-expanded="true" data-parent="Review::region-0" data-role="Final">
+      <rect class="state-bounds" x="320" y="1740" width="32" height="81" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M352 1756 L351.923 1757.568 L351.693 1759.121 L351.311 1760.645 L350.782 1762.123 L350.111 1763.542 L349.304 1764.889 L348.368 1766.15 L347.314 1767.314 L346.15 1768.368 L344.889 1769.304 L343.542 1770.111 L342.123 1770.782 L340.645 1771.311 L339.121 1771.693 L337.568 1771.923 L336 1772 L334.432 1771.923 L332.879 1771.693 L331.355 1771.311 L329.877 1770.782 L328.458 1770.111 L327.111 1769.304 L325.85 1768.368 L324.686 1767.314 L323.632 1766.15 L322.696 1764.889 L321.889 1763.542 L321.218 1762.123 L320.689 1760.645 L320.307 1759.121 L320.077 1757.568 L320 1756 L320.077 1754.432 L320.307 1752.879 L320.689 1751.355 L321.218 1749.877 L321.889 1748.458 L322.696 1747.111 L323.632 1745.85 L324.686 1744.686 L325.85 1743.632 L327.111 1742.696 L328.458 1741.889 L329.877 1741.218 L331.355 1740.689 L332.879 1740.307 L334.432 1740.077 L336 1740 L337.568 1740.077 L339.121 1740.307 L340.645 1740.689 L342.123 1741.218 L343.542 1741.889 L344.889 1742.696 L346.15 1743.632 L347.314 1744.686 L348.368 1745.85 L349.304 1747.111 L350.111 1748.458 L350.782 1749.877 L351.311 1751.355 L351.693 1752.879 L351.923 1754.432 L352 1756 Z" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+      <ellipse cx="336" cy="1756" rx="10" ry="10" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Published" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="128" y="2213" width="120" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M236 2213 L238.341 2213.231 L240.592 2213.913 L242.667 2215.022 L244.485 2216.515 L245.978 2218.333 L247.087 2220.408 L247.769 2222.659 L248 2225 L248 2265 L247.769 2267.341 L247.087 2269.592 L245.978 2271.667 L244.485 2273.485 L242.667 2274.978 L240.592 2276.087 L238.341 2276.769 L236 2277 L140 2277 L137.659 2276.769 L135.408 2276.087 L133.333 2274.978 L131.515 2273.485 L130.022 2271.667 L128.913 2269.592 L128.231 2267.341 L128 2265 L128 2225 L128.231 2222.659 L128.913 2220.408 L130.022 2218.333 L131.515 2216.515 L133.333 2215.022 L135.408 2213.913 L137.659 2213.231 L140 2213 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Published" x="188" y="2249.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="188" y="2249.5">Published</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="root::final" data-shape="fr-circ" data-expanded="true" data-parent="root" data-role="Final">
+      <rect class="state-bounds" x="128" y="2477" width="32" height="81" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M160 2493 L159.923 2494.568 L159.693 2496.121 L159.311 2497.645 L158.782 2499.123 L158.111 2500.542 L157.304 2501.889 L156.368 2503.15 L155.314 2504.314 L154.15 2505.368 L152.889 2506.304 L151.542 2507.111 L150.123 2507.782 L148.645 2508.311 L147.121 2508.693 L145.568 2508.923 L144 2509 L142.432 2508.923 L140.879 2508.693 L139.355 2508.311 L137.877 2507.782 L136.458 2507.111 L135.111 2506.304 L133.85 2505.368 L132.686 2504.314 L131.632 2503.15 L130.696 2501.889 L129.889 2500.542 L129.218 2499.123 L128.689 2497.645 L128.307 2496.121 L128.077 2494.568 L128 2493 L128.077 2491.432 L128.307 2489.879 L128.689 2488.355 L129.218 2486.877 L129.889 2485.458 L130.696 2484.111 L131.632 2482.85 L132.686 2481.686 L133.85 2480.632 L135.111 2479.696 L136.458 2478.889 L137.877 2478.218 L139.355 2477.689 L140.879 2477.307 L142.432 2477.077 L144 2477 L145.568 2477.077 L147.121 2477.307 L148.645 2477.689 L150.123 2478.218 L151.542 2478.889 L152.889 2479.696 L154.15 2480.632 L155.314 2481.686 L156.368 2482.85 L157.304 2484.111 L158.111 2485.458 L158.782 2486.877 L159.311 2488.355 L159.693 2489.879 L159.923 2491.432 L160 2493 Z" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+      <ellipse cx="144" cy="2493" rx="10" ry="10" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+  </g>
+<g data-motion-paths="true" aria-hidden="true">
+  <path id="motion-dacca41ae5933ef5-0" d="M140 152 L140 176 Q140 184 148 184 L368 184 Q376 184 376 192 L376 401" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-1" d="M332 699 L332 723 Q332 731 340 731 L368 731 Q376 731 376 739 L376 948" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-2" d="M376 1012 L376 1212" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-3" d="M376 1276 L376 1476" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-4" d="M320 1244 L296 1244 Q288 1244 288 1236 L288 988 Q288 980 296 980 L320 980" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-5" d="M376 1540 L376 1564 Q376 1572 368 1572 L344 1572 Q336 1572 336 1580 L336 1740" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-6" d="M376 2013 L376 2037 Q376 2045 368 2045 L196 2045 Q188 2045 188 2053 L188 2213" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+  <path id="motion-dacca41ae5933ef5-7" d="M188 2277 L188 2301 Q188 2309 180 2309 L152 2309 Q144 2309 144 2317 L144 2477" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+</g>
+</svg>
+</div>
+<script type="application/json" data-motion-data>{"version":1,"step_limit":100000,"view_id":"state-mermaid-choice","kind":"state","canonical":"\u003csvg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 656 2590\" width=\"656\" height=\"2590\" role=\"img\" data-diagram=\"state\" data-connector-options=\"{\u0026#xa;  style: Some(Rounded),\u0026#xa;  crossing: Bridge,\u0026#xa;  minimum_approach: 24,\u0026#xa;  corner_radius: 8,\u0026#xa;  bridge_radius: 5,\u0026#xa;  style_supplied_bpmn: false,\u0026#xa;  limits: {\u0026#xa;    candidates: 2000000,\u0026#xa;    subdivisions: 200000,\u0026#xa;    segments: 100000,\u0026#xa;    crossings: 10000,\u0026#xa;    output_units: 16777216,\u0026#xa;  },\u0026#xa;}\" id=\"sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-diagram\"\u003e\n  \u003ctitle\u003estate-mermaid-choice\u003c/title\u003e\n  \u003cdesc\u003eState structure and supplied scenarios. Guards, actions and history remain descriptive data.\u003c/desc\u003e\n  \u003cdefs\u003e\n    \u003cmarker id=\"sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-9 -4 L0 0 L-9 4 Z\" fill=\"#94a3b8\" stroke=\"#94a3b8\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-circle\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z\" fill=\"#94a3b8\" stroke=\"#94a3b8\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n    \u003cmarker id=\"sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-cross\" viewBox=\"-10 -6 16 12\" refX=\"0\" refY=\"0\" markerWidth=\"16\" markerHeight=\"12\" markerUnits=\"userSpaceOnUse\" orient=\"auto-start-reverse\"\u003e\n      \u003cpath d=\"M-4 -4 L4 4 M-4 4 L4 -4\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\"/\u003e\n    \u003c/marker\u003e\n  \u003c/defs\u003e\n  \u003crect class=\"bg\" x=\"0\" y=\"0\" width=\"656\" height=\"2590\" fill=\"#020617\"/\u003e\n  \u003cg class=\"state-backgrounds\"\u003e\n    \u003cg class=\"state-group\" data-state-id=\"root\"\u003e\n      \u003crect class=\"state-bounds\" x=\"0\" y=\"0\" width=\"656\" height=\"2590\" fill=\"none\" stroke=\"none\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-group\" data-state-id=\"Review\" data-shape=\"rect\" data-expanded=\"true\" data-parent=\"root\" data-role=\"Composite\"\u003e\n      \u003crect class=\"state-bounds\" x=\"128\" y=\"401\" width=\"496\" height=\"1612\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M612 401 L614.341 401.231 L616.592 401.913 L618.667 403.022 L620.485 404.515 L621.978 406.333 L623.087 408.408 L623.769 410.659 L624 413 L624 2001 L623.769 2003.341 L623.087 2005.592 L621.978 2007.667 L620.485 2009.485 L618.667 2010.978 L616.592 2012.087 L614.341 2012.769 L612 2013 L140 2013 L137.659 2012.769 L135.408 2012.087 L133.333 2010.978 L131.515 2009.485 L130.022 2007.667 L128.913 2005.592 L128.231 2003.341 L128 2001 L128 413 L128.231 410.659 L128.913 408.408 L130.022 406.333 L131.515 404.515 L133.333 403.022 L135.408 401.913 L137.659 401.231 L140 401 Z\" fill=\"#020617\" stroke=\"#94a3b8\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"Review\" x=\"168\" y=\"426\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"700\" fill=\"#ffffff\"\u003e\n        \u003ctspan x=\"168\" y=\"426\"\u003eReview\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-group\" data-state-id=\"Review::region-0\" data-shape=\"rect\" data-expanded=\"true\" data-parent=\"Review\"\u003e\n      \u003crect class=\"state-bounds\" x=\"224\" y=\"538\" width=\"304\" height=\"1379\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" stroke-dasharray=\"6 4\"/\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"state-connections\"\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-0\" data-source=\"root::initial\" data-target=\"Review\" data-display-source=\"root::initial\" data-display-target=\"Review\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M140 152 L140 176 Q140 184 148 184 L368 184 Q376 184 376 192 L376 401\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-0\" data-connector-source=\"root::initial\" data-connector-target=\"Review\" data-connector-route=\"M140 152 L140 184 L376 184 L376 401\" data-connector-key=\"0\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-1\" data-source=\"Review::region-0::initial\" data-target=\"Draft\" data-display-source=\"Review::region-0::initial\" data-display-target=\"Draft\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M332 699 L332 723 Q332 731 340 731 L368 731 Q376 731 376 739 L376 948\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-1\" data-connector-source=\"Review::region-0::initial\" data-connector-target=\"Draft\" data-connector-route=\"M332 699 L332 731 L376 731 L376 948\" data-connector-key=\"1\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-2\" data-source=\"Draft\" data-target=\"Decision\" data-display-source=\"Draft\" data-display-target=\"Decision\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M376 1012 L376 1212\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-2\" data-connector-source=\"Draft\" data-connector-target=\"Decision\" data-connector-route=\"M376 1012 L376 1212\" data-connector-key=\"2\"/\u003e\n      \u003crect x=\"348\" y=\"1083\" width=\"56\" height=\"21\" rx=\"3\" fill=\"#020617\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"transition-2\" x=\"376\" y=\"1098\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#ffffff\"\u003e\n        \u003ctspan x=\"376\" y=\"1098\"\u003esubmit\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-3\" data-source=\"Decision\" data-target=\"Approved\" data-display-source=\"Decision\" data-display-target=\"Approved\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M376 1276 L376 1476\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-3\" data-connector-source=\"Decision\" data-connector-target=\"Approved\" data-connector-route=\"M376 1276 L376 1476\" data-connector-key=\"3\"/\u003e\n      \u003crect x=\"340\" y=\"1347\" width=\"72\" height=\"21\" rx=\"3\" fill=\"#020617\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"transition-3\" x=\"376\" y=\"1362\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#ffffff\"\u003e\n        \u003ctspan x=\"376\" y=\"1362\"\u003eaccepted\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-4\" data-source=\"Decision\" data-target=\"Draft\" data-display-source=\"Decision\" data-display-target=\"Draft\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M320 1244 L296 1244 Q288 1244 288 1236 L288 988 Q288 980 296 980 L320 980\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-4\" data-connector-source=\"Decision\" data-connector-target=\"Draft\" data-connector-route=\"M320 1244 L288 1244 L288 980 L320 980\" data-connector-key=\"4\"/\u003e\n      \u003crect x=\"260\" y=\"1083\" width=\"56\" height=\"21\" rx=\"3\" fill=\"#020617\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"transition-4\" x=\"288\" y=\"1098\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#ffffff\"\u003e\n        \u003ctspan x=\"288\" y=\"1098\"\u003erevise\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-5\" data-source=\"Approved\" data-target=\"Review::region-0::final\" data-display-source=\"Approved\" data-display-target=\"Review::region-0::final\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M376 1540 L376 1564 Q376 1572 368 1572 L344 1572 Q336 1572 336 1580 L336 1740\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-5\" data-connector-source=\"Approved\" data-connector-target=\"Review::region-0::final\" data-connector-route=\"M376 1540 L376 1572 L336 1572 L336 1740\" data-connector-key=\"5\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-6\" data-source=\"Review\" data-target=\"Published\" data-display-source=\"Review\" data-display-target=\"Published\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M376 2013 L376 2037 Q376 2045 368 2045 L196 2045 Q188 2045 188 2053 L188 2213\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-6\" data-connector-source=\"Review\" data-connector-target=\"Published\" data-connector-route=\"M376 2013 L376 2045 L188 2045 L188 2213\" data-connector-key=\"6\"/\u003e\n      \u003crect x=\"250\" y=\"2016\" width=\"64\" height=\"21\" rx=\"3\" fill=\"#020617\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"transition-6\" x=\"282\" y=\"2031\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#ffffff\"\u003e\n        \u003ctspan x=\"282\" y=\"2031\"\u003epublish\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-connection\" data-state-id=\"transition-7\" data-source=\"Published\" data-target=\"root::final\" data-display-source=\"Published\" data-display-target=\"root::final\"\u003e\n      \u003cpath class=\"state-connector\" d=\"M188 2277 L188 2301 Q188 2309 180 2309 L152 2309 Q144 2309 144 2317 L144 2477\" fill=\"none\" stroke=\"#94a3b8\" stroke-width=\"1.5\" marker-end=\"url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-63-68-6f-69-63-65-2d-64-61-72-6b-sl-arrow)\" data-connector-id=\"transition-7\" data-connector-source=\"Published\" data-connector-target=\"root::final\" data-connector-route=\"M188 2277 L188 2309 L144 2309 L144 2477\" data-connector-key=\"7\"/\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n  \u003cg class=\"state-nodes\"\u003e\n    \u003cg class=\"state-node\" data-state-id=\"root::initial\" data-shape=\"f-circ\" data-expanded=\"true\" data-parent=\"root\" data-role=\"Initial\"\u003e\n      \u003crect class=\"state-bounds\" x=\"128\" y=\"128\" width=\"24\" height=\"73\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M152 140 L151.942 141.176 L151.769 142.341 L151.483 143.483 L151.087 144.592 L150.583 145.657 L149.978 146.667 L149.276 147.613 L148.485 148.485 L147.613 149.276 L146.667 149.978 L145.657 150.583 L144.592 151.087 L143.483 151.483 L142.341 151.769 L141.176 151.942 L140 152 L138.824 151.942 L137.659 151.769 L136.517 151.483 L135.408 151.087 L134.343 150.583 L133.333 149.978 L132.387 149.276 L131.515 148.485 L130.724 147.613 L130.022 146.667 L129.417 145.657 L128.913 144.592 L128.517 143.483 L128.231 142.341 L128.058 141.176 L128 140 L128.058 138.824 L128.231 137.659 L128.517 136.517 L128.913 135.408 L129.417 134.343 L130.022 133.333 L130.724 132.387 L131.515 131.515 L132.387 130.724 L133.333 130.022 L134.343 129.417 L135.408 128.913 L136.517 128.517 L137.659 128.231 L138.824 128.058 L140 128 L141.176 128.058 L142.341 128.231 L143.483 128.517 L144.592 128.913 L145.657 129.417 L146.667 130.022 L147.613 130.724 L148.485 131.515 L149.276 132.387 L149.978 133.333 L150.583 134.343 L151.087 135.408 L151.483 136.517 L151.769 137.659 L151.942 138.824 L152 140 Z\" fill=\"#fb923c\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Review::region-0::initial\" data-shape=\"f-circ\" data-expanded=\"true\" data-parent=\"Review::region-0\" data-role=\"Initial\"\u003e\n      \u003crect class=\"state-bounds\" x=\"320\" y=\"675\" width=\"24\" height=\"73\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M344 687 L343.942 688.176 L343.769 689.341 L343.483 690.483 L343.087 691.592 L342.583 692.657 L341.978 693.667 L341.276 694.613 L340.485 695.485 L339.613 696.276 L338.667 696.978 L337.657 697.583 L336.592 698.087 L335.483 698.483 L334.341 698.769 L333.176 698.942 L332 699 L330.824 698.942 L329.659 698.769 L328.517 698.483 L327.408 698.087 L326.343 697.583 L325.333 696.978 L324.387 696.276 L323.515 695.485 L322.724 694.613 L322.022 693.667 L321.417 692.657 L320.913 691.592 L320.517 690.483 L320.231 689.341 L320.058 688.176 L320 687 L320.058 685.824 L320.231 684.659 L320.517 683.517 L320.913 682.408 L321.417 681.343 L322.022 680.333 L322.724 679.387 L323.515 678.515 L324.387 677.724 L325.333 677.022 L326.343 676.417 L327.408 675.913 L328.517 675.517 L329.659 675.231 L330.824 675.058 L332 675 L333.176 675.058 L334.341 675.231 L335.483 675.517 L336.592 675.913 L337.657 676.417 L338.667 677.022 L339.613 677.724 L340.485 678.515 L341.276 679.387 L341.978 680.333 L342.583 681.343 L343.087 682.408 L343.483 683.517 L343.769 684.659 L343.942 685.824 L344 687 Z\" fill=\"#fb923c\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Draft\" data-shape=\"rounded\" data-expanded=\"true\" data-parent=\"Review::region-0\" data-role=\"Simple\"\u003e\n      \u003crect class=\"state-bounds\" x=\"320\" y=\"948\" width=\"112\" height=\"64\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M420 948 L422.341 948.231 L424.592 948.913 L426.667 950.022 L428.485 951.515 L429.978 953.333 L431.087 955.408 L431.769 957.659 L432 960 L432 1000 L431.769 1002.341 L431.087 1004.592 L429.978 1006.667 L428.485 1008.485 L426.667 1009.978 L424.592 1011.087 L422.341 1011.769 L420 1012 L332 1012 L329.659 1011.769 L327.408 1011.087 L325.333 1009.978 L323.515 1008.485 L322.022 1006.667 L320.913 1004.592 L320.231 1002.341 L320 1000 L320 960 L320.231 957.659 L320.913 955.408 L322.022 953.333 L323.515 951.515 L325.333 950.022 L327.408 948.913 L329.659 948.231 L332 948 Z\" fill=\"rgba(6, 78, 59, 0.4)\" stroke=\"#34d399\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"Draft\" x=\"376\" y=\"984.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#34d399\"\u003e\n        \u003ctspan x=\"376\" y=\"984.5\"\u003eDraft\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Decision\" data-shape=\"rounded\" data-expanded=\"true\" data-parent=\"Review::region-0\" data-role=\"Simple\"\u003e\n      \u003crect class=\"state-bounds\" x=\"320\" y=\"1212\" width=\"112\" height=\"64\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M420 1212 L422.341 1212.231 L424.592 1212.913 L426.667 1214.022 L428.485 1215.515 L429.978 1217.333 L431.087 1219.408 L431.769 1221.659 L432 1224 L432 1264 L431.769 1266.341 L431.087 1268.592 L429.978 1270.667 L428.485 1272.485 L426.667 1273.978 L424.592 1275.087 L422.341 1275.769 L420 1276 L332 1276 L329.659 1275.769 L327.408 1275.087 L325.333 1273.978 L323.515 1272.485 L322.022 1270.667 L320.913 1268.592 L320.231 1266.341 L320 1264 L320 1224 L320.231 1221.659 L320.913 1219.408 L322.022 1217.333 L323.515 1215.515 L325.333 1214.022 L327.408 1212.913 L329.659 1212.231 L332 1212 Z\" fill=\"rgba(6, 78, 59, 0.4)\" stroke=\"#34d399\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"Decision\" x=\"376\" y=\"1248.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#34d399\"\u003e\n        \u003ctspan x=\"376\" y=\"1248.5\"\u003eDecision\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Approved\" data-shape=\"rounded\" data-expanded=\"true\" data-parent=\"Review::region-0\" data-role=\"Simple\"\u003e\n      \u003crect class=\"state-bounds\" x=\"320\" y=\"1476\" width=\"112\" height=\"64\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M420 1476 L422.341 1476.231 L424.592 1476.913 L426.667 1478.022 L428.485 1479.515 L429.978 1481.333 L431.087 1483.408 L431.769 1485.659 L432 1488 L432 1528 L431.769 1530.341 L431.087 1532.592 L429.978 1534.667 L428.485 1536.485 L426.667 1537.978 L424.592 1539.087 L422.341 1539.769 L420 1540 L332 1540 L329.659 1539.769 L327.408 1539.087 L325.333 1537.978 L323.515 1536.485 L322.022 1534.667 L320.913 1532.592 L320.231 1530.341 L320 1528 L320 1488 L320.231 1485.659 L320.913 1483.408 L322.022 1481.333 L323.515 1479.515 L325.333 1478.022 L327.408 1476.913 L329.659 1476.231 L332 1476 Z\" fill=\"rgba(6, 78, 59, 0.4)\" stroke=\"#34d399\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"Approved\" x=\"376\" y=\"1512.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#34d399\"\u003e\n        \u003ctspan x=\"376\" y=\"1512.5\"\u003eApproved\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Review::region-0::final\" data-shape=\"fr-circ\" data-expanded=\"true\" data-parent=\"Review::region-0\" data-role=\"Final\"\u003e\n      \u003crect class=\"state-bounds\" x=\"320\" y=\"1740\" width=\"32\" height=\"81\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M352 1756 L351.923 1757.568 L351.693 1759.121 L351.311 1760.645 L350.782 1762.123 L350.111 1763.542 L349.304 1764.889 L348.368 1766.15 L347.314 1767.314 L346.15 1768.368 L344.889 1769.304 L343.542 1770.111 L342.123 1770.782 L340.645 1771.311 L339.121 1771.693 L337.568 1771.923 L336 1772 L334.432 1771.923 L332.879 1771.693 L331.355 1771.311 L329.877 1770.782 L328.458 1770.111 L327.111 1769.304 L325.85 1768.368 L324.686 1767.314 L323.632 1766.15 L322.696 1764.889 L321.889 1763.542 L321.218 1762.123 L320.689 1760.645 L320.307 1759.121 L320.077 1757.568 L320 1756 L320.077 1754.432 L320.307 1752.879 L320.689 1751.355 L321.218 1749.877 L321.889 1748.458 L322.696 1747.111 L323.632 1745.85 L324.686 1744.686 L325.85 1743.632 L327.111 1742.696 L328.458 1741.889 L329.877 1741.218 L331.355 1740.689 L332.879 1740.307 L334.432 1740.077 L336 1740 L337.568 1740.077 L339.121 1740.307 L340.645 1740.689 L342.123 1741.218 L343.542 1741.889 L344.889 1742.696 L346.15 1743.632 L347.314 1744.686 L348.368 1745.85 L349.304 1747.111 L350.111 1748.458 L350.782 1749.877 L351.311 1751.355 L351.693 1752.879 L351.923 1754.432 L352 1756 Z\" fill=\"rgba(251, 146, 60, 0.3)\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n      \u003cellipse cx=\"336\" cy=\"1756\" rx=\"10\" ry=\"10\" fill=\"#fb923c\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"Published\" data-shape=\"rounded\" data-expanded=\"true\" data-parent=\"root\" data-role=\"Simple\"\u003e\n      \u003crect class=\"state-bounds\" x=\"128\" y=\"2213\" width=\"120\" height=\"64\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M236 2213 L238.341 2213.231 L240.592 2213.913 L242.667 2215.022 L244.485 2216.515 L245.978 2218.333 L247.087 2220.408 L247.769 2222.659 L248 2225 L248 2265 L247.769 2267.341 L247.087 2269.592 L245.978 2271.667 L244.485 2273.485 L242.667 2274.978 L240.592 2276.087 L238.341 2276.769 L236 2277 L140 2277 L137.659 2276.769 L135.408 2276.087 L133.333 2274.978 L131.515 2273.485 L130.022 2271.667 L128.913 2269.592 L128.231 2267.341 L128 2265 L128 2225 L128.231 2222.659 L128.913 2220.408 L130.022 2218.333 L131.515 2216.515 L133.333 2215.022 L135.408 2213.913 L137.659 2213.231 L140 2213 Z\" fill=\"rgba(6, 78, 59, 0.4)\" stroke=\"#34d399\" stroke-width=\"1.5\"/\u003e\n      \u003ctext class=\"state-label\" data-label-owner=\"Published\" x=\"188\" y=\"2249.5\" text-anchor=\"middle\" font-family=\"'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace\" font-size=\"13\" font-weight=\"400\" fill=\"#34d399\"\u003e\n        \u003ctspan x=\"188\" y=\"2249.5\"\u003ePublished\u003c/tspan\u003e\n      \u003c/text\u003e\n    \u003c/g\u003e\n    \u003cg class=\"state-node\" data-state-id=\"root::final\" data-shape=\"fr-circ\" data-expanded=\"true\" data-parent=\"root\" data-role=\"Final\"\u003e\n      \u003crect class=\"state-bounds\" x=\"128\" y=\"2477\" width=\"32\" height=\"81\" fill=\"none\" stroke=\"none\" pointer-events=\"none\" aria-hidden=\"true\"/\u003e\n      \u003cpath class=\"state-outline\" d=\"M160 2493 L159.923 2494.568 L159.693 2496.121 L159.311 2497.645 L158.782 2499.123 L158.111 2500.542 L157.304 2501.889 L156.368 2503.15 L155.314 2504.314 L154.15 2505.368 L152.889 2506.304 L151.542 2507.111 L150.123 2507.782 L148.645 2508.311 L147.121 2508.693 L145.568 2508.923 L144 2509 L142.432 2508.923 L140.879 2508.693 L139.355 2508.311 L137.877 2507.782 L136.458 2507.111 L135.111 2506.304 L133.85 2505.368 L132.686 2504.314 L131.632 2503.15 L130.696 2501.889 L129.889 2500.542 L129.218 2499.123 L128.689 2497.645 L128.307 2496.121 L128.077 2494.568 L128 2493 L128.077 2491.432 L128.307 2489.879 L128.689 2488.355 L129.218 2486.877 L129.889 2485.458 L130.696 2484.111 L131.632 2482.85 L132.686 2481.686 L133.85 2480.632 L135.111 2479.696 L136.458 2478.889 L137.877 2478.218 L139.355 2477.689 L140.879 2477.307 L142.432 2477.077 L144 2477 L145.568 2477.077 L147.121 2477.307 L148.645 2477.689 L150.123 2478.218 L151.542 2478.889 L152.889 2479.696 L154.15 2480.632 L155.314 2481.686 L156.368 2482.85 L157.304 2484.111 L158.111 2485.458 L158.782 2486.877 L159.311 2488.355 L159.693 2489.879 L159.923 2491.432 L160 2493 Z\" fill=\"rgba(251, 146, 60, 0.3)\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n      \u003cellipse cx=\"144\" cy=\"2493\" rx=\"10\" ry=\"10\" fill=\"#fb923c\" stroke=\"#fb923c\" stroke-width=\"1.5\"/\u003e\n    \u003c/g\u003e\n  \u003c/g\u003e\n\u003c/svg\u003e\n","accent":"#2563eb","plan":{"mode":"finite","duration_ms":"3000","steps":[{"reversed":false,"visit":false,"ordinal":0,"key":"state:20:state-mermaid-choice:12:transition-0","start_ms":"0","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":1,"key":"state:20:state-mermaid-choice:12:transition-0","start_ms":"1000","duration_ms":"1000","groups":[]},{"reversed":false,"visit":false,"ordinal":2,"key":"state:20:state-mermaid-choice:12:transition-1","start_ms":"2000","duration_ms":"1000","groups":[3]},{"reversed":false,"visit":true,"ordinal":3,"key":"state-visit:20:state-mermaid-choice:13:root::initial","start_ms":"2000","duration_ms":"1000","groups":[3]}]},"paths":[{"label":"","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-0","id":"motion-dacca41ae5933ef5-0","index":0,"kind":"state","connection":"transition-0"},{"label":"","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-1","id":"motion-dacca41ae5933ef5-1","index":1,"kind":"state","connection":"transition-1"},{"label":"submit","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-2","id":"motion-dacca41ae5933ef5-2","index":2,"kind":"state","connection":"transition-2"},{"label":"accepted","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-3","id":"motion-dacca41ae5933ef5-3","index":3,"kind":"state","connection":"transition-3"},{"label":"revise","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-4","id":"motion-dacca41ae5933ef5-4","index":4,"kind":"state","connection":"transition-4"},{"label":"","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-5","id":"motion-dacca41ae5933ef5-5","index":5,"kind":"state","connection":"transition-5"},{"label":"publish","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-6","id":"motion-dacca41ae5933ef5-6","index":6,"kind":"state","connection":"transition-6"},{"label":"","reversed":false,"key":"state:20:state-mermaid-choice:12:transition-7","id":"motion-dacca41ae5933ef5-7","index":7,"kind":"state","connection":"transition-7"}],"node_bindings":[{"endpoint":"root::initial","kind":"state","id":"root::initial"},{"endpoint":"state-visit:20:state-mermaid-choice:13:root::initial","kind":"state","id":"root::initial"},{"endpoint":"Review","kind":"state","id":"Review"},{"endpoint":"state-visit:20:state-mermaid-choice:6:Review","kind":"state","id":"Review"},{"endpoint":"Review::region-0::initial","kind":"state","id":"Review::region-0::initial"},{"endpoint":"state-visit:20:state-mermaid-choice:25:Review::region-0::initial","kind":"state","id":"Review::region-0::initial"},{"endpoint":"Draft","kind":"state","id":"Draft"},{"endpoint":"state-visit:20:state-mermaid-choice:5:Draft","kind":"state","id":"Draft"},{"endpoint":"Decision","kind":"state","id":"Decision"},{"endpoint":"state-visit:20:state-mermaid-choice:8:Decision","kind":"state","id":"Decision"},{"endpoint":"Approved","kind":"state","id":"Approved"},{"endpoint":"state-visit:20:state-mermaid-choice:8:Approved","kind":"state","id":"Approved"},{"endpoint":"Review::region-0::final","kind":"state","id":"Review::region-0::final"},{"endpoint":"state-visit:20:state-mermaid-choice:23:Review::region-0::final","kind":"state","id":"Review::region-0::final"},{"endpoint":"Published","kind":"state","id":"Published"},{"endpoint":"state-visit:20:state-mermaid-choice:9:Published","kind":"state","id":"Published"},{"endpoint":"root::final","kind":"state","id":"root::final"},{"endpoint":"state-visit:20:state-mermaid-choice:11:root::final","kind":"state","id":"root::final"},{"endpoint":"root","kind":"state","id":"root"},{"endpoint":"Review::region-0","kind":"state","id":"Review::region-0"}],"outside":[],"graph":{"nodes":[{"primary":true,"id":"root::initial","label":"root::initial","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:13:root::initial","description":"State role: Initial. Structural illustration only.\n"},{"primary":true,"id":"Review","label":"Review","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:6:Review","description":"State role: Composite. Structural illustration only.\n"},{"primary":true,"id":"Review::region-0::initial","label":"Review::region-0::initial","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:25:Review::region-0::initial","description":"State role: Initial. Structural illustration only.\n"},{"primary":true,"id":"Draft","label":"Draft","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:5:Draft","description":"State role: Simple. Structural illustration only.\n"},{"primary":true,"id":"Decision","label":"Decision","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:8:Decision","description":"State role: Simple. Structural illustration only.\n"},{"primary":true,"id":"Approved","label":"Approved","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:8:Approved","description":"State role: Simple. Structural illustration only.\n"},{"primary":true,"id":"Review::region-0::final","label":"Review::region-0::final","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:23:Review::region-0::final","description":"State role: Final. Structural illustration only.\n"},{"primary":true,"id":"Published","label":"Published","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:9:Published","description":"State role: Simple. Structural illustration only.\n"},{"primary":true,"id":"root::final","label":"root::final","kind":"state","occurrence":"state-visit:20:state-mermaid-choice:11:root::final","description":"State role: Final. Structural illustration only.\n"},{"primary":false,"id":"root","label":"root","kind":"state","occurrence":null,"description":"Concurrent region. Separator: Horizontal. Ownership creates no transitions."},{"primary":false,"id":"Review::region-0","label":"Review::region-0","kind":"state","occurrence":null,"description":"Concurrent region. Separator: Horizontal. Ownership creates no transitions."}],"edges":[{"reversed":false,"kind":"state","source":"root::initial","target":"Review","occurrence":"state:20:state-mermaid-choice:12:transition-0"},{"reversed":false,"kind":"state","source":"Review::region-0::initial","target":"Draft","occurrence":"state:20:state-mermaid-choice:12:transition-1"},{"reversed":false,"kind":"state","source":"Draft","target":"Decision","occurrence":"state:20:state-mermaid-choice:12:transition-2"},{"reversed":false,"kind":"state","source":"Decision","target":"Approved","occurrence":"state:20:state-mermaid-choice:12:transition-3"},{"reversed":false,"kind":"state","source":"Decision","target":"Draft","occurrence":"state:20:state-mermaid-choice:12:transition-4"},{"reversed":false,"kind":"state","source":"Approved","target":"Review::region-0::final","occurrence":"state:20:state-mermaid-choice:12:transition-5"},{"reversed":false,"kind":"state","source":"Review","target":"Published","occurrence":"state:20:state-mermaid-choice:12:transition-6"},{"reversed":false,"kind":"state","source":"Published","target":"root::final","occurrence":"state:20:state-mermaid-choice:12:transition-7"}]},"query_limits":{"nodes":10000,"edges":50000,"results":10000,"work":1000000}}</script>
+<script>(() => {
+  'use strict';
+  const root = document.currentScript.closest('[data-diagram-viewer]');
+  if (!root || root.dataset.motionReady) return;
+  root.dataset.motionReady = 'true';
+  const data = JSON.parse(root.querySelector('script[data-motion-data]').textContent);
+  const svg = root.querySelector('svg');
+  const control = name => root.querySelector(`[data-control="${name}"]`);
+  const play = control('play'), restart = control('restart'), step = control('step');
+  const speedControl = control('speed'), seek = control('seek'), positionLabel = control('position');
+  const status = control('status'), from = control('from'), to = control('to');
+  const connectionControl=control('connection'), showConnection=control('show-connection');
+  const undirectedKinds = control('undirected');
+  const messageKinds = control('messages'), direction = control('direction');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const ns = 'http://www.w3.org/2000/svg';
+  const elements = new Map([...svg.querySelectorAll('path[id]')].map(path => [path.id, path]));
+  const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
+  const nodeElements = new Map();
+  const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id], .flowchart-connection[data-flowchart-id], .state-connection[data-state-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id') ?? element.getAttribute('data-flowchart-id') ?? element.getAttribute('data-state-id'),element]));
+  const stateElements = new Map([...svg.querySelectorAll('.state-node[data-state-id], .state-group[data-state-id]')].map(element => [element.getAttribute('data-state-id'),element]));
+  const flowchartElements = new Map([...svg.querySelectorAll('.flowchart-node[data-flowchart-id], .flowchart-group[data-flowchart-id], .flowchart-lane[data-flowchart-id]')].map(element => [element.getAttribute('data-flowchart-id'),element]));
+  const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
+  const architectureElements = new Map([...svg.querySelectorAll('.architecture-service[data-id], .architecture-junction[data-id], .architecture-group[data-id]')].map(element => [element.getAttribute('data-id'),element]));
+  const messageElements = new Map([...svg.querySelectorAll('.message[data-index]')].map(element => [Number(element.getAttribute('data-index')), element]));
+  const frameElements = [...svg.querySelectorAll('rect.frame')];
+  const byData = (selector, name) => new Map([...svg.querySelectorAll(selector)].map(element => [element.getAttribute(name), element]));
+  const termElements = byData('.rr-term[data-term]', 'data-term'), rowElements = byData('.data-row[data-member]', 'data-member'), boxElements = byData('.data-box[data-node]', 'data-node');
+  const visitKeys = new Set();
+  for (const binding of data.node_bindings) {
+    const element = binding.kind === 'state' ? stateElements.get(binding.id) : binding.kind === 'flowchart' ? flowchartElements.get(binding.id) : binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
+    if (element) nodeElements.set(binding.endpoint, element);
+    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box' || ((binding.kind === 'flowchart' || binding.kind === 'state') && binding.endpoint !== binding.id)) visitKeys.add(binding.endpoint);
+  }
+  const structural = data.kind === 'regex' || data.kind === 'ebnf' || data.kind === 'data-tree';
+  function decode(plan) {
+    return { mode: plan.mode, duration: Number(plan.duration_ms), steps: plan.steps.map(item => ({ ordinal: item.ordinal, key: item.key, start: Number(item.start_ms), duration: Number(item.duration_ms), groups: item.groups, reversed: Boolean(item.reversed), visit: Boolean(item.visit) })) };
+  }
+  const authored = decode(data.plan);
+  let plan = authored, position = 0, speed = 1, playing = false, previous = null, frame = null;
+  const overlays = new Map(), highlights = new Set(), visits = new Map();
+  function clearVisits() { for (const element of visits.values()) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; } visits.clear(); }
+  function clearHighlights() { for (const element of highlights) element.classList.remove('motion-selected'); highlights.clear(); }
+  function highlight(ids) { clearHighlights(); for (const id of ids) { const element = nodeElements.get(id); if (element) { element.classList.add('motion-selected'); highlights.add(element); } } }
+  function clearOverlays() { for (const overlay of overlays.values()) overlay.group.remove(); overlays.clear(); clearVisits(); }
+  function normalize(time) {
+    if (plan.duration === 0) return 0;
+    return plan.mode === 'illustrative' ? Math.max(0, time) % plan.duration : Math.max(0, Math.min(time, plan.duration));
+  }
+  function stopFrame() { if (frame !== null) cancelAnimationFrame(frame); frame = null; previous = null; }
+  function state(message) {
+    root.dataset.playing = String(playing);
+    play.textContent = playing ? 'Pause' : 'Play'; play.setAttribute('aria-pressed', String(playing));
+    play.disabled = plan.duration === 0; restart.disabled = plan.duration === 0; step.disabled = plan.duration === 0; seek.disabled = plan.duration === 0;
+    status.textContent = message || (playing ? (plan.mode === 'finite' ? 'Playing explicit scenario' : 'Playing illustrative flow') : plan.mode === 'finite' && position >= plan.duration ? 'Finished' : reduced.matches ? 'Paused. Reduced motion: use Step or Position.' : 'Paused');
+  }
+  function makeOverlay(item) {
+    const binding = bindings.get(item.key);
+    if (!binding || !binding.element) throw new Error('Missing validated motion binding');
+    if (binding.length === null) binding.length = binding.element.getTotalLength();
+    const group = document.createElementNS(ns, 'g');
+    group.setAttribute('class', 'motion-overlay'); group.setAttribute('aria-hidden', 'true'); group.dataset.ordinal = String(item.ordinal); group.dataset.key = item.key;
+    // Apply the final connector's local separation to the entire overlay,
+    // including the moving token. Copying only the path mask lets the token
+    // repaint an underpass as a joined crossing.
+    for (const name of ['mask', 'clip-path']) {
+      const value = binding.element.getAttribute(name);
+      if (value) group.setAttribute(name, value);
+    }
+    const path = document.createElementNS(ns, 'path'); path.setAttribute('d', binding.element.getAttribute('d'));
+    path.setAttribute('fill', 'none'); path.setAttribute('stroke', data.accent); path.setAttribute('stroke-width', '3'); path.setAttribute('stroke-opacity', '.5'); path.setAttribute('stroke-dasharray', '12 8');
+    const dot = document.createElementNS(ns, 'circle'); dot.setAttribute('r', '4'); dot.setAttribute('fill', data.accent);
+    group.append(path, dot); binding.element.parentElement.append(group);
+    const overlay = { key: item.key, group, path, dot, binding };
+    overlays.set(item.ordinal, overlay); return overlay;
+  }
+  function draw() {
+    const logical = Math.floor(normalize(position)); const active = new Set(); const keys = [];
+    for (const item of plan.steps) {
+      if (logical < item.start || logical >= item.start + item.duration) continue;
+      active.add(item.ordinal); keys.push(item.key);
+      if (item.visit) {
+        const element = nodeElements.get(item.key);
+        if (!element) throw new Error('Missing validated visit binding');
+        const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+        element.classList.add('motion-visit'); element.dataset.motionProgress = String(progress); visits.set(item.ordinal, element);
+        continue;
+      }
+      const overlay = overlays.get(item.ordinal) || makeOverlay(item);
+      const progress = Math.max(0, Math.min(1, (normalize(position) - item.start) / item.duration));
+      const point = overlay.binding.element.getPointAtLength(overlay.binding.length * (item.reversed ? 1 - progress : progress));
+      overlay.dot.setAttribute('cx', String(point.x)); overlay.dot.setAttribute('cy', String(point.y));
+      overlay.path.setAttribute('stroke-dashoffset', String((item.reversed ? 1 : -1) * overlay.binding.length * progress));
+      overlay.group.dataset.progress = String(progress); overlay.group.dataset.reversed = String(Boolean(item.reversed));
+    }
+    for (const [ordinal, overlay] of overlays) if (!active.has(ordinal)) { overlay.group.remove(); overlays.delete(ordinal); }
+    for (const [ordinal, element] of visits) if (!active.has(ordinal)) { element.classList.remove('motion-visit'); delete element.dataset.motionProgress; visits.delete(ordinal); }
+    // Still startup keeps the complete static diagram without an overlay.
+    if (!playing && position === 0 && !root.dataset.inspected) clearOverlays();
+    root.dataset.position = String(logical); root.dataset.active = JSON.stringify(keys); root.dataset.finished = String(plan.mode === 'finite' && logical >= plan.duration);
+    seek.max = String(plan.duration); seek.value = String(logical);
+    positionLabel.textContent = `${logical} / ${plan.duration} ms`;
+  }
+  function advance(now) {
+    if (previous !== null) position = normalize(position + Math.max(0, now - previous) * speed);
+    previous = now;
+    if (plan.mode === 'finite' && position >= plan.duration) { playing = false; stopFrame(); state('Finished'); }
+  }
+  function tick(now) {
+    frame = null;
+    if (!playing || document.hidden || reduced.matches) { previous = null; return; }
+    advance(now); draw();
+    if (playing) frame = requestAnimationFrame(tick);
+  }
+  function schedule() { stopFrame(); if (playing && !document.hidden && !reduced.matches) frame = requestAnimationFrame(tick); }
+  function inspect(time) {
+    playing = false; stopFrame(); position = Math.max(0, Math.min(time, plan.duration)); root.dataset.inspected = 'true'; draw(); state();
+  }
+  function nextStep() {
+    const logical = Math.floor(normalize(position));
+    let next = plan.duration;
+    for (const item of plan.steps) if (item.start > logical && item.start < next) next = item.start;
+    if (plan.mode === 'illustrative' && next >= plan.duration) inspect(0); else inspect(next);
+  }
+  play.addEventListener('click', () => {
+    if (reduced.matches) { nextStep(); return; }
+    if (!playing && plan.mode === 'finite' && position >= plan.duration) position = 0;
+    const requested = !playing;
+    if (playing && previous !== null) advance(performance.now());
+    playing = requested; root.dataset.inspected = 'true'; state(); draw(); schedule();
+  });
+  restart.addEventListener('click', () => inspect(0));
+  step.addEventListener('click', nextStep);
+  speedControl.addEventListener('change', () => {
+    if (playing && previous !== null) advance(performance.now());
+    const selected = Number(speedControl.value); if ([.25, .5, 1, 1.5, 2, 4].includes(selected)) speed = selected;
+    root.dataset.speed = String(speed); previous = null; draw(); schedule();
+  });
+  seek.addEventListener('input', () => { position = Math.max(0, Math.min(Number(seek.value), plan.duration)); previous = null; root.dataset.inspected = 'true'; draw(); state(); });
+  document.addEventListener('visibilitychange', () => { schedule(); });
+  reduced.addEventListener('change', () => { if (reduced.matches) playing = false; state(); schedule(); });
+  control('download').addEventListener('click', () => {
+    const url = URL.createObjectURL(new Blob([data.canonical], { type: 'image/svg+xml;charset=utf-8' }));
+    const link = document.createElement('a'); link.href = url; link.download = `${data.view_id.replace(/[^a-z0-9._-]/gi, '_') || 'diagram'}.svg`;
+    root.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 0);
+  });
+
+  const outside = new Set(data.outside || []);
+  const nodeIndex = new Map(data.graph.nodes.map((node, index) => [node.id, index]));
+  const outgoing = new Map(), incoming = new Map();
+  function add(table, node, kind, arc) { let kinds = table.get(node); if (!kinds) table.set(node, kinds = new Map()); let arcs = kinds.get(kind); if (!arcs) kinds.set(kind, arcs = []); arcs.push(arc); }
+  data.graph.edges.forEach((edge, index) => { const a = nodeIndex.get(edge.source), b = nodeIndex.get(edge.target); add(outgoing, a, edge.kind, [b, index]); add(incoming, b, edge.kind, [a, index]); });
+  function* arcs(node, kinds, selectedDirection) {
+    const streams = [];
+    for (const kind of kinds) {
+      if (selectedDirection !== 'reverse') { const items = outgoing.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+      if (selectedDirection !== 'forward') { const items = incoming.get(node)?.get(kind); if (items) streams.push({ items, next: 0 }); }
+    }
+    let last = -1;
+    for (;;) {
+      let chosen = null;
+      for (const stream of streams) if (stream.next < stream.items.length && (!chosen || stream.items[stream.next][1] < chosen.items[chosen.next][1])) chosen = stream;
+      if (!chosen) return;
+      const arc = chosen.items[chosen.next++]; if (arc[1] === last) continue; last = arc[1]; yield arc;
+    }
+  }
+  function search(startId, targetId, selectedDirection, reach) {
+    const limits = data.query_limits;
+    const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
+    if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
+    const kinds = data.kind === 'state' ? ['state'] : ['sequence', 'order', 'swimlane', 'flowchart', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
+    if (!reach && start === target) return { nodes: [start], edges: [] };
+    while (at < queue.length) {
+      if (++work > limits.work) return { failure: 'Search limit exceeded: work' };
+      const current = queue[at++];
+      for (const [next, edge] of arcs(current, kinds, selectedDirection)) {
+        if (++work > limits.work || ++count > limits.edges) return { failure: 'Search limit exceeded' };
+        if (seen.has(next)) continue;
+        if (queue.length >= limits.nodes || (reach && queue.length >= limits.results)) return { failure: 'Search limit exceeded: nodes/results' };
+        seen.add(next); previous.set(next, [current, edge]); queue.push(next);
+        if (!reach && next === target) {
+          const nodes = [target], edges = []; let cursor = target;
+          while (cursor !== start) { if (nodes.length >= limits.results) return { failure: 'Search limit exceeded: results' }; const [parent, selected] = previous.get(cursor); nodes.push(parent); edges.push(selected); cursor = parent; }
+          return { nodes: nodes.reverse(), edges: edges.reverse() };
+        }
+      }
+    }
+    return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
+  }
+  for (const node of data.graph.nodes) {
+    if (node.kind !== 'state' && node.kind !== 'flowchart' && node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
+    for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
+  }
+  if ((data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
+  if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
+  messageKinds.closest('label').hidden = data.kind !== 'bpmn';
+  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state');
+  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state');
+  for (const binding of data.paths) {
+    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture' && binding.kind !== 'flowchart' && binding.kind !== 'state') continue;
+    const option=document.createElement('option'); option.value=binding.key;
+    option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
+  }
+  showConnection.disabled=connectionControl.options.length===0;
+  control('route').disabled = from.options.length === 0; control('reach').disabled = from.options.length === 0;
+  function replace(next, message) { playing = false; stopFrame(); clearOverlays(); plan = next; position = 0; root.dataset.inspected = 'true'; draw(); state(message); }
+  showConnection.addEventListener('click', () => {
+    const binding=data.paths.find(binding => binding.key===connectionControl.value);
+    if (!binding) return;
+    replace({mode:'finite',duration:1000,steps:[{ordinal:0,key:binding.key,start:0,duration:1000,groups:[],reversed:Boolean(binding.reversed)}]},'Selected connection: '+binding.connection);
+    clearHighlights(); const element=connectionElements.get(binding.connection);
+    if(element) { element.classList.add('motion-selected'); highlights.add(element); }
+    root.dataset.connection=binding.connection; root.dataset.route=JSON.stringify([binding.key]);
+  });
+  control('route').addEventListener('click', () => {
+    delete root.dataset.connection;
+    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state') ? direction.value : 'forward', false);
+    if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
+    if (structural) {
+      // Railroad routes follow drawn connectors and term visits. Hierarchy
+      // routes visit rows and boxes and follow connectors only where drawn.
+      const items = [];
+      if (data.kind === 'data-tree' && data.graph.nodes[result.nodes[0]].occurrence) items.push({ key: data.graph.nodes[result.nodes[0]].occurrence, visit: true });
+      result.edges.forEach((index, ordinal) => {
+        const key = data.graph.edges[index].occurrence;
+        if (key) items.push({ key, visit: visitKeys.has(key) });
+        const next = data.graph.nodes[result.nodes[ordinal + 1]];
+        if (data.kind === 'data-tree' && next && next.occurrence) items.push({ key: next.occurrence, visit: true });
+      });
+      if (items.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+      const steps = items.map((item, ordinal) => ({ ordinal, key: item.key, start: ordinal * 1000, duration: 1000, groups: [], reversed: false, visit: item.visit }));
+      replace({ mode: 'finite', duration: steps.length * 1000, steps }, data.kind === 'data-tree' ? `Hierarchy route: ${steps.length} steps. Containment only; equal values create no relation.` : `Structural route: ${steps.length} steps. No input is matched or parsed.`);
+      highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(items.map(item => item.key));
+      return;
+    }
+    if ((data.kind === 'flowchart' || data.kind === 'state') && result.edges.length === 0) {
+      const node = data.graph.nodes[result.nodes[0]];
+      const steps = node.occurrence ? [{ordinal:0,key:node.occurrence,start:0,duration:1000,groups:[],reversed:false,visit:true}] : [];
+      replace({mode:'finite',duration:steps.length*1000,steps},'Structural node visit. No action is executed.');
+      highlight([node.id]); root.dataset.route=JSON.stringify(steps.map(item=>item.key)); return;
+    }
+    const keys = data.kind !== 'sequence' ? result.edges.map(index => data.graph.edges[index].occurrence).filter(Boolean) : result.nodes.map(index => data.graph.nodes[index].occurrence).filter(Boolean);
+    if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
+    const steps = keys.map((key, ordinal) => {
+      const edge = data.graph.edges[result.edges[ordinal]];
+      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
+    });
+    replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);
+    highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(keys);
+  });
+  control('reach').addEventListener('click', () => {
+    const result = search(from.value, null, direction.value, true);
+    playing = false; stopFrame(); clearOverlays();
+    if (result.failure) { clearHighlights(); state(result.failure); root.dataset.reachable = '[]'; return; }
+    const ids = result.nodes.map(index => data.graph.nodes[index].id); highlight(ids); root.dataset.reachable = JSON.stringify(ids);
+    const visible = new Set(ids.map(id => nodeElements.get(id)).filter(Boolean));
+    state(`Structural reachability: ${visible.size} diagram elements. Conditions and event triggers are not evaluated.`);
+  });
+  control('clear').addEventListener('click', () => { clearHighlights(); delete root.dataset.route; delete root.dataset.connection; delete root.dataset.reachable; replace(authored, 'Paused'); delete root.dataset.inspected; draw(); });
+  root.dataset.speed = '1'; draw(); state();
+})();
+</script>
+</main></body></html>

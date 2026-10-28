@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/state"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/state-ast",
+  "moonrockz/diagrams-mermaid/state-syntax",
+}
+
+// Values
+pub let diagnostic_codes : ReadOnlyArray[String]
+
+pub fn to_state(@state-ast.Diagram, limits? : @state-syntax.Limits, id? : String) -> Conversion
+
+// Errors
+
+// Types and methods
+pub struct Conversion {
+  state : @moonrockz/diagrams/state.StateDiagram?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

@@ -8,6 +8,8 @@ import {
 
 import {
   "moonrockz/diagrams-animated" @animated,
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams/state",
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/swimlane",
   "moonrockz/diagrams/bpmn" @model,

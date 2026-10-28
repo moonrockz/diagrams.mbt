@@ -1,6 +1,6 @@
 name = "moonrockz/bpmn"
 
-version = "0.3.0"
+version = "0.4.0"
 
 description = "Portable BPMN document reading, writing and traversal"
 

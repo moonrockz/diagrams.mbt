@@ -79,3 +79,21 @@ Players illustrate structure or caller-supplied scenarios. They do not evaluate
 conditions, execute workflows or simulate BPMN tokens. Regex matching and EBNF
 parsing require an external engine; structural examples do not claim execution
 evidence.
+
+## State sources
+
+The state family adds six distinct checked sources, three Mermaid 12.2.0 and
+three PlantUML 1.2026.9. The set covers lifecycles, self-loops, composite states,
+choice, fork/join, concurrent regions, descriptions, notes, boundary endpoints
+and shallow/deep history. Each source has adaptive, light and dark SVG and
+standalone finite-scenario players. Source, SVG and player variants do not
+count as additional sources.
+
+Run `mise run test:state` to qualify stored source-to-player artifacts offline.
+`mise run gallery -- --existing-output --site-assets --qualify` checks their
+source bindings, all existing artifacts and browser controls. Root, next and
+release-version detail pages offer preview/source controls, source downloads,
+SVG variants and offline players, including at 360 pixels without scripting.
+See [state geometry and playback](states-and-animation.md) for exact limits and
+[Mermaid](mermaid-states.md) and [PlantUML](plantuml-states.md) for source profiles.
+State playback does not evaluate guards, execute actions or restore history.

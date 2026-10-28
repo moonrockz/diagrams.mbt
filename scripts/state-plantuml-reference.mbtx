@@ -1,0 +1,167 @@
+///|
+/// Refresh or check the PlantUML 1.2026.9 reference with the pinned JAR and
+/// the JDK that the mise task pins. This is test-only qualification tooling:
+/// no library module runs Java, a server or the upstream renderer.
+///
+/// Usage: `mise run state-plantuml-corpus:reference [-- --check]`.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let corpus : String = "tests/corpus/plantuml-state"
+
+///|
+fn fail(message : String) -> Unit {
+  eprintln("❌ " + message)
+  @sys.exit(1)
+}
+
+///|
+async fn main {
+  let check = @env.args().contains("--check")
+  let (canonical_code, canonical_out, canonical_err) = @process.collect_output(
+    "moon",
+    ["run", "--target", "js", "tests/plantuml-state-canonical"],
+  )
+  if canonical_code != 0 {
+    eprintln(canonical_err.text())
+    fail("Could not print typed canonical state sources")
+  }
+  let canonical = @json.parse(canonical_out.text())
+  guard canonical is Object(sources) else {
+    fail("Invalid canonical source output")
+    return
+  }
+  for name, value in sources {
+    guard value is String(source) else {
+      fail("Invalid canonical source")
+      return
+    }
+    let path = corpus + "/fixtures/canonical/" + name
+    if check {
+      if !@fs.exists(path) || @fs.read_file(path).text() != source {
+        fail("Stale canonical state fixture: " + name)
+      }
+    } else {
+      @fs.write_file(path, source)
+    }
+  }
+  let manifest = @json.parse(@fs.read_file(corpus + "/manifest.json").text())
+  guard manifest is Object(m) &&
+    m.get("jar") is Some(Object(jar)) &&
+    jar.get("url") is Some(String(url)) &&
+    jar.get("sha256") is Some(String(expected_sha)) &&
+    m.get("plantuml") is Some(String(version)) &&
+    m.get("jdk") is Some(String(jdk)) &&
+    m.get("java_version") is Some(String(java_version)) else {
+    fail("Invalid PlantUML manifest")
+    return
+  }
+  // The pinned JAR is cached outside the source tree and verified on use.
+  let dir = "_build/plantuml-reference"
+  let jar_path = dir + "/plantuml-" + version + ".jar"
+  if !@fs.exists(jar_path) {
+    if !@fs.exists("_build") {
+      @fs.mkdir("_build")
+    }
+    if !@fs.exists(dir) {
+      @fs.mkdir(dir)
+    }
+    let code = @process.run(
+      "curl",
+      ["-fsSL", "-o", jar_path, url],
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      fail("Could not download the pinned PlantUML JAR")
+    }
+  }
+  let bytes = @fs.read_file(jar_path).binary()
+  let actual_sha = @crypto.bytes_to_hex_string(@crypto.sha256(bytes))
+  if actual_sha != expected_sha {
+    fail("PlantUML JAR digest mismatch: " + actual_sha)
+  }
+  let (code, _, err) = @process.collect_output("java", ["-version"])
+  if code != 0 || !err.text().contains("\"" + java_version + "\"") {
+    fail(
+      "The reference task needs JDK " +
+      jdk +
+      "; run it with mise run state-plantuml-corpus:reference",
+    )
+  }
+  let raw = dir + "/reference.raw.json"
+  let code = @process.run(
+    "java",
+    [
+      "-Djava.awt.headless=true",
+      "-cp",
+      jar_path,
+      "tests/plantuml-state-reference/Reference.java",
+      corpus + "/fixtures",
+      raw,
+    ],
+    extra_env={ "PLANTUML_SECURITY_PROFILE": "SANDBOX" },
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    fail("The PlantUML reference driver failed")
+  }
+  let (code, out, err) = @process.collect_output("moonx", [
+    "scripts/state-plantuml-corpus.mbtx", "digest",
+  ])
+  if code != 0 {
+    eprintln(err.text())
+    fail("Could not compute the fixture digest")
+  }
+  let report = @json.parse(@fs.read_file(raw).text())
+  guard report is Object(fields) &&
+    fields.get("plantuml") is Some(String(reported)) else {
+    fail("Invalid reference driver output")
+    return
+  }
+  if reported != version {
+    fail("The JAR reports PlantUML " + reported + ", not " + version)
+  }
+  let ordered : Map[String, Json] = Map([])
+  ordered["plantuml"] = Json(version)
+  ordered["jdk"] = Json(jdk)
+  ordered["jar_sha256"] = Json(actual_sha)
+  ordered["adapter_sha256"] = Json(
+    @crypto.bytes_to_hex_string(
+      @crypto.sha256(
+        @fs.read_file("tests/plantuml-state-reference/Reference.java").binary(),
+      ),
+    ),
+  )
+  ordered["fixtures_digest"] = Json(out.text().trim().to_owned())
+  ordered["fixtures"] = fields.get("fixtures").unwrap()
+  let text = Json(ordered).stringify(indent=1) + "\n"
+  let target = corpus + "/reference.json"
+  if check {
+    if !@fs.exists(target) || @fs.read_file(target).text() != text {
+      fail("The stored PlantUML reference differs from the pinned JAR output")
+    }
+    println("✅ The stored PlantUML reference matches the pinned JAR")
+    return
+  }
+  @fs.write_file(target, text)
+  let code = @process.run(
+    "moonx",
+    ["scripts/state-plantuml-corpus.mbtx", "generate"],
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}

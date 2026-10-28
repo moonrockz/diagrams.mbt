@@ -16,8 +16,8 @@
 [data-diagram-viewer] .motion-overlay { pointer-events: none; }
 @media screen {
   [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection) { filter: none; }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) { filter: none; }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
   [data-diagram-viewer] .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
 }
 @media (prefers-color-scheme: dark) {
@@ -208,7 +208,8 @@
   const bindings = new Map(data.paths.map(binding => [binding.key, { element: elements.get(binding.id), length: null }]));
   const nodeElements = new Map();
   const bpmnElements = new Map([...svg.querySelectorAll('.bpmn-shape')].map(element => [element.getAttribute('data-id'), element]));
-  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id], .flowchart-connection[data-flowchart-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id') ?? element.getAttribute('data-flowchart-id'),element]));
+  const connectionElements = new Map([...svg.querySelectorAll('.swimlane-connection[data-swimlane-id], .architecture-connection[data-id], .flowchart-connection[data-flowchart-id], .state-connection[data-state-id]')].map(element => [element.getAttribute('data-swimlane-id') ?? element.getAttribute('data-id') ?? element.getAttribute('data-flowchart-id') ?? element.getAttribute('data-state-id'),element]));
+  const stateElements = new Map([...svg.querySelectorAll('.state-node[data-state-id], .state-group[data-state-id]')].map(element => [element.getAttribute('data-state-id'),element]));
   const flowchartElements = new Map([...svg.querySelectorAll('.flowchart-node[data-flowchart-id], .flowchart-group[data-flowchart-id], .flowchart-lane[data-flowchart-id]')].map(element => [element.getAttribute('data-flowchart-id'),element]));
   const swimlaneElements = new Map([...svg.querySelectorAll('.swimlane-node[data-swimlane-id], .swimlane-group[data-swimlane-id], .swimlane-lane[data-swimlane-id]')].map(element => [element.getAttribute('data-swimlane-id'), element]));
   const architectureElements = new Map([...svg.querySelectorAll('.architecture-service[data-id], .architecture-junction[data-id], .architecture-group[data-id]')].map(element => [element.getAttribute('data-id'),element]));
@@ -218,9 +219,9 @@
   const termElements = byData('.rr-term[data-term]', 'data-term'), rowElements = byData('.data-row[data-member]', 'data-member'), boxElements = byData('.data-box[data-node]', 'data-node');
   const visitKeys = new Set();
   for (const binding of data.node_bindings) {
-    const element = binding.kind === 'flowchart' ? flowchartElements.get(binding.id) : binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
+    const element = binding.kind === 'state' ? stateElements.get(binding.id) : binding.kind === 'flowchart' ? flowchartElements.get(binding.id) : binding.kind === 'architecture' ? architectureElements.get(binding.id) : binding.kind === 'swimlane' ? swimlaneElements.get(binding.id) : binding.kind === 'bpmn' ? bpmnElements.get(binding.id) : binding.kind === 'message' ? messageElements.get(binding.index) : binding.kind === 'term' ? termElements.get(binding.id) : binding.kind === 'row' ? rowElements.get(binding.id) : binding.kind === 'box' ? boxElements.get(binding.id) : frameElements[binding.index];
     if (element) nodeElements.set(binding.endpoint, element);
-    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box' || (binding.kind === 'flowchart' && binding.endpoint !== binding.id)) visitKeys.add(binding.endpoint);
+    if (binding.kind === 'term' || binding.kind === 'row' || binding.kind === 'box' || ((binding.kind === 'flowchart' || binding.kind === 'state') && binding.endpoint !== binding.id)) visitKeys.add(binding.endpoint);
   }
   const structural = data.kind === 'regex' || data.kind === 'ebnf' || data.kind === 'data-tree';
   function decode(plan) {
@@ -358,7 +359,7 @@
     const limits = data.query_limits;
     const start = nodeIndex.get(startId), target = targetId === null ? null : nodeIndex.get(targetId);
     if (start === undefined || (!reach && target === undefined)) return { failure: outside.has(startId) || outside.has(targetId) ? 'Outside current view' : 'Invalid endpoint' };
-    const kinds = ['sequence', 'order', 'swimlane', 'flowchart', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
+    const kinds = data.kind === 'state' ? ['state'] : ['sequence', 'order', 'swimlane', 'flowchart', 'railroad', 'containment']; if (data.kind === 'architecture') kinds.push('architecture'); if (messageKinds.checked) kinds.push('message'); if (undirectedKinds.checked) kinds.push('undirected');
     const queue = [start], seen = new Set(queue), previous = new Map(); let at = 0, count = 0, work = kinds.length;
     if (!reach && start === target) return { nodes: [start], edges: [] };
     while (at < queue.length) {
@@ -379,16 +380,16 @@
     return reach ? { nodes: queue, edges: [] } : { failure: 'Unreachable under the selected connection kinds' };
   }
   for (const node of data.graph.nodes) {
-    if (node.kind !== 'flowchart' && node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
+    if (node.kind !== 'state' && node.kind !== 'flowchart' && node.kind !== 'bpmn' && node.kind !== 'message' && node.kind !== 'swimlane' && node.kind !== 'architecture' && node.kind !== 'point' && node.kind !== 'data') continue;
     for (const select of [from, to]) { const option = document.createElement('option'); option.value = node.id; option.textContent = node.label || node.id; if (node.description) option.title = node.description; select.append(option); }
   }
-  if ((data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
+  if ((data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state')) { const first = data.graph.nodes.find(node => node.primary); if (first) from.value = first.id; }
   if (to.options.length > 1) to.selectedIndex = to.options.length - 1;
   messageKinds.closest('label').hidden = data.kind !== 'bpmn';
-  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart');
-  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart');
+  undirectedKinds.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state');
+  connectionControl.closest('label').hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state'); showConnection.hidden = (data.kind !== 'swimlane' && data.kind !== 'architecture' && data.kind !== 'flowchart' && data.kind !== 'state');
   for (const binding of data.paths) {
-    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture' && binding.kind !== 'flowchart') continue;
+    if (binding.kind !== 'swimlane' && binding.kind !== 'architecture' && binding.kind !== 'flowchart' && binding.kind !== 'state') continue;
     const option=document.createElement('option'); option.value=binding.key;
     option.textContent=binding.connection+(binding.label ? ': '+binding.label : ''); connectionControl.append(option);
   }
@@ -405,7 +406,7 @@
   });
   control('route').addEventListener('click', () => {
     delete root.dataset.connection;
-    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart') ? direction.value : 'forward', false);
+    const result = search(from.value, to.value, (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state') ? direction.value : 'forward', false);
     if (result.failure) { replace({ mode: 'finite', duration: 0, steps: [] }, result.failure); clearHighlights(); root.dataset.route = '[]'; return; }
     if (structural) {
       // Railroad routes follow drawn connectors and term visits. Hierarchy
@@ -424,7 +425,7 @@
       highlight(result.nodes.map(index => data.graph.nodes[index].id)); root.dataset.route = JSON.stringify(items.map(item => item.key));
       return;
     }
-    if (data.kind === 'flowchart' && result.edges.length === 0) {
+    if ((data.kind === 'flowchart' || data.kind === 'state') && result.edges.length === 0) {
       const node = data.graph.nodes[result.nodes[0]];
       const steps = node.occurrence ? [{ordinal:0,key:node.occurrence,start:0,duration:1000,groups:[],reversed:false,visit:true}] : [];
       replace({mode:'finite',duration:steps.length*1000,steps},'Structural node visit. No action is executed.');
@@ -434,7 +435,7 @@
     if (keys.length > data.step_limit) { replace({ mode: 'finite', duration: 0, steps: [] }, 'Scenario step limit exceeded'); clearHighlights(); root.dataset.route = '[]'; return; }
     const steps = keys.map((key, ordinal) => {
       const edge = data.graph.edges[result.edges[ordinal]];
-      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
+      const reversed = (data.kind === 'swimlane' || data.kind === 'architecture' || data.kind === 'flowchart' || data.kind === 'state') && (Boolean(edge.reversed) !== (edge.source !== data.graph.nodes[result.nodes[ordinal]].id));
       return { ordinal, key, start: ordinal * 1000, duration: 1000, groups: [], reversed };
     });
     replace({ mode: 'finite', duration: steps.length * 1000, steps }, `Structural route: ${keys.length} connections. Conditions and event triggers are not evaluated.`);

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add state diagrams</title>
+<!--
+  Agent document template (.agents/templates/agent-document.html). Specs, plans and reports that a person reviews
+  start from this file: copy it, keep the <head> as it is, and write the content inside the main element.
+  Styles and scripts are files in .agents/templates/assets/, referenced and not embedded. In a copy, change the
+  "assets/" prefix of each href and src to the relative path from the copy to that directory, for example
+  "../../.agents/templates/assets/" from .dev/beads-specs/. See AGENTS.md, "Specs and plans are HTML documents".
+  Code goes in <pre><code class="language-moonbit"> (or scheme, toml, json, bash, diff). Give sections an id and
+  list them in nav.toc.
+-->
+<link rel="stylesheet" href="../../../../.agents/templates/assets/agent-document.css">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="../../../../.agents/templates/assets/highlight/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+<script defer src="../../../../.agents/templates/assets/highlight/highlight.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/highlight/languages/scheme.min.js"></script>
+<script defer src="../../../../.agents/templates/assets/agent-document.js"></script>
+</head>
+<body>
+<main>
+
+<h1>Add state diagrams</h1>
+<p class="meta">2026-10-28 · Implemented and verified · Epic diagrams-d4d</p>
+<nav class="toc" aria-label="Contents"><ul>
+<li><a href="#context">Context</a></li>
+<li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li>
+<li><a href="#migration">Migration plan</a></li>
+<li><a href="#verification">Verification</a></li>
+</ul></nav>
+
+<h2 id="context">Context</h2>
+<p>See <a href="proposal.md">the proposal</a> for motivation and scope. The shared
+renderer uses a public <code>Diagram</code> enum. Mermaid has separate typed AST,
+syntax, printer and conversion packages with multi-kind dispatch. PlantUML uses
+an envelope scanner and typed documents; its current UML envelope selects
+activities. This selection must distinguish state blocks before the new reader
+can be integrated.</p>
+<p>The flowchart layout has a shared graph foundation, but its model expresses
+actions, groups and responsibility lanes. It cannot represent concurrent state
+regions or history without changing their meaning. The SVG renderer already
+resolves final connector curves, bridges and masks. The animation catalog and
+standalone player already support real paths, timed node visits, explicit
+scenarios, bounded queries and canonical static download.</p>
+<p>The current reference baselines are Mermaid 12.2.0 at
+<code>1fb7869866dd619168d840291c9c54b4f129758b</code> and PlantUML 1.2026.9 at
+<code>18d0aae311a4f1eb3723bb4b0ad939185e22f166</code>. Existing reference tools
+already have locked Mermaid dependencies and a pinned PlantUML JAR/JDK.
+The <a href="https://mermaid.js.org/syntax/stateDiagram.html">Mermaid state guide</a>
+and <a href="https://plantuml.com/state-diagram">PlantUML state guide</a> identify
+features to freeze and qualify. Live documentation is discovery evidence; the
+pinned grammar and independent reference establish accepted behavior.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p>Keep source identity, state hierarchy, geometry and playback separate. Callers
+can construct a state model without a reader or renderer. Both source formats
+use the same render and animation contracts. Existing published modules retain
+their dependency boundaries. No new published module is required.</p>
+<p>Descriptions and transitions describe behavior. A playback position is an
+illustration position, not a computed active-state configuration. See the
+proposal for execution, resource and styling exclusions.</p>
+
+<h2 id="decisions">Decisions</h2>
+<h3 id="scope-1">SCOPE-1. Source formats and typical handling</h3>
+<p><strong>Owner:</strong> Add state support with the typical handling of existing
+diagrams. <strong>Call:</strong> Include both Mermaid headers and PlantUML state
+blocks, following the recent two-format flowchart work. Apply the existing
+connector, inspection, playback, accessibility, export, gallery and four-target
+contracts. Both formats are an author assumption based on the recent flowchart
+scope.</p>
+
+<h3 id="model-1">MODEL-1. Dedicated immutable state model</h3>
+<p><strong>Call:</strong> Add <code>pkgs/diagrams/state</code> and a
+<code>Diagram::State</code> variant. Use typed state roles, transition values,
+ordered regions, notes and source bindings. Each state belongs to one region;
+each non-root region belongs to a composite state. Generate deterministic
+qualified IDs where source scopes require them. Do not merge equal labels or
+parallel transitions. Scoped implicit initial/final symbols follow independent
+source evidence, not a single global star node.</p>
+<p>Keep shallow/deep history and entry/exit points distinct. PlantUML pins and
+expansion symbols retain their own typed boundary roles. Preserve behavior text
+in ordered description records. Preserve opaque event/guard/action labels;
+only split fields where the pinned syntax supplies that structure. A string
+containing a slash or bracket is not sufficient reason to invent executable
+semantics. Internal description lines do not create self-loops.</p>
+<p>Reusing the flowchart model was considered. That would confuse state regions
+with groups or lanes and would require callers to recover lost state roles.
+Reuse pure graph and geometry functions where they fit, not the activity model.</p>
+
+<h3 id="syntax-1">SYNTAX-1. Native typed readers and canonical printing</h3>
+<p><strong>Call:</strong> Follow the Mermaid package split with state AST,
+syntax and printer packages plus model conversion. Extend <code>read_diagram</code>,
+<code>print_diagram</code>, parsed/tree values and conversion dispatch; preserve
+sequence-only entry points. Follow the PlantUML dedicated-reader pattern under
+<code>pkgs/diagrams-plantuml/state</code>, with envelope, document, printing and
+conversion integration. Dedicated reader imports remain available.</p>
+<p>Retain the complete bounded source tree and UTF-16 diagnostics. Recover at
+valid statement boundaries without treating a partial AST as a complete model.
+Canonical output comes from edited typed values, not replay of saved text.
+A second print must be byte-stable. Front matter, directives, classes and
+styles remain inert data with findings when unapplied. Includes and executable
+preprocessing remain errors. Adding upstream parsers as runtime dependencies
+was rejected because the library must stay portable and pure.</p>
+
+<h3 id="syntax-2">SYNTAX-2. Explicit UML family detection</h3>
+<p><strong>Call:</strong> Separate UML envelope recognition from body-family
+selection. Detect state evidence using syntax-aware statements such as state
+declarations, scoped state star/history forms and state bodies. Existing modern
+and legacy activity fixtures remain authoritative for activity recognition.
+Ignore keyword-like text inside comments, quotes and notes. Do not classify a
+plain <code>A -&gt; B</code> arrow as state solely because it could be a transition.
+Unsupported mixed or ambiguous bodies receive a diagnostic. An explicit state
+kind in raw-body reading bypasses family inference but still validates syntax.</p>
+<p>Defaulting every UML block to activity or state was considered. Either choice
+would reinterpret unsupported families and could break existing callers. Add
+regression fixtures for class/sequence blocks, both activity dialects, notes
+with misleading words, malformed state blocks and all existing body-only APIs.</p>
+
+<h3 id="reference-1">REF-1. Independent compatibility evidence</h3>
+<p><strong>Call:</strong> Freeze state documentation and relevant grammar/source
+inputs with provenance, licenses, hashes and a feature inventory. Extend the
+locked Mermaid reference adapter to read original and canonical state source
+and project ordered hierarchy, regions, pseudostates and transitions. Extend
+the pinned Java reference adapter to project PlantUML state entities, ownership,
+roles and links. Prove both adapters with small independently authored fixtures
+in the tracer group before expanding implementation.</p>
+<p>Record accepted behavior, upstream refusals, library refusals and unapplied
+presentation separately. Mermaid and PlantUML do not have to agree on scope or
+cross-composite references. Preserve each pinned profile. Do not derive oracle
+values from the MoonBit converter or treat an SVG screenshot as topology proof.
+Normal tests consume committed portable fixtures, with no Java, browser or
+network dependency. Reference refresh tools remain test-only MoonBit tasks
+with pinned imports and bounded host adapters.</p>
+
+<h3 id="layout-1">LAYOUT-1. Hierarchical state geometry</h3>
+<p><strong>Call:</strong> Add a state layout package and painter, with typed
+geometry for state bodies, description compartments, composite headings,
+concurrent separators, notes and transitions. Use measured text and reserve
+routing corridors before drawing. Reuse pure graph placement where useful,
+then place nested regions and route actual semantic endpoints. A composite may
+itself be an endpoint. Cross-boundary child connections retain child identity.
+Boundary symbols attach at their owning composite outline.</p>
+<p>Expose a caller-selected collapsed view. Its hidden descendants remain in the
+model, and external display routes attach to the collapsed outline. Inspection
+keeps semantic and display endpoints separate. Descendants are outside visible
+query scope. No hidden initial or history transitions are invented.</p>
+<p>Feed transition routes through the accepted connector resolver. Natural
+state routes use rounded elbows; explicit Elbow, Rounded and Curved requests
+retain their existing meanings. Bridge is the default and Plain opts out.
+Region separators and actual fork/join contacts are not unrelated crossings.
+All overlays consume the same final paths and masks. Do not fork the connector
+algorithm or change another family's default geometry.</p>
+
+<h3 id="motion-1">MOTION-1. Structural catalog and shared player</h3>
+<p><strong>Call:</strong> Add a state catalog adapter and scene bindings to the
+existing animation and HTML paths. Visible states and pseudostates have visit
+identities; transitions have occurrence identities bound to final geometry.
+Regions and notes remain inspectable without becoming playable connections.
+Default illustrations are finite ordered occurrence sets. Explicit scenarios
+provide repetitions, chosen transitions, visits and parallel timing.</p>
+<p>Queries use explicit transitions only. Retain reverse traversal and the
+existing invalid/outside-view/unreachable/exhausted distinctions. A route into
+history ends at that pseudostate. It does not select a previous child. Shared
+player controls, keyboard behavior, reduced motion, page visibility and print
+remain unchanged. Canonical download uses the stored direct SVG, preserving
+viewer position, selection and speed. A new state-machine simulator and a
+separate state-only player were considered and excluded.</p>
+
+<h3 id="gallery-1">GALLERY-1. Six distinct qualified sources</h3>
+<p><strong>Call:</strong> Add three Mermaid examples for a lifecycle with a
+self-loop, nested composite/choice, and concurrent regions with fork/join.
+Add three PlantUML examples for state descriptions and notes, a nested
+cross-boundary lifecycle with entry/exit points, and concurrent regions with
+shallow/deep history. Use distinct sources, not theme or style variants, to
+meet the count. Pin exact syntax through the compatibility corpus before
+qualification. A small crossing/style view can be an extra variant.</p>
+<p>Extend the existing checked gallery manifest, artifact generation, site family
+labels and filters. Every example has exact source, adaptive/light/dark SVG
+and a qualified offline player. Keep old routes and source/SVG bytes. Publish
+separate format guides and a shared state/playback guide with enum migration,
+refusals, limits and commands. Gallery integration uses the existing unpublished
+site tool; no UI package enters the library.</p>
+
+<h3 id="landing-1">LAND-1. One coherent implementation pull request</h3>
+<p><strong>Call:</strong> Use one epic and one story per task group after
+approval. Group dependencies express work order, not a requirement for separate
+pull requests. Target one implementation and release PR that includes all tests, docs,
+updated task checkboxes and the OpenSpec archive. Split only when a concrete
+review or integration constraint makes it necessary. After merge, close stories
+and the epic with the PR and SHA, sync the tracker, and remove the branch.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table><thead><tr><th>Risk</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Source languages disagree on alias scope and cross-boundary references.</td><td>Keep separate native conversion profiles and independent normalized fixtures under REF-1.</td></tr>
+<tr><td>UML envelope detection reinterprets an existing activity or unsupported diagram.</td><td>Use explicit evidence and ambiguity diagnostics under SYNTAX-2, with existing dispatch regression suites.</td></tr>
+<tr><td>Nested descriptions, loops and bridge hops exceed layout space.</td><td>Reserve measured compartments and terminal corridors, check final paths, and return bounded routing findings when no safe placement exists.</td></tr>
+<tr><td>A highlighted state is mistaken for a computed active state.</td><td>Use structural illustration labels and scenario occurrence inspection under MOTION-1; never infer configurations.</td></tr>
+<tr><td>Reference adapter cannot expose enough independent topology.</td><td>Prove small source and canonical fixtures in the first group; keep acceptance and topology evidence separate and fail qualification on missing supported evidence.</td></tr>
+<tr><td>Shared renderer or player edits affect prior examples.</td><td>Preserve static bytes, run existing corpora, and qualify any deterministic shared HTML updates.</td></tr>
+</tbody></table>
+
+<h2 id="migration">Migration plan</h2>
+<ol>
+<li>Approve the artifacts, create or reuse the epic and story beads, and record dependencies.</li>
+<li>Complete the tracer and then expand model, readers, geometry and player support in dependency order. Each group includes its own tests and docs.</li>
+<li>Document new cases for exhaustive matches in render diagrams, Mermaid parsed/tree values, PlantUML documents/kinds and shared scene/catalog dispatch where exposed. Preserve old function behavior and module boundaries.</li>
+<li>Qualify the gallery and all existing diagrams. Archive in the final implementation PR and update HTML asset links for its archive depth.</li>
+<li>Close tracker items only after merge and successful sync. The owner authorized a shared 0.4.0 version bump and release through the existing GitHub Actions workflow. If rollback is required before release, revert the integrated implementation and restore its requirements/tracker status together.</li>
+</ol>
+
+<h2 id="verification">Verification</h2>
+<p>Each source feature has an acceptance/refusal record and independent normalized
+state evidence. Check original and canonical source against pinned references.
+Run immutable model, source recovery, UTF-16, edits/printing, limits, geometry,
+scene, route and motion tests on wasm, wasm-gc, js and native. Fresh consumers
+cover model-only, dedicated-reader and render/player dependency boundaries.</p>
+<p>Qualify stored state SVG/HTML with network blocked, fixed/adaptive themes,
+inline prefixes, hostile labels, actual paths and masks, reverse/repeated motion,
+node visits, keyboard controls, reduced motion, hidden pages, print and exact
+static downloads. Site checks cover root/next links, no-script reading and
+360-pixel layouts. Run existing renderer/player suites and gallery regression
+checks, then <code>mise run format</code>, <code>mise run check</code> and
+<code>mise exec -- openspec validate --all --strict</code>.</p>
+
+</main>
+</body>
+</html>

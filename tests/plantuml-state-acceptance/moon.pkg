@@ -1,0 +1,12 @@
+import {
+  "moonrockz/diagrams/flowchart",
+  "moonrockz/diagrams-tests/plantuml-state-acceptance" @corpus,
+  "moonbitlang/core/json",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-svg/state-layout" @layout,
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonrockz/diagrams-plantuml/state" @syntax,
+  "moonrockz/diagrams-plantuml/envelope",
+  "moonrockz/diagrams/state" @model,
+} for "test"

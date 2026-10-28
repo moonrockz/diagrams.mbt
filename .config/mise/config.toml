@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus", "validate:state-mermaid-corpus", "validate:state-plantuml-corpus"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -326,3 +326,36 @@ run = "moonx scripts/test-flowchart.mbtx"
 [tasks."test:flowchart-consumer"]
 description = "Qualify fresh flowchart model, reader and renderer/player consumers on all targets"
 run = "moonx scripts/test-flowchart-consumer.mbtx"
+
+[tasks."test:state"]
+description = "Qualify stored state SVG and offline scenarios in Chromium"
+run = "moonx scripts/test-state.mbtx"
+
+[tasks."test:state-consumer"]
+description = "Qualify fresh state model, dedicated readers and player on all four targets"
+run = "moonx scripts/test-state-consumer.mbtx"
+
+[tasks."state-mermaid-corpus:reference"]
+description = "Qualify source and canonical state topology against pinned Mermaid 12.2.0"
+run = "moonx scripts/state-mermaid-reference.mbtx"
+
+[tasks."validate:state-mermaid-corpus"]
+description = "Verify frozen Mermaid state source digests and independent topology"
+run = "moonx scripts/state-mermaid-corpus.mbtx check"
+
+[tasks."state-mermaid-corpus:generate"]
+description = "Embed independently qualified Mermaid state fixtures"
+run = "moonx scripts/state-mermaid-corpus.mbtx generate"
+
+[tasks."state-plantuml-corpus:reference"]
+description = "Qualify state sources and canonical topology against pinned PlantUML 1.2026.9"
+tools = { java = "temurin-21.0.13+9.0.LTS" }
+run = "moonx scripts/state-plantuml-reference.mbtx"
+
+[tasks."validate:state-plantuml-corpus"]
+description = "Verify frozen PlantUML state sources and independent topology"
+run = "moonx scripts/state-plantuml-corpus.mbtx check"
+
+[tasks."state-plantuml-corpus:generate"]
+description = "Embed independently qualified PlantUML state fixtures"
+run = "moonx scripts/state-plantuml-corpus.mbtx generate"

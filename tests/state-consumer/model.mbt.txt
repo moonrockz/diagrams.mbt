@@ -1,0 +1,10 @@
+test "fresh state model needs only the core library" {
+  let inputs = [@state.State::new("Outer", role=Composite), @state.State::new("Idle", region="inside", descriptions=["entry / log"])]
+  let view = @state.StateDiagram::new("fresh", inputs, [], regions=[@state.Region::new("root"), @state.Region::new("inside", owner="Outer")])
+  inputs.clear()
+  assert_eq(view.states.length(),2)
+  assert_eq(view.regions[1].members,["Idle"])
+  assert_eq(@state.validate(view),[])
+  assert_true(@state.validate(view, work_limit=1).any(d => d.code == "state/work-limit"))
+  assert_eq(view.with_direction(RL).states,view.states)
+}

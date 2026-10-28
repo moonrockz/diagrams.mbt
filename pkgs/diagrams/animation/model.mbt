@@ -39,6 +39,7 @@ pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
   Swimlane(@swimlane.FlowDirection)
+  State(@state.Transition)
   Flowchart(@flowchart.Connection)
   Architecture(@architecture.Connection)
   /// A drawn railroad connector with its structural role.
@@ -52,6 +53,8 @@ pub(all) enum OccurrenceKind {
 ///|
 /// The kind of a node-visit target.
 pub(all) enum VisitKind {
+  StateNode(@state.Role)
+  StateNote
   FlowchartNode(@flowchart.Role)
   FlowchartNote
   /// A railroad term: a literal, class, terminal, reference or constraint.
@@ -114,6 +117,9 @@ pub(all) enum NodeKind {
   Start
   End
   SwimlaneNode
+  StateNode(@state.State)
+  StateRegion(@state.Region)
+  StateNote(@state.Note)
   FlowchartNode(@flowchart.Node)
   FlowchartGroup
   FlowchartLane
@@ -146,6 +152,7 @@ pub(all) enum EdgeKind {
   MessageFlow
   Order
   SwimlaneFlow
+  StateTransition
   FlowchartFlow
   ArchitectureFlow
   Undirected

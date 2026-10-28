@@ -1,0 +1,12 @@
+@startuml
+state Root {
+state Nested
+}
+state "Updated root" as Root
+state Choice <<choice>>
+state "Updated choice" as Choice
+state root
+[*] --> Root
+Root.Nested --> Choice
+Choice --> root
+@enduml

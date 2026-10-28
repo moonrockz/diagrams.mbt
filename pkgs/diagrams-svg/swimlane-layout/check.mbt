@@ -76,6 +76,7 @@ pub fn check(
   palette : @theme.Palette,
   work_limit~ : Int32 = 1000000,
   intentional_containment~ : ArrayView[(String, String)] = [],
+  boundary_attachments~ : ArrayView[(String, String)] = [],
 ) -> ReadOnlyArray[Finding] {
   let findings = []
   let mut work = 0
@@ -115,6 +116,7 @@ pub fn check(
       exhausted = true
     }
   }
+  let boundaries=Map(boundary_attachments.map(p => (p,true)))
   let intended : Map[(String, String), Bool] = Map([])
   for pair in intentional_containment {
     if !charge(pair.0.length() + pair.1.length() + 1) {
@@ -157,7 +159,7 @@ pub fn check(
     }
     if shape.parent is Some(parent) {
       if by_id.get(parent) is Some(parent_shape) {
-        if !parent_shape.box.contains(shape.box, tolerance=0.1) {
+        if !parent_shape.box.contains(shape.box, tolerance=0.1) && !boundaries.contains((shape.id,parent)) {
           add(
             Containment,
             [shape.id, parent],

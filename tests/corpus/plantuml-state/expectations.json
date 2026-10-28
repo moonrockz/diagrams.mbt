@@ -1,0 +1,14 @@
+{
+  "docs/32.puml": {
+    "category": "library-refusal",
+    "reason": "Multiple nested UML block markers are refused."
+  },
+  "docs/36.puml": {
+    "category": "library-refusal",
+    "reason": "Mixed JSON and state blocks are outside the state profile."
+  },
+  "docs/40.puml": {
+    "category": "library-refusal",
+    "reason": "Frame groups are not state composites."
+  }
+}

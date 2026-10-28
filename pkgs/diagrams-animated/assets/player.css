@@ -15,8 +15,8 @@ body { margin: 1.5rem; background: #f4f5f7; color: #0f172a; font: 15px/1.5 syste
 [data-diagram-viewer] .motion-overlay { pointer-events: none; }
 @media screen {
   [data-diagram-viewer] .motion-selected { filter: drop-shadow(0 0 3px #2563eb); }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection) { filter: none; }
-  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) { filter: none; }
+  [data-diagram-viewer] .motion-selected:is(.swimlane-connection, .flowchart-connection, .architecture-connection, .state-connection) > path { filter: drop-shadow(0 0 3px #2563eb); }
   [data-diagram-viewer] .motion-visit { filter: drop-shadow(0 0 4px #2563eb) drop-shadow(0 0 2px #2563eb); }
 }
 @media (prefers-color-scheme: dark) {

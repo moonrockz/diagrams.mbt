@@ -1,0 +1,184 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 946" width="300" height="946" role="img" data-diagram="state" data-connector-options="{&#xa;  style: Some(Rounded),&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-diagram">
+  <title>state-mermaid-lifecycle</title>
+  <desc>State structure and supplied scenarios. Guards, actions and history remain descriptive data.</desc>
+  <defs>
+    <style>
+svg#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-diagram {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+@media (prefers-color-scheme: light) {
+  svg#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-diagram {
+    --bg: #f4f5f7;
+    --text: #111827;
+    --muted: #5b6474;
+    --mask: #ffffff;
+    --arrow: #64748b;
+    --frontend-fill: rgba(34, 211, 238, 0.15);
+    --frontend-stroke: #0891b2;
+    --frontend-ink: #07718b;
+    --backend-fill: rgba(52, 211, 153, 0.18);
+    --backend-stroke: #059669;
+    --backend-ink: #047351;
+    --database-fill: rgba(167, 139, 250, 0.2);
+    --database-stroke: #7c3aed;
+    --database-ink: #7935ed;
+    --cloud-fill: rgba(251, 191, 36, 0.18);
+    --cloud-stroke: #d97706;
+    --cloud-ink: #9d5705;
+    --security-fill: rgba(251, 113, 133, 0.15);
+    --security-stroke: #e11d48;
+    --security-ink: #c61a3f;
+    --messagebus-fill: rgba(251, 146, 60, 0.15);
+    --messagebus-stroke: #ea580c;
+    --messagebus-ink: #b44409;
+    --external-fill: rgba(148, 163, 184, 0.18);
+    --external-stroke: #64748b;
+    --external-ink: #5a687c;
+  }
+}
+svg#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-diagram[data-theme="dark"] {
+  --bg: #020617;
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --mask: #0f172a;
+  --arrow: #94a3b8;
+  --frontend-fill: rgba(8, 51, 68, 0.4);
+  --frontend-stroke: #22d3ee;
+  --frontend-ink: #22d3ee;
+  --backend-fill: rgba(6, 78, 59, 0.4);
+  --backend-stroke: #34d399;
+  --backend-ink: #34d399;
+  --database-fill: rgba(76, 29, 149, 0.4);
+  --database-stroke: #a78bfa;
+  --database-ink: #a78bfa;
+  --cloud-fill: rgba(120, 53, 15, 0.3);
+  --cloud-stroke: #fbbf24;
+  --cloud-ink: #fbbf24;
+  --security-fill: rgba(136, 19, 55, 0.4);
+  --security-stroke: #fb7185;
+  --security-ink: #fb7185;
+  --messagebus-fill: rgba(251, 146, 60, 0.3);
+  --messagebus-stroke: #fb923c;
+  --messagebus-ink: #fb923c;
+  --external-fill: rgba(30, 41, 59, 0.5);
+  --external-stroke: #94a3b8;
+  --external-ink: #94a3b8;
+}
+svg#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-diagram[data-theme="light"] {
+  --bg: #f4f5f7;
+  --text: #111827;
+  --muted: #5b6474;
+  --mask: #ffffff;
+  --arrow: #64748b;
+  --frontend-fill: rgba(34, 211, 238, 0.15);
+  --frontend-stroke: #0891b2;
+  --frontend-ink: #07718b;
+  --backend-fill: rgba(52, 211, 153, 0.18);
+  --backend-stroke: #059669;
+  --backend-ink: #047351;
+  --database-fill: rgba(167, 139, 250, 0.2);
+  --database-stroke: #7c3aed;
+  --database-ink: #7935ed;
+  --cloud-fill: rgba(251, 191, 36, 0.18);
+  --cloud-stroke: #d97706;
+  --cloud-ink: #9d5705;
+  --security-fill: rgba(251, 113, 133, 0.15);
+  --security-stroke: #e11d48;
+  --security-ink: #c61a3f;
+  --messagebus-fill: rgba(251, 146, 60, 0.15);
+  --messagebus-stroke: #ea580c;
+  --messagebus-ink: #b44409;
+  --external-fill: rgba(148, 163, 184, 0.18);
+  --external-stroke: #64748b;
+  --external-ink: #5a687c;
+}
+</style>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="300" height="946" fill="var(--bg)"/>
+  <g class="state-backgrounds">
+    <g class="state-group" data-state-id="root">
+      <rect class="state-bounds" x="0" y="0" width="300" height="946" fill="none" stroke="none"/>
+    </g>
+  </g>
+  <g class="state-connections">
+    <g class="state-connection" data-state-id="transition-0" data-source="root::initial" data-target="Idle" data-display-source="root::initial" data-display-target="Idle">
+      <path class="state-connector" d="M116 128 L116 152 Q116 160 124 160 L152 160 Q160 160 160 168 L160 353" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-arrow)" data-connector-id="transition-0" data-connector-source="root::initial" data-connector-target="Idle" data-connector-route="M116 128 L116 160 L160 160 L160 353" data-connector-key="0"/>
+    </g>
+    <g class="state-connection" data-state-id="transition-1" data-source="Idle" data-target="Running" data-display-source="Idle" data-display-target="Running">
+      <path class="state-connector" d="M160 417 L160 441 Q160 449 152 449 L120 449 Q112 449 112 457 L112 593.734" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-arrow)" data-connector-id="transition-1" data-connector-source="Idle" data-connector-target="Running" data-connector-route="M160 417 L160 449 L112 449 L112 593.734" data-connector-key="1"/>
+      <rect x="88" y="492.367" width="48" height="21" rx="3" fill="var(--bg)"/>
+      <text class="state-label" data-label-owner="transition-1" x="112" y="507.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="112" y="507.367">start</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-2" data-source="Running" data-target="Running" data-display-source="Running" data-display-target="Running">
+      <path class="state-connector" d="M216 625 L240 625 Q248 625 248 617 L248 561.734 Q248 553.734 240 553.734 L216 553.734 Q208 553.734 208 561.734 L208 593.734" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-arrow)" data-connector-id="transition-2" data-connector-source="Running" data-connector-target="Running" data-connector-route="M216 625 L248 625 L248 553.734 L208 553.734 L208 593.734" data-connector-key="2"/>
+      <rect x="224" y="560.367" width="48" height="21" rx="3" fill="var(--bg)"/>
+      <text class="state-label" data-label-owner="transition-2" x="248" y="575.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="248" y="575.367">retry</tspan>
+      </text>
+    </g>
+    <g class="state-connection" data-state-id="transition-3" data-source="Running" data-target="root::final" data-display-source="Running" data-display-target="root::final">
+      <path class="state-connector" d="M160 657 L160 681 Q160 689 152 689 L128 689 Q120 689 120 697 L120 833" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-6d-65-72-6d-61-69-64-2d-6c-69-66-65-63-79-63-6c-65-2d-61-64-61-70-74-69-76-65-sl-arrow)" data-connector-id="transition-3" data-connector-source="Running" data-connector-target="root::final" data-connector-route="M160 657 L160 689 L120 689 L120 833" data-connector-key="3"/>
+    </g>
+  </g>
+  <g class="state-nodes">
+    <g class="state-node" data-state-id="root::initial" data-shape="f-circ" data-expanded="true" data-parent="root" data-role="Initial">
+      <rect class="state-bounds" x="104" y="104" width="24" height="73" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M128 116 L127.942 117.176 L127.769 118.341 L127.483 119.483 L127.087 120.592 L126.583 121.657 L125.978 122.667 L125.276 123.613 L124.485 124.485 L123.613 125.276 L122.667 125.978 L121.657 126.583 L120.592 127.087 L119.483 127.483 L118.341 127.769 L117.176 127.942 L116 128 L114.824 127.942 L113.659 127.769 L112.517 127.483 L111.408 127.087 L110.343 126.583 L109.333 125.978 L108.387 125.276 L107.515 124.485 L106.724 123.613 L106.022 122.667 L105.417 121.657 L104.913 120.592 L104.517 119.483 L104.231 118.341 L104.058 117.176 L104 116 L104.058 114.824 L104.231 113.659 L104.517 112.517 L104.913 111.408 L105.417 110.343 L106.022 109.333 L106.724 108.387 L107.515 107.515 L108.387 106.724 L109.333 106.022 L110.343 105.417 L111.408 104.913 L112.517 104.517 L113.659 104.231 L114.824 104.058 L116 104 L117.176 104.058 L118.341 104.231 L119.483 104.517 L120.592 104.913 L121.657 105.417 L122.667 106.022 L123.613 106.724 L124.485 107.515 L125.276 108.387 L125.978 109.333 L126.583 110.343 L127.087 111.408 L127.483 112.517 L127.769 113.659 L127.942 114.824 L128 116 Z" fill="var(--messagebus-ink)" stroke="var(--messagebus-stroke)" stroke-width="1.5"/>
+    </g>
+    <g class="state-node" data-state-id="Idle" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="104" y="353" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M204 353 L206.341 353.231 L208.592 353.913 L210.667 355.022 L212.485 356.515 L213.978 358.333 L215.087 360.408 L215.769 362.659 L216 365 L216 405 L215.769 407.341 L215.087 409.592 L213.978 411.667 L212.485 413.485 L210.667 414.978 L208.592 416.087 L206.341 416.769 L204 417 L116 417 L113.659 416.769 L111.408 416.087 L109.333 414.978 L107.515 413.485 L106.022 411.667 L104.913 409.592 L104.231 407.341 L104 405 L104 365 L104.231 362.659 L104.913 360.408 L106.022 358.333 L107.515 356.515 L109.333 355.022 L111.408 353.913 L113.659 353.231 L116 353 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Idle" x="160" y="389.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="160" y="389.5">Idle</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="Running" data-shape="rounded" data-expanded="true" data-parent="root" data-role="Simple">
+      <rect class="state-bounds" x="104" y="593" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M204 593 L206.341 593.231 L208.592 593.913 L210.667 595.022 L212.485 596.515 L213.978 598.333 L215.087 600.408 L215.769 602.659 L216 605 L216 645 L215.769 647.341 L215.087 649.592 L213.978 651.667 L212.485 653.485 L210.667 654.978 L208.592 656.087 L206.341 656.769 L204 657 L116 657 L113.659 656.769 L111.408 656.087 L109.333 654.978 L107.515 653.485 L106.022 651.667 L104.913 649.592 L104.231 647.341 L104 645 L104 605 L104.231 602.659 L104.913 600.408 L106.022 598.333 L107.515 596.515 L109.333 595.022 L111.408 593.913 L113.659 593.231 L116 593 Z" fill="var(--backend-fill)" stroke="var(--backend-stroke)" stroke-width="1.5"/>
+      <text class="state-label" data-label-owner="Running" x="160" y="629.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--backend-ink)">
+        <tspan x="160" y="629.5">Running</tspan>
+      </text>
+    </g>
+    <g class="state-node" data-state-id="root::final" data-shape="fr-circ" data-expanded="true" data-parent="root" data-role="Final">
+      <rect class="state-bounds" x="104" y="833" width="32" height="81" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="state-outline" d="M136 849 L135.923 850.568 L135.693 852.121 L135.311 853.645 L134.782 855.123 L134.111 856.542 L133.304 857.889 L132.368 859.15 L131.314 860.314 L130.15 861.368 L128.889 862.304 L127.542 863.111 L126.123 863.782 L124.645 864.311 L123.121 864.693 L121.568 864.923 L120 865 L118.432 864.923 L116.879 864.693 L115.355 864.311 L113.877 863.782 L112.458 863.111 L111.111 862.304 L109.85 861.368 L108.686 860.314 L107.632 859.15 L106.696 857.889 L105.889 856.542 L105.218 855.123 L104.689 853.645 L104.307 852.121 L104.077 850.568 L104 849 L104.077 847.432 L104.307 845.879 L104.689 844.355 L105.218 842.877 L105.889 841.458 L106.696 840.111 L107.632 838.85 L108.686 837.686 L109.85 836.632 L111.111 835.696 L112.458 834.889 L113.877 834.218 L115.355 833.689 L116.879 833.307 L118.432 833.077 L120 833 L121.568 833.077 L123.121 833.307 L124.645 833.689 L126.123 834.218 L127.542 834.889 L128.889 835.696 L130.15 836.632 L131.314 837.686 L132.368 838.85 L133.304 840.111 L134.111 841.458 L134.782 842.877 L135.311 844.355 L135.693 845.879 L135.923 847.432 L136 849 Z" fill="var(--messagebus-fill)" stroke="var(--messagebus-stroke)" stroke-width="1.5"/>
+      <ellipse cx="120" cy="849" rx="10" ry="10" fill="var(--messagebus-ink)" stroke="var(--messagebus-stroke)" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

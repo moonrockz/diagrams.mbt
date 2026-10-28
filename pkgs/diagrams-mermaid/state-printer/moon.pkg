@@ -1,0 +1,5 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/state-ast" @ast,
+  "moonrockz/diagrams-mermaid/state-syntax" @syntax,
+}

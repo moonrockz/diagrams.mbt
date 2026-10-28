@@ -1,0 +1,16 @@
+@startuml
+state Service {
+  state Worker
+  [*] --> Worker
+  Worker --> Worker : work
+  --
+  state Monitor
+  [*] --> Monitor
+  Monitor --> Monitor : check
+}
+state Paused
+[*] --> Service
+Service --> Paused : pause
+Paused --> Service[H] : resume
+Paused --> Service[H*] : deep resume
+@enduml

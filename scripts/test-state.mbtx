@@ -1,0 +1,33 @@
+///|
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+/// Qualify current-commit stored state SVG and offline-player artifacts.
+
+///|
+async fn main {
+  for
+    (command, args) in [
+      ("bun", ["install", "--frozen-lockfile", "--cwd", "apps/site"]),
+      (
+        "node",
+        ["apps/site/node_modules/playwright/cli.js", "install", "chromium"],
+      ),
+      ("node", ["apps/site/scripts/state-test.ts"]),
+    ] {
+    let code = @process.run(
+      command,
+      args,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+  }
+}

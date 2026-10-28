@@ -72,7 +72,7 @@ async fn main {
         "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
         "moonrockz/diagrams-tests/animation-acceptance", "moonrockz/diagrams-tests/plantuml-acceptance",
         "moonrockz/diagrams-tests/zenuml-integration", "moonrockz/diagrams-tests/flowchart-gallery-acceptance",
-        "moonrockz/diagrams-tests/gallery-expansion-acceptance",
+        "moonrockz/diagrams-tests/gallery-expansion-acceptance", "moonrockz/diagrams-tests/state-gallery-acceptance",
       ] {
       let code = @process.run(
         "moon",
@@ -405,6 +405,35 @@ async fn main {
     }
   }
   html.write_string(
+    "<h2 id=\"states\">Mermaid and PlantUML state diagrams</h2><p>States, composite and concurrent regions, pseudostates and history are authored structure. Playback illustrates finite supplied scenarios without evaluating guards, executing actions or restoring history.</p>",
+  )
+  for
+    row in rows(
+      "tests/state-gallery-acceptance/__snapshot__/state-gallery.json",
+    ) {
+    let name = string(row[0])
+    let media = string(row[1])
+    let content = string(row[2])
+    if media == "text/plain" &&
+      @fs.read_file("site/examples/states/" + name).text() != content {
+      raise Failure("Stale state gallery source: " + name)
+    }
+    save(name, content, check, site_assets)
+    html.write_string(
+      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
+    )
+    if media == "image/svg+xml" &&
+      (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
+      html.write_string(
+        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
+        escape(name) +
+        "\" src=\"" +
+        escape(name) +
+        "\">",
+      )
+    }
+  }
+  html.write_string(
     "<h2 id=\"expanded-gallery\">Thirty additional source examples</h2><p>The published baseline has 15 cards. This section adds three distinct sources in each of its ten families. Theme, player and connector comparison variants do not count as additional sources.</p>",
   )
   let expanded_artifacts : Map[String, String] = Map([])
@@ -474,6 +503,7 @@ async fn main {
         ),
         ("node", ["apps/site/scripts/gallery-test.ts"]),
         ("node", ["apps/site/scripts/flowchart-test.ts"]),
+        ("node", ["apps/site/scripts/state-test.ts"]),
       ] {
       let code = @process.run(
         command,
@@ -713,6 +743,7 @@ async fn expanded_gallery_examples() -> Array[Json] {
 async fn save_site_gallery(check : Bool) -> Unit {
   let entries = site_gallery_examples()
   entries.append(expanded_gallery_examples())
+  entries.append(state_gallery_examples())
   let root = "apps/site/assets/examples"
   let absolute_root = @fs.realpath(root)
   for entry in entries {
@@ -785,4 +816,66 @@ test "site gallery baseline covers implemented families with unique ids and no d
     ] {
     @test.assert_eq(families.contains(family), true)
   }
+}
+
+///|
+fn state_gallery_examples() -> Array[Json] {
+  let entries = []
+  for
+    (id, extension, title, format) in [
+      (
+        "state-mermaid-lifecycle", "mmd", "Mermaid lifecycle and retry", "Mermaid 12.2.0",
+      ),
+      (
+        "state-mermaid-choice", "mmd", "Mermaid composite and choice", "Mermaid 12.2.0",
+      ),
+      (
+        "state-mermaid-concurrent", "mmd", "Mermaid concurrency and fork/join", "Mermaid 12.2.0",
+      ),
+      (
+        "state-plantuml-lifecycle", "puml", "PlantUML descriptions and notes", "PlantUML 1.2026.9",
+      ),
+      (
+        "state-plantuml-composite", "puml", "PlantUML child and boundary endpoints",
+        "PlantUML 1.2026.9",
+      ),
+      (
+        "state-plantuml-history", "puml", "PlantUML concurrent regions and history",
+        "PlantUML 1.2026.9",
+      ),
+    ] {
+    let entry = gallery_example(
+      id,
+      "state",
+      title,
+      format + " state source with typed hierarchy and labelled transitions.",
+      "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      id + "." + extension,
+      "text/plain",
+      id + "-light.svg",
+      preview_dark=id + "-dark.svg",
+      player=id + "-light.html",
+    )
+    if entry is Object(fields) {
+      fields["companions"] = @json.to_json([
+        gallery_file(id + "-adaptive.svg", "image/svg+xml"),
+        gallery_file(id + "-dark.html", "text/html"),
+        gallery_file(id + "-adaptive.html", "text/html"),
+      ])
+    }
+    if id == "state-plantuml-history" && entry is Object(fields) {
+      if fields.get("companions") is Some(Array(companions)) {
+        for variant in ["curved-light", "curved-dark", "elbow-plain-light"] {
+          companions.push(
+            gallery_file(id + "-" + variant + ".svg", "image/svg+xml"),
+          )
+          companions.push(
+            gallery_file(id + "-" + variant + ".html", "text/html"),
+          )
+        }
+      }
+    }
+    entries.push(entry)
+  }
+  entries
 }

@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+## 0.4.0 - 2026-10-28
+
+### Added
+
+- Native Mermaid 12.2.0 `stateDiagram` and `stateDiagram-v2`, and PlantUML
+  1.2026.9 state blocks and explicit state bodies, with lossless source trees,
+  UTF-16 diagnostics, editable typed ASTs and canonical printers.
+- Immutable state models with composite and concurrent regions, scoped
+  initial/final and history symbols, boundary roles, descriptions, notes and
+  bounded structural validation.
+- Standalone themed state SVG, public geometry and connector inspection,
+  collapsed views, curves, bridges, finite scenarios, node visits and
+  structural route/reachability queries in the shared offline player.
+- Six distinct gallery sources with themed SVG, exact source downloads and
+  offline players, plus model, source compatibility and playback guides.
+- Independent pinned state topology corpora, portable acceptance tests and
+  fresh model, dedicated-reader and player consumers across four targets.
+
+### Changed
+
+- Exhaustive matches must handle `Diagram::State`, Mermaid parsed/tree state
+  cases, PlantUML `Kind::State` and `Document::State`, and state animation,
+  graph, visit and SVG node binding cases.
+- UML envelope dispatch distinguishes state and activity evidence and reports
+  ambiguous input. Explicit body reading selects the intended family.
+- All seven public modules use the shared version `0.4.0`.
+
+### Scope
+
+State playback illustrates authored structure and supplied scenarios. It does
+not evaluate guards, run actions, restore history or execute state machines.
+
 ## 0.3.0 - 2026-10-28
 
 Native PlantUML, Mermaid flowcharts, ZenUML and architecture diagrams, with

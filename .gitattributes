@@ -32,3 +32,10 @@ pkgs/diagrams-svg/icons/*.mbti text eol=lf
 pkgs/diagrams/icons/registry.generated.mbt text eol=lf
 pkgs/diagrams-mermaid/zenuml/oracle.generated_wbtest.mbt text eol=lf
 tests/architecture-acceptance/fixtures.generated.mbt text eol=lf
+
+# State compatibility inputs preserve pinned upstream bytes on Windows too.
+tests/corpus/mermaid-states/** -text
+tests/corpus/plantuml-state/** -text
+tests/state-mermaid-acceptance/*.generated.mbt text eol=lf
+tests/plantuml-state-acceptance/*.generated.mbt text eol=lf
+tests/plantuml-state-acceptance/fixtures.mbt text eol=lf

@@ -1,9 +1,9 @@
 name = "moonrockz/diagrams-svg"
 
-version = "0.3.0"
+version = "0.4.0"
 
 import {
-  "moonrockz/diagrams@0.3.0",
+  "moonrockz/diagrams@0.4.0",
   "moonbit-community/metrics@0.1.1",
 }
 

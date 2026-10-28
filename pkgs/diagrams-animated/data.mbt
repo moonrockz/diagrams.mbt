@@ -133,6 +133,7 @@ fn playback_data(
           budget.str(
             match binding.occurrence.kind {
               Architecture(c) => c.label.unwrap_or("")
+              State(c) => c.label
               Flowchart(c) => c.label
               _ =>
                 binding.occurrence.swimlane_connection
@@ -146,6 +147,7 @@ fn playback_data(
           Json(
             match binding.occurrence.kind {
               Architecture(c) => c.source_head && !c.target_head
+              State(c) => c.direction == Backward
               Flowchart(c) => c.direction == Backward
               _ =>
                 binding.occurrence.swimlane_connection
@@ -160,7 +162,9 @@ fn playback_data(
         (
           "kind",
           budget.str(
-            if binding.occurrence.kind is Architecture(_) {
+            if binding.occurrence.kind is State(_) {
+              "state"
+            } else if binding.occurrence.kind is Architecture(_) {
               "architecture"
             } else if binding.occurrence.kind is Flowchart(_) {
               "flowchart"
@@ -181,6 +185,7 @@ fn playback_data(
           "connection",
           match binding.occurrence {
             { kind: Architecture(c), .. } => budget.str(c.id)
+            { kind: State(c), .. } => budget.str(c.id)
             { kind: Flowchart(c), .. } => budget.str(c.id)
             { swimlane_connection: Some(c), .. } => budget.str(c.id)
             { flow: Some(f), .. } => budget.str(f.id)
@@ -198,6 +203,7 @@ fn playback_data(
   let nodes = []
   for node in scene.catalog.graph.nodes {
     let kind = match node.kind {
+      StateNode(_) | StateRegion(_) | StateNote(_) => "state"
       Bpmn(_) => "bpmn"
       SwimlaneNode | SwimlaneGroup | SwimlaneLane => "swimlane"
       FlowchartNode(_) | FlowchartGroup | FlowchartLane | FlowchartNote(_) =>
@@ -210,6 +216,16 @@ fn playback_data(
       _ => "control"
     }
     let detail = match node.kind {
+      StateNode(n) =>
+        "State role: " +
+        n.role.to_repr().to_string() +
+        ". Structural illustration only.\n" +
+        n.descriptions.join("\n")
+      StateNote(note) => note.text
+      StateRegion(region) =>
+        "Concurrent region. Separator: " +
+        region.separator.to_repr().to_string() +
+        ". Ownership creates no transitions."
       FlowchartNode(n) =>
         "Control role: " +
         n.role.to_repr().to_string() +
@@ -228,7 +244,11 @@ fn playback_data(
       budget.object([
         (
           "primary",
-          Json(node.swimlane_node is Some(_) || node.kind is FlowchartNode(_)),
+          Json(
+            node.swimlane_node is Some(_) ||
+            node.kind is FlowchartNode(_) ||
+            node.kind is StateNode(_),
+          ),
         ),
         ("id", budget.str(node.id)),
         ("label", budget.str(endpoint_label(node, scene.catalog))),
@@ -251,6 +271,7 @@ fn playback_data(
       MessageFlow => "message"
       Order => "order"
       SwimlaneFlow => "swimlane"
+      StateTransition => "state"
       FlowchartFlow => "flowchart"
       ArchitectureFlow => "architecture"
       Undirected => "undirected"
@@ -275,6 +296,17 @@ fn playback_data(
   }
   let outside = []
   match scene.catalog.source {
+    State(view) =>
+      for
+        id in view.states
+        .map(s => s.id)
+        .iter()
+        .concat(view.regions.map(r => r.id).iter())
+        .concat(view.notes.map(n => n.id).iter()) {
+        if scene.catalog.graph.lookup(id) is Err(OutsideView(_)) {
+          outside.push(budget.str(id))
+        }
+      }
     Flowchart(view) =>
       for
         id in view.nodes
@@ -304,6 +336,12 @@ fn playback_data(
   let node_bindings = []
   for binding in scene.nodes {
     let value = match binding.kind {
+      State(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("state")),
+          ("id", budget.str(id)),
+        ])
       Architecture(id) =>
         budget.object([
           ("endpoint", budget.str(binding.endpoint)),

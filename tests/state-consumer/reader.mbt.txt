@@ -1,0 +1,16 @@
+test "fresh Mermaid state reader prints and converts without rendering imports" {
+  for header in ["stateDiagram", "stateDiagram-v2"] {
+    let source = header + "\n[*] --> Idle\nIdle --> Running : begin\nRunning --> [*]\n"
+    let read = @syntax.read(source)
+    assert_eq(read.tree.text(),source)
+    assert_eq(read.diagnostics,[])
+    let printed = @printer.print(read.ast.unwrap()).output.unwrap()
+    let reread = @syntax.read(printed)
+    assert_eq(reread.diagnostics,[])
+    assert_eq(@printer.print(reread.ast.unwrap()).output,Some(printed))
+    let view = @conversion.to_state(read.ast.unwrap()).state.unwrap()
+    assert_eq(view.transitions.length(),3)
+    assert_true(view.states.any(s => s.role == Initial))
+    assert_true(view.states.any(s => s.role == Final))
+  }
+}

@@ -517,12 +517,14 @@ fn route_connections(
   parents : ArrayView[Int32],
   budget : Budget,
   direction_hints~ : ArrayView[(String, @model.Direction)] = [],
+  fixed_ports~ : ArrayView[(String,Int32)] = [],
 ) -> Array[Connection] {
   let by_index = Map([])
   for shape in shapes {
     by_index[shape.index] = shape
   }
   let hints : Map[String, @model.Direction] = Map(direction_hints)
+  let fixed=Map(fixed_ports)
   fn ancestor(child : Int32, container : Int32) -> Bool {
     let mut i = parents[child]
     while i >= 0 {
@@ -662,10 +664,12 @@ fn route_connections(
     } else {
       label_safe_side(target, source, to)
     }
+    from=fixed.get(source.id).unwrap_or(from)
+    to=fixed.get(target.id).unwrap_or(to)
     let connection = view.connections[edge_index]
     let special = ["brace", "brace-r", "braces"].contains(source.shape) ||
       ["brace", "brace-r", "braces"].contains(target.shape)
-    if explicit is None && a != b && !special && connection.style != Invisible {
+    if explicit is None && a != b && !special && !fixed.contains(source.id) && !fixed.contains(target.id) && connection.style != Invisible {
       let source_box = source.outline_box
       let target_box = target.outline_box
       let dx = target_box.x +

@@ -57,6 +57,13 @@ pub fn render_svg(
     return @render.Rendered::failed("image/svg+xml", diagnostics[:])
   }
   let model = match ast {
+    State(ast) => {
+      let converted = to_state(ast)
+      for d in converted.diagnostics {
+        diagnostics.push(d)
+      }
+      converted.state.map(model => @render.Diagram::State(model))
+    }
     Flowchart(ast) => {
       let converted = to_flowchart(ast)
       for d in converted.diagnostics {

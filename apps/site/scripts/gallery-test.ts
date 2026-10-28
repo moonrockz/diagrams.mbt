@@ -5,6 +5,7 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const flowcharts = JSON.parse(await readFile('tests/flowchart-gallery-acceptance/__snapshot__/flowchart-gallery.json','utf8')) as [string,string,string][];
+const states = JSON.parse(await readFile('tests/state-gallery-acceptance/__snapshot__/state-gallery.json','utf8')) as [string,string,string][];
 const expanded = JSON.parse(await readFile('tests/gallery-expansion-acceptance/__snapshot__/expanded-gallery.json', 'utf8')) as [string,string,string][];
 type GalleryEntry = { id: string; family: string; sources: { path: string }[] };
 const manifest = JSON.parse(await readFile('site/gallery.json', 'utf8')) as { root: string; entries: GalleryEntry[] };
@@ -18,6 +19,9 @@ for (const family of ['sequence','ZenUML','architecture','BPMN','swimlane','flow
   for (const source of baselineSources) additionalSources.delete(source);
   assert.ok(additionalSources.size >= 3, `${family}: at least three genuinely additional sources`);
 }
+const stateEntries = manifest.entries.filter(entry => entry.family === 'state');
+assert.equal(stateEntries.length,6);
+assert.equal(new Set(await Promise.all(stateEntries.map(entry => readFile(resolve(manifest.root,entry.sources[0].path),'utf8')))).size,6);
 const root = pathToFileURL(resolve('_gallery/index.html')).href;
 const browser = await chromium.launch({ headless: true });
 const errors: string[] = [], external: string[] = [];
@@ -40,8 +44,8 @@ try {
       for (const node of nodes) { node.loading = 'eager'; await node.decode(); if (!node.naturalWidth || !node.naturalHeight) throw new Error('Empty gallery image'); }
       return nodes.map(node => node.getAttribute('src')!);
     });
-    assert.equal(images.length, 120 + expanded.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length + flowcharts.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length);
-    for (const [name,mime] of [...flowcharts, ...expanded]) if (mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)) assert.ok(images.includes(name));
+    assert.equal(images.length, 120 + expanded.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length + flowcharts.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length + states.filter(([name,mime]) => mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)).length);
+    for (const [name,mime] of [...flowcharts, ...expanded, ...states]) if (mime === 'image/svg+xml' && /-(light|dark)\.svg$/.test(name)) assert.ok(images.includes(name));
     for (const file of images) {
       const svg = await readFile(fileURLToPath(new URL(file, root)), 'utf8');
       await page.evaluate(svg => {
@@ -51,9 +55,9 @@ try {
     }
     assert.equal(new Set(references.filter(reference => reference.endsWith(".bpmn"))).size, 7 + expanded.filter(([name]) => name.endsWith('.bpmn')).length);
     const players = references.filter(reference => reference.endsWith('.html'));
-    assert.equal(players.length, 46 + expanded.filter(([,mime]) => mime === 'text/html').length + flowcharts.filter(([,mime]) => mime === 'text/html').length);
-    assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7 + expanded.filter(([name]) => name.endsWith('.puml')).length + flowcharts.filter(([name]) => name.endsWith('.puml')).length);
-    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6 + expanded.filter(([name]) => name.endsWith('.mmd')).length + flowcharts.filter(([name]) => name.endsWith('.mmd')).length);
+    assert.equal(players.length, 46 + expanded.filter(([,mime]) => mime === 'text/html').length + flowcharts.filter(([,mime]) => mime === 'text/html').length + states.filter(([,mime]) => mime === 'text/html').length);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7 + expanded.filter(([name]) => name.endsWith('.puml')).length + flowcharts.filter(([name]) => name.endsWith('.puml')).length + states.filter(([name]) => name.endsWith('.puml')).length);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6 + expanded.filter(([name]) => name.endsWith('.mmd')).length + flowcharts.filter(([name]) => name.endsWith('.mmd')).length + states.filter(([name]) => name.endsWith('.mmd')).length);
     for (const file of players) {
       await page.goto(new URL(file, root).href);
       await page.locator('[data-motion-ready="true"]').waitFor();

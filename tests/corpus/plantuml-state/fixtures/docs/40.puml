@@ -1,0 +1,9 @@
+@startuml
+frame frame {
+state a
+}
+state b
+a --> b
+b--> [*]
+@enduml
+

@@ -24,6 +24,7 @@ pub fn Geometry::overlay(
   definitions : ArrayView[Overlay],
   limits~ : Limits = Limits::new(),
   direction_hints~ : ArrayView[(String, @model.Direction)] = [],
+  boundaries~ : ArrayView[(String, String)] = [],
 ) -> Result {
   let budget = Budget::{ limits, diagnostics: [], work: 0, failed: false, }
   let shapes = self.shapes.iter().to_array()
@@ -137,6 +138,22 @@ pub fn Geometry::overlay(
       }
     }
   }
+  // Boundary symbols use explicit points on their owning composite, then
+  // participate in the same routing pass as all other real endpoints.
+  for i,(id,owner) in boundaries {
+    if !budget.charge(shapes.length()+boundaries.length()) { return layout_failure(budget.diagnostics) }
+    if by_id.get(id) is Some(index) && by_id.get(owner) is Some(parent) {
+      let shape=shapes[index]
+      let box=shapes[parent].outline_box
+      let count=boundaries.iter().filter(p => p.1 == owner).count()
+      let ordinal=boundaries[:i].iter().filter(p => p.1 == owner).count()
+      let point=box.y+box.height*(ordinal+1).to_double()/(count+1).to_double()
+      let outline_box : Rect={x:box.x-12.0,y:point-12.0,width:24.0,height:24.0}
+      let label=shape.label.map(l => { ..l, box: { ..l.box, x:box.x+20.0,y:point+18.0 } })
+      let bounds : Rect={x:outline_box.x,y:outline_box.y,width:Double::max(24.0,label.map(l => l.box.x+l.box.width-outline_box.x).unwrap_or(24.0)),height:Double::max(24.0,label.map(l => l.box.y+l.box.height-outline_box.y).unwrap_or(24.0))}
+      shapes[index]={..shape,box:bounds,outline_box,label,parent:Some(owner)}
+    }
+  }
   let positions : Map[String, Int32] = Map([])
   let count = self.view.nodes.length() +
     self.view.groups.length() +
@@ -165,6 +182,7 @@ pub fn Geometry::overlay(
     parents,
     budget,
     direction_hints~,
+    fixed_ports=boundaries.map(p => (p.0,0)),
   )
   if budget.failed {
     return layout_failure(budget.diagnostics)
