@@ -1,0 +1,39 @@
+{
+  "repository": "https://github.com/mermaid-js/mermaid",
+  "tag": "mermaid@12.2.0",
+  "commit": "1fb7869866dd619168d840291c9c54b4f129758b",
+  "license": "MIT",
+  "documentationExamples": 22,
+  "sources": [
+    {
+      "path": "upstream/stateDiagram.jison",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/diagrams/state/parser/stateDiagram.jison",
+      "license": "MIT"
+    },
+    {
+      "path": "upstream/stateDb.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/diagrams/state/stateDb.ts",
+      "license": "MIT"
+    },
+    {
+      "path": "upstream/stateDiagram.md",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/docs/syntax/stateDiagram.md",
+      "license": "MIT"
+    },
+    {
+      "path": "upstream/dataFetcher.ts",
+      "url": "https://raw.githubusercontent.com/mermaid-js/mermaid/1fb7869866dd619168d840291c9c54b4f129758b/packages/mermaid/src/diagrams/state/dataFetcher.ts",
+      "license": "MIT"
+    }
+  ],
+  "reference": {
+    "package": "mermaid@12.2.0",
+    "lock": "tests/swimlane-reference/bun.lock",
+    "runner": "scripts/state-mermaid-reference.mbtx",
+    "topology": "Pinned database getData projection, not MoonBit output"
+  },
+  "projectCases": {
+    "license": "Apache-2.0",
+    "authors": "diagrams.mbt contributors"
+  }
+}

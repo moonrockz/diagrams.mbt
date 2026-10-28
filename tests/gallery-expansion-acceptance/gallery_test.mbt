@@ -34,6 +34,7 @@ fn gallery_model(example : GalleryCase) -> @render.Diagram raise {
     )
     assert_eq(read.tree.text(), example.source)
     match read.ast.unwrap() {
+      State(ast) => State(@mermaid.to_state(ast, id=example.id).state.unwrap())
       Sequence(ast) => Sequence(@mermaid.to_sequence(ast).sequence)
       Zenuml(ast) =>
         Sequence(@mermaid.to_zenuml_sequence(ast).sequence.unwrap())

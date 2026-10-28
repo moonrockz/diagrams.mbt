@@ -1,6 +1,6 @@
 # moonrockz/diagrams-mermaid
 
-Mermaid for diagrams.mbt. This module reads Mermaid sequence, native swimlane, flowchart, ZenUML and architecture
+Mermaid for diagrams.mbt. This module reads Mermaid sequence, native swimlane, flowchart, state, ZenUML and architecture
 diagrams into lossless syntax and typed AST values, prints canonical Mermaid,
 and converts them to format-independent models in `moonrockz/diagrams`.
 `render_svg` dispatches supported kinds to `moonrockz/diagrams-svg`. Existing
@@ -479,3 +479,35 @@ Flowchart reader/printer `nodes` and `edges` limits count AST declaration/group
 records and link records. Conversion bounds normalized distinct elements and
 expanded connections separately. On exhaustion the source tree remains exact,
 but that phase returns no complete AST, model or output.
+
+## Native state diagrams
+
+Both `stateDiagram` and `stateDiagram-v2` use native portable source processing.
+The dedicated `state-ast`, `state-cst`, `state-syntax`, `state-printer` and `state`
+packages retain typed values, source spans, hierarchy, concurrent regions,
+pseudostates, descriptions and note attachments. They do not import a renderer.
+
+```mbt check
+///|
+test {
+  let source = "stateDiagram-v2\n[*] --> Idle\nIdle --> Running : begin\nRunning --> [*]\n"
+  let read = @mermaid.read_diagram(source)
+  assert_eq(read.tree.text(), source)
+  guard read.ast is Some(State(ast)) else { fail("Expected a state diagram") }
+  let model = @mermaid.to_state(ast).state.unwrap()
+  assert_eq(model.transitions.length(), 3)
+  let canonical = @mermaid.print_diagram(State(ast)).output.unwrap()
+  assert_eq(
+    @mermaid.print_diagram(@mermaid.read_diagram(canonical).ast.unwrap()).output,
+    Some(canonical),
+  )
+}
+```
+
+Ordinary identifiers follow pinned global identity rules. Scoped initial/final
+IDs remain distinct across regions. Labels and entry/do/exit descriptions are
+inert data. Typed canonical output reflects AST edits. Bounds distinguish invalid
+syntax from exhaustion, with no complete model or printed output on failure.
+The compatibility baseline is Mermaid 12.2.0. See the repository's
+[Mermaid state guide](https://moonrockz.github.io/diagrams.mbt/docs/guides/mermaid-states/)
+for source-profile details, diagnostics, limits and reference commands.

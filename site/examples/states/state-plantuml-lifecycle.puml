@@ -1,0 +1,14 @@
+@startuml
+state "Ready" as Ready
+state Running
+[*] --> Ready
+Ready : entry / prepare
+Ready : tick [pending] / wait
+Ready --> Running : start
+Running --> Running : tick
+Running --> [*] : finish
+note right of Ready
+Descriptions are data.
+No actions execute.
+end note
+@enduml

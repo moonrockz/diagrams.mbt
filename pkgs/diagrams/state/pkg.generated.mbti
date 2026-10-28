@@ -1,0 +1,130 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams/state"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/flowchart",
+}
+
+// Values
+pub fn fresh_id(String, ArrayView[String], work_limit? : Int32) -> Result[String, @diagrams.Diagnostic]
+
+pub fn validate(StateDiagram, nodes_limit? : Int32, edges_limit? : Int32, regions_limit? : Int32, depth_limit? : Int32, diagnostics_limit? : Int32, work_limit? : Int32) -> ReadOnlyArray[@diagrams.Diagnostic]
+
+// Errors
+
+// Types and methods
+pub struct Note {
+  id : String
+  text : String
+  targets : ReadOnlyArray[String]
+  connection_targets : ReadOnlyArray[String]
+  placement : String
+  region : String
+  origin : @flowchart.SourceBinding?
+} derive(Eq, @debug.Debug)
+pub fn Note::equal(Self, Self) -> Bool
+pub fn Note::new(String, String, targets? : ArrayView[String], connection_targets? : ArrayView[String], placement? : String, region? : String, origin? : @flowchart.SourceBinding) -> Self
+pub fn Note::not_equal(Self, Self) -> Bool
+pub fn Note::to_repr(Self) -> @debug.Repr
+
+pub struct Region {
+  id : String
+  owner : String?
+  members : ReadOnlyArray[String]
+  separator : Separator
+  direction : @flowchart.Direction?
+  origin : @flowchart.SourceBinding?
+} derive(Eq, @debug.Debug)
+pub fn Region::equal(Self, Self) -> Bool
+pub fn Region::new(String, owner? : String, members? : ArrayView[String], separator? : Separator, direction? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
+pub fn Region::not_equal(Self, Self) -> Bool
+pub fn Region::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Role {
+  Simple
+  Composite
+  Initial
+  Final
+  Choice
+  Fork
+  Join
+  ShallowHistory
+  DeepHistory
+  EntryPoint
+  ExitPoint
+  InputPin
+  OutputPin
+  ExpansionInput
+  ExpansionOutput
+  Unsupported(String)
+} derive(Eq, @debug.Debug)
+pub fn Role::equal(Self, Self) -> Bool
+pub fn Role::not_equal(Self, Self) -> Bool
+pub fn Role::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Separator {
+  Horizontal
+  Vertical
+} derive(Eq, @debug.Debug)
+pub fn Separator::equal(Self, Self) -> Bool
+pub fn Separator::not_equal(Self, Self) -> Bool
+pub fn Separator::to_repr(Self) -> @debug.Repr
+
+pub struct State {
+  id : String
+  label : String
+  region : String
+  role : Role
+  descriptions : ReadOnlyArray[String]
+  expanded : Bool
+  direction : @flowchart.Direction?
+  origin : @flowchart.SourceBinding?
+} derive(Eq, @debug.Debug)
+pub fn State::equal(Self, Self) -> Bool
+pub fn State::new(String, label? : String, region? : String, role? : Role, descriptions? : ArrayView[String], expanded? : Bool, direction? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
+pub fn State::not_equal(Self, Self) -> Bool
+pub fn State::to_repr(Self) -> @debug.Repr
+pub fn State::with_descriptions(Self, ArrayView[String]) -> Self
+pub fn State::with_label(Self, String) -> Self
+
+pub struct StateDiagram {
+  id : String
+  states : ReadOnlyArray[State]
+  transitions : ReadOnlyArray[Transition]
+  regions : ReadOnlyArray[Region]
+  notes : ReadOnlyArray[Note]
+  direction : @flowchart.Direction
+  title : String?
+  accessibility_title : String?
+  accessibility_description : String?
+} derive(Eq, @debug.Debug)
+pub fn StateDiagram::equal(Self, Self) -> Bool
+pub fn StateDiagram::new(String, ArrayView[State], ArrayView[Transition], regions? : ArrayView[Region], notes? : ArrayView[Note], direction? : @flowchart.Direction, title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
+pub fn StateDiagram::not_equal(Self, Self) -> Bool
+pub fn StateDiagram::to_repr(Self) -> @debug.Repr
+pub fn StateDiagram::with_direction(Self, @flowchart.Direction) -> Self
+pub fn StateDiagram::with_states(Self, ArrayView[State]) -> Self
+
+pub struct Transition {
+  id : String
+  source : String
+  target : String
+  label : String
+  style : @flowchart.LineStyle
+  source_marker : @flowchart.Marker
+  target_marker : @flowchart.Marker
+  min_length : Int32
+  direction : @flowchart.FlowDirection
+  direction_hint : @flowchart.Direction?
+  origin : @flowchart.SourceBinding?
+} derive(Eq, @debug.Debug)
+pub fn Transition::equal(Self, Self) -> Bool
+pub fn Transition::new(String, String, String, label? : String, style? : @flowchart.LineStyle, source_marker? : @flowchart.Marker, target_marker? : @flowchart.Marker, min_length? : Int32, direction_hint? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
+pub fn Transition::not_equal(Self, Self) -> Bool
+pub fn Transition::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

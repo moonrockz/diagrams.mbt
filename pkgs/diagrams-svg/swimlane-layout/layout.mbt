@@ -19,8 +19,13 @@ pub fn layout(
   view : @model.Swimlane,
   limits~ : Limits = Limits::new(),
   flowchart~ : Bool = false,
+  ordered_scopes~ : ArrayView[(String,@model.Direction)] = [],
+  region_directions~ : ArrayView[(String,@model.Direction)] = [],
+  scope_padding~ : Double = 0.0,
   direction_hints~ : ArrayView[(String, @model.Direction)] = [],
 ) -> Result {
+  let ordered=Map(ordered_scopes)
+  let region_dirs=Map(region_directions)
   let diagnostics = []
   let budget = Budget::{ limits, diagnostics, work: 0, failed: false, }
   let real_count = view.lanes.length() +
@@ -102,6 +107,7 @@ pub fn layout(
   let parents = Array::make(count, -1)
   let visible = Array::make(count, true)
   let ids : Map[String, Int32] = Map([])
+  let names : Array[String] = []
   let kinds : Array[Kind] = []
   let texts = []
   let shapes = []
@@ -119,6 +125,7 @@ pub fn layout(
     direction : @model.Direction?,
   ) {
     ids[id] = kinds.length()
+    names.push(id)
     kinds.push(kind)
     texts.push(text)
     shapes.push(shape)
@@ -445,6 +452,29 @@ pub fn layout(
     if items.is_empty() || !expanded[scope] {
       continue
     }
+    if ordered.get(names[scope]) is Some(dir) {
+      let pad=scope_padding.max(48.0)
+      let (_,header)=measure(plain_text(texts[scope]),weight=700)
+      let mut x=0.0
+      let mut y=0.0
+      let mut width=0.0
+      let mut height=0.0
+      let mut previous : Int32? = None
+      for item in items {
+        if !budget.charge(1) { return layout_failure(diagnostics) }
+        let direction=region_dirs.get(names[item]).unwrap_or(dir)
+        if previous is Some(last) {
+          if horizontal(direction) { x+=sizes[last].0+pad }
+          else { y+=sizes[last].1+pad }
+        }
+        offsets[item]={x:pad+x,y:pad+header+24.0+y}
+        width=width.max(x+sizes[item].0)
+        height=height.max(y+sizes[item].1)
+        previous=Some(item)
+      }
+      sizes[scope]=(width+pad*2.0,height+pad*2.0+header+24.0)
+      continue
+    }
     let dir = directions[scope]
     let axis = horizontal(dir)
     let projected = []
@@ -575,7 +605,7 @@ pub fn layout(
       flow += length + gap
     }
     flow = Double::max(0.0, flow - gap)
-    let pad_x = 32.0.max(limits.minimum_approach + 24.0)
+    let pad_x = 32.0.max(limits.minimum_approach + 24.0).max(scope_padding)
     let pad_y = if scope == unowned { pad_x } else { header_h + pad_x + 24.0 }
     let body_w = if axis { flow } else { extent }
     let body_h = if axis { extent } else { flow }

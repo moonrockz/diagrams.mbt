@@ -10,6 +10,7 @@ import {
   "moonrockz/diagrams-plantuml/envelope",
   "moonrockz/diagrams-plantuml/json",
   "moonrockz/diagrams-plantuml/regex",
+  "moonrockz/diagrams-plantuml/state",
   "moonrockz/diagrams-plantuml/yaml",
   "moonrockz/diagrams-svg",
   "moonrockz/diagrams/railroad-trace",
@@ -51,6 +52,7 @@ pub(all) enum Document {
   Json(@json.Document)
   Yaml(@yaml.Document)
   Activity(@activity.Document)
+  State(@state.Document)
 } derive(Eq, @debug.Debug)
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::kind(Self) -> @envelope.Kind

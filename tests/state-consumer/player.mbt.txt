@@ -1,0 +1,24 @@
+test "fresh state renderer and finite playback use shared portable APIs" {
+  let view = @state.StateDiagram::new("fresh-player", [@state.State::new("A"), @state.State::new("B"), @state.State::new("isolated")], [@state.Transition::new("AB","A","B"), @state.Transition::new("loop","B","B")])
+  let catalog = @animation.Catalog::state(view).catalog.unwrap()
+  let a = catalog.connection("AB").unwrap().key
+  let b = catalog.connection("loop").unwrap().key
+  let visit = catalog.graph.lookup("isolated").unwrap().occurrence.unwrap()
+  let plan = @animation.PlaybackPlan::scenario(catalog, @animation.Motion::serial([
+    @animation.Motion::parallel([Step(a,1000L), Visit(visit,500L)]), Step(b,500L), Step(b,500L),
+  ])).plan.unwrap()
+  assert_eq(plan.sample_at(250L).active.length(),2)
+  assert_true(plan.sample_at(2000L).finished)
+  let renderer = @svg.SvgRenderer::new(mode=Fixed(Light),id_prefix="fresh",connectors=@svg.ConnectorOptions::new(style=Curved))
+  let rendered = @render.Renderer::render(renderer,State(view))
+  assert_true(rendered.output.unwrap().contains("data-diagram=\"state\""))
+  let inspected = renderer.connector_geometry(State(view))
+  assert_eq(inspected.paths.length(),2)
+  assert_eq(inspected.paths,@svg.inspect_connectors(rendered.output.unwrap()))
+  let geometry = @layout.layout(view).geometry.unwrap()
+  assert_eq(@layout.check(geometry,@theme.Theme::classic().light),[])
+  let html = @render.Renderer::render(@animated.AnimatedRenderer::new(svg=renderer,playback=plan),State(view)).output.unwrap()
+  assert_true(html.contains("data-motion-data"))
+  assert_true(html.contains("Download SVG"))
+  assert_true(html.contains("no state machine is executed"))
+}

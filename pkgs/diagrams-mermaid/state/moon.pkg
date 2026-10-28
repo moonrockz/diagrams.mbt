@@ -1,0 +1,8 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/state" @model,
+  "moonrockz/diagrams/flowchart",
+  "moonrockz/diagrams-mermaid/state-ast" @ast,
+  "moonrockz/diagrams-mermaid/state-syntax" @syntax,
+  "moonrockz/diagrams-mermaid/state-printer" @printer,
+}

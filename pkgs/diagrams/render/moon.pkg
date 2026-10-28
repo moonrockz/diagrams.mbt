@@ -3,6 +3,7 @@ import {
   "moonrockz/diagrams/sequence",
   "moonrockz/diagrams/bpmn",
   "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/state",
   "moonrockz/diagrams/flowchart",
   "moonrockz/diagrams/architecture",
   "moonrockz/diagrams/regex",

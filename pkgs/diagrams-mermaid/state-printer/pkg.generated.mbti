@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/state-printer"
+
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/state-ast",
+  "moonrockz/diagrams-mermaid/state-syntax",
+}
+
+// Values
+pub fn print(@state-ast.Diagram, limits? : @state-syntax.Limits) -> Printed
+
+// Errors
+
+// Types and methods
+pub struct Printed {
+  output : String?
+  diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
+}
+
+// Type aliases
+
+// Traits

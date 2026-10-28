@@ -14,6 +14,7 @@ pub(all) enum Document {
   Json(@json_syntax.Document)
   Yaml(@yaml_syntax.Document)
   Activity(@activity.Document)
+  State(@state.Document)
 } derive(Eq, Debug)
 
 ///|
@@ -30,6 +31,7 @@ pub fn Document::kind(self : Document) -> @envelope.Kind {
     Json(_) => Json
     Yaml(_) => Yaml
     Activity(_) => Activity
+    State(_) => State
   }
 }
 
@@ -72,6 +74,15 @@ fn read_scan(scan : @envelope.Scan, limits : @envelope.Limits) -> ReadResult {
       let r = @yaml_syntax.read(scan, limits~)
       finish(scan, r.nodes, r.document.map(d => Yaml(d)), r.diagnostics)
     }
+    Some(State) => {
+      let r = @state.read(scan, limits~)
+      finish(
+        scan,
+        r.nodes.iter().to_array(),
+        r.document.map(d => State(d)),
+        r.diagnostics,
+      )
+    }
     Some(Activity) => {
       let r = @activity.read(scan, limits~)
       finish(
@@ -99,8 +110,8 @@ fn read_scan(scan : @envelope.Scan, limits : @envelope.Limits) -> ReadResult {
 }
 
 ///|
-/// Read one regex, EBNF, JSON, YAML or modern/legacy activity block with its
-/// matching end marker. Activities use `@startuml` and `@enduml`. Other UML
+/// Read one regex, EBNF, JSON, YAML, state or modern/legacy activity block with its
+/// matching end marker. State and activities use `@startuml` and `@enduml`. Other UML
 /// kinds, extra blocks and text outside the block are errors.
 pub fn read(
   source : String,
@@ -163,6 +174,7 @@ fn statements_of(document : Document) -> ReadOnlyArray[@envelope.Statement] {
     Json(d) => d.statements
     Yaml(d) => d.statements
     Activity(d) => d.statements
+    State(d) => d.statements
   }
 }
 
@@ -174,6 +186,7 @@ fn name_of(document : Document) -> String? {
     Json(d) => d.name
     Yaml(d) => d.name
     Activity(d) => d.name
+    State(d) => d.name
   }
 }
 
@@ -189,6 +202,7 @@ pub fn print_body(
     Json(d) => @json_syntax.print_body(d, limits~)
     Yaml(d) => @yaml_syntax.print_body(d, limits~)
     Activity(d) => @activity.print_body(d, limits~)
+    State(d) => @state.print_body(d, limits~)
   }
   match result {
     Ok(text) => { output: Some(text), diagnostics: [], }
@@ -259,6 +273,10 @@ pub fn to_diagram(
     Json(d) => {
       let c = @json_syntax.to_data_tree(d, id=id.unwrap_or("json"), limits~)
       { diagram: c.tree.map(t => DataTree(t)), diagnostics: c.diagnostics, }
+    }
+    State(d) => {
+      let c = @state.to_state(d, id=id.unwrap_or("state"), limits~)
+      { diagram: c.state.map(m => State(m)), diagnostics: c.diagnostics, }
     }
     Activity(d) => {
       let c = @activity.to_flowchart(d, id=id.unwrap_or("activity"), limits~)
@@ -381,5 +399,6 @@ pub let diagnostic_codes : ReadOnlyArray[String] = ReadOnlyArray::from_iter(
   .concat(@ebnf_syntax.diagnostic_codes.iter())
   .concat(@json_syntax.diagnostic_codes.iter())
   .concat(@yaml_syntax.diagnostic_codes.iter())
+  .concat(@state.diagnostic_codes.iter())
   .concat(["plantuml/print-limit"].iter()),
 )

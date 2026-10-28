@@ -8,11 +8,12 @@ runtime, while preserving source text and making compatibility limits explicit.
 
 ### Requirement: Native diagram dispatch
 
-The library SHALL read one native regex, EBNF, JSON, YAML or activity block and
-return its typed kind. Activity blocks SHALL use `@startuml` and `@enduml`.
-Raw body reading SHALL require an explicit kind and, for activities, dialect.
-Wrong closing markers, other diagram kinds, extra blocks and trailing
-non-trivia SHALL produce diagnostics rather than partial success.
+The library SHALL read one native regex, EBNF, JSON, YAML, activity or state
+block and return its typed kind. Activity and state blocks SHALL use
+`@startuml` and `@enduml`. Raw body reading SHALL require an explicit kind and,
+for activities, dialect. Wrong closing markers, unsupported or ambiguous kinds,
+extra blocks and trailing non-trivia SHALL produce diagnostics rather than
+partial success.
 
 #### Scenario: Dispatch each supported block
 
@@ -32,12 +33,22 @@ non-trivia SHALL produce diagnostics rather than partial success.
 #### Scenario: Another UML family
 
 - **WHEN** a complete `@startuml` block contains a class or sequence diagram
-- **THEN** reading reports an unsupported diagram and returns no activity model or SVG
+- **THEN** reading reports an unsupported diagram and returns no activity or state model or SVG
 
 #### Scenario: Existing body-only callers
 
 - **WHEN** an existing caller supplies a regex, EBNF, JSON or YAML body with its explicit kind
 - **THEN** its reading, canonical writing and conversion results retain their existing contracts
+
+#### Scenario: State block and explicit state body
+
+- **WHEN** a caller reads a state block or supplies its body with the explicit state kind
+- **THEN** both identify a typed state document and support state printing and conversion
+
+#### Scenario: Misleading text and ambiguous arrows
+
+- **WHEN** comments or quoted labels contain state keywords, or an arrow-only UML body cannot distinguish state from another supported family
+- **THEN** those words do not determine dispatch and the ambiguous body receives a kind diagnostic that directs the caller to explicit body reading
 
 ### Requirement: Lossless source and locations
 
@@ -151,10 +162,10 @@ empty output.
 ### Requirement: Published compatibility profile
 
 The library SHALL publish a versioned feature and refusal inventory for regex,
-EBNF, JSON, YAML and both activity dialects. The baseline SHALL remain PlantUML
-`1.2026.9`. The inventory SHALL separate native acceptance, literal-data
-handling, library safety refusals and unsupported presentation features.
-Portable results SHALL agree on all four targets.
+EBNF, JSON, YAML, both activity dialects and state diagrams. The baseline SHALL
+remain PlantUML `1.2026.9`. The inventory SHALL separate native acceptance,
+literal-data handling, library safety refusals and unsupported presentation
+features. Portable results SHALL agree on all four targets.
 
 #### Scenario: A documented example is refused upstream
 
@@ -165,3 +176,8 @@ Portable results SHALL agree on all four targets.
 
 - **WHEN** a reader inspects the compatibility inventory
 - **THEN** modern activity, legacy activity and the four existing native block kinds have separately checkable coverage and refusal records
+
+#### Scenario: State coverage is separate
+
+- **WHEN** a reader inspects state compatibility
+- **THEN** state syntax, hierarchy, transitions, pseudostates and refusals have their own checkable records alongside unchanged existing inventories

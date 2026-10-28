@@ -1,0 +1,11 @@
+stateDiagram-v2
+state decide <<choice>>
+state fork <<fork>>
+state join <<join>>
+[*] --> decide
+decide --> fork : accepted
+fork --> A
+fork --> B
+A --> join
+B --> join
+join --> [*]

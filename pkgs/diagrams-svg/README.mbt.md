@@ -511,3 +511,37 @@ bounds candidate, subdivision, segment, crossing and output work with a distinct
 `connector/limit` failure and no partial successful SVG. See the
 [connector guide](../../docs/guides/connectors.md) for defaults, ownership,
 resource isolation, canonical export and visual compatibility changes.
+
+## State diagrams
+
+`render_state` and `SvgRenderer.render(State(model))` draw immutable state
+models with composites, concurrent regions, descriptions, notes, typed
+pseudostates and boundary symbols. `state_limits` selects bounded geometry and
+output budgets. Natural state connectors use rounded elbows; explicit
+connector options and default bridges use the shared final-path resolver.
+
+```mbt check
+///|
+test {
+  let model = @state.StateDiagram::new(
+    "lifecycle",
+    [
+      @state.State::new("idle", label="Idle"),
+      @state.State::new("running", label="Running"),
+    ],
+    [@state.Transition::new("start", "idle", "running", label="start")],
+  )
+  let geometry = @state_layout.layout(model).geometry.unwrap()
+  assert_eq(@state_layout.check(geometry, @theme.Theme::classic().light), [])
+  let renderer = @svg.SvgRenderer::new(mode=Fixed(Light))
+  let rendered = renderer.render(State(model))
+  assert_eq(rendered.media_type, "image/svg+xml")
+  let scene = renderer.scene(State(model)).scene.unwrap()
+  assert_eq(scene.canonical_svg, rendered.output.unwrap())
+  assert_eq(scene.paths.length(), 1)
+  assert_eq(renderer.connector_geometry(State(model)).paths[0].source, "idle")
+}
+```
+
+See the [state guide](../../docs/guides/states-and-animation.md) for geometry,
+collapsed views, finite scenarios, structural queries and exact SVG export.

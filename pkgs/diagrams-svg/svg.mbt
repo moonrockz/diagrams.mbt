@@ -788,6 +788,7 @@ pub struct SvgRenderer {
   bpmn_limits : @bpmn_layout.Limits
   architecture_limits : @architecture_layout.Limits
   swimlane_limits : @swimlane_layout.Limits
+  state_limits : @state_layout.Limits
   flowchart_limits : @flowchart_layout.Limits
   railroad_limits : @railroad_layout.Limits
   data_tree_limits : @data_tree_layout.Limits
@@ -806,6 +807,7 @@ pub fn SvgRenderer::new(
   bpmn_limits~ : @bpmn_layout.Limits = @bpmn_layout.Limits::new(),
   architecture_limits~ : @architecture_layout.Limits = @architecture_layout.Limits::new(),
   swimlane_limits~ : @swimlane_layout.Limits = @swimlane_layout.Limits::new(),
+  state_limits~ : @state_layout.Limits = @state_layout.Limits::new(),
   flowchart_limits~ : @flowchart_layout.Limits = @flowchart_layout.Limits::new(),
   railroad_limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   data_tree_limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
@@ -821,6 +823,7 @@ pub fn SvgRenderer::new(
     architecture_limits,
     swimlane_limits,
     flowchart_limits,
+    state_limits,
     railroad_limits,
     data_tree_limits,
     trace,
@@ -878,6 +881,15 @@ pub impl @render.Renderer for SvgRenderer with fn render(self, diagram) {
         self.mode,
         self.id_prefix,
         self.swimlane_limits,
+        connectors=self.connectors,
+      )
+    State(view) =>
+      paint_state(
+        view,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.state_limits,
         connectors=self.connectors,
       )
     Flowchart(view) =>

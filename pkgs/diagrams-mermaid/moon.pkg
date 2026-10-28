@@ -1,4 +1,9 @@
 import {
+  "moonrockz/diagrams-mermaid/state-ast" @state_ast,
+  "moonrockz/diagrams-mermaid/state-cst" @state_cst,
+  "moonrockz/diagrams-mermaid/state-syntax" @state_syntax,
+  "moonrockz/diagrams-mermaid/state-printer" @state_printer,
+  "moonrockz/diagrams-mermaid/state" @state_conversion,
   "moonrockz/diagrams-mermaid/flowchart-ast" @flowchart_ast,
   "moonrockz/diagrams-mermaid/flowchart-syntax" @flowchart_syntax,
   "moonrockz/diagrams-mermaid/flowchart-printer" @flowchart_printer,

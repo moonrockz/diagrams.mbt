@@ -1,0 +1,11 @@
+stateDiagram-v2
+state Active {
+[*] --> A
+A --> B
+--
+[*] --> C
+state Nested {
+[*] --> D
+}
+C --> Nested
+}

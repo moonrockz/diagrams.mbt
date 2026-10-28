@@ -1,0 +1,16 @@
+import {
+  "moonrockz/diagrams-svg/state-layout" @layout,
+  "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams-tests/state-mermaid-acceptance" @corpus,
+  "moonbitlang/core/json",
+  "moonbitlang/core/test",
+  "moonrockz/diagrams-mermaid/state-ast" @ast,
+  "moonrockz/diagrams-mermaid/state-syntax" @syntax,
+  "moonrockz/diagrams-mermaid/state-printer" @printer,
+  "moonrockz/diagrams-mermaid/state" @conversion,
+  "moonrockz/diagrams/state" @model,
+  "moonrockz/diagrams-mermaid" @mermaid,
+} for "test"

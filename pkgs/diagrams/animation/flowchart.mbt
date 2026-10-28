@@ -89,14 +89,34 @@ pub fn Catalog::flowchart(
       build.outside[group.id] = true
     }
   }
-  fn visit(id : String, kind : VisitKind, index : Int) -> String {
-    let key="flowchart-visit:"+view.id.length().to_string()+":"+view.id+":"+id.length().to_string()+":"+id
-    build.occurrence({key,index,kind:Visit(kind),path:[],source:None,flow:None,message:None,swimlane_connection:None,railroad_connector:None,railroad_term:None,data_member:None,data_node:None})
+  fn visit(id : String, kind : VisitKind, index : Int32) -> String {
+    let key = "flowchart-visit:" +
+      view.id.length().to_string() +
+      ":" +
+      view.id +
+      ":" +
+      id.length().to_string() +
+      ":" +
+      id
+    build.occurrence({
+      key,
+      index,
+      kind: Visit(kind),
+      path: [],
+      source: None,
+      flow: None,
+      message: None,
+      swimlane_connection: None,
+      railroad_connector: None,
+      railroad_term: None,
+      data_member: None,
+      data_node: None,
+    })
     key
   }
-  for index,node in view.nodes {
+  for index, node in view.nodes {
     if visible(node.lane, node.groups.last()) {
-      let key=visit(node.id,FlowchartNode(node.role),index)
+      let key = visit(node.id, FlowchartNode(node.role), index)
       build.node({
         id: node.id,
         label: node.label,
@@ -109,35 +129,77 @@ pub fn Catalog::flowchart(
       build.outside[node.id] = true
     }
   }
-  for index,note in view.notes {
-    if visible(note.lane,note.groups.last()) {
-      let key=visit(note.id,FlowchartNote,index)
-      build.node({id:note.id,label:note.text,kind:FlowchartNote(note),occurrence:Some(key),source_node:None,swimlane_node:None})
-    } else { build.outside[note.id]=true }
+  for index, note in view.notes {
+    if visible(note.lane, note.groups.last()) {
+      let key = visit(note.id, FlowchartNote, index)
+      build.node({
+        id: note.id,
+        label: note.text,
+        kind: FlowchartNote(note),
+        occurrence: Some(key),
+        source_node: None,
+        swimlane_node: None,
+      })
+    } else {
+      build.outside[note.id] = true
+    }
   }
-  let regions : Map[String,@flowchart.Region]=Map(view.regions.map(r => (r.id,r)))
+  let regions : Map[String, @flowchart.Region] = Map(
+    view.regions.map(r => (r.id, r)),
+  )
   fn region_anchor(region : @flowchart.Region) -> String? {
-    let stack : Array[(String,Int)]=[]
-    for i=region.members.length()-1;i>=0;i=i-1 { stack.push((region.members[i],0)) }
-    if region.entry is Some(entry) { stack.push((entry,0)) }
-    let seen : Map[String,Bool]=Map([])
-    while stack.pop() is Some((id,depth)) {
-      if !budget.charge(id.length()+1) { return None }
-      if depth > limits.depth { budget.error("animation/plan-limit","Flowchart region binding depth limit exceeded");return None }
+    let stack : Array[(String, Int32)] = []
+    for i = region.members.length() - 1; i >= 0; i = i - 1 {
+      stack.push((region.members[i], 0))
+    }
+    if region.entry is Some(entry) {
+      stack.push((entry, 0))
+    }
+    let seen : Map[String, Bool] = Map([])
+    while stack.pop() is Some((id, depth)) {
+      if !budget.charge(id.length() + 1) {
+        return None
+      }
+      if depth > limits.depth {
+        budget.error(
+          "animation/plan-limit", "Flowchart region binding depth limit exceeded",
+        )
+        return None
+      }
       if regions.get(id) is Some(child) {
-        if seen.contains(id) { continue };seen[id]=true
-        for i=child.members.length()-1;i>=0;i=i-1 { stack.push((child.members[i],depth+1)) }
-        if child.entry is Some(entry) { stack.push((entry,depth+1)) }
-      } else if build.indices.contains(id) { return Some(id) }
+        if seen.contains(id) {
+          continue
+        }
+        seen[id] = true
+        for i = child.members.length() - 1; i >= 0; i = i - 1 {
+          stack.push((child.members[i], depth + 1))
+        }
+        if child.entry is Some(entry) {
+          stack.push((entry, depth + 1))
+        }
+      } else if build.indices.contains(id) {
+        return Some(id)
+      }
     }
     None
   }
   for region in view.regions {
     if region_anchor(region) is Some(anchor) {
-      build.node({id:region.id,label:region.condition.unwrap_or(region.id),kind:FlowchartRegion(region,anchor),occurrence:None,source_node:None,swimlane_node:None})
-    } else { build.outside[region.id]=true }
+      build.node({
+        id: region.id,
+        label: region.condition.unwrap_or(region.id),
+        kind: FlowchartRegion(region, anchor),
+        occurrence: None,
+        source_node: None,
+        swimlane_node: None,
+      })
+    } else {
+      build.outside[region.id] = true
+    }
   }
-  if budget.failed { return build.finish() }
+  if budget.failed {
+    return build.finish()
+  }
   let parents : Map[String, String] = Map([])
   for group in view.groups {
     if (match group.parent {
@@ -177,7 +239,13 @@ pub fn Catalog::flowchart(
     Some(current)
   }
   for note in view.notes {
-    if (match note.groups.last() { Some(id) => Some(id); None => note.lane }) is Some(parent) { parents[note.id]=parent }
+    if (match note.groups.last() {
+        Some(id) => Some(id)
+        None => note.lane
+      })
+      is Some(parent) {
+      parents[note.id] = parent
+    }
   }
   for i, connection in view.connections {
     if !budget.charge(
@@ -188,7 +256,9 @@ pub fn Catalog::flowchart(
       ) {
       return build.finish()
     }
-    if connection.style == Invisible || connection.role == NoteAttachment || connection.role == Layout {
+    if connection.style == Invisible ||
+      connection.role == NoteAttachment ||
+      connection.role == Layout {
       continue
     }
     if (

@@ -1,0 +1,5 @@
+import {
+  "moonrockz/diagrams-plantuml" @plantuml,
+  "moonrockz/diagrams-tests/plantuml-state-acceptance" @corpus,
+}
+options("is-main": true)

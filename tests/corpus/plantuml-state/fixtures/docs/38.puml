@@ -1,0 +1,14 @@
+@startuml
+<style>
+.foo {
+  state,stateBody {
+    BackGroundColor lightblue;
+  }
+}
+</style>
+
+state MainState <<foo>> {
+  state SubA
+}
+@enduml
+

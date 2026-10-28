@@ -1,7 +1,7 @@
 # moonrockz/diagrams-plantuml
 
-PlantUML for diagrams.mbt. This module reads native PlantUML regex, EBNF, JSON
-and YAML blocks into lossless syntax trees and typed ASTs, writes canonical
+PlantUML for diagrams.mbt. This module reads native PlantUML state, activity, regex, EBNF,
+JSON and YAML blocks into lossless syntax trees and typed ASTs, writes canonical
 PlantUML, and converts the blocks to format-independent models in
 `moonrockz/diagrams`. `render_svg` composes reading, conversion and the
 `moonrockz/diagrams-svg` renderer.
@@ -18,6 +18,8 @@ pinned JAR is test-only reference tooling; see
 | `@startebnf` | `@ebnf.Grammar` | Ordered rules and notes. References stay symbolic. |
 | `@startjson` | `@data_tree.DataTree` | Exact number lexemes, ordered and repeated members. |
 | `@startyaml` | `@data_tree.DataTree` | The native PlantUML YAML subset. Every scalar is text. |
+| `@startuml` activity | `@flowchart.Flowchart` | Modern and legacy activity dialects. Structural data only. |
+| `@startuml` state | `@state.StateDiagram` | Hierarchy, concurrent regions, pseudostates and descriptive history. |
 
 ## Read, print and convert
 
@@ -298,3 +300,9 @@ See the [PlantUML flowchart guide](../../docs/guides/plantuml-flowcharts.md) for
 control syntax, ownership, notes, finite structural playback and independent
 compatibility evidence. Conditions and join specifications remain descriptive.
 The library does not execute workflows or load author-requested resources.
+
+
+State blocks add `Document::State` and `envelope.Kind::State`. Ambiguous UML
+arrows require `read_body(State, body)`; explicit state declarations and scoped
+pseudostates select state blocks. The dedicated `state` reader has no renderer
+or host dependency. See the [state guide](../../docs/guides/plantuml-states.md).

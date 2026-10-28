@@ -14,7 +14,7 @@ pub fn check(Geometry, @theme.Palette, work_limit? : Int32) -> ReadOnlyArray[@sw
 
 pub fn diagnostics(ArrayView[@diagrams.Diagnostic]) -> ReadOnlyArray[@diagrams.Diagnostic]
 
-pub fn layout(@flowchart.Flowchart, limits? : Limits) -> Result
+pub fn layout(@flowchart.Flowchart, limits? : Limits, ordered_scopes? : ArrayView[(String, @flowchart.Direction)], region_directions? : ArrayView[(String, @flowchart.Direction)], scope_padding? : Double) -> Result
 
 // Errors
 

@@ -13,6 +13,10 @@ import {
   "moonrockz/diagrams-mermaid/flowchart",
   "moonrockz/diagrams-mermaid/flowchart-ast",
   "moonrockz/diagrams-mermaid/sequence",
+  "moonrockz/diagrams-mermaid/state",
+  "moonrockz/diagrams-mermaid/state-ast",
+  "moonrockz/diagrams-mermaid/state-cst",
+  "moonrockz/diagrams-mermaid/state-syntax",
   "moonrockz/diagrams-mermaid/swimlane",
   "moonrockz/diagrams-mermaid/swimlane-ast",
   "moonrockz/diagrams-mermaid/swimlane-cst",
@@ -40,13 +44,17 @@ pub let flowchart_diagnostic_codes : ReadOnlyArray[String]
 
 pub fn print(@ast.Diagram) -> String
 
-pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramPrintResult
+pub fn print_diagram(ParsedDiagram, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits, state_limits? : @state-syntax.Limits) -> DiagramPrintResult
 
 pub fn read(String) -> ReadResult
 
-pub fn read_diagram(String, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramReadResult
+pub fn read_diagram(String, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits, state_limits? : @state-syntax.Limits) -> DiagramReadResult
 
 pub fn render_svg(String, renderer? : @diagrams-svg.SvgRenderer) -> @render.Rendered
+
+pub let state_conversion_diagnostic_codes : ReadOnlyArray[String]
+
+pub let state_diagnostic_codes : ReadOnlyArray[String]
 
 pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String]
 
@@ -57,6 +65,8 @@ pub fn to_architecture(@architecture-ast.Diagram, limits? : @architecture-syntax
 pub fn to_flowchart(@flowchart-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> @flowchart.Conversion
 
 pub fn to_sequence(@ast.Diagram) -> @sequence.Conversion
+
+pub fn to_state(@state-ast.Diagram, limits? : @state-syntax.Limits, id? : String) -> @state.Conversion
 
 pub fn to_swimlane(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, id? : String) -> @swimlane.Conversion
 
@@ -87,6 +97,7 @@ pub fn DiagramReadResult::not_equal(Self, Self) -> Bool
 pub fn DiagramReadResult::to_repr(Self) -> @debug.Repr
 
 pub(all) enum DiagramTree {
+  State(@state-cst.Node)
   Flowchart(@swimlane-cst.Node)
   Sequence(@cst.Node)
   Swimlane(@swimlane-cst.Node)
@@ -100,6 +111,7 @@ pub fn DiagramTree::text(Self) -> String
 pub fn DiagramTree::to_repr(Self) -> @debug.Repr
 
 pub(all) enum ParsedDiagram {
+  State(@state-ast.Diagram)
   Flowchart(@flowchart-ast.Diagram)
   Sequence(@ast.Diagram)
   Swimlane(@swimlane-ast.Diagram)

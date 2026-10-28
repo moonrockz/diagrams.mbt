@@ -1,0 +1,13 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/state" @model,
+  "moonrockz/diagrams/flowchart",
+  "moonrockz/diagrams-plantuml/cst",
+  "moonrockz/diagrams-plantuml/envelope",
+}
+
+import {
+  "moonrockz/diagrams-plantuml/state",
+  "moonrockz/diagrams-plantuml/envelope",
+} for "test"

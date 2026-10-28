@@ -1,0 +1,92 @@
+{
+  "examples": [
+    {
+      "source": "docs/001.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/002.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/003.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/004.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/005.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/006.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/007.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/008.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/009.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/010.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/011.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/012.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/013.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/014.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/015.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/016.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/017.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/018.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/019.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/020.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/021.mmd",
+      "status": "supported"
+    },
+    {
+      "source": "docs/022.mmd",
+      "status": "supported"
+    }
+  ]
+}

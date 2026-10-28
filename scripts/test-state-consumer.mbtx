@@ -1,0 +1,146 @@
+///|
+/// Qualify fresh model-only, native reader and SVG/offline-player consumers.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+  "moonbitlang/core/env",
+}
+
+///|
+fn version(text : String) -> String {
+  for line in text.split("\n") {
+    if line.trim().has_prefix("version = ") {
+      let parts = line.split("\"").to_array()
+      if parts.length() == 3 {
+        return parts[1].to_owned()
+      }
+    }
+  }
+  abort("Root moon.mod has no version")
+}
+
+///|
+async fn consumer(
+  name : String,
+  modules : ArrayView[String],
+  packages : String,
+  published : Bool,
+) -> Unit {
+  let release = version(@fs.read_file("moon.mod").text())
+  let dir = @fs.tmpdir(prefix="state-" + name)
+  defer @fs.rmdir(dir, recursive=true)
+  let members = StringBuilder()
+  members.write_string("\".\"")
+  let imports = StringBuilder()
+  for i, module_path in modules {
+    if !published {
+      members.write_string(
+        ", \"" +
+        @fs.realpath("pkgs/" + module_path).replace_all(old="\\", new="/") +
+        "\"",
+      )
+    }
+    if i != 0 {
+      imports.write_string(", ")
+    }
+    imports.write_string("\"moonrockz/" + module_path + "@" + release + "\"")
+  }
+  // Reader modules already depend on SVG for their root rendering entry points.
+  // Override that transitive module locally without importing a renderer package
+  // into either dedicated-reader consumer.
+  if !published && (name == "reader" || name == "plantuml") {
+    members.write_string(
+      ", \"" +
+      @fs.realpath("pkgs/diagrams-svg").replace_all(old="\\", new="/") +
+      "\"",
+    )
+  }
+  @fs.write_file(
+    dir + "/moon.mod",
+    "name = \"qualification/state-" +
+    name +
+    "\"\nversion = \"0.0.0\"\nimport { " +
+    imports.to_string() +
+    " }\n",
+  )
+  @fs.write_file(
+    dir + "/moon.work",
+    "members = [" + members.to_string() + "]\n",
+  )
+  @fs.write_file(
+    dir + "/moon.pkg",
+    "import { " + packages + " } for \"test\"\n",
+  )
+  @fs.write_file(
+    dir + "/consumer_test.mbt",
+    @fs.read_file("tests/state-consumer/" + name + ".mbt.txt").text(),
+  )
+  if name == "model" {
+    // The model-only workspace has exactly the core module and no adapter.
+    if modules.length() != 1 || modules[0] != "diagrams" {
+      abort("Unexpected model consumer dependency")
+    }
+    let manifest = @fs.read_file("pkgs/diagrams/moon.mod").text().to_lower()
+    for
+      forbidden in [
+        "diagrams-svg", "diagrams-mermaid", "diagrams-plantuml", "diagrams-animated",
+        "rabbita", "telescope", "moonbitlang/async",
+      ] {
+      if manifest.contains(forbidden) {
+        abort("Core model module depends on " + forbidden)
+      }
+    }
+  }
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let code = @process.run(
+      "moon",
+      [
+        "test",
+        "--target",
+        target,
+        "--deny-warn",
+        "-p",
+        "qualification/state-" + name,
+      ],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    println("Fresh state " + name + " consumer passed: " + target)
+  }
+}
+
+///|
+async fn main {
+  let published = @env.args().contains("--published")
+  consumer("model", ["diagrams"], "\"moonrockz/diagrams/state\"", published)
+  consumer(
+    "reader",
+    ["diagrams", "diagrams-mermaid"],
+    "\"moonrockz/diagrams-mermaid/state-syntax\" @syntax, \"moonrockz/diagrams-mermaid/state-printer\" @printer, \"moonrockz/diagrams-mermaid/state\" @conversion",
+    published,
+  )
+  consumer(
+    "plantuml",
+    ["diagrams", "diagrams-plantuml"],
+    "\"moonrockz/diagrams-plantuml/state\" @reader, \"moonrockz/diagrams-plantuml/envelope\"",
+    published,
+  )
+  consumer(
+    "player",
+    ["diagrams", "diagrams-svg", "diagrams-animated"],
+    "\"moonrockz/diagrams/state\", \"moonrockz/diagrams/render\", \"moonrockz/diagrams/animation\", \"moonrockz/diagrams-svg\" @svg, \"moonrockz/diagrams-svg/state-layout\" @layout, \"moonrockz/diagrams-svg/theme\" @theme, \"moonrockz/diagrams-animated\" @animated",
+    published,
+  )
+}
+
+///|
+test "fresh consumer version follows the root manifest" {
+  assert_eq(version("name = \"example\"\nversion = \"1.2.3\"\n"), "1.2.3")
+}

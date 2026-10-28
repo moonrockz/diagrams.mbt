@@ -1663,6 +1663,270 @@
           "media_type": "image/svg+xml"
         }
       ]
+    },
+    {
+      "id": "state-mermaid-lifecycle",
+      "family": "state",
+      "title": "Mermaid lifecycle and retry",
+      "status": "implemented",
+      "description": "Mermaid 12.2.0 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-mermaid-lifecycle.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-mermaid-lifecycle-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-mermaid-lifecycle-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-mermaid-lifecycle-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-mermaid-lifecycle-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-mermaid-lifecycle-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-mermaid-lifecycle-adaptive.html",
+          "media_type": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "state-mermaid-choice",
+      "family": "state",
+      "title": "Mermaid composite and choice",
+      "status": "implemented",
+      "description": "Mermaid 12.2.0 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-mermaid-choice.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-mermaid-choice-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-mermaid-choice-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-mermaid-choice-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-mermaid-choice-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-mermaid-choice-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-mermaid-choice-adaptive.html",
+          "media_type": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "state-mermaid-concurrent",
+      "family": "state",
+      "title": "Mermaid concurrency and fork/join",
+      "status": "implemented",
+      "description": "Mermaid 12.2.0 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-mermaid-concurrent.mmd",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-mermaid-concurrent-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-mermaid-concurrent-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-mermaid-concurrent-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-mermaid-concurrent-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-mermaid-concurrent-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-mermaid-concurrent-adaptive.html",
+          "media_type": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "state-plantuml-lifecycle",
+      "family": "state",
+      "title": "PlantUML descriptions and notes",
+      "status": "implemented",
+      "description": "PlantUML 1.2026.9 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-plantuml-lifecycle.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-plantuml-lifecycle-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-plantuml-lifecycle-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-plantuml-lifecycle-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-plantuml-lifecycle-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-lifecycle-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-lifecycle-adaptive.html",
+          "media_type": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "state-plantuml-composite",
+      "family": "state",
+      "title": "PlantUML child and boundary endpoints",
+      "status": "implemented",
+      "description": "PlantUML 1.2026.9 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-plantuml-composite.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-plantuml-composite-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-plantuml-composite-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-plantuml-composite-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-plantuml-composite-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-composite-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-composite-adaptive.html",
+          "media_type": "text/html"
+        }
+      ]
+    },
+    {
+      "id": "state-plantuml-history",
+      "family": "state",
+      "title": "PlantUML concurrent regions and history",
+      "status": "implemented",
+      "description": "PlantUML 1.2026.9 state source with typed hierarchy and labelled transitions.",
+      "scope": "Structural illustration and supplied scenarios only. Guards and actions remain text. History is descriptive and is never restored by execution.",
+      "sources": [
+        {
+          "path": "state-plantuml-history.puml",
+          "media_type": "text/plain"
+        }
+      ],
+      "preview": {
+        "path": "state-plantuml-history-light.svg",
+        "media_type": "image/svg+xml"
+      },
+      "preview_dark": {
+        "path": "state-plantuml-history-dark.svg",
+        "media_type": "image/svg+xml"
+      },
+      "player": {
+        "path": "state-plantuml-history-light.html",
+        "media_type": "text/html"
+      },
+      "companions": [
+        {
+          "path": "state-plantuml-history-adaptive.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-history-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-history-adaptive.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-history-curved-light.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-history-curved-light.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-history-curved-dark.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-history-curved-dark.html",
+          "media_type": "text/html"
+        },
+        {
+          "path": "state-plantuml-history-elbow-plain-light.svg",
+          "media_type": "image/svg+xml"
+        },
+        {
+          "path": "state-plantuml-history-elbow-plain-light.html",
+          "media_type": "text/html"
+        }
+      ]
     }
   ]
 }

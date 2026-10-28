@@ -1,6 +1,6 @@
 name = "moonrockz/diagrams-workspace"
 
-version = "0.3.0"
+version = "0.4.0"
 
 description = "diagrams.mbt workspace"
 

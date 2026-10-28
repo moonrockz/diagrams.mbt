@@ -1,0 +1,161 @@
+{
+  "baseline": "1.2026.9",
+  "features": {
+    "aliases-qualified-names": {
+      "status": "supported",
+      "fixtures": [
+        "docs/04.puml",
+        "docs/05.puml",
+        "docs/34.puml",
+        "docs/35.puml"
+      ]
+    },
+    "descriptions": {
+      "status": "supported",
+      "fixtures": [
+        "lifecycle.puml",
+        "docs/28.puml",
+        "docs/33.puml"
+      ]
+    },
+    "hierarchy-cross-boundary": {
+      "status": "supported",
+      "fixtures": [
+        "composite.puml",
+        "docs/03.puml",
+        "docs/37.puml"
+      ]
+    },
+    "concurrent-horizontal-vertical": {
+      "status": "supported",
+      "fixtures": [
+        "docs/09.puml",
+        "docs/10.puml"
+      ]
+    },
+    "choice-fork-join-start-end": {
+      "status": "supported",
+      "fixtures": [
+        "docs/08.puml",
+        "docs/12.puml"
+      ]
+    },
+    "shallow-deep-history": {
+      "status": "supported",
+      "fixtures": [
+        "concurrent-history.puml",
+        "docs/07.puml",
+        "docs/13.puml"
+      ]
+    },
+    "entry-exit-pins-expansion": {
+      "status": "supported",
+      "fixtures": [
+        "docs/15.puml",
+        "docs/16.puml",
+        "docs/17.puml"
+      ]
+    },
+    "directions-styles-markers": {
+      "status": "supported",
+      "fixtures": [
+        "docs/18.puml",
+        "docs/19.puml",
+        "docs/20.puml",
+        "docs/42.puml"
+      ]
+    },
+    "notes-state-link-floating": {
+      "status": "supported",
+      "fixtures": [
+        "docs/21.puml",
+        "docs/22.puml",
+        "docs/23.puml",
+        "docs/24.puml"
+      ]
+    },
+    "inert-presentation": {
+      "status": "supported",
+      "fixtures": [
+        "docs/27.puml",
+        "docs/29.puml",
+        "docs/30.puml",
+        "docs/31.puml",
+        "docs/38.puml",
+        "docs/39.puml",
+        "docs/43.puml",
+        "docs/44.puml",
+        "docs/45.puml"
+      ]
+    },
+    "redeclarations": {
+      "status": "supported",
+      "fixtures": [
+        "redeclarations.puml"
+      ]
+    }
+  },
+  "refusals": {
+    "multiple-blocks": "docs/32.puml",
+    "mixed-json": "docs/36.puml",
+    "frame": "docs/40.puml",
+    "external-includes": "!include and executable preprocessor are errors without I/O",
+    "external-assets": "image, sprite and external links remain lossless but are explicitly refused"
+  },
+  "unapplied-symbols": {
+    "sdlreceive": [
+      "docs/11.puml",
+      "docs/14.puml"
+    ]
+  },
+  "all_documentation_examples": [
+    "docs/01.puml",
+    "docs/02.puml",
+    "docs/03.puml",
+    "docs/04.puml",
+    "docs/05.puml",
+    "docs/06.puml",
+    "docs/07.puml",
+    "docs/08.puml",
+    "docs/09.puml",
+    "docs/10.puml",
+    "docs/11.puml",
+    "docs/12.puml",
+    "docs/13.puml",
+    "docs/14.puml",
+    "docs/15.puml",
+    "docs/16.puml",
+    "docs/17.puml",
+    "docs/18.puml",
+    "docs/19.puml",
+    "docs/20.puml",
+    "docs/21.puml",
+    "docs/22.puml",
+    "docs/23.puml",
+    "docs/24.puml",
+    "docs/25.puml",
+    "docs/26.puml",
+    "docs/27.puml",
+    "docs/28.puml",
+    "docs/29.puml",
+    "docs/30.puml",
+    "docs/31.puml",
+    "docs/32.puml",
+    "docs/33.puml",
+    "docs/34.puml",
+    "docs/35.puml",
+    "docs/36.puml",
+    "docs/37.puml",
+    "docs/38.puml",
+    "docs/39.puml",
+    "docs/40.puml",
+    "docs/41.puml",
+    "docs/42.puml",
+    "docs/43.puml",
+    "docs/44.puml",
+    "docs/45.puml"
+  ],
+  "upstream-refusals": {
+    "cross-region-state-reference": "refused-cross-region.puml"
+  }
+}

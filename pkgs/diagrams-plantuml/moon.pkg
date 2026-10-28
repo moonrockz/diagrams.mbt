@@ -5,6 +5,7 @@ import {
   "moonrockz/diagrams/railroad-trace" @railroad_trace,
   "moonrockz/diagrams-svg" @svg,
   "moonrockz/diagrams-plantuml/activity",
+  "moonrockz/diagrams-plantuml/state",
   "moonrockz/diagrams-plantuml/cst",
   "moonrockz/diagrams-plantuml/envelope",
   "moonrockz/diagrams-plantuml/regex" @regex_syntax,

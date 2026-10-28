@@ -14,6 +14,7 @@ pub(all) enum NodeBindingKind {
   Frame(Int32)
   Swimlane(String)
   Flowchart(String)
+  State(String)
   Architecture(String)
   /// A railroad term group, by term identity.
   RailroadTerm(String)
@@ -214,6 +215,7 @@ pub fn SvgRenderer::scene(
     Architecture(view) => @animation.Catalog::architecture(view, limits~)
     Swimlane(view) => @animation.Catalog::swimlane(view, limits~)
     Flowchart(view) => @animation.Catalog::flowchart(view, limits~)
+    State(view) => @animation.Catalog::state(view, limits~)
     Bpmn(view) => @animation.Catalog::bpmn(view, limits~)
     Sequence(sequence) =>
       @animation.Catalog::sequence(sequence, view_id=sequence_view_id, limits~)
@@ -270,6 +272,73 @@ pub fn SvgRenderer::scene(
       }
       for node in catalog.graph.nodes {
         nodes.push({ endpoint: node.id, kind: Architecture(node.id), })
+      }
+      (rendered, false)
+    }
+    State(view) => {
+      let result = @state_layout.layout(
+        view,
+        limits=self.state_limits.with_minimum_approach(
+          self.connectors.minimum_approach,
+        ),
+      )
+      guard result.geometry is Some(geometry) else {
+        return { scene: None, diagnostics: result.diagnostics, }
+      }
+      let rendered = paint_state(
+        view,
+        self.theme,
+        self.mode,
+        self.id_prefix,
+        self.state_limits,
+        connectors=self.connectors,
+        geometry~,
+      )
+      if rendered.output == None {
+        return { scene: None, diagnostics: rendered.diagnostics, }
+      }
+      let edges = Map([])
+      for edge in geometry.connections {
+        edges[edge.transition.id] = edge
+      }
+      for occurrence in catalog.occurrences {
+        if occurrence.is_visit() {
+          continue
+        }
+        guard occurrence.kind is State(connection) &&
+          edges.get(connection.id) is Some(edge) else {
+          return failed(
+            "animation/binding-mismatch", "A state connection has no visible rendered path",
+          )
+        }
+        let path = state_path(edge)
+        if path.length() > output_units {
+          return failed(
+            "animation/scene-limit", "State scene path exceeds output limit",
+          )
+        }
+        paths.push((occurrence, path))
+      }
+      let visible = Map(geometry.shapes.map(shape => (shape.id, true)))
+      let roots = Map(
+        view.regions
+        .iter()
+        .filter(r => r.owner == None)
+        .map(r => (r.id, true))
+        .to_array(),
+      )
+      for node in catalog.graph.nodes {
+        let anchor = if visible.contains(node.id) || roots.contains(node.id) {
+          Some(node.id)
+        } else {
+          None
+        }
+        if anchor is Some(id) {
+          nodes.push({ endpoint: node.id, kind: State(id), })
+          if node.occurrence is Some(key) {
+            nodes.push({ endpoint: key, kind: State(id), })
+          }
+        }
       }
       (rendered, false)
     }

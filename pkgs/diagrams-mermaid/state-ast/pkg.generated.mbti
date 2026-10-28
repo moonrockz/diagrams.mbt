@@ -1,0 +1,57 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-mermaid/state-ast"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct Diagram {
+  header : String
+  statements : ReadOnlyArray[Statement]
+  front_matter : String?
+  directives : ReadOnlyArray[String]
+} derive(@debug.Debug)
+pub fn Diagram::equal(Self, Self) -> Bool
+pub fn Diagram::new(ArrayView[Statement], header? : String, front_matter? : String, directives? : ArrayView[String]) -> Self
+pub fn Diagram::not_equal(Self, Self) -> Bool
+pub fn Diagram::to_repr(Self) -> @debug.Repr
+pub impl Eq for Diagram
+
+pub(all) struct Statement {
+  kind : StatementKind
+  span : @diagrams.Span
+} derive(@debug.Debug)
+pub fn Statement::equal(Self, Self) -> Bool
+pub fn Statement::not_equal(Self, Self) -> Bool
+pub fn Statement::to_repr(Self) -> @debug.Repr
+pub impl Eq for Statement
+
+pub(all) enum StatementKind {
+  State(id~ : String, label~ : String?, role~ : String?, description~ : String?, classes~ : ReadOnlyArray[String])
+  Composite(id~ : String, label~ : String?)
+  EndComposite
+  Concurrent
+  Transition(source~ : String, target~ : String, label~ : String?, source_classes~ : ReadOnlyArray[String], target_classes~ : ReadOnlyArray[String])
+  Description(id~ : String, text~ : String)
+  Note(target~ : String, placement~ : String, text~ : String)
+  FloatingNote(id~ : String, text~ : String)
+  Direction(String)
+  AccTitle(String)
+  AccDescription(String)
+  Presentation(String)
+  Comment(String)
+  Invalid(String)
+} derive(Eq, @debug.Debug)
+pub fn StatementKind::equal(Self, Self) -> Bool
+pub fn StatementKind::not_equal(Self, Self) -> Bool
+pub fn StatementKind::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits

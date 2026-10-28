@@ -1,0 +1,434 @@
+{
+  "profile": "Mermaid 12.2.0 native state",
+  "features": [
+    {
+      "feature": "headers",
+      "fixture": "docs/001.mmd",
+      "status": "supported",
+      "behavior": "Both stateDiagram and stateDiagram-v2 preserve their header; the pinned parser shares state semantics."
+    },
+    {
+      "feature": "aliases",
+      "fixture": "cases/alias-with-description.mmd",
+      "status": "supported",
+      "behavior": "Quoted aliases accumulate descriptions; alias suffix whitespace follows pinned database behavior."
+    },
+    {
+      "feature": "descriptions",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "behavior": "First description is the heading; subsequent descriptions remain ordered compartments."
+    },
+    {
+      "feature": "implicit-states",
+      "fixture": "docs/008.mmd",
+      "status": "supported",
+      "behavior": "Transition endpoints introduce states."
+    },
+    {
+      "feature": "simple-declarations",
+      "fixture": "docs/005.mmd",
+      "status": "supported",
+      "behavior": "Bare identifiers introduce states. A plain state keyword without an alias/body/role is accepted but ignored upstream."
+    },
+    {
+      "feature": "composite-states",
+      "fixture": "cases/deep-regions.mmd",
+      "status": "supported",
+      "behavior": "Empty and nested composite bodies retain ownership."
+    },
+    {
+      "feature": "concurrent-regions",
+      "fixture": "cases/nested-concurrent.mmd",
+      "status": "supported",
+      "behavior": "-- separates ordered concurrent regions; initial/final IDs are region scoped."
+    },
+    {
+      "feature": "choice-fork-join",
+      "fixture": "cases/choice-fork-join.mmd",
+      "status": "supported",
+      "behavior": "Angle-bracket and square-bracket stereotypes retain typed roles. First occurrence fixes the role."
+    },
+    {
+      "feature": "notes",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "behavior": "Left/right attachments and multiline text are retained as notes, not transitions."
+    },
+    {
+      "feature": "floating-notes",
+      "fixture": "cases/floating-note.mmd",
+      "status": "literal-data",
+      "behavior": "Pinned grammar accepts floating notes but omits them from drawing topology; native model retains inspection data and warns."
+    },
+    {
+      "feature": "direction",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "behavior": "Four global directions and local composite hints retain semantic endpoints."
+    },
+    {
+      "feature": "accessibility",
+      "fixture": "cases/metadata.mmd",
+      "status": "supported",
+      "behavior": "Accessible title and one-line/multiline description retained."
+    },
+    {
+      "feature": "front-matter",
+      "fixture": "docs/004.mmd",
+      "status": "literal-data",
+      "behavior": "Metadata retained without overriding caller rendering options."
+    },
+    {
+      "feature": "classes-styles-links-scale-hide",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "inert-presentation",
+      "behavior": "Presentation commands are retained and warned; no CSS, callbacks, links or source configuration execute."
+    },
+    {
+      "feature": "parallel-self-transitions",
+      "fixture": "cases/lifecycle.mmd",
+      "status": "supported",
+      "behavior": "Parallel and self transitions retain ordered identities."
+    },
+    {
+      "feature": "cross-composite-references",
+      "fixture": "cases/cross-composite.mmd",
+      "status": "supported",
+      "behavior": "Pinned parser accepts cross-boundary child references despite the documentation prohibition."
+    },
+    {
+      "feature": "global-identifiers",
+      "fixture": "cases/scoped-equal-identifiers.mmd",
+      "status": "supported",
+      "behavior": "Ordinary IDs are global. Later nested occurrences update ownership; root references preserve a prior nested owner. Stars remain scoped."
+    },
+    {
+      "feature": "redeclarations",
+      "fixture": "cases/redeclarations.mmd",
+      "status": "supported",
+      "behavior": "Descriptions accumulate; later role redeclarations do not replace the first role."
+    },
+    {
+      "feature": "qualified-identifiers",
+      "fixture": "cases/qualified-identifiers.mmd",
+      "status": "supported",
+      "behavior": "Dots remain literal identifier text; they do not invent scope."
+    },
+    {
+      "feature": "case-insensitive-keywords",
+      "fixture": "cases/case-insensitive.mmd",
+      "status": "supported",
+      "behavior": "Keyword matching is case insensitive; identifier and label spelling is retained."
+    },
+    {
+      "feature": "multiline-alias",
+      "fixture": "cases/multiline-alias.mmd",
+      "status": "supported",
+      "behavior": "Quoted label code units are retained across newlines."
+    },
+    {
+      "feature": "comments",
+      "fixture": "docs/019.mmd",
+      "status": "supported",
+      "behavior": "Percent and hash comments remain lossless source data."
+    },
+    {
+      "feature": "unsafe-labels",
+      "fixture": "cases/hostile.mmd",
+      "status": "literal-data",
+      "behavior": "Native model retains raw text, while pinned Mermaid sanitizes HTML. Native SVG escapes the raw data."
+    },
+    {
+      "feature": "unsupported-boundaries",
+      "fixture": "cases/boundary-refusal.mmd",
+      "status": "library-refusal",
+      "behavior": "PlantUML entry/history/boundary stereotypes are not Mermaid roles; upstream silently ignores this declaration. Native reader reports invalid syntax."
+    },
+    {
+      "feature": "invalid-arrows",
+      "fixture": "cases/arrow-refusal.mmd",
+      "status": "upstream-refusal",
+      "behavior": "Only --> is a state transition in the pinned grammar."
+    },
+    {
+      "feature": "composite-description-refusal",
+      "fixture": "cases/group-description-refusal.mmd",
+      "status": "upstream-refusal",
+      "behavior": "Pinned database refuses composite nodes with multiple descriptions."
+    },
+    {
+      "feature": "reserved-root",
+      "fixture": "cases/reserved-root.mmd",
+      "status": "library-refusal",
+      "behavior": "Pinned Mermaid accepts root but omits its node, producing a dangling endpoint. Native conversion reports state/reserved-id instead of creating incomplete output."
+    }
+  ],
+  "fixtures": [
+    {
+      "source": "docs/001.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/002.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/003.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/004.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/005.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/006.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/007.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/008.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/009.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/010.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/011.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/012.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/013.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/014.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/015.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/016.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/017.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/018.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/019.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/020.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/021.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "docs/022.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/alias-with-description.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/aliases-descriptions-notes.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/arrow-refusal.mmd",
+      "upstreamAccepted": false,
+      "status": "upstream-refusal"
+    },
+    {
+      "source": "cases/bare-stars.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/boundary-refusal.mmd",
+      "upstreamAccepted": true,
+      "status": "library-refusal"
+    },
+    {
+      "source": "cases/case-insensitive.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/choice-fork-join.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/cross-composite.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/deep-regions.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/duplicate-labels.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/empty-composite.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/floating-note.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/four-directions.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/gallery-composite-choice.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/gallery-concurrent-fork-join.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/grammar-presentation.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/group-description-refusal.mmd",
+      "upstreamAccepted": false,
+      "status": "upstream-refusal"
+    },
+    {
+      "source": "cases/hostile.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/inline-composite.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/legacy-scoped-stars.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/lifecycle.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/metadata.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/multiline-alias.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/nested-concurrent.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/presentation.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/qualified-identifiers.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/redeclarations.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/reserved-root.mmd",
+      "upstreamAccepted": true,
+      "status": "library-refusal"
+    },
+    {
+      "source": "cases/scoped-equal-identifiers.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/shorthand-roles.mmd",
+      "upstreamAccepted": true,
+      "status": "supported"
+    },
+    {
+      "source": "cases/top-concurrent.mmd",
+      "upstreamAccepted": false,
+      "status": "upstream-refusal"
+    }
+  ]
+}

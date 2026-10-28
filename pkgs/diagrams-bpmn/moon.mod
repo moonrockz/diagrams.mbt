@@ -1,11 +1,11 @@
 name = "moonrockz/diagrams-bpmn"
 
-version = "0.3.0"
+version = "0.4.0"
 
 import {
-  "moonrockz/bpmn@0.3.0",
-  "moonrockz/diagrams@0.3.0",
-  "moonrockz/diagrams-svg@0.3.0",
+  "moonrockz/bpmn@0.4.0",
+  "moonrockz/diagrams@0.4.0",
+  "moonrockz/diagrams-svg@0.4.0",
 }
 
 description = "BPMN document adapter for diagrams.mbt"

@@ -1,6 +1,6 @@
 name = "moonrockz/diagrams"
 
-version = "0.3.0"
+version = "0.4.0"
 
 description = "Diagramming for MoonBit: Mermaid, PlantUML, Draw.io, Graphviz DOT and more"
 

@@ -1,0 +1,397 @@
+{
+  "grammar": "upstream/stateDiagram.jison",
+  "productions": [
+    {
+      "nonterminal": "start",
+      "line": 179,
+      "production": ": SPACE start",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "start",
+      "line": 180,
+      "production": "| NL start",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "start",
+      "line": 181,
+      "production": "| SD document { /* console.log('--> Root document', $2); */   yy.setRootDoc($2); return $2; }",
+      "fixture": "docs/002.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "document",
+      "line": 185,
+      "production": ": /* empty */ { /*console.log('empty document'); */ $$ = [] }",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "document",
+      "line": 186,
+      "production": "| document line {",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "line",
+      "line": 196,
+      "production": ": SPACE statement { $$ = $2 }",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "line",
+      "line": 197,
+      "production": "| statement { $$ = $1 }",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "line",
+      "line": 198,
+      "production": "| NL { $$='nl';}",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 202,
+      "production": ": classDefStatement",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 203,
+      "production": "| styleStatement",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 204,
+      "production": "| cssClassStatement",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 205,
+      "production": "| idStatement { /* console.log('got id', $1); */",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 208,
+      "production": "| idStatement DESCR {",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 213,
+      "production": "| idStatement '-->' idStatement",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 219,
+      "production": "| idStatement '-->' idStatement DESCR",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 225,
+      "production": "| HIDE_EMPTY",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 226,
+      "production": "| scale WIDTH",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 227,
+      "production": "| COMPOSIT_STATE",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 228,
+      "production": "| COMPOSIT_STATE STRUCT_START document STRUCT_STOP",
+      "fixture": "cases/nested-concurrent.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 233,
+      "production": "| STATE_DESCR AS ID {",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 244,
+      "production": "| STATE_DESCR AS ID STRUCT_START document STRUCT_STOP",
+      "fixture": "cases/aliases-descriptions-notes.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 249,
+      "production": "| FORK {",
+      "fixture": "cases/choice-fork-join.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 252,
+      "production": "| JOIN {",
+      "fixture": "cases/choice-fork-join.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 255,
+      "production": "| CHOICE {",
+      "fixture": "cases/choice-fork-join.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 258,
+      "production": "| CONCURRENT {",
+      "fixture": "cases/nested-concurrent.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 261,
+      "production": "| note notePosition ID NOTE_TEXT",
+      "fixture": "docs/016.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 266,
+      "production": "| note NOTE_TEXT AS ID",
+      "fixture": "docs/016.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 267,
+      "production": "| direction",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 268,
+      "production": "| acc_title acc_title_value  { $$=$2.trim();yy.setAccTitle($$); }",
+      "fixture": "cases/metadata.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 269,
+      "production": "| acc_descr acc_descr_value  { $$=$2.trim();yy.setAccDescription($$); }",
+      "fixture": "cases/metadata.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 270,
+      "production": "| acc_descr_multiline_value { $$=$1.trim();yy.setAccDescription($$); }",
+      "fixture": "cases/metadata.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 271,
+      "production": "| CLICK idStatement STRING STRING NL",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "statement",
+      "line": 280,
+      "production": "| CLICK idStatement HREF STRING NL",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "classDefStatement",
+      "line": 292,
+      "production": ": classDef CLASSDEF_ID CLASSDEF_STYLEOPTS {",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "classDefStatement",
+      "line": 295,
+      "production": "| classDef DEFAULT CLASSDEF_STYLEOPTS {",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "styleStatement",
+      "line": 301,
+      "production": ": style STYLE_IDS STYLEDEF_STYLEOPTS {",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "cssClassStatement",
+      "line": 307,
+      "production": ": class CLASSENTITY_IDS STYLECLASS {",
+      "fixture": "cases/presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "direction",
+      "line": 314,
+      "production": ": direction_tb",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "direction",
+      "line": 316,
+      "production": "| direction_bt",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "direction",
+      "line": 318,
+      "production": "| direction_rl",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "direction",
+      "line": 320,
+      "production": "| direction_lr",
+      "fixture": "cases/four-directions.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "eol",
+      "line": 325,
+      "production": ": NL",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "unreachable-helper",
+      "note": "The eol helper is not referenced by the pinned start grammar."
+    },
+    {
+      "nonterminal": "eol",
+      "line": 326,
+      "production": "| ';'",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "unreachable-helper",
+      "note": "The eol helper is not referenced by the pinned start grammar."
+    },
+    {
+      "nonterminal": "idStatement",
+      "line": 330,
+      "production": ": ID",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "idStatement",
+      "line": 334,
+      "production": "| EDGE_STATE",
+      "fixture": "cases/lifecycle.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "idStatement",
+      "line": 338,
+      "production": "| ID STYLE_SEPARATOR ID",
+      "fixture": "docs/021.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "idStatement",
+      "line": 342,
+      "production": "| EDGE_STATE STYLE_SEPARATOR ID",
+      "fixture": "cases/lifecycle.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "notePosition",
+      "line": 349,
+      "production": ": left_of",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    },
+    {
+      "nonterminal": "notePosition",
+      "line": 350,
+      "production": "| right_of",
+      "fixture": "cases/grammar-presentation.mmd",
+      "status": "supported",
+      "note": "Accepted fixture and normalized pinned topology are committed in reference.json."
+    }
+  ]
+}

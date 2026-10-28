@@ -1,0 +1,15 @@
+test "fresh dedicated PlantUML state reader supports explicit body and native block" {
+  let body = "state Idle\nstate Running\n[*] --> Idle\nIdle --> Running : begin\nRunning --> [*]\n"
+  let read = @reader.read(@envelope.scan_body(State,body))
+  assert_eq(read.diagnostics,[])
+  let document = read.document.unwrap()
+  let printed = @reader.print_body(document).unwrap()
+  let reread = @reader.read(@envelope.scan_body(State,printed))
+  assert_true(document.logical_equal(reread.document.unwrap()))
+  assert_true(@reader.to_state(document).state is Some(_))
+  let source = "@startuml\n" + body + "@enduml\n"
+  let scan = @envelope.scan(source)
+  let block = @reader.read(scan)
+  assert_eq(scan.document(block.nodes[:]).text(),source)
+  assert_eq(@reader.to_state(block.document.unwrap()).state.unwrap().transitions.length(),3)
+}

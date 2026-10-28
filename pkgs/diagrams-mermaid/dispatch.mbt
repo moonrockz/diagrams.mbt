@@ -1,6 +1,7 @@
 ///|
 /// Multi-kind entry points preserve the sequence-only API.
 pub(all) enum ParsedDiagram {
+  State(@state_ast.Diagram)
   Flowchart(@flowchart_ast.Diagram)
   Sequence(@ast.Diagram)
   Swimlane(@swimlane_ast.Diagram)
@@ -10,6 +11,7 @@ pub(all) enum ParsedDiagram {
 
 ///|
 pub(all) enum DiagramTree {
+  State(@state_cst.Node)
   Flowchart(@swimlane_cst.Node)
   Sequence(@cst.Node)
   Swimlane(@swimlane_cst.Node)
@@ -21,6 +23,7 @@ pub(all) enum DiagramTree {
 ///|
 pub fn DiagramTree::text(self : DiagramTree) -> String {
   match self {
+    State(tree) => tree.text()
     Flowchart(tree) => tree.text()
     Sequence(tree) => tree.text()
     Swimlane(tree) => tree.text()
@@ -49,9 +52,13 @@ pub fn read_diagram(
   limits~ : @swimlane_syntax.Limits = @swimlane_syntax.Limits::new(),
   zenuml_limits~ : @zenuml_syntax.Limits = @zenuml_syntax.Limits::new(),
   architecture_limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
+  state_limits~ : @state_syntax.Limits = @state_syntax.Limits::new(),
 ) -> DiagramReadResult {
   if source.length() >
-    limits.source.max(zenuml_limits.source).max(architecture_limits.source) {
+    limits.source
+    .max(zenuml_limits.source)
+    .max(architecture_limits.source)
+    .max(state_limits.source) {
     return {
       tree: Unsupported(source),
       ast: None,
@@ -99,6 +106,20 @@ pub fn read_diagram(
     }
     if text.has_prefix("%%") {
       continue
+    }
+    if ["stateDiagram-v2", "stateDiagram"]
+      .iter()
+      .any(header => {
+        text == header ||
+        text.has_prefix(header + " ") ||
+        text.has_prefix(header + "\t")
+      }) {
+      let result = @state_syntax.read(source, limits=state_limits)
+      return {
+        tree: State(result.tree),
+        ast: result.ast.map(ast => State(ast)),
+        diagnostics: result.diagnostics,
+      }
     }
     if text.has_prefix("zenuml") &&
       (
@@ -191,7 +212,7 @@ pub fn read_diagram(
     ast: None,
     diagnostics: [
       @diagrams.Diagnostic::error(
-        "mermaid/unsupported-diagram", "Expected sequenceDiagram, swimlane-beta, flowchart, graph, zenuml or architecture-beta",
+        "mermaid/unsupported-diagram", "Expected sequenceDiagram, swimlane-beta, flowchart, graph, zenuml, architecture-beta, stateDiagram or stateDiagram-v2",
       ),
     ],
   }
@@ -203,8 +224,13 @@ pub fn print_diagram(
   limits~ : @swimlane_syntax.Limits = @swimlane_syntax.Limits::new(),
   zenuml_limits~ : @zenuml_syntax.Limits = @zenuml_syntax.Limits::new(),
   architecture_limits~ : @architecture_syntax.Limits = @architecture_syntax.Limits::new(),
+  state_limits~ : @state_syntax.Limits = @state_syntax.Limits::new(),
 ) -> DiagramPrintResult {
   match diagram {
+    State(ast) => {
+      let result = @state_printer.print(ast, limits=state_limits)
+      { output: result.output, diagnostics: result.diagnostics, }
+    }
     Flowchart(ast) => {
       let result = @flowchart_printer.print(ast, limits~)
       { output: result.output, diagnostics: result.diagnostics, }
@@ -322,3 +348,18 @@ pub let flowchart_diagnostic_codes : ReadOnlyArray[String] = @flowchart_syntax.d
 
 ///|
 pub let flowchart_conversion_diagnostic_codes : ReadOnlyArray[String] = @flowchart_conversion.diagnostic_codes
+
+///|
+pub fn to_state(
+  diagram : @state_ast.Diagram,
+  limits~ : @state_syntax.Limits = @state_syntax.Limits::new(),
+  id~ : String = "state",
+) -> @state_conversion.Conversion {
+  @state_conversion.to_state(diagram, limits~, id~)
+}
+
+///|
+pub let state_diagnostic_codes : ReadOnlyArray[String] = @state_syntax.diagnostic_codes
+
+///|
+pub let state_conversion_diagnostic_codes : ReadOnlyArray[String] = @state_conversion.diagnostic_codes

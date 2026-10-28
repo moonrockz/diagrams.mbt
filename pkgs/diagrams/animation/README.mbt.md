@@ -230,3 +230,56 @@ test "visit an inline row halfway" {
   assert_eq(wrong.diagnostics[0].code, "animation/invalid-target-kind")
 }
 ```
+
+## State structure and supplied scenarios
+
+`Catalog::state(view)` records visible states, pseudostates, regions, notes and
+transitions. States and notes have node-visit occurrences. Transition occurrences
+retain their own typed transition, source order and identity, including parallel
+transitions and self-loops. Regions, ownership, descriptions, notes and history
+add no route edges. Collapsed descendants return `OutsideView`; an unknown ID
+returns `InvalidEndpoint`. A disconnected valid endpoint returns `Unreachable`.
+
+```mbt check
+///|
+test "repeat a state transition and visit an isolated state concurrently" {
+  let view = @state.StateDiagram::new(
+    "state-scenario",
+    [
+      @state.State::new("Ready", descriptions=["entry / show"]),
+      @state.State::new("Aside"),
+    ],
+    [
+      @state.Transition::new(
+        "tick",
+        "Ready",
+        "Ready",
+        label="tick [ready] / log",
+      ),
+    ],
+  )
+  let catalog = @animation.Catalog::state(view).catalog.unwrap()
+  let tick = catalog.connection("tick").unwrap().key
+  let aside = catalog.graph.lookup("Aside").unwrap().occurrence.unwrap()
+  let motion = @animation.Motion::serial([
+    @animation.Motion::parallel([Step(tick, 500L), Visit(aside, 750L)]),
+    Step(tick, 250L),
+  ])
+  let plan = @animation.PlaybackPlan::scenario(catalog, motion).plan.unwrap()
+  assert_eq(plan.duration_ms, 1000L)
+  assert_eq(plan.sample_at(250L).active.length(), 2)
+  assert_true(plan.sample_at(1000L).finished)
+  assert_eq(catalog.graph.route("Ready", "Aside"), Unreachable)
+}
+```
+
+State routes use `StateTransition` edges by default. Unheaded relations need
+`kinds=[Undirected]`. Reverse searches keep each transition's real path and mark
+its traversal as reversed. A self-route can become a node visit. Explicit motion
+retains repeat occurrences, durations and caller-chosen concurrent groups.
+`PlaybackPlan::illustrative` uses each catalog occurrence once per finite period,
+without unfolding cycles. Its repeating display does not claim a feasible state
+execution. Guards, actions, internal behavior and history are inspectable text;
+no API infers active states, evaluates a guard, schedules an event or restores
+history. The shared offline player uses the scene's final connector paths and
+canonical static SVG for download.

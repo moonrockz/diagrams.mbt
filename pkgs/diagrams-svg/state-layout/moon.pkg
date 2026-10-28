@@ -1,0 +1,9 @@
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/state" @model,
+  "moonrockz/diagrams/flowchart",
+  "moonrockz/diagrams-svg/flowchart-layout" @graph,
+  "moonrockz/diagrams-svg/swimlane-layout" @vector,
+  "moonrockz/diagrams-svg/theme",
+}

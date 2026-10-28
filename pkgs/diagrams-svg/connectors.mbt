@@ -772,6 +772,7 @@ fn finalize_connectors(
     identity : String,
   ) -> Unit {
     guard node is Element(name, attrs, children) else { return }
+    let identity = cattr(attrs, "data-state-id").unwrap_or(identity)
     let identity = cattr(attrs, "data-connector").unwrap_or(
       cattr(attrs, "data-flowchart-id").unwrap_or(
         cattr(attrs, "data-swimlane-id").unwrap_or(
@@ -799,7 +800,8 @@ fn finalize_connectors(
         class.has_prefix("rr-connector ") ||
         class == "data-connector" ||
         class == "swimlane-connector" ||
-        class == "flowchart-connector"
+        class == "flowchart-connector" ||
+        class == "state-connector"
       )
     if visible {
       if cattr(attrs, "d") is Some(original) {
@@ -1559,7 +1561,8 @@ fn finalize_connectors(
         class.has_prefix("rr-connector ") ||
         class == "data-connector" ||
         class == "swimlane-connector" ||
-        class == "flowchart-connector"
+        class == "flowchart-connector" ||
+        class == "state-connector"
       )
     let new_attrs = attrs.iter().to_array()
     if visible {
