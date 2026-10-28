@@ -45,6 +45,30 @@ test "supplied connector display styling preserves source waypoints and writing"
 }
 
 ///|
+test "unstyled supplied connectors honor caller work and output limits" {
+  let document = @bpmn.read(supplied_connector_source()).document.unwrap()
+  let before = @bpmn.write(document)
+  let diagram = @adapter.to_diagram(document).diagram.unwrap()
+  for policy in [@model.GeometryPolicy::PreferDi, RequireDi] {
+    for
+      limits in [
+        @svg.ConnectorLimits::new(segments=0),
+        @svg.ConnectorLimits::new(output_units=1),
+      ] {
+      let rendered = @svg.SvgRenderer::new(
+        bpmn_policy=policy,
+        connectors=@svg.ConnectorOptions::new(style=Curved, limits~),
+      ).render(diagram)
+      assert_true(rendered.output is None)
+      assert_true(
+        rendered.diagnostics.iter().any(d => d.code == "connector/limit"),
+      )
+    }
+  }
+  assert_eq(@bpmn.write(document), before)
+}
+
+///|
 test "unsafe styling refuses a short imported terminal without moving supplied geometry" {
   let document = @bpmn.read(supplied_connector_source(short=true)).document.unwrap()
   let before = @bpmn.write(document)

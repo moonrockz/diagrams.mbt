@@ -347,7 +347,7 @@ fn paint_bpmn(
   }
   let display_options = if geometry.source == Supplied &&
     !connectors.style_supplied_bpmn {
-    ConnectorOptions::new(crossing=Plain)
+    ConnectorOptions::new(crossing=Plain, limits=connectors.limits)
   } else {
     connectors
   }
