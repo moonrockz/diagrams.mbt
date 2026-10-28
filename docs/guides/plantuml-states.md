@@ -68,7 +68,10 @@ implicit states, redeclarations and ordered descriptions. Composites include
 empty and nested forms; `--` and `||` retain concurrent region orientation.
 Transitions preserve parallel edges, self-loops, arrow direction hints, line
 styles and endpoint markers. Left/up drawing hints do not reverse semantic
-endpoints. Reverse arrows retain their authored semantic direction.
+endpoints. Reverse arrows retain their authored semantic direction. Compact
+arrows such as `A-r->B.C` retain the qualified child endpoint. Direction hints
+accept the pinned spellings `l`, `le`, `left`, `r`, `ri`, `right`, `u`, `up`, `d`,
+`do` and `down`; colors and line-style words do not select a direction.
 
 State roles distinguish initial, final, choice, fork, join, shallow/deep history,
 entry/exit points, input/output pins and expansion input/output symbols. Scoped

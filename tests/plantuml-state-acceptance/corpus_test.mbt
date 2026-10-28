@@ -189,6 +189,22 @@ test "independent pinned entity ownership roles and ordered transition endpoints
         string(field(link, "label")),
         msg=name + " label " + i.to_string(),
       )
+      if name.contains("arrow-direction-") {
+        let hint : @flowchart.Direction? = match
+          string(field(link, "rank_direction")) {
+          "RL" => Some(RL)
+          "LR" => Some(LR)
+          "BT" => Some(BT)
+          "TB" => Some(TB)
+          _ => None
+        }
+        assert_eq(edge.direction_hint, hint, msg=name + " pinned direction")
+        assert_true(
+          string(field(link, "line_style")).has_prefix("DASHED"),
+          msg=name,
+        )
+        assert_eq(edge.style, Dotted, msg=name + " pinned style")
+      }
     }
   }
 }
@@ -407,4 +423,61 @@ test "cross-composite lookup retains an earlier implicit child's identity" {
   assert_eq(model.transitions[0].target, "A.X")
   assert_eq(model.transitions[1].source, "A.X")
   assert_eq(@model.validate(model), [])
+}
+
+///|
+test "compact state arrows retain qualified targets and pinned abbreviated directions" {
+  let source = "@startuml\nstate A\nstate B {\nstate C\n}\nA-->B.C : compact\nB.C<--A : reverse compact\n@enduml\n"
+  let read = @plantuml.read(source)
+  assert_false(read.diagnostics.any(d => d.severity == Error))
+  guard read.document is Some(State(document)) else { fail("state") }
+  let compact = document.items.filter_map(item => {
+    match item.kind {
+      Transition(a, arrow, b, label) => Some((a, arrow, b, label))
+      _ => None
+    }
+  })
+  assert_eq(compact[0], ("A", "-->", "B.C", "compact"))
+  assert_eq(compact[1], ("B.C", "<--", "A", "reverse compact"))
+  let converted = @syntax.to_state(document).state.unwrap()
+  for edge in converted.transitions {
+    assert_eq(edge.source, "A")
+    assert_eq(edge.target, "B.C")
+  }
+  for
+    (hint, direction) in [
+      ("l", @flowchart.Direction::RL),
+      ("le", RL),
+      ("left", RL),
+      ("r", LR),
+      ("ri", LR),
+      ("right", LR),
+      ("u", BT),
+      ("up", BT),
+      ("d", TB),
+      ("do", TB),
+      ("down", TB),
+    ] {
+    let source = "@startuml\nstate A\nstate B\nA -[#blue,dashed]" +
+      hint +
+      "-> B\n@enduml\n"
+    guard @plantuml.read(source).document is Some(State(document)) else {
+      fail(hint)
+    }
+    let model = @syntax.to_state(document).state.unwrap()
+    assert_eq(model.transitions[0].direction_hint, Some(direction), msg=hint)
+    assert_eq(model.transitions[0].source, "A", msg=hint)
+    assert_eq(model.transitions[0].target, "B", msg=hint)
+    assert_eq(model.transitions[0].style, Dotted, msg=hint)
+  }
+}
+
+///|
+test "single-letter state direction is retained without reading color as direction" {
+  let read = @plantuml.read(
+    "@startuml\nstate A\nstate B\nA -[#red,dashed]u-> B\n@enduml\n",
+  )
+  guard read.document is Some(State(document)) else { fail("state") }
+  let model = @syntax.to_state(document).state.unwrap()
+  assert_eq(model.transitions[0].direction_hint, Some(@flowchart.Direction::BT))
 }

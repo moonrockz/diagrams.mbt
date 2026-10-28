@@ -93,6 +93,24 @@
       "fixtures": [
         "redeclarations.puml"
       ]
+    },
+    "compact-arrows-and-direction-abbreviations": {
+      "status": "supported",
+      "fixtures": [
+        "arrow-compact-qualified.puml",
+        "arrow-direction-l.puml",
+        "arrow-direction-le.puml",
+        "arrow-direction-left.puml",
+        "arrow-direction-r.puml",
+        "arrow-direction-ri.puml",
+        "arrow-direction-right.puml",
+        "arrow-direction-u.puml",
+        "arrow-direction-up.puml",
+        "arrow-direction-d.puml",
+        "arrow-direction-do.puml",
+        "arrow-direction-down.puml",
+        "arrow-direction-reverse-u.puml"
+      ]
     }
   },
   "refusals": {

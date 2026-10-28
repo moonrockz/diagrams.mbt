@@ -21,8 +21,8 @@ MoonBit readers. Portable acceptance tests consume committed fixtures.
 | Existing output stability | All 208 existing gallery source/static SVG files compare byte-for-byte with the v0.3.0 base; reviewed shared player HTML updates retain static downloads |
 | Dependency boundaries and all four targets | `mise run test:state-consumer`; model, dedicated Mermaid/PlantUML and renderer/player cases each run on wasm, wasm-gc, js and native |
 
-The final frozen-code `mise run check` passed 888 tests on wasm, wasm-gc and
-JavaScript, 899 tests on native, 23 task scripts, lint, validation and builds.
+The final frozen-code `mise run check` passed 890 tests on wasm, wasm-gc and
+JavaScript, 901 tests on native, 23 task scripts, lint, validation and builds.
 Fresh local consumers passed all 16 case/target combinations.
 
 The full repository gate is `mise run check`. Stored visual/player qualification
@@ -36,3 +36,8 @@ approved implementation, merge and publication. Postmerge tracker closure
 records the PR and merge SHA, then pulls/pushes beads. Publication verification
 checks all seven modules, the matching tag/release SHA, site asset contents,
 fresh published state consumers and deployed versioned docs before goal closure.
+
+PR review regressions add compact qualified endpoint and all supported arrow
+direction spellings, with independent native queue/inversion and line-style
+evidence. The PlantUML corpus now has 122 original/canonical/refusal fixtures.
+The fresh dedicated PlantUML consumer checks `A-r->B.C` and its rightward hint.

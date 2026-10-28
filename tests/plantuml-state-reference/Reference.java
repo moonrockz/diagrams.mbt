@@ -61,7 +61,13 @@ public class Reference {
           label = display(middle.getDisplay());
           for (Link next : s.getLinks()) if ((next.isInverted() ? next.getEntity2() : next.getEntity1()) == middle) { b = next.isInverted() ? next.getEntity1() : next.getEntity2(); break; }
         }
-        links.add("{\"source\":" + q(name(a)) + ",\"target\":" + q(name(b)) + ",\"label\":" + q(label) + "}");
+        String rank = l.getLength() == 1 ? (l.isInverted() ? "RL" : "LR") : (l.isInverted() ? "BT" : "TB");
+        // Direction fixtures use two authored body dashes. The pinned command
+        // normalizes horizontal queues to length one and inverts left/up links.
+        // Inspect those upstream facts rather than parsing direction text here.
+        String rankEvidence = file.getFileName().toString().startsWith("arrow-direction-")
+          ? ",\"rank_direction\":" + q(rank) + ",\"line_style\":" + q(l.getType().getStyle().toString()) : "";
+        links.add("{\"source\":" + q(name(a)) + ",\"target\":" + q(name(b)) + ",\"label\":" + q(label) + rankEvidence + "}");
       }
       return prefix + ",\"status\":\"accepted\",\"entities\":[" + String.join(",",entities) + "],\"links\":[" + String.join(",",links) + "]}";
     } catch (Throwable e) { return prefix + ",\"status\":\"crashed\",\"error\":" + q(e.toString()) + "}"; }

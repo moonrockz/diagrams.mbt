@@ -2,9 +2,1005 @@
  "plantuml": "1.2026.9",
  "jdk": "temurin-21.0.13+9.0.LTS",
  "jar_sha256": "aa4a1d06f8911c4b842beff4828dd955be431692b631a312d04c0e9fab9581de",
- "adapter_sha256": "d3816cc3824e7ce0ca2ca8a873acb9bde62624629a006c99c7761eb04ee8a704",
- "fixtures_digest": "42895e09e5aa30edbc1ee329568c5acfa42d1f2688bca7c7bcd50b41bd5d30dd",
+ "adapter_sha256": "f22356b0e24f67759967aca5925aabdded8b50ef9e6e1b57f59c06e6351f0005",
+ "fixtures_digest": "429d212844c8c92f985549a5eac03a1299183507e4f68ace72a8bbe4ba315d9c",
  "fixtures": [
+  {
+   "name": "arrow-compact-qualified.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "B",
+     "parent": "root",
+     "group": true,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    },
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B.C",
+     "parent": "B",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "C",
+     "descriptions": []
+    },
+    {
+     "id": "Box",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "Box",
+     "descriptions": []
+    },
+    {
+     "id": "open",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "open",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "compact"
+    },
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "reverse compact"
+    },
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "compact direction"
+    },
+    {
+     "source": "Box",
+     "target": "open",
+     "label": "endpoint names"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-d.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "d",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-do.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "do",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-down.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "down",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-l.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "l",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-le.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "le",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-left.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "left",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-r.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "r",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-reverse-u.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "B",
+     "target": "A",
+     "label": "reverse up",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-ri.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "ri",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-right.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "right",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-u.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "u",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "arrow-direction-up.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "up",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-compact-qualified.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "B",
+     "parent": "root",
+     "group": true,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    },
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B.C",
+     "parent": "B",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "C",
+     "descriptions": []
+    },
+    {
+     "id": "Box",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "Box",
+     "descriptions": []
+    },
+    {
+     "id": "open",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "open",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "compact"
+    },
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "reverse compact"
+    },
+    {
+     "source": "A",
+     "target": "B.C",
+     "label": "compact direction"
+    },
+    {
+     "source": "Box",
+     "target": "open",
+     "label": "endpoint names"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-d.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "d",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-do.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "do",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-down.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "down",
+     "rank_direction": "TB",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-l.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "l",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-le.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "le",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-left.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "left",
+     "rank_direction": "RL",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-r.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "r",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-reverse-u.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "B",
+     "target": "A",
+     "label": "reverse up",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-ri.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "ri",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-right.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "right",
+     "rank_direction": "LR",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-u.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "u",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
+  {
+   "name": "canonical/arrow-direction-up.puml",
+   "status": "accepted",
+   "entities": [
+    {
+     "id": "A",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "A",
+     "descriptions": []
+    },
+    {
+     "id": "B",
+     "parent": "root",
+     "group": false,
+     "role": "STATE",
+     "position": "NORMAL",
+     "stereotype": "",
+     "label": "B",
+     "descriptions": []
+    }
+   ],
+   "links": [
+    {
+     "source": "A",
+     "target": "B",
+     "label": "up",
+     "rank_direction": "BT",
+     "line_style": "DASHED(null)"
+    }
+   ]
+  },
   {
    "name": "canonical/composite.puml",
    "status": "accepted",

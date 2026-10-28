@@ -16,3 +16,9 @@ boundary positions and transition links. Arrow direction is normalized from
 upstream link inversion. Timestamp-named presentation label nodes are collapsed by
 following upstream links, keeping their labels on the logical transition.
 No expected topology comes from the MoonBit converter or rendered pixels.
+
+Arrow direction regression fixtures inspect the pinned link queue length and
+inversion. For two-dash authored bodies, the native command forces horizontal
+queues to one while preserving vertical queue length, and inverts left/up
+links. These independent facts determine their expected rank direction. Link
+styles come from the native LinkType, including styles before/after hints.

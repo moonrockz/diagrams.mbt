@@ -1,0 +1,12 @@
+@startuml
+state A
+state B {
+  state C
+}
+state Box
+state open
+A-->B.C : compact
+B.C<--A : reverse compact
+A-r->B.C : compact direction
+Box-->open : endpoint names
+@enduml

@@ -7,6 +7,12 @@ test "fresh dedicated PlantUML state reader supports explicit body and native bl
   let reread = @reader.read(@envelope.scan_body(State,printed))
   assert_true(document.logical_equal(reread.document.unwrap()))
   assert_true(@reader.to_state(document).state is Some(_))
+  let compact = @reader.read(@envelope.scan_body(State,"state A\nstate B {\n state C\n}\nA-r->B.C\n"))
+  assert_eq(compact.diagnostics,[])
+  let compact_model = @reader.to_state(compact.document.unwrap()).state.unwrap()
+  assert_eq(compact_model.transitions[0].source,"A")
+  assert_eq(compact_model.transitions[0].target,"B.C")
+  assert_eq(compact_model.transitions[0].direction_hint,Some(LR))
   let source = "@startuml\n" + body + "@enduml\n"
   let scan = @envelope.scan(source)
   let block = @reader.read(scan)

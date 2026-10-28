@@ -6,8 +6,11 @@ remain descriptive data.
 
 }
 ```mbt check
+///|
 test {
-  let scan = @envelope.scan("@startuml\nstate Ready\nReady --> Done : finish\n@enduml\n")
+  let scan = @envelope.scan(
+    "@startuml\nstate Ready\nReady --> Done : finish\n@enduml\n",
+  )
   let read = @state.read(scan)
   let document = read.document.unwrap()
   let model = @state.to_state(document).state.unwrap()

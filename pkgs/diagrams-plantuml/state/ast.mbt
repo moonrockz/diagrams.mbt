@@ -19,9 +19,18 @@ pub struct Statement {
 } derive(Eq, Debug)
 
 ///|
-pub fn Statement::new(kind : Kind, span? : @diagrams.Span, explicit_label? : Bool) -> Statement {
-  let explicit_label = explicit_label.unwrap_or(match kind { Declaration(code, label, _, _) => code != label; _ => false })
-  { kind, explicit_label, span }
+pub fn Statement::new(
+  kind : Kind,
+  span? : @diagrams.Span,
+  explicit_label? : Bool,
+) -> Statement {
+  let explicit_label = explicit_label.unwrap_or(
+    match kind {
+      Declaration(code, label, _, _) => code != label
+      _ => false
+    },
+  )
+  { kind, explicit_label, span, }
 }
 
 ///|
@@ -39,12 +48,22 @@ pub fn Document::new(
   complete~ : Bool = true,
   statements~ : ArrayView[@envelope.Statement] = [],
 ) -> Document {
-  { name, complete, statements: ReadOnlyArray::from_array(statements), items: ReadOnlyArray::from_array(items) }
+  {
+    name,
+    complete,
+    statements: ReadOnlyArray::from_array(statements),
+    items: ReadOnlyArray::from_array(items),
+  }
 }
 
 ///|
 pub fn Document::without_spans(self : Document) -> Document {
-  { ..self, items: ReadOnlyArray::from_iter(self.items.iter().map(s => { ..s, span: None })) }
+  {
+    ..self,
+    items: ReadOnlyArray::from_iter(
+      self.items.iter().map(s => { ..s, span: None, }),
+    ),
+  }
 }
 
 ///|
@@ -54,13 +73,18 @@ pub fn Document::logical_equal(self : Document, other : Document) -> Bool {
 
 ///|
 pub extend Kind with Eq::{equal, not_equal}
+
 ///|
 pub extend Kind with @debug.Debug::{to_repr}
+
 ///|
 pub extend Statement with Eq::{equal, not_equal}
+
 ///|
 pub extend Statement with @debug.Debug::{to_repr}
+
 ///|
 pub extend Document with Eq::{equal, not_equal}
+
 ///|
 pub extend Document with @debug.Debug::{to_repr}

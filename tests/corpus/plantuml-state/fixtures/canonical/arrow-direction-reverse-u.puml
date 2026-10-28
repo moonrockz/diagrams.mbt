@@ -1,0 +1,5 @@
+@startuml
+state A
+state B
+A <-u[#red,dashed]- B : reverse up
+@enduml
