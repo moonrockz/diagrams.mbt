@@ -39,9 +39,13 @@ cancellation, bounded failure, SVG availability and recovery. Eight landing
 screenshots covered both trees, both themes and 360/1440 widths; visual review
 found no clipping. The existing matrix also covers 768 pixels and no-script use.
 
-The complete local gate passed with 924 tests on wasm, wasm-gc and JavaScript,
-935 on native, 27 task-script suites, all validation and builds. Independent
+The complete local gate passed with 926 tests on wasm, wasm-gc and JavaScript,
+937 on native, 27 task-script suites, all validation and builds. Independent
 review checked raster/GIF bounds, geometry, source binding and the worker
 protocol. Three font findings were fixed and reviewed again: aggregate glyph
 preflight, cmap expansion precharge and signed-wrap cmap normalization. The
 original font panic reproducer now succeeds, including font subsetting.
+
+Continued PR review also moved cumulative-pixel and minimum-byte GIF budget
+checks ahead of timestamp allocation. Public sampler/worker regressions cover
+enormous custom frame limits with small remaining budgets.

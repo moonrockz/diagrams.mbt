@@ -432,15 +432,11 @@ fn export_gif_data_explicit(
       data, plan, limits,
     )
     let (width, height) = still_dimensions(canonical, options.size, limits)
-    let times = gif_times(duration, options, limits) catch {
-      GifInvalid(message) => raise raster_fail("raster/gif-options", message)
-    }
     let pixel_count = width.to_int64() * height.to_int64()
-    guard times.length().to_int64() <=
-      limits.max_cumulative_pixels / pixel_count else {
-      raise raster_fail(
-        "raster/cumulative-pixel-limit", "GIF exceeds its cumulative pixel budget",
-      )
+    let times = gif_times(duration, options, limits, pixels=pixel_count) catch {
+      GifInvalid(message) => raise raster_fail("raster/gif-options", message)
+      RasterInvalid(code, message, source_id) => raise RasterInvalid(code, message, source_id)
+      error => raise raster_fail("raster/gif-options", error.to_string())
     }
     let tree = parse_svg_xml(display, max_nodes=limits.max_svg_nodes)
     let visit_indices = gif_visit_indices(tree)

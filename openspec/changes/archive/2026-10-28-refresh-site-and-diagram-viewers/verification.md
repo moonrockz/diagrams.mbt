@@ -18,10 +18,16 @@ workstation publication was used.
 
 `mise run format`, `mise run check`, strict OpenSpec validation, stored SVG and
 animation browser suites, fresh portable raster/flowchart/state consumers, and
-root/next site consumer checks passed. The final local gate had 924 tests on
-each portable backend, 935 on native and 27 task-script suites. Source/static
+root/next site consumer checks passed. The final local gate had 926 tests on
+each portable backend, 937 on native and 27 task-script suites. Source/static
 SVG inventory remained exact; historical archive assembly code was unchanged.
 
 Independent review's glyph allocation, cmap expansion and signed-wrap findings
 were fixed and re-reviewed. Regression tests enforce early aggregate budgets
 and successful outlining/subsetting of the formerly crashing valid font.
+
+Continued PR review found a custom-limit GIF timestamp allocation that preceded
+the cumulative-pixel check. Both sampler and worker paths now preflight pixel
+and minimum byte budgets before allocating timestamps. Regressions exercise a
+2,147,483,647-frame request with tiny pixel/output budgets without materializing
+its schedule.

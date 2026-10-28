@@ -198,3 +198,23 @@ test "many aliases reuse a single node index and reach font validation" {
   )
   assert_true(decorated.contains("gif-visit-overlay"))
 }
+
+///|
+test "public samplers reject enormous timing arrays before font or frame work" {
+  let view = @swimlane.Swimlane::new(
+    "timing-budget",
+    [@swimlane.Node::new("A"), @swimlane.Node::new("B")],
+    [@swimlane.Connection::new("AB", "A", "B")],
+  )
+  let scene = @svg.SvgRenderer::new().scene(@render.Diagram::Swimlane(view)).scene.unwrap()
+  let plan = @animation.PlaybackPlan::illustrative(scene.catalog, duration_ms=100L).plan.unwrap()
+  let data = gif_export_data(scene, plan).data.unwrap()
+  let options = GifOptions::new(frame_rate=100, interval=Interval(start_ms=0L, end_ms=21474836460L))
+  let limits = { ..RasterLimits::default(), max_frames: 2147483647, max_cumulative_pixels: 1L, }
+  let sampled = GifSampler::new(scene, plan, options~, limits~)
+  assert_true(sampled.sampler is None)
+  assert_eq(sampled.diagnostics[0].code, "raster/cumulative-pixel-limit")
+  let exported = Rasterizer::new(FontSet::new([]), limits~).export_gif_data(data, options~)
+  assert_true(exported.image is None)
+  assert_eq(exported.diagnostics[0].code, "raster/cumulative-pixel-limit")
+}

@@ -100,11 +100,8 @@ pub fn GifSampler::new(
       options.size,
       limits,
     )
-    let times = gif_times(plan.duration_ms, options, limits)
     let pixels = width.to_int64() * height.to_int64()
-    if times.length().to_int64() > limits.max_cumulative_pixels / pixels {
-      raise GifInvalid("GIF cumulative pixel budget exhausted")
-    }
+    let times = gif_times(plan.duration_ms, options, limits, pixels~)
     guard limits.max_svg_nodes > 0 &&
       scene.paths.length() <= limits.max_svg_nodes &&
       scene.nodes.length() <= limits.max_svg_nodes else {

@@ -115,7 +115,9 @@ The versioned `gif_export_data` and `export_gif_data` protocol carries the same
 scene/plan for an offline worker. It validates source identity, geometry,
 schedules and limits. Its fingerprint detects accidental mismatch, not hostile
 forgery. Bindings, steps and groups share the XML-node budget; repeated metadata
-shares the source-unit budget. Zero-duration and empty schedules are diagnostics.
+shares the source-unit budget. Zero-duration and empty schedules are diagnostics. Endpoint-inclusive frame
+counts are checked against cumulative pixels and the minimum encoded byte
+budget before any timestamp array is allocated, including with custom limits.
 See the checked module examples for interval and loop options.
 
 Standalone players embed a compressed worker and validated font subsets. PNG,

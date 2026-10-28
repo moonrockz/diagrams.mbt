@@ -63,7 +63,8 @@ fn gif_times(
   duration : Int64,
   options : GifOptions,
   limits : RasterLimits,
-) -> Array[(Int64, Int32)] raise GifError {
+  pixels~ : Int64 = 1L,
+) -> Array[(Int64, Int32)] raise {
   guard options.frame_rate >= 1 && options.frame_rate <= 100 else {
     raise GifInvalid("GIF frame rate must be between 1 and 100")
   }
@@ -98,6 +99,13 @@ fn gif_times(
   let intervals = (elapsed * fps + 999L) / 1000L
   guard intervals + 1L <= limits.max_frames.to_int64() else {
     raise GifInvalid("GIF frame budget exhausted")
+  }
+  let count = intervals + 1L
+  guard pixels > 0L && count <= limits.max_cumulative_pixels / pixels else {
+    raise raster_fail("raster/cumulative-pixel-limit", "GIF exceeds its cumulative pixel budget")
+  }
+  guard limits.max_output_bytes.to_int64() >= 782L + count * 20L else {
+    raise raster_fail("raster/output-limit", "GIF byte budget cannot hold its headers and frames")
   }
   let result : Array[(Int64, Int32)] = []
   for i in 0L..<intervals {
