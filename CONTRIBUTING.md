@@ -85,10 +85,10 @@ substitute the workflow or skill name from the table above.
 | --- | --- | --- |
 | Codex CLI / IDE | `.agents/skills/` | `$openspec-apply-change <change>` |
 | Codex desktop | `.agents/skills/` | Select `openspec-apply-change` from Skills in the sidebar |
-| Claude Code | `.claude/skills/` | `/opsx:apply <change>` or `/openspec-apply-change <change>` |
+| Claude Code | `.claude/skills/` | `/openspec-apply-change <change>` |
 | Grok Build | `.grok/skills/` | `/openspec-apply-change <change>` |
-| Cursor | `.cursor/skills/` | `/opsx-apply <change>` |
-| GitHub Copilot | `.github/skills/` | `/opsx-apply <change>` |
+| Cursor | `.cursor/skills/` | `/openspec-apply-change <change>` |
+| GitHub Copilot | `.github/skills/` | `/openspec-apply-change <change>` |
 | Muse / portable agents | `.agents/skills/` | Ask it to read the matching `SKILL.md` and follow it for `<change>` |
 
 If skill discovery is unavailable, use this prompt with any agent:
@@ -113,34 +113,34 @@ mise run openspec:setup
 mise exec -- openspec validate --all --strict
 ```
 
-The setup task installs the six core workflows as skills for all five supported
-clients, plus commands for Claude, Cursor and Copilot. It uses temporary OpenSpec
-settings with `profile: core` and `delivery: both`; your machine-wide profile and
+The setup task installs the six core workflows as skills for the supported
+clients. It uses temporary OpenSpec settings with `profile: core` and
+`delivery: skills`; your machine-wide profile and
 delivery settings stay unchanged. It preserves `openspec/config.yaml`, existing
 specifications and changes. Review and commit the generated files with the setup
 task. Keep repository-specific instructions in `AGENTS.md`, `CONTRIBUTING.md` and
-`openspec/config.yaml`, rather than editing generated skills or commands.
+`openspec/config.yaml`, rather than editing generated skills.
 
 Restart or reload the agent if the new entry points do not appear. In Codex CLI
 or the IDE extension, check `/skills` or type `$openspec-` to select a workflow.
 In Codex desktop, check Skills in the sidebar. With a portable client, explicitly
 load `AGENTS.md` at the start of the session.
 
-The task configures Copilot skills and editor prompts. GitHub-hosted Copilot
+The task configures Copilot editor skills. GitHub-hosted Copilot
 environment setup is separate; it is not installed by this task.
 
-### Claude command reference
+### Claude skill reference
 
-Claude Code also provides the following commands:
+Claude Code exposes these installed skills:
 
 | Command | Use |
 | --- | --- |
-| `/opsx:explore` | Examine an idea or a problem before you write a change |
-| `/opsx:propose` | Make a change and write all of its files |
-| `/opsx:update` | Revise the files of a change and keep them consistent |
-| `/opsx:apply` | Implement the tasks of a change |
-| `/opsx:sync` | Copy the requirement changes into `openspec/specs/` without archiving |
-| `/opsx:archive` | Archive a complete change |
+| `/openspec-explore` | Examine an idea or a problem before you write a change |
+| `/openspec-propose` | Make a change and write all of its files |
+| `/openspec-update-change` | Revise the files of a change and keep them consistent |
+| `/openspec-apply-change` | Implement the tasks of a change |
+| `/openspec-sync-specs` | Copy the requirement changes into `openspec/specs/` without archiving |
+| `/openspec-archive-change` | Archive a complete change |
 
 Without an agent, run `mise exec -- openspec new change <name>`. Then run
 `mise exec -- openspec instructions <artifact> --change <name>` to see the template
