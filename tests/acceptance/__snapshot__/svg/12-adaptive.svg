@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 371 240" width="371" height="240" role="img" data-diagram="sequence" id="seq-cd8461b9c1899409-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 371 240" width="371" height="240" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-7a3dabe63bdb3ff7-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (A, J) and 2 messages.</desc>
   <defs>
     <style>
-svg#seq-cd8461b9c1899409-diagram {
+svg#seq-7a3dabe63bdb3ff7-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg#seq-cd8461b9c1899409-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#seq-cd8461b9c1899409-diagram {
+  svg#seq-7a3dabe63bdb3ff7-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg#seq-cd8461b9c1899409-diagram {
     --external-ink: #606f85;
   }
 }
-svg#seq-cd8461b9c1899409-diagram[data-theme="dark"] {
+svg#seq-7a3dabe63bdb3ff7-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg#seq-cd8461b9c1899409-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#seq-cd8461b9c1899409-diagram[data-theme="light"] {
+svg#seq-7a3dabe63bdb3ff7-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,10 +118,10 @@ svg#seq-cd8461b9c1899409-diagram[data-theme="light"] {
   --external-ink: #606f85;
 }
 </style>
-    <marker id="seq-cd8461b9c1899409-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-7a3dabe63bdb3ff7-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-cd8461b9c1899409-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-7a3dabe63bdb3ff7-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--backend-stroke)" stroke="var(--backend-stroke)" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -134,14 +134,14 @@ svg#seq-cd8461b9c1899409-diagram[data-theme="light"] {
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="A" data-to="J" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M87 127 L284 127" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-cd8461b9c1899409-head-0-end)"/>
+      <path class="m-line" d="M87 127 L284 127" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-7a3dabe63bdb3ff7-head-0-end)" data-connector-id="0" data-connector-source="A" data-connector-target="J" data-connector-route="M87 127 L284 127" data-connector-key="0"/>
       <rect class="mask" x="96" y="100" width="179" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="185" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="185" y="115">Hello John, how are you?</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="1" data-from="J" data-to="A" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M284 175 L87 175" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-cd8461b9c1899409-head-1-end)"/>
+      <path class="m-line" d="M284 175 L87 175" fill="none" stroke="var(--backend-stroke)" stroke-width="1.4" marker-end="url(#seq-7a3dabe63bdb3ff7-head-1-end)" data-connector-id="1" data-connector-source="J" data-connector-target="A" data-connector-route="M284 175 L87 175" data-connector-key="1"/>
       <rect class="mask" x="157" y="148" width="57" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="185" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--backend-ink)">
         <tspan x="185" y="163">Great!</tspan>

@@ -310,7 +310,16 @@ fn paint_data_tree(
   id_prefix : String?,
   limits : @data_tree_layout.Limits,
   precomputed? : @data_tree_layout.Result,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
+  if !connector_options_valid(connectors) {
+    return @render.Rendered::failed("image/svg+xml", [
+      @diagrams.Diagnostic::error(
+        "connector/invalid-option", "Invalid connector options",
+      ),
+    ])
+  }
+  let limits = limits.with_minimum_approach(connectors.minimum_approach)
   let result = match precomputed {
     Some(result) => result
     None => @data_tree_layout.layout(view, limits~)
@@ -352,12 +361,12 @@ fn paint_data_tree(
       ],
     ),
   )
-  let connectors = []
+  let connector_nodes = []
   for connector in geometry.connectors {
     if c.failed {
       break
     }
-    connectors.push(
+    connector_nodes.push(
       c.element("path", attrs=[
         ("class", "data-connector"),
         ("data-member", connector.entry),
@@ -406,7 +415,11 @@ fn paint_data_tree(
     body.push(c.label("data-title", label))
   }
   body.push(
-    c.element("g", attrs=[("class", "data-connectors")], children=connectors),
+    c.element(
+      "g",
+      attrs=[("class", "data-connectors")],
+      children=connector_nodes,
+    ),
   )
   body.push(c.element("g", attrs=[("class", "data-boxes")], children=boxes))
   let root = c.element(
@@ -431,6 +444,26 @@ fn paint_data_tree(
       ),
     ])
   }
+  let obstacles : Array[ConnectorObstacle] = []
+  for box in geometry.boxes {
+    let r = box.box
+    obstacles.push({
+      owner: box.node,
+      x: r.x,
+      y: r.y,
+      width: r.width,
+      height: r.height,
+    })
+  }
+  guard finalize_connectors(
+      root,
+      connectors,
+      diagnostics,
+      obstacles=obstacles[:],
+    )
+    is Some(root) else {
+    return @render.Rendered::failed("image/svg+xml", diagnostics)
+  }
   let original = @writer.to_string(root)
   if original.length() > limits.output_units - 128 {
     return prefix_failure()
@@ -439,7 +472,7 @@ fn paint_data_tree(
   // two references use it too.
   let occurrences = (if mode == Adaptive { 4 } else { 0 }) +
     2 +
-    connectors.length()
+    connector_nodes.length()
   let prefix_limit = (limits.output_units - original.length() - 128) /
     occurrences
   let prefix = match id_prefix {
@@ -515,8 +548,9 @@ pub fn render_data_tree(
   mode~ : Mode = Adaptive,
   id_prefix? : String,
   limits~ : @data_tree_layout.Limits = @data_tree_layout.Limits::new(),
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
-  paint_data_tree(view, theme, mode, id_prefix, limits)
+  paint_data_tree(view, theme, mode, id_prefix, limits, connectors~)
 }
 
 ///|
@@ -531,7 +565,9 @@ fn data_tree_scene(
   (@render.Rendered, Array[(@animation.Occurrence, String)], Array[NodeBinding]),
   ReadOnlyArray[@diagrams.Diagnostic],
 ] {
-  let limits = renderer.data_tree_limits
+  let limits = renderer.data_tree_limits.with_minimum_approach(
+    renderer.connectors.minimum_approach,
+  )
   let result = @data_tree_layout.layout(view, limits~)
   let rendered = paint_data_tree(
     view,
@@ -539,6 +575,7 @@ fn data_tree_scene(
     renderer.mode,
     renderer.id_prefix,
     limits,
+    connectors=renderer.connectors,
     precomputed=result,
   )
   guard result.geometry is Some(geometry) && rendered.output is Some(_) else {

@@ -75,7 +75,7 @@ pub fn check(
   geometry : Geometry,
   palette : @theme.Palette,
   work_limit~ : Int32 = 1000000,
-  intentional_containment~ : ArrayView[(String,String)] = [],
+  intentional_containment~ : ArrayView[(String, String)] = [],
 ) -> ReadOnlyArray[Finding] {
   let findings = []
   let mut work = 0
@@ -115,10 +115,12 @@ pub fn check(
       exhausted = true
     }
   }
-  let intended : Map[(String,String),Bool]=Map([])
+  let intended : Map[(String, String), Bool] = Map([])
   for pair in intentional_containment {
-    if !charge(pair.0.length()+pair.1.length()+1) { return ReadOnlyArray::from_array(findings) }
-    intended[pair]=true
+    if !charge(pair.0.length() + pair.1.length() + 1) {
+      return ReadOnlyArray::from_array(findings)
+    }
+    intended[pair] = true
   }
   let by_id : Map[String, Shape] = Map([])
   for shape in geometry.shapes {
@@ -128,7 +130,9 @@ pub fn check(
     by_id[shape.id] = shape
   }
   fn ancestor(child : Shape, parent : String) -> Bool {
-    if intended.contains((child.id,parent)) { return true }
+    if intended.contains((child.id, parent)) {
+      return true
+    }
     let mut current = child.parent
     let seen = Map([])
     while current is Some(id) {

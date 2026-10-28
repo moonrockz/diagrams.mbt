@@ -1,0 +1,10 @@
+import {
+  "moonbitlang/core/test",
+  "moonrockz/bpmn",
+  "moonrockz/diagrams-bpmn" @adapter,
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams-animated" @animated,
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-plantuml" @plantuml,
+} for "test"

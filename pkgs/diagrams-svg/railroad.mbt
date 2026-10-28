@@ -776,7 +776,9 @@ fn paint_railroad(
       ),
     ])
   }
-  let limits = renderer.railroad_limits
+  let limits = renderer.railroad_limits.with_minimum_approach(
+    renderer.connectors.minimum_approach,
+  )
   let result = @railroad_layout.layout(model, limits~)
   let diagnostics = result.diagnostics.iter().collect()
   guard result.geometry is Some(geometry) else { return failed(diagnostics) }
@@ -1018,6 +1020,93 @@ fn paint_railroad(
   if c.failed {
     return failed(c.diagnostics)
   }
+  let obstacles : Array[ConnectorObstacle] = []
+  let labels : Array[(String, ConnectorObstacle)] = []
+  for term in geometry.terms {
+    let r = term.rect
+    obstacles.push({
+      owner: term.term.id,
+      x: r.x,
+      y: r.y,
+      width: r.width,
+      height: r.height,
+    })
+  }
+  for wire in geometry.wires {
+    if wire.label is Some(label) {
+      let r = label.box
+      labels.push(
+        (
+          "",
+          {
+            owner: wire.connector.id,
+            x: r.x,
+            y: r.y,
+            width: r.width,
+            height: r.height,
+          },
+        ),
+      )
+    }
+  }
+  for frame in geometry.frames {
+    let r = frame.label.box
+    labels.push(
+      (
+        "",
+        {
+          owner: frame.owner,
+          x: r.x,
+          y: r.y,
+          width: r.width,
+          height: r.height,
+        },
+      ),
+    )
+  }
+  for note in geometry.notes {
+    let r = note.rect
+    labels.push(
+      (
+        "",
+        { owner: note.id, x: r.x, y: r.y, width: r.width, height: r.height, },
+      ),
+    )
+  }
+  for track in geometry.tracks {
+    let r = track.label.box
+    labels.push(
+      (
+        "",
+        {
+          owner: track.track.id,
+          x: r.x,
+          y: r.y,
+          width: r.width,
+          height: r.height,
+        },
+      ),
+    )
+  }
+  if geometry.title is Some(title) {
+    let r = title.box
+    labels.push(
+      (
+        "",
+        { owner: "title", x: r.x, y: r.y, width: r.width, height: r.height, },
+      ),
+    )
+  }
+  guard finalize_connectors(
+      root,
+      renderer.connectors,
+      c.diagnostics,
+      obstacles=obstacles[:],
+      labels=labels[:],
+    )
+    is Some(root) else {
+    return failed(c.diagnostics)
+  }
   let original = @writer.to_string(root)
   if original.length() > limits.output_units / 2 {
     return failed([
@@ -1162,8 +1251,10 @@ pub fn render_regex(
   id_prefix? : String,
   limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   trace? : TraceHighlight,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
   let renderer = SvgRenderer::new(
+    connectors~,
     theme~,
     mode~,
     id_prefix?,
@@ -1182,8 +1273,10 @@ pub fn render_ebnf(
   id_prefix? : String,
   limits~ : @railroad_layout.Limits = @railroad_layout.Limits::new(),
   trace? : TraceHighlight,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
   let renderer = SvgRenderer::new(
+    connectors~,
     theme~,
     mode~,
     id_prefix?,

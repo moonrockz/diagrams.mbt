@@ -1,0 +1,11 @@
+@startyaml
+title Services
+services:
+  - name: api
+    endpoints: [read, write]
+    health:
+      path: /health
+  - name: worker
+    endpoints: []
+    queue: jobs
+@endyaml

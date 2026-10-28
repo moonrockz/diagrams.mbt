@@ -103,7 +103,14 @@ receive timed visits without a fabricated path.
 
 Download SVG returns the exact canonical static bytes for the same model and
 renderer options. Transient selection, route and progress overlays stay in the
-viewer. Export preserves its logical position and selection.
+viewer. Export preserves its logical position, occurrence, selection and speed.
+
+Pass connector options through the `svg` argument of `AnimatedRenderer::new`.
+The selected elbow, rounded-elbow or smooth-curve path, including bridge hops,
+is shared by the static diagram, motion and canonical download. The progress
+line and moving dot retain the final path's local underpass mask. Selecting a
+connection keeps this separation too. Reverse routes follow the same visible
+path in reverse; crossing another connection never creates a reachable endpoint.
 
 ## Verify a consumer or artifact
 
@@ -125,6 +132,8 @@ provides stable pages, source and SVG downloads and qualified player links.
 
 Consumers with exhaustive matches must add the new flowchart cases to the
 renderer diagram, Mermaid parsed/tree dispatch and scene bindings, plus the
-activity cases to PlantUML document/kind values. Existing diagram entry points,
-static SVG bytes and semantic playback contracts remain unchanged. Shared HTML
-runtime changes have deterministic snapshots and browser qualification.
+activity cases to PlantUML document/kind values. Diagram entry points, source
+identities and semantic playback contracts remain stable. Default bridge hops,
+longer marked approaches and explicit connector styles change affected SVG and
+HTML bytes. Reviewed portable snapshots and browser checks qualify these visual
+updates and the shared player runtime.

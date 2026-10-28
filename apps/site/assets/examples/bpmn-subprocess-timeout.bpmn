@@ -1,0 +1,7 @@
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="urn:gallery:expanded">
+<b:process id="Fulfilment" isExecutable="false">
+<b:startEvent id="start"/><b:subProcess id="work" name="Fulfil order"><b:startEvent id="innerStart"/><b:serviceTask id="pack" name="Pack"/><b:endEvent id="innerEnd"/><b:sequenceFlow id="i1" sourceRef="innerStart" targetRef="pack"/><b:sequenceFlow id="i2" sourceRef="pack" targetRef="innerEnd"/></b:subProcess>
+<b:boundaryEvent id="timeout" attachedToRef="work"><b:timerEventDefinition/></b:boundaryEvent><b:task id="escalate" name="Escalate"/><b:endEvent id="end"/>
+<b:sequenceFlow id="f1" sourceRef="start" targetRef="work"/><b:sequenceFlow id="f2" sourceRef="work" targetRef="end"/><b:sequenceFlow id="f3" sourceRef="timeout" targetRef="escalate"/><b:sequenceFlow id="f4" sourceRef="escalate" targetRef="end"/>
+</b:process>
+</b:definitions>

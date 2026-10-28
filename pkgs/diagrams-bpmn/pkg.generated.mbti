@@ -4,6 +4,7 @@ package "moonrockz/diagrams-bpmn"
 import {
   "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams-svg",
   "moonrockz/diagrams/render",
 }
 
@@ -12,7 +13,7 @@ pub let graphical_types : ReadOnlyArray[@moonrockz/bpmn.TypeId]
 
 pub fn map_diagnostic(@moonrockz/bpmn.Diagnostic) -> @diagrams.Diagnostic
 
-pub fn render_svg(String, selector? : ViewSelector, resources? : @moonrockz/bpmn.ResourceSet, geometry_policy? : @moonrockz/diagrams/bpmn.GeometryPolicy) -> @render.Rendered
+pub fn render_svg(String, selector? : ViewSelector, resources? : @moonrockz/bpmn.ResourceSet, geometry_policy? : @moonrockz/diagrams/bpmn.GeometryPolicy, connectors? : @diagrams-svg.ConnectorOptions) -> @render.Rendered
 
 pub fn to_diagram(@moonrockz/bpmn.Document, selector? : ViewSelector, resources? : @moonrockz/bpmn.ResourceSet, resource_id? : String, limits? : @moonrockz/bpmn.Limits, geometry_policy? : @moonrockz/diagrams/bpmn.GeometryPolicy) -> Conversion
 

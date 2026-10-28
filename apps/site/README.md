@@ -97,8 +97,13 @@ read access through `gh`.
 
 ## Add and qualify an example
 
-Update a tested renderer source or fixture first, then add an entry to
-`site_gallery_examples` in `scripts/gallery.mbtx`. Choose a stable ID and family,
+Update a tested renderer source or fixture first. The original 15-card baseline
+is in `site_gallery_examples` in `scripts/gallery.mbtx`. Additional examples and
+connector comparisons are in `tests/gallery-expansion-acceptance/`, which writes
+qualified artifacts and inventory snapshots for the same exporter. The inventory
+has 51 cards, including at least three additional distinct sources per family.
+Theme, player and connector variants do not count as distinct sources.
+Choose a stable ID and family,
 state the implemented scope, name a source and light SVG, and optionally provide
 a dark SVG, a qualified player and companion artifacts. BPMN players illustrate
 structure or supplied scenarios; regex and EBNF evidence comes from external

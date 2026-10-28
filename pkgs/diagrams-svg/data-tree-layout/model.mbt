@@ -7,6 +7,7 @@ pub struct Limits {
   /// The widest value column before text wraps, in SVG units.
   width : Int32
   output_units : Int32
+  minimum_approach : Double
 } derive(Eq, Debug)
 
 ///|
@@ -22,8 +23,9 @@ pub fn Limits::new(
   work~ : Int32 = 1000000,
   width~ : Int32 = 360,
   output_units~ : Int32 = 16777216,
+  minimum_approach~ : Double = 24.0,
 ) -> Limits {
-  { nodes, depth, work, width, output_units, }
+  { minimum_approach, nodes, depth, work, width, output_units, }
 }
 
 ///|
@@ -388,4 +390,12 @@ pub fn svg_number(value : Double) -> String {
   }
   let digits = "\{if fraction < 100 { "0" } else { "" }}\{if fraction < 10 { "0" } else { "" }}\{fraction}"
   "\{prefix}\{whole}." + digits.trim_end(chars="0").to_owned()
+}
+
+///|
+pub fn Limits::with_minimum_approach(
+  self : Limits,
+  minimum_approach : Double,
+) -> Limits {
+  { ..self, minimum_approach, }
 }

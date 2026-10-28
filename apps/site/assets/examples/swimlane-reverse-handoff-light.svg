@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 677 519" width="677" height="519" role="img" data-diagram="swimlane" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-diagram">
+  <title>swimlane-reverse-handoff</title>
+  <desc>Swimlane diagram with 2 responsibility lanes and 3 structural connections. Playback illustrates structure and does not execute a process.</desc>
+  <defs>
+    <marker id="sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#64748b" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="677" height="519" fill="#f4f5f7"/>
+  <g class="swimlane-backgrounds">
+    <g class="swimlane-lane" data-swimlane-id="Dispatch" data-shape="rect" data-expanded="true" data-lane="Dispatch">
+      <rect class="swimlane-bounds" x="32" y="265" width="612.235" height="221.235" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 265 L644.235 265 L644.235 486.235 L32 486.235 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Dispatch" x="80" y="290" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="80" y="290">Dispatch</tspan>
+      </text>
+    </g>
+    <g class="swimlane-lane" data-swimlane-id="Intake" data-shape="rect" data-expanded="true" data-lane="Intake">
+      <rect class="swimlane-bounds" x="32" y="32" width="612.235" height="201" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M32 32 L644.235 32 L644.235 233 L32 233 Z" fill="#f4f5f7" stroke="#5b6474" stroke-width="2"/>
+      <text class="swimlane-label" data-label-owner="Intake" x="72" y="57" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#111827">
+        <tspan x="72" y="57">Intake</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="swimlane-connections">
+    <g class="swimlane-connection" data-swimlane-id="L_A_B_0" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path class="swimlane-connector" d="M352 153 L192 153" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_A_B_0" data-connector-source="A" data-connector-target="B" data-connector-route="M352 153 L192 153" data-connector-key="0"/>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="L_B_C_0" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path class="swimlane-connector" d="M136 185 L136 217 L380.235 217 L380.235 354" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_B_C_0" data-connector-source="B" data-connector-target="C" data-connector-route="M136 185 L136 217 L380.235 217 L380.235 354" data-connector-key="1"/>
+    </g>
+    <g class="swimlane-connection" data-swimlane-id="L_C_D_0" data-source="C" data-target="D" data-display-source="C" data-display-target="D">
+      <path class="swimlane-connector" d="M324.235 386 L196.235 386 L196.235 396.118 L164.235 396.118" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-77-69-6d-6c-61-6e-65-2d-72-65-76-65-72-73-65-2d-68-61-6e-64-6f-66-66-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="L_C_D_0" data-connector-source="C" data-connector-target="D" data-connector-route="M324.235 386 L196.235 386 L196.235 396.118 L164.235 396.118" data-connector-key="2"/>
+    </g>
+  </g>
+  <g class="swimlane-nodes">
+    <g class="swimlane-node" data-swimlane-id="A" data-shape="stadium" data-expanded="true" data-lane="Intake" data-parent="Intake">
+      <rect class="swimlane-bounds" x="352" y="121" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M432 121 L438.243 121.615 L444.246 123.436 L449.778 126.393 L454.627 130.373 L458.607 135.222 L461.564 140.754 L463.385 146.757 L464 153 L464 153 L463.385 159.243 L461.564 165.246 L458.607 170.778 L454.627 175.627 L449.778 179.607 L444.246 182.564 L438.243 184.385 L432 185 L384 185 L377.757 184.385 L371.754 182.564 L366.222 179.607 L361.373 175.627 L357.393 170.778 L354.436 165.246 L352.615 159.243 L352 153 L352 153 L352.615 146.757 L354.436 140.754 L357.393 135.222 L361.373 130.373 L366.222 126.393 L371.754 123.436 L377.757 121.615 L384 121 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="A" x="408" y="157.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="408" y="157.5">Received</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="B" data-shape="rect" data-expanded="true" data-lane="Intake" data-parent="Intake">
+      <rect class="swimlane-bounds" x="80" y="121" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M80 121 L192 121 L192 185 L80 185 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="B" x="136" y="157.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="136" y="157.5">Validate</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="C" data-shape="rect" data-expanded="true" data-lane="Dispatch" data-parent="Dispatch">
+      <rect class="swimlane-bounds" x="324.235" y="354" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M324.235 354 L436.235 354 L436.235 418 L324.235 418 Z" fill="rgba(52, 211, 153, 0.18)" stroke="#059669" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="C" x="380.235" y="390.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#047351">
+        <tspan x="380.235" y="390.5">Ship</tspan>
+      </text>
+    </g>
+    <g class="swimlane-node" data-swimlane-id="D" data-shape="circle" data-expanded="true" data-lane="Dispatch" data-parent="Dispatch">
+      <rect class="swimlane-bounds" x="80" y="354" width="84.235" height="84.235" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="swimlane-outline" d="M164.235 396.118 L164.033 400.246 L163.426 404.334 L162.422 408.344 L161.029 412.235 L159.262 415.972 L157.137 419.517 L154.675 422.837 L151.899 425.899 L148.837 428.675 L145.517 431.137 L141.972 433.262 L138.235 435.029 L134.344 436.422 L130.334 437.426 L126.246 438.033 L122.118 438.235 L117.989 438.033 L113.901 437.426 L109.892 436.422 L106 435.029 L102.264 433.262 L98.718 431.137 L95.399 428.675 L92.336 425.899 L89.56 422.837 L87.098 419.517 L84.973 415.972 L83.206 412.235 L81.814 408.344 L80.809 404.334 L80.203 400.246 L80 396.118 L80.203 391.989 L80.809 387.901 L81.814 383.892 L83.206 380 L84.973 376.264 L87.098 372.718 L89.56 369.399 L92.336 366.336 L95.399 363.56 L98.718 361.098 L102.264 358.973 L106 357.206 L109.892 355.814 L113.901 354.809 L117.989 354.203 L122.118 354 L126.246 354.203 L130.334 354.809 L134.344 355.814 L138.235 357.206 L141.972 358.973 L145.517 361.098 L148.837 363.56 L151.899 366.336 L154.675 369.399 L157.137 372.718 L159.262 376.264 L161.029 380 L162.422 383.892 L163.426 387.901 L164.033 391.989 L164.235 396.118 Z" fill="rgba(251, 146, 60, 0.15)" stroke="#ea580c" stroke-width="1.5"/>
+      <text class="swimlane-label" data-label-owner="D" x="122.118" y="400.618" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#b44409">
+        <tspan x="122.118" y="400.618">Done</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

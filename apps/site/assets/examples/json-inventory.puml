@@ -1,0 +1,4 @@
+@startjson
+title Inventory
+{"warehouse":{"items":[{"sku":"A","stock":3,"tags":["fragile","gift"]},{"sku":"B","stock":0,"tags":[]}],"reserved":{},"locations":["north","south"]}}
+@endjson

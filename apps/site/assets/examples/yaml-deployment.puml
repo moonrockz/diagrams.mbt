@@ -1,0 +1,10 @@
+@startyaml
+title Deployment
+deployment:
+  name: web
+  replicas: 3
+  image:
+    repository: example/web
+    tag: stable
+  ports: [80, 443]
+@endyaml

@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 371 240" width="371" height="240" role="img" data-diagram="sequence" id="seq-9b664291547322e4-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 371 240" width="371" height="240" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-ccedfef5f8e585e4-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (A, J) and 2 messages.</desc>
   <defs>
-    <marker id="seq-9b664291547322e4-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-ccedfef5f8e585e4-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-9b664291547322e4-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-ccedfef5f8e585e4-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -18,14 +18,14 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="A" data-to="J" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M87 127 L284 127" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-9b664291547322e4-head-0-end)"/>
+      <path class="m-line" d="M87 127 L284 127" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-ccedfef5f8e585e4-head-0-end)" data-connector-id="0" data-connector-source="A" data-connector-target="J" data-connector-route="M87 127 L284 127" data-connector-key="0"/>
       <rect class="mask" x="96" y="100" width="179" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="185" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="185" y="115">Hello John, how are you?</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="1" data-from="J" data-to="A" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M284 175 L87 175" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#seq-9b664291547322e4-head-1-end)"/>
+      <path class="m-line" d="M284 175 L87 175" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#seq-ccedfef5f8e585e4-head-1-end)" data-connector-id="1" data-connector-source="J" data-connector-target="A" data-connector-route="M284 175 L87 175" data-connector-key="1"/>
       <rect class="mask" x="157" y="148" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="185" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="185" y="163">Great!</tspan>

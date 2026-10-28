@@ -79,7 +79,11 @@ fn free_x(
 ///|
 /// Layout in two passes: measured horizontal constraints, then an event cursor
 /// for rows. The result retains every sequence element for a separate painter.
-pub fn layout(sequence : @sequence.Sequence) -> Geometry {
+pub fn layout(
+  sequence : @sequence.Sequence,
+  minimum_approach~ : Double = 24.0,
+) -> Geometry {
+  let terminal = minimum_approach.max(14.0).ceil().to_int() + 8
   let parts = sequence.participants.iter().to_array()
   let n = parts.length()
   fn index(id : String) -> Int32 {
@@ -238,11 +242,21 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
     }
     let (w, _) = chip_size(message_text(m), message_sublabel(m))
     if a == b {
-      right_lanes[a] = max(right_lanes[a], clearance(right_clear[a]) + w + 16)
+      right_lanes[a] = max(
+        right_lanes[a],
+        max(clearance(right_clear[a]) + w + 16, terminal + 16),
+      )
     } else {
       let lo = min(a, b)
       let hi = max(a, b)
-      spread(lo, hi, w + clearance(right_clear[lo]) + clearance(left_clear[hi]))
+      spread(
+        lo,
+        hi,
+        max(
+          terminal * 2,
+          w + clearance(right_clear[lo]) + clearance(left_clear[hi]),
+        ),
+      )
       let mut blocked = groups.length() > 0
       for i in (lo + 1)..<hi {
         if max_depths[i] > 0 {
@@ -485,7 +499,7 @@ pub fn layout(sequence : @sequence.Sequence) -> Geometry {
             )
           })
           let path : Array[Segment] = if a == b {
-            let bend = max(x1 + 40, chip.x + chip.width + 8)
+            let bend = max(x1 + max(40, terminal), chip.x + chip.width + 8)
             [
               { x1, y1: y, x2: bend, y2: y, owner, },
               { x1: bend, y1: y, x2: bend, y2: y + 28, owner, },

@@ -37,7 +37,7 @@ script-context JSON data, including script terminators and Unicode separators.
 It never becomes active markup or code.
 
 Use `svg=` to choose the shared theme, adaptive/fixed mode, BPMN geometry policy,
-geometry limits and an ID prefix. Different prefixes isolate adjacent copies.
+geometry limits, connector options and an ID prefix. Different prefixes isolate adjacent copies.
 `playback=` accepts the full immutable `PlaybackPlan`; source mismatch produces
 `animation/plan-mismatch` with no HTML. The earlier `plan=` first-flow BPMN API
 remains supported. Supply one plan input. The default sequence view ID is
@@ -89,9 +89,36 @@ cycles. Limit exhaustion and unreachable results are distinct. Selecting a route
 replaces the active plan/overlay without changing the source, layout or canonical
 SVG. Reset view restores the original supplied plan.
 
+Connector options belong to the supplied `SvgRenderer`. Elbow, rounded-elbow and
+smooth-curve output use the same final paths for the static drawing and motion.
+Bridges are the default for unrelated crossings. The underpass mask also applies
+to the progress line, moving dot and selected connector, including reverse
+traversal and repeated occurrences. Crossing geometry adds no graph edges.
+Supplied BPMN waypoints remain unstyled unless display styling is explicitly
+enabled. Connector styling does not rewrite source points or invoke a provider.
+
+```mbt check
+///|
+test "play a curved sequence with the same canonical SVG" {
+  let model = @sequence.Sequence::new([@sequence.Participant::new("Worker")], [
+    Message(@sequence.Message::new("Worker", "Worker", "retry")),
+  ])
+  let svg = @svg.SvgRenderer::new(
+    connectors=@svg.ConnectorOptions::new(style=Curved),
+  )
+  let diagram = @render.Diagram::Sequence(model)
+  let scene = svg.scene(diagram).scene.unwrap()
+  assert_eq(scene.canonical_svg, svg.render(diagram).output.unwrap())
+  assert_true(scene.paths[0].path.contains("C"))
+  let output = @animated.AnimatedRenderer::new(svg~).render(diagram)
+  assert_true(output.output is Some(_))
+}
+```
+
 Download SVG saves the stored canonical bytes from the ordinary SVG renderer.
 It excludes display instrumentation, controls, highlights and motion, and keeps
-the current playback position and selection. Canonical and display copies use
+the current playback position, occurrence, selection and speed. Configured static
+trace highlights remain part of the canonical bytes. Canonical and display copies use
 the same measured geometry. Both SVG APIs remain script-free.
 
 ## Bounds, browsers and verification
@@ -175,7 +202,10 @@ test "play a regex railroad with term visits" {
     @regex.Node::new("a", Literal("a")),
     @regex.Node::new("b", Literal("b")),
   ])
-  let output = @render.Renderer::render(@animated.AnimatedRenderer::new(), Regex(model))
+  let output = @render.Renderer::render(
+    @animated.AnimatedRenderer::new(),
+    Regex(model),
+  )
   let html = output.output.unwrap()
   assert_true(html.contains("\"visit\":true"))
   assert_true(html.contains("no input is matched or parsed"))

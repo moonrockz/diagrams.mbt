@@ -4,11 +4,12 @@ fn architecture_prefix(
   id_prefix : String?,
   theme : @theme.Theme,
   mode : Mode,
+  connectors : ConnectorOptions,
 ) -> String {
   let raw = match id_prefix {
     Some(value) => value
     None => {
-      let source = @debug.to_string((model, theme, mode))
+      let source = @debug.to_string((model, theme, mode, connectors))
       let mut hash : UInt64 = 14695981039346656037
       for i in 0..<source.length() {
         hash = (hash ^ source.code_unit_at(i).to_int().to_uint64()) *
@@ -102,7 +103,16 @@ fn paint_architecture(
   id_prefix : String?,
   limits : @architecture_layout.Limits,
   geometry? : @architecture_layout.Geometry,
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
+  if !connector_options_valid(connectors) {
+    return @render.Rendered::failed("image/svg+xml", [
+      @diagrams.Diagnostic::error(
+        "connector/invalid-option", "Invalid connector options",
+      ),
+    ])
+  }
+  let limits = limits.with_minimum_approach(connectors.minimum_approach)
   let result = match geometry {
     Some(g) =>
       @architecture_layout.LayoutResult::{ geometry: Some(g), diagnostics: [], }
@@ -116,7 +126,7 @@ fn paint_architecture(
   }
   let diagnostics = result.diagnostics.iter().to_array()
   let p = Paint::{ theme, mode, }
-  let prefix = architecture_prefix(model, id_prefix, theme, mode)
+  let prefix = architecture_prefix(model, id_prefix, theme, mode, connectors)
   let defs = []
   let used : Map[String, Bool] = Map([])
   if mode == Adaptive {
@@ -380,21 +390,78 @@ fn paint_architecture(
       architecture_label(p, title, g.width / 2, 24, "diagram-title"),
     )
   }
-  let svg = @writer.to_string(
-    @writer.element(
-      "svg",
-      attrs=[
-        ("xmlns", "http://www.w3.org/2000/svg"),
-        ("id", prefix + "diagram"),
-        ("viewBox", "0 0 " + g.width.to_string() + " " + g.height.to_string()),
-        ("width", g.width.to_string()),
-        ("height", g.height.to_string()),
-        ("role", "img"),
-        ("data-diagram", "architecture"),
-      ],
-      children~,
-    ),
+  let root = @writer.element(
+    "svg",
+    attrs=[
+      ("xmlns", "http://www.w3.org/2000/svg"),
+      ("id", prefix + "diagram"),
+      ("viewBox", "0 0 " + g.width.to_string() + " " + g.height.to_string()),
+      ("width", g.width.to_string()),
+      ("height", g.height.to_string()),
+      ("role", "img"),
+      ("data-diagram", "architecture"),
+    ],
+    children~,
   )
+  let obstacles : Array[ConnectorObstacle] = []
+  let labels : Array[(String, ConnectorObstacle)] = []
+  for shape in g.shapes {
+    if shape.kind != Group {
+      let r = shape.box
+      obstacles.push({
+        owner: shape.id,
+        x: r.x.to_double(),
+        y: r.y.to_double(),
+        width: r.width.to_double(),
+        height: r.height.to_double(),
+      })
+    }
+  }
+  for edge in g.connections {
+    if edge.label_box is Some(r) {
+      labels.push(
+        (
+          "",
+          {
+            owner: edge.connection.id,
+            x: r.x.to_double(),
+            y: r.y.to_double(),
+            width: r.width.to_double(),
+            height: r.height.to_double(),
+          },
+        ),
+      )
+    }
+  }
+  for shape in g.shapes {
+    if shape.kind == Group {
+      let r = shape.box
+      labels.push(
+        (
+          "",
+          {
+            owner: shape.id,
+            x: r.x.to_double(),
+            y: r.y.to_double(),
+            width: r.width.to_double(),
+            height: shape.header_height.to_double(),
+          },
+        ),
+      )
+    }
+  }
+  guard finalize_connectors(
+      root,
+      connectors,
+      diagnostics,
+      obstacles=obstacles[:],
+      labels=labels[:],
+      resource_prefix=prefix,
+    )
+    is Some(root) else {
+    return @render.Rendered::failed("image/svg+xml", diagnostics)
+  }
+  let svg = @writer.to_string(root)
   if svg.length() > limits.output_units {
     return @render.Rendered::failed("image/svg+xml", [
       @diagrams.Diagnostic::error(
@@ -427,6 +494,7 @@ pub fn render_architecture(
   mode~ : Mode = Adaptive,
   id_prefix? : String,
   limits~ : @architecture_layout.Limits = @architecture_layout.Limits::new(),
+  connectors~ : ConnectorOptions = ConnectorOptions::new(),
 ) -> @render.Rendered {
-  paint_architecture(model, theme, mode, id_prefix, limits)
+  paint_architecture(model, theme, mode, id_prefix, limits, connectors~)
 }

@@ -10,7 +10,7 @@ import {
 // Values
 pub fn check(Geometry, @theme.Palette) -> Array[Finding]
 
-pub fn layout(@sequence.Sequence) -> Geometry
+pub fn layout(@sequence.Sequence, minimum_approach? : Double) -> Geometry
 
 pub let min_contrast : Double
 

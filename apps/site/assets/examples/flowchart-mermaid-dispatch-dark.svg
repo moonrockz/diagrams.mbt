@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1912 424" width="1912" height="424" role="img" data-diagram="flowchart" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-diagram">
+  <title>flowchart-mermaid-dispatch</title>
+  <desc>Flowchart with 7 nodes and 8 structural connections. Playback illustrates structure and does not execute a workflow.</desc>
+  <defs>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1912" height="424" fill="#020617"/>
+  <g class="flowchart-backgrounds">
+    <g class="flowchart-group" data-flowchart-id="Intake" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="80" width="536" height="211" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M80 80 L616 80 L616 291 L80 291 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="Intake" x="120" y="105" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">
+        <tspan x="120" y="105">Intake</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="flowchart-connections">
+    <g class="flowchart-connection" data-flowchart-id="L_A_B_0" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
+      <path class="flowchart-connector" d="M240 201 L392 201 L392 206 L424 206" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_A_B_0" data-connector-source="A" data-connector-target="B" data-connector-route="M240 201 L392 201 L392 206 L424 206" data-connector-key="0"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_B_A_0" data-source="B" data-target="A" data-display-source="B" data-display-target="A">
+      <path class="flowchart-connector" d="M496 169 L496 137 L184 137 L184 169" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_B_A_0" data-connector-source="B" data-connector-target="A" data-connector-route="M496 169 L496 137 L184 137 L184 169" data-connector-key="1"/>
+      <rect x="328" y="108" width="24" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="L_B_A_0" x="340" y="123" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="340" y="123">no</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_B_C_0" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
+      <path class="flowchart-connector" d="M568 206 L768 206 L768 117 L800 117" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_B_C_0" data-connector-source="B" data-connector-target="C" data-connector-route="M568 206 L768 206 L768 117 L800 117" data-connector-key="2"/>
+      <rect x="652" y="177" width="32" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="L_B_C_0" x="668" y="192" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="668" y="192">yes</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_C_D_0" data-source="C" data-target="D" data-display-source="C" data-display-target="D">
+      <path class="flowchart-connector" d="M992 117 L1144 117 L1144 112 L1176 112" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_C_D_0" data-connector-source="C" data-connector-target="D" data-connector-route="M992 117 L1144 117 L1144 112 L1176 112" data-connector-key="3"/>
+      <rect x="1048" y="88" width="40" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="L_C_D_0" x="1068" y="103" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="1068" y="103">fast</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_C_E_0" data-source="C" data-target="E" data-display-source="C" data-display-target="E">
+      <path class="flowchart-connector" d="M896 154 L896 186 L1232 186 L1232 328" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_C_E_0" data-connector-source="C" data-connector-target="E" data-connector-route="M896 154 L896 186 L1232 186 L1232 328" data-connector-key="4"/>
+      <rect x="1036" y="157" width="56" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="L_C_E_0" x="1064" y="172" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="1064" y="172">normal</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_D_F_0" data-source="D" data-target="F" data-display-source="D" data-display-target="F">
+      <path class="flowchart-connector" d="M1288 112 L1440 112 L1440 88 L1472 88" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_D_F_0" data-connector-source="D" data-connector-target="F" data-connector-route="M1288 112 L1440 112 L1440 88 L1472 88" data-connector-key="5"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_E_F_0" data-source="E" data-target="F" data-display-source="E" data-display-target="F">
+      <path class="flowchart-connector" d="M1288 360 L1432 360 L1432 136 L1472 136" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_E_F_0" data-connector-source="E" data-connector-target="F" data-connector-route="M1288 360 L1432 360 L1432 136 L1472 136" data-connector-key="6"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="L_F_G_0" data-source="F" data-target="G" data-display-source="F" data-display-target="G">
+      <path class="flowchart-connector" d="M1584 112 L1768 112" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-65-72-6d-61-69-64-2d-64-69-73-70-61-74-63-68-2d-64-61-72-6b-sl-arrow)" data-connector-id="L_F_G_0" data-connector-source="F" data-connector-target="G" data-connector-route="M1584 112 L1768 112" data-connector-key="7"/>
+    </g>
+  </g>
+  <g class="flowchart-nodes">
+    <g class="flowchart-node" data-flowchart-id="A" data-shape="rect" data-expanded="true" data-parent="Intake">
+      <rect class="flowchart-bounds" x="128" y="169" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M128 169 L240 169 L240 233 L128 233 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="A" x="184" y="205.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="184" y="205.5">Read</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="B" data-shape="diamond" data-expanded="true" data-parent="Intake">
+      <rect class="flowchart-bounds" x="424" y="169" width="144" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M496 169 L568 206 L496 243 L424 206 Z" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="B" x="496" y="210.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fbbf24">
+        <tspan x="496" y="210.5">Valid?</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="C" data-shape="diamond" data-expanded="true">
+      <rect class="flowchart-bounds" x="800" y="80" width="192" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M896 80 L992 117 L896 154 L800 117 Z" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="C" x="896" y="121.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fbbf24">
+        <tspan x="896" y="121.5">Priority?</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="D" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="1176" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M1176 80 L1288 80 L1288 144 L1176 144 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="D" x="1232" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="1232" y="116.5">Express</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="E" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="1176" y="328" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M1176 328 L1288 328 L1288 392 L1176 392 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="E" x="1232" y="364.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="1232" y="364.5">Queue</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="F" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="1472" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M1472 80 L1584 80 L1584 144 L1472 144 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="F" x="1528" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="1528" y="116.5">Notify</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="G" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="1768" y="80" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M1768 80 L1880 80 L1880 144 L1768 144 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="G" x="1824" y="116.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="1824" y="116.5">Archive</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

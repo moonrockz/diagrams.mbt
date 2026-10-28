@@ -1,17 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 376" width="840" height="376" role="img" data-diagram="sequence" id="seq-2f79482f58f1461b-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 376" width="840" height="376" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-57bb6af3d34c047-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 4 participants (A, J, B, C) and 4 messages.</desc>
   <defs>
-    <marker id="seq-2f79482f58f1461b-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-57bb6af3d34c047-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-2f79482f58f1461b-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-57bb6af3d34c047-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#059669" stroke="#059669" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-2f79482f58f1461b-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-57bb6af3d34c047-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#0891b2" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-2f79482f58f1461b-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-57bb6af3d34c047-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="#7c3aed" stroke="#7c3aed" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -31,28 +31,28 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="A" data-to="J" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M105 167 L332 167" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-2f79482f58f1461b-head-0-end)"/>
+      <path class="m-line" d="M105 167 L332 167" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-57bb6af3d34c047-head-0-end)" data-connector-id="0" data-connector-source="A" data-connector-target="J" data-connector-route="M105 167 L332 167" data-connector-key="0"/>
       <rect class="mask" x="129" y="140" width="179" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="218" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="218" y="155">Hello John, how are you?</tspan>
       </text>
     </g>
     <g class="message f-backend" data-index="1" data-from="J" data-to="A" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M332 215 L105 215" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#seq-2f79482f58f1461b-head-1-end)"/>
+      <path class="m-line" d="M332 215 L105 215" fill="none" stroke="#059669" stroke-width="1.4" marker-end="url(#seq-57bb6af3d34c047-head-1-end)" data-connector-id="1" data-connector-source="J" data-connector-target="A" data-connector-route="M332 215 L105 215" data-connector-key="1"/>
       <rect class="mask" x="190" y="188" width="57" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="218" y="203" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#047d58">
         <tspan x="218" y="203">Great!</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="2" data-from="A" data-to="B" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M105 263 L488 263" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-2f79482f58f1461b-head-2-end)"/>
+      <path class="m-line" d="M105 263 L488 263" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-57bb6af3d34c047-head-2-end)" data-connector-id="2" data-connector-source="A" data-connector-target="B" data-connector-route="M105 263 L488 263" data-connector-key="2"/>
       <rect class="mask" x="200" y="236" width="193" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="296" y="251" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="296" y="251">Hello Bob, how is Charley?</tspan>
       </text>
     </g>
     <g class="message f-database" data-index="3" data-from="B" data-to="C" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M502 311 L735 311" fill="none" stroke="#7c3aed" stroke-width="1.4" marker-end="url(#seq-2f79482f58f1461b-head-3-end)"/>
+      <path class="m-line" d="M502 311 L735 311" fill="none" stroke="#7c3aed" stroke-width="1.4" marker-end="url(#seq-57bb6af3d34c047-head-3-end)" data-connector-id="3" data-connector-source="B" data-connector-target="C" data-connector-route="M502 311 L735 311" data-connector-key="3"/>
       <rect class="mask" x="519" y="284" width="199" height="23" rx="3" fill="#ffffff"/>
       <text class="m-label" x="618" y="299" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#7c3aed">
         <tspan x="618" y="299">Hello Charley, how are you?</tspan>

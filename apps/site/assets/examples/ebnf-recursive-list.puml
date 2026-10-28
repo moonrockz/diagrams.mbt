@@ -1,0 +1,7 @@
+@startebnf
+title Nested lists
+list = "[", [ item, { ",", item } ], "]";
+item = word | list;
+word = letter, { letter };
+letter = ? alphabetic ?;
+@endebnf

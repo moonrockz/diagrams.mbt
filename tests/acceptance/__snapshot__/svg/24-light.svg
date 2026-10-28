@@ -1,8 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 389 280" width="389" height="280" role="img" data-diagram="sequence" id="seq-356b35c315352726-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 389 280" width="389" height="280" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-36378ed1240d36bb-diagram">
   <title>Sequence diagram</title>
   <desc>Sequence diagram with 2 participants (Alice, John) and 1 message.</desc>
   <defs>
-    <marker id="seq-356b35c315352726-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-36378ed1240d36bb-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#0891b2" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -15,7 +15,7 @@
   <g class="activations"/>
   <g class="messages">
     <g class="message f-frontend" data-index="0" data-from="Alice" data-to="John" data-sender-head="none" data-receiver-head="open">
-      <path class="m-line" d="M87 142 L302 142" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-356b35c315352726-head-0-end)"/>
+      <path class="m-line" d="M87 142 L302 142" fill="none" stroke="#0891b2" stroke-width="1.4" marker-end="url(#seq-36378ed1240d36bb-head-0-end)" data-connector-id="0" data-connector-source="Alice" data-connector-target="John" data-connector-route="M87 142 L302 142" data-connector-key="0"/>
       <rect class="mask" x="145" y="100" width="98" height="38" rx="3" fill="#ffffff"/>
       <text class="m-label" x="194" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#077995">
         <tspan x="194" y="115">Hello John,</tspan>

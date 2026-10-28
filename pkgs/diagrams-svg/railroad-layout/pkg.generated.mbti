@@ -95,11 +95,13 @@ pub struct Limits {
   work : Int32
   width : Int32
   output_units : Int32
+  minimum_approach : Double
 } derive(Eq, @debug.Debug)
 pub fn Limits::equal(Self, Self) -> Bool
-pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32, width? : Int32, output_units? : Int32) -> Self
+pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32, width? : Int32, output_units? : Int32, minimum_approach? : Double) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
+pub fn Limits::with_minimum_approach(Self, Double) -> Self
 
 pub(all) enum Model {
   Regex(@regex.Regex)

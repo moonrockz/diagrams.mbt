@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 735 1602" width="735" height="1602" role="img" data-diagram="sequence" id="seq-e686b7a7b39a719f-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 735 1602" width="735" height="1602" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-e51fc594210cad3d-diagram">
   <title>Login flow</title>
   <desc>A &lt; B &amp; "C"</desc>
   <defs>
     <style>
-svg#seq-e686b7a7b39a719f-diagram {
+svg#seq-e51fc594210cad3d-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg#seq-e686b7a7b39a719f-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#seq-e686b7a7b39a719f-diagram {
+  svg#seq-e51fc594210cad3d-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg#seq-e686b7a7b39a719f-diagram {
     --external-ink: #606f85;
   }
 }
-svg#seq-e686b7a7b39a719f-diagram[data-theme="dark"] {
+svg#seq-e51fc594210cad3d-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
+svg#seq-e51fc594210cad3d-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,67 +118,67 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
   --external-ink: #606f85;
 }
 </style>
-    <marker id="seq-e686b7a7b39a719f-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-1-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-2-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-2-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-3-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-3-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-4,-4 L4,4 M-4,4 L4,-4" fill="none" stroke="var(--security-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-4,-4 L4,4 M-4,4 L4,-4" fill="none" stroke="var(--security-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-4-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-4-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-4-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-5-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-5-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-5-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-6-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-6-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,0 z" fill="var(--database-stroke)" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-6-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0 L-9,0 z" fill="var(--database-stroke)" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-7-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-7-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-7-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-8-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-8-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-8-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-8-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,4 L0,0" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-9-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-9-start" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-9-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-9-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-11-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-11-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--messagebus-stroke)" stroke="var(--messagebus-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-12-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-12-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--messagebus-stroke)" stroke="var(--messagebus-stroke)" stroke-width="1.4"/>
     </marker>
-    <marker id="seq-e686b7a7b39a719f-head-13-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="seq-e51fc594210cad3d-head-13-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9,-4 L0,0 L-9,4 z" fill="var(--frontend-stroke)" stroke="var(--frontend-stroke)" stroke-width="1.4"/>
     </marker>
   </defs>
@@ -204,7 +204,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
   </g>
   <g class="messages">
     <g class="message f-database" data-index="0" data-from="A" data-to="B" data-sender-head="none" data-receiver-head="none">
-      <path class="m-line" d="M249 297 L438 297" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
+      <path class="m-line" d="M249 297 L438 297" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" data-connector-id="0" data-connector-source="A" data-connector-target="B" data-connector-route="M249 297 L438 297" data-connector-key="0"/>
       <rect class="mask" x="314" y="255" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="342" y="270" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="342" y="270">Head 0</tspan>
@@ -212,7 +212,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-external" data-index="1" data-from="A" data-to="A" data-sender-head="arrow" data-receiver-head="arrow">
-      <path class="m-line" d="M249 359 L322 359 L322 387 L249 387" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e686b7a7b39a719f-head-1-start)" marker-end="url(#seq-e686b7a7b39a719f-head-1-end)"/>
+      <path class="m-line" d="M249 359 L322 359 L322 387 L249 387" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e51fc594210cad3d-head-1-start)" marker-end="url(#seq-e51fc594210cad3d-head-1-end)" data-connector-id="1" data-connector-source="A" data-connector-target="A" data-connector-route="M249 359 L322 359 L322 387 L249 387" data-connector-key="1"/>
       <rect class="mask" x="257" y="317" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="285" y="332" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--external-ink)">
         <tspan x="285" y="332">Head 1</tspan>
@@ -220,7 +220,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-database" data-index="2" data-from="A" data-to="B" data-sender-head="open" data-receiver-head="open">
-      <path class="m-line" d="M249 449 L438 449" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e686b7a7b39a719f-head-2-start)" marker-end="url(#seq-e686b7a7b39a719f-head-2-end)"/>
+      <path class="m-line" d="M249 449 L438 449" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e51fc594210cad3d-head-2-start)" marker-end="url(#seq-e51fc594210cad3d-head-2-end)" data-connector-id="2" data-connector-source="A" data-connector-target="B" data-connector-route="M249 449 L438 449" data-connector-key="2"/>
       <rect class="mask" x="314" y="407" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="342" y="422" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="342" y="422">Head 2</tspan>
@@ -228,7 +228,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-security" data-index="3" data-from="A" data-to="A" data-sender-head="cross" data-receiver-head="cross">
-      <path class="m-line" d="M249 511 L322 511 L322 539 L249 539" fill="none" stroke="var(--security-stroke)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e686b7a7b39a719f-head-3-start)" marker-end="url(#seq-e686b7a7b39a719f-head-3-end)"/>
+      <path class="m-line" d="M249 511 L322 511 L322 539 L249 539" fill="none" stroke="var(--security-stroke)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e51fc594210cad3d-head-3-start)" marker-end="url(#seq-e51fc594210cad3d-head-3-end)" data-connector-id="3" data-connector-source="A" data-connector-target="A" data-connector-route="M249 511 L322 511 L322 539 L249 539" data-connector-key="3"/>
       <rect class="mask" x="257" y="469" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="285" y="484" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--security-ink)">
         <tspan x="285" y="484">Head 3</tspan>
@@ -236,7 +236,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-database" data-index="4" data-from="A" data-to="B" data-sender-head="async" data-receiver-head="async">
-      <path class="m-line" d="M249 601 L438 601" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e686b7a7b39a719f-head-4-start)" marker-end="url(#seq-e686b7a7b39a719f-head-4-end)"/>
+      <path class="m-line" d="M249 601 L438 601" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e51fc594210cad3d-head-4-start)" marker-end="url(#seq-e51fc594210cad3d-head-4-end)" data-connector-id="4" data-connector-source="A" data-connector-target="B" data-connector-route="M249 601 L438 601" data-connector-key="4"/>
       <rect class="mask" x="314" y="559" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="342" y="574" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="342" y="574">Head 4</tspan>
@@ -244,7 +244,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-external" data-index="5" data-from="A" data-to="A" data-sender-head="half-upper-filled" data-receiver-head="half-upper-filled">
-      <path class="m-line" d="M249 663 L322 663 L322 691 L249 691" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e686b7a7b39a719f-head-5-start)" marker-end="url(#seq-e686b7a7b39a719f-head-5-end)"/>
+      <path class="m-line" d="M249 663 L322 663 L322 691 L249 691" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e51fc594210cad3d-head-5-start)" marker-end="url(#seq-e51fc594210cad3d-head-5-end)" data-connector-id="5" data-connector-source="A" data-connector-target="A" data-connector-route="M249 663 L322 663 L322 691 L249 691" data-connector-key="5"/>
       <rect class="mask" x="257" y="621" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="285" y="636" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--external-ink)">
         <tspan x="285" y="636">Head 5</tspan>
@@ -252,7 +252,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-database" data-index="6" data-from="A" data-to="B" data-sender-head="half-lower-filled" data-receiver-head="half-lower-filled">
-      <path class="m-line" d="M249 753 L438 753" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e686b7a7b39a719f-head-6-start)" marker-end="url(#seq-e686b7a7b39a719f-head-6-end)"/>
+      <path class="m-line" d="M249 753 L438 753" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e51fc594210cad3d-head-6-start)" marker-end="url(#seq-e51fc594210cad3d-head-6-end)" data-connector-id="6" data-connector-source="A" data-connector-target="B" data-connector-route="M249 753 L438 753" data-connector-key="6"/>
       <rect class="mask" x="314" y="711" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="342" y="726" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="342" y="726">Head 6</tspan>
@@ -260,7 +260,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-external" data-index="7" data-from="A" data-to="A" data-sender-head="half-upper-open" data-receiver-head="half-upper-open">
-      <path class="m-line" d="M249 815 L322 815 L322 843 L249 843" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e686b7a7b39a719f-head-7-start)" marker-end="url(#seq-e686b7a7b39a719f-head-7-end)"/>
+      <path class="m-line" d="M249 815 L322 815 L322 843 L249 843" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e51fc594210cad3d-head-7-start)" marker-end="url(#seq-e51fc594210cad3d-head-7-end)" data-connector-id="7" data-connector-source="A" data-connector-target="A" data-connector-route="M249 815 L322 815 L322 843 L249 843" data-connector-key="7"/>
       <rect class="mask" x="257" y="773" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="285" y="788" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--external-ink)">
         <tspan x="285" y="788">Head 7</tspan>
@@ -268,7 +268,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-database" data-index="8" data-from="A" data-to="B" data-sender-head="half-lower-open" data-receiver-head="half-lower-open">
-      <path class="m-line" d="M249 905 L438 905" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e686b7a7b39a719f-head-8-start)" marker-end="url(#seq-e686b7a7b39a719f-head-8-end)"/>
+      <path class="m-line" d="M249 905 L438 905" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" marker-start="url(#seq-e51fc594210cad3d-head-8-start)" marker-end="url(#seq-e51fc594210cad3d-head-8-end)" data-connector-id="8" data-connector-source="A" data-connector-target="B" data-connector-route="M249 905 L438 905" data-connector-key="8"/>
       <rect class="mask" x="314" y="863" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="342" y="878" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="342" y="878">Head 8</tspan>
@@ -276,7 +276,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-external" data-index="9" data-from="A" data-to="A" data-sender-head="central-arrow" data-receiver-head="central-arrow">
-      <path class="m-line" d="M249 967 L322 967 L322 995 L249 995" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e686b7a7b39a719f-head-9-start)" marker-end="url(#seq-e686b7a7b39a719f-head-9-end)"/>
+      <path class="m-line" d="M249 967 L322 967 L322 995 L249 995" fill="none" stroke="var(--arrow)" stroke-width="1.4" stroke-dasharray="4 4" marker-start="url(#seq-e51fc594210cad3d-head-9-start)" marker-end="url(#seq-e51fc594210cad3d-head-9-end)" data-connector-id="9" data-connector-source="A" data-connector-target="A" data-connector-route="M249 967 L322 967 L322 995 L249 995" data-connector-key="9"/>
       <rect class="mask" x="257" y="925" width="57" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="285" y="940" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--external-ink)">
         <tspan x="285" y="940">Head 9</tspan>
@@ -286,7 +286,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       <circle class="central-connection" cx="240" cy="995" r="5" fill="var(--mask)" stroke="var(--arrow)" stroke-width="1.4"/>
     </g>
     <g class="message f-database" data-index="10" data-from="A" data-to="B" data-sender-head="central-none" data-receiver-head="central-none">
-      <path class="m-line" d="M249 1057 L438 1057" fill="none" stroke="var(--database-stroke)" stroke-width="1.4"/>
+      <path class="m-line" d="M249 1057 L438 1057" fill="none" stroke="var(--database-stroke)" stroke-width="1.4" data-connector-id="10" data-connector-source="A" data-connector-target="B" data-connector-route="M249 1057 L438 1057" data-connector-key="10"/>
       <rect class="mask" x="307" y="1015" width="64" height="38" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="339" y="1030" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--database-ink)">
         <tspan x="339" y="1030">Head 10</tspan>
@@ -296,7 +296,7 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       <circle class="central-connection" cx="445" cy="1057" r="5" fill="var(--mask)" stroke="var(--database-stroke)" stroke-width="1.4"/>
     </g>
     <g class="message f-messagebus" data-index="11" data-from="B" data-to="A" data-sender-head="none" data-receiver-head="arrow" data-link="smithy:example.weather#City$name" data-description="&lt;message description&gt;">
-      <path class="m-line" d="M438 1256 L247 1256" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-e686b7a7b39a719f-head-11-end)"/>
+      <path class="m-line" d="M438 1256 L247 1256" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-e51fc594210cad3d-head-11-end)" data-connector-id="11" data-connector-source="B" data-connector-target="A" data-connector-route="M438 1256 L247 1256" data-connector-key="11"/>
       <rect class="mask" x="273" y="1210" width="98" height="42" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="322" y="1225" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--messagebus-ink)">
         <tspan x="322" y="1225">15 City$name</tspan>
@@ -306,14 +306,14 @@ svg#seq-e686b7a7b39a719f-diagram[data-theme="light"] {
       </text>
     </g>
     <g class="message f-messagebus" data-index="12" data-from="B" data-to="C" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M452 1434 L557 1434" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-e686b7a7b39a719f-head-12-end)"/>
+      <path class="m-line" d="M452 1434 L557 1434" fill="none" stroke="var(--messagebus-stroke)" stroke-width="1.4" marker-end="url(#seq-e51fc594210cad3d-head-12-end)" data-connector-id="12" data-connector-source="B" data-connector-target="C" data-connector-route="M452 1434 L557 1434" data-connector-key="12"/>
       <rect class="mask" x="484" y="1407" width="57" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="512" y="1422" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--messagebus-ink)">
         <tspan x="512" y="1422">create</tspan>
       </text>
     </g>
     <g class="message f-frontend" data-index="13" data-from="C" data-to="B" data-sender-head="none" data-receiver-head="arrow">
-      <path class="m-line" d="M598 1501 L452 1501" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-e686b7a7b39a719f-head-13-end)"/>
+      <path class="m-line" d="M598 1501 L452 1501" fill="none" stroke="var(--frontend-stroke)" stroke-width="1.4" marker-end="url(#seq-e51fc594210cad3d-head-13-end)" data-connector-id="13" data-connector-source="C" data-connector-target="B" data-connector-route="M598 1501 L452 1501" data-connector-key="13"/>
       <rect class="mask" x="477" y="1474" width="64" height="23" rx="3" fill="var(--mask)"/>
       <text class="m-label" x="509" y="1489" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="var(--frontend-ink)">
         <tspan x="509" y="1489">goodbye</tspan>

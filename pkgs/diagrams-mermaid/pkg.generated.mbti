@@ -21,6 +21,7 @@ import {
   "moonrockz/diagrams-mermaid/zenuml-ast",
   "moonrockz/diagrams-mermaid/zenuml-cst",
   "moonrockz/diagrams-mermaid/zenuml-syntax",
+  "moonrockz/diagrams-svg",
   "moonrockz/diagrams/render",
 }
 
@@ -45,7 +46,7 @@ pub fn read(String) -> ReadResult
 
 pub fn read_diagram(String, limits? : @swimlane-syntax.Limits, zenuml_limits? : @zenuml-syntax.Limits, architecture_limits? : @architecture-syntax.Limits) -> DiagramReadResult
 
-pub fn render_svg(String) -> @render.Rendered
+pub fn render_svg(String, renderer? : @diagrams-svg.SvgRenderer) -> @render.Rendered
 
 pub let swimlane_conversion_diagnostic_codes : ReadOnlyArray[String]
 

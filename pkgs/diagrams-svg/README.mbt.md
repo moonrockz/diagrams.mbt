@@ -207,7 +207,8 @@ process and collaboration examples. Portable snapshots cover all 38 standard
 graphical kinds, the ten event definitions, activity and gateway markers, theme
 modes, escaping and ID isolation. `mise run test:svg` also checks those snapshots
 in Chromium, including both system preferences, contrast, translated coordinates
-and offline playback. Existing sequence SVG snapshots remain byte-identical.
+and offline playback. Default bridge hops and marker approaches update affected sequence snapshots;
+source identities and semantic content stay stable.
 
 ## Notice
 
@@ -253,7 +254,8 @@ are provided by `moonrockz/diagrams-animated`.
 `Diagram::Swimlane` and `render_swimlane` use the independent immutable
 `diagrams/swimlane` model. Mermaid source conversion is in the Mermaid module.
 Swimlane geometry imports no BPMN model or document types. Existing sequence
-and BPMN static SVG bytes remain unchanged.
+and BPMN content retain their identities. Connector geometry and bridge
+treatment have reviewed snapshot updates.
 
 ```mbt check
 ///|
@@ -454,3 +456,58 @@ test "an inline scalar row has no connector" {
 `diagrams-svg/data-tree-layout` exposes `layout` and `check` for row bounds,
 label clearance, connector attachment, crossings and contrast.
 `data_tree_limits` bounds nodes, depth, work, width and output.
+## Connector styles and final geometry
+
+`ConnectorOptions` applies to every diagram kind. Omission keeps natural line
+geometry and enables bridge hops at unrelated interior crossings. Use `Plain`
+for an explicit comparison. `minimum_approach` defaults to 24 SVG units;
+automatic routers reserve marked terminal corridors before middle routing.
+`Elbow`, `Rounded` and `Curved` retain semantic endpoints and graph connectivity.
+
+```mbt check
+///|
+test "typed styles expose the same immutable final geometry as SVG" {
+  let view = @flowchart.Flowchart::new(
+    "connectors",
+    [
+      @flowchart.Node::new("a", label="Request"),
+      @flowchart.Node::new("b", label="Done"),
+    ],
+    [@flowchart.Connection::new("ab", "a", "b")],
+  )
+  let renderer = @svg.SvgRenderer::new(
+    connectors=@svg.ConnectorOptions::new(
+      style=Curved,
+      crossing=Bridge,
+      minimum_approach=32.0,
+    ),
+  )
+  let model = @render.Diagram::Flowchart(view)
+  let output = renderer.render(model).output.unwrap()
+  let paths = @svg.inspect_connectors(output)
+  assert_eq(paths.length(), 1)
+  assert_eq(paths[0].id, "ab")
+  assert_eq(paths[0].source, "a")
+  assert_eq(paths[0].target, "b")
+  assert_eq(paths, renderer.connector_geometry(model).paths)
+}
+```
+
+Connections that land on one node side spread over its usable span with corner
+and marker padding. Automatic return and crowded routes can use clear top and
+bottom sides. Explicit architecture ports and edge hints remain in force.
+
+`ResolvedConnector` retains original `route`, final `path` commands, source
+identity and optional scoped underpass mask. Original layout route points stay
+available in the existing layout packages. `check_connectors` checks final
+curves and bridges against protected rectangles and viewport bounds. Masks do
+not exempt shape or label collisions.
+
+Complete supplied BPMN paths stay unstyled by default. Set
+`style_supplied_bpmn=true` to opt into display styling without changing supplied
+waypoints or source writing. Unsafe geometry returns `connector/routing-conflict`;
+invalid numeric settings return `connector/invalid-option`. `ConnectorLimits`
+bounds candidate, subdivision, segment, crossing and output work with a distinct
+`connector/limit` failure and no partial successful SVG. See the
+[connector guide](../../docs/guides/connectors.md) for defaults, ownership,
+resource isolation, canonical export and visual compatibility changes.

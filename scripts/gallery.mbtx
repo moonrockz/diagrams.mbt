@@ -72,6 +72,7 @@ async fn main {
         "moonrockz/diagrams-tests/acceptance", "moonrockz/diagrams-tests/bpmn-acceptance",
         "moonrockz/diagrams-tests/animation-acceptance", "moonrockz/diagrams-tests/plantuml-acceptance",
         "moonrockz/diagrams-tests/zenuml-integration", "moonrockz/diagrams-tests/flowchart-gallery-acceptance",
+        "moonrockz/diagrams-tests/gallery-expansion-acceptance",
       ] {
       let code = @process.run(
         "moon",
@@ -403,6 +404,53 @@ async fn main {
       )
     }
   }
+  html.write_string(
+    "<h2 id=\"expanded-gallery\">Thirty additional source examples</h2><p>The published baseline has 15 cards. This section adds three distinct sources in each of its ten families. Theme, player and connector comparison variants do not count as additional sources.</p>",
+  )
+  let expanded_artifacts : Map[String, String] = Map([])
+  for
+    row in rows(
+      "tests/gallery-expansion-acceptance/__snapshot__/expanded-gallery.json",
+    ) {
+    let name = string(row[0])
+    let content = string(row[2])
+    if name == "connector-crossing.mmd" &&
+      @fs.read_file("site/examples/connectors/crossing.mmd")
+      .text()
+      .trim_end()
+      .to_owned() !=
+      content.trim_end().to_owned() {
+      raise Failure("Stale connector comparison source fixture")
+    }
+    expanded_artifacts[name] = content
+    save(name, content, check, site_assets)
+  }
+  for entry in expanded_gallery_examples() {
+    guard entry is Object(fields) else {
+      raise Failure("Invalid expanded gallery entry")
+    }
+    let id = string(fields["id"])
+    let title = string(fields["title"])
+    guard fields["sources"] is Array(sources) else {
+      raise Failure("Missing expanded sources")
+    }
+    guard sources[0] is Object(source) else {
+      raise Failure("Missing expanded source")
+    }
+    let source_name = string(source["path"])
+    html.write_string(
+      "<article id=\"expanded-\{id}\"><h3>\{escape(title)}</h3><p>\{escape(string(fields["family"]))}: \{escape(string(fields["description"]))}</p><p>\{escape(string(fields["scope"]))}</p><p><a href=\"\{source_name}\">Exact source</a> · <a href=\"\{id}-adaptive.svg\">adaptive SVG</a></p><div class=\"pair\">",
+    )
+    for variant in ["light", "dark"] {
+      let name = id + "-" + variant
+      html.write_string(
+        "<figure class=\"\{variant}\"><figcaption><a href=\"\{name}.svg\">\{variant} SVG</a> · <a href=\"\{name}.html\">offline player</a></figcaption><img loading=\"lazy\" src=\"\{name}.svg\" alt=\"\{escape(title)}, \{variant}\"></figure>",
+      )
+    }
+    html.write_string(
+      "</div><details><summary>Source and render settings</summary><p>\{escape(string(fields["description"]))}</p><pre><code>\{escape(expanded_artifacts[source_name])}</code></pre></details></article>",
+    )
+  }
   save(
     "icon-contact-sheet.svg",
     @fs.read_file(
@@ -649,8 +697,22 @@ fn site_gallery_examples() -> Array[Json] {
 }
 
 ///|
+async fn expanded_gallery_examples() -> Array[Json] {
+  guard @json.parse(
+      @fs.read_file(
+        "tests/gallery-expansion-acceptance/__snapshot__/expanded-inventory.json",
+      ).text(),
+    )
+    is Array(entries) else {
+    raise Failure("Invalid qualified expanded gallery inventory")
+  }
+  entries
+}
+
+///|
 async fn save_site_gallery(check : Bool) -> Unit {
   let entries = site_gallery_examples()
+  entries.append(expanded_gallery_examples())
   let root = "apps/site/assets/examples"
   let absolute_root = @fs.realpath(root)
   for entry in entries {
@@ -663,6 +725,9 @@ async fn save_site_gallery(check : Bool) -> Unit {
       raise Failure("Missing gallery sources: " + id)
     }
     files.append(sources)
+    if fields.get("companions") is Some(Array(companions)) {
+      files.append(companions)
+    }
     for key in ["preview", "preview_dark", "player"] {
       if fields.get(key) is Some(file) {
         files.push(file)
@@ -700,10 +765,12 @@ async fn save_site_gallery(check : Bool) -> Unit {
 }
 
 ///|
-test "site gallery covers implemented families with unique ids and no digests" {
+test "site gallery baseline covers implemented families with unique ids and no digests" {
   let ids : Array[String] = []
   let families : Array[String] = []
-  for entry in site_gallery_examples() {
+  let entries = site_gallery_examples()
+  @test.assert_eq(entries.length(), 15)
+  for entry in entries {
     guard entry is Object(fields) else { fail("object required") }
     let id = string(fields["id"])
     @test.assert_eq(ids.contains(id), false)

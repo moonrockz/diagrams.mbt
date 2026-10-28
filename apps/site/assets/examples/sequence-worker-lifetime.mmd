@@ -1,0 +1,7 @@
+sequenceDiagram
+participant API
+create participant Worker
+API->>Worker: Start job
+Worker->>Worker: Process batch
+destroy Worker
+Worker-->>API: Completed

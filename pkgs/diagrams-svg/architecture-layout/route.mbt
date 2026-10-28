@@ -41,8 +41,28 @@ fn clear(
   line : ArrayView[Point],
   obstacles : ArrayView[Rect],
   budget : RouteBudget,
+  occupied~ : ArrayView[(Point, Point)] = [],
 ) -> Bool {
   for i in 1..<line.length() {
+    let a = line[i - 1]
+    let b = line[i]
+    for (p, q) in occupied {
+      if !charge(budget, 1) {
+        return false
+      }
+      let horizontal = a.y == b.y && p.y == q.y && a.y == p.y
+      let vertical = a.x == b.x && p.x == q.x && a.x == p.x
+      if (
+          horizontal &&
+          a.x.min(b.x).max(p.x.min(q.x)) < a.x.max(b.x).min(p.x.max(q.x))
+        ) ||
+        (
+          vertical &&
+          a.y.min(b.y).max(p.y.min(q.y)) < a.y.max(b.y).min(p.y.max(q.y))
+        ) {
+        return false
+      }
+    }
     for box in obstacles {
       if !charge(budget, 1) || crosses(line[i - 1], line[i], box) {
         return false
@@ -91,6 +111,7 @@ fn orthogonal(
   obstacles : ArrayView[Rect],
   channel : Int32,
   budget : RouteBudget,
+  occupied~ : ArrayView[(Point, Point)] = [],
 ) -> Array[Point]? {
   let middle_x = (start.x + end.x) / 2
   let middle_y = (start.y + end.y) / 2
@@ -103,7 +124,7 @@ fn orthogonal(
       [start, { x: start.x, y: channel, }, { x: end.x, y: channel, }, end],
     ] {
     let points = compact(points[:])
-    if clear(points[:], obstacles, budget) {
+    if clear(points[:], obstacles, budget, occupied~) {
       return Some(points)
     }
     if budget.failed {
@@ -120,6 +141,17 @@ fn orthogonal(
     xs.push(box.x + box.width + 12)
     ys.push((box.y - 12).max(12))
     ys.push(box.y + box.height + 12)
+  }
+  for (a, b) in occupied {
+    if !charge(budget, 1) {
+      return None
+    }
+    for p in [a, b] {
+      xs.push((p.x - 12).max(12))
+      xs.push(p.x + 12)
+      ys.push((p.y - 12).max(12))
+      ys.push(p.y + 12)
+    }
   }
   let xs = axis(xs)
   let ys = axis(ys)
@@ -167,6 +199,7 @@ fn orthogonal(
           [{ x: xs[x], y: ys[y], }, { x: xs[nx], y: ys[ny], }],
           obstacles,
           budget,
+          occupied~,
         ) {
         seen[(nx, ny)] = true
         previous[(nx, ny)] = (x, y)

@@ -1,0 +1,11 @@
+flowchart LR
+subgraph Intake
+A[Read] --> B{Valid?}
+end
+B -->|no| A
+B -->|yes| C{Priority?}
+C -->|fast| D[Express]
+C -->|normal| E[Queue]
+D --> F[Notify]
+E --> F
+F --> G[Archive]

@@ -83,7 +83,16 @@ test "ZenUML and architecture review gallery with offline players" (
         id_prefix=name + "-" + variant,
       )
       let rendered = @render.Renderer::render(renderer, model)
-      assert_false(rendered.diagnostics.iter().any(d => d.severity == Error))
+      assert_false(
+        rendered.diagnostics.iter().any(d => d.severity == Error),
+        msg=name +
+          " " +
+          rendered.diagnostics
+          .iter()
+          .map(d => d.code + ": " + d.message)
+          .to_array()
+          .join("; "),
+      )
       rows.push(
         Json::array([
           Json(name + "-" + variant + ".svg"),

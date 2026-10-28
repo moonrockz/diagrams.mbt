@@ -1,0 +1,14 @@
+architecture-beta
+title Nested processing network
+group cloud(cloud)[Cloud]
+group ingest(server)[Ingest] in cloud
+group data(database)[Data] in cloud
+service api(server)[API] in ingest
+service worker(server)[Worker] in ingest
+service db(database)[Database] in data
+service archive(disk)[Archive] in data
+junction join in cloud
+api:R --> L:worker
+worker:B --> T:join
+join:R --> L:db
+join:B --> T:archive

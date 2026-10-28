@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 688 2347" width="688" height="2347" role="img" data-diagram="flowchart" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-diagram">
+  <title>Parallel preparation</title>
+  <desc>Flowchart with 11 nodes and 12 structural connections. Playback illustrates structure and does not execute a workflow.</desc>
+  <defs>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9 -4 L0 0 L-9 4 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+    <marker id="sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="688" height="2347" fill="#020617"/>
+  <g class="flowchart-backgrounds">
+    <g class="flowchart-group" data-flowchart-id="__activity_group1" data-shape="rect" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="307" width="576" height="1543" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M80 307 L656 307 L656 1850 L80 1850 Z" fill="#020617" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text class="flowchart-label" data-label-owner="__activity_group1" x="140" y="332" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">
+        <tspan x="140" y="332">Preparation</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="flowchart-connections">
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge3" data-source="__activity_node0" data-target="__activity_node2" data-display-source="__activity_node0" data-display-target="__activity_node2">
+      <path class="flowchart-connector" d="M89 98 L89 364 L136 364 L136 396" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge3" data-connector-source="__activity_node0" data-connector-target="__activity_node2" data-connector-route="M89 98 L89 364 L136 364 L136 396" data-connector-key="0"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge7" data-source="__activity_node2" data-target="__activity_node6" data-display-source="__activity_node2" data-display-target="__activity_node6">
+      <path class="flowchart-connector" d="M136 408 L136 440 L184 440 L184 617" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge7" data-connector-source="__activity_node2" data-connector-target="__activity_node6" data-connector-route="M136 408 L136 440 L184 440 L184 617" data-connector-key="1"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge9" data-source="__activity_node6" data-target="__activity_node8" data-display-source="__activity_node6" data-display-target="__activity_node8">
+      <path class="flowchart-connector" d="M184 681 L184 713 L200 713 L200 841" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge9" data-connector-source="__activity_node6" data-connector-target="__activity_node8" data-connector-route="M184 681 L184 713 L200 713 L200 841" data-connector-key="2"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge10" data-source="__activity_node8" data-target="__activity_node2" data-display-source="__activity_node8" data-display-target="__activity_node2">
+      <path class="flowchart-connector" d="M128 878 L96 878 L96 402 L130 402" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge10" data-connector-source="__activity_node8" data-connector-target="__activity_node2" data-connector-route="M128 878 L96 878 L96 402 L130 402" data-connector-key="3"/>
+      <rect x="254" y="629.5" width="32" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="__activity_edge10" x="270" y="644.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="270" y="644.5">yes</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge11" data-source="__activity_node8" data-target="__activity_node4" data-display-source="__activity_node8" data-display-target="__activity_node4">
+      <path class="flowchart-connector" d="M200 915 L200 947 L136 947 L136 1075" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge11" data-connector-source="__activity_node8" data-connector-target="__activity_node4" data-connector-route="M200 915 L200 947 L136 947 L136 1075" data-connector-key="4"/>
+      <rect x="124" y="982" width="24" height="21" rx="3" fill="#020617"/>
+      <text class="flowchart-label" data-label-owner="__activity_edge11" x="136" y="997" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="136" y="997">no</tspan>
+      </text>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge14" data-source="__activity_node4" data-target="__activity_node13" data-display-source="__activity_node4" data-display-target="__activity_node13">
+      <path class="flowchart-connector" d="M136 1087 L136 1119 L170 1119 L170 1296" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge14" data-connector-source="__activity_node4" data-connector-target="__activity_node13" data-connector-route="M136 1087 L136 1119 L170 1119 L170 1296" data-connector-key="5"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge18" data-source="__activity_node13" data-target="__activity_node17" data-display-source="__activity_node13" data-display-target="__activity_node17">
+      <path class="flowchart-connector" d="M170 1308 L170 1340 L204 1340 L204 1517" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge18" data-connector-source="__activity_node13" data-connector-target="__activity_node17" data-connector-route="M170 1308 L170 1340 L204 1340 L204 1517" data-connector-key="6"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge21" data-source="__activity_node13" data-target="__activity_node20" data-display-source="__activity_node13" data-display-target="__activity_node20">
+      <path class="flowchart-connector" d="M212 1302 L408.734 1302 L408.734 1525 L440.734 1525" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge21" data-connector-source="__activity_node13" data-connector-target="__activity_node20" data-connector-route="M212 1302 L408.734 1302 L408.734 1525 L440.734 1525" data-connector-key="7"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge23" data-source="__activity_node17" data-target="__activity_node15" data-display-source="__activity_node17" data-display-target="__activity_node15">
+      <path class="flowchart-connector" d="M204 1581 L204 1613 L170 1613 L170 1741" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge23" data-connector-source="__activity_node17" data-connector-target="__activity_node15" data-connector-route="M204 1581 L204 1613 L170 1613 L170 1741" data-connector-key="8"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge24" data-source="__activity_node20" data-target="__activity_node15" data-display-source="__activity_node20" data-display-target="__activity_node15">
+      <path class="flowchart-connector" d="M440.734 1573 L400.734 1573 L400.734 1747 L212 1747" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge24" data-connector-source="__activity_node20" data-connector-target="__activity_node15" data-connector-route="M440.734 1573 L400.734 1573 L400.734 1747 L212 1747" data-connector-key="9"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge26" data-source="__activity_node15" data-target="__activity_node25" data-display-source="__activity_node15" data-display-target="__activity_node25">
+      <path class="flowchart-connector" d="M170 1753 L170 1785 L136 1785 L136 2010" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge26" data-connector-source="__activity_node15" data-connector-target="__activity_node25" data-connector-route="M170 1753 L170 1785 L136 1785 L136 2010" data-connector-key="10"/>
+    </g>
+    <g class="flowchart-connection" data-flowchart-id="__activity_edge28" data-source="__activity_node25" data-target="__activity_node27" data-display-source="__activity_node25" data-display-target="__activity_node27">
+      <path class="flowchart-connector" d="M136 2074 L136 2106 L96 2106 L96 2234" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-66-6c-6f-77-63-68-61-72-74-2d-6d-6f-64-65-72-6e-2d-70-61-72-61-6c-6c-65-6c-2d-64-61-72-6b-sl-arrow)" data-connector-id="__activity_edge28" data-connector-source="__activity_node25" data-connector-target="__activity_node27" data-connector-route="M136 2074 L136 2106 L96 2106 L96 2234" data-connector-key="11"/>
+    </g>
+  </g>
+  <g class="flowchart-nodes">
+    <g class="flowchart-node" data-flowchart-id="__activity_node0" data-shape="sm-circ" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="80" width="18" height="67" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M98 89 L97.957 89.882 L97.827 90.756 L97.612 91.613 L97.315 92.444 L96.937 93.243 L96.483 94 L95.957 94.71 L95.364 95.364 L94.71 95.957 L94 96.483 L93.243 96.937 L92.444 97.315 L91.613 97.612 L90.756 97.827 L89.882 97.957 L89 98 L88.118 97.957 L87.244 97.827 L86.387 97.612 L85.556 97.315 L84.757 96.937 L84 96.483 L83.29 95.957 L82.636 95.364 L82.043 94.71 L81.517 94 L81.063 93.243 L80.685 92.444 L80.388 91.613 L80.173 90.756 L80.043 89.882 L80 89 L80.043 88.118 L80.173 87.244 L80.388 86.387 L80.685 85.556 L81.063 84.757 L81.517 84 L82.043 83.29 L82.636 82.636 L83.29 82.043 L84 81.517 L84.757 81.063 L85.556 80.685 L86.387 80.388 L87.244 80.173 L88.118 80.043 L89 80 L89.882 80.043 L90.756 80.173 L91.613 80.388 L92.444 80.685 L93.243 81.063 L94 81.517 L94.71 82.043 L95.364 82.636 L95.957 83.29 L96.483 84 L96.937 84.757 L97.315 85.556 L97.612 86.387 L97.827 87.244 L97.957 88.118 L98 89 Z" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node2" data-shape="anchor" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="396" width="16" height="61" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M142 402 L141.971 402.588 L141.885 403.171 L141.742 403.742 L141.543 404.296 L141.292 404.828 L140.989 405.333 L140.638 405.806 L140.243 406.243 L139.806 406.638 L139.333 406.989 L138.828 407.292 L138.296 407.543 L137.742 407.742 L137.171 407.885 L136.588 407.971 L136 408 L135.412 407.971 L134.829 407.885 L134.258 407.742 L133.704 407.543 L133.172 407.292 L132.667 406.989 L132.194 406.638 L131.757 406.243 L131.362 405.806 L131.011 405.333 L130.708 404.828 L130.457 404.296 L130.258 403.742 L130.115 403.171 L130.029 402.588 L130 402 L130.029 401.412 L130.115 400.829 L130.258 400.258 L130.457 399.704 L130.708 399.172 L131.011 398.667 L131.362 398.194 L131.757 397.757 L132.194 397.362 L132.667 397.011 L133.172 396.708 L133.704 396.457 L134.258 396.258 L134.829 396.115 L135.412 396.029 L136 396 L136.588 396.029 L137.171 396.115 L137.742 396.258 L138.296 396.457 L138.828 396.708 L139.333 397.011 L139.806 397.362 L140.243 397.757 L140.638 398.194 L140.989 398.667 L141.292 399.172 L141.543 399.704 L141.742 400.258 L141.885 400.829 L141.971 401.412 L142 402 Z" fill="#34d399" stroke="#34d399" stroke-width="1.5"/>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node4" data-shape="anchor" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="1075" width="16" height="61" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M142 1081 L141.971 1081.588 L141.885 1082.171 L141.742 1082.742 L141.543 1083.296 L141.292 1083.828 L140.989 1084.333 L140.638 1084.806 L140.243 1085.243 L139.806 1085.638 L139.333 1085.989 L138.828 1086.292 L138.296 1086.543 L137.742 1086.742 L137.171 1086.885 L136.588 1086.971 L136 1087 L135.412 1086.971 L134.829 1086.885 L134.258 1086.742 L133.704 1086.543 L133.172 1086.292 L132.667 1085.989 L132.194 1085.638 L131.757 1085.243 L131.362 1084.806 L131.011 1084.333 L130.708 1083.828 L130.457 1083.296 L130.258 1082.742 L130.115 1082.171 L130.029 1081.588 L130 1081 L130.029 1080.412 L130.115 1079.829 L130.258 1079.258 L130.457 1078.704 L130.708 1078.172 L131.011 1077.667 L131.362 1077.194 L131.757 1076.757 L132.194 1076.362 L132.667 1076.011 L133.172 1075.708 L133.704 1075.457 L134.258 1075.258 L134.829 1075.115 L135.412 1075.029 L136 1075 L136.588 1075.029 L137.171 1075.115 L137.742 1075.258 L138.296 1075.457 L138.828 1075.708 L139.333 1076.011 L139.806 1076.362 L140.243 1076.757 L140.638 1077.194 L140.989 1077.667 L141.292 1078.172 L141.543 1078.704 L141.742 1079.258 L141.885 1079.829 L141.971 1080.412 L142 1081 Z" fill="#34d399" stroke="#34d399" stroke-width="1.5"/>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node6" data-shape="rounded" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="617" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M228 617 L230.341 617.231 L232.592 617.913 L234.667 619.022 L236.485 620.515 L237.978 622.333 L239.087 624.408 L239.769 626.659 L240 629 L240 669 L239.769 671.341 L239.087 673.592 L237.978 675.667 L236.485 677.485 L234.667 678.978 L232.592 680.087 L230.341 680.769 L228 681 L140 681 L137.659 680.769 L135.408 680.087 L133.333 678.978 L131.515 677.485 L130.022 675.667 L128.913 673.592 L128.231 671.341 L128 669 L128 629 L128.231 626.659 L128.913 624.408 L130.022 622.333 L131.515 620.515 L133.333 619.022 L135.408 617.913 L137.659 617.231 L140 617 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="__activity_node6" x="184" y="653.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="184" y="653.5">Validate</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node8" data-shape="diamond" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="841" width="144" height="74" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M200 841 L272 878 L200 915 L128 878 Z" fill="rgba(120, 53, 15, 0.3)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="__activity_node8" x="200" y="882.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#fbbf24">
+        <tspan x="200" y="882.5">Retry?</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node13" data-shape="fork" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="1296" width="84" height="61" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M128 1296 L212 1296 L212 1308 L128 1308 Z" fill="#34d399" stroke="#34d399" stroke-width="1.5"/>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node15" data-shape="fork" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="1741" width="84" height="61" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M128 1741 L212 1741 L212 1753 L128 1753 Z" fill="#34d399" stroke="#34d399" stroke-width="1.5"/>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node17" data-shape="rounded" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="128" y="1517" width="152" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M268 1517 L270.341 1517.231 L272.592 1517.913 L274.667 1519.022 L276.485 1520.515 L277.978 1522.333 L279.087 1524.408 L279.769 1526.659 L280 1529 L280 1569 L279.769 1571.341 L279.087 1573.592 L277.978 1575.667 L276.485 1577.485 L274.667 1578.978 L272.592 1580.087 L270.341 1580.769 L268 1581 L140 1581 L137.659 1580.769 L135.408 1580.087 L133.333 1578.978 L131.515 1577.485 L130.022 1575.667 L128.913 1573.592 L128.231 1571.341 L128 1569 L128 1529 L128.231 1526.659 L128.913 1524.408 L130.022 1522.333 L131.515 1520.515 L133.333 1519.022 L135.408 1517.913 L137.659 1517.231 L140 1517 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="__activity_node17" x="204" y="1553.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="204" y="1553.5">Prepare stock</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node20" data-shape="rounded" data-expanded="true" data-parent="__activity_group1">
+      <rect class="flowchart-bounds" x="440" y="1517" width="168" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M596 1517 L598.341 1517.231 L600.592 1517.913 L602.667 1519.022 L604.485 1520.515 L605.978 1522.333 L607.087 1524.408 L607.769 1526.659 L608 1529 L608 1569 L607.769 1571.341 L607.087 1573.592 L605.978 1575.667 L604.485 1577.485 L602.667 1578.978 L600.592 1580.087 L598.341 1580.769 L596 1581 L452 1581 L449.659 1580.769 L447.408 1580.087 L445.333 1578.978 L443.515 1577.485 L442.022 1575.667 L440.913 1573.592 L440.231 1571.341 L440 1569 L440 1529 L440.231 1526.659 L440.913 1524.408 L442.022 1522.333 L443.515 1520.515 L445.333 1519.022 L447.408 1517.913 L449.659 1517.231 L452 1517 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="__activity_node20" x="524" y="1553.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="524" y="1553.5">Prepare invoice</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node25" data-shape="rounded" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="2010" width="112" height="64" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M180 2010 L182.341 2010.231 L184.592 2010.913 L186.667 2012.022 L188.485 2013.515 L189.978 2015.333 L191.087 2017.408 L191.769 2019.659 L192 2022 L192 2062 L191.769 2064.341 L191.087 2066.592 L189.978 2068.667 L188.485 2070.485 L186.667 2071.978 L184.592 2073.087 L182.341 2073.769 L180 2074 L92 2074 L89.659 2073.769 L87.408 2073.087 L85.333 2071.978 L83.515 2070.485 L82.022 2068.667 L80.913 2066.592 L80.231 2064.341 L80 2062 L80 2022 L80.231 2019.659 L80.913 2017.408 L82.022 2015.333 L83.515 2013.515 L85.333 2012.022 L87.408 2010.913 L89.659 2010.231 L92 2010 Z" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="flowchart-label" data-label-owner="__activity_node25" x="136" y="2046.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#34d399">
+        <tspan x="136" y="2046.5">Dispatch</tspan>
+      </text>
+    </g>
+    <g class="flowchart-node" data-flowchart-id="__activity_node27" data-shape="fr-circ" data-expanded="true">
+      <rect class="flowchart-bounds" x="80" y="2234" width="32" height="81" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
+      <path class="flowchart-outline" d="M112 2250 L111.923 2251.568 L111.693 2253.121 L111.311 2254.645 L110.782 2256.123 L110.111 2257.542 L109.304 2258.889 L108.368 2260.15 L107.314 2261.314 L106.15 2262.368 L104.889 2263.304 L103.542 2264.111 L102.123 2264.782 L100.645 2265.311 L99.121 2265.693 L97.568 2265.923 L96 2266 L94.432 2265.923 L92.879 2265.693 L91.355 2265.311 L89.877 2264.782 L88.458 2264.111 L87.111 2263.304 L85.85 2262.368 L84.686 2261.314 L83.632 2260.15 L82.696 2258.889 L81.889 2257.542 L81.218 2256.123 L80.689 2254.645 L80.307 2253.121 L80.077 2251.568 L80 2250 L80.077 2248.432 L80.307 2246.879 L80.689 2245.355 L81.218 2243.877 L81.889 2242.458 L82.696 2241.111 L83.632 2239.85 L84.686 2238.686 L85.85 2237.632 L87.111 2236.696 L88.458 2235.889 L89.877 2235.218 L91.355 2234.689 L92.879 2234.307 L94.432 2234.077 L96 2234 L97.568 2234.077 L99.121 2234.307 L100.645 2234.689 L102.123 2235.218 L103.542 2235.889 L104.889 2236.696 L106.15 2237.632 L107.314 2238.686 L108.368 2239.85 L109.304 2241.111 L110.111 2242.458 L110.782 2243.877 L111.311 2245.355 L111.693 2246.879 L111.923 2248.432 L112 2250 Z" fill="rgba(251, 146, 60, 0.3)" stroke="#fb923c" stroke-width="1.5"/>
+      <ellipse cx="96" cy="2250" rx="10" ry="10" fill="#fb923c" stroke="#fb923c" stroke-width="1.5"/>
+    </g>
+  </g>
+</svg>

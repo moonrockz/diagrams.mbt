@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 376" width="448" height="376" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-diagram">
+  <title>Nested order lookup</title>
+  <desc>Sequence diagram with 3 participants (Client, API, Store) and 4 messages.</desc>
+  <defs>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#34d399" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#94a3b8" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-3-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4" fill="none" stroke="#94a3b8" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="448" height="376" rx="0" fill="#020617"/>
+  <g class="bands"/>
+  <g class="lifelines">
+    <path class="lifeline" d="M80 112 V344" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M224 112 V344" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M368 112 V344" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations">
+    <rect class="activation-mask" x="363" y="215" width="10" height="48" rx="0" fill="#0f172a"/>
+    <rect class="activation" x="363" y="215" width="10" height="48" rx="0" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+    <rect class="activation-mask" x="219" y="167" width="10" height="144" rx="0" fill="#0f172a"/>
+    <rect class="activation" x="219" y="167" width="10" height="144" rx="0" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+  </g>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="Client" data-to="API" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M87 167 L217 167" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-0-end)" data-connector-id="0" data-connector-source="Client" data-connector-target="API" data-connector-route="M87 167 L217 167" data-connector-key="0"/>
+      <rect class="mask" x="117" y="140" width="71" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="152" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
+        <tspan x="152" y="155">lookup()</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="API" data-to="Store" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M229 215 L361 215" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-1-end)" data-connector-id="1" data-connector-source="API" data-connector-target="Store" data-connector-route="M229 215 L361 215" data-connector-key="1"/>
+      <rect class="mask" x="268" y="188" width="57" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="296" y="203" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="296" y="203">find()</tspan>
+      </text>
+    </g>
+    <g class="message f-external" data-index="2" data-from="Store" data-to="API" data-sender-head="none" data-receiver-head="open">
+      <path class="m-line" d="M363 263 L229 263" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-2-end)" data-connector-id="2" data-connector-source="Store" data-connector-target="API" data-connector-route="M363 263 L229 263" data-connector-key="2"/>
+      <rect class="mask" x="268" y="236" width="57" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="296" y="251" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="296" y="251">record</tspan>
+      </text>
+    </g>
+    <g class="message f-external" data-index="3" data-from="API" data-to="Client" data-sender-head="none" data-receiver-head="open">
+      <path class="m-line" d="M219 311 L87 311" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-u-7a-65-6e-75-6d-6c-2d-6e-65-73-74-65-64-2d-63-61-6c-6c-73-2d-64-61-72-6b-head-3-end)" data-connector-id="3" data-connector-source="API" data-connector-target="Client" data-connector-route="M219 311 L87 311" data-connector-key="3"/>
+      <rect class="mask" x="124" y="284" width="57" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="152" y="299" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="152" y="299">result</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="Client">
+      <rect class="mask" x="32" y="64" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="32" y="64" width="96" height="48" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="p-label" x="80" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="80" y="92">Client</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="API">
+      <rect class="mask" x="176" y="64" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="176" y="64" width="96" height="48" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="p-label" x="224" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="224" y="92">API</tspan>
+      </text>
+    </g>
+    <g class="participant f-database" data-id="Store">
+      <rect class="mask" x="320" y="64" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="320" y="64" width="96" height="48" rx="6" fill="rgba(76, 29, 149, 0.4)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text class="p-label" x="368" y="92" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="368" y="92">Store</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations">
+    <rect class="mask" x="32" y="16" width="384" height="32" rx="3" fill="#0f172a"/>
+    <text class="diagram-title" x="224" y="36" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+      <tspan x="224" y="36">Nested order lookup</tspan>
+    </text>
+  </g>
+</svg>

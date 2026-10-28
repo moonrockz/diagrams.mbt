@@ -1,0 +1,4 @@
+@startregex
+title Colour tags
+(?:red|green|blue)(?:-(?:light|dark))?(?:,[a-z]+)*
+@endregex

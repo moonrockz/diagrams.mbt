@@ -1,0 +1,9 @@
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="urn:gallery:expanded">
+<b:process id="Approval" isExecutable="false">
+<b:startEvent id="start"/><b:userTask id="review" name="Review"/><b:exclusiveGateway id="decision" name="Approved?"/><b:endEvent id="end"/>
+<b:sequenceFlow id="request" sourceRef="start" targetRef="review"/>
+<b:sequenceFlow id="check" sourceRef="review" targetRef="decision"/>
+<b:sequenceFlow id="retry" sourceRef="decision" targetRef="review" name="retry"/>
+<b:sequenceFlow id="approve" sourceRef="decision" targetRef="end" name="yes"/>
+</b:process>
+</b:definitions>

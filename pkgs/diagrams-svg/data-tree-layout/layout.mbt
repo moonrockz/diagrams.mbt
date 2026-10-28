@@ -17,7 +17,7 @@ let pad_x : Double = 8.0
 let pad_y : Double = 5.0
 
 ///|
-let column_gap : Double = 56.0
+let natural_column_gap : Double = 56.0
 
 ///|
 let box_gap : Double = 16.0
@@ -231,6 +231,7 @@ pub fn layout(
   tree : @model.DataTree,
   limits~ : Limits = Limits::new(),
 ) -> Result {
+  let column_gap = natural_column_gap.max(limits.minimum_approach * 2.0 + 16.0)
   let diagnostics : Array[@diagrams.Diagnostic] = []
   if limits.nodes <= 0 ||
     limits.depth <= 0 ||

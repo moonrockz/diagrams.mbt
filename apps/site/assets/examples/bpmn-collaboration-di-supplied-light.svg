@@ -1,27 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 544" width="1024" height="544" role="img" data-diagram="bpmn" id="bpmn-c8c9efc1caeeb12e-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 544" width="1024" height="544" role="img" data-diagram="bpmn" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Plain,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="bpmn-a51bd0052242205d-diagram">
   <title>Purchase collaboration</title>
   <desc>BPMN view with 9 visible shapes and 6 connections. Structural flow is illustrative. Conditions, timers and execution outcomes are not evaluated.</desc>
   <defs>
-    <marker id="bpmn-c8c9efc1caeeb12e-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-a51bd0052242205d-sequence-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-10 -5 L0 0 L-10 5 Z" fill="#64748b" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-c8c9efc1caeeb12e-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-a51bd0052242205d-open-head" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-10 -5 L0 0 L-10 5" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-c8c9efc1caeeb12e-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="bpmn-a51bd0052242205d-message-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <circle cx="0" cy="0" r="3.5" fill="#f4f5f7" stroke="#64748b" stroke-width="1.5"/>
     </marker>
-    <marker id="bpmn-c8c9efc1caeeb12e-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="bpmn-a51bd0052242205d-condition-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M0 0 L6 -4 L12 0 L6 4 Z" fill="#f4f5f7" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
-    <marker id="bpmn-c8c9efc1caeeb12e-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
+    <marker id="bpmn-a51bd0052242205d-default-tail" viewBox="-12 -7 28 14" refX="0" refY="0" markerWidth="28" markerHeight="14" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M4 -5 L10 5" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
     </marker>
   </defs>
   <rect class="bg" x="0" y="0" width="1024" height="544" fill="#f4f5f7"/>
   <g transform="translate(12 12)" class="bpmn-viewport">
     <g class="bpmn-backgrounds">
-      <g data-id="Buyer" data-source-id="Buyer" data-source-path="0/2/0" id="bpmn-c8c9efc1caeeb12e-node-0" class="bpmn-shape" data-kind="participant" data-expanded="false" data-black-box="false" data-events="">
+      <g data-id="Buyer" data-source-id="Buyer" data-source-path="0/2/0" id="bpmn-a51bd0052242205d-node-0" class="bpmn-shape" data-kind="participant" data-expanded="false" data-black-box="false" data-events="">
         <rect class="bpmn-bounds" x="20" y="20" width="700" height="320" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(20 20) scale(700 320)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -32,7 +32,7 @@
           <path d="M30 0 V320" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
         </g>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:7:Prepare" data-source-id="Prepare" data-source-path="0/1/1" id="bpmn-c8c9efc1caeeb12e-node-4" class="bpmn-shape" data-kind="subProcess" data-expanded="true" data-black-box="false" data-pool="Buyer" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:7:Prepare" data-source-id="Prepare" data-source-path="0/1/1" id="bpmn-a51bd0052242205d-node-4" class="bpmn-shape" data-kind="subProcess" data-expanded="true" data-black-box="false" data-pool="Buyer" data-events="">
         <rect class="bpmn-bounds" x="220" y="60" width="360" height="220" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(220 60) scale(360 220)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -44,7 +44,7 @@
           <g transform="translate(10 8) scale(0.8)"/>
         </g>
       </g>
-      <g data-id="Supplier" data-source-id="Supplier" data-source-path="0/2/1" id="bpmn-c8c9efc1caeeb12e-node-1" class="bpmn-shape" data-kind="participant" data-expanded="false" data-black-box="true" data-events="">
+      <g data-id="Supplier" data-source-id="Supplier" data-source-path="0/2/1" id="bpmn-a51bd0052242205d-node-1" class="bpmn-shape" data-kind="participant" data-expanded="false" data-black-box="true" data-events="">
         <rect class="bpmn-bounds" x="20" y="400" width="700" height="100" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(20 400) scale(700 100)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -57,31 +57,31 @@
       </g>
     </g>
     <g class="bpmn-connections">
-      <g data-id="Order" data-source-id="Order" data-source-path="0/2/2" id="bpmn-c8c9efc1caeeb12e-flow-0" class="bpmn-flow" data-kind="messageFlow" data-from="@bpmn:0:5:Buyer:4:Work" data-to="Supplier">
-        <path d="M410 170 L410 300 L760 300 L760 450 L720 450" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="6 4" marker-start="url(#bpmn-c8c9efc1caeeb12e-message-tail)" marker-end="url(#bpmn-c8c9efc1caeeb12e-open-head)"/>
+      <g data-id="Order" data-source-id="Order" data-source-path="0/2/2" id="bpmn-a51bd0052242205d-flow-0" class="bpmn-flow" data-kind="messageFlow" data-from="@bpmn:0:5:Buyer:4:Work" data-to="Supplier">
+        <path class="bpmn-connector" d="M410 170 L410 300 L760 300 L760 450 L720 450" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="6 4" marker-start="url(#bpmn-a51bd0052242205d-message-tail)" marker-end="url(#bpmn-a51bd0052242205d-open-head)" data-connector-id="Order" data-connector-source="@bpmn:0:5:Buyer:4:Work" data-connector-target="Supplier" data-connector-route="M410 170 L410 300 L760 300 L760 450 L720 450" data-connector-key="0"/>
         <g transform="translate(603 288)">
           <rect x="1" y="4" width="22" height="16" rx="0" fill="#f4f5f7" stroke="#64748b" stroke-width="1.5"/>
           <path d="M1 4 L12 13 L23 4" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
         </g>
       </g>
-      <g data-id="ExplainSupplier" data-source-id="ExplainSupplier" data-source-path="0/2/4" id="bpmn-c8c9efc1caeeb12e-flow-1" class="bpmn-flow" data-kind="association" data-from="Supplier" data-to="SupplierNote">
-        <path d="M720 460 L800 460" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="1 4" stroke-linecap="round"/>
+      <g data-id="ExplainSupplier" data-source-id="ExplainSupplier" data-source-path="0/2/4" id="bpmn-a51bd0052242205d-flow-1" class="bpmn-flow" data-kind="association" data-from="Supplier" data-to="SupplierNote">
+        <path class="bpmn-connector" d="M720 460 L800 460" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="1 4" stroke-linecap="round" data-connector-id="ExplainSupplier" data-connector-source="Supplier" data-connector-target="SupplierNote" data-connector-route="M720 460 L800 460" data-connector-key="1"/>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:9:BeginWork" data-source-id="BeginWork" data-source-path="0/1/1/3" id="bpmn-c8c9efc1caeeb12e-flow-2" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:8:Received" data-to="@bpmn:0:5:Buyer:4:Work">
-        <path d="M286 128 L310 128 L310 130 L340 130" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-c8c9efc1caeeb12e-sequence-head)"/>
+      <g data-id="@bpmn:0:5:Buyer:9:BeginWork" data-source-id="BeginWork" data-source-path="0/1/1/3" id="bpmn-a51bd0052242205d-flow-2" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:8:Received" data-to="@bpmn:0:5:Buyer:4:Work">
+        <path class="bpmn-connector" d="M286 128 L310 128 L310 130 L340 130" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-a51bd0052242205d-sequence-head)" data-connector-id="@bpmn:0:5:Buyer:9:BeginWork" data-connector-source="@bpmn:0:5:Buyer:8:Received" data-connector-target="@bpmn:0:5:Buyer:4:Work" data-connector-route="M286 128 L310 128 L310 130 L340 130" data-connector-key="2"/>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:12:CompleteWork" data-source-id="CompleteWork" data-source-path="0/1/1/4" id="bpmn-c8c9efc1caeeb12e-flow-3" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:4:Work" data-to="@bpmn:0:5:Buyer:5:Ready">
-        <path d="M480 130 L495 130 L495 128 L510 128" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-c8c9efc1caeeb12e-sequence-head)"/>
+      <g data-id="@bpmn:0:5:Buyer:12:CompleteWork" data-source-id="CompleteWork" data-source-path="0/1/1/4" id="bpmn-a51bd0052242205d-flow-3" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:4:Work" data-to="@bpmn:0:5:Buyer:5:Ready">
+        <path class="bpmn-connector" d="M480 130 L495 130 L495 128 L510 128" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-a51bd0052242205d-sequence-head)" data-connector-id="@bpmn:0:5:Buyer:12:CompleteWork" data-connector-source="@bpmn:0:5:Buyer:4:Work" data-connector-target="@bpmn:0:5:Buyer:5:Ready" data-connector-route="M480 130 L495 130 L495 128 L510 128" data-connector-key="3"/>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:10:BeginOrder" data-source-id="BeginOrder" data-source-path="0/1/3" id="bpmn-c8c9efc1caeeb12e-flow-4" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:5:Start" data-to="@bpmn:0:5:Buyer:7:Prepare">
-        <path d="M136 148 L180 148 L180 170 L220 170" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-c8c9efc1caeeb12e-sequence-head)"/>
+      <g data-id="@bpmn:0:5:Buyer:10:BeginOrder" data-source-id="BeginOrder" data-source-path="0/1/3" id="bpmn-a51bd0052242205d-flow-4" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:5:Start" data-to="@bpmn:0:5:Buyer:7:Prepare">
+        <path class="bpmn-connector" d="M136 148 L180 148 L180 170 L220 170" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-a51bd0052242205d-sequence-head)" data-connector-id="@bpmn:0:5:Buyer:10:BeginOrder" data-connector-source="@bpmn:0:5:Buyer:5:Start" data-connector-target="@bpmn:0:5:Buyer:7:Prepare" data-connector-route="M136 148 L180 148 L180 170 L220 170" data-connector-key="4"/>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:13:CompleteOrder" data-source-id="CompleteOrder" data-source-path="0/1/4" id="bpmn-c8c9efc1caeeb12e-flow-5" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:7:Prepare" data-to="@bpmn:0:5:Buyer:6:Placed">
-        <path d="M580 170 L640 170" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-c8c9efc1caeeb12e-sequence-head)"/>
+      <g data-id="@bpmn:0:5:Buyer:13:CompleteOrder" data-source-id="CompleteOrder" data-source-path="0/1/4" id="bpmn-a51bd0052242205d-flow-5" class="bpmn-flow" data-kind="sequenceFlow" data-from="@bpmn:0:5:Buyer:7:Prepare" data-to="@bpmn:0:5:Buyer:6:Placed">
+        <path class="bpmn-connector" d="M580 170 L640 170" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linejoin="round" marker-end="url(#bpmn-a51bd0052242205d-sequence-head)" data-connector-id="@bpmn:0:5:Buyer:13:CompleteOrder" data-connector-source="@bpmn:0:5:Buyer:7:Prepare" data-connector-target="@bpmn:0:5:Buyer:6:Placed" data-connector-route="M580 170 L640 170" data-connector-key="5"/>
       </g>
     </g>
     <g class="bpmn-nodes">
-      <g data-id="SupplierNote" data-source-id="SupplierNote" data-source-path="0/2/3" id="bpmn-c8c9efc1caeeb12e-node-2" class="bpmn-shape" data-kind="textAnnotation" data-expanded="false" data-black-box="false" data-events="">
+      <g data-id="SupplierNote" data-source-id="SupplierNote" data-source-path="0/2/3" id="bpmn-a51bd0052242205d-node-2" class="bpmn-shape" data-kind="textAnnotation" data-expanded="false" data-black-box="false" data-events="">
         <rect class="bpmn-bounds" x="800" y="400" width="180" height="100" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(800 400) scale(180 100)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -90,7 +90,7 @@
         </g>
         <g transform="translate(800 400)" class="bpmn-markers"/>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:5:Start" data-source-id="Start" data-source-path="0/1/0" id="bpmn-c8c9efc1caeeb12e-node-3" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:5:Start" data-source-id="Start" data-source-path="0/1/0" id="bpmn-a51bd0052242205d-node-3" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-events="">
         <rect class="bpmn-bounds" x="100" y="130" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(100 130) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">
@@ -101,7 +101,7 @@
           <g transform="translate(8.1 8.1) scale(0.825)"/>
         </g>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:8:Received" data-source-id="Received" data-source-path="0/1/1/0" id="bpmn-c8c9efc1caeeb12e-node-5" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:8:Received" data-source-id="Received" data-source-path="0/1/1/0" id="bpmn-a51bd0052242205d-node-5" class="bpmn-shape" data-kind="startEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
         <rect class="bpmn-bounds" x="250" y="110" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(250 110) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">
@@ -112,7 +112,7 @@
           <g transform="translate(8.1 8.1) scale(0.825)"/>
         </g>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:4:Work" data-source-id="Work" data-source-path="0/1/1/1" id="bpmn-c8c9efc1caeeb12e-node-6" class="bpmn-shape" data-kind="serviceTask" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:4:Work" data-source-id="Work" data-source-path="0/1/1/1" id="bpmn-a51bd0052242205d-node-6" class="bpmn-shape" data-kind="serviceTask" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
         <rect class="bpmn-bounds" x="340" y="90" width="140" height="80" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(340 90) scale(140 80)" aria-hidden="true">
           <g transform="scale(0.01 0.0125)">
@@ -127,7 +127,7 @@
           </g>
         </g>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:5:Ready" data-source-id="Ready" data-source-path="0/1/1/2" id="bpmn-c8c9efc1caeeb12e-node-7" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:5:Ready" data-source-id="Ready" data-source-path="0/1/1/2" id="bpmn-a51bd0052242205d-node-7" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-subprocess="@bpmn:0:5:Buyer:7:Prepare" data-events="">
         <rect class="bpmn-bounds" x="510" y="110" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(510 110) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">
@@ -138,7 +138,7 @@
           <g transform="translate(8.1 8.1) scale(0.825)"/>
         </g>
       </g>
-      <g data-id="@bpmn:0:5:Buyer:6:Placed" data-source-id="Placed" data-source-path="0/1/2" id="bpmn-c8c9efc1caeeb12e-node-8" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-events="">
+      <g data-id="@bpmn:0:5:Buyer:6:Placed" data-source-id="Placed" data-source-path="0/1/2" id="bpmn-a51bd0052242205d-node-8" class="bpmn-shape" data-kind="endEvent" data-expanded="false" data-black-box="false" data-pool="Buyer" data-events="">
         <rect class="bpmn-bounds" x="640" y="152" width="36" height="36" fill="none" stroke="none" pointer-events="none" aria-hidden="true"/>
         <g transform="translate(640 152) scale(36 36)" aria-hidden="true">
           <g transform="scale(0.01 0.01)">

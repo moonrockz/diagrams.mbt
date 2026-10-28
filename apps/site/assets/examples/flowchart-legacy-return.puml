@@ -1,0 +1,14 @@
+@startuml
+title Legacy retry
+partition Intake {
+(*) --> "Receive" as R
+R --> "Check" as C
+}
+if "Ready?" then
+-->[yes] "Dispatch" as D
+else
+-->[no] "Correct" as Fix
+Fix --> R
+endif
+D --> (*)
+@enduml

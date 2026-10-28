@@ -1,0 +1,4 @@
+@startjson
+title Exact values
+{"ids":[12345678901234567890,12345678901234567890],"amount":0.000000001,"states":[false,true,null],"labels":["same","same"],"meta":{"empty":"","unicode":"café"}}
+@endjson

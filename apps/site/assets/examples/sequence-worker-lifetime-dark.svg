@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 454 370" width="454" height="370" role="img" data-diagram="sequence" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-diagram">
+  <title>Sequence diagram</title>
+  <desc>Sequence diagram with 2 participants (API, Worker) and 3 messages.</desc>
+  <defs>
+    <marker id="seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-0-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#22d3ee" stroke="#22d3ee" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-1-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#34d399" stroke="#34d399" stroke-width="1.4"/>
+    </marker>
+    <marker id="seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-2-end" viewBox="-10 -5 15 10" refX="0" refY="0" markerWidth="15" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+      <path d="M-9,-4 L0,0 L-9,4 z" fill="#94a3b8" stroke="#94a3b8" stroke-width="1.4"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="0" y="0" width="454" height="370" rx="0" fill="#020617"/>
+  <g class="bands"/>
+  <g class="lifelines">
+    <path class="lifeline" d="M80 72 V338" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+    <path class="lifeline" d="M237 187 V305" fill="none" stroke="#94a3b8" stroke-width="0.8" stroke-dasharray="3 7"/>
+  </g>
+  <g class="activations"/>
+  <g class="messages">
+    <g class="message f-frontend" data-index="0" data-from="API" data-to="Worker" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M87 163 L189 163" fill="none" stroke="#22d3ee" stroke-width="1.4" marker-end="url(#seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-0-end)" data-connector-id="0" data-connector-source="API" data-connector-target="Worker" data-connector-route="M87 163 L189 163" data-connector-key="0"/>
+      <rect class="mask" x="96" y="136" width="77" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="134" y="151" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#22d3ee">
+        <tspan x="134" y="151">Start job</tspan>
+      </text>
+    </g>
+    <g class="message f-backend" data-index="1" data-from="Worker" data-to="Worker" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M244 230 L414 230 L414 258 L244 258" fill="none" stroke="#34d399" stroke-width="1.4" marker-end="url(#seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-1-end)" data-connector-id="1" data-connector-source="Worker" data-connector-target="Worker" data-connector-route="M244 230 L414 230 L414 258 L244 258" data-connector-key="1"/>
+      <rect class="mask" x="301" y="203" width="105" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="353" y="218" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#34d399">
+        <tspan x="353" y="218">Process batch</tspan>
+      </text>
+    </g>
+    <g class="message f-external" data-index="2" data-from="Worker" data-to="API" data-sender-head="none" data-receiver-head="arrow">
+      <path class="m-line" d="M230 305 L87 305" fill="none" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#seq-u-73-65-71-75-65-6e-63-65-2d-77-6f-72-6b-65-72-2d-6c-69-66-65-74-69-6d-65-2d-64-61-72-6b-head-2-end)" data-connector-id="2" data-connector-source="Worker" data-connector-target="API" data-connector-route="M230 305 L87 305" data-connector-key="2"/>
+      <rect class="mask" x="96" y="278" width="77" height="23" rx="3" fill="#0f172a"/>
+      <text class="m-label" x="134" y="293" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="11" font-weight="400" fill="#94a3b8">
+        <tspan x="134" y="293">Completed</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="notes"/>
+  <g class="participants">
+    <g class="participant f-frontend" data-id="API">
+      <rect class="mask" x="32" y="24" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="32" y="24" width="96" height="48" rx="6" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text class="p-label" x="80" y="52" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="80" y="52">API</tspan>
+      </text>
+    </g>
+    <g class="participant f-backend" data-id="Worker">
+      <rect class="mask" x="189" y="139" width="96" height="48" rx="6" fill="#0f172a"/>
+      <rect class="box" x="189" y="139" width="96" height="48" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+      <text class="p-label" x="237" y="167" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#ffffff">
+        <tspan x="237" y="167">Worker</tspan>
+      </text>
+    </g>
+  </g>
+  <g class="annotations">
+    <path class="destruction" d="M231 299 L243 311 M231 311 L243 299" fill="none" stroke="#fb7185" stroke-width="1.4"/>
+  </g>
+</svg>

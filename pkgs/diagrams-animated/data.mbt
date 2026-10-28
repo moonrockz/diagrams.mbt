@@ -200,7 +200,8 @@ fn playback_data(
     let kind = match node.kind {
       Bpmn(_) => "bpmn"
       SwimlaneNode | SwimlaneGroup | SwimlaneLane => "swimlane"
-      FlowchartNode(_) | FlowchartGroup | FlowchartLane | FlowchartNote(_) => "flowchart"
+      FlowchartNode(_) | FlowchartGroup | FlowchartLane | FlowchartNote(_) =>
+        "flowchart"
       ArchitectureService | ArchitectureJunction | ArchitectureGroup =>
         "architecture"
       Message => "message"
@@ -209,14 +210,26 @@ fn playback_data(
       _ => "control"
     }
     let detail = match node.kind {
-      FlowchartNode(n) => "Control role: "+n.role.to_repr().to_string()+". Structural illustration only."
+      FlowchartNode(n) =>
+        "Control role: " +
+        n.role.to_repr().to_string() +
+        ". Structural illustration only."
       FlowchartNote(note) => note.text
-      FlowchartRegion(region,_) => "Control region: "+region.kind.to_repr().to_string()+". "+region.condition.unwrap_or("")+" "+region.join_specification.unwrap_or("")
-      _ => node.source_node.map(n => description(n,budget)).unwrap_or("")
+      FlowchartRegion(region, _) =>
+        "Control region: " +
+        region.kind.to_repr().to_string() +
+        ". " +
+        region.condition.unwrap_or("") +
+        " " +
+        region.join_specification.unwrap_or("")
+      _ => node.source_node.map(n => description(n, budget)).unwrap_or("")
     }
     nodes.push(
       budget.object([
-        ("primary", Json(node.swimlane_node is Some(_) || node.kind is FlowchartNode(_))),
+        (
+          "primary",
+          Json(node.swimlane_node is Some(_) || node.kind is FlowchartNode(_)),
+        ),
         ("id", budget.str(node.id)),
         ("label", budget.str(endpoint_label(node, scene.catalog))),
         ("kind", budget.str(kind)),
@@ -262,11 +275,18 @@ fn playback_data(
   }
   let outside = []
   match scene.catalog.source {
-    Flowchart(view) => {
-      for id in view.nodes.map(n => n.id).iter().concat(view.groups.map(g => g.id).iter()).concat(view.notes.map(n => n.id).iter()).concat(view.regions.map(r => r.id).iter()) {
-        if scene.catalog.graph.lookup(id) is Err(OutsideView(_)) { outside.push(budget.str(id)) }
+    Flowchart(view) =>
+      for
+        id in view.nodes
+        .map(n => n.id)
+        .iter()
+        .concat(view.groups.map(g => g.id).iter())
+        .concat(view.notes.map(n => n.id).iter())
+        .concat(view.regions.map(r => r.id).iter()) {
+        if scene.catalog.graph.lookup(id) is Err(OutsideView(_)) {
+          outside.push(budget.str(id))
+        }
       }
-    }
     Swimlane(view) => {
       for node in view.nodes {
         if scene.catalog.graph.lookup(node.id) is Err(OutsideView(_)) {
@@ -290,7 +310,12 @@ fn playback_data(
           ("kind", budget.str("architecture")),
           ("id", budget.str(id)),
         ])
-      Flowchart(id) => budget.object([("endpoint",budget.str(binding.endpoint)),("kind",budget.str("flowchart")),("id",budget.str(id))])
+      Flowchart(id) =>
+        budget.object([
+          ("endpoint", budget.str(binding.endpoint)),
+          ("kind", budget.str("flowchart")),
+          ("id", budget.str(id)),
+        ])
       Swimlane(id) =>
         budget.object([
           ("endpoint", budget.str(binding.endpoint)),

@@ -108,6 +108,9 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 - `.github/workflows/` holds the CI, release and site workflows. The `ci-ok` job
   is the aggregate check for branch protection.
 
+See [connector paths](docs/guides/connectors.md) for typed line styles, default
+bridge hops, marker approaches, supplied BPMN policy and final path inspection.
+
 ## Review the integrated output
 
 Run `mise run gallery`, then open `_gallery/index.html`. It includes source XML,
@@ -119,7 +122,8 @@ from stored snapshots without compiling. `--check` compares existing artifacts;
 Run `mise run test:animation` for offline player qualification.
 
 Callers that exhaustively match the public `Diagram` enum must add its `Bpmn`,
-`Swimlane`, `Flowchart`, `Regex`, `Ebnf`, `DataTree` and `Architecture` cases. Existing sequence and BPMN static SVG bytes remain unchanged.
+`Swimlane`, `Flowchart`, `Regex`, `Ebnf`, `DataTree` and `Architecture` cases. Default bridge hops and marker approaches update affected static SVG bytes;
+source identities and model semantics remain stable.
 See the tested module guides, [BPMN and animation](docs/guides/bpmn-and-animation.md)
 and [Mermaid swimlanes](docs/guides/mermaid-swimlanes.md).
 

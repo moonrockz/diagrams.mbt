@@ -57,8 +57,11 @@ all four effective directions and empty, unowned, nested and collapsed scopes.
 
 The [SVG module guide](../../pkgs/diagrams-svg/README.mbt.md) describes geometry,
 themes, limits and the public legibility checker. Static output is standalone,
-script-free SVG. Explicit ID prefixes isolate inline copies. Existing sequence
-and BPMN static SVG bytes remain unchanged for the same inputs and options.
+script-free SVG. Explicit ID prefixes isolate inline copies. Shared connector
+updates deliberately change affected sequence, BPMN and swimlane SVG bytes for
+default bridge hops and longer marked approaches. Explicit styles also change
+display geometry. Source identities, semantic endpoints and query results stay
+stable; portable snapshots and browser checks qualify the visual updates.
 
 Built-in vector shapes and their aliases use the shared diagram palettes.
 Image/icon assets and unknown shapes return explicit errors without output or
