@@ -20,8 +20,9 @@ let result = @raster.rasterize(
 
 `RasterSize` supports original dimensions, positive finite scale, output width,
 output height and a fitting box. The renderer preserves viewBox aspect ratio and
-shows the complete diagram. Dimensions round up; a fitting box is a maximum,
-not a cropping rectangle.
+shows the complete diagram. An explicit width or height is exact. Only the
+derived axis rounds up. Integral generated bounds use overflow-safe integer
+ratios, and a fitting box is a maximum, not a cropping rectangle.
 
 PNG defaults to alpha. JPEG requires an explicit opaque background and quality
 from 1 through 100:

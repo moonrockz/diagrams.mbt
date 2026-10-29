@@ -45,8 +45,9 @@ test "JPEG requires an explicit opaque background" {
 ## Size, background and theme
 
 `RasterSize` accepts original dimensions, a positive finite scale, a width, a
-height or a fitting box. Width and height preserve the SVG viewBox aspect ratio.
-`Fit(w,h)` fits the complete diagram inside the box. Output dimensions round up.
+height or a fitting box. Explicit width and height requests keep that axis exact;
+the derived axis rounds up, using exact ratios for integral viewBox dimensions.
+`Fit(w,h)` fits the complete diagram inside the box without exceeding either bound.
 No option crops the diagram.
 
 PNG defaults to a transparent background. JPEG accepts quality 1–100 and requires

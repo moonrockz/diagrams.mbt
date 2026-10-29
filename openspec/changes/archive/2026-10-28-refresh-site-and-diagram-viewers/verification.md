@@ -18,8 +18,8 @@ workstation publication was used.
 
 `mise run format`, `mise run check`, strict OpenSpec validation, stored SVG and
 animation browser suites, fresh portable raster/flowchart/state consumers, and
-root/next site consumer checks passed. The final local gate had 926 tests on
-each portable backend, 937 on native and 28 task-script suites. Source/static
+root/next site consumer checks passed. The final local gate had 930 tests on
+each portable backend, 941 on native and 28 task-script suites. Source/static
 SVG inventory remained exact; historical archive assembly code was unchanged.
 
 Independent review's glyph allocation, cmap expansion and signed-wrap findings
@@ -44,3 +44,11 @@ The hosted trace measured four concurrent Zig compiler processes at 14.76 GiB
 combined RSS, about 111 MiB available RAM and 2.09 GiB swap use before runner
 shutdown. Only this gate now uses `--jobs=2`, with a 30-minute allowance for the
 reduced parallelism. The selected OS, compiler pin and full suite remain the same.
+
+Sizing review found one-ULP errors on actual state/flowchart/YAML/sequence
+viewBoxes. Explicit axes are exact; integral derived dimensions and Fit
+comparisons use bounded Int64 ratios. Fractional inputs have a guarded floating
+path. Portable regressions include public PNG/JPEG decoding, exact dimension
+budgets and architecture/swimlane exact-aspect cases. The prior capped Linux
+Zig run passed all 937 then-current native tests in 13m20s, with peak combined
+compiler RSS 10.25 GiB and at least 4.67 GiB available RAM.

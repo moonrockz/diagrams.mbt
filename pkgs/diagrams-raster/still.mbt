@@ -121,8 +121,27 @@ fn still_dimensions(
       "raster/invalid-scale", "Scale must be finite and positive",
     )
   }
-  let w = (width * scale).ceil()
-  let h = (height * scale).ceil()
+  // Keep explicit axes exact, and derive the other axis without introducing
+  // a divide-then-multiply overshoot at an integral aspect result.
+  let (w, h) = match size {
+    Width(value) => (value.to_double(), ratio_dimension(height, value, width))
+    Height(value) => (ratio_dimension(width, value, height), value.to_double())
+    Fit(max_w, max_h) => {
+      let width_limited = if width <= 2147483647.0 && height <= 2147483647.0 &&
+        width.floor() == width && height.floor() == height {
+        max_w.to_int64() * height.to_int().to_int64() <=
+          max_h.to_int64() * width.to_int().to_int64()
+      } else {
+        max_w.to_double() / width <= max_h.to_double() / height
+      }
+      if width_limited {
+        (max_w.to_double(), ratio_dimension(height, max_w, width).min(max_h.to_double()))
+      } else {
+        (ratio_dimension(width, max_h, height).min(max_w.to_double()), max_h.to_double())
+      }
+    }
+    _ => ((width * scale).ceil(), (height * scale).ceil())
+  }
   guard raster_finite(w) &&
     raster_finite(h) &&
     w <= limits.max_dimension.to_double() &&
@@ -420,4 +439,26 @@ fn validate_raster_size(
       }
     }
   }
+}
+
+///|
+/// Integral generated dimensions admit an exact, overflow-safe ratio. The
+/// largest product of two positive Int32 values fits Int64. Fractional input
+/// multiplies before dividing; ratio-first avoids overflow for extreme values.
+fn ratio_dimension(axis : Double, requested : Int32, opposite : Double) -> Double {
+  if axis <= 2147483647.0 && opposite <= 2147483647.0 &&
+    axis.floor() == axis && opposite.floor() == opposite {
+    let numerator = axis.to_int().to_int64() * requested.to_int64()
+    let denominator = opposite.to_int().to_int64()
+    let extra = if numerator % denominator == 0L { 0L } else { 1L }
+    let rounded = numerator / denominator + extra
+    return rounded.to_double()
+  }
+  let product = axis * requested.to_double()
+  let value = if raster_finite(product) {
+    product / opposite
+  } else {
+    (axis / opposite) * requested.to_double()
+  }
+  value.ceil().max(1.0)
 }
