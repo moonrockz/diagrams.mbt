@@ -2,6 +2,7 @@
 package "moonrockz/diagrams-animated"
 
 import {
+  "moonrockz/diagrams-raster",
   "moonrockz/diagrams-svg",
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/render",
@@ -20,8 +21,9 @@ pub struct AnimatedRenderer {
   query_limits : @animation.Limits
   sequence_view_id : String?
   output_units : Int32
+  raster_fonts : @diagrams-raster.FontSet?
 }
-pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan, playback? : @animation.PlaybackPlan, svg? : @diagrams-svg.SvgRenderer, limits? : @animation.Limits, query_limits? : @animation.Limits, sequence_view_id? : String, output_units? : Int32) -> Self
+pub fn AnimatedRenderer::new(plan? : @animation.MotionPlan, playback? : @animation.PlaybackPlan, svg? : @diagrams-svg.SvgRenderer, limits? : @animation.Limits, query_limits? : @animation.Limits, sequence_view_id? : String, output_units? : Int32, raster_fonts? : @diagrams-raster.FontSet) -> Self
 pub fn AnimatedRenderer::render(Self, @render.Diagram) -> @render.Rendered
 pub impl @render.Renderer for AnimatedRenderer
 

@@ -1,0 +1,103 @@
+///|
+/// Verify an isolated public raster consumer on each portable target. Local
+/// release candidates use only their own library workspace members; --published
+/// switches to registry installs after an approved release, without path pins.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn raster_version(text : String) -> String {
+  for line in text.split("\n") {
+    if line.trim().has_prefix("version = ") {
+      let parts = line.split("\"").to_array()
+      if parts.length() == 3 {
+        return parts[1].to_owned()
+      }
+    }
+  }
+  abort("Root moon.mod has no version")
+}
+
+///|
+let raster_consumer : String =
+  #|test "public still and animation exports need no browser or site" {
+  #|  let model=@swimlane.Swimlane::new("consumer",[@swimlane.Node::new("A",label="Review"),@swimlane.Node::new("B",label="Approve")],[@swimlane.Connection::new("AB","A","B")])
+  #|  let scene=@svg.SvgRenderer::new().scene(@render.Diagram::Swimlane(model)).scene.unwrap()
+  #|  let fonts=@raster.FontSet::default().subset_for_svg(scene.canonical_svg).fonts.unwrap()
+  #|  let png=@raster.rasterize(scene.canonical_svg,fonts~,options=@raster.StillOptions::new(size=Width(128)))
+  #|  assert_eq(png.diagnostics.length(),0)
+  #|  assert_eq(png.image.unwrap().media_type,"image/png")
+  #|  assert_eq(png.image.unwrap().width,128)
+  #|  let jpeg=@raster.rasterize(scene.canonical_svg,fonts~,options=@raster.StillOptions::new(format=Jpeg(quality=80),size=Width(128),background=@raster.Rgba::white()))
+  #|  assert_eq(jpeg.diagnostics.length(),0)
+  #|  assert_eq(jpeg.image.unwrap().media_type,"image/jpeg")
+  #|  let plan=@animation.PlaybackPlan::illustrative(scene.catalog,duration_ms=100L).plan.unwrap()
+  #|  let gif=@raster.export_gif(scene,plan,fonts~,options=@raster.GifOptions::new(size=Width(64),frame_rate=10,loop_behavior=Once))
+  #|  assert_eq(gif.diagnostics.length(),0)
+  #|  assert_eq(gif.image.unwrap().media_type,"image/gif")
+  #|}
+
+///|
+async fn main {
+  let published = @env.args().contains("--published")
+  let version = raster_version(@fs.read_file("moon.mod").text())
+  let dir = @fs.tmpdir(prefix="diagrams-raster-consumer")
+  defer @fs.rmdir(dir, recursive=true)
+  @fs.write_file(
+    dir + "/moon.mod",
+    "name = \"qualification/raster-export-consumer\"\nversion = \"0.0.0\"\nimport {\n  \"moonrockz/diagrams@" +
+    version +
+    "\",\n  \"moonrockz/diagrams-svg@" +
+    version +
+    "\",\n  \"moonrockz/diagrams-raster@" +
+    version +
+    "\",\n}\n",
+  )
+  let members = StringBuilder()
+  members.write_string("members = [\".\"")
+  if !published {
+    for module_name in ["diagrams", "diagrams-svg", "diagrams-raster"] {
+      members.write_string(
+        ",\"" +
+        @fs.realpath("pkgs/" + module_name).replace(old="\\", new="/") +
+        "\"",
+      )
+    }
+  }
+  members.write_string("]\n")
+  @fs.write_file(dir + "/moon.work", members.to_string())
+  @fs.write_file(
+    dir + "/moon.pkg",
+    "import { \"moonrockz/diagrams-raster\" @raster, \"moonrockz/diagrams-svg\" @svg, \"moonrockz/diagrams/render\", \"moonrockz/diagrams/animation\", \"moonrockz/diagrams/swimlane\", } for \"test\"\n",
+  )
+  @fs.write_file(dir + "/consumer_test.mbt", raster_consumer)
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let status = @process.run(
+      "moon",
+      [
+        "test", "--target", target, "--deny-warn", "-p", "qualification/raster-export-consumer",
+      ],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if status != 0 {
+      @sys.exit(if status > 0 { status } else { 1 })
+    }
+    println("Fresh public raster consumer passed: " + target)
+  }
+}
+
+///|
+test "consumer candidate follows the shared release version" {
+  assert_eq(
+    raster_version("name = \"example\"\nversion = \"2.3.4\"\n"),
+    "2.3.4",
+  )
+}

@@ -1,0 +1,54 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-tests/raster-spike"
+
+import {
+  "mizchi/font",
+  "mizchi/image",
+  "mizchi/svg",
+}
+
+// Values
+pub fn encode_jpeg(@image.ImageData, quality? : Int32) -> Bytes raise @image.EncodeError
+
+pub fn normalize_generated_svg(String, String, SpikeFonts) -> String raise SpikeError
+
+pub fn parse_svg_xml(String, max_nodes? : Int32) -> Array[SvgXmlNode] raise SpikeError
+
+pub fn render_normalized(String, Int32, Int32) -> @svg.Image raise SpikeError
+
+// Errors
+pub(all) suberror SpikeError {
+  Unsupported(String)
+}
+
+// Types and methods
+pub(all) struct SpikeFonts {
+  regular : @font.TTFont
+  bold : @font.TTFont
+  fallbacks : Array[@font.TTFont]
+}
+
+pub(all) struct SvgXmlAttribute {
+  raw_name : String
+  value : String
+}
+
+pub(all) enum SvgXmlKind {
+  Document
+  Element
+  Text
+} derive(Eq)
+pub fn SvgXmlKind::equal(Self, Self) -> Bool
+pub fn SvgXmlKind::not_equal(Self, Self) -> Bool
+
+pub(all) struct SvgXmlNode {
+  kind : SvgXmlKind
+  raw_name : String
+  attributes : Array[SvgXmlAttribute]
+  children : Array[Int32]
+  value : String
+}
+
+// Type aliases
+
+// Traits

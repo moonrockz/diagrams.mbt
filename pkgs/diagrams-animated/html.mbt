@@ -9,6 +9,7 @@ pub struct AnimatedRenderer {
   query_limits : @animation.Limits
   sequence_view_id : String?
   output_units : Int32
+  raster_fonts : @raster.FontSet?
 }
 
 ///|
@@ -20,8 +21,9 @@ pub fn AnimatedRenderer::new(
   query_limits~ : @animation.Limits = @animation.Limits::new(),
   sequence_view_id? : String,
   output_units~ : Int32 = 33554432,
+  raster_fonts? : @raster.FontSet,
 ) -> AnimatedRenderer {
-  { plan, playback, svg, limits, query_limits, sequence_view_id, output_units, }
+  { plan, playback, svg, limits, query_limits, sequence_view_id, output_units, raster_fonts, }
 }
 
 ///|
@@ -109,12 +111,22 @@ pub impl @render.Renderer for AnimatedRenderer with fn render(self, diagram) {
       "animation/render-limit", "Display SVG exceeds the HTML output limit",
     )
   }
+  let font_subset = self.raster_fonts.unwrap_or_else(@raster.FontSet::default).subset_for_svg(scene.canonical_svg)
+  let font_result = font_subset.fonts.map(fonts => fonts.export_data())
+  let font_data = font_result.bind(result => result.data).unwrap_or(Json(null))
+  let gif_result = @raster.gif_export_data(scene, plan)
+  let raster_errors = font_subset.diagnostics.iter().map(d => d.code + ": " + d.message).to_array()
+  if font_result is Some(result) { raster_errors.append(result.diagnostics.iter().map(d => d.code + ": " + d.message).to_array()) }
   let data = playback_data(
     scene,
     plan,
     self.query_limits,
     self.limits.steps,
     budget,
+    font_data,
+    gif_result.data.unwrap_or(Json(null)),
+    raster_errors.join("; "),
+    gif_result.diagnostics.iter().map(d => d.code + ": " + d.message).to_array().join("; "),
   )
   if budget.failed {
     return failed(
@@ -140,7 +152,23 @@ pub impl @render.Renderer for AnimatedRenderer with fn render(self, diagram) {
     (_, Finite) =>
       "Explicit scenario. Selected connections illustrate the supplied order; no process execution is inferred."
   }
-  let html = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>Diagram flow illustration</title><style>\{player_style}</style></head><body>\n<main data-diagram-viewer aria-label=\"Diagram flow viewer\">\n<p>\{explanation}</p>\n<section class=\"motion-controls\" aria-label=\"Playback controls\">\n<button type=\"button\" data-control=\"play\" aria-pressed=\"false\">Play</button>\n<button type=\"button\" data-control=\"restart\">Restart</button>\n<button type=\"button\" data-control=\"step\">Step</button>\n<label>Speed <select data-control=\"speed\" aria-label=\"Playback speed\"><option value=\"0.25\">0.25×</option><option value=\"0.5\">0.5×</option><option value=\"1\" selected>1×</option><option value=\"1.5\">1.5×</option><option value=\"2\">2×</option><option value=\"4\">4×</option></select></label>\n<label>Position <input data-control=\"seek\" aria-label=\"Playback position\" type=\"range\" min=\"0\" max=\"\{plan.duration_ms}\" value=\"0\" step=\"1\"></label>\n<output data-control=\"position\">0 / \{plan.duration_ms} ms</output>\n<button type=\"button\" data-control=\"download\">Download SVG</button>\n</section>\n<fieldset><legend>Structural exploration</legend>\n<label>From <select data-control=\"from\" aria-label=\"Route from\"></select></label>\n<label>To <select data-control=\"to\" aria-label=\"Route to\"></select></label>\n<label><input data-control=\"messages\" type=\"checkbox\">Include message flows</label>\n<label><input data-control=\"undirected\" type=\"checkbox\">Include unheaded connections</label>\n<button type=\"button\" data-control=\"route\">Show route</button>\n<label>Connection <select data-control=\"connection\" aria-label=\"Select a diagram connection\"></select></label>\n<button type=\"button\" data-control=\"show-connection\">Show connection</button>\n<label>Direction <select data-control=\"direction\" aria-label=\"Reachability direction\"><option value=\"forward\">Downstream</option><option value=\"reverse\">Upstream</option><option value=\"both\">Both directions</option></select></label>\n<button type=\"button\" data-control=\"reach\">Show reachability</button>\n<button type=\"button\" data-control=\"clear\">Reset view</button>\n</fieldset>\n<p data-control=\"status\" role=\"status\" aria-live=\"polite\">Paused</p>\n<div class=\"diagram-canvas\">\{scene.display_svg}</div>\n<script type=\"application/json\" data-motion-data>\{encoded}</script>\n<script>\{player_source}</script>\n</main></body></html>\n"
+  let export_form =
+    #|<form class="diagram-viewer__raster" data-control="raster-form" aria-label="Image export options" hidden>
+    #|<label>Format <select data-control="raster-format"><option value="png">PNG</option><option value="jpeg">JPEG</option><option value="gif">Animated GIF</option></select></label>
+    #|<output data-control="raster-size" aria-label="Export dimensions"></output>
+    #|<label>Width in pixels, blank for source size <input data-control="raster-width" type="number" min="1" max="16384" step="1"></label>
+    #|<label>Background <input data-control="raster-background" type="color" value="#ffffff"></label>
+    #|<label><input data-control="raster-transparent" type="checkbox" checked> Transparent PNG background</label>
+    #|<label>JPEG quality <input data-control="raster-quality" type="number" min="1" max="100" step="1" value="90" disabled></label>
+    #|<fieldset class="diagram-viewer__gif-options" data-control="gif-options" disabled hidden><legend>Animation interval and timing</legend>
+    #|<label>Start, milliseconds <input data-control="gif-start" type="number" min="0" step="1" placeholder="0"></label>
+    #|<label>End, milliseconds, blank for full plan <input data-control="gif-end" type="number" min="1" step="1"></label>
+    #|<label>Frames per second <input data-control="gif-rate" type="number" min="1" max="100" step="1" value="10"></label>
+    #|<label>Loop <select data-control="gif-loop"><option value="once">Once</option><option value="forever">Forever</option><option value="repeat">Repeat</option></select></label>
+    #|<label>Additional plays for Repeat <input data-control="gif-repeats" type="number" min="1" max="65535" value="2" step="1"></label>
+    #|</fieldset><div class="diagram-viewer__export-actions"><button type="submit" data-control="raster-export">Download PNG</button><button type="button" data-control="raster-cancel" hidden>Cancel export</button></div>
+    #|</form><p class="diagram-viewer__status" data-control="raster-status" role="status" aria-live="polite"></p>
+  let html = "<!doctype html>\n<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width\"><title>Diagram flow illustration</title><style>\{player_style}</style></head><body>\n<main class=\"diagram-viewer\" data-diagram-viewer aria-label=\"Diagram flow viewer\">\n<header class=\"diagram-viewer__header\"><h1>Diagram player</h1><p>\{explanation}</p></header>\n<div class=\"diagram-canvas diagram-viewer__viewport\"><div class=\"diagram-viewer__content\">\{scene.display_svg}</div></div>\n<section class=\"motion-controls diagram-viewer__playback\" aria-label=\"Playback controls\">\n<button type=\"button\" data-control=\"play\" aria-pressed=\"false\">Play</button>\n<button type=\"button\" data-control=\"restart\">Restart</button>\n<button type=\"button\" data-control=\"step\">Step</button>\n<label>Speed <select data-control=\"speed\" aria-label=\"Playback speed\"><option value=\"0.25\">0.25×</option><option value=\"0.5\">0.5×</option><option value=\"1\" selected>1×</option><option value=\"1.5\">1.5×</option><option value=\"2\">2×</option><option value=\"4\">4×</option></select></label>\n<label class=\"diagram-viewer__timeline\">Position <input data-control=\"seek\" aria-label=\"Playback position\" type=\"range\" min=\"0\" max=\"\{plan.duration_ms}\" value=\"0\" step=\"1\"></label>\n<output data-control=\"position\">0 / \{plan.duration_ms} ms</output>\n</section>\n<fieldset class=\"diagram-viewer__exploration\"><legend>Structural exploration</legend>\n<label>From <select data-control=\"from\" aria-label=\"Route from\"></select></label>\n<label>To <select data-control=\"to\" aria-label=\"Route to\"></select></label>\n<label><input data-control=\"messages\" type=\"checkbox\">Include message flows</label>\n<label><input data-control=\"undirected\" type=\"checkbox\">Include unheaded connections</label>\n<button type=\"button\" data-control=\"route\">Show route</button>\n<label>Connection <select data-control=\"connection\" aria-label=\"Select a diagram connection\"></select></label>\n<button type=\"button\" data-control=\"show-connection\">Show connection</button>\n<label>Direction <select data-control=\"direction\" aria-label=\"Reachability direction\"><option value=\"forward\">Downstream</option><option value=\"reverse\">Upstream</option><option value=\"both\">Both directions</option></select></label>\n<button type=\"button\" data-control=\"reach\">Show reachability</button>\n<button type=\"button\" data-control=\"clear\">Reset view</button>\n</fieldset>\n<p class=\"diagram-viewer__status\" data-control=\"status\" role=\"status\" aria-live=\"polite\">Paused</p>\n<section class=\"diagram-viewer__export\" aria-label=\"Export diagram\"><h2>Export</h2><button type=\"button\" data-control=\"download\">Download SVG</button>\n\{export_form}</section>\n<script type=\"application/json\" data-motion-data>\{encoded}</script>\n<script>\{player_source}</script>\n</main></body></html>\n"
   if html.length() > self.output_units {
     return failed("animation/render-limit", "HTML output limit exceeded")
   }

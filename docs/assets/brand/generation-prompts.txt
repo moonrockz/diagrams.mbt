@@ -1,0 +1,44 @@
+Generated 2026-10-28 with the built-in image_gen tool.
+transparent_background=true
+Primary selection: A, Lunar drafter. B and C retained as branding alternatives.
+
+Reference image 1:
+Repository: moonrockz/smithy
+Path: site/public/moonrockz.png
+URL: https://github.com/moonrockz/smithy/blob/main/site/public/moonrockz.png
+
+Reference image 2:
+Repository: moonrockz/smithy
+Path: docs/assets/brand/smithy-badge-1024.png
+URL: https://github.com/moonrockz/smithy/blob/main/docs/assets/brand/smithy-badge-1024.png
+
+A: Lunar drafter
+
+Use case: logo-brand. Create ONE square high-quality illustrated badge logo candidate for diagrams.mbt, a MoonBit diagram library in the Moonrockz family.
+Input image 1 is the Moonrockz organization logo, the character-identity and brand reference. Input image 2 is the smithy.mbt sibling-project logo, the rendering, badge, and typography reference. These are REFERENCES, not edit targets. Paint a new scene.
+Preserve recognizably the SAME cheerful hot-pink bunny: two very tall swept ears with darker pink interiors, large friendly white oval eyes with dark pupils, fluffy WHITE cheek muzzle, small pink nose, open joyful grin, white chest/belly. Thick dark navy outlines, polished soft painted cartoon shading and crisp silhouettes, as in the references.
+Keep family branding: round midnight navy starry-space badge with a restrained dark-blue rim, gray cratered lunar ground. A large recognizable bunny face and two clearly separated ears, ears can break the circle. Avoid overly intricate detail. No smithing apron, anvil, hammer, or flag.
+Below the scene: EXACT text "diagrams.mbt", all lowercase, d-i-a-g-r-a-m-s period m-b-t. Chunky rounded WHITE lettering, cool-gray dimensional lower faces, thick midnight-navy outline, like smithy.mbt. Large, evenly spaced, fully legible. No other text, no candidate labels.
+Composition: complete badge and wordmark in a balanced compact square, 5 percent clear padding, no cropped ears or letters. Transparent alpha outside the complete badge, mascot, and wordmark. No opaque rectangle, no painted checkerboard, no mockup, no grid, no watermark.
+Candidate A, LUNAR DRAFTER. The pink bunny stands on the moon behind an angled architect's drafting table, drawing a clear simple diagram with a large pencil held naturally in one paw. A broad blue drawing board occupies lower center, with a few large white connected rounded rectangles and one diamond, crisp orthogonal connecting arrows, NO tiny writing. Other paw steadies the board. Bunny's head and ears dominate upper center, happy focused expression. Board is tilted toward viewer so the diagram is unmistakable, pencil tip touches one connector. Gray lunar rocks at the base and a few sparse stars. Blue diagram board, white diagram lines, pink bunny, gray moon, navy sky. Keep scene compact and readable as a repo logo.
+
+B: Constellation builder
+
+Use case: logo-brand. Create ONE square high-quality illustrated badge logo candidate for diagrams.mbt, a MoonBit diagram library in the Moonrockz family.
+Input image 1 is the Moonrockz organization logo, the character-identity and brand reference. Input image 2 is the smithy.mbt sibling-project logo, the rendering, badge, and typography reference. These are REFERENCES, not edit targets. Paint a new scene.
+Preserve recognizably the SAME cheerful hot-pink bunny: two very tall swept ears with darker pink interiors, large friendly white oval eyes with dark pupils, fluffy WHITE cheek muzzle, small pink nose, open joyful grin, white chest/belly. Thick dark navy outlines, polished soft painted cartoon shading and crisp silhouettes, as in the references.
+Keep family branding: round midnight navy starry-space badge with a restrained dark-blue rim, gray cratered lunar ground. A large recognizable bunny face and two clearly separated ears, ears can break the circle. Avoid overly intricate detail. No smithing apron, anvil, hammer, or flag.
+Below the scene: EXACT text "diagrams.mbt", all lowercase, d-i-a-g-r-a-m-s period m-b-t. Chunky rounded WHITE lettering, cool-gray dimensional lower faces, thick midnight-navy outline, like smithy.mbt. Large, evenly spaced, fully legible. No other text, no candidate labels.
+Composition: complete badge and wordmark in a balanced compact square, 5 percent clear padding, no cropped ears or letters. Transparent alpha outside the complete badge, mascot, and wordmark. No opaque rectangle, no painted checkerboard, no mockup, no grid, no watermark.
+Candidate B, CONSTELLATION BUILDER. The pink bunny floats playfully just above a small gray lunar crescent ground, arranging a diagram constellation with one extended paw. Three large luminous cyan rounded-rectangle nodes and one small warm-white diamond joined by crisp bright-cyan elbow connectors form a clear compact flowchart beside the bunny, in front of the navy star field. Paw is visibly placing or touching one upper node. Bunny on left half, graph on right half, face large and joyful. Graph is diagram geometry, not a random constellation: obvious right-angle connectors, two restrained arrowheads, no labels, no tiny symbols. Keep cyan accents restrained and the reference painted mascot style. Energetic silhouette, some open dark sky for breathing room, sparse stars, no extra gadgets.
+
+C: Flowchart explorer
+
+Use case: logo-brand. Create ONE square high-quality illustrated badge logo candidate for diagrams.mbt, a MoonBit diagram library in the Moonrockz family.
+Input image 1 is the Moonrockz organization logo, the character-identity and brand reference. Input image 2 is the smithy.mbt sibling-project logo, the rendering, badge, and typography reference. These are REFERENCES, not edit targets. Paint a new scene.
+Preserve recognizably the SAME cheerful hot-pink bunny: two very tall swept ears with darker pink interiors, large friendly white oval eyes with dark pupils, fluffy WHITE cheek muzzle, small pink nose, open joyful grin, white chest/belly. Thick dark navy outlines, polished soft painted cartoon shading and crisp silhouettes, as in the references.
+Keep family branding: round midnight navy starry-space badge with a restrained dark-blue rim, gray cratered lunar ground. A large recognizable bunny face and two clearly separated ears, ears can break the circle. Avoid overly intricate detail. No smithing apron, anvil, hammer, or flag.
+Below the scene: EXACT text "diagrams.mbt", all lowercase, d-i-a-g-r-a-m-s period m-b-t. Chunky rounded WHITE lettering, cool-gray dimensional lower faces, thick midnight-navy outline, like smithy.mbt. Large, evenly spaced, fully legible. No other text, no candidate labels.
+Composition: complete badge and wordmark in a balanced compact square, 5 percent clear padding, no cropped ears or letters. Transparent alpha outside the complete badge, mascot, and wordmark. No opaque rectangle, no painted checkerboard, no mockup, no grid, no watermark.
+Candidate C, FLOWCHART EXPLORER. The same pink bunny stands on the moon, turned three-quarter toward viewer, enthusiastically presenting a large unfurled blue blueprint sheet held in both paws across the lower foreground. Bunny's upper torso, large face and tall swept ears rise above the sheet. On the blueprint a bold clear WHITE flowchart: a top rounded rectangle connects downward to a diamond, which branches to two lower rounded rectangles with crisp elbow arrows. Exactly a handful of large shapes, no microtext, no labels or letters. The sheet has subtly curled corners and looks hand-held, not like a screen. It is the central diagram prop, clearly separated from the "diagrams.mbt" lettering below. Cheerful welcoming project mascot, moon surface and sparse stars behind, polished badge illustration matching the sibling Smithy brand.
+

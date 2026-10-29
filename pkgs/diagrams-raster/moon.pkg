@@ -1,0 +1,26 @@
+import {
+  "Milky2018/xml",
+  "Milky2018/svg" @backend,
+  "mizchi/font",
+  "mizchi/image",
+  "walkzzz/image/src/pure/codec" @gif_codec,
+  "moonbitlang/core/encoding/base64",
+  "moonbitlang/core/string",
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/animation",
+}
+
+import {
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/render",
+} for "wbtest"
+
+import {
+  "moonrockz/diagrams-raster" @raster,
+  "moonrockz/diagrams-svg" @svg,
+  "moonrockz/diagrams/animation",
+  "moonrockz/diagrams/swimlane",
+  "moonrockz/diagrams/render",
+} for "test"

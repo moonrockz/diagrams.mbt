@@ -1,0 +1,10 @@
+options("is-main": true)
+import {
+  "mizchi/svg" @svg,
+  "walkzzz/image/src/pure/codec" @codec,
+  "moonrockz/diagrams-tests/raster-spike" @spike,
+  "mizchi/font",
+  "mizchi/image",
+  "moonbitlang/core/encoding/base64",
+  "moonbitlang/core/encoding/utf8",
+}

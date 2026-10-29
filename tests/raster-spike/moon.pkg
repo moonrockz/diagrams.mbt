@@ -1,0 +1,8 @@
+import {
+  "mizchi/image",
+  "mizchi/svg" @raster_svg,
+  "Milky2018/svg" @qualified_svg,
+  "Milky2018/xml",
+  "mizchi/font",
+  "moonbitlang/core/string",
+}

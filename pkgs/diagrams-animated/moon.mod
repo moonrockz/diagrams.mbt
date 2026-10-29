@@ -3,6 +3,7 @@ name = "moonrockz/diagrams-animated"
 version = "0.4.0"
 
 import {
+  "moonrockz/diagrams-raster@0.4.0",
   "moonrockz/diagrams@0.4.0",
   "moonrockz/diagrams-svg@0.4.0",
 }

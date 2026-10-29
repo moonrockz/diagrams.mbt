@@ -23,6 +23,35 @@ fn escape(text : String) -> String {
 }
 
 ///|
+/// Keep canonical bytes as inert text, independent from the displayed viewport.
+fn preview_panel(
+  file : String,
+  svg : String,
+  caption : String,
+  title : String,
+  theme : String,
+) -> String {
+  let canonical = escape(svg)
+    .replace_all(old="\r", new="&#13;")
+    .replace_all(old="(", new="&#40;")
+    .replace_all(old=")", new="&#41;")
+    .replace_all(old="/", new="&#47;")
+  let name = file.replace_all(old=".svg", new="")
+  let caption = if caption == "" { escape(title) } else { caption }
+  "<figure class=\"diagram-viewer \{theme}\" data-diagram-viewer data-raster-name=\"\{escape(name)}\" data-raster-theme=\"\{theme}\"><figcaption>\{caption}</figcaption><div class=\"diagram-viewer__viewport\"><div class=\"diagram-viewer__content\"><img loading=\"lazy\" src=\"\{escape(file)}\" alt=\"\{escape(title)}\"></div></div><template class=\"diagram-viewer__canonical\">\{canonical}</template></figure>"
+}
+
+///|
+async fn trusted_asset(path : String) -> String {
+  let source = @fs.read_file(path).text()
+  if source.to_lower().contains("</script") ||
+    source.to_lower().contains("</style") {
+    raise Failure("Trusted gallery asset contains an HTML terminator: " + path)
+  }
+  source
+}
+
+///|
 fn string(value : Json) -> String raise Failure {
   guard value is String(text) else { raise Failure("Expected snapshot string") }
   text
@@ -66,6 +95,16 @@ async fn main {
   let args = @env.args()
   let check = args.contains("--check")
   let site_assets = args.contains("--site-assets")
+  let local_gallery = !args.contains("--site-assets-only")
+  let raster_path = "pkgs/diagrams-animated/assets/raster.generated.js"
+  let raster_available = @fs.exists(raster_path)
+  if local_gallery && !raster_available && !args.contains("--existing-output") {
+    raise Failure(
+      "Missing supported raster browser payload: " +
+      raster_path +
+      ". Build the raster assets before normal gallery generation; --existing-output permits explicit viewport-only review.",
+    )
+  }
   if !args.contains("--existing-output") && !check {
     for
       package_name in [
@@ -98,22 +137,40 @@ async fn main {
       #|<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
       #|<title>Diagram review gallery</title>
       #|<style>
-      #|body{margin:2rem;background:#e2e8f0;color:#0f172a;font:16px system-ui}h1{font-size:1.8rem}
+      #|html{color-scheme:light dark}body{margin:2rem;background:#f9fafb;color:#111827;font:16px system-ui;overflow-wrap:anywhere}h1{font-size:1.8rem}
       #|article{margin:2rem 0}h2 a{color:inherit}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
       #|figure{margin:0;overflow:auto;border-radius:8px}figcaption{padding:.75rem;font-weight:600}
-      #|.dark{background:#020617;color:#e2e8f0}.light{background:#f4f5f7}img{display:block;max-width:none}
+      #|img{display:block;max-width:100%;height:auto}.diagram-viewer{min-width:0}.diagram-viewer__viewport{margin:.5rem}.diagram-viewer__export{width:auto}
       #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
       #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
-      #|</style><h1>Diagram review gallery</h1>
+      #|@media(prefers-color-scheme:dark){body{background:#0f1014;color:#e5e7eb}pre{background:#17181f}a{color:#a5b4fc}}
+      #|</style>
+    ),
+  )
+  if local_gallery {
+    html.write_string(
+      "<style>" +
+      trusted_asset("pkgs/diagrams-animated/assets/viewer.css") +
+      "</style>",
+    )
+  }
+  html.write_string(
+    (
+      #|<h1>Diagram review gallery</h1>
       #|<nav><a href="#bpmn">BPMN views and XML</a> · <a href="#animation">Offline players</a> · <a href="#plantuml">PlantUML regex, EBNF, JSON and YAML</a> · <a href="#sequence">Sequence corpus</a> · <a href="#flowcharts">Flowcharts</a></nav>
       #|<p>Processes and collaborations render with supplied or automatic geometry. Choreography and conversation documents are retained and validated; their rendering is deferred.</p>
       #|<p>Players illustrate drawn connections. Conditions, timer triggers and gateway synchronization are not evaluated. No tokens or process execution are simulated.</p>
       #|<h2 id="sequence">Sequence corpus</h2><p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
       #|The task verifies these SVG bytes against the current renderer before writing this page.
-      #|Each diagram scrolls at its natural size. Expand the source to compare syntax.</p>
+      #|Use the corner controls to enlarge, zoom, pan or fit each diagram. Expand the source to compare syntax.</p>
       #|
     ),
   )
+  if local_gallery && !raster_available {
+    html.write_string(
+      "<p role=\"status\" data-raster-unavailable>Viewport-only review: the supported raster browser payload has not been built. PNG/JPEG export is unavailable. Build the raster assets and regenerate this gallery for export qualification.</p>",
+    )
+  }
   let base = "tests/corpus/mermaid-12.2.0"
   for line in @fs.read_file("\{base}/SHA256SUMS").text().split("\n") {
     if line.trim() == "" {
@@ -131,7 +188,13 @@ async fn main {
       let svg = @fs.read_file("tests/acceptance/__snapshot__/svg/\{file}")
       save(file, svg.text(), check, site_assets && name == "01")
       html.write_string(
-        "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"Example \{name}, \{variant} theme\" loading=\"lazy\"></figure>",
+        preview_panel(
+          file,
+          svg.text(),
+          "<a href=\"\{file}\">\{variant} SVG</a>",
+          "Example \{name}, \{variant} theme",
+          variant,
+        ),
       )
     }
     let source = escape(@fs.read_file("\{base}/\{path}").text())
@@ -168,7 +231,13 @@ async fn main {
         let file = id + "-" + variant + ".svg"
         save(file, images[name + "/" + variant], check, site_assets)
         html.write_string(
-          "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"\{escape(name)} \{variant}\" loading=\"lazy\"></figure>",
+          preview_panel(
+            file,
+            images[name + "/" + variant],
+            "<a href=\"\{file}\">\{variant} SVG</a>",
+            name + " " + variant,
+            variant,
+          ),
         )
       }
       html.write_string(
@@ -246,7 +315,13 @@ async fn main {
     save(name + ".svg", swimlane_svgs[name], check, site_assets)
     save(name + ".html", players[name], check, site_assets)
     html.write_string(
-      "<figure class=\"\{variant}\"><figcaption><a href=\"\{name}.html\">Open \{variant} review player</a> · <a href=\"\{name}.svg\">static SVG</a></figcaption><img src=\"\{name}.svg\" alt=\"Customer and Support review in \{variant}\"></figure>",
+      preview_panel(
+        name + ".svg",
+        swimlane_svgs[name],
+        "<a href=\"\{name}.html\">Open \{variant} review player</a> · <a href=\"\{name}.svg\">static SVG</a>",
+        "Customer and Support review in " + variant,
+        variant,
+      ),
     )
   }
   for direction in ["tb", "bt", "lr", "rl"] {
@@ -316,7 +391,13 @@ async fn main {
     for variant in ["dark", "light"] {
       let file = name + "-" + variant + ".svg"
       html.write_string(
-        "<figure class=\"\{variant}\"><figcaption><a href=\"\{file}\">\{variant} SVG</a></figcaption><img src=\"\{file}\" alt=\"\{escape(title)}, \{variant} theme\" loading=\"lazy\"></figure>",
+        preview_panel(
+          file,
+          plantuml[file],
+          "<a href=\"\{file}\">\{variant} SVG</a>",
+          title + ", " + variant + " theme",
+          variant,
+        ),
       )
     }
     html.write_string(
@@ -338,7 +419,17 @@ async fn main {
       ] {
       let file = name + "-trace-" + variant.0 + ".svg"
       html.write_string(
-        "<figure class=\"\{if variant.0 == "dark" { "dark" } else { "light" }}\"><figcaption><a href=\"\{file}\">\{name}: \{variant.1}</a></figcaption><img src=\"\{file}\" alt=\"\{name} trace, \{variant.1}\" loading=\"lazy\"></figure>",
+        preview_panel(
+          file,
+          plantuml[file],
+          "<a href=\"\{file}\">\{name}: \{variant.1}</a>",
+          name + " trace, " + variant.1,
+          if variant.0 == "dark" {
+            "dark"
+          } else {
+            "light"
+          },
+        ),
       )
     }
     html.write_string("</div>")
@@ -357,11 +448,17 @@ async fn main {
     )
     if name.has_suffix("-light.svg") || name.has_suffix("-dark.svg") {
       html.write_string(
-        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
-        escape(name) +
-        "\" src=\"" +
-        escape(name) +
-        "\">",
+        preview_panel(
+          name,
+          string(row[2]),
+          "",
+          name,
+          if name.has_suffix("-dark.svg") {
+            "dark"
+          } else {
+            "light"
+          },
+        ),
       )
     }
   }
@@ -396,11 +493,17 @@ async fn main {
     if media == "image/svg+xml" &&
       (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
       html.write_string(
-        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
-        escape(name) +
-        "\" src=\"" +
-        escape(name) +
-        "\">",
+        preview_panel(
+          name,
+          content,
+          "",
+          name,
+          if name.has_suffix("-dark.svg") {
+            "dark"
+          } else {
+            "light"
+          },
+        ),
       )
     }
   }
@@ -425,11 +528,17 @@ async fn main {
     if media == "image/svg+xml" &&
       (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
       html.write_string(
-        "<img loading=\"lazy\" style=\"max-width:100%\" alt=\"" +
-        escape(name) +
-        "\" src=\"" +
-        escape(name) +
-        "\">",
+        preview_panel(
+          name,
+          content,
+          "",
+          name,
+          if name.has_suffix("-dark.svg") {
+            "dark"
+          } else {
+            "light"
+          },
+        ),
       )
     }
   }
@@ -473,7 +582,13 @@ async fn main {
     for variant in ["light", "dark"] {
       let name = id + "-" + variant
       html.write_string(
-        "<figure class=\"\{variant}\"><figcaption><a href=\"\{name}.svg\">\{variant} SVG</a> · <a href=\"\{name}.html\">offline player</a></figcaption><img loading=\"lazy\" src=\"\{name}.svg\" alt=\"\{escape(title)}, \{variant}\"></figure>",
+        preview_panel(
+          name + ".svg",
+          expanded_artifacts[name + ".svg"],
+          "<a href=\"\{name}.svg\">\{variant} SVG</a> · <a href=\"\{name}.html\">offline player</a>",
+          title + ", " + variant,
+          variant,
+        ),
       )
     }
     html.write_string(
@@ -488,6 +603,22 @@ async fn main {
     check,
     false,
   )
+  if local_gallery {
+    html.write_string(
+      "<script>" +
+      trusted_asset("pkgs/diagrams-animated/assets/viewer.js") +
+      "</script>",
+    )
+    if raster_available {
+      html.write_string(
+        "<script>" +
+        trusted_asset(raster_path) +
+        "</script><script>" +
+        trusted_asset("pkgs/diagrams-animated/assets/gallery-export.js") +
+        "</script>",
+      )
+    }
+  }
   html.write_string("</html>\n")
   save("index.html", html.to_string(), check, false)
   if site_assets {

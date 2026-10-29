@@ -1,0 +1,198 @@
+///|
+/// Check or regenerate licensed default font subsets and their portable literal
+/// embedding from committed originals. The compiler process uses an isolated
+/// module with the exact qualified published font dependency graph.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/core/env",
+  "moonbitlang/core/encoding/base64",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+fn field(value : Json, name : String) -> Json {
+  guard value is Object(fields) && fields.get(name) is Some(value) else {
+    abort("Missing font profile field " + name)
+  }
+  value
+}
+
+///|
+fn text(value : Json) -> String {
+  guard value is String(value) else { abort("Expected font profile text") }
+  value
+}
+
+///|
+fn array(value : Json) -> Array[Json] {
+  guard value is Array(value) else { abort("Expected font profile array") }
+  value
+}
+
+///|
+fn integer(value : Json) -> Int32 {
+  guard value is Number(value, ..) &&
+    value >= 0.0 &&
+    value <= 1114111.0 &&
+    value.floor() == value else {
+    abort("Invalid font coverage endpoint")
+  }
+  value.to_int()
+}
+
+///|
+fn digest(bytes : Bytes) -> String {
+  @crypto.bytes_to_hex_string(@crypto.sha256(bytes))
+}
+
+///|
+fn encoded_literal(name : String, bytes : Bytes) -> String {
+  let encoded = @base64.encode(bytes)
+  let result = StringBuilder()
+  result.write_string("\n///|\nlet default_" + name + "_base64 : String =\n")
+  let mut start = 0
+  while start < encoded.length() {
+    let end = (start + 100).min(encoded.length())
+    result.write_string("  #|" + encoded[start:end].to_owned() + "\n")
+    start = end
+  }
+  result.to_string()
+}
+
+///|
+async fn main {
+  let generate = @env.args().contains("generate")
+  let root = "pkgs/diagrams-raster/fonts/"
+  let provenance = @json.parse(@fs.read_file(root + "source.json").text())
+  let profile = @json.parse(@fs.read_file(root + "default/profile.json").text())
+  guard text(field(profile, "subsetter")) == "mizchi/font@0.7.4 subset_font" else {
+    abort("Font subsetter pin differs from the qualified profile")
+  }
+  let directory = @fs.tmpdir(prefix="diagrams-font-subsets")
+  defer @fs.rmdir(directory, recursive=true)
+  let main = StringBuilder()
+  main.write_string("fn main {\n  let coverage : Array[Int] = []\n")
+  for range in array(field(profile, "coverage")) {
+    let bounds = array(range)
+    guard bounds.length() == 2 else {
+      abort("Font coverage range needs two endpoints")
+    }
+    let first = integer(bounds[0])
+    let last = integer(bounds[1])
+    guard first <= last else { abort("Reversed font coverage range") }
+    main.write_string(
+      "  for cp in " +
+      first.to_string() +
+      "..=" +
+      last.to_string() +
+      " {coverage.push(cp)}\n",
+    )
+  }
+  let inputs = [
+    ("regular", "NotoSansMono-Regular.ttf"),
+    ("bold", "NotoSansMono-Bold.ttf"),
+    ("symbols", "NotoSansSymbols2-Regular.ttf"),
+  ]
+  let literals = StringBuilder()
+  for (name, filename) in inputs {
+    let bytes = @fs.read_file(root + filename).binary()
+    guard digest(bytes) ==
+      text(field(field(field(provenance, "files"), filename), "sha256")) else {
+      abort("Original font digest differs: " + filename)
+    }
+    main.write_string(
+      "  println(\"" +
+      name +
+      ":\"+@base64.encode(@font.subset_font(@base64.decode_lossy(default_" +
+      name +
+      "_base64,ignore_whitespace=true),coverage).unwrap()))\n",
+    )
+    literals.write_string(encoded_literal(name, bytes))
+  }
+  main.write_string("}\n")
+  main.write_string(literals.to_string())
+  @fs.write_file(
+    directory + "/moon.mod",
+    "name = \"qualification/font-subsets\"\nversion = \"0.0.0\"\nimport {\n  \"mizchi/font@0.7.4\",\n  \"mizchi/pixelmatch@0.6.2\",\n  \"mizchi/image@0.4.3\",\n  \"mizchi/zlib@0.4.10\",\n  \"moonbitlang/x@0.5.5\",\n  \"moonbitlang/async@0.22.5\",\n}\n",
+  )
+  @fs.write_file(
+    directory + "/moon.pkg",
+    "options(\"is-main\": true)\nimport {\"mizchi/font\",\"moonbitlang/core/encoding/base64\",}\n",
+  )
+  @fs.write_file(directory + "/main.mbt", main.to_string())
+  let (status, stdout, stderr) = @process.collect_output(
+    "moon",
+    ["run", "--target", "native", "."],
+    cwd=directory,
+  )
+  if status != 0 {
+    eprintln(stderr.text())
+    @sys.exit(if status > 0 { status } else { 1 })
+  }
+  let subsets : Map[String, Bytes] = Map([])
+  for line in stdout.text().split("\n") {
+    let pair = line.split(":").to_array()
+    if pair.length() == 2 &&
+      ["regular", "bold", "symbols"].contains(pair[0].to_owned()) {
+      subsets[pair[0].to_owned()] = @base64.decode(pair[1])
+    }
+  }
+  guard subsets.length() == 3 else {
+    abort("Font subset process returned incomplete output")
+  }
+  let embedding = StringBuilder()
+  embedding.write_string(
+    "///| Licensed default fonts, derived deterministically by mizchi/font@0.7.4.\n/// See fonts/default/profile.json and fonts/OFL.txt.\n",
+  )
+  guard field(profile, "files") is Object(files) else {
+    abort("Invalid font profile files")
+  }
+  for (name, _) in inputs {
+    let bytes = subsets[name]
+    let file = root + "default/" + name + ".ttf"
+    if generate {
+      @fs.write_file(file, bytes)
+      files[name] = Json({
+        "bytes": Json(bytes.length()),
+        "sha256": Json(digest(bytes)),
+      })
+    } else {
+      guard @fs.read_file(file).binary() == bytes &&
+        text(field(files[name], "sha256")) == digest(bytes) else {
+        abort("Default font subset is stale: " + name)
+      }
+    }
+    embedding.write_string(encoded_literal(name, bytes))
+  }
+  let source = "pkgs/diagrams-raster/fonts.generated.mbt"
+  if generate {
+    @fs.write_file(source, embedding.to_string())
+    @fs.write_file(
+      root + "default/profile.json",
+      profile.stringify(indent=2) + "\n",
+    )
+  } else {
+    guard @fs.read_file(source).text() == embedding.to_string() else {
+      abort("Portable default font embedding is stale")
+    }
+  }
+  println(
+    if generate {
+      "Regenerated licensed raster font subsets"
+    } else {
+      "Licensed raster font subsets and embedding match"
+    },
+  )
+}
+
+///|
+test "font embedding wraps exact base64 without changing bytes" {
+  assert_eq(
+    encoded_literal("fixture", b"abc"),
+    "\n///|\nlet default_fixture_base64 : String =\n  #|YWJj\n",
+  )
+}

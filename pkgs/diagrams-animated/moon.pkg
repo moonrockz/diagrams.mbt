@@ -1,4 +1,5 @@
 import {
+  "moonrockz/diagrams-raster" @raster,
   "moonrockz/diagrams",
   "moonrockz/diagrams/animation",
   "moonrockz/diagrams/render",
