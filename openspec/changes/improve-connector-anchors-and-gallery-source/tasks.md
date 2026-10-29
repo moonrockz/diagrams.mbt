@@ -24,9 +24,9 @@ Depends on group 1.
 
 Bead: diagrams-q4b.3
 
-- [ ] 3.1 Create a matching upstream Telescope change and reuse shared source panels for index cards with unique per-entry tab/panel IDs; verify exact declared source, multiple filenames, copy/download actions and independent card state.
-- [ ] 3.2 Implement accessible keyboard tabs and no-script source fallback while preserving mounted viewer instances; verify retained zoom/pan, repeated hide/show, fullscreen/export controls, filters, detail links and clipboard-denied behavior.
-- [ ] 3.3 Add shared styling hooks and source-text escaping tests; verify hostile input, narrow source scrolling, both themes, missing optional source, local assets and stable version-tree URLs in upstream browser/consumer checks.
+- [x] 3.1 Create a matching upstream Telescope change and reuse shared source panels for index cards with unique per-entry tab/panel IDs; verify exact declared source, multiple filenames, copy/download actions and independent card state.
+- [x] 3.2 Implement accessible keyboard tabs and no-script source fallback while preserving mounted viewer instances; verify retained zoom/pan, repeated hide/show, fullscreen/export controls, filters, detail links and clipboard-denied behavior.
+- [x] 3.3 Add shared styling hooks and source-text escaping tests; verify hostile input, narrow source scrolling, both themes, missing optional source, local assets and stable version-tree URLs in upstream browser/consumer checks.
 - [ ] 3.4 Prepare and qualify the upstream library and matching CLI release under its repository rules, obtain any separately required release approval, and verify published artifacts exist before consumer pin adoption.
 
 ## 4. Adopt source tabs and extend the local gallery
