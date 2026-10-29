@@ -42,6 +42,76 @@ fn preview_panel(
 }
 
 ///|
+fn source_panel(file : String, text : String) -> String {
+  "<details class=\"gallery-source\" data-gallery-source><summary>Original source</summary><p><span>\{escape(file)}</span> · <a download href=\"\{escape(file)}\">Download source</a></p><pre tabindex=\"0\" aria-label=\"\{escape(file)} source\"><code>\{escape(text).replace_all(old="\r", new="&#13;")}</code></pre></details>"
+}
+
+///|
+async fn snapshot_gallery(
+  html : StringBuilder,
+  path : String,
+  check : Bool,
+  site_assets : Bool,
+  source_dir : String?,
+) -> Unit {
+  let mut source : (String, String)? = None
+  for row in rows(path) {
+    let name = string(row[0])
+    let media = string(row[1])
+    let content = string(row[2])
+    if media == "text/plain" {
+      if source is Some((file, text)) {
+        html.write_string("</div>" + source_panel(file, text) + "</article>")
+      }
+      let source_name = match name {
+        "flowchart-mermaid-review.mmd" => "mermaid-review.mmd"
+        "flowchart-plantuml-modern.puml" => "plantuml-modern-order.puml"
+        "flowchart-plantuml-legacy.puml" => "plantuml-legacy-request.puml"
+        _ => name
+      }
+      if source_dir is Some(dir) &&
+        @fs.read_file(dir + source_name).text() != content {
+        raise Failure("Stale gallery source: " + name)
+      }
+      source = Some((name, content))
+      html.write_string("<article><h3>\{escape(name)}</h3><div class=\"pair\">")
+    }
+    if media != "text/plain" {
+      guard source is Some((file, _)) else {
+        raise Failure("Preview has no declared source: " + name)
+      }
+      let stem = file
+        .replace_all(old=".mmd", new="")
+        .replace_all(old=".puml", new="")
+      if !name.has_prefix(stem + "-") {
+        raise Failure("Preview does not belong to declared source: " + name)
+      }
+    }
+    save(name, content, check, site_assets)
+    html.write_string("<p><a href=\"\{escape(name)}\">\{escape(name)}</a></p>")
+    if media == "image/svg+xml" &&
+      (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
+      html.write_string(
+        preview_panel(
+          name,
+          content,
+          "",
+          name,
+          if name.has_suffix("-dark.svg") {
+            "dark"
+          } else {
+            "light"
+          },
+        ),
+      )
+    }
+  }
+  if source is Some((file, text)) {
+    html.write_string("</div>" + source_panel(file, text) + "</article>")
+  }
+}
+
+///|
 async fn trusted_asset(path : String) -> String {
   let source = @fs.read_file(path).text()
   if source.to_lower().contains("</script") ||
@@ -141,7 +211,7 @@ async fn main {
       #|article{margin:2rem 0}h2 a{color:inherit}.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
       #|figure{margin:0;overflow:auto;border-radius:8px}figcaption{padding:.75rem;font-weight:600}
       #|img{display:block;max-width:100%;height:auto}.diagram-viewer{min-width:0}.diagram-viewer__viewport{margin:.5rem}.diagram-viewer__export{width:auto}
-      #|pre{overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
+      #|pre{min-width:0;max-width:100%;overflow-wrap:normal;overflow:auto;padding:1rem;background:#fff;border-radius:8px}summary{cursor:pointer;margin-top:1rem}
       #|@media(max-width:900px){.pair{grid-template-columns:1fr}body{margin:1rem}}
       #|@media(prefers-color-scheme:dark){body{background:#0f1014;color:#e5e7eb}pre{background:#17181f}a{color:#a5b4fc}}
       #|</style>
@@ -151,6 +221,7 @@ async fn main {
     html.write_string(
       "<style>" +
       trusted_asset("pkgs/diagrams-animated/assets/viewer.css") +
+      trusted_asset("scripts/assets/gallery-inspection.css") +
       "</style>",
     )
   }
@@ -162,7 +233,7 @@ async fn main {
       #|<p>Players illustrate drawn connections. Conditions, timer triggers and gateway synchronization are not evaluated. No tokens or process execution are simulated.</p>
       #|<h2 id="sequence">Sequence corpus</h2><p>All 38 frozen Mermaid 12.2.0 examples, rendered with the classic dark and light palettes.
       #|The task verifies these SVG bytes against the current renderer before writing this page.
-      #|Use the corner controls to enlarge, zoom, pan or fit each diagram. Expand the source to compare syntax.</p>
+      #|Use the corner controls to enlarge, zoom, pan or fit each diagram. Choose Source to compare the original syntax.</p>
       #|
     ),
   )
@@ -197,9 +268,11 @@ async fn main {
         ),
       )
     }
-    let source = escape(@fs.read_file("\{base}/\{path}").text())
+    let source = @fs.read_file("\{base}/\{path}").text()
+    let source_name = name + ".mmd"
+    save(source_name, source, check, false)
     html.write_string(
-      "</div><details><summary>Mermaid source</summary><pre><code>\{source}</code></pre></details></article>\n",
+      "</div>" + source_panel(source_name, source) + "</article>\n",
     )
   }
   save(
@@ -241,7 +314,7 @@ async fn main {
         )
       }
       html.write_string(
-        "</div><details><summary>BPMN XML source</summary><pre><code>\{escape(xml)}</code></pre></details></article>",
+        "</div>" + source_panel(source_name, xml) + "</article>",
       )
     }
   }
@@ -287,7 +360,20 @@ async fn main {
         "<li><a href=\"\{file}\">Open \{variant} player</a></li>",
       )
     }
-    html.write_string("</ul></article>")
+    html.write_string("</ul>")
+    if kind == "bpmn-collaboration" {
+      html.write_string(
+        source_panel(
+          "collaboration-di.bpmn",
+          @fs.read_file("tests/corpus/bpmn-render/collaboration-di.bpmn").text(),
+        ),
+      )
+    } else {
+      html.write_string(
+        "<p data-source-unavailable>Original source unavailable: model-only fixture in tests/animation-acceptance/player_test.mbt.</p>",
+      )
+    }
+    html.write_string("</article>")
   }
   for
     (name, title) in [
@@ -308,7 +394,7 @@ async fn main {
   ).text()
   save("swimlane-review.mmd", swimlane_source, check, site_assets)
   html.write_string(
-    "<p><a href=\"swimlane-review.mmd\">Native Mermaid source</a></p><details><summary>Review source</summary><pre><code>\{escape(swimlane_source)}</code></pre></details>",
+    "<article id=\"local-swimlane-review\"><h3>Review</h3><div class=\"pair\">",
   )
   for variant in ["dark", "light"] {
     let name = "swimlane-review-" + variant
@@ -324,6 +410,11 @@ async fn main {
       ),
     )
   }
+  html.write_string(
+    "</div>" +
+    source_panel("swimlane-review.mmd", swimlane_source) +
+    "</article>",
+  )
   for direction in ["tb", "bt", "lr", "rl"] {
     let name = "swimlane-" + direction
     save(name + ".svg", swimlane_svgs[name], check, site_assets)
@@ -401,14 +492,18 @@ async fn main {
       )
     }
     html.write_string(
-      "</div><details><summary>PlantUML source</summary><pre><code>\{escape(plantuml[name + ".puml"])}</code></pre></details></article>\n",
+      "</div>" +
+      source_panel(name + ".puml", plantuml[name + ".puml"]) +
+      "</article>\n",
     )
   }
   html.write_string(
     "<h3 id=\"plantuml-traces\">Independent trace highlight channels</h3><p>Matched paths are solid, non-matched paths are dashed, the taken path or prefix has its own colour, and failure points have a cross marker. Each channel can be shown alone. Unvisited branches stay neutral.</p>",
   )
   for name in ["regex-date", "ebnf-arithmetic"] {
-    html.write_string("<div class=\"pair\">")
+    html.write_string(
+      "<article><h3>\{escape(name)} traces</h3><div class=\"pair\">",
+    )
     for
       variant in [
         ("success", "matched and not-matched attempts"),
@@ -432,7 +527,11 @@ async fn main {
         ),
       )
     }
-    html.write_string("</div>")
+    html.write_string(
+      "</div>" +
+      source_panel(name + ".puml", plantuml[name + ".puml"]) +
+      "</article>",
+    )
   }
   html.write_string(
     "<p><a href=\"ebnf-scenario.html\">Explicit EBNF scenario with term visits and a return loop</a> · <a href=\"ebnf-arithmetic-trace-light.html\">Player with configured static trace highlights</a></p>",
@@ -440,108 +539,33 @@ async fn main {
   html.write_string(
     "<h2 id=\"native-mermaid\">Mermaid ZenUML and architecture</h2><p>Native interactions retain participant symbols. Architecture playback follows authored connections and does not execute deployments. <a href=\"icon-contact-sheet.svg\">Complete 523-key symbol contact sheet</a>.</p>",
   )
-  for row in rows("tests/zenuml-integration/__snapshot__/new-gallery.json") {
-    let name = string(row[0])
-    save(name, string(row[2]), check, site_assets)
-    html.write_string(
-      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
-    )
-    if name.has_suffix("-light.svg") || name.has_suffix("-dark.svg") {
-      html.write_string(
-        preview_panel(
-          name,
-          string(row[2]),
-          "",
-          name,
-          if name.has_suffix("-dark.svg") {
-            "dark"
-          } else {
-            "light"
-          },
-        ),
-      )
-    }
-  }
+  snapshot_gallery(
+    html,
+    "tests/zenuml-integration/__snapshot__/new-gallery.json",
+    check,
+    site_assets,
+    None,
+  )
   html.write_string(
     "<h2 id=\"flowcharts\">Mermaid and PlantUML flowcharts</h2><p>Mermaid flowchart/graph and modern/legacy PlantUML activity examples keep groups, branches, loop returns and parallel paths. Players illustrate structure and caller-supplied scenarios. They do not evaluate conditions, execute actions or assert synchronization.</p>",
   )
-  for
-    row in rows(
-      "tests/flowchart-gallery-acceptance/__snapshot__/flowchart-gallery.json",
-    ) {
-    let name = string(row[0])
-    let media = string(row[1])
-    let content = string(row[2])
-    let source_path = match name {
-      "flowchart-mermaid-review.mmd" =>
-        Some("site/examples/flowcharts/mermaid-review.mmd")
-      "flowchart-plantuml-modern.puml" =>
-        Some("site/examples/flowcharts/plantuml-modern-order.puml")
-      "flowchart-plantuml-legacy.puml" =>
-        Some("site/examples/flowcharts/plantuml-legacy-request.puml")
-      _ => None
-    }
-    if source_path is Some(path) {
-      if @fs.read_file(path).text() != content {
-        raise Failure("Stale flowchart source fixture: " + path)
-      }
-    }
-    save(name, content, check, site_assets)
-    html.write_string(
-      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
-    )
-    if media == "image/svg+xml" &&
-      (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
-      html.write_string(
-        preview_panel(
-          name,
-          content,
-          "",
-          name,
-          if name.has_suffix("-dark.svg") {
-            "dark"
-          } else {
-            "light"
-          },
-        ),
-      )
-    }
-  }
+  snapshot_gallery(
+    html,
+    "tests/flowchart-gallery-acceptance/__snapshot__/flowchart-gallery.json",
+    check,
+    site_assets,
+    Some("site/examples/flowcharts/"),
+  )
   html.write_string(
     "<h2 id=\"states\">Mermaid and PlantUML state diagrams</h2><p>States, composite and concurrent regions, pseudostates and history are authored structure. Playback illustrates finite supplied scenarios without evaluating guards, executing actions or restoring history.</p>",
   )
-  for
-    row in rows(
-      "tests/state-gallery-acceptance/__snapshot__/state-gallery.json",
-    ) {
-    let name = string(row[0])
-    let media = string(row[1])
-    let content = string(row[2])
-    if media == "text/plain" &&
-      @fs.read_file("site/examples/states/" + name).text() != content {
-      raise Failure("Stale state gallery source: " + name)
-    }
-    save(name, content, check, site_assets)
-    html.write_string(
-      "<p><a href=\"" + escape(name) + "\">" + escape(name) + "</a></p>",
-    )
-    if media == "image/svg+xml" &&
-      (name.has_suffix("-light.svg") || name.has_suffix("-dark.svg")) {
-      html.write_string(
-        preview_panel(
-          name,
-          content,
-          "",
-          name,
-          if name.has_suffix("-dark.svg") {
-            "dark"
-          } else {
-            "light"
-          },
-        ),
-      )
-    }
-  }
+  snapshot_gallery(
+    html,
+    "tests/state-gallery-acceptance/__snapshot__/state-gallery.json",
+    check,
+    site_assets,
+    Some("site/examples/states/"),
+  )
   html.write_string(
     "<h2 id=\"expanded-gallery\">Thirty additional source examples</h2><p>The published baseline has 15 cards. This section adds three distinct sources in each of its ten families. Theme, player and connector comparison variants do not count as additional sources.</p>",
   )
@@ -592,7 +616,9 @@ async fn main {
       )
     }
     html.write_string(
-      "</div><details><summary>Source and render settings</summary><p>\{escape(string(fields["description"]))}</p><pre><code>\{escape(expanded_artifacts[source_name])}</code></pre></details></article>",
+      "</div>" +
+      source_panel(source_name, expanded_artifacts[source_name]) +
+      "</article>",
     )
   }
   save(
@@ -607,6 +633,7 @@ async fn main {
     html.write_string(
       "<script>" +
       trusted_asset("pkgs/diagrams-animated/assets/viewer.js") +
+      trusted_asset("scripts/assets/gallery-inspection.js") +
       "</script>",
     )
     if raster_available {
@@ -1009,4 +1036,15 @@ fn state_gallery_examples() -> Array[Json] {
     entries.push(entry)
   }
   entries
+}
+
+///|
+test "source panels preserve carriage returns and escape active markup" {
+  let panel = source_panel("a&b.mmd", "<script>\r\n&\"</script>")
+  @test.assert_eq(panel.contains("<script>"), false)
+  @test.assert_eq(
+    panel.contains("&lt;script&gt;&#13;\n&amp;&quot;&lt;/script&gt;"),
+    true,
+  )
+  @test.assert_eq(panel.contains("href=\"a&amp;b.mmd\""), true)
 }

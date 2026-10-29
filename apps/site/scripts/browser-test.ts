@@ -283,6 +283,38 @@ try {
         if (width === 360) {
           check(await galleryPage.locator('.gallery-card').first().evaluate(card => card.getBoundingClientRect().top < innerHeight), `${colorScheme}, JS=${javaScriptEnabled}: family navigation leaves the first preview in the narrow viewport`);
         }
+        const indexCard = galleryPage.locator('.gallery-card').first();
+        const indexSource = indexCard.locator('.gallery-source');
+        if (javaScriptEnabled) {
+          const preview = indexCard.getByRole('tab', {name: 'Preview', exact: true});
+          const source = indexCard.getByRole('tab', {name: 'Source', exact: true});
+          const other = galleryPage.locator('.gallery-card').nth(1);
+          const viewer = indexCard.locator('[data-diagram-viewer]:visible').first();
+          await viewer.getByRole('button', {name: 'Zoom in', exact: true}).click();
+          await viewer.locator('.diagram-viewer__viewport').focus(); await galleryPage.keyboard.press('ArrowLeft');
+          const transform = await viewer.locator('.diagram-viewer__content').evaluate(node => (node as HTMLElement).style.transform);
+          for (let repeat = 0; repeat < 3; repeat++) {
+            await preview.focus(); await preview.press('End');
+            check(await source.getAttribute('aria-selected') === 'true', 'Index End selects Source');
+            check(await source.evaluate(node => node === document.activeElement), 'Index focus follows selection');
+            check(await other.getByRole('tab', {name: 'Preview', exact: true}).getAttribute('aria-selected') === 'true', 'Other card stays in Preview');
+            check(await galleryPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Index Source fits ${width}/${colorScheme}`);
+            const download = indexSource.locator('a[download]').first();
+            const href = await download.getAttribute('href');
+            check(href !== null && href.startsWith(base), 'Index source URL remains tree scoped');
+            if (href) check(await indexSource.locator('pre code').first().textContent() === await (await galleryPage.request.get(new URL(href, site).href)).text(), 'Index source equals original download');
+            await source.press('Home');
+            await galleryPage.waitForFunction(({id, transform}) => (document.getElementById(id)?.querySelector('.diagram-viewer__content') as HTMLElement)?.style.transform === transform, {id: await preview.getAttribute('aria-controls'), transform});
+          }
+          const ids = await galleryPage.locator('[id]').evaluateAll(nodes => nodes.map(node => node.id));
+          check(new Set(ids).size === ids.length, 'Index IDs are unique');
+          await viewer.getByRole('button', {name: 'Fit diagram', exact: true}).click();
+        } else {
+          check(await indexSource.isVisible(), 'No-script index keeps original source readable');
+          check(await indexCard.getByRole('tab').count() === 0, 'No-script index has no inactive tabs');
+          const href = await indexSource.locator('a[download]').first().getAttribute('href');
+          if (href) check(await indexSource.locator('pre code').first().textContent() === await (await galleryPage.request.get(new URL(href, site).href)).text(), 'No-script index source is exact');
+        }
         for (const [id, family] of examples) {
           await galleryPage.goto(`${site}gallery/${id}/`);
           const label = `${id}, ${width}px, ${colorScheme}, JS=${javaScriptEnabled}`;
@@ -341,6 +373,8 @@ try {
     }
     const cards = specimen.locator('.gallery-card:visible');
     check(await cards.count() === examples.length, `${colorScheme}: all qualified gallery preview cards`);
+    const firstCard = specimen.locator('.gallery-card').first();
+    await firstCard.getByRole('tab', {name: 'Source', exact: true}).click();
     await specimen.getByRole('link', { name: 'BPMN', exact: true }).click();
     check(await cards.count() === examples.filter(([,family]) => family === 'BPMN').length, `${colorScheme}: family filter selects all BPMN examples`);
     const filter = specimen.getByRole('searchbox', { name: 'Filter examples', exact: true });
@@ -352,6 +386,7 @@ try {
     check(await specimen.getByText('No examples match these filters.', { exact: true }).isVisible(), `${colorScheme}: empty state visible`);
     await specimen.getByRole('button', { name: 'Reset filters', exact: true }).first().click();
     check(await cards.count() === examples.length, `${colorScheme}: reset restores all examples`);
+    check(await firstCard.getByRole('tab', {name: 'Source', exact: true}).getAttribute('aria-selected') === 'true', 'Filtering retains independent tab state');
 
     await specimen.goto(`${site}gallery/sequence-basic/`);
     const tabs = specimen.getByRole('tablist', { name: 'Example inspection' });
@@ -402,6 +437,9 @@ try {
     await root.locator('[aria-label="Zoom in"]').click();
     await root.locator('.diagram-viewer__viewport').focus(); await gallery.keyboard.press('ArrowLeft');
     const transform = await root.locator('.diagram-viewer__content').getAttribute('style');
+    await card.getByRole('tab', {name: 'Source', exact: true}).click();
+    await card.getByRole('tab', {name: 'Preview', exact: true}).click();
+    await gallery.waitForFunction(transform => (document.querySelector('.gallery-card .diagram-viewer__content') as HTMLElement).getAttribute('style') === transform, transform);
     await galleryExport(gallery, root, 'png', colorScheme === 'light');
     await galleryExport(gallery, root, 'jpeg', colorScheme === 'light');
     assert.equal(await root.locator('.diagram-viewer__content').getAttribute('style'), transform, 'Gallery export changes zoom/pan');

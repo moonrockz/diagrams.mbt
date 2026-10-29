@@ -456,7 +456,18 @@ fn side(shape : Shape, other : Shape, source : Bool) -> Int32 {
   if dy > 0.0 && shape.label is Some(label) && !shape.box.contains(label.box) {
     return if dx >= 0.0 { 0 } else { 2 }
   }
-  if dx.abs() >= dy.abs() {
+  let point_profile = gateway(shape.node.kind) || gateway(other.node.kind)
+  let horizontal_distance = if point_profile {
+    dx.abs() / (shape.box.width + other.box.width).max(1.0)
+  } else {
+    dx.abs()
+  }
+  let vertical_distance = if point_profile {
+    dy.abs() / (shape.box.height + other.box.height).max(1.0)
+  } else {
+    dy.abs()
+  }
+  if horizontal_distance >= vertical_distance {
     if dx > 0.0 || (dx == 0.0 && source) {
       0
     } else {
@@ -496,16 +507,42 @@ fn bounded_exit_distance(
 }
 
 ///|
-fn spread_port_fraction(extent : Double, rank : Int32, count : Int32) -> Double {
-  if count <= 1 || extent <= 0.0 {
-    return 0.5
+fn shape_profile(
+  shape : Shape,
+  side : Int32,
+  budget : Budget,
+) -> @attachment.AttachmentProfile {
+  let profile = if gateway(shape.node.kind) {
+    "diamond"
+  } else if activity(shape.node.kind) {
+    "bpmn-activity"
+  } else {
+    "circle"
   }
-  let padding = 8.0.min(extent / 4.0)
-  (
-    padding +
-    (extent - padding * 2.0) * rank.to_double() / (count - 1).to_double()
-  ) /
-  extent
+  @attachment.attachment_profile(
+    profile,
+    shape.box.width,
+    shape.box.height,
+    side,
+    (budget.limits.minimum_approach - 24.0).max(0.0) / 4.0,
+  )
+}
+
+///|
+fn outside_port(
+  shape : Shape,
+  anchor : Point,
+  side : Int32,
+  distance : Double,
+) -> Point {
+  let box = shape.box
+  match side {
+    0 => { x: (anchor.x + distance).max(box.x + box.width + 8.0), y: anchor.y, }
+    1 =>
+      { x: anchor.x, y: (anchor.y + distance).max(box.y + box.height + 8.0), }
+    2 => { x: (anchor.x - distance).min(box.x - 8.0), y: anchor.y, }
+    _ => { x: anchor.x, y: (anchor.y - distance).min(box.y - 8.0), }
+  }
 }
 
 ///|
@@ -559,12 +596,7 @@ fn route_connections(
       distance,
       minimum,
     )
-    let exit : Point = match chosen {
-      0 => { x: anchor.x + distance, y: anchor.y, }
-      1 => { x: anchor.x, y: anchor.y + distance, }
-      2 => { x: anchor.x - distance, y: anchor.y, }
-      _ => { x: anchor.x, y: anchor.y - distance, }
-    }
+    let exit = outside_port(shape, anchor, chosen, distance)
     for obstacle in shapes {
       if !budget.charge(1) {
         return false
@@ -608,11 +640,6 @@ fn route_connections(
     distance : Double,
   ) -> Bool {
     let count = counts.get((shape.index, chosen)).unwrap_or(0) + 1
-    let extent = if chosen == 0 || chosen == 2 {
-      shape.box.height
-    } else {
-      shape.box.width
-    }
     let reserved = distance.max(
       budget.limits.minimum_approach.max(14.0) +
       8.0 +
@@ -623,7 +650,7 @@ fn route_connections(
           shape,
           other,
           chosen,
-          spread_port_fraction(extent, rank, count),
+          shape_profile(shape, chosen, budget).fraction(rank, count),
           reserved,
         ) {
         return false
@@ -722,11 +749,186 @@ fn route_connections(
         }
       }
     }
+    let source_profile = shape_profile(source, from, budget)
+    let target_profile = shape_profile(target, to, budget)
+    if (source_profile.point_preferred || target_profile.point_preferred) &&
+      !special {
+      let preferred_from = from
+      let preferred_to = to
+      let mut best_cost = 1.0e30
+      let mut best = None
+      let obstacles = []
+      for shape in shapes {
+        if !budget.charge(1) {
+          return []
+        }
+        if shape.node.kind != Group &&
+          shape.node.kind != Lane &&
+          !ancestor(a, shape.index) &&
+          !ancestor(b, shape.index) {
+          obstacles.push(
+            inflated(
+              shape.box,
+              if shape.index == a || shape.index == b {
+                0.0
+              } else {
+                8.0
+              },
+            ),
+          )
+        }
+        if shape.label is Some(label) {
+          obstacles.push(inflated(label.box, 6.0))
+        }
+      }
+      let mut area : Rect? = None
+      let mut parent = parents[a]
+      while parent >= 0 {
+        if !budget.charge(1) {
+          return []
+        }
+        if ancestor(b, parent) &&
+          by_index.get(parent) is Some(container) &&
+          container.node.kind != Lane {
+          area = Some(inflated(container.box, -8.0))
+          break
+        }
+        parent = parents[parent]
+      }
+      let distance = budget.limits.minimum_approach.max(14.0) + 8.0
+      for candidate_from in source_profile.sides(from, false) {
+        for candidate_to in target_profile.sides(to, false) {
+          if !budget.charge(1) {
+            return []
+          }
+          if a == b && candidate_from == candidate_to {
+            continue
+          }
+          if !clear_side(source, target, candidate_from, distance) ||
+            !clear_side(target, source, candidate_to, distance) {
+            continue
+          }
+          let source_count = counts.get((a, candidate_from)).unwrap_or(0)
+          let target_count = counts.get((b, candidate_to)).unwrap_or(0)
+          let start = port(
+            source,
+            candidate_from,
+            shape_profile(source, candidate_from, budget).fraction(
+              source_count,
+              source_count + 1,
+            ),
+          )
+          let end = port(
+            target,
+            candidate_to,
+            shape_profile(target, candidate_to, budget).fraction(
+              target_count,
+              target_count + 1,
+            ),
+          )
+          let exit = outside_port(source, start, candidate_from, distance)
+          let entry = outside_port(target, end, candidate_to, distance)
+          if orthogonal(
+              exit,
+              entry,
+              obstacles,
+              [],
+              source.box.y.max(target.box.y) +
+              source.box.height.max(target.box.height) +
+              64.0,
+              area,
+              budget,
+            )
+            is Some(route) {
+            let mut length = 2.0 * distance
+            for i in 1..<route.length() {
+              length += (route[i].x - route[i - 1].x).abs() +
+                (route[i].y - route[i - 1].y).abs()
+            }
+            let congestion = (if source_profile.point_preferred {
+                counts.get((a, candidate_from)).unwrap_or(0)
+              } else {
+                0
+              }) +
+              (if target_profile.point_preferred {
+                counts.get((b, candidate_to)).unwrap_or(0)
+              } else {
+                0
+              })
+            let cost = @attachment.attachment_cost(
+              candidate_from,
+              candidate_to,
+              preferred_from,
+              preferred_to,
+              congestion,
+              route.length() - 2,
+              length,
+              source.box.width
+              .max(source.box.height)
+              .max(target.box.width)
+              .max(target.box.height),
+            )
+            if cost < best_cost {
+              best_cost = cost
+              best = Some((candidate_from, candidate_to))
+            }
+          }
+          if budget.failed {
+            return []
+          }
+        }
+      }
+      if best is Some((chosen_from, chosen_to)) {
+        from = chosen_from
+        to = chosen_to
+      }
+    }
     sides.push((from, to))
     counts[(a, from)] = counts.get((a, from)).unwrap_or(0) + 1
     counts[(b, to)] = counts.get((b, to)).unwrap_or(0) + 1
   }
-  let used : Map[(Int32, Int32), Int32] = Map([])
+  // Order each side's fan by the other endpoint's cross-axis position.
+  // Source declaration order still breaks ties for parallel identities, while
+  // routes to different rows/columns do not braid inside their marker stubs.
+  let fans : Map[(Int32, Int32), Array[(Double, Int32, Bool)]] = Map([])
+  for occurrence, (_, a, b) in selected {
+    let (from, to) = sides[occurrence]
+    for
+      (endpoint, other, side, source) in [(a, b, from, true), (b, a, to, false)] {
+      if !budget.charge(1) {
+        return []
+      }
+      let box = by_index[other].box
+      let coordinate = if side == 0 || side == 2 {
+        box.y + box.height / 2.0
+      } else {
+        box.x + box.width / 2.0
+      }
+      let key = (endpoint, side)
+      if fans.get(key) is Some(items) {
+        items.push((coordinate, occurrence, source))
+      } else {
+        fans[key] = [(coordinate, occurrence, source)]
+      }
+    }
+  }
+  let port_order : Map[(Int32, Bool), Int32] = Map([])
+  for (_, items) in fans {
+    items.sort_by((a, b) => {
+      let order = a.0.compare(b.0)
+      if order == 0 {
+        a.1.compare(b.1)
+      } else {
+        order
+      }
+    })
+    for n, (_, occurrence, source) in items {
+      if !budget.charge(1) {
+        return []
+      }
+      port_order[(occurrence, source)] = n
+    }
+  }
   let connections : Array[Connection] = []
   let labels : Array[Label] = []
   for shape in shapes {
@@ -747,35 +949,27 @@ fn route_connections(
     let source = by_index[a]
     let target = by_index[b]
     let (from, to) = sides[occurrence]
-    fn next_port(shape : Shape, side : Int32) -> Point {
+    fn next_port(shape : Shape, side : Int32, source : Bool) -> Point {
       let key = (shape.index, side)
-      let n = used.get(key).unwrap_or(0)
-      used[key] = n + 1
+      let n = port_order[(occurrence, source)]
       port(
         shape,
         side,
-        spread_port_fraction(
-          if side == 0 || side == 2 {
-            shape.box.height
-          } else {
-            shape.box.width
-          },
-          n,
-          counts[key],
-        ),
+        shape_profile(shape, side, budget).fraction(n, counts[key]),
       )
     }
-    let start = next_port(source, from)
-    let end = next_port(target, to)
+    let start = next_port(source, from, true)
+    let end = next_port(target, to, false)
     fn outside(
       shape : Shape,
       other : Shape,
       anchor : Point,
       side : Int32,
+      source_end : Bool,
     ) -> Point {
       let minimum = budget.limits.minimum_approach.max(14.0) + 8.0
       let requested = minimum +
-        (used[(shape.index, side)] - 1).to_double() * 8.0
+        port_order[(occurrence, source_end)].to_double() * 8.0
       let distance = bounded_exit_distance(
         anchor,
         side,
@@ -783,15 +977,10 @@ fn route_connections(
         requested,
         minimum,
       )
-      match side {
-        0 => { x: anchor.x + distance, y: anchor.y, }
-        1 => { x: anchor.x, y: anchor.y + distance, }
-        2 => { x: anchor.x - distance, y: anchor.y, }
-        _ => { x: anchor.x, y: anchor.y - distance, }
-      }
+      outside_port(shape, anchor, side, distance)
     }
-    let exit = outside(source, target, start, from)
-    let entry = outside(target, source, end, to)
+    let exit = outside(source, target, start, from, true)
+    let entry = outside(target, source, end, to, false)
     planned.push((start, exit, entry, end))
   }
   for occurrence, (i, a, b) in selected {

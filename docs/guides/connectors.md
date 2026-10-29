@@ -39,14 +39,57 @@ outline or explicit port. Longer reservations can increase layout spacing.
 Natural data curves retain a straight marked terminal; railroad returns and
 sequence self-messages reserve their approach in their own layout.
 
-Multiple independent attachments spread across the usable side span with
-padding for corners and markers. One attachment stays centred. Automatic
-routing considers spare top and bottom approaches for returns and congested
-bundles; vertical layouts use the corresponding clear left and right sides.
-Explicit architecture ports and edge direction hints keep their authored sides.
-Junctions and grammar joins remain shared semantic points. Architecture service
-ports use a 12-unit inset at each end of the side. Group-boundary ports stay
-within the span adjacent to their referenced service.
+Automatic swimlane, flowchart and state attachments use measured shape profiles.
+Automatic BPMN uses the same policy. Diamond and choice profiles prefer their
+four points, including wide or shallow decisions. A clear single connection
+uses the appropriate cardinal point and a straight axis approach. Box profiles
+spread independent attachments evenly across a padded usable span. Rounded
+boxes include their corner radius in that padding; circles and other outlines
+retain their real perimeter projection. Larger marker reservations increase
+padding within the bounded usable span.
+
+Each decision endpoint offers at most four sides, ordered from the preferred
+side with stable clockwise ties. The router checks complete candidate routes
+against outlines, labels and containment before ranking them. The cost is 32
+per existing incident at a preferred point, 4 per changed side, 1 per bend, plus
+route length divided by the largest measured endpoint dimension. Candidate
+checks and route search consume the existing layout work budget. Exhaustion
+returns the family's layout-limit diagnostic with no successful partial output.
+
+An occupied point can move an independent connection to another clear side.
+When constraints or congestion require several connections on one side, the
+router spreads their anchors along the real outline and reserves distinct
+terminal corridors. Those fallback anchors can lie on a diamond's sloping edge.
+The router orders each fan by the remote endpoint's cross-axis position, then
+source declaration order. A self-loop uses two different terminal corridors.
+No post-render snapping changes the selected route.
+
+The review and escalation gallery examples reproduce the old side-fraction
+problem. Review's diamond previously used sloping-edge endpoints at
+`(88,386.889)` and `(216,386.889)`, roughly 9 units from the nearest point. Clear
+sides now use measured diamond points; crowded or authored sides retain safe
+outline fallbacks. Connector-only paths, label positions, masks and the viewport
+needed to contain those routes can change. Source text and graph identities
+remain unchanged.
+
+| Example and connection | Previous diamond endpoint | Selected diamond point |
+| --- | --- | --- |
+| Review `AB` target | `(88,386.889)` | `(152,354)` top |
+| Review `parallel` target | `(216,386.889)` | `(80,391)` left |
+| Review `BC` source | `(224,391)` | `(224,391)` right |
+| Escalation `L_B_C_0` source | `(88,395.111)` | `(152,428)` bottom |
+| Escalation `L_C_B_0` target | `(216,395.111)` | `(224,391)` right |
+
+Both examples retain diamond B's outline at `(152,354)`, `(224,391)`,
+`(152,428)` and `(80,391)`. Escalation's `L_A_B_0` target retains the top point.
+
+Automatic routing also considers spare top and bottom approaches for returns
+and congested bundles; vertical layouts use the corresponding clear left and
+right sides. Explicit architecture ports, edge direction hints and state
+boundary targets retain their authored constraints. Junctions and grammar joins
+remain shared semantic points. Architecture service ports use a 12-unit inset
+at each end of the side. Group-boundary ports stay within the span adjacent to
+their referenced service.
 
 Complete supplied BPMN bounds and waypoints retain their display geometry by
 default, under both prefer-supplied and require-supplied policies. Set

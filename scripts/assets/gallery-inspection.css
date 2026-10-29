@@ -1,0 +1,11 @@
+.gallery-tabs{display:flex;gap:1rem;margin:.75rem 0;border-bottom:1px solid #64748b}
+.gallery-tabs button,.gallery-source button{font:inherit;min-height:44px;padding:.5rem .9rem;color:inherit;background:transparent;cursor:pointer}
+.gallery-tabs button{padding:.5rem .25rem;border:0;border-bottom:3px solid transparent;border-radius:0}
+.gallery-source button{border:1px solid #64748b;border-radius:.35rem}
+.gallery-tabs [aria-selected=true]{font-weight:700;border-bottom-color:currentColor}
+.gallery-tabs button:focus-visible,.gallery-source button:focus-visible{outline:3px solid #818cf8;outline-offset:3px}
+.gallery-source{min-width:0;max-width:100%}
+.gallery-source p{overflow-wrap:anywhere}
+.gallery-source pre{white-space:pre;overflow-x:auto}
+[data-gallery-example]>[hidden]{display:none!important}
+@media print{.gallery-tabs,.gallery-source button{display:none}[data-gallery-example]>[hidden]{display:block!important}}

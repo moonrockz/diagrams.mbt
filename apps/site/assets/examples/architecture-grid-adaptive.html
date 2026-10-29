@@ -1139,6 +1139,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     const fullscreen = button('Fullscreen', 'Fullscreen', () => { void toggleFullscreen(); });
     viewport.append(toolbar);
     function measure() {
+      if (!viewport.clientWidth || !viewport.clientHeight) return;
       const box = image.viewBox?.baseVal;
       const naturalWidth = box?.width || image.naturalWidth || Number(image.getAttribute('width')) || 640;
       const naturalHeight = box?.height || image.naturalHeight || Number(image.getAttribute('height')) || 480;

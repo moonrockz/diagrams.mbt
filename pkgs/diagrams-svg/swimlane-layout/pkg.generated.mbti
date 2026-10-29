@@ -9,6 +9,10 @@ import {
 }
 
 // Values
+pub fn attachment_cost(Int32, Int32, Int32, Int32, Int32, Int32, Double, Double) -> Double
+
+pub fn attachment_profile(String, Double, Double, Int32, Double) -> AttachmentProfile
+
 pub fn check(Geometry, @theme.Palette, work_limit? : Int32, intentional_containment? : ArrayView[(String, String)], boundary_attachments? : ArrayView[(String, String)]) -> ReadOnlyArray[Finding]
 
 pub fn family(String) -> @theme.Family
@@ -28,6 +32,17 @@ pub fn svg_number(Double) -> String
 // Errors
 
 // Types and methods
+pub struct AttachmentProfile {
+  point_preferred : Bool
+  extent : Double
+  padding : Double
+} derive(Eq, @debug.Debug)
+pub fn AttachmentProfile::equal(Self, Self) -> Bool
+pub fn AttachmentProfile::fraction(Self, Int32, Int32) -> Double
+pub fn AttachmentProfile::not_equal(Self, Self) -> Bool
+pub fn AttachmentProfile::sides(Self, Int32, Bool) -> Array[Int32]
+pub fn AttachmentProfile::to_repr(Self) -> @debug.Repr
+
 pub struct Connection {
   connection : @swimlane.Connection
   index : Int32

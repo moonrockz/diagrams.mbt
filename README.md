@@ -125,7 +125,10 @@ bridge hops, marker approaches, supplied BPMN policy and final path inspection.
 
 Run `mise run gallery`, then open `_gallery/index.html`. It includes source XML,
 supplied-DI and automatic BPMN views, native swimlanes in all four directions,
-fixed dark/light players and all 38 sequence examples. After qualification, `mise run gallery -- --existing-output` regenerates
+fixed dark/light players and all 38 sequence examples. Preview and Source tabs
+let you inspect each example in place, copy or download its original syntax,
+and return to the same zoom and pan. Theme variants share one source panel.
+Model-only examples identify when original syntax is unavailable. After qualification, `mise run gallery -- --existing-output` regenerates
 from stored snapshots without compiling. `--check` compares existing artifacts;
 `--qualify` runs browser and link checks.
 `--site-assets` also refreshes the selected examples used by the docs site.

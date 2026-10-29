@@ -6,6 +6,7 @@ import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/bpmn" @model,
   "moonrockz/diagrams-svg/theme",
+  "moonrockz/diagrams-svg/swimlane-layout" @attachment,
 }
 
 import {

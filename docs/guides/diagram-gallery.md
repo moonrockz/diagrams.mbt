@@ -25,6 +25,29 @@ Each additional source has fixed light and dark SVG previews, an adaptive SVG
 artifact and standalone light and dark players. Source downloads preserve the
 reader input. Theme and player variants do not count as distinct sources.
 
+## Inspect original source
+
+Each implemented gallery card and detail page has Preview and Source tabs.
+Source shows the original declared diagram syntax, its filename, and copy and
+download actions. When an example has several sources, select a filename to
+read it. The controls act within that example. Switching tabs or filtering the
+gallery retains the preview's zoom and pan and the selected source file.
+
+Use Left/Right or Home/End while a tab is focused. Long source lines scroll
+inside their panel at narrow widths. If clipboard access is denied, the text
+stays selectable and downloadable. Without JavaScript, the source and static
+preview remain readable and inactive tab controls are absent.
+
+The local gallery groups theme and rendering variants with the same declared
+source. Its Source panels and downloads work offline, including when opened as
+files. Model-only fixtures identify unavailable original syntax and name their
+fixture location. They do not substitute generated SVG for diagram source.
+
+Telescope owns the published `.gallery-workbench`, `.gallery-tabs`,
+`.gallery-panel`, `.gallery-source`, `.gallery-source-file` and `.gallery-actions`
+style hooks. The local gallery uses `.gallery-tabs` and `.gallery-source` with
+`data-gallery-example` and `data-gallery-source` to scope its controls.
+
 ## Inspect and save a preview
 
 Every local image panel, published gallery card and example detail has a corner
