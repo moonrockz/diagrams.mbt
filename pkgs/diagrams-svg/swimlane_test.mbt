@@ -234,3 +234,89 @@ test "ID prefix expansion is bounded before rewriting scoped SVG copies" {
   assert_eq(result.output, None)
   assert_eq(result.diagnostics.last().unwrap().code, "swimlane/render-limit")
 }
+
+///|
+test "decision anchors final styles and playback retain the same geometry and identity" {
+  for direction in [@swimlane.Direction::TB, BT, LR, RL] {
+    for style in [@svg.ConnectorStyle::Elbow, Rounded, Curved] {
+      for minimum in [24.0, 72.0] {
+        let view = swimlane_fixture(direction)
+        let source = @debug.to_string(view)
+        let renderer = @svg.SvgRenderer::new(
+          mode=Fixed(Light),
+          connectors=@svg.ConnectorOptions::new(
+            style~,
+            minimum_approach=minimum,
+          ),
+        )
+        let result = renderer.render(Swimlane(view))
+        assert_true(
+          result.output != None,
+          msg=@debug.to_string((direction, style, minimum, result.diagnostics)),
+        )
+        let svg = result.output.unwrap()
+        let paths = @svg.inspect_connectors(svg)
+        let scene = renderer.scene(Swimlane(view)).scene.unwrap()
+        assert_eq(scene.canonical_svg, svg)
+        assert_eq(paths, renderer.connector_geometry(Swimlane(view)).paths)
+        assert_eq(scene.paths.length(), paths.length())
+        for binding in scene.paths {
+          let path = paths
+            .iter()
+            .find_first(p => {
+              scene.catalog.connection(p.id) == Some(binding.occurrence)
+            })
+            .unwrap()
+          assert_eq(binding.path, path.path.svg())
+          assert_eq(binding.mask, path.mask)
+        }
+        let laid_out = @swimlane_layout.layout(
+          view,
+          limits=@swimlane_layout.Limits::new(minimum_approach=minimum),
+        ).geometry.unwrap()
+        let diamond = laid_out.shapes
+          .iter()
+          .find_first(s => s.id == "B")
+          .unwrap().outline_box
+        for edge in laid_out.connections {
+          let p = if edge.target == "B" {
+            Some(edge.line[edge.line.length() - 1])
+          } else if edge.source == "B" {
+            Some(edge.line[0])
+          } else {
+            None
+          }
+          if p is Some(p) {
+            let cardinal = (p.x - diamond.x - diamond.width / 2.0).abs() < 0.001 ||
+              (p.y - diamond.y - diamond.height / 2.0).abs() < 0.001
+            assert_true(
+              cardinal,
+              msg=@debug.to_string((direction, edge.connection.id, p)),
+            )
+          }
+        }
+        assert_eq(@debug.to_string(view), source)
+        // An actual collision still fails even at a preferred decision point.
+        let path = paths[0]
+        let first = laid_out.connections[0].line[0]
+        let findings = @svg.check_connectors(
+          [path],
+          [
+            @svg.ConnectorObstacle::{
+              owner: "unrelated",
+              x: first.x - 2.0,
+              y: first.y - 2.0,
+              width: 4.0,
+              height: 4.0,
+            },
+          ],
+          width=laid_out.width.to_double(),
+          height=laid_out.height.to_double(),
+        )
+        assert_true(
+          findings.iter().any(d => d.code == "connector/routing-conflict"),
+        )
+      }
+    }
+  }
+}

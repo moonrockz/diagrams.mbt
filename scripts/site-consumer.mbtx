@@ -28,8 +28,8 @@ async fn run(args : Array[String]) -> Unit {
 async fn verify(out : String, base : String) -> Int32 {
   guard @json.parse(@fs.read_file(out + "/telescope-build.json").text())
     is Object(build) &&
-    build.get("toolkit_version") == Some(Json::string("0.4.0")) else {
-    fail(out + ": expected released Telescope 0.4.0 provenance")
+    build.get("toolkit_version") == Some(Json::string("0.5.0")) else {
+    fail(out + ": expected released Telescope 0.5.0 provenance")
   }
   let (code, revision) = @process.collect_stdout("git", ["rev-parse", "HEAD"])
   guard code == 0 &&
@@ -97,8 +97,8 @@ async fn qualify() -> Unit {
   run(["run", "check:site-compatibility", "--", "--out", "_site/next"])
   let artifacts = verify("_site/next", "/diagrams.mbt/next/")
   let report : Json = {
-    "library": "moonrockz/telescope@0.4.0",
-    "cli": "0.4.0",
+    "library": "moonrockz/telescope@0.5.0",
+    "cli": "0.5.0",
     "baseline_routes": 77,
     "baseline_anchors": 5376,
     "gallery_entries": 57,

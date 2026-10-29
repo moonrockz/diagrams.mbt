@@ -132,11 +132,27 @@ test "BPMN spreads ports per side and uses spare sides for feedback and dense bu
             assert_true((points[0] - origin - extent / 2.0).abs() < 0.001)
           } else {
             assert_true(
-              (points[0] - origin - 8.0).abs() < 0.001,
+              (points[0] -
+              origin -
+              shape_profile(shapes[index], side, Budget::{
+                limits: Limits::new(),
+                diagnostics: [],
+                work: 0,
+                failed: false,
+              }).padding).abs() <
+              0.001,
               msg="first port near the usable side start",
             )
             assert_true(
-              (points[points.length() - 1] - origin - extent + 8.0).abs() <
+              (points[points.length() - 1] -
+              origin -
+              extent +
+              shape_profile(shapes[index], side, Budget::{
+                limits: Limits::new(),
+                diagnostics: [],
+                work: 0,
+                failed: false,
+              }).padding).abs() <
               0.001,
               msg="last port near the usable side end",
             )
@@ -255,16 +271,95 @@ test "spread ports near rounded and folded corners retain actual outline attachm
     }
     for side in 0..<4 {
       for count in [2, 3] {
-        let extent = if side == 0 || side == 2 { box.height } else { box.width }
         for rank in 0..<count {
           assert_true(
             on_shape(
-              port(shape, side, spread_port_fraction(extent, rank, count)),
+              port(
+                shape,
+                side,
+                @attachment.attachment_profile(
+                  if activity(kind) {
+                    "bpmn-activity"
+                  } else {
+                    "rect"
+                  },
+                  box.width,
+                  box.height,
+                  side,
+                  0.0,
+                ).fraction(rank, count),
+              ),
               shape,
             ),
             msg="spread corner port attaches to its drawn outline",
           )
         }
+      }
+    }
+  }
+}
+
+///|
+test "automatic gateway profiles use measured cardinal points and separate crowded terminals" {
+  for
+    (dx, dy, expected) in [
+      (400.0, 0.0, 0),
+      (0.0, 400.0, 1),
+      (-400.0, 0.0, 2),
+      (0.0, -400.0, 3),
+    ] {
+    for count in [1, 2, 4, 8] {
+      let nodes = [
+        @model.Node::new("A", ExclusiveGateway),
+        @model.Node::new("B", Task),
+      ]
+      let view = @model.Bpmn::new(
+        "gateway",
+        nodes,
+        Array::makei(count, i => @model.Flow::new("f-\{i}", "A", "B")),
+      )
+      let boxes = [
+        Rect::{ x: 500.0, y: 500.0, width: 160.0, height: 80.0, },
+        { x: 500.0 + dx, y: 500.0 + dy, width: 160.0, height: 80.0, },
+      ]
+      let shapes = Array::makei(2, i => Shape::{
+        node: nodes[i],
+        index: i,
+        box: boxes[i],
+        bounds: exact_bounds(boxes[i]),
+        label: None,
+      })
+      let budget : Budget = {
+        limits: Limits::new(),
+        diagnostics: [],
+        work: 0,
+        failed: false,
+      }
+      let edges = route_connections(
+        view,
+        Array::makei(count, i => (i, 0, 1)),
+        shapes,
+        [-1, -1],
+        budget,
+      )
+      assert_false(budget.failed, msg=@debug.to_string(budget.diagnostics))
+      assert_eq(edges.length(), count)
+      let endpoints = []
+      for edge in edges {
+        let start = edge.line[0]
+        assert_true(on_shape(start, shapes[0]))
+        assert_false(endpoints.contains(start))
+        endpoints.push(start)
+        assert_eq(edge.flow, view.flows[edge.index])
+        if count == 1 {
+          // The established feedback policy can choose a transverse free point.
+          if expected == 0 || expected == 1 {
+            assert_eq(routed_side(edge.line, true), expected)
+          }
+          assert_eq(start, port(shapes[0], routed_side(edge.line, true), 0.5))
+        }
+        let next = edge.line[1]
+        assert_true((next.x - start.x).abs() + (next.y - start.y).abs() >= 24.0)
       }
     }
   }

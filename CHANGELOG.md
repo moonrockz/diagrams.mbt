@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Accessible Preview and Source tabs in gallery cards and the offline review
+  gallery, with original syntax, source downloads and retained viewer state.
+
+### Changed
+
+- Automatic connectors prefer clear diamond and choice points, use measured
+  outline spans and consider route congestion while preserving explicit ports,
+  direction hints and supplied BPMN waypoints.
+
 ## 0.4.0 - 2026-10-28
 
 ### Added

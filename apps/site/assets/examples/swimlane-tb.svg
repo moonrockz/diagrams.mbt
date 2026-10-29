@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 654" width="640" height="654" role="img" data-diagram="swimlane" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-9eed1a2817f73056-diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 654" width="640" height="654" role="img" data-diagram="swimlane" data-connector-options="{&#xa;  style: None,&#xa;  crossing: Bridge,&#xa;  minimum_approach: 24,&#xa;  corner_radius: 8,&#xa;  bridge_radius: 5,&#xa;  style_supplied_bpmn: false,&#xa;  limits: {&#xa;    candidates: 2000000,&#xa;    subdivisions: 200000,&#xa;    segments: 100000,&#xa;    crossings: 10000,&#xa;    output_units: 16777216,&#xa;  },&#xa;}" id="sl-adde720ae63817ba-diagram">
   <title>Review</title>
   <desc>Swimlane diagram with 2 responsibility lanes and 5 structural connections. Playback illustrates structure and does not execute a process.</desc>
   <defs>
     <style>
-svg#sl-9eed1a2817f73056-diagram {
+svg#sl-adde720ae63817ba-diagram {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -32,7 +32,7 @@ svg#sl-9eed1a2817f73056-diagram {
   --external-ink: #94a3b8;
 }
 @media (prefers-color-scheme: light) {
-  svg#sl-9eed1a2817f73056-diagram {
+  svg#sl-adde720ae63817ba-diagram {
     --bg: #f4f5f7;
     --text: #111827;
     --muted: #5b6474;
@@ -61,7 +61,7 @@ svg#sl-9eed1a2817f73056-diagram {
     --external-ink: #5a687c;
   }
 }
-svg#sl-9eed1a2817f73056-diagram[data-theme="dark"] {
+svg#sl-adde720ae63817ba-diagram[data-theme="dark"] {
   --bg: #020617;
   --text: #ffffff;
   --muted: #94a3b8;
@@ -89,7 +89,7 @@ svg#sl-9eed1a2817f73056-diagram[data-theme="dark"] {
   --external-stroke: #94a3b8;
   --external-ink: #94a3b8;
 }
-svg#sl-9eed1a2817f73056-diagram[data-theme="light"] {
+svg#sl-adde720ae63817ba-diagram[data-theme="light"] {
   --bg: #f4f5f7;
   --text: #111827;
   --muted: #5b6474;
@@ -118,13 +118,13 @@ svg#sl-9eed1a2817f73056-diagram[data-theme="light"] {
   --external-ink: #5a687c;
 }
 </style>
-    <marker id="sl-9eed1a2817f73056-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="sl-adde720ae63817ba-sl-arrow" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-9 -4 L0 0 L-9 4 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
     </marker>
-    <marker id="sl-9eed1a2817f73056-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="sl-adde720ae63817ba-sl-circle" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-4 0 A4 4 0 1 0 4 0 A4 4 0 1 0 -4 0 Z" fill="var(--arrow)" stroke="var(--arrow)" stroke-width="1.5"/>
     </marker>
-    <marker id="sl-9eed1a2817f73056-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
+    <marker id="sl-adde720ae63817ba-sl-cross" viewBox="-10 -6 16 12" refX="0" refY="0" markerWidth="16" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto-start-reverse">
       <path d="M-4 -4 L4 4 M-4 4 L4 -4" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
     </marker>
   </defs>
@@ -147,31 +147,31 @@ svg#sl-9eed1a2817f73056-diagram[data-theme="light"] {
   </g>
   <g class="swimlane-connections">
     <g class="swimlane-connection" data-swimlane-id="AB" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
-      <path class="swimlane-connector" d="M180.955 129 L472.432 129" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-start="url(#sl-9eed1a2817f73056-sl-arrow)" marker-end="url(#sl-9eed1a2817f73056-sl-arrow)" data-connector-id="AB" data-connector-source="A" data-connector-target="B" data-connector-route="M180.955 129 L472.432 129" data-connector-key="0"/>
-      <rect x="258.694" y="100" width="136" height="21" rx="3" fill="var(--bg)"/>
-      <text class="swimlane-label" data-label-owner="AB" x="326.694" y="115" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
-        <tspan x="326.694" y="115">review or return</tspan>
+      <path class="swimlane-connector" d="M187.558 137 L384 137 L384 158 L416 158" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-start="url(#sl-adde720ae63817ba-sl-arrow)" marker-end="url(#sl-adde720ae63817ba-sl-arrow)" data-connector-id="AB" data-connector-source="A" data-connector-target="B" data-connector-route="M187.558 137 L384 137 L384 158 L416 158" data-connector-key="0" mask="url(#sl-adde720ae63817ba-connector-underpass-0)"/>
+      <rect x="217.779" y="108" width="136" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="AB" x="285.779" y="123" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="285.779" y="123">review or return</tspan>
       </text>
     </g>
     <g class="swimlane-connection" data-swimlane-id="BC" data-source="B" data-target="C" data-display-source="B" data-display-target="C">
-      <path class="swimlane-connector" d="M488 195 L488 227 L522.219 227 L522.219 487.092" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-9eed1a2817f73056-sl-arrow)" data-connector-id="BC" data-connector-source="B" data-connector-target="C" data-connector-route="M488 195 L488 227 L522.219 227 L522.219 487.092" data-connector-key="1"/>
+      <path class="swimlane-connector" d="M488 195 L488 227 L522.219 227 L522.219 487.092" fill="none" stroke="var(--arrow)" stroke-width="1.5" marker-end="url(#sl-adde720ae63817ba-sl-arrow)" data-connector-id="BC" data-connector-source="B" data-connector-target="C" data-connector-route="M488 195 L488 227 L522.219 227 L522.219 487.092" data-connector-key="1"/>
       <rect x="490.219" y="328.046" width="64" height="21" rx="3" fill="var(--bg)"/>
       <text class="swimlane-label" data-label-owner="BC" x="522.219" y="343.046" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
         <tspan x="522.219" y="343.046">approve</tspan>
       </text>
     </g>
     <g class="swimlane-connection" data-swimlane-id="CA" data-source="C" data-target="A" data-display-source="C" data-display-target="A">
-      <path class="swimlane-connector" d="M424 487.092 L424 451 L88 451 L88 173.955" fill="none" stroke="var(--arrow)" stroke-width="1.5" data-connector-id="CA" data-connector-source="C" data-connector-target="A" data-connector-route="M424 487.092 L424 451 L88 451 L88 173.955" data-connector-key="2"/>
-      <rect x="224" y="422" width="64" height="21" rx="3" fill="var(--bg)"/>
-      <text class="swimlane-label" data-label-owner="CA" x="256" y="437" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
-        <tspan x="256" y="437">related</tspan>
+      <path class="swimlane-connector" d="M424 487.092 L424 451 L108 451 L108 184.606" fill="none" stroke="var(--arrow)" stroke-width="1.5" data-connector-id="CA" data-connector-source="C" data-connector-target="A" data-connector-route="M424 487.092 L424 451 L108 451 L108 184.606" data-connector-key="2"/>
+      <rect x="234" y="422" width="64" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="CA" x="266" y="437" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="266" y="437">related</tspan>
       </text>
     </g>
     <g class="swimlane-connection" data-swimlane-id="parallel" data-source="A" data-target="B" data-display-source="A" data-display-target="B">
-      <path class="swimlane-connector" d="M180.955 177 L408 177 L408 187 L472.432 187" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sl-9eed1a2817f73056-sl-arrow)" data-connector-id="parallel" data-connector-source="A" data-connector-target="B" data-connector-route="M180.955 177 L408 177 L408 187 L472.432 187" data-connector-key="3"/>
-      <rect x="258.477" y="148" width="72" height="21" rx="3" fill="var(--bg)"/>
-      <text class="swimlane-label" data-label-owner="parallel" x="294.477" y="163" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
-        <tspan x="294.477" y="163">expedite</tspan>
+      <path class="swimlane-connector" d="M187.558 169 L357.779 169 L357.779 142 C357.779 139.5 352.779 139.5 352.779 137 C352.779 134.5 357.779 134.5 357.779 132 L357.779 89 L488 89 L488 121" fill="none" stroke="var(--arrow)" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#sl-adde720ae63817ba-sl-arrow)" data-connector-id="parallel" data-connector-source="A" data-connector-target="B" data-connector-route="M187.558 169 L357.779 169 L357.779 89 L488 89 L488 121" data-connector-key="3"/>
+      <rect x="236.668" y="140" width="72" height="21" rx="3" fill="var(--bg)"/>
+      <text class="swimlane-label" data-label-owner="parallel" x="272.668" y="155" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="var(--text)">
+        <tspan x="272.668" y="155">expedite</tspan>
       </text>
     </g>
   </g>
@@ -198,4 +198,10 @@ svg#sl-9eed1a2817f73056-diagram[data-theme="light"] {
       </text>
     </g>
   </g>
+  <defs>
+    <mask id="sl-adde720ae63817ba-connector-underpass-0" maskUnits="userSpaceOnUse" x="0" y="0" width="640" height="654">
+      <rect x="0" y="0" width="640" height="654" fill="white"/>
+      <circle cx="357.779" cy="137" r="10" fill="black"/>
+    </mask>
+  </defs>
 </svg>

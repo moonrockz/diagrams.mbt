@@ -23,17 +23,17 @@
       <path class="state-connector" d="M124 136 L124 160 Q124 168 132 168 L292 168 Q300 168 300 176 L300 490" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/2" data-connector-source="*start*" data-connector-target="Ready" data-connector-route="M124 136 L124 168 L300 168 L300 490" data-connector-key="0"/>
     </g>
     <g class="state-connection" data-state-id="transition/5" data-source="Ready" data-target="Running" data-display-source="Ready" data-display-target="Running">
-      <path class="state-connector" d="M300 581 L300 605 Q300 613 292 613 L224 613 Q216 613 216 621 L216 862.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/5" data-connector-source="Ready" data-connector-target="Running" data-connector-route="M300 581 L300 613 L216 613 L216 862.734" data-connector-key="1"/>
-      <rect x="192" y="708.867" width="48" height="21" rx="3" fill="#020617"/>
-      <text class="state-label" data-label-owner="transition/5" x="216" y="723.867" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
-        <tspan x="216" y="723.867">start</tspan>
+      <path class="state-connector" d="M300 581 L300 605 Q300 613 292 613 L220 613 Q212 613 212 621 L212 862" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/5" data-connector-source="Ready" data-connector-target="Running" data-connector-route="M300 581 L300 613 L212 613 L212 862" data-connector-key="1"/>
+      <rect x="188" y="708.5" width="48" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/5" x="212" y="723.5" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="212" y="723.5">start</tspan>
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/6" data-source="Running" data-target="Running" data-display-source="Running" data-display-target="Running">
-      <path class="state-connector" d="M224 894 L248 894 Q256 894 256 886 L256 821.734 Q256 813.734 248 813.734 L128 813.734 Q120 813.734 120 821.734 L120 862.734" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/6" data-connector-source="Running" data-connector-target="Running" data-connector-route="M224 894 L256 894 L256 813.734 L120 813.734 L120 862.734" data-connector-key="2"/>
-      <rect x="168" y="784.734" width="40" height="21" rx="3" fill="#020617"/>
-      <text class="state-label" data-label-owner="transition/6" x="188" y="799.734" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
-        <tspan x="188" y="799.734">tick</tspan>
+      <path class="state-connector" d="M224 894 L248 894 Q256 894 256 886 L256 821 Q256 813 248 813 L132 813 Q124 813 124 821 L124 862" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-6c-69-66-65-63-79-63-6c-65-2d-64-61-72-6b-sl-arrow)" data-connector-id="transition/6" data-connector-source="Running" data-connector-target="Running" data-connector-route="M224 894 L256 894 L256 813 L124 813 L124 862" data-connector-key="2"/>
+      <rect x="170" y="784" width="40" height="21" rx="3" fill="#020617"/>
+      <text class="state-label" data-label-owner="transition/6" x="190" y="799" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#ffffff">
+        <tspan x="190" y="799">tick</tspan>
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/7" data-source="Running" data-target="*end*" data-display-source="Running" data-display-target="*end*">

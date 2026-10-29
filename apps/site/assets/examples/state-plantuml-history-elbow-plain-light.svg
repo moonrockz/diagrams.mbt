@@ -35,33 +35,33 @@
   </g>
   <g class="state-connections">
     <g class="state-connection" data-state-id="transition/2" data-source="Service.*start*Service" data-target="Service.Worker" data-display-source="Service.*start*Service" data-display-target="Service.Worker">
-      <path class="state-connector" d="M404 795 L404 827 L400 827 L400 1068.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/2" data-connector-source="Service.*start*Service" data-connector-target="Service.Worker" data-connector-route="M404 795 L404 827 L400 827 L400 1068.734" data-connector-key="0"/>
+      <path class="state-connector" d="M404 795 L404 1068" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/2" data-connector-source="Service.*start*Service" data-connector-target="Service.Worker" data-connector-route="M404 795 L404 1068" data-connector-key="0"/>
     </g>
     <g class="state-connection" data-state-id="transition/3" data-source="Service.Worker" data-target="Service.Worker" data-display-source="Service.Worker" data-display-target="Service.Worker">
-      <path class="state-connector" d="M504 1100 L536 1100 L536 1028.734 L496 1028.734 L496 1068.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/3" data-connector-source="Service.Worker" data-connector-target="Service.Worker" data-connector-route="M504 1100 L536 1100 L536 1028.734 L496 1028.734 L496 1068.734" data-connector-key="1"/>
-      <rect x="516" y="1035.367" width="40" height="21" rx="3" fill="#f4f5f7"/>
-      <text class="state-label" data-label-owner="transition/3" x="536" y="1050.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
-        <tspan x="536" y="1050.367">work</tspan>
+      <path class="state-connector" d="M504 1100 L536 1100 L536 1028 L492 1028 L492 1068" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/3" data-connector-source="Service.Worker" data-connector-target="Service.Worker" data-connector-route="M504 1100 L536 1100 L536 1028 L492 1028 L492 1068" data-connector-key="1"/>
+      <rect x="516" y="1035" width="40" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/3" x="536" y="1050" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="536" y="1050">work</tspan>
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/6" data-source="Service.CONC1.*start*CONC1" data-target="Service.CONC1.Monitor" data-display-source="Service.CONC1.*start*CONC1" data-display-target="Service.CONC1.Monitor">
-      <path class="state-connector" d="M404 1557 L404 1589 L400 1589 L400 1830.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/6" data-connector-source="Service.CONC1.*start*CONC1" data-connector-target="Service.CONC1.Monitor" data-connector-route="M404 1557 L404 1589 L400 1589 L400 1830.734" data-connector-key="2"/>
+      <path class="state-connector" d="M404 1557 L404 1830" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/6" data-connector-source="Service.CONC1.*start*CONC1" data-connector-target="Service.CONC1.Monitor" data-connector-route="M404 1557 L404 1830" data-connector-key="2"/>
     </g>
     <g class="state-connection" data-state-id="transition/7" data-source="Service.CONC1.Monitor" data-target="Service.CONC1.Monitor" data-display-source="Service.CONC1.Monitor" data-display-target="Service.CONC1.Monitor">
-      <path class="state-connector" d="M504 1862 L536 1862 L536 1790.734 L496 1790.734 L496 1830.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/7" data-connector-source="Service.CONC1.Monitor" data-connector-target="Service.CONC1.Monitor" data-connector-route="M504 1862 L536 1862 L536 1790.734 L496 1790.734 L496 1830.734" data-connector-key="3"/>
-      <rect x="512" y="1797.367" width="48" height="21" rx="3" fill="#f4f5f7"/>
-      <text class="state-label" data-label-owner="transition/7" x="536" y="1812.367" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
-        <tspan x="536" y="1812.367">check</tspan>
+      <path class="state-connector" d="M504 1862 L536 1862 L536 1790 L492 1790 L492 1830" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/7" data-connector-source="Service.CONC1.Monitor" data-connector-target="Service.CONC1.Monitor" data-connector-route="M504 1862 L536 1862 L536 1790 L492 1790 L492 1830" data-connector-key="3"/>
+      <rect x="512" y="1797" width="48" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/7" x="536" y="1812" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="536" y="1812">check</tspan>
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/10" data-source="*start*" data-target="Service" data-display-source="*start*" data-display-target="Service">
       <path class="state-connector" d="M164 176 L164 208 L697.067 208 L697.067 449" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/10" data-connector-source="*start*" data-connector-target="Service" data-connector-route="M164 176 L164 208 L697.067 208 L697.067 449" data-connector-key="4"/>
     </g>
     <g class="state-connection" data-state-id="transition/11" data-source="Service" data-target="Paused" data-display-source="Service" data-display-target="Paused">
-      <path class="state-connector" d="M697.067 2134 L697.067 2166 L160 2166 L160 2358.734" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/11" data-connector-source="Service" data-connector-target="Paused" data-connector-route="M697.067 2134 L697.067 2166 L160 2166 L160 2358.734" data-connector-key="5"/>
-      <rect x="404.533" y="2137" width="48" height="21" rx="3" fill="#f4f5f7"/>
-      <text class="state-label" data-label-owner="transition/11" x="428.533" y="2152" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
-        <tspan x="428.533" y="2152">pause</tspan>
+      <path class="state-connector" d="M697.067 2134 L697.067 2166 L164 2166 L164 2358" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/11" data-connector-source="Service" data-connector-target="Paused" data-connector-route="M697.067 2134 L697.067 2166 L164 2166 L164 2358" data-connector-key="5"/>
+      <rect x="406.533" y="2137" width="48" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/11" x="430.533" y="2152" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="430.533" y="2152">pause</tspan>
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/12" data-source="Paused" data-target="Service.*historical*Service" data-display-source="Paused" data-display-target="Service.*historical*Service">
@@ -72,10 +72,10 @@
       </text>
     </g>
     <g class="state-connection" data-state-id="transition/13" data-source="Paused" data-target="Service.*deephistory*Service" data-display-source="Paused" data-display-target="Service.*deephistory*Service">
-      <path class="state-connector" d="M256 2358.734 L256 2318.734 L966.461 2318.734 L966.461 842.345" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/13" data-connector-source="Paused" data-connector-target="Service.*deephistory*Service" data-connector-route="M256 2358.734 L256 2318.734 L966.461 2318.734 L966.461 842.345" data-connector-key="7"/>
-      <rect x="918.461" y="1551.54" width="96" height="21" rx="3" fill="#f4f5f7"/>
-      <text class="state-label" data-label-owner="transition/13" x="966.461" y="1566.54" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
-        <tspan x="966.461" y="1566.54">deep resume</tspan>
+      <path class="state-connector" d="M252 2358 L252 2318 L966.461 2318 L966.461 842.345" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#sl-u-73-74-61-74-65-2d-70-6c-61-6e-74-75-6d-6c-2d-68-69-73-74-6f-72-79-2d-65-6c-62-6f-77-2d-70-6c-61-69-6e-2d-6c-69-67-68-74-sl-arrow)" data-connector-id="transition/13" data-connector-source="Paused" data-connector-target="Service.*deephistory*Service" data-connector-route="M252 2358 L252 2318 L966.461 2318 L966.461 842.345" data-connector-key="7"/>
+      <rect x="918.461" y="1551.173" width="96" height="21" rx="3" fill="#f4f5f7"/>
+      <text class="state-label" data-label-owner="transition/13" x="966.461" y="1566.173" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'DejaVu Sans Mono', 'Liberation Mono', monospace" font-size="13" font-weight="400" fill="#111827">
+        <tspan x="966.461" y="1566.173">deep resume</tspan>
       </text>
     </g>
   </g>

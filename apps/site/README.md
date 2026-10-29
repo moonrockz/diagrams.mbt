@@ -1,7 +1,7 @@
 # diagrams.mbt site consumer
 
 `moonrockz/diagrams-site` is an unpublished native consumer of
-[`moonrockz/telescope@0.4.0`](https://mooncakes.io/docs/moonrockz/telescope).
+[`moonrockz/telescope@0.5.0`](https://mooncakes.io/docs/moonrockz/telescope).
 The published diagram libraries have no Telescope or UI dependency.
 
 `consumer/` supplies compiled Mermaid and PlantUML fence callbacks to the released
@@ -34,25 +34,27 @@ entries and the exact bytes of their 311 supplied artifacts. It writes
 `_build/site-consumer-report.json`. `-- --existing-output` checks builds already
 on disk. No Telescope checkout, path override or source build is used.
 
-`scripts/telescope.mbtx` downloads CLI **v0.4.0** from the
-[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.4.0), verifies
+`scripts/telescope.mbtx` downloads CLI **v0.5.0** from the
+[GitHub release](https://github.com/moonrockz/telescope/releases/tag/v0.5.0), verifies
 both the pinned SHA-256 and companion checksum, extracts it below
 `_build/tools/telescope/`, and checks `--version` before use. It supports the
 release's qualified Linux x64 and macOS arm64 archives:
 
 | Archive | SHA-256 |
 | --- | --- |
-| `telescope-0.4.0-linux-x64.tar.gz` | `6dda974d670141382122519745057d4120bec0a5b5ff3895646fb07b5393b14c` |
-| `telescope-0.4.0-macos-arm64.tar.gz` | `b2042899a1ea9f51dde1b3c168211ad3c59be8ad6fddbd19f8b311fb0a80d591` |
+| `telescope-0.5.0-linux-x64.tar.gz` | `ed25fe34173e7032035708bcfdaec06500bacfa9366916851b75ca675fb8ed6a` |
+| `telescope-0.5.0-macos-arm64.tar.gz` | `8af13f0e2727eac93e5020f11c9a52400087cef9900d746e4c581b4337a2f153` |
 
-The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40767534086)
-published source `8ab416c7f6e1fc1973f5a4b0caac628978f0895f`. See the
-[0.4.0 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.4.0.md)
+The owner-approved [release run](https://github.com/moonrockz/telescope/actions/runs/40895904607)
+published source `4116b2d51da5ff8999ca8437e4aa0a973e7babdf`. See the
+[0.5.0 release guide](https://github.com/moonrockz/telescope/blob/main/docs/release/0.5.0.md)
 for the public-install qualification. The downloader never substitutes a
 binary from PATH or rebuilds Telescope. The library and CLI embed their CSS and
 browser islands; Bun installs only the locked browser test dependencies.
-This release supplies shared viewport controls, public theme hooks, branding
-inputs and the host raster adapter contract. The library consumer supplies the
+This release adds independent index-card Preview/Source tabs, exact original
+syntax and filename selection while retaining mounted viewport state. Shared
+viewport controls, public theme hooks, branding inputs and the host raster
+adapter contract remain available. The library consumer supplies the
 compiled portable raster worker as a local static asset.
 
 ## Commands and content
@@ -146,5 +148,5 @@ retain original SVG actions and preserve filtering and viewport state. Scripts
 disabled leaves static previews and source/download links usable. See
 [gallery controls and exports](../../docs/guides/diagram-gallery.md).
 
-See [0.4.0 adoption verification](verification-0.4.0.md) for current publication
+See [0.5.0 adoption verification](verification-0.5.0.md) for current publication
 and consumer evidence.

@@ -20,6 +20,7 @@ for (const path of [
 }
 for (const [name, , svg] of JSON.parse(await readFile('tests/animation-acceptance/__snapshot__/players.json', 'utf8')) as [string,string,string][]) if (name.startsWith('swimlane-')) expected.set(name + '.svg', svg);
 for (const [name, theme, svg] of JSON.parse(await readFile('tests/bpmn-acceptance/__snapshot__/scenes.json', 'utf8')) as [string,string,string][]) expected.set('bpmn-' + name.replace('.bpmn/', '-') + '-' + theme + '.svg', svg);
+for (let i = 1; i <= 38; i++) { const name = String(i).padStart(2, '0') + '.mmd'; expected.set(name, await readFile('tests/corpus/mermaid-12.2.0/examples/' + name, 'utf8')); }
 expected.set('sequence-basic.mmd', await readFile('tests/corpus/mermaid-12.2.0/examples/01.mmd', 'utf8'));
 for (const name of ['process-di', 'collaboration-di']) expected.set(name + '.bpmn', await readFile('tests/corpus/bpmn-render/' + name + '.bpmn', 'utf8'));
 for (const name of ['activities','events','collaboration','di-views','choreography-conversation']) expected.set('document-' + name + '.bpmn', await readFile('tests/corpus/bpmn-model/' + name + '.bpmn', 'utf8'));
@@ -82,6 +83,48 @@ async function checkViewport(page: Page) {
   await page.emulateMedia({media: 'screen'});
 }
 
+
+async function checkSourceTabs(page: Page) {
+  const cards = page.locator('[data-gallery-example]');
+  assert.ok(await cards.count() > 80, 'Original sources cover corpus and gallery families');
+  const ids = await page.locator('[id]').evaluateAll(nodes => nodes.map(node => node.id));
+  assert.equal(new Set(ids).size, ids.length, 'Tab and panel IDs are unique');
+  for (const source of await page.locator('[data-gallery-source]').all()) {
+    const filename = await source.locator('a[download]').getAttribute('href');
+    assert.ok(filename);
+    assert.equal(await source.locator('code').textContent(), await readFile(fileURLToPath(new URL(filename, root)), 'utf8'), filename + ': exact declared source');
+  }
+  const first = cards.first(), second = cards.nth(1);
+  const preview = first.getByRole('tab', {name: 'Preview', exact: true});
+  const source = first.getByRole('tab', {name: 'Source', exact: true});
+  const view = first.locator('[data-diagram-viewer]').first();
+  await button(view, 'Zoom in').click();
+  await view.locator('.diagram-viewer__viewport').focus();
+  await page.keyboard.press('ArrowLeft');
+  const transform = await view.locator('.diagram-viewer__content').evaluate(node => (node as HTMLElement).style.transform);
+  for (const width of [360, 768, 1440]) {
+    await page.setViewportSize({width, height: 900});
+    await preview.focus(); await preview.press('End');
+    assert.equal(await source.getAttribute('aria-selected'), 'true');
+    assert.ok(await source.evaluate(node => node === document.activeElement));
+    assert.equal(await second.getByRole('tab', {name: 'Preview', exact: true}).getAttribute('aria-selected'), 'true');
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Source fits ' + width);
+    if (width === 360) { const theme = await page.evaluate(() => matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); await page.screenshot({path: `_build/local-source-${theme}-360.png`}); }
+    await source.press('Home');
+    await waitFor(async () => await view.locator('.diagram-viewer__content').evaluate(node => (node as HTMLElement).style.transform) === transform, 'Mounted preview retains zoom/pan');
+  }
+  await source.click();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', {configurable: true, value: {writeText: () => Promise.reject(new Error('Denied'))}}));
+  await button(first, 'Copy source').click();
+  await waitFor(async () => (await first.locator('[role=status]').allTextContents()).some(text => text.includes('Copy unavailable')), 'Clipboard denial leaves source selectable');
+  const pending = page.waitForEvent('download');
+  await first.locator('[data-gallery-source] a[download]').click();
+  const download = await pending;
+  assert.equal(await download.failure(), null);
+  assert.equal(await readFile((await download.path())!, 'utf8'), await first.locator('[data-gallery-source] code').textContent());
+  await preview.click(); await button(view, 'Fit diagram').click();
+  assert.ok(await page.locator('[data-source-unavailable]').count() > 0, 'Model-only fixtures report unavailable original text');
+}
 
 type ExportOptions = { theme: string; background: string | null; quality: number; width?: number };
 type ExportResult = { bytes: number[] | Uint8Array; mediaType: string; width: number; height: number };
@@ -315,8 +358,9 @@ try {
     const players = references.filter(reference => reference.endsWith('.html'));
     assert.equal(players.length, 46 + expanded.filter(([,mime]) => mime === 'text/html').length + flowcharts.filter(([,mime]) => mime === 'text/html').length + states.filter(([,mime]) => mime === 'text/html').length);
     assert.equal(new Set(references.filter(reference => reference.endsWith('.puml'))).size, 7 + expanded.filter(([name]) => name.endsWith('.puml')).length + flowcharts.filter(([name]) => name.endsWith('.puml')).length + states.filter(([name]) => name.endsWith('.puml')).length);
-    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 6 + expanded.filter(([name]) => name.endsWith('.mmd')).length + flowcharts.filter(([name]) => name.endsWith('.mmd')).length + states.filter(([name]) => name.endsWith('.mmd')).length);
+    assert.equal(new Set(references.filter(reference => reference.endsWith('.mmd'))).size, 44 + expanded.filter(([name]) => name.endsWith('.mmd')).length + flowcharts.filter(([name]) => name.endsWith('.mmd')).length + states.filter(([name]) => name.endsWith('.mmd')).length);
     if (!viewportOnly && preference === 'light') convertedPreviews = await qualifyEveryPreview(page, canonicals);
+    await checkSourceTabs(page);
     await checkViewport(page);
     await checkExports(page);
     if (!viewportOnly) for (const file of players) {
@@ -362,12 +406,16 @@ try {
   assert.ok(await staticPage.locator('img').count() > 100);
   assert.equal(await staticPage.locator('.diagram-viewer__toolbar, .diagram-viewer__export, button').count(), 0, 'No inactive controls without JavaScript');
   assert.ok(await staticPage.locator('a[href="01-dark.svg"]').isVisible());
+  const staticSource = staticPage.locator('[data-gallery-source]').first();
+  await staticSource.locator('summary').click();
+  assert.equal(await staticSource.locator('code').textContent(), expected.get('01.mmd'));
+  assert.ok(await staticSource.locator('a[download]').isVisible());
   assert.ok(await staticPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   await staticPage.close();
   await checkExpandedFallback(fallback);
   await fallback.close();
   for (const [file, hash] of sourceDigests) assert.equal(digest(await readFile(fileURLToPath(new URL(file, root)))), hash, file + ': source/static bytes retained after interaction');
   assert.deepEqual(external, []); assert.deepEqual(errors, []);
-  await writeFile('_build/local-gallery-qualification.json', JSON.stringify({mode: viewportOnly ? 'viewport-only' : 'complete', previewCount, convertedPreviews, staticArtifactCount: sourceDigests.size, staticDigests: Object.fromEntries(sourceDigests), externalRequests: external, errors, viewport: true, fullscreen: ['native','modal'], pointer: ['mouse','touch','cancel'], keyboard: true, print: true, noScript: true, raster: !viewportOnly}, null, 2) + '\n');
+  await writeFile('_build/local-gallery-qualification.json', JSON.stringify({mode: viewportOnly ? 'viewport-only' : 'complete', previewCount, convertedPreviews, staticArtifactCount: sourceDigests.size, staticDigests: Object.fromEntries(sourceDigests), externalRequests: external, errors, viewport: true, fullscreen: ['native','modal'], pointer: ['mouse','touch','cancel'], keyboard: true, print: true, noScript: true, sourceTabs: true, exactSources: true, raster: !viewportOnly}, null, 2) + '\n');
   console.log(`Gallery: source/static digests, all preview viewports, offline file use, native/modal fullscreen, mouse/touch/keyboard, themes, print and no-script verified (${viewportOnly ? 'viewport-only review; raster qualification pending' : 'real PNG/JPEG downloads and offline players qualified'}).`);
 } finally { await browser.close(); }

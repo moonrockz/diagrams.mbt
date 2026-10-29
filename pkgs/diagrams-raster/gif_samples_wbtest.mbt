@@ -83,3 +83,56 @@ test "GIF node visits retain bound terms without synthetic paths" {
     repeating.sample_at(200L),
   )
 }
+
+///|
+test "decision SVG PNG and GIF consume identical final anchors paths and masks" {
+  let view = @swimlane.Swimlane::new(
+    "decision exports",
+    [
+      @swimlane.Node::new("A", shape="diamond"),
+      @swimlane.Node::new("B"),
+      @swimlane.Node::new("C"),
+    ],
+    [
+      @swimlane.Connection::new("AB", "A", "B"),
+      @swimlane.Connection::new("AC", "A", "C"),
+    ],
+  )
+  for style in [@svg.ConnectorStyle::Elbow, Rounded, Curved] {
+    let renderer = @svg.SvgRenderer::new(
+      mode=Fixed(Light),
+      connectors=@svg.ConnectorOptions::new(style~),
+    )
+    let diagram = @render.Diagram::Swimlane(view)
+    let scene = renderer.scene(diagram).scene.unwrap()
+    let canonical = @render.Renderer::render(renderer, diagram).output.unwrap()
+    assert_eq(scene.canonical_svg, canonical)
+    let paths = @svg.inspect_connectors(canonical)
+    let key = scene.catalog.connection("AB").unwrap().key
+    let plan = @animation.PlaybackPlan::scenario(scene.catalog, Step(key, 100L)).plan.unwrap()
+    let options = GifOptions::new(size=Width(64), frame_rate=10)
+    let sampler = GifSampler::new(
+      scene,
+      plan,
+      options~,
+      limits=gif_test_limits(),
+    ).sampler.unwrap()
+    let frame = sampler.frame(1).frame.unwrap()
+    for occurrence in frame.occurrences {
+      guard occurrence.target is Connection(id~, path~, mask~, point~) else {
+        abort("expected connection")
+      }
+      let selected = paths.iter().find_first(p => p.id == id).unwrap()
+      assert_eq(path, selected.path.svg())
+      assert_eq(mask, selected.mask)
+      let sampled = gif_path(selected.path, 8192)
+      assert_eq(point, sampled.point(1.0))
+    }
+    let still = rasterize(canonical, options=StillOptions::new(size=Width(64)))
+    assert_true(still.image is Some(_), msg=@debug.to_string(still.diagnostics))
+    let gif = export_gif(scene, plan, options~, limits=gif_test_limits())
+    assert_true(gif.image is Some(_), msg=@debug.to_string(gif.diagnostics))
+    assert_eq(gif.image.unwrap().media_type, "image/gif")
+    assert_eq(scene.canonical_svg, canonical)
+  }
+}

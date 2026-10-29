@@ -308,3 +308,279 @@ test "diagonal forward handoffs use clear spare sides before bundles become crow
     }
   }
 }
+
+///|
+test "review decision uses available distinct diamond points before sloping edges" {
+  let geometry = clean(example(TB))
+  let diamond = placed(geometry, "B")
+  let box = diamond.outline_box
+  let points = [
+    Point::{ x: box.x + box.width, y: box.y + box.height / 2.0, },
+    { x: box.x + box.width / 2.0, y: box.y + box.height, },
+    { x: box.x, y: box.y + box.height / 2.0, },
+    { x: box.x + box.width / 2.0, y: box.y, },
+  ]
+  let endpoints = []
+  for edge in geometry.connections {
+    if edge.source == "B" {
+      endpoints.push(edge.line[0])
+    }
+    if edge.target == "B" {
+      endpoints.push(edge.line[edge.line.length() - 1])
+    }
+  }
+  // This example has five incidents, so at least two must use a safe fallback.
+  // Uncrowded sides must still use their exact measured point.
+  assert_true(endpoints.iter().filter(p => points.contains(p)).count() >= 2)
+}
+
+///|
+test "minimal decision fan uses three distinct natural points" {
+  let view = @model.Swimlane::new(
+    "decision",
+    [
+      @model.Node::new("A"),
+      @model.Node::new("B", shape="diamond"),
+      @model.Node::new("C"),
+      @model.Node::new("D"),
+    ],
+    [
+      @model.Connection::new("AB", "A", "B"),
+      @model.Connection::new("BC", "B", "C"),
+      @model.Connection::new("BD", "B", "D"),
+    ],
+  )
+  let geometry = clean(view)
+  let box = placed(geometry, "B").outline_box
+  for edge in geometry.connections {
+    let p = if edge.source == "B" {
+      edge.line[0]
+    } else {
+      edge.line[edge.line.length() - 1]
+    }
+    assert_true(
+      (
+        (p.x - box.x - box.width / 2.0).abs() < 0.001 &&
+        (p.y == box.y || p.y == box.y + box.height)
+      ) ||
+      (
+        (p.y - box.y - box.height / 2.0).abs() < 0.001 &&
+        (p.x == box.x || p.x == box.x + box.width)
+      ),
+      msg=@debug.to_string(p),
+    )
+  }
+}
+
+///|
+test "measured diamond points and marked approaches follow all four directions" {
+  for direction in [@model.Direction::TB, BT, LR, RL] {
+    for shape in ["diamond", "choice"] {
+      let view = @model.Swimlane::new(
+        "measured decision",
+        [
+          @model.Node::new(
+            "A",
+            shape~,
+            label="a deliberately wide decision label",
+          ),
+          @model.Node::new("B", shape="rounded"),
+        ],
+        [@model.Connection::new("AB", "A", "B", source_marker=Arrow)],
+        direction~,
+      )
+      let original = @debug.to_string(view)
+      let geometry = clean(view)
+      assert_eq(@debug.to_string(view), original)
+      assert_eq(layout(view).geometry, Some(geometry))
+      let source = placed(geometry, "A")
+      assert_true(source.outline_box.width != source.outline_box.height)
+      let edge = geometry.connections[0]
+      let chosen = match direction {
+        TB => 1
+        BT => 3
+        LR => 0
+        RL => 2
+      }
+      assert_eq(
+        routed_side(edge.line, true),
+        chosen,
+        msg=@debug.to_string((direction, shape, geometry)),
+      )
+      assert_eq(edge.line[0], port(source, chosen, 0.5))
+      assert_true(
+        (edge.line[0].x - edge.line[1].x).abs() +
+        (edge.line[0].y - edge.line[1].y).abs() >=
+        24.0,
+      )
+      assert_eq(edge.connection, view.connections[0])
+    }
+  }
+}
+
+///|
+test "diamond parallel reciprocal and self terminals remain distinct with safe constrained fallback" {
+  for direction in [@model.Direction::TB, BT, LR, RL] {
+    for count in [2, 4, 8] {
+      let view = @model.Swimlane::new(
+        "crowded diamond",
+        [@model.Node::new("A", shape="diamond"), @model.Node::new("B")],
+        Array::makei(count, i => {
+          @model.Connection::new("edge-\{i}", "A", "B", source_marker=Arrow)
+        }),
+        direction~,
+      )
+      for constrained in [false, true] {
+        let hints = if constrained {
+          view.connections.iter().map(e => (e.id, direction)).to_array()
+        } else {
+          []
+        }
+        let result = layout(view, direction_hints=hints)
+        assert_true(
+          result.geometry != None,
+          msg=@debug.to_string(result.diagnostics),
+        )
+        let geometry = result.geometry.unwrap()
+        assert_eq(check(geometry, palette(@theme.Theme::classic().light)), [])
+        let source = placed(geometry, "A")
+        let endpoints = []
+        for edge in geometry.connections {
+          assert_true(on_shape(edge.line[0], source))
+          assert_false(
+            endpoints.contains(edge.line[0]),
+            msg="independent connections do not share a point",
+          )
+          endpoints.push(edge.line[0])
+          if constrained {
+            assert_eq(
+              routed_side(edge.line, true),
+              match direction {
+                LR => 0
+                RL => 2
+                TB => 1
+                BT => 3
+              },
+            )
+          }
+          assert_eq(edge.connection, view.connections[edge.index])
+        }
+      }
+    }
+    let geometry = clean(example(direction))
+    let self_edge = geometry.connections
+      .iter()
+      .find_first(e => e.source == e.target)
+      .unwrap()
+    assert_true(
+      self_edge.line[0] != self_edge.line[self_edge.line.length() - 1],
+    )
+  }
+}
+
+///|
+test "attachment profiles keep rounded and box spans usable and bounded" {
+  for side in 0..<4 {
+    for shape in ["rect", "rounded", "stadium", "circle", "diamond"] {
+      let profile = attachment_profile(shape, 160.0, 80.0, side, 8.0)
+      assert_true(
+        profile.padding >= 8.0 && profile.padding <= profile.extent / 4.0,
+      )
+      assert_eq(profile.fraction(0, 1), 0.5)
+      assert_eq(profile.sides(side, true), [side])
+      assert_true(profile.sides(side, false).length() <= 4)
+      for count in [2, 3, 8] {
+        let first = profile.fraction(0, count)
+        let last = profile.fraction(count - 1, count)
+        assert_true(first > 0.0 && last < 1.0)
+        assert_true((first + last - 1.0).abs() < 0.001)
+      }
+    }
+  }
+  let result = layout(example(TB), limits=Limits::new(work=100))
+  assert_eq(result.geometry, None)
+  assert_true(
+    result.diagnostics.iter().any(d => d.code == "swimlane/layout-limit"),
+  )
+}
+
+///|
+test "blocked preferred point selects a complete clear alternative route" {
+  let nodes = [
+    @model.Node::new("A", shape="diamond"),
+    @model.Node::new("B"),
+    @model.Node::new("blocked"),
+  ]
+  let boxes = [
+    Rect::{ x: 100.0, y: 100.0, width: 160.0, height: 80.0, },
+    { x: 500.0, y: 100.0, width: 112.0, height: 64.0, },
+    { x: 270.0, y: 110.0, width: 40.0, height: 60.0, },
+  ]
+  let shapes = Array::makei(3, i => Shape::{
+    id: nodes[i].id,
+    index: i,
+    kind: Node,
+    shape: nodes[i].shape,
+    box: boxes[i],
+    outline_box: boxes[i],
+    label: None,
+    parent: None,
+    lane: None,
+    expanded: true,
+  })
+  let view = @model.Swimlane::new(
+    "blocked",
+    nodes,
+    [@model.Connection::new("AB", "A", "B")],
+    direction=LR,
+  )
+  let budget : Budget = {
+    limits: Limits::new(),
+    diagnostics: [],
+    work: 0,
+    failed: false,
+  }
+  let edges = route_connections(view, [(0, 0, 1)], shapes, [-1, -1, -1], budget)
+  assert_false(budget.failed, msg=@debug.to_string(budget.diagnostics))
+  assert_eq(edges.length(), 1)
+  let exhausted : Budget = {
+    limits: Limits::new(work=1),
+    diagnostics: [],
+    work: 0,
+    failed: false,
+  }
+  assert_eq(
+    route_connections(view, [(0, 0, 1)], shapes, [-1, -1, -1], exhausted),
+    [],
+  )
+  assert_true(exhausted.failed)
+  assert_eq(exhausted.diagnostics[0].code, "swimlane/layout-limit")
+  assert_true(routed_side(edges[0].line, true) != 0)
+  for i in 1..<edges[0].line.length() {
+    assert_false(crosses(edges[0].line[i - 1], edges[0].line[i], boxes[2]))
+  }
+  let geometry : Geometry = {
+    view,
+    shapes: ReadOnlyArray::from_array(shapes),
+    connections: ReadOnlyArray::from_array(edges),
+    width: 800,
+    height: 400,
+  }
+  assert_eq(check(geometry, palette(@theme.Theme::classic().light)), [])
+  let broken = {
+    ..edges[0],
+    line: ReadOnlyArray::from_array([
+      Point::{ x: 260.0, y: 140.0, },
+      { x: 500.0, y: 140.0, },
+    ]),
+  }
+  let findings = check(
+    { ..geometry, connections: [broken], },
+    palette(@theme.Theme::classic().light),
+  )
+  assert_true(
+    findings
+    .iter()
+    .any(f => f.rule == Overlap && f.identities.contains("blocked")),
+  )
+}
