@@ -11,7 +11,7 @@ import {
 }
 
 ///|
-let version : String = "0.4.0"
+let version : String = "0.5.0"
 
 ///|
 async fn output(command : String, args : Array[String]) -> String {
@@ -27,11 +27,11 @@ async fn install() -> String {
   let (platform, expected) = match (system, machine) {
     ("Darwin", "arm64") =>
       (
-        "macos-arm64", "b2042899a1ea9f51dde1b3c168211ad3c59be8ad6fddbd19f8b311fb0a80d591",
+        "macos-arm64", "8af13f0e2727eac93e5020f11c9a52400087cef9900d746e4c581b4337a2f153",
       )
     ("Linux", "x86_64") =>
       (
-        "linux-x64", "6dda974d670141382122519745057d4120bec0a5b5ff3895646fb07b5393b14c",
+        "linux-x64", "ed25fe34173e7032035708bcfdaec06500bacfa9366916851b75ca675fb8ed6a",
       )
     _ => fail("Telescope \{version} is not qualified for \{system}/\{machine}")
   }

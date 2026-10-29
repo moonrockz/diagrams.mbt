@@ -292,7 +292,9 @@ try {
           const viewer = indexCard.locator('[data-diagram-viewer]:visible').first();
           await viewer.getByRole('button', {name: 'Zoom in', exact: true}).click();
           await viewer.locator('.diagram-viewer__viewport').focus(); await galleryPage.keyboard.press('ArrowLeft');
-          const transform = await viewer.locator('.diagram-viewer__content').evaluate(node => (node as HTMLElement).style.transform);
+          const content = await viewer.locator('.diagram-viewer__content').elementHandle();
+          assert.ok(content);
+          const transform = await content.evaluate(node => (node as HTMLElement).style.transform);
           for (let repeat = 0; repeat < 3; repeat++) {
             await preview.focus(); await preview.press('End');
             check(await source.getAttribute('aria-selected') === 'true', 'Index End selects Source');
@@ -303,8 +305,9 @@ try {
             const href = await download.getAttribute('href');
             check(href !== null && href.startsWith(base), 'Index source URL remains tree scoped');
             if (href) check(await indexSource.locator('pre code').first().textContent() === await (await galleryPage.request.get(new URL(href, site).href)).text(), 'Index source equals original download');
+            if (repeat === 0 && (width === 360 || width === 1440)) await indexCard.screenshot({ path: `_build/handoff/source-tabs-${treeName}-${width}-${colorScheme}.png` });
             await source.press('Home');
-            await galleryPage.waitForFunction(({id, transform}) => (document.getElementById(id)?.querySelector('.diagram-viewer__content') as HTMLElement)?.style.transform === transform, {id: await preview.getAttribute('aria-controls'), transform});
+            await galleryPage.waitForFunction(({content, transform}) => content.isConnected && (content as HTMLElement).style.transform === transform, {content, transform});
           }
           const ids = await galleryPage.locator('[id]').evaluateAll(nodes => nodes.map(node => node.id));
           check(new Set(ids).size === ids.length, 'Index IDs are unique');
@@ -436,10 +439,12 @@ try {
     await root.getByLabel('JPEG quality', { exact: true }).fill('80');
     await root.locator('[aria-label="Zoom in"]').click();
     await root.locator('.diagram-viewer__viewport').focus(); await gallery.keyboard.press('ArrowLeft');
-    const transform = await root.locator('.diagram-viewer__content').getAttribute('style');
+    const content = await root.locator('.diagram-viewer__content').elementHandle();
+    assert.ok(content);
+    const transform = await content.getAttribute('style');
     await card.getByRole('tab', {name: 'Source', exact: true}).click();
     await card.getByRole('tab', {name: 'Preview', exact: true}).click();
-    await gallery.waitForFunction(transform => (document.querySelector('.gallery-card .diagram-viewer__content') as HTMLElement).getAttribute('style') === transform, transform);
+    await gallery.waitForFunction(({content, transform}) => content.isConnected && content.getAttribute('style') === transform, {content, transform});
     await galleryExport(gallery, root, 'png', colorScheme === 'light');
     await galleryExport(gallery, root, 'jpeg', colorScheme === 'light');
     assert.equal(await root.locator('.diagram-viewer__content').getAttribute('style'), transform, 'Gallery export changes zoom/pan');
@@ -510,4 +515,4 @@ if (failures.length) {
   for (const f of failures) console.error(`FAIL: ${f}`);
   process.exit(1);
 }
-console.log(`Published Telescope0.4 ${treeName}: ${galleryInventory.length} entries, ${galleryInventory.length * 12} responsive detail cases, ${galleryConversions} real UI conversions match compiled-library bytes (${portableComparisons} also match four-target portable fixtures); branding/assets, root-scoped links, cancellation/error/recovery, option race, isolation, filters/tabs and landing screenshots passed.`);
+console.log(`Published Telescope0.5 ${treeName}: ${galleryInventory.length} entries, ${galleryInventory.length * 12} responsive detail cases, ${galleryConversions} real UI conversions match compiled-library bytes (${portableComparisons} also match four-target portable fixtures); branding/assets, root-scoped links, cancellation/error/recovery, option race, isolation, filters/tabs and landing screenshots passed.`);

@@ -5,7 +5,7 @@ version = "0.4.0"
 import {
   "moonbitlang/async@0.22.5",
   "moonbitlang/x@0.5.5",
-  "moonrockz/telescope@0.4.0",
+  "moonrockz/telescope@0.5.0",
   "bobzhang/beautiful_mermaid@0.2.0",
   "moonrockz/diagrams-mermaid@0.4.0",
   "moonrockz/diagrams@0.4.0",

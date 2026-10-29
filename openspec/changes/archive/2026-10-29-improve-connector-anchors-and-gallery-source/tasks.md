@@ -27,7 +27,7 @@ Bead: diagrams-q4b.3
 - [x] 3.1 Create a matching upstream Telescope change and reuse shared source panels for index cards with unique per-entry tab/panel IDs; verify exact declared source, multiple filenames, copy/download actions and independent card state.
 - [x] 3.2 Implement accessible keyboard tabs and no-script source fallback while preserving mounted viewer instances; verify retained zoom/pan, repeated hide/show, fullscreen/export controls, filters, detail links and clipboard-denied behavior.
 - [x] 3.3 Add shared styling hooks and source-text escaping tests; verify hostile input, narrow source scrolling, both themes, missing optional source, local assets and stable version-tree URLs in upstream browser/consumer checks.
-- [ ] 3.4 Prepare and qualify the upstream library and matching CLI release under its repository rules, obtain any separately required release approval, and verify published artifacts exist before consumer pin adoption.
+- [x] 3.4 Prepare and qualify the upstream library and matching CLI release under its repository rules, obtain any separately required release approval, and verify published artifacts exist before consumer pin adoption.
 
 ## 4. Adopt source tabs and extend the local gallery
 
@@ -35,10 +35,10 @@ Bead: diagrams-q4b.4
 
 Depends on groups 2 and 3.
 
-- [ ] 4.1 Adopt the qualified published Telescope library/CLI and verified archive hashes; verify a fresh diagrams.mbt consumer builds root and next without a sibling checkout or generated-HTML patches.
+- [x] 4.1 Adopt the qualified published Telescope library/CLI and verified archive hashes; verify a fresh diagrams.mbt consumer builds root and next without a sibling checkout or generated-HTML patches.
 - [x] 4.2 Associate local gallery examples with original declared text and add Preview/Source inspection shared across theme variants; verify offline source text and downloads and explicit source-unavailable handling for model-only fixtures.
-- [ ] 4.3 Extend the existing gallery browser matrix for index/detail/local source tabs, multiple sources, exact text, keyboard/no-script reading and 360/768/1440 widths; verify retained viewport state, filters, source URLs and raster actions.
-- [ ] 4.4 Update site and local-gallery documentation and checked artifacts; verify root/next route/anchor compatibility and unchanged original source and historical release bytes.
+- [x] 4.3 Extend the existing gallery browser matrix for index/detail/local source tabs, multiple sources, exact text, keyboard/no-script reading and 360/768/1440 widths; verify retained viewport state, filters, source URLs and raster actions.
+- [x] 4.4 Update site and local-gallery documentation and checked artifacts; verify root/next route/anchor compatibility and unchanged original source and historical release bytes.
 
 ## 5. Verify the combined change
 
@@ -46,8 +46,8 @@ Bead: diagrams-q4b.5
 
 Depends on all prior groups.
 
-- [ ] 5.1 Run combined SVG, animation, raster, local-gallery and published-site browser qualification; verify natural attachments and their source text together in both themes and version trees.
-- [ ] 5.2 Run mise run format, mise run check and mise exec -- openspec validate --all --strict; verify all pass and inspect generated interfaces and reviewed connector-only snapshot changes.
+- [x] 5.1 Run combined SVG, animation, raster, local-gallery and published-site browser qualification; verify natural attachments and their source text together in both themes and version trees.
+- [x] 5.2 Run mise run format, mise run check and mise exec -- openspec validate --all --strict; verify all pass and inspect generated interfaces and reviewed connector-only snapshot changes.
 
 ## Workflow follow-up
 

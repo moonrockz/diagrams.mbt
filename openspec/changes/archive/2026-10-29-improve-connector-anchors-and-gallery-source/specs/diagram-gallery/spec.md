@@ -76,13 +76,13 @@ of inventing syntax from SVG. Local inspection SHALL work offline.
 
 ### Requirement: State guides and gallery compatibility
 
-Guides SHALL describe pinned syntax profiles, refusals, model construction,
+Guides SHALL cover pinned syntax profiles, refusals, model construction,
 geometry, connector options, playback/query limits and exhaustive enum migration.
-State pages SHALL obey versioned base paths, no-script/narrow browsing and both
-themes. Existing IDs, family anchors, routes and source bytes SHALL remain
-unchanged. Static SVG changes SHALL be limited to reviewed qualified connector
-geometry under the connector-rendering contract. Shared player updates SHALL be
-qualified separately. Historical release artifacts SHALL retain their bytes.
+State pages SHALL support versioned paths, no-script/narrow browsing and both
+themes. IDs, anchors, routes and source bytes SHALL remain unchanged. SVG changes
+SHALL be reviewed qualified connector geometry under connector-rendering. Shared
+player updates SHALL be qualified separately. Historical release artifacts SHALL
+retain their bytes.
 
 #### Scenario: Versioned no-script browsing
 
