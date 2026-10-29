@@ -72,3 +72,26 @@ of inventing syntax from SVG. Local inspection SHALL work offline.
 - **THEN** available original text is shown with its filename and download, or the example explicitly identifies unavailable source
 - **AND** the preview and existing exports remain usable
 
+## MODIFIED Requirements
+
+### Requirement: State guides and gallery compatibility
+
+Guides SHALL describe pinned syntax profiles, refusals, model construction,
+geometry, connector options, playback/query limits and exhaustive enum migration.
+State pages SHALL obey versioned base paths, no-script/narrow browsing and both
+themes. Existing IDs, family anchors, routes and source bytes SHALL remain
+unchanged. Static SVG changes SHALL be limited to reviewed qualified connector
+geometry under the connector-rendering contract. Shared player updates SHALL be
+qualified separately. Historical release artifacts SHALL retain their bytes.
+
+#### Scenario: Versioned no-script browsing
+
+- **WHEN** root and next state pages open without JavaScript at 360 CSS pixels in either theme
+- **THEN** preview, source, scope and downloads remain readable and all detail/asset/player links resolve in the selected version tree
+
+#### Scenario: Existing gallery regression
+
+- **WHEN** the checked gallery inventory and prior artifact digests are compared after state support
+- **THEN** all existing examples retain their URLs and source bytes, and static SVG changes are limited to reviewed qualified connector geometry
+- **AND** any shared-player HTML changes match reviewed runtime snapshots and historical release bytes remain unchanged
+
