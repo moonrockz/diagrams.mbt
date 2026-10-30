@@ -566,10 +566,12 @@ def compile_form(
 
 
 class _View:
-    """The native query index of one tree, shared by its cursors."""
+    """The native query index of one tree, shared by its cursors.
+
+    It does not hold the tree: the cache entry must not keep a tree alive.
+    """
 
     def __init__(self, tree: "_bpmn.DocumentTree"):
-        self.tree = tree
         self.token = _boundary.call("query_view_open", tree._token)
         weakref.finalize(self, _release, "query_view_close", self.token)
 
@@ -654,7 +656,7 @@ class QueryPlan:
         )
         if r[0] == "error":
             raise QueryCompileError(_diagnostics(r[1]))
-        return QueryCursor(r[1], self, view, fields)
+        return QueryCursor(r[1], self, view, tree, fields)
 
     def collect(
         self,
@@ -682,10 +684,18 @@ class QueryCursor:
     """An execution of a plan. Concurrent use of one cursor raises
     ``BusyError``; independent cursors do not share a position."""
 
-    def __init__(self, token: int, plan: QueryPlan, view: _View, fields: Tuple[str, ...]):
+    def __init__(
+        self,
+        token: int,
+        plan: QueryPlan,
+        view: _View,
+        tree: "_bpmn.DocumentTree",
+        fields: Tuple[str, ...],
+    ):
         self._token = token
         self._plan = plan
         self._view = view
+        self._tree = tree
         self._fields = fields
         self._guard = _boundary.Exclusive()
         self._finalizer = weakref.finalize(self, _release, "query_close", token)
@@ -696,7 +706,7 @@ class QueryCursor:
             r = _boundary.call("query_next_batch", self._token, int(size))
         kind = r[0]
         if kind == "rows":
-            tree = self._view.tree
+            tree = self._tree
             rows = tuple(
                 QueryMatch(
                     pattern,

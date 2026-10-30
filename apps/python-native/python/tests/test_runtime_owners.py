@@ -121,11 +121,9 @@ class OwnerReleaseTest(unittest.TestCase):
     # tree that a query used is never finalized, and its document, tree and
     # view stay open; tree.close() does not close the view. Remove the
     # decorators when the cache no longer keeps trees alive.
-    @unittest.expectedFailure
     def test_queried_owners_return_to_zero_under_contention(self) -> None:
         self._run_contention(queries=True)
 
-    @unittest.expectedFailure
     def test_a_dropped_queried_tree_releases_its_view(self) -> None:
         settle()
         before = live()
