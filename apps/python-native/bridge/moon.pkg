@@ -1,4 +1,5 @@
 import {
+  "moonrockz/bpmn",
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams-mermaid" @mermaid,
