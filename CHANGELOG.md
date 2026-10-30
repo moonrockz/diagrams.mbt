@@ -6,12 +6,24 @@
 
 - Accessible Preview and Source tabs in gallery cards and the offline review
   gallery, with original syntax, source downloads and retained viewer state.
+- `moonrockz/diagrams-query`: a portable, bounded structural query language
+  with Tree-sitter-style patterns, fields, alternations, captures and native
+  predicates, text and typed compilation, projections, batches and explicit
+  limits. The opt-in `moonrockz/diagrams-query/bpmn` package adapts the BPMN
+  document tree; `moonrockz/bpmn` keeps its core-only imports.
+- Python (`diagrams_mbt`, next 0.0.x release): `diagrams_mbt.query` and the
+  BPMN reading, inspection, visitor, walk, fold, reduction, event, cursor and
+  graph APIs of `diagrams_mbt.bpmn`, through the same MoonBit implementations.
 
 ### Changed
 
 - Automatic connectors prefer clear diamond and choice points, use measured
   outline spans and consider route congestion while preserving explicit ports,
   direction hints and supplied BPMN waypoints.
+- The Python extension uses a versioned structured boundary (version 2)
+  instead of JSON, releases the GIL during native work and while it waits for
+  the runtime lock, and serializes all MoonBit runtime access. `render_svg`
+  output and diagnostics are unchanged.
 
 ## 0.4.0 - 2026-10-28
 
