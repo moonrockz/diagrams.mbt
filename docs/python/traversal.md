@@ -12,6 +12,24 @@ Python adds no BPMN rule and no other default.
 
 > The package is experimental (0.0.x). Its API can change in any release.
 
+The Python examples on this page run in order, in one namespace. The test
+`test_doc_examples.py` runs them. This setup block gives their `source`:
+
+```python
+# Setup: the BPMN source of the examples on this page.
+source = """<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="urn:orders">
+  <bpmn:process id="Orders">
+    <bpmn:startEvent id="Start"/>
+    <bpmn:task id="Check" name="Check order"/>
+    <bpmn:subProcess id="Ship"><bpmn:task id="Pack"/></bpmn:subProcess>
+    <bpmn:endEvent id="End"/>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Check"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Check" targetRef="Ship"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Ship" targetRef="End"/>
+  </bpmn:process>
+</bpmn:definitions>"""
+```
+
 ## Read a document and walk it
 
 MoonBit:
@@ -32,14 +50,16 @@ from diagrams_mbt.bpmn import Control
 
 read = bpmn.read(source, source_id="orders.bpmn")
 tree = read.document.tree().tree
-bpmn.walk(
+status = bpmn.walk(
     tree.root(),
     lambda node: Control.SKIP_CHILDREN if node.id == "Ship" else Control.CONTINUE,
     lambda node: print(node.id),
 )
+assert status is bpmn.TraversalStatus.COMPLETE
 ```
 
-`read` returns a `ReadResult`. Its `document` is `None` after an XML syntax
+`walk` returns `TraversalStatus.STOPPED` after a `STOP` decision, else
+`COMPLETE`. `read` returns a `ReadResult`. Its `document` is `None` after an XML syntax
 error; its `diagnostics` keep their spans and locations. `tree()` returns a
 `TreeBuildResult` with `tree` and `diagnostics`; `tree` is `None` when a
 traversal limit stops the build.
@@ -73,6 +93,7 @@ class Tasks(bpmn.Visitor):
 
 tasks = Tasks()
 bpmn.accept(tree.root(), tasks)
+assert tasks.names == ["task", "subProcess", "task"]
 ```
 
 `accept` finds the methods that the subclass overrides once per traversal. It
@@ -99,45 +120,28 @@ match graph.route(Node(task.handle()), Id("End")) {
 Python:
 
 ```python
+document = read.document
+task = next(e.node for e in bpmn.EventReader(tree.root()) if e.node.id == "Check")
 graph = bpmn.DocumentGraph.new(document).graph
 result = graph.route(bpmn.GraphEndpoint.node(task), bpmn.GraphEndpoint.id("End"))
 if result.status == "Found":
-    print(len(result.route.nodes))
+    print([node.id for node in result.route.nodes])  # ['Check', 'Ship', 'End']
 elif result.status == "Failed":
     print(result.failure.kind)
+assert [node.id for node in result.route.nodes] == ["Check", "Ship", "End"]
 ```
 
 A node endpoint is a revision-bound handle. It never falls back to the node's
 ID, so it selects one node when two nodes have the same ID. An `id` endpoint
 still reports `Ambiguous`.
 
-## Compatibility map
+## Semantics
 
-Each row maps a public MoonBit operation to its Python operation. "Same" means
-the same name in snake case.
+The [compatibility map](compatibility.md) lists each MoonBit operation and its
+Python operation, with defaults, failures, limits and units. This section
+gives the rules that the map refers to.
 
-### Reading, owners and nodes
-
-| MoonBit | Python | Notes |
-| --- | --- | --- |
-| `read(source, source_id?, limits?)` | `read(source, source_id=None, limits=None) -> ReadResult` | `ReadResult(document, diagnostics)`. No I/O. |
-| `Limits::new(...)` | `Limits(source_units=None, ...)` | `None` keeps the MoonBit default. `Limits.defaults()` gives the values. |
-| `DocumentTree::new(document, resource_id?, limits?)` | `DocumentTree.new(document, resource_id=None, limits=None)`, `document.tree(...)` | `TreeBuildResult(tree, diagnostics)` |
-| `tree.root()`, `tree.length()`, `tree.resource_id()` | `tree.root()`, `tree.length`, `tree.resource_id` | `tree.node(ordinal)` gives the node at a preorder ordinal. |
-| `tree.lookup(handle)` | `tree.lookup(handle)` | `NodeLookup(status, node)`: `Found`, `DocumentMismatch` or `InvalidHandle` |
-| `NodeRef::value` | `node.value` | `NodeValue(kind, text, target, data)` |
-| `NodeRef::element` | `node.element()` | `ElementView` or `None` |
-| `NodeRef::kind` | `node.kind`, `node.kind_class` | `ExpandedName` or `None`; `standard`, `foreign` or `unknown` |
-| `NodeRef::category` | `node.category` | `Category`; values are the MoonBit names |
-| `NodeRef::id`, `depth`, `span`, `step` | `node.id`, `node.depth`, `node.span`, `node.step` | Snapshot values; no native call |
-| `NodeRef::attributes` | `node.attributes()` | Present attributes only, in source order |
-| `NodeRef::scalar(name)` | `node.scalar(ExpandedName(ns, local))` | `Scalar(tag, token, detail)` or `None` |
-| `NodeRef::fields`, `field(f)` | `node.fields()`, `node.field(f)` | `NodeField(field, attributes, children)`; no absent defaults |
-| `NodeRef::children`, `parent` | `node.children()`, `node.parent()` | |
-| `NodeRef::location` | `node.location()` | `None` for constructed content |
-| `NodeRef::resource_id` | `node.resource_id` | |
-| `NodeRef::path`, `NodePath::steps`, `depth`, `resolve` | `node.path()`, `.steps()`, `.depth`, `.resolve(tree)` | Document-relative |
-| `NodeRef::handle` | `node.handle` | `NodeHandle(tree, ordinal)`; equal only in the same revision |
+### Values
 
 `Scalar.tag` is the MoonBit constructor name: `Text`, `Identifier`, `Uri`,
 `Boolean`, `Integer`, `Number`, `Reference`, `Enumeration` or `Invalid`.
@@ -147,20 +151,6 @@ the same name in snake case.
 `Text`, `Comment`, `ProcessingInstruction`, `Root`, `Prolog` or `Epilog`.
 
 ### Traversal
-
-| MoonBit | Python | Notes |
-| --- | --- | --- |
-| `Control::Continue`, `SkipChildren`, `Stop` | `Control.CONTINUE`, `SKIP_CHILDREN`, `STOP` | Another return value raises `TypeError` |
-| `walk(root, enter, leave?)` | `walk(root, enter, leave=None)` | |
-| `fold(root, initial, enter, leave?)` | `fold(root, initial, enter, leave=None)` | `enter` returns `(value, control)` |
-| `reduce(root, combine)` | `reduce(root, combine)` | `combine(node, children_tuple)`; bottom up |
-| `reduce_pruned(root, enter, combine)` | `reduce_pruned(root, enter, combine)` | A skipped node gets `()`; `None` after stop |
-| `Visitor`, `accept(root, visitor)` | `Visitor`, `accept(root, visitor)` | Same method names: `enter`, `leave`, `visit_definitions` to `visit_other` |
-| `EventReader::new(root)`, `next`, `skip_children`, `stop`, `iter` | `EventReader(root)`, `next()`, `skip_children()`, `stop()`, iteration | `Enter(node)` and `Leave(node)` events |
-| (none) | `EventReader.next_batch(size)`, `batches(size)` | Observational; never applies a control. `size` is 1 to 4096 |
-| `EventSource`, `push_events(source, enter, leave?)` | `EventSource` protocol, `push_events(source, enter, leave=None)` | Any object with `next`, `skip_children` and `stop`, also a Python one |
-| `TreeCursor::new(root)` and its moves | `TreeCursor(root)`, `goto_parent()`, `goto_first_child()`, `goto_last_child()`, `goto_next_sibling()`, `goto_previous_sibling()` | A failed move returns `False` and keeps the position |
-| `TreeCursor::node`, `path`, `depth` | `cursor.node()`, `cursor.path()`, `cursor.depth()` | `depth` is relative to the start; `path` is document-relative |
 
 Order and controls:
 
@@ -175,18 +165,16 @@ Order and controls:
   A root that returns `SKIP_CHILDREN` gives `combine(root, ())`. A stop gives
   `None`, also at the root.
 
-### Graphs
+Status of a traversal:
 
-| MoonBit | Python | Notes |
+| Operation | MoonBit result | Python result |
 | --- | --- | --- |
-| `ResourceSet::new(documents?, external?)` | `ResourceSet(documents=(), external=())` | `DocumentResource(location, document)`, `ExternalResource(location, namespace_uri, import_type, symbols)` |
-| `DocumentGraph::new(document, resources?, resource_id?, limits?, graph_limits?)` | `DocumentGraph.new(document, resources=None, resource_id=None, limits=None, graph_limits=None)` | `GraphBuildResult(graph, diagnostics)` |
-| `graph.nodes`, `graph.edges` | `graph.nodes`, `graph.edges` | `GraphNode`, `GraphEdge(kind, source, target, connection)` |
-| `GraphEndpoint::Node`, `Id`, `Qualified`, `Symbol` | `GraphEndpoint.node(handle_or_node)`, `.id(id)`, `.qualified(ns, local)`, `.symbol(resource, ns, local)` | A `str` is not an endpoint |
-| `graph.lookup(endpoint, limits?)` | `graph.lookup(endpoint, limits=None)` | `LookupResult(status, node, failure)`: `Ok` or `Err` |
-| `graph.reachable(start, kinds?, direction?, limits?)` | `graph.reachable(start, kinds=None, direction=None, limits=None)` | `ReachabilityResult`: `Complete` or `Failed` |
-| `graph.route(start, target, kinds?, direction?, limits?)` | `graph.route(start, target, kinds=None, direction=None, limits=None)` | `RouteResult`: `Found`, `Unreachable` or `Failed` |
-| `GraphLimits::new(...)` | `GraphLimits(nodes=None, edges=None, results=None, work=None)` | `GraphLimits.defaults()` |
+| `walk`, `accept`, `push_events` | `Unit`; the caller knows its own `Stop` decision | `TraversalStatus.COMPLETE` when the events end, `TraversalStatus.STOPPED` after a `STOP` decision |
+| `fold`, `reduce`, `reduce_pruned` | The value (`None` after a stop in `reduce_pruned`) | The same value |
+| A callback raises | (no exceptions in callbacks) | The exception propagates: the failed case. No status. |
+| `EventReader.next_batch` | (Python only) | `EventBatch(events, state)`. `state` is `running` until a read past the last event (`complete`) or a `stop()` (`stopped`). A full batch stays `running`. After `stop()` the state is never `complete`. |
+
+### Graphs
 
 Defaults: `kinds=None` is `[SequenceFlow]`, `direction=None` is `Forward`,
 and `limits=None` is `GraphLimits::new()`: 100,000 nodes, 200,000 edges,

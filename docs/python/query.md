@@ -17,6 +17,19 @@ version 1 grammar, the predicate table and the unsupported features. The
 [BPMN adapter README](../../pkgs/diagrams-query/bpmn/README.mbt.md) has the
 schema inventory.
 
+The Python examples on this page run in order, in one namespace. The test
+`test_doc_examples.py` runs them. This setup block gives their `source`:
+
+```python
+# Setup: the BPMN source of the examples on this page.
+source = """<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" targetNamespace="urn:order">
+  <bpmn:process id="Order">
+    <bpmn:userTask id="Approve" name="Approve"/>
+    <bpmn:userTask id="Review" name="Review"/>
+  </bpmn:process>
+</bpmn:definitions>"""
+```
+
 ## Compile and run a query
 
 MoonBit:
@@ -47,6 +60,8 @@ result = plan.collect(tree, fields=("id", "location"))
 for m in result.matches:
     capture = m.captures[0]
     print(capture.node.id, capture.get("id"), capture.get("location"))
+assert result.state == "complete"
+assert [m.captures[0].node.id for m in result.matches] == ["Approve"]
 ```
 
 `capture.node` is a `bpmn.Node` view of the same revision and ordinal as a walk
