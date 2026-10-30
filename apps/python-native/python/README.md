@@ -59,7 +59,9 @@ Supported Mermaid diagrams: flowchart and graph, sequence, state, ZenUML,
 
 - Diagnostic columns and offsets count UTF-16 code units. Use
   `diagrams_mbt.code_point_index(source, offset)` to get a Python string index.
-- Calls hold the GIL and run one at a time.
+- The extension releases the GIL while MoonBit runs. One process-wide runtime
+  lock lets only one MoonBit call run at a time, so other Python threads
+  continue, but MoonBit work does not run in parallel.
 - An internal renderer failure (a MoonBit panic) stops the process. Do not
   render untrusted input in a process that must not stop.
 
