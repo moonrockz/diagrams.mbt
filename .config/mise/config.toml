@@ -383,3 +383,19 @@ run = "moonx scripts/raster-assets.mbtx generate"
 [tasks."validate:raster-assets"]
 description = "Verify the compiled offline raster adapter and font assets"
 run = "moonx scripts/raster-assets.mbtx check"
+
+[tasks."python-native:build"]
+description = "Build the Python native-binding spike extension (default and bad-ABI variants)"
+run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbtx build"
+
+[tasks."test:python-native"]
+description = "Build the Python native-binding spike and test it in process with CPython 3.12 and 3.15"
+run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbtx test"
+
+[tasks."test:python-native-sanitize"]
+description = "Test the Python native-binding spike with AddressSanitizer and UndefinedBehaviorSanitizer"
+run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbtx sanitize"
+
+[tasks."python-native:measure"]
+description = "Measure bounded repeated calls of the Python native-binding spike (macOS also runs leaks)"
+run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbtx measure"

@@ -1,0 +1,212 @@
+# Feasibility report: Python in-process binding over the MoonBit native backend
+
+Change: `prove-python-native-binding`. Date: 2026-10-29. Host: macOS 26.6.2,
+arm64, Apple clang 21.0.0.
+
+## Result
+
+**Feasible, with conditions.** CPython 3.12 and 3.15 call the existing
+`@mermaid.render_svg` in the same process through code that the MoonBit C
+backend generates. One Limited API extension file (`.abi3.so`) loads in both
+versions. For each of the 10 fixtures, the output and the diagnostics equal the
+direct output of a native MoonBit program. The AddressSanitizer and
+UndefinedBehaviorSanitizer build reports no error. After an ownership fix, the
+`leaks` tool reports 0 leaks after 4,000 renders.
+
+The conditions are in [Limits](#limits) and [Risks](#deployment-and-abi-risks).
+The most important ones: a MoonBit panic stops the Python process, the
+calling convention of exported functions is not documented, and only macOS
+arm64 was verified.
+
+## Toolchain
+
+| Item | Value |
+| --- | --- |
+| MoonBit | `moon 0.1.20261021`, `moonc v0.10.17+093cb8f9c` (pinned in `.config/mise/config.toml`) |
+| CPython | 3.12.16 and 3.15.2, the latest patch releases of the oldest Limited API target and of the newest stable line (mise), selected by the spike tasks only |
+| C compiler | Apple clang 21.0.0, arm64 |
+
+## Linkage and runtime approach
+
+The stable MoonBit pages say: "The native backend does not currently support
+exporting a `foreign_library` package as a linkable library artifact, including
+shared libraries such as a `.dll` or `.so`." ([FFI][ffi], [package][pkg])
+
+The pinned toolchain gives this, as a probe module and this spike show:
+
+- A native package with `pkgtype(kind: "foreign_library")` builds into a
+  **static archive** (`ffi.a`). There is no shared library and no `main`.
+- In release mode, `moonc link-core` writes C (the C backend, `ffi.c`, 50 MB,
+  925,111 lines for this spike). Then `cc -c` compiles it, and `libtool -static`
+  puts it into the archive with mimalloc (`libmoonbitrun.o`), the runtime
+  objects and simdutf. Debug mode uses the new native backend, which writes an
+  object file directly. The spike uses release mode only.
+- Each `#export_name` function becomes a plain C wrapper with that name. The
+  generated C also defines `void moonbit_init(void)`. It calls
+  `moonbit_runtime_init(0, 0)`, sets the layout table and initializes the
+  top-level values. The pinned `moonbit.h` declares `moonbit_init` for hosts of
+  a compiled library, and calls itself a "very unstable API".
+- The bundled mimalloc does not define `malloc` or `free`. It does not replace
+  the allocator of the Python process.
+
+Thus the documented gap is a **shared** library. A CPython extension is a
+shared library that we link ourselves, so the static archive is sufficient.
+No compiler flag or patch of generated code was necessary. Two link paths work:
+
+1. **Archive (default build).** Link the adapter object and `ffi.a` with
+   `-bundle -undefined dynamic_lookup` and export only
+   `PyInit__diagrams_native`. The module imports only `libSystem`.
+2. **Generated C and runtime sources (sanitizer and system-allocator builds).**
+   Compile `ffi.c` and five runtime files (`runtime.c`, `env.c`, `utf.c`,
+   `stdio.c`, `backtrace.c`) with our own flags, and link the precompiled
+   simdutf objects. This path depends on file names in `_build` and in the
+   toolchain, so it is only for diagnostics.
+
+The build task checks that each linked module exports only its initialization
+function and imports no process, socket or thread-creation function (`fork`,
+`posix_spawn`, `exec*`, `system`, `popen`, `socket`, `connect`,
+`pthread_create`). The module cannot start a child process.
+
+## Boundary, ownership and initialization
+
+- **Boundary.** Two exports: `int32_t diagrams_py_abi_version(void)` and
+  `moonbit_bytes_t diagrams_py_render_svg(moonbit_bytes_t)`. UTF-8 source goes
+  in, and UTF-8 JSON (format 1: media type, output, diagnostics) comes out.
+  The FFI page gives `Bytes` a stable mapping to `uint8_t*`. Python does not
+  see MoonBit structs, enums, strings or mangled names. The adapter refuses
+  another boundary version with `ImportError` (tested with a build that
+  expects version 0).
+- **Ownership — finding.** The FFI page says that MoonBit "uses an owned
+  calling convention" by default, but it describes `extern "C"` imports. It
+  does not state the convention for `#export_name` functions. A C probe on the
+  pinned compiler shows that the export **borrows** its `Bytes` argument: the
+  reference count is 2, not 1, after the call when the caller holds one extra
+  reference. The first adapter followed the owned convention and leaked each
+  input: `leaks` reported 4,005 leaks (307,808 bytes) after 4,000 renders. The
+  adapter now releases the input and the result, each one time. A change of
+  the convention would show as a double free in the sanitizer build or as
+  growth in the measurement task.
+- **Copies.** The Python `str` owns its UTF-8 buffer. The adapter copies it
+  into a new MoonBit `Bytes` and copies the result into a new `str`. No Python
+  object points into MoonBit memory after a call. Text with a lone surrogate
+  raises `UnicodeEncodeError` before MoonBit is called (tested with a call
+  counter).
+- **Initialization.** The module exec slot calls `moonbit_init` one time for
+  each process. A second import makes a new module object but does not
+  initialize the runtime again (tested). MoonBit has no shutdown function, so
+  the runtime and its top-level values stay until the process stops.
+- **Concurrency.** The adapter holds the GIL during a render, so calls are
+  serialized. The runtime has process-global state, for example the cycle
+  collector buffer. The module declares
+  `Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED`; an isolated 3.15 subinterpreter
+  gets `ImportError` (tested). The source sets `Py_MOD_GIL_USED` only when the
+  headers define `Py_mod_gil`; the 3.12 Limited API headers do not, so the
+  current build has no such slot. We make no claim about threads,
+  free-threaded builds or subinterpreters.
+- **Diagnostics.** Each diagnostic has code, severity, message and an optional
+  span. Lines and columns start at 1. **Columns and offsets count UTF-16 code
+  units**, as MoonBit strings do. `diagrams_native.code_point_index` converts an
+  offset to a Python index (tested with an emoji before the error).
+
+## Results
+
+| Check | Command | Result |
+| --- | --- | --- |
+| Bridge package on wasm, wasm-gc, js and native | `mise run check` | 4 tests pass on each target |
+| Parity, behavior and lifetime tests, CPython 3.12.16 | `mise run test:python-native` | 13 pass, 1 skipped (subinterpreter test needs 3.14) |
+| Same tests, CPython 3.15.2, same `.abi3.so` | `mise run test:python-native` | 14 pass |
+| ASan + UBSan, 200 mixed rounds (2,000 renders and 2,000 refused calls) per interpreter | `mise run test:python-native-sanitize` | No sanitizer report; tests pass on 3.12 and 3.15 |
+| `leaks --atExit`, system-allocator build | `mise run python-native:measure` | 0 leaks at baseline, 0 leaks after 4,000 renders |
+| Growth per call, batches 1 to 5 (8,000 calls) | `mise run python-native:measure` | Python blocks 0.0105; malloc blocks 0.000125 (system allocator) |
+
+The fixtures are valid flowchart, sequence and state diagrams, invalid
+flowchart, sequence and Unicode sources, an unsupported `pie` diagram, empty
+input, whitespace only, and labels with U+1F680, U+1D518, U+10348, CJK and
+`café`. Valid output can also have a warning (`flowchart/plain-text-label`).
+
+Bounded measurements (CPython 3.12.16, 5 batches of 2,000 mixed calls, each
+call also makes one refused call):
+
+| Build | µs per mixed call | RSS after batch 1 → 5 | Median, valid flowchart | Median, invalid input |
+| --- | --- | --- | --- | --- |
+| Archive, mimalloc | 255–267 | 38.7 MB → 39.2 MB | 1,406 µs | 15–17 µs |
+| Sources, system allocator | 503–514 | 37.6 MB → 38.1 MB | 2,967 µs | 24–27 µs |
+
+The import of the extension, with `moonbit_init`, took 0.7 ms on CPython
+3.15.2 with a warm file cache (`-X importtime`); a first cold import took 4.5 ms. The default module is 9.4 MB (7.8 MB with `strip -x`).
+
+## Limits
+
+- The tasks test CPython 3.12.16 and 3.15.2. CPython recommends tests with
+  each supported minor version; 3.13 and 3.14 are not in the task matrix.
+- Only macOS arm64 was verified. The task has Linux link arguments
+  (`-shared -Wl,--exclude-libs,ALL`), but nobody ran them. Windows was not tried.
+- LeakSanitizer is not available on this platform: ASan prints "detect_leaks is
+  not supported on this platform". The leak evidence is from the macOS `leaks`
+  tool and malloc zone counts on the system-allocator build. The default build
+  uses mimalloc, which these counts do not see; for it we only have RSS, which
+  does not prove that there is no leak.
+- The sanitizer runtime does not instrument the precompiled `simdutf.o`,
+  `moonbit_simdutf.o` or `libmoonbitrun.o`, nor CPython itself.
+- Ten fixtures do not cover the renderer. The spike tests the boundary, not
+  the renderer. Large inputs, limits and other diagram families were not tested.
+- Only the default renderer options are exposed. Options would need a new
+  boundary version.
+- A MoonBit panic calls `abort()` (`backtrace.c`). It stops the Python process,
+  and the adapter cannot catch it. The fixtures did not cause a panic.
+
+## Deployment and ABI risks
+
+| Risk | Note |
+| --- | --- |
+| Unstable runtime interface | The adapter uses `moonbit_init`, `moonbit_make_bytes_raw`, `moonbit_decref` and `Moonbit_array_length` from a header that calls itself "very unstable". Keep the toolchain pinned and the boundary versioned. |
+| Undocumented export convention | Measured, not documented. Ask upstream to document it, or add `#borrow`/`#owned` support for exports. |
+| Process abort on panic | A production design needs an upstream panic hook or a process boundary for untrusted input. |
+| One runtime per extension | Each MoonBit extension links its own runtime and mimalloc. Only the module initialization symbol is exported, which lowers the risk of a symbol clash. Two runtimes in one process were not tested. |
+| No `-fPIC` from moon | Moon compiles archive objects without `-fPIC`. macOS arm64 code is position-independent; Linux shared objects can need `-fPIC`, which path 2 can add. |
+| Archive content | `ffi.a` depends on the toolchain layout (mimalloc, simdutf, runtime objects). A toolchain update can change it. |
+| Size | About 9.4 MB for one module; the whole renderer is linked. |
+| Stable ABI scope | The Limited API 3.12 build (`abi3`) loads in 3.12 and 3.15 (and loaded in 3.14.7 during development). CPython says `abi3` is for non-free-threaded builds; free-threaded builds need `abi3t`, which starts in 3.15. The spike did not build `abi3t`. The CPython docs also recommend tests with each supported minor version. ([stable ABI][abi]) |
+
+## Fallback
+
+The native path was not blocked, so the spike uses no fallback. If a future
+toolchain removes the static archive or `moonbit_init`, first try path 2
+(compile the generated C and runtime sources). A separate process that runs a
+MoonBit native executable is the fallback for untrusted input or panics. It is
+not in-process and must be reported as a different design.
+
+## Next steps
+
+1. Ask MoonBit upstream to document the export calling convention,
+   `moonbit_init`, the archive output and a panic policy for embedders.
+2. Run the same task on Linux x86_64 and arm64 in CI and fix `-fPIC` if needed.
+3. Decide the production boundary: keep JSON, or add typed results for each
+   diagram family and renderer options under a new boundary version.
+4. Build wheels with one `abi3` file for each platform. Add an `abi3t` build
+   (CPython 3.15 and later) only if free-threaded support is required; it
+   needs a thread-safety design for the runtime first.
+5. Add input limits and a corpus run to bound time and memory for each call.
+
+## Reproduce
+
+```shell
+mise run clean
+mise run test:python-native
+mise run test:python-native-sanitize
+mise run python-native:measure
+```
+
+## Sources
+
+- MoonBit FFI: <https://docs.moonbitlang.com/en/stable/language/ffi.html> ([ffi])
+- MoonBit package configuration: <https://docs.moonbitlang.com/en/stable/toolchain/moon/package.html> ([pkg])
+- Extending and embedding Python: <https://docs.python.org/3/extending/index.html>
+- C API stability: <https://docs.python.org/3/c-api/stable.html> ([abi])
+- Module objects and slots: <https://docs.python.org/3/c-api/module.html>
+- Pinned toolchain sources: `include/moonbit.h`, `lib/runtime/runtime.c`,
+  `env.c` and `backtrace.c` under `mise where http:moonbit`.
+
+[ffi]: https://docs.moonbitlang.com/en/stable/language/ffi.html
+[pkg]: https://docs.moonbitlang.com/en/stable/toolchain/moon/package.html
+[abi]: https://docs.python.org/3/c-api/stable.html

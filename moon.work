@@ -2,6 +2,7 @@ members = [
   ".",
   "./apps/site",
   "./apps/raster-browser",
+  "./apps/python-native",
   "./pkgs/diagrams",
   "./pkgs/bpmn",
   "./pkgs/diagrams-bpmn",

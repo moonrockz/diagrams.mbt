@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>prove-python-native-binding: design</title>
+<meta name="color-scheme" content="light dark">
+<style>
+:root { color-scheme: light dark; --bg: #fafafa; --fg: #18212f; --muted: #526071;
+  --line: #cbd5e1; --panel: #eef2f6; --link: #075caa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111827; --fg: #e5e7eb; --muted: #b0bdce;
+    --line: #475569; --panel: #1e293b; --link: #8cc8ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 1rem/1.6 system-ui, sans-serif; }
+main { max-width: 70rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); }
+h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
+h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+a { color: var(--link); }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.meta { color: var(--muted); }
+.toc, pre, details { background: var(--panel); border: 1px solid var(--line);
+  border-radius: .4rem; padding: 1rem; }
+code { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+pre { overflow-x: auto; } pre code { overflow-wrap: normal; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid var(--line); padding: .6rem; text-align: left;
+  overflow-wrap: anywhere; }
+svg { max-width: 100%; height: auto; }
+@media print { main { max-width: none; padding: 0; } pre, tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<h1>prove-python-native-binding: design</h1>
+<p class="meta">OpenSpec change | 2026-10-29 | spike approved by the user; results in <code>apps/python-native/FEASIBILITY.md</code></p>
+
+<nav class="toc" aria-label="Contents">
+<ul>
+<li><a href="#context">Context</a></li>
+<li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li>
+<li><a href="#open-questions">Open questions</a></li>
+</ul>
+</nav>
+
+<h2 id="context">Context</h2>
+<p>The stable MoonBit FFI and package pages say that the native backend cannot
+export a <code>foreign_library</code> package as a linkable artifact, such as a
+<code>.so</code> or <code>.dll</code>. We examined the pinned toolchain
+(<code>moon 0.1.20261021</code>, <code>moonc v0.10.17+093cb8f9c</code>) before we
+made a decision. These are the results of a probe module:</p>
+<ul>
+<li>A native <code>foreign_library</code> package builds into a static archive,
+<code>&lt;package&gt;.a</code>. There is no shared library and no
+<code>main</code>.</li>
+<li>In release mode, <code>moonc link-core</code> writes C (the C backend). Then
+<code>cc -c</code> compiles it, and <code>libtool -static</code> puts it into the
+archive with the precompiled mimalloc object and the runtime objects. Debug mode
+uses the new native backend, which writes an object file directly.</li>
+<li>Each <code>#export_name</code> function becomes a plain C wrapper. The
+generated C also defines <code>void moonbit_init(void)</code>. It calls
+<code>moonbit_runtime_init(0, 0)</code>, sets the layout table and initializes
+the top-level values. The pinned <code>moonbit.h</code> declares
+<code>moonbit_init</code> for hosts of a compiled library. The header calls
+itself a "very unstable API".</li>
+<li>An export borrows its <code>Bytes</code> argument (measured; see OWN-1).</li>
+<li>The bundled mimalloc does not define <code>malloc</code> or
+<code>free</code>, so it does not replace the host allocator.
+<code>moonbit_panic</code> calls <code>abort()</code>.</li>
+</ul>
+<p>Thus the gap in the documentation is a shared library, not a static archive.
+A CPython extension is a shared library that we link ourselves, so the archive
+is sufficient as input.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p><strong>Goals:</strong> prove a CPython import that calls the existing
+Mermaid-to-SVG code in the same process. Give structured diagnostics and output
+that equals the direct MoonBit output. Record initialization, ownership,
+sanitizer results and repeated-call measurements, and make the build repeatable.</p>
+<p><strong>Non-goals:</strong> the items under "Out of Scope" in the proposal.</p>
+
+<h2 id="decisions">Decisions</h2>
+
+<h3 id="link-1">LINK-1. Call: link the archive of a native foreign library</h3>
+<p>The package <code>apps/python-native/ffi</code> has the kind
+<code>foreign_library</code> and supports only <code>native</code>. Moon builds
+it in release mode with the C backend. The build task links the resulting
+archive and a small C adapter into a CPython extension module. The task does not
+copy or patch the generated C.</p>
+<p>Alternative: compile the generated <code>.c</code> file and the runtime
+sources directly. This gives full control of compiler flags, so the sanitizer
+build uses it. It depends on file names inside <code>_build</code>, so it is not
+the default. Rejected alternatives: a subprocess wrapper and a WebAssembly build.
+They do not answer the question.</p>
+
+<h3 id="abi-1">ABI-1. Call: one versioned bytes-in, bytes-out entry point</h3>
+<p>The library exports two symbols with prefix <code>diagrams_py_</code>:</p>
+<ul>
+<li><code>int32_t diagrams_py_abi_version(void)</code></li>
+<li><code>moonbit_bytes_t diagrams_py_render_svg(moonbit_bytes_t utf8_source)</code></li>
+</ul>
+<p>The FFI page gives <code>Bytes</code> a stable mapping to
+<code>uint8_t*</code>. The result is UTF-8 JSON with a format version, the
+media type, the optional output and the diagnostics. Only the adapter and the
+MoonBit bridge know this format. Python code does not see MoonBit structs,
+enums, strings or mangled names. The adapter checks the version when the module
+loads and refuses a mismatch with <code>ImportError</code>.</p>
+<p>Alternatives: opaque result handles with accessor functions, or C structs.
+They need more exported symbols and expose more of the runtime layout. JSON
+costs one extra copy of the SVG, which is acceptable for a spike.</p>
+
+<h3 id="own-1">OWN-1. Call: copy at the boundary and release each value one time</h3>
+<p>The FFI page describes an owned convention for <code>extern "C"</code>
+declarations, but it does not state the convention for <code>#export_name</code>
+functions. A C probe on the pinned compiler showed that the export
+<strong>borrows</strong> its <code>Bytes</code> argument and returns a new
+reference. The first adapter assumed the owned convention and leaked each
+input; the <code>leaks</code> tool found it. The adapter now:</p>
+<ol>
+<li>gets the UTF-8 buffer of the Python string. The string owns this buffer.</li>
+<li>allocates a MoonBit <code>Bytes</code> value with
+<code>moonbit_make_bytes_raw</code>, copies the buffer into it and calls the
+export.</li>
+<li>releases the argument with <code>moonbit_decref</code>, copies the
+returned <code>Bytes</code> into a new Python object and releases the result.</li>
+</ol>
+<p>No MoonBit pointer stays in Python after a call. A Python object never
+points into MoonBit memory. A change of the convention shows as a double free
+in the sanitizer build or as allocator growth in the measurement task.</p>
+
+<h3 id="init-1">INIT-1. Call: initialize one time and never tear down</h3>
+<p>The module execution slot calls <code>moonbit_init</code> one time for each
+process, protected by a static flag. MoonBit has no shutdown function, so the
+runtime and its top-level values stay until the process stops. The module uses
+multi-phase initialization and declares
+<code>Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED</code>.</p>
+
+<h3 id="gil-1">GIL-1. Call: hold the GIL and serialize calls</h3>
+<p>The runtime has process-global state, for example the cycle collector root
+buffer. The adapter does not release the GIL during a render, so calls are
+serialized. The spike makes no claim about threads, free-threaded builds or
+subinterpreters.</p>
+
+<h3 id="api-1">API-1. Call: Limited API 3.12 for the adapter</h3>
+<p>The adapter uses only Limited API functions and defines
+<code>Py_LIMITED_API=0x030C0000</code>. The build writes an
+<code>.abi3.so</code> file, and the tests load the same file in two pinned
+CPython versions. This is evidence for later packaging. It is not a wheel.</p>
+
+<h3 id="test-1">TEST-1. Call: compare with an independent native oracle</h3>
+<p>A native MoonBit executable calls <code>render_svg</code> directly for each
+fixture file. It writes the SVG and one line for each diagnostic. It does not
+use the bridge JSON. The Python tests compare their results with these files
+and also run repeated mixed calls.</p>
+
+<h3 id="auto-1">AUTO-1. Call: build automation in an <code>.mbtx</code> task</h3>
+<p><code>scripts/python-native.mbtx</code> uses <code>moonbitlang/async</code>
+processes to run <code>moon</code>, <code>cc</code> and Python. mise tasks
+select a pinned CPython for these tasks only. <code>mise run check</code> builds
+and tests the MoonBit packages on all targets, but it does not need Python.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table>
+<thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>A MoonBit panic calls <code>abort()</code> and stops the Python process.</td><td>Report it. Use renderer limits and diagnostics. A production design needs a panic policy from upstream or a process boundary.</td></tr>
+<tr><td><code>moonbit.h</code>, <code>moonbit_init</code>, archive contents and the export convention are unstable or undocumented.</td><td>The adapter uses one generated and three runtime symbols, plus one header macro. It checks a boundary version. The toolchain stays pinned.</td></tr>
+<tr><td>Moon compiles the archive objects without <code>-fPIC</code>. Linux shared objects can need it.</td><td>macOS arm64 code is position-independent. Record the Linux risk and the direct-compile alternative.</td></tr>
+<tr><td>Two extensions that each link a MoonBit runtime can conflict.</td><td>Export only <code>PyInit__diagrams_native</code>. Record it as a deployment risk.</td></tr>
+<tr><td>Flat RSS does not prove that there is no leak.</td><td>Use sanitizers, allocator counts and leak tools where they are available. Report the limits.</td></tr>
+</tbody>
+</table>
+
+<h2 id="open-questions">Open questions</h2>
+<ul>
+<li>Will upstream MoonBit support a shared native library, a panic hook or a
+runtime shutdown function?</li>
+<li>Must a production package use one process-wide runtime for each wheel, or
+one shared runtime for all MoonBit extensions?</li>
+</ul>
+
+</main>
+</body>
+</html>
