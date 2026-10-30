@@ -1,0 +1,11 @@
+import {
+  "moonrockz/bpmn",
+  "moonrockz/diagrams-query" @query,
+  "moonrockz/diagrams-query/bpmn" @query_bpmn,
+  "moonbitlang/core/json",
+  "moonbitlang/core/string",
+}
+
+import {
+  "moonrockz/diagrams-tests/query-corpus" @corpus,
+} for "test"

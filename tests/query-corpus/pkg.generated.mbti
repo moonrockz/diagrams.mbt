@@ -1,0 +1,21 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-tests/query-corpus"
+
+// Values
+pub let cases_text : String
+
+pub fn deep_document() -> String
+
+pub let documents : ReadOnlyArray[(String, String)]
+
+pub let expected_text : String
+
+pub fn run_corpus() -> String raise Failure
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

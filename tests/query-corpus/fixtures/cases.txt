@@ -1,0 +1,217 @@
+; Shared normalized query corpus. Each case starts with "=== name". Keys:
+; document (fixture file or generated:deep), namespaces (prefix uri, repeatable),
+; fields (projection field names), limits (work pending results output),
+; root-id (search below the first node with this ID), and query (the rest of
+; the case, newline separated) or query-json (one JSON string).
+=== design-named-user-tasks
+document: process.bpmn
+fields: id
+query:
+; Capture user tasks with the exact decoded name "Approve".
+((bpmn.userTask) @task
+  (#attr-eq? @task "name" "Approve"))
+=== design-direct-flow-elements
+document: process.bpmn
+fields: id
+query:
+(bpmn.process
+  bpmn.flowElement: (bpmn.userTask) @task) @process
+=== design-either-task-kind
+document: process.bpmn
+fields: id
+query:
+[ (bpmn.userTask) (bpmn.serviceTask) ] @task
+=== design-unnamed-activities
+document: process.bpmn
+fields: id kind category
+query:
+((category.activity) @activity
+  (#missing-attr? @activity "name"))
+=== missing-versus-empty
+document: process.bpmn
+fields: id attr:name
+query:
+((category.activity) @a (#has-attr? @a "name"))
+((category.activity) @b (#attr-eq? @b "name" ""))
+((category.activity) @c (#attr-not-eq? @c "name" "Approve"))
+((category.activity) @d (#attr-in? @d "name" "dup" "Approve"))
+=== overlapping-patterns-and-branches
+document: process.bpmn
+fields: id
+query:
+(bpmn.userTask) @u
+[(bpmn.userTask) @first (category.activity) @second]
+=== repeated-capture-roles
+document: process.bpmn
+fields: id
+query:
+(bpmn.serviceTask) @a @b
+=== children-in-order
+document: process.bpmn
+fields: id
+query:
+(bpmn.process (bpmn.userTask) @first (bpmn.task) @second) @p
+=== absent-field
+document: process.bpmn
+fields: id
+query:
+((category.activity !bpmn.flowElement) @leaf (#has-attr? @leaf "name"))
+=== prefix-alias-a
+document: process.bpmn
+namespaces: model http://www.omg.org/spec/BPMN/20100524/MODEL
+fields: id
+query:
+(model.userTask) @t
+=== prefix-alias-b
+document: process.bpmn
+namespaces: other http://www.omg.org/spec/BPMN/20100524/MODEL
+fields: id
+query:
+(other.userTask) @t
+=== vendor-collision
+document: process.bpmn
+namespaces: v urn:v
+fields: kind category attr:v:flag attr:kind attr:flag
+query:
+(v.userTask) @vendor
+((bpmn.userTask) @model (#attr-eq? @model "id" "A"))
+=== complete-content
+document: process.bpmn
+namespaces: v urn:v
+fields: category text field
+query:
+(category.document) @doc
+(category.comment) @comment
+(category.processing-instruction) @pi
+((v.userTask (category.text) @t (category.comment) @c (category.processing-instruction) @p) (#text-eq? @p "data"))
+=== diagram-interchange
+document: process.bpmn
+fields: id kind category field
+query:
+(bpmndi.BPMNShape (dc.Bounds) @bounds) @shape
+=== projections
+document: process.bpmn
+fields: id attr:name location path depth field kind category text
+query:
+((bpmn.task) @t (#attr-eq? @t "id" "Deep"))
+=== source-locations-after-non-bmp
+document: process.bpmn
+fields: location
+query:
+(bpmn.userTask) @u
+=== subtree-root
+document: process.bpmn
+root-id: Sub
+fields: id path
+query:
+(category.activity) @a
+=== reference-cycle
+document: process.bpmn
+fields: id
+query:
+[(bpmn.userTask) (bpmn.serviceTask)] @t
+(bpmn.sequenceFlow (_) @child)
+=== collaboration-and-choreography
+document: collaboration.bpmn
+fields: id category
+query:
+(category.participant) @p
+(category.choreography-activity) @ct
+(category.conversation) @conv
+(category.conversation-link) @link
+(category.lane) @lane
+=== extension-kind
+document: collaboration.bpmn
+namespaces: x urn:x
+fields: id kind category
+query:
+(x.task) @vendor
+(bpmn.task) @model
+=== work-limit-after-rows
+document: process.bpmn
+limits: 30 100000 1000000 100000000
+fields: id
+query:
+(_) @n
+=== results-limit
+document: process.bpmn
+limits: 10000000 100000 2 100000000
+fields: id
+query:
+(category.activity) @a
+=== results-limit-exact
+document: process.bpmn
+limits: 10000000 100000 2 100000000
+fields: id
+query:
+(bpmn.userTask) @u
+=== pending-limit
+document: process.bpmn
+limits: 10000000 2 1000000 100000000
+query:
+(bpmn.process (_) (_) (_))
+=== output-limit
+document: process.bpmn
+limits: 10000000 100000 1000000 20
+fields: id attr:name
+query:
+(category.activity) @a
+=== invalid-limits
+document: process.bpmn
+limits: 0 1 1 1
+query:
+(_) @n
+=== unknown-projection-field
+document: process.bpmn
+fields: id owner
+query:
+(bpmn.task) @t
+=== error-quantifier
+document: process.bpmn
+query:
+(bpmn.task)*
+=== error-anchor
+document: process.bpmn
+query:
+(bpmn.process . (bpmn.task))
+=== error-directive
+document: process.bpmn
+query:
+((bpmn.task) @t (#set! @t "k"))
+=== error-regex
+document: process.bpmn
+query:
+((bpmn.task) @t (#match? @t "a.*"))
+=== error-unknown-predicate
+document: process.bpmn
+query:
+((bpmn.task) @t (#eq? @t "a"))
+=== error-grouping
+document: process.bpmn
+query:
+((bpmn.task) (bpmn.task))
+=== error-unknown-kind
+document: process.bpmn
+query:
+(bpmn.userTaskX)
+=== error-unbound-prefix
+document: process.bpmn
+query:
+(zz.task)
+=== error-duplicate-capture
+document: process.bpmn
+query:
+(bpmn.process (bpmn.task) @t (bpmn.task) @t)
+=== error-unknown-capture
+document: process.bpmn
+query:
+((bpmn.task) @t (#has-attr? @u "name"))
+=== error-non-bmp-crlf
+document: process.bpmn
+query-json: "; 𝔘\r\n(bpmn.task) @t\r\n(𝔘"
+=== deep-document
+document: generated:deep
+namespaces: v urn:v
+fields: depth
+query:
+(v.n (v.leaf) @leaf) @parent

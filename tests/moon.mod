@@ -4,6 +4,7 @@ version = "0.4.0"
 
 import {
   "moonrockz/bpmn@0.4.0",
+  "moonrockz/diagrams-query@0.4.0",
   "moonrockz/diagrams-bpmn@0.4.0",
   "moonrockz/diagrams-animated@0.4.0",
   "moonrockz/diagrams@0.4.0",

@@ -1,0 +1,15 @@
+<definitions xmlns='http://www.omg.org/spec/BPMN/20100524/MODEL' xmlns:x='urn:x' targetNamespace='urn:c'>
+  <collaboration id='C'>
+    <participant id='Buyer' processRef='PB'/>
+    <participant id='Seller' processRef='PS'/>
+    <messageFlow id='M1' sourceRef='Buyer' targetRef='Seller'/>
+    <conversation id='Conv'><participantRef>Buyer</participantRef></conversation>
+    <conversationLink id='CL' sourceRef='Buyer' targetRef='Conv'/>
+  </collaboration>
+  <choreography id='Ch'>
+    <participant id='P1'/>
+    <choreographyTask id='CT' initiatingParticipantRef='P1'><participantRef>P1</participantRef></choreographyTask>
+  </choreography>
+  <process id='PB'><task id='Order'/><x:task id='Vendor'/></process>
+  <process id='PS'><laneSet id='LS'><lane id='L1'><flowNodeRef>Ship</flowNodeRef></lane></laneSet><task id='Ship'/></process>
+</definitions>

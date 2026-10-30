@@ -47,3 +47,6 @@ apps/site/assets/raster/*.js text eol=lf
 
 # Python parity fixtures: diagnostic offsets count the exact source bytes on every checkout.
 apps/python-native/fixtures/** -text
+
+# Query corpus fixtures keep their CRLF and non-BMP bytes on every checkout.
+tests/query-corpus/fixtures/* -text
