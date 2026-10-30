@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Defs" targetNamespace="urn:choreo">
+  <b:message id="Message" name="Request"/>
+  <b:choreography id="Choreography" name="Exchange">
+    <b:participant id="Buyer" name="Buyer"/>
+    <b:participant id="Seller" name="Seller"/>
+    <b:messageFlow id="MF" sourceRef="Buyer" targetRef="Seller" messageRef="Message"/>
+    <b:startEvent id="CStart"/>
+    <b:choreographyTask id="CT" name="Request" initiatingParticipantRef="Buyer"><b:participantRef>Buyer</b:participantRef><b:participantRef>Seller</b:participantRef><b:messageFlowRef>MF</b:messageFlowRef></b:choreographyTask>
+    <b:subChoreography id="SubCT" initiatingParticipantRef="Seller"><b:participantRef>Buyer</b:participantRef><b:participantRef>Seller</b:participantRef></b:subChoreography>
+    <b:endEvent id="CEnd"/>
+    <b:sequenceFlow id="C1" sourceRef="CStart" targetRef="CT"/>
+    <b:sequenceFlow id="C2" sourceRef="CT" targetRef="SubCT"/>
+    <b:sequenceFlow id="C3" sourceRef="SubCT" targetRef="CEnd"/>
+  </b:choreography>
+  <b:collaboration id="Collab">
+    <b:participant id="Pool" name="Pool"/>
+    <b:participant id="Other" name="Other"/>
+    <b:messageFlow id="M" sourceRef="Pool" targetRef="Other"/>
+    <b:conversation id="Talk" name="Talk"/>
+    <b:subConversation id="Nested"><b:conversation id="Inner"/></b:subConversation>
+    <b:conversationLink id="L1" sourceRef="Pool" targetRef="Talk"/>
+    <b:conversationLink id="L2" sourceRef="Talk" targetRef="Other"/>
+  </b:collaboration>
+</b:definitions>

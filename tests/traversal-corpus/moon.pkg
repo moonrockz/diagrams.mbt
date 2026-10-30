@@ -1,0 +1,8 @@
+import {
+  "moonrockz/bpmn",
+  "moonbitlang/core/string",
+}
+
+import {
+  "moonrockz/diagrams-tests/traversal-corpus" @corpus,
+} for "test"

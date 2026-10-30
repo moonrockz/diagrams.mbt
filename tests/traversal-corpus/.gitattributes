@@ -1,0 +1,5 @@
+# Locations count the exact fixture bytes, including CRLF, on every checkout.
+fixtures/** -text
+expected/** -text
+# Generated source must match the generator on Windows too.
+*.generated.mbt text eol=lf

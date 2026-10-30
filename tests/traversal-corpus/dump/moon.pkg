@@ -1,0 +1,7 @@
+pkgtype(kind: "executable")
+
+supported_targets = "native"
+
+import {
+  "moonrockz/diagrams-tests/traversal-corpus" @corpus,
+}

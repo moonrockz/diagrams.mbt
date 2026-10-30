@@ -1,0 +1,7 @@
+graph main
+route id:CStart id:CEnd
+route id:Pool id:Other kinds=MessageFlow
+route id:Pool id:Other kinds=ConversationLink
+reachable id:Talk kinds=ConversationLink direction=Both
+reachable id:CT kinds=Reference
+route id:Buyer id:Seller

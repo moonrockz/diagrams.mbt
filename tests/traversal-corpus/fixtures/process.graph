@@ -1,0 +1,36 @@
+# Sequence-flow reachability, the review cycle, kinds and directions.
+graph main
+reachable id:Start
+reachable id:Fix
+reachable id:End direction=Reverse
+route id:Start id:End
+route id:Fix id:End
+route id:End id:Start
+route id:End id:Start direction=Reverse
+route id:Start id:Start
+route id:Orders id:Pack kinds=Containment
+route id:Start_di id:Start kinds=Reference
+reachable id:Pack kinds=SequenceFlow,Containment direction=Both
+route id:ShipStart id:End
+lookup id:Check
+lookup node:6
+lookup foreign:6
+lookup id:Missing
+lookup qname:urn:orders|Check
+lookup qname:urn:other|Check
+lookup qname:|Check
+route id:Start id:End limits=nodes:2
+route id:Start id:End limits=edges:1
+route id:Start id:End limits=results:2
+route id:Start id:End limits=work:3
+reachable id:Start limits=results:2
+reachable id:Start limits=nodes:0
+lookup id:Start limits=work:0
+route id:Start id:End kinds=SequenceFlow,SequenceFlow
+route node:6 id:End
+route foreign:6 id:End
+graph tiny limits=nodes:1
+graph tiny-edges limits=edges:1
+graph main-again resource_id=orders
+lookup node:6
+lookup id:Check

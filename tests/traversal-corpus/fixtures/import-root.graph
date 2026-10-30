@@ -1,0 +1,17 @@
+# Explicit resources only. Absent resources fail without any I/O.
+graph bare resource_id=root
+reachable id:Call kinds=Reference
+reachable id:Item kinds=Reference
+lookup symbol:types|urn:types|Order
+graph full resource_id=root document=other:import-other.bpmn external=types|urn:types|urn:external|Order
+reachable id:Call kinds=Reference
+route id:Call qname:urn:other|Shared kinds=Reference
+route id:Call id:Main kinds=Reference,Containment
+route id:Item symbol:types|urn:types|Order kinds=Reference
+lookup symbol:types|urn:types|Order
+lookup qname:urn:types|Order
+lookup qname:urn:other|Inner
+lookup node:5
+graph duplicate-symbol resource_id=root document=other:import-other.bpmn external=types|urn:types|urn:external|Order,Order
+reachable id:Item kinds=Reference
+lookup symbol:types|urn:types|Order

@@ -1,0 +1,3 @@
+fixture broken.bpmn
+read document=no diagnostics=1
+  diag xml/mismatched-tag Error span=173-185 loc=corpus:broken.bpmn@3:36:173-3:48:185 msg="Closing tag skips unclosed elements"
