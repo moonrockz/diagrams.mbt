@@ -74,7 +74,9 @@ __all__ = [
     "Scalar",
     "Span",
     "Tree",
+    "EventBatch",
     "TraversalEvent",
+    "TraversalStatus",
     "TreeBuildResult",
     "TreeCursor",
     "Visitor",
@@ -277,6 +279,19 @@ class Control(enum.Enum):
     CONTINUE = "Continue"
     SKIP_CHILDREN = "SkipChildren"
     STOP = "Stop"
+
+
+class TraversalStatus(enum.Enum):
+    """How ``walk``, ``accept`` and ``push_events`` ended.
+
+    MoonBit returns ``Unit``: its caller knows its own ``Stop`` decision.
+    Python returns ``COMPLETE`` when the source has no more events, and
+    ``STOPPED`` when an enter decision was ``STOP``. A callback exception is
+    the failed case; it propagates and gives no status.
+    """
+
+    COMPLETE = "complete"
+    STOPPED = "stopped"
 
 
 _CONTROL_CODE = {Control.CONTINUE: 0, Control.SKIP_CHILDREN: 1, Control.STOP: 2}
@@ -830,13 +845,31 @@ def _event(tree: DocumentTree, rec: Any) -> TraversalEvent:
     return Enter(node) if rec[0] else Leave(node)
 
 
+@dataclass(frozen=True)
+class EventBatch:
+    """An observational batch: up to the requested number of events and the
+    reader ``state`` after them. A full batch stays ``running`` even when no
+    event is left; only a read past the end shows ``complete``. After
+    ``stop()`` the state is ``stopped``, never ``complete``."""
+
+    events: Tuple[TraversalEvent, ...]
+    state: str
+
+    def __len__(self) -> int:
+        return len(self.events)
+
+    def __iter__(self) -> Iterator[TraversalEvent]:
+        return iter(self.events)
+
+
 class EventReader(_Owner):
     """``EventReader``: pull events of a subtree in enter/leave order.
 
     ``skip_children()`` acts only right after an enter; ``stop()`` ends the
     reader. ``next_batch(n)`` observes up to ``n`` events in one native call;
-    it never applies a control. Two threads that advance one reader at the
-    same time get ``BusyError``.
+    it never applies a control. ``state`` is ``running``, ``complete`` (a read
+    past the last event) or ``stopped`` (``stop()`` before the end). Two
+    threads that advance one reader at the same time get ``BusyError``.
     """
 
     __slots__ = ("_tree", "_guard")
@@ -864,17 +897,22 @@ class EventReader(_Owner):
         with self._guard:
             _boundary.call("bpmn_events_stop", self._token)
 
-    def next_batch(self, size: int = 256) -> Tuple[TraversalEvent, ...]:
-        """Up to ``size`` (1 to 4096) next events; empty at the end."""
-        with self._guard:
-            recs = _boundary.call("bpmn_events_batch", self._token, size)
-        return tuple(_event(self._tree, r) for r in recs)
+    @property
+    def state(self) -> str:
+        """``running``, ``complete`` or ``stopped``."""
+        return _boundary.call("bpmn_events_state", self._token)
 
-    def batches(self, size: int = 256) -> Iterator[Tuple[TraversalEvent, ...]]:
-        """Observational batches until the end."""
+    def next_batch(self, size: int = 256) -> EventBatch:
+        """Up to ``size`` (1 to 4096) next events and the state after them."""
+        with self._guard:
+            recs, state = _boundary.call("bpmn_events_batch", self._token, size)
+        return EventBatch(tuple(_event(self._tree, r) for r in recs), state)
+
+    def batches(self, size: int = 256) -> Iterator[EventBatch]:
+        """Observational batches that hold events, until the reader ends."""
         while True:
             batch = self.next_batch(size)
-            if not batch:
+            if not batch.events:
                 return
             yield batch
 
@@ -896,7 +934,7 @@ def _drive(
     root: Node,
     enter: Callable[[Node], Control],
     leave: Optional[Callable[[Node], None]],
-) -> None:
+) -> TraversalStatus:
     """``push_events(EventReader::new(root), enter, leave)``, one native event at a time.
 
     A control applies in the same native call that fetches the next event, so
@@ -911,12 +949,12 @@ def _drive(
         while True:
             rec = _boundary.call("bpmn_events_next", token, control)
             if rec is None:
-                return
+                return TraversalStatus.COMPLETE
             node = Node._from_record(tree, rec[1])
             if rec[0]:
                 control = _control_code(enter(node))
                 if control == 2:
-                    return
+                    return TraversalStatus.STOPPED
             else:
                 control = 0
                 if leave is not None:
@@ -933,7 +971,7 @@ def _observed(root: Node, size: int = 256) -> Iterator[TraversalEvent]:
     token = _boundary.call("bpmn_events_new", tree._token, root.ordinal)
     try:
         while True:
-            recs = _boundary.call("bpmn_events_batch", token, size)
+            recs, _state = _boundary.call("bpmn_events_batch", token, size)
             if not recs:
                 return
             for rec in recs:
@@ -946,9 +984,12 @@ def walk(
     root: Node,
     enter: Callable[[Node], Control],
     leave: Optional[Callable[[Node], None]] = None,
-) -> None:
-    """``walk(root, enter, leave?)``. A skipped node still leaves; stop ends at once."""
-    _drive(root, enter, leave)
+) -> TraversalStatus:
+    """``walk(root, enter, leave?)``. A skipped node still leaves; stop ends at once.
+
+    Returns ``STOPPED`` after a ``STOP`` decision, else ``COMPLETE``.
+    """
+    return _drive(root, enter, leave)
 
 
 def fold(
@@ -1025,19 +1066,22 @@ def push_events(
     source: EventSource,
     enter: Callable[[Node], Control],
     leave: Optional[Callable[[Node], None]] = None,
-) -> None:
-    """``push_events(source, enter, leave?)`` over any ``EventSource``."""
+) -> TraversalStatus:
+    """``push_events(source, enter, leave?)`` over any ``EventSource``.
+
+    Returns ``STOPPED`` after a ``STOP`` decision, else ``COMPLETE``.
+    """
     while True:
         event = source.next()
         if event is None:
-            return
+            return TraversalStatus.COMPLETE
         if isinstance(event, Enter):
             control = _control_code(enter(event.node))
             if control == 1:
                 source.skip_children()
             elif control == 2:
                 source.stop()
-                return
+                return TraversalStatus.STOPPED
         elif isinstance(event, Leave):
             if leave is not None:
                 leave(event.node)
@@ -1159,8 +1203,11 @@ def _implemented(visitor: object, name: str) -> Optional[Callable[..., Any]]:
     return getattr(visitor, name)
 
 
-def accept(root: Node, visitor: Visitor) -> None:
-    """``accept(root, visitor)``. Overridden methods are resolved once."""
+def accept(root: Node, visitor: Visitor) -> TraversalStatus:
+    """``accept(root, visitor)``. Overridden methods are resolved once.
+
+    Returns ``STOPPED`` after a ``STOP`` decision, else ``COMPLETE``.
+    """
     enter = _implemented(visitor, "enter")
     leave = _implemented(visitor, "leave")
     families: Dict[Category, Tuple[Callable[..., Any], bool]] = {}
@@ -1174,7 +1221,7 @@ def accept(root: Node, visitor: Visitor) -> None:
             for event in _observed(root):
                 if isinstance(event, Leave):
                     leave(event.node)
-        return
+        return TraversalStatus.COMPLETE
 
     def on_enter(node: Node) -> Control:
         control = Control.CONTINUE if enter is None else enter(node)
@@ -1185,7 +1232,7 @@ def accept(root: Node, visitor: Visitor) -> None:
                 control = method(ElementView(node), node) if typed else method(node)
         return control
 
-    _drive(root, on_enter, leave)
+    return _drive(root, on_enter, leave)
 
 
 # ---------------------------------------------------------------------------

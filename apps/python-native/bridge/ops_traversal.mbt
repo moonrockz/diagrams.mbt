@@ -98,30 +98,36 @@ fn traversal_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
       bp_lookup_record(path.resolve(tree_of(arg_int(args, 2))))
     }
     "bpmn_events_new" =>
-      Int(bp_readers.add(@bpmn.EventReader::new(bp_node_arg(args, 0))))
+      Int(
+        bp_readers.add({
+          reader: @bpmn.EventReader::new(bp_node_arg(args, 0)),
+          state: Running,
+        }),
+      )
     "bpmn_events_next" => {
-      let reader = bp_readers.get(arg_int(args, 0))
+      let entry = bp_readers.get(arg_int(args, 0))
       match arg_int32(args, 1) {
         0 => ()
-        1 => reader.skip_children()
-        2 => reader.stop()
+        1 => entry.reader.skip_children()
+        2 => entry.stop()
         _ => raise bp_invalid_argument("A control is 0, 1 or 2.")
       }
-      match reader.next() {
+      match entry.next() {
         Some(event) => bp_event_record(event)
         None => Null
       }
     }
     "bpmn_events_skip_children" => {
-      bp_readers.get(arg_int(args, 0)).skip_children()
+      bp_readers.get(arg_int(args, 0)).reader.skip_children()
       Null
     }
     "bpmn_events_stop" => {
       bp_readers.get(arg_int(args, 0)).stop()
       Null
     }
+    "bpmn_events_state" => Str(bp_readers.get(arg_int(args, 0)).state.name())
     "bpmn_events_batch" => {
-      let reader = bp_readers.get(arg_int(args, 0))
+      let entry = bp_readers.get(arg_int(args, 0))
       let size = arg_int32(args, 1)
       guard size >= 1 && size <= bp_max_event_batch else {
         raise bp_invalid_argument(
@@ -129,10 +135,10 @@ fn traversal_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
         )
       }
       let events = []
-      while events.length() < size && reader.next() is Some(event) {
+      while events.length() < size && entry.next() is Some(event) {
         events.push(bp_event_record(event))
       }
-      Rec::list(events)
+      Rec::list([Rec::list(events), Str(entry.state.name())])
     }
     "bpmn_cursor_new" => {
       let cursor = @bpmn.TreeCursor::new(bp_node_arg(args, 0))
@@ -178,6 +184,9 @@ let bp_max_event_batch : Int32 = 4096
 
 ///|
 /// An event: `(is_enter, node record)`.
+/// `bpmn_events_batch` returns `(events, state)`; `state` is `"running"`,
+/// `"complete"` or `"stopped"`. A batch that fills up stays `"running"` even
+/// when no event is left: only a read past the end shows `"complete"`.
 fn bp_event_record(event : @bpmn.TraversalEvent) -> Rec {
   match event {
     Enter(node) => Rec::list([Bool(true), node_record(node)])

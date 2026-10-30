@@ -183,9 +183,57 @@ class ControlTest(unittest.TestCase):
                 self.log.append(f"-{node.id}")
 
         visitor = StopAtSub()
-        bpmn.accept(by_id(tree, "P"), visitor)
+        status = bpmn.accept(by_id(tree, "P"), visitor)
         self.assertEqual(visitor.log, ["+P", "+A", "-A", "+Sub"])
+        self.assertIs(status, bpmn.TraversalStatus.STOPPED)
+        self.assertIsNot(status, bpmn.TraversalStatus.COMPLETE)
         self.assertEqual(live(), before)
+        self.assertIs(bpmn.accept(by_id(tree, "P"), bpmn.Visitor()), bpmn.TraversalStatus.COMPLETE)
+
+    def test_walk_push_events_and_accept_report_complete_or_stopped(self) -> None:
+        tree = tree_of()
+        root = by_id(tree, "P")
+        cont = lambda n: Control.CONTINUE  # noqa: E731
+        stop_at_sub = lambda n: Control.STOP if n.id == "Sub" else Control.CONTINUE  # noqa: E731
+        self.assertIs(bpmn.walk(root, cont), bpmn.TraversalStatus.COMPLETE)
+        self.assertIs(bpmn.walk(root, stop_at_sub), bpmn.TraversalStatus.STOPPED)
+        skip_all = lambda n: Control.SKIP_CHILDREN  # noqa: E731
+        self.assertIs(bpmn.walk(root, skip_all), bpmn.TraversalStatus.COMPLETE)
+        reader = bpmn.EventReader(root)
+        self.assertIs(bpmn.push_events(reader, stop_at_sub), bpmn.TraversalStatus.STOPPED)
+        self.assertEqual(reader.state, "stopped")
+        reader = bpmn.EventReader(root)
+        self.assertIs(bpmn.push_events(reader, cont), bpmn.TraversalStatus.COMPLETE)
+        self.assertEqual(reader.state, "complete")
+
+    def test_batches_after_stop_never_claim_completion(self) -> None:
+        tree = tree_of()
+        root = by_id(tree, "P")
+        total = 2 * 7
+        reader = bpmn.EventReader(root)
+        self.assertEqual(reader.state, "running")
+        first = reader.next_batch(3)
+        self.assertEqual((len(first), first.state), (3, "running"))
+        reader.stop()
+        self.assertEqual(reader.state, "stopped")
+        after = reader.next_batch(64)
+        self.assertEqual((after.events, after.state), ((), "stopped"))
+        self.assertIsNone(reader.next())
+        self.assertEqual(reader.state, "stopped")
+        # A full batch that reaches the last event is not yet complete.
+        exact = bpmn.EventReader(root)
+        full = exact.next_batch(total)
+        self.assertEqual((len(full), full.state), (total, "running"))
+        end = exact.next_batch(1)
+        self.assertEqual((end.events, end.state), ((), "complete"))
+        exact.stop()
+        self.assertEqual(exact.state, "complete")
+        short = bpmn.EventReader(root).next_batch(total + 1)
+        self.assertEqual((len(short), short.state), (total, "complete"))
+        # Stopping through push_events: no later event in a following batch.
+        pushed = bpmn.EventReader(root)
+        bpmn.push_events(pushed, lambda n: Control.STOP if n.id == "Sub" else Control.CONTINUE)
+        self.assertEqual(pushed.next_batch(64).state, "stopped")
 
     def test_fold_and_reductions_keep_the_moonbit_order(self) -> None:
         tree = tree_of()
@@ -269,7 +317,7 @@ class ControlTest(unittest.TestCase):
         self.assertIsNone(first.next())
         self.assertEqual([type(e).__name__ for e in second.next_batch(3)], ["Enter", "Enter", "Leave"])
         second.stop()
-        self.assertEqual(second.next_batch(10), ())
+        self.assertEqual(second.next_batch(10), bpmn.EventBatch((), "stopped"))
         with self.assertRaises(_boundary.InvalidArgumentError):
             bpmn.EventReader(root).next_batch(0)
         with self.assertRaises(ValueError):

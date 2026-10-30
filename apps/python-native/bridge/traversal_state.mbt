@@ -22,7 +22,48 @@ let bp_documents : Registry[@bpmn.Document] = Registry::new(1)
 let bp_graphs : Registry[BpGraphEntry] = Registry::new(2)
 
 ///|
-let bp_readers : Registry[@bpmn.EventReader] = Registry::new(3)
+let bp_readers : Registry[BpReaderEntry] = Registry::new(3)
+
+///|
+/// The terminal state of an event reader. `Stopped` follows `stop()` before
+/// the end; `Complete` follows a read past the last event.
+priv enum BpReaderState {
+  Running
+  Complete
+  Stopped
+}
+
+///|
+fn BpReaderState::name(self : BpReaderState) -> String {
+  match self {
+    Running => "running"
+    Complete => "complete"
+    Stopped => "stopped"
+  }
+}
+
+///|
+priv struct BpReaderEntry {
+  reader : @bpmn.EventReader
+  mut state : BpReaderState
+}
+
+///|
+fn BpReaderEntry::stop(self : BpReaderEntry) -> Unit {
+  self.reader.stop()
+  if self.state is Running {
+    self.state = Stopped
+  }
+}
+
+///|
+fn BpReaderEntry::next(self : BpReaderEntry) -> @bpmn.TraversalEvent? {
+  let event = self.reader.next()
+  if event is None && self.state is Running {
+    self.state = Complete
+  }
+  event
+}
 
 ///|
 let bp_cursors : Registry[@bpmn.TreeCursor] = Registry::new(4)

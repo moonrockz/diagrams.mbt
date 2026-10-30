@@ -275,15 +275,21 @@ test "event readers apply controls before advancing and batches only observe" {
     ok("bpmn_events_new", [Int(tree), @python_native_bridge.Rec::int(0)]),
   )
   let sizes = []
+  let states = []
   while ok("bpmn_events_batch", [
           Int(batched),
           @python_native_bridge.Rec::int(5),
         ])
-        is List(events) &&
-        events.length() > 0 {
+        is List([List(events), Str(state)]) {
+    states.push(state)
+    if events.length() == 0 {
+      break
+    }
     sizes.push(events.length())
   }
   assert_eq(sizes, [5, 5, 2])
+  // Full batches never claim completion; a short batch read past the end.
+  assert_eq(states, ["running", "running", "complete", "complete"])
   assert_eq(
     error_code("bpmn_events_batch", [
       Int(batched),
@@ -299,8 +305,24 @@ test "event readers apply controls before advancing and batches only observe" {
     is List(_),
   )
   assert_eq(
+    ok("bpmn_events_state", [Int(stopped)]),
+    @python_native_bridge.Rec::Str("running"),
+  )
+  assert_eq(
     ok("bpmn_events_next", [Int(stopped), @python_native_bridge.Rec::int(2)]),
     Null,
+  )
+  assert_eq(
+    ok("bpmn_events_batch", [Int(stopped), @python_native_bridge.Rec::int(9)]),
+    @python_native_bridge.Rec::list([
+      @python_native_bridge.Rec::list([]),
+      Str("stopped"),
+    ]),
+  )
+  ok("bpmn_events_stop", [Int(batched)]) |> ignore
+  assert_eq(
+    ok("bpmn_events_state", [Int(batched)]),
+    @python_native_bridge.Rec::Str("complete"),
   )
   assert_eq(live("bpmn.event_reader"), 3L)
   for t in [reader, batched, stopped, tree, document] {
