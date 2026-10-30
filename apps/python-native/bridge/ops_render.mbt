@@ -3,8 +3,12 @@
 /// `(media_type, output, diagnostics)`. `output` is the SVG text or `None`.
 /// Each diagnostic is `(code, severity, message, span)` and a span is
 /// `((line, column, offset), (line, column, offset))` or `None`.
+///
+/// `echo(args...)` returns its arguments as one list. It runs no domain code;
+/// the adapter tests use it to check the record codec in both directions.
 fn render_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
   match op {
+    "echo" => Some(List(ReadOnlyArray::from_array(args.to_owned())))
     "render_svg" =>
       match args.get(0) {
         Some(Bin(source)) => Some(rendered_record(render_svg_bytes(source)))

@@ -34,10 +34,6 @@ pub let record_tags : ReadOnlyArray[(String, Int32)]
 
 pub fn render_svg_bytes(BytesView) -> @render.Rendered
 
-pub fn render_svg_json(String) -> String
-
-pub fn render_svg_utf8(BytesView) -> Bytes
-
 pub fn severity_name(@diagrams.Severity) -> String
 
 // Errors
