@@ -7,7 +7,7 @@ Epic: diagrams-uzj
 Bead: diagrams-uzj.1
 
 - [x] 1.1 Add a minimal public portable query module, BPMN adapter and Python entry path for one exact-kind capture; verify a fresh MoonBit consumer on all four targets and Python return the same node identity and projected ID from the same source.
-- [ ] 1.2 Audit the pinned runtime and allocator thread-handoff constraints, then add a bounded native-lock/GIL tracer bullet; verify different Python threads can enter serially, unrelated Python code advances during native work and lock waits, and sanitizers report no error. If thread affinity requires a dedicated owner thread, update the design explicitly before continuing.
+- [x] 1.2 Audit the pinned runtime and allocator thread-handoff constraints, then add a bounded native-lock/GIL tracer bullet; verify different Python threads can enter serially, unrelated Python code advances during native work and lock waits, and sanitizers report no error. If thread affinity requires a dedicated owner thread, update the design explicitly before continuing.
 - [ ] 1.3 Record reproducible commands, runtime findings, baseline render/query/callback timings and the proposed API mapping; verify the evidence distinguishes measured behavior from assumptions and the initial query needs no Python predicate.
 
 ## 2. Add the public query schema, typed form and compiler
@@ -50,8 +50,8 @@ Bead: diagrams-uzj.5
 Depends on group 1; query transport qualification also requires groups 3 and 4.
 
 - [ ] 5.1 Introduce the versioned structured C boundary, C-owned result buffers and generation-checked owner/plan/cursor tokens; verify stale/wrong/closed tokens fail safely, retained views outlive local document variables and cleanup releases resources exactly once under sanitizers.
-- [ ] 5.2 Replace complete SVG JSON transport while preserving the public Python rendering API; verify exact SVG/diagnostic/Unicode parity, unchanged dataclass and error behavior, and no JSON round trip for complete SVG or projected batches.
-- [ ] 5.3 Apply the native lock policy to initialization, allocation, reference counts, cycle collection, registries and counters; verify detached lock waits, release-before-GIL-reacquire ordering, imports/cleanup under contention, and rejection of simultaneous advancement of one cursor with bounded deadlock tests.
+- [x] 5.2 Replace complete SVG JSON transport while preserving the public Python rendering API; verify exact SVG/diagnostic/Unicode parity, unchanged dataclass and error behavior, and no JSON round trip for complete SVG or projected batches.
+- [x] 5.3 Apply the native lock policy to initialization, allocation, reference counts, cycle collection, registries and counters; verify detached lock waits, release-before-GIL-reacquire ordering, imports/cleanup under contention, and rejection of simultaneous advancement of one cursor with bounded deadlock tests.
 - [ ] 5.4 Document boundary ownership and supported concurrency, and qualify portable bridge records plus candidate native wheels; verify Python 3.12 Limited API compatibility, all existing wheel targets, sanitizer and native-Zig integration, and unchanged subinterpreter/free-threaded restrictions.
 
 ## 6. Expose complete Python query and traversal parity
