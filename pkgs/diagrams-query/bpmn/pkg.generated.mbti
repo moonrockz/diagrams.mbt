@@ -11,6 +11,8 @@ pub fn category_name(@moonrockz/bpmn.NodeCategory) -> String
 
 pub fn compile(String, namespaces? : ArrayView[(String, String)], limits? : @diagrams-query.CompileLimits) -> Result[@diagrams-query.QueryPlan, ReadOnlyArray[@diagrams-query.QueryDiagnostic]]
 
+pub fn compile_form(@diagrams-query.QueryForm, namespaces? : ArrayView[(String, String)], limits? : @diagrams-query.CompileLimits) -> Result[@diagrams-query.QueryPlan, ReadOnlyArray[@diagrams-query.QueryDiagnostic]]
+
 pub let default_namespaces : ReadOnlyArray[(String, String)]
 
 pub fn field_name(@moonrockz/bpmn.PathField) -> @diagrams-query.Name

@@ -309,3 +309,23 @@ test "captured handles feed explicit graph operations" {
     graph.reachable(Node(start.handle()), limits=@model.GraphLimits::new(nodes=1)) is Failed(Limit(Nodes)),
   )
 }
+
+///|
+test "typed forms compile with the default prefixes" {
+  let form = @query.QueryForm::new([
+    @query.Rule::new(
+      @query.Pattern::node(
+        Kind(@query.QName::new("userTask", prefix="bpmn")),
+        captures=["task"],
+      ),
+      predicates=[@query.Predicate::attr_eq("task", "name", "Approve")],
+    ),
+  ])
+  let typed = @bpmn.compile_form(form).unwrap()
+  let text = @bpmn.compile(
+    "((bpmn.userTask) @task (#attr-eq? @task \"name\" \"Approve\"))",
+  ).unwrap()
+  assert_eq(typed.normalized(), text.normalized())
+  let tree = tree_of(source)
+  assert_eq(typed.collect(tree), text.collect(tree))
+}

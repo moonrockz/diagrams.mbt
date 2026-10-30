@@ -334,3 +334,16 @@ pub fn compile(
   bindings.append(namespaces.to_owned())
   @query.compile(source, schema, namespaces=bindings, limits~)
 }
+
+///|
+/// Compiles a typed query form for this adapter with `default_namespaces` and
+/// any extra bindings, with the same checks as `compile`.
+pub fn compile_form(
+  form : @query.QueryForm,
+  namespaces? : ArrayView[(String, String)] = [],
+  limits? : @query.CompileLimits = @query.CompileLimits::new(),
+) -> Result[@query.QueryPlan, ReadOnlyArray[@query.QueryDiagnostic]] {
+  let bindings = default_namespaces.iter().to_array()
+  bindings.append(namespaces.to_owned())
+  @query.compile_form(form, schema, namespaces=bindings, limits~)
+}
