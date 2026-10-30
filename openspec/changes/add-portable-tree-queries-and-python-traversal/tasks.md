@@ -6,7 +6,7 @@ Epic: diagrams-uzj
 
 Bead: diagrams-uzj.1
 
-- [ ] 1.1 Add a minimal public portable query module, BPMN adapter and Python entry path for one exact-kind capture; verify a fresh MoonBit consumer on all four targets and Python return the same node identity and projected ID from the same source.
+- [x] 1.1 Add a minimal public portable query module, BPMN adapter and Python entry path for one exact-kind capture; verify a fresh MoonBit consumer on all four targets and Python return the same node identity and projected ID from the same source.
 - [ ] 1.2 Audit the pinned runtime and allocator thread-handoff constraints, then add a bounded native-lock/GIL tracer bullet; verify different Python threads can enter serially, unrelated Python code advances during native work and lock waits, and sanitizers report no error. If thread affinity requires a dedicated owner thread, update the design explicitly before continuing.
 - [ ] 1.3 Record reproducible commands, runtime findings, baseline render/query/callback timings and the proposed API mapping; verify the evidence distinguishes measured behavior from assumptions and the initial query needs no Python predicate.
 
@@ -16,10 +16,10 @@ Bead: diagrams-uzj.2
 
 Depends on group 1.
 
-- [ ] 2.1 Complete the generic core-only adapter/schema contract and immutable typed query/plan values; verify independent BPMN and non-BPMN test adapters, reusable plans, incompatible-schema failures and the generated public interface on all four targets.
-- [ ] 2.2 Implement the documented version 1 grammar, name resolution and native-predicate checks; verify exact kinds/categories, wildcards, ordered child fields, absent fields, alternatives and captures, including malformed queries and explicit rejection of regex, quantifiers, directives and anchors.
-- [ ] 2.3 Implement text/typed-form validation parity and compile limits; verify namespace aliases/open extension namespaces, capture scope, duplicate capture rules, predicate arities, absent-versus-empty values and UTF-16 query diagnostics after non-BMP/CRLF text.
-- [ ] 2.4 Publish the language grammar, schema inventory and executable MoonBit examples; verify every documented supported example compiles and every unsupported example gives its documented diagnostic on all four targets.
+- [x] 2.1 Complete the generic core-only adapter/schema contract and immutable typed query/plan values; verify independent BPMN and non-BPMN test adapters, reusable plans, incompatible-schema failures and the generated public interface on all four targets.
+- [x] 2.2 Implement the documented version 1 grammar, name resolution and native-predicate checks; verify exact kinds/categories, wildcards, ordered child fields, absent fields, alternatives and captures, including malformed queries and explicit rejection of regex, quantifiers, directives and anchors.
+- [x] 2.3 Implement text/typed-form validation parity and compile limits; verify namespace aliases/open extension namespaces, capture scope, duplicate capture rules, predicate arities, absent-versus-empty values and UTF-16 query diagnostics after non-BMP/CRLF text.
+- [x] 2.4 Publish the language grammar, schema inventory and executable MoonBit examples; verify every documented supported example compiles and every unsupported example gives its documented diagnostic on all four targets.
 
 ## 3. Add bounded native matching, projections and batches
 
@@ -27,10 +27,10 @@ Bead: diagrams-uzj.3
 
 Depends on group 2.
 
-- [ ] 3.1 Implement explicit-stack matching and fixed native predicates; verify root preorder, pattern and child-assignment order, distinct overlapping alternatives, repeated node capture roles and exact direct-child semantics against an independent small-tree reference evaluator.
-- [ ] 3.2 Add requested-field projection and immutable owner-qualified capture records; verify namespace/scalar/source distinctions, absent and unknown fields, output bounds and equal text/typed query results without per-field callbacks.
-- [ ] 3.3 Add independent cursors, bounded batches and complete/stopped/failed outcomes; verify batch sizes 1/64/256 concatenate identically, budgets are cumulative and a limit after a delivered batch is not presented as completion.
-- [ ] 3.4 Add adversarial/deep-tree tests and consumer guidance; verify all declared compile/execution bounds, ambiguous child assignments, 10,000-depth trees, early close, independent cursors and no host-stack overflow on all four targets.
+- [x] 3.1 Implement explicit-stack matching and fixed native predicates; verify root preorder, pattern and child-assignment order, distinct overlapping alternatives, repeated node capture roles and exact direct-child semantics against an independent small-tree reference evaluator.
+- [x] 3.2 Add requested-field projection and immutable owner-qualified capture records; verify namespace/scalar/source distinctions, absent and unknown fields, output bounds and equal text/typed query results without per-field callbacks.
+- [x] 3.3 Add independent cursors, bounded batches and complete/stopped/failed outcomes; verify batch sizes 1/64/256 concatenate identically, budgets are cumulative and a limit after a delivered batch is not presented as completion.
+- [x] 3.4 Add adversarial/deep-tree tests and consumer guidance; verify all declared compile/execution bounds, ambiguous child assignments, 10,000-depth trees, early close, independent cursors and no host-stack overflow on all four targets.
 
 ## 4. Complete the BPMN adapter and compatibility contract
 
@@ -38,10 +38,10 @@ Bead: diagrams-uzj.4
 
 Depends on group 3.
 
-- [ ] 4.1 Complete the opt-in BPMN adapter using existing public node/field/path APIs; verify processes, choreography, conversations, DI, vendor XML, comments, PI, malformed-but-retained content and constructed values retain identity, order and optional source locations.
-- [ ] 4.2 Qualify namespace-aware fields and revision ownership; verify known/extension local-name collisions, duplicate IDs, aliases, absent defaults, source changes and handle/path resolution using shared source-backed and MoonBit-constructed fixtures.
-- [ ] 4.3 Publish the exact MoonBit/Python compatibility map and normalized fixture schema for every mapped operation; verify defaults, enum/optional/scalar mappings, integer widths, source units, callback controls, graph failures and unsupported surfaces have no undocumented gaps.
-- [ ] 4.4 Add fresh reader-only and query-adapter consumer tests and docs; verify BPMN retains its core-only imports, tree matching does not follow reference cycles, and captured handles feed existing graph lookup/reachability/routes with their original ambiguity and limit behavior on all four targets.
+- [x] 4.1 Complete the opt-in BPMN adapter using existing public node/field/path APIs; verify processes, choreography, conversations, DI, vendor XML, comments, PI, malformed-but-retained content and constructed values retain identity, order and optional source locations.
+- [x] 4.2 Qualify namespace-aware fields and revision ownership; verify known/extension local-name collisions, duplicate IDs, aliases, absent defaults, source changes and handle/path resolution using shared source-backed and MoonBit-constructed fixtures.
+- [x] 4.3 Publish the exact MoonBit/Python compatibility map and normalized fixture schema for every mapped operation; verify defaults, enum/optional/scalar mappings, integer widths, source units, callback controls, graph failures and unsupported surfaces have no undocumented gaps.
+- [x] 4.4 Add fresh reader-only and query-adapter consumer tests and docs; verify BPMN retains its core-only imports, tree matching does not follow reference cycles, and captured handles feed existing graph lookup/reachability/routes with their original ambiguity and limit behavior on all four targets.
 
 ## 5. Replace private transport and complete runtime synchronization
 
@@ -60,11 +60,11 @@ Bead: diagrams-uzj.6
 
 Depends on groups 4 and 5.
 
-- [ ] 6.1 Add BPMN reading, explicit resources, owning tree views, node inspection, handles and paths plus query schema/typed/text compile, projection and batches; verify each mapped operation against the shared MoonBit oracle, including absent values, source units and complete/stopped/failed outcomes.
-- [ ] 6.2 Add resumable pull/push events and full tree-cursor navigation; verify subtree bounds, relative depth, unchanged position after failed moves, independent cursors and callback-free observational batches on shared fixtures.
-- [ ] 6.3 Add visitor, walk, fold, reduce and pruned-reduce facades; verify implemented-handler-only dispatch, immediate Continue/SkipChildren/Stop, leave behavior, accumulator/combine order, nested extension calls, 10,000-depth traversal and original exception propagation without later callbacks.
-- [ ] 6.4 Expose graph lookup, reachability and route inputs/results from the compatibility map; verify typed endpoints, external resources/nodes, edge-kind/direction defaults, route tie breaks, ambiguity and each failure/limit outcome against MoonBit.
-- [ ] 6.5 Publish paired MoonBit/Python query and traversal guides and typed Python signatures; verify examples run from clean consumer installs and the final generated-interface/API inventory has no missing mapped operation.
+- [x] 6.1 Add BPMN reading, explicit resources, owning tree views, node inspection, handles and paths plus query schema/typed/text compile, projection and batches; verify each mapped operation against the shared MoonBit oracle, including absent values, source units and complete/stopped/failed outcomes.
+- [x] 6.2 Add resumable pull/push events and full tree-cursor navigation; verify subtree bounds, relative depth, unchanged position after failed moves, independent cursors and callback-free observational batches on shared fixtures.
+- [x] 6.3 Add visitor, walk, fold, reduce and pruned-reduce facades; verify implemented-handler-only dispatch, immediate Continue/SkipChildren/Stop, leave behavior, accumulator/combine order, nested extension calls, 10,000-depth traversal and original exception propagation without later callbacks.
+- [x] 6.4 Expose graph lookup, reachability and route inputs/results from the compatibility map; verify typed endpoints, external resources/nodes, edge-kind/direction defaults, route tie breaks, ambiguity and each failure/limit outcome against MoonBit.
+- [x] 6.5 Publish paired MoonBit/Python query and traversal guides and typed Python signatures; verify examples run from clean consumer installs and the final generated-interface/API inventory has no missing mapped operation.
 
 ## 7. Qualify combined parity and performance
 
