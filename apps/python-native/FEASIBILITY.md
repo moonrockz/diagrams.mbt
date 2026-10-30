@@ -326,6 +326,16 @@ Only the invalid and non-BMP rows differ by more than the run-to-run spread.
 For the other rows the difference is inside the noise of this host, so this
 report claims no speedup for them.
 
+### Query and traversal measurements
+
+[MEASUREMENTS.md](MEASUREMENTS.md) has the method and tables for the BPMN
+query, event and visitor workloads (small, medium and large trees, batch sizes
+1, 64 and 256, native oracle rows, callback time, GIL-held time and lock
+wait). In short, on this host: a selective query on a 10,003-node tree makes
+no Python callback and takes 1.30 ms at p50, against 311 ms for the
+equal-work Python visitor. Most native time of events, visitors and captures
+is `@bpmn.NodeRef::category` (11.8 µs for each node snapshot record).
+
 ### Assumed, not measured
 
 - Windows behavior of the lock and the GIL release (CI runs the tests).
