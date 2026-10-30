@@ -1,0 +1,374 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-query"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn compile(String, Schema, namespaces? : ArrayView[(String, String)], limits? : CompileLimits) -> Result[QueryPlan, ReadOnlyArray[QueryDiagnostic]]
+
+pub fn compile_form(QueryForm, Schema, namespaces? : ArrayView[(String, String)], limits? : CompileLimits) -> Result[QueryPlan, ReadOnlyArray[QueryDiagnostic]]
+
+pub fn is_capture_name(String) -> Bool
+
+pub fn is_identifier(String) -> Bool
+
+pub let language_version : Int32
+
+pub let max_projection_fields : Int32
+
+pub fn parse(String, limits? : CompileLimits) -> Result[QueryForm, ReadOnlyArray[QueryDiagnostic]]
+
+pub let query_diagnostic_codes : ReadOnlyArray[String]
+
+// Errors
+
+// Types and methods
+pub struct CapturedNode {
+  name : String
+  node : Int32
+  values : ReadOnlyArray[Projected]
+} derive(Eq, @debug.Debug)
+pub fn CapturedNode::equal(Self, Self) -> Bool
+pub fn CapturedNode::not_equal(Self, Self) -> Bool
+pub fn CapturedNode::to_repr(Self) -> @debug.Repr
+
+pub struct CompileLimits {
+  source_units : Int32
+  patterns : Int32
+  pattern_nodes : Int32
+  nesting : Int32
+  captures : Int32
+  predicates : Int32
+} derive(Eq, @debug.Debug)
+pub fn CompileLimits::equal(Self, Self) -> Bool
+pub fn CompileLimits::new(source_units? : Int32, patterns? : Int32, pattern_nodes? : Int32, nesting? : Int32, captures? : Int32, predicates? : Int32) -> Self
+pub fn CompileLimits::not_equal(Self, Self) -> Bool
+pub fn CompileLimits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum CursorState {
+  Running
+  Complete
+  Stopped
+  Failed(QueryFailure)
+} derive(Eq, @debug.Debug)
+pub fn CursorState::equal(Self, Self) -> Bool
+pub fn CursorState::not_equal(Self, Self) -> Bool
+pub fn CursorState::to_repr(Self) -> @debug.Repr
+
+pub struct ExecutionLimits {
+  work : Int32
+  pending : Int32
+  results : Int32
+  output_units : Int32
+} derive(Eq, @debug.Debug)
+pub fn ExecutionLimits::equal(Self, Self) -> Bool
+pub fn ExecutionLimits::new(work? : Int32, pending? : Int32, results? : Int32, output_units? : Int32) -> Self
+pub fn ExecutionLimits::not_equal(Self, Self) -> Bool
+pub fn ExecutionLimits::to_repr(Self) -> @debug.Repr
+
+pub(all) enum FieldRequest {
+  Kind
+  Category
+  Text
+  Location
+  Path
+  Depth
+  Field
+  Attribute(String)
+  Extra(String)
+} derive(Eq, @debug.Debug)
+pub fn FieldRequest::equal(Self, Self) -> Bool
+pub fn FieldRequest::not_equal(Self, Self) -> Bool
+pub fn FieldRequest::parse(String) -> Self
+pub fn FieldRequest::to_repr(Self) -> @debug.Repr
+
+pub struct Name {
+  namespace_uri : String
+  local_name : String
+} derive(Compare, Eq, Hash, @debug.Debug)
+pub fn Name::clark(Self) -> String
+pub fn Name::compare(Self, Self) -> Int32
+pub fn Name::equal(Self, Self) -> Bool
+pub fn Name::hash(Self) -> Int32
+pub fn Name::hash_combine(Self, Hasher) -> Unit
+pub fn Name::new(String, String) -> Self
+pub fn Name::not_equal(Self, Self) -> Bool
+pub fn Name::op_ge(Self, Self) -> Bool
+pub fn Name::op_gt(Self, Self) -> Bool
+pub fn Name::op_le(Self, Self) -> Bool
+pub fn Name::op_lt(Self, Self) -> Bool
+pub fn Name::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Part {
+  Child(Pattern)
+  Field(QName, Pattern)
+  Absent(QName)
+} derive(Eq, @debug.Debug)
+pub fn Part::equal(Self, Self) -> Bool
+pub fn Part::not_equal(Self, Self) -> Bool
+pub fn Part::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Pattern {
+  Node(Selector, ReadOnlyArray[Part], ReadOnlyArray[String])
+  Alternation(ReadOnlyArray[Pattern], ReadOnlyArray[String])
+} derive(Eq, @debug.Debug)
+pub fn Pattern::alternation(ArrayView[Self], captures? : ArrayView[String]) -> Self
+pub fn Pattern::equal(Self, Self) -> Bool
+pub fn Pattern::node(Selector, parts? : ArrayView[Part], captures? : ArrayView[String]) -> Self
+pub fn Pattern::not_equal(Self, Self) -> Bool
+pub fn Pattern::to_repr(Self) -> @debug.Repr
+
+pub struct Predicate {
+  name : String
+  capture : String
+  operands : ReadOnlyArray[String]
+} derive(Eq, @debug.Debug)
+pub fn Predicate::attr_eq(String, String, String) -> Self
+pub fn Predicate::attr_in(String, String, ArrayView[String]) -> Self
+pub fn Predicate::attr_not_eq(String, String, String) -> Self
+pub fn Predicate::equal(Self, Self) -> Bool
+pub fn Predicate::has_attr(String, String) -> Self
+pub fn Predicate::missing_attr(String, String) -> Self
+pub fn Predicate::new(String, String, operands? : ArrayView[String]) -> Self
+pub fn Predicate::not_equal(Self, Self) -> Bool
+pub fn Predicate::text_eq(String, String) -> Self
+pub fn Predicate::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Projected {
+  Absent
+  Text(String)
+  Scalar(ScalarValue)
+  Name(Name)
+  Int(Int32)
+  Location(QueryLocation)
+  Path(ReadOnlyArray[QueryPathStep])
+} derive(Eq, @debug.Debug)
+pub fn Projected::equal(Self, Self) -> Bool
+pub fn Projected::not_equal(Self, Self) -> Bool
+pub fn Projected::to_repr(Self) -> @debug.Repr
+
+pub struct Projection {
+  schema_id : String
+  schema_version : Int32
+  fields : ReadOnlyArray[FieldRequest]
+  // private fields
+}
+pub fn Projection::identity(Schema) -> Self
+pub fn Projection::new(Schema, ArrayView[FieldRequest], namespaces? : ArrayView[(String, String)]) -> Result[Self, ReadOnlyArray[QueryDiagnostic]]
+pub fn Projection::to_repr(Self) -> @debug.Repr
+pub impl @debug.Debug for Projection
+
+pub struct QName {
+  prefix : String?
+  local_name : String
+} derive(Eq, @debug.Debug)
+pub fn QName::equal(Self, Self) -> Bool
+pub fn QName::new(String, prefix? : String) -> Self
+pub fn QName::not_equal(Self, Self) -> Bool
+pub fn QName::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QueryBatch {
+  Rows(ReadOnlyArray[QueryMatch])
+  Complete
+  Stopped
+  Failed(QueryFailure)
+} derive(Eq, @debug.Debug)
+pub fn QueryBatch::equal(Self, Self) -> Bool
+pub fn QueryBatch::not_equal(Self, Self) -> Bool
+pub fn QueryBatch::to_repr(Self) -> @debug.Repr
+
+pub struct QueryCursor[T] {
+  // private fields
+}
+pub fn[T] QueryCursor::close(Self[T]) -> Unit
+pub fn[T] QueryCursor::delivered(Self[T]) -> Int32
+pub fn[T : QueryTree] QueryCursor::next_batch(Self[T], Int32) -> QueryBatch
+pub fn[T] QueryCursor::state(Self[T]) -> CursorState
+pub fn[T] QueryCursor::stop(Self[T]) -> Unit
+pub fn[T] QueryCursor::to_repr(Self[T]) -> @debug.Repr
+pub fn[T] QueryCursor::work(Self[T]) -> Int32
+pub impl[T] @debug.Debug for QueryCursor[T]
+
+pub struct QueryDiagnostic {
+  code : String
+  severity : Severity
+  message : String
+  span : QuerySpan?
+} derive(Eq, @debug.Debug)
+pub fn QueryDiagnostic::equal(Self, Self) -> Bool
+pub fn QueryDiagnostic::not_equal(Self, Self) -> Bool
+pub fn QueryDiagnostic::to_repr(Self) -> @debug.Repr
+
+pub(all) enum QueryFailure {
+  Limit(QueryLimit)
+  IncompatibleSchema(expected~ : String, actual~ : String)
+  InvalidRoot
+  InvalidLimits
+} derive(Eq, @debug.Debug)
+pub fn QueryFailure::equal(Self, Self) -> Bool
+pub fn QueryFailure::not_equal(Self, Self) -> Bool
+pub fn QueryFailure::to_repr(Self) -> @debug.Repr
+
+pub struct QueryForm {
+  rules : ReadOnlyArray[Rule]
+  // private fields
+}
+pub fn QueryForm::equal(Self, Self) -> Bool
+pub fn QueryForm::new(ArrayView[Rule]) -> Self
+pub fn QueryForm::not_equal(Self, Self) -> Bool
+pub fn QueryForm::to_repr(Self) -> @debug.Repr
+pub impl Eq for QueryForm
+pub impl @debug.Debug for QueryForm
+
+pub(all) enum QueryLimit {
+  Work
+  Pending
+  Results
+  Output
+} derive(Eq, @debug.Debug)
+pub fn QueryLimit::equal(Self, Self) -> Bool
+pub fn QueryLimit::not_equal(Self, Self) -> Bool
+pub fn QueryLimit::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QueryLocation {
+  source_id : String?
+  start : QueryPosition
+  end : QueryPosition
+} derive(Eq, @debug.Debug)
+pub fn QueryLocation::equal(Self, Self) -> Bool
+pub fn QueryLocation::not_equal(Self, Self) -> Bool
+pub fn QueryLocation::to_repr(Self) -> @debug.Repr
+
+pub struct QueryMatch {
+  pattern : Int32
+  captures : ReadOnlyArray[CapturedNode]
+} derive(Eq, @debug.Debug)
+pub fn QueryMatch::equal(Self, Self) -> Bool
+pub fn QueryMatch::not_equal(Self, Self) -> Bool
+pub fn QueryMatch::to_repr(Self) -> @debug.Repr
+
+pub(all) struct QueryPathStep {
+  field : Name
+  index : Int32
+  position : Int32
+} derive(Eq, @debug.Debug)
+pub fn QueryPathStep::equal(Self, Self) -> Bool
+pub fn QueryPathStep::not_equal(Self, Self) -> Bool
+pub fn QueryPathStep::to_repr(Self) -> @debug.Repr
+
+pub struct QueryPlan {
+  language_version : Int32
+  schema_id : String
+  schema_version : Int32
+  pattern_count : Int32
+  capture_names : ReadOnlyArray[String]
+  // private fields
+}
+pub fn[T : QueryTree] QueryPlan::collect(Self, T, root? : Int32, projection? : Projection, limits? : ExecutionLimits) -> QueryResult
+pub fn[T : QueryTree] QueryPlan::execute(Self, T, root? : Int32, projection? : Projection, limits? : ExecutionLimits) -> QueryCursor[T]
+pub fn QueryPlan::normalized(Self) -> String
+pub fn QueryPlan::to_repr(Self) -> @debug.Repr
+pub impl @debug.Debug for QueryPlan
+
+pub(all) struct QueryPosition {
+  offset : Int32
+  line : Int32
+  column : Int32
+} derive(Eq, @debug.Debug)
+pub fn QueryPosition::equal(Self, Self) -> Bool
+pub fn QueryPosition::not_equal(Self, Self) -> Bool
+pub fn QueryPosition::to_repr(Self) -> @debug.Repr
+
+pub struct QueryResult {
+  matches : ReadOnlyArray[QueryMatch]
+  outcome : CursorState
+} derive(Eq, @debug.Debug)
+pub fn QueryResult::equal(Self, Self) -> Bool
+pub fn QueryResult::not_equal(Self, Self) -> Bool
+pub fn QueryResult::to_repr(Self) -> @debug.Repr
+
+pub struct QuerySpan {
+  start : QueryPosition
+  end : QueryPosition
+} derive(Eq, @debug.Debug)
+pub fn QuerySpan::equal(Self, Self) -> Bool
+pub fn QuerySpan::not_equal(Self, Self) -> Bool
+pub fn QuerySpan::to_repr(Self) -> @debug.Repr
+
+pub struct Rule {
+  pattern : Pattern
+  predicates : ReadOnlyArray[Predicate]
+} derive(Eq, @debug.Debug)
+pub fn Rule::equal(Self, Self) -> Bool
+pub fn Rule::new(Pattern, predicates? : ArrayView[Predicate]) -> Self
+pub fn Rule::not_equal(Self, Self) -> Bool
+pub fn Rule::to_repr(Self) -> @debug.Repr
+
+pub(all) struct ScalarValue {
+  tag : String
+  text : String
+} derive(Eq, @debug.Debug)
+pub fn ScalarValue::equal(Self, Self) -> Bool
+pub fn ScalarValue::not_equal(Self, Self) -> Bool
+pub fn ScalarValue::to_repr(Self) -> @debug.Repr
+
+pub struct Schema {
+  id : String
+  version : Int32
+  kinds : ReadOnlyArray[Name]
+  categories : ReadOnlyArray[String]
+  fields : ReadOnlyArray[Name]
+  reserved_namespaces : ReadOnlyArray[String]
+  open_extensions : Bool
+  scalar_tags : ReadOnlyArray[String]
+  extra_fields : ReadOnlyArray[String]
+  // private fields
+}
+pub fn Schema::admits_field(Self, Name) -> Bool
+pub fn Schema::admits_kind(Self, Name) -> Bool
+pub fn Schema::compatible(Self, Self) -> Bool
+pub fn Schema::equal(Self, Self) -> Bool
+pub fn Schema::has_category(Self, String) -> Bool
+pub fn Schema::new(id~ : String, version~ : Int32, kinds~ : ArrayView[Name], categories~ : ArrayView[String], fields~ : ArrayView[Name], reserved_namespaces? : ArrayView[String], open_extensions? : Bool, scalar_tags? : ArrayView[String], extra_fields? : ArrayView[String]) -> Self
+pub fn Schema::not_equal(Self, Self) -> Bool
+pub fn Schema::to_repr(Self) -> @debug.Repr
+pub impl Eq for Schema
+pub impl @debug.Debug for Schema
+
+pub(all) enum Selector {
+  Kind(QName)
+  Category(String)
+  Wildcard
+} derive(Eq, @debug.Debug)
+pub fn Selector::equal(Self, Self) -> Bool
+pub fn Selector::not_equal(Self, Self) -> Bool
+pub fn Selector::to_repr(Self) -> @debug.Repr
+
+pub(all) enum Severity {
+  Error
+  Warning
+} derive(Eq, @debug.Debug)
+pub fn Severity::equal(Self, Self) -> Bool
+pub fn Severity::not_equal(Self, Self) -> Bool
+pub fn Severity::to_repr(Self) -> @debug.Repr
+
+// Type aliases
+
+// Traits
+pub(open) trait QueryTree {
+  fn schema(Self) -> Schema
+  fn root(Self) -> Int32
+  fn node_count(Self) -> Int32
+  fn kind(Self, Int32) -> Name?
+  fn category(Self, Int32) -> String
+  fn children(Self, Int32) -> ArrayView[Int32]
+  fn field(Self, Int32) -> Name?
+  fn attribute(Self, Int32, Name) -> ScalarValue?
+  fn text(Self, Int32) -> String?
+  fn extra(Self, Int32, String) -> ScalarValue?
+  fn location(Self, Int32) -> QueryLocation?
+  fn path(Self, Int32) -> ReadOnlyArray[QueryPathStep]
+  fn depth(Self, Int32) -> Int32
+}

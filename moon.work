@@ -5,6 +5,7 @@ members = [
   "./apps/python-native",
   "./pkgs/diagrams",
   "./pkgs/bpmn",
+  "./pkgs/diagrams-query",
   "./pkgs/diagrams-bpmn",
   "./pkgs/diagrams-animated",
   "./pkgs/diagrams-mermaid",

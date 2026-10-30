@@ -1,0 +1,5 @@
+import {
+  "moonrockz/diagrams-query" @query,
+  "moonrockz/bpmn" @model,
+  "moonbitlang/core/debug",
+}
