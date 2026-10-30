@@ -141,9 +141,15 @@ static void lock_release(void) {
   }
 }
 static uint64_t now_ns(void) {
+#if defined(__APPLE__)
+  /* CLOCK_MONOTONIC has microsecond resolution on macOS. This clock counts
+     nanoseconds, like Python's time.perf_counter there. */
+  return clock_gettime_nsec_np(CLOCK_UPTIME_RAW);
+#else
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
   return (uint64_t)ts.tv_sec * 1000000000ull + (uint64_t)ts.tv_nsec;
+#endif
 }
 #endif
 
