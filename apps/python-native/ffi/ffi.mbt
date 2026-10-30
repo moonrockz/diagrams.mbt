@@ -9,7 +9,7 @@
 
 ///|
 #export_name("diagrams_py_abi_version")
-pub fn abi_version() -> Int {
+pub fn abi_version() -> Int32 {
   @bridge.abi_version()
 }
 
@@ -17,4 +17,12 @@ pub fn abi_version() -> Int {
 #export_name("diagrams_py_render_svg")
 pub fn render_svg(source : Bytes) -> Bytes {
   @bridge.render_svg_utf8(source)
+}
+
+///|
+/// The structured boundary: one encoded request record in, one encoded
+/// response record out. See `@bridge.call`. Same ownership as above.
+#export_name("diagrams_py_call")
+pub fn call(request : Bytes) -> Bytes {
+  @bridge.call(request)
 }

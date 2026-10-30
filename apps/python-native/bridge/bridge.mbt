@@ -3,7 +3,7 @@
 ///
 /// Change it when the exported functions or the result format change. The
 /// Python adapter refuses a library with another version.
-pub fn abi_version() -> Int {
+pub fn abi_version() -> Int32 {
   1
 }
 
@@ -46,7 +46,9 @@ fn result_json(rendered : @render.Rendered) -> Json {
       Some(text) => Json(text)
       None => Json(null)
     },
-    "diagnostics": Json(rendered.diagnostics.iter().map(diagnostic_json).to_array()),
+    "diagnostics": Json(
+      rendered.diagnostics.iter().map(diagnostic_json).to_array(),
+    ),
   }
 }
 
@@ -66,11 +68,7 @@ fn diagnostic_json(d : @diagrams.Diagnostic) -> Json {
 
 ///|
 fn position_json(p : @diagrams.Position) -> Json {
-  {
-    "line": Json(p.line),
-    "column": Json(p.column),
-    "offset": Json(p.offset),
-  }
+  { "line": Json(p.line), "column": Json(p.column), "offset": Json(p.offset) }
 }
 
 ///|
