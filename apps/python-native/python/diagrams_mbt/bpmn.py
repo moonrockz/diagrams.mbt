@@ -1069,24 +1069,33 @@ def push_events(
 ) -> TraversalStatus:
     """``push_events(source, enter, leave?)`` over any ``EventSource``.
 
-    Returns ``STOPPED`` after a ``STOP`` decision, else ``COMPLETE``.
+    Returns ``STOPPED`` after a ``STOP`` decision, else ``COMPLETE``. When a
+    callback raises, the source is stopped (no later event is emitted and a
+    native reader releases its state) and the original exception propagates.
     """
     while True:
         event = source.next()
         if event is None:
             return TraversalStatus.COMPLETE
-        if isinstance(event, Enter):
-            control = _control_code(enter(event.node))
-            if control == 1:
-                source.skip_children()
-            elif control == 2:
+        try:
+            if isinstance(event, Enter):
+                control = _control_code(enter(event.node))
+                if control == 1:
+                    source.skip_children()
+                elif control == 2:
+                    source.stop()
+                    return TraversalStatus.STOPPED
+            elif isinstance(event, Leave):
+                if leave is not None:
+                    leave(event.node)
+            else:
+                raise TypeError(f"An event source returned {event!r}")
+        except BaseException:
+            try:
                 source.stop()
-                return TraversalStatus.STOPPED
-        elif isinstance(event, Leave):
-            if leave is not None:
-                leave(event.node)
-        else:
-            raise TypeError(f"An event source returned {event!r}")
+            except Exception:
+                pass  # Keep the original exception.
+            raise
 
 
 # ---------------------------------------------------------------------------

@@ -325,6 +325,47 @@ class ControlTest(unittest.TestCase):
 
 
 class ExceptionTest(unittest.TestCase):
+    def test_push_events_stops_its_source_when_a_callback_raises(self) -> None:
+        tree = tree_of()
+        reader = bpmn.EventReader(by_id(tree, "P"))
+        seen: List[str] = []
+
+        def enter(node: bpmn.Node) -> Control:
+            seen.append(node.id or "")
+            if len(seen) == 2:
+                raise Boom()
+            return Control.CONTINUE
+
+        with self.assertRaises(Boom):
+            bpmn.push_events(reader, enter)
+        self.assertEqual(reader.state, "stopped")
+        self.assertIsNone(reader.next())
+        self.assertEqual(len(seen), 2)
+
+        events = list(bpmn.EventReader(by_id(tree, "P")))
+
+        class ListSource:
+            def __init__(self) -> None:
+                self.at = 0
+                self.stopped = False
+
+            def next(self) -> Optional[bpmn.TraversalEvent]:
+                if self.stopped or self.at >= len(events):
+                    return None
+                self.at += 1
+                return events[self.at - 1]
+
+            def skip_children(self) -> None:
+                pass
+
+            def stop(self) -> None:
+                self.stopped = True
+
+        source = ListSource()
+        with self.assertRaises(Boom):
+            bpmn.push_events(source, lambda n: Control.CONTINUE, leave=lambda n: (_ for _ in ()).throw(Boom()))
+        self.assertTrue(source.stopped)
+
     def test_an_exception_propagates_without_later_callbacks(self) -> None:
         tree = tree_of()
         before = live()

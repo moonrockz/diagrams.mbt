@@ -9,11 +9,13 @@
 /// - compile result: `("ok", plan_token, normalized, language_version,
 ///   schema_id, schema_version, pattern_count, capture_names)` or
 ///   `("error", diagnostics)`.
-/// - form: `(rules...)`; rule `(pattern, predicates)`; pattern
-///   `("node", selector, parts, captures)` or `("alt", branches, captures)`;
-///   selector `("kind", prefix | None, local)`, `("category", name)` or
-///   `("any",)`; part `("child", pattern)`, `("field", prefix | None, local,
-///   pattern)` or `("absent", prefix | None, local)`; predicate
+/// - form: `(patterns, rules)`, a flat table whose depth does not grow with
+///   the pattern nesting. A pattern entry is `("node", selector, parts,
+///   captures)` or `("alt", branch_indices, captures)` and refers to earlier
+///   entries by index; each entry is used once. A rule is `(root_index,
+///   predicates)`. selector `("kind", prefix | None, local)`, `("category",
+///   name)` or `("any",)`; part `("child", index)`, `("field", prefix | None,
+///   local, index)` or `("absent", prefix | None, local)`; predicate
 ///   `(name, capture, operands)`.
 /// - batch: `("rows", matches)`, `("complete",)`, `("stopped",)` or
 ///   `("failed", failure)`; match `(pattern, captures)`; capture
@@ -260,8 +262,10 @@ fn qname_rec(name : @query.QName) -> Array[Rec] {
 }
 
 ///|
-fn pattern_record(pattern : @query.Pattern) -> Rec {
-  match pattern {
+/// Adds `pattern` to `table` after its sub-patterns and returns its index.
+/// Recursion depth is the pattern nesting, which `parse` bounds.
+fn table_add(pattern : @query.Pattern, table : Array[Rec]) -> Int {
+  let entry = match pattern {
     Node(selector, parts, captures) => {
       let sel = match selector {
         Kind(name) => {
@@ -272,56 +276,74 @@ fn pattern_record(pattern : @query.Pattern) -> Rec {
         Category(name) => Rec::list([Str("category"), Str(name)])
         Wildcard => Rec::list([Str("any")])
       }
-      let part_records = parts.map(part => match part {
-        Child(p) => Rec::list([Str("child"), pattern_record(p)])
-        Field(name, p) => {
-          let items = [Rec::Str("field")]
-          items.append(qname_rec(name))
-          items.push(pattern_record(p))
-          Rec::list(items)
+      let part_records = []
+      for part in parts {
+        match part {
+          Child(p) => part_records.push(Rec::list([Str("child"), Rec::int(table_add(p, table))]))
+          Field(name, p) => {
+            let child = table_add(p, table)
+            let items = [Rec::Str("field")]
+            items.append(qname_rec(name))
+            items.push(Rec::int(child))
+            part_records.push(Rec::list(items))
+          }
+          Absent(name) => {
+            let items = [Rec::Str("absent")]
+            items.append(qname_rec(name))
+            part_records.push(Rec::list(items))
+          }
         }
-        Absent(name) => {
-          let items = [Rec::Str("absent")]
-          items.append(qname_rec(name))
-          Rec::list(items)
-        }
-      })
+      }
       Rec::list([
         Str("node"),
         sel,
-        List(part_records),
+        Rec::list(part_records),
         Rec::list(captures.iter().map(c => Rec::Str(c)).to_array()),
       ])
     }
-    Alternation(branches, captures) =>
+    Alternation(branches, captures) => {
+      let indices = []
+      for branch in branches {
+        indices.push(Rec::int(table_add(branch, table)))
+      }
       Rec::list([
         Str("alt"),
-        List(branches.map(pattern_record)),
+        Rec::list(indices),
         Rec::list(captures.iter().map(c => Rec::Str(c)).to_array()),
       ])
+    }
   }
+  table.push(entry)
+  table.length() - 1
 }
 
 ///|
+/// A form as a flat table, so the record depth does not grow with the
+/// pattern nesting: `(patterns, rules)`, where each pattern entry refers to
+/// its sub-patterns by earlier table index and each rule is
+/// `(root_index, predicates)`.
 fn form_record(form : @query.QueryForm) -> Rec {
-  Rec::list(
-    form.rules
-    .iter()
-    .map(rule => Rec::list([
-      pattern_record(rule.pattern),
-      Rec::list(
-        rule.predicates
-        .iter()
-        .map(p => Rec::list([
-          Str(p.name),
-          Str(p.capture),
-          Rec::list(p.operands.iter().map(o => Rec::Str(o)).to_array()),
-        ]))
-        .to_array(),
-      ),
-    ]))
-    .to_array(),
-  )
+  let table = []
+  let rules = []
+  for rule in form.rules {
+    let root = table_add(rule.pattern, table)
+    rules.push(
+      Rec::list([
+        Rec::int(root),
+        Rec::list(
+          rule.predicates
+          .iter()
+          .map(p => Rec::list([
+            Str(p.name),
+            Str(p.capture),
+            Rec::list(p.operands.iter().map(o => Rec::Str(o)).to_array()),
+          ]))
+          .to_array(),
+        ),
+      ]),
+    )
+  }
+  Rec::list([Rec::list(table), Rec::list(rules)])
 }
 
 ///|
@@ -352,68 +374,84 @@ fn qname_of(prefix : Rec, local_name : Rec) -> @query.QName raise BridgeError {
 }
 
 ///|
-/// Decodes a pattern record. Nesting is bounded by the record depth limit.
-fn pattern_of(value : Rec) -> @query.Pattern raise BridgeError {
-  match value {
-    List([Str("node"), selector, List(parts), captures]) => {
-      let sel : @query.Selector = match selector {
-        List([Str("kind"), prefix, name]) => Kind(qname_of(prefix, name))
-        List([Str("category"), Str(name)]) => Category(name)
-        List([Str("any")]) => Wildcard
-        _ => raise BridgeError("invalid-argument", "Unknown selector record.")
-      }
-      let decoded : Array[@query.Part] = []
-      for part in parts {
-        let p : @query.Part = match part {
-          List([Str("child"), pattern]) => Child(pattern_of(pattern))
-          List([Str("field"), prefix, name, pattern]) =>
-            Field(qname_of(prefix, name), pattern_of(pattern))
-          List([Str("absent"), prefix, name]) => Absent(qname_of(prefix, name))
-          _ => raise BridgeError("invalid-argument", "Unknown part record.")
-        }
-        decoded.push(p)
-      }
-      @query.Pattern::node(
-        sel,
-        parts=decoded,
-        captures=strings_of(captures, "Captures"),
-      )
-    }
-    List([Str("alt"), List(branches), captures]) => {
-      let decoded = []
-      for branch in branches {
-        decoded.push(pattern_of(branch))
-      }
-      @query.Pattern::alternation(decoded, captures=strings_of(captures, "Captures"))
-    }
-    _ => raise BridgeError("invalid-argument", "Unknown pattern record.")
+/// Takes table entry `index` for a pattern that `owner` refers to. Each entry
+/// must come before its user and be used once, so the form is a tree.
+fn take_entry(
+  built : Array[@query.Pattern?],
+  index : Rec,
+  owner : Int,
+) -> @query.Pattern raise BridgeError {
+  guard index is Int(i) && i >= 0L && i < owner.to_int64() else {
+    raise BridgeError(
+      "invalid-argument", "A pattern must refer to an earlier table entry.",
+    )
   }
+  guard built[i.to_int()] is Some(pattern) else {
+    raise BridgeError("invalid-argument", "A pattern table entry is used twice.")
+  }
+  built[i.to_int()] = None
+  pattern
 }
 
 ///|
 fn form_of(args : ArrayView[Rec], index : Int) -> @query.QueryForm raise BridgeError {
-  let rules = []
-  for rule in arg_list(args, index) {
-    match rule {
-      List([pattern, List(predicates)]) => {
-        let decoded = []
-        for predicate in predicates {
-          match predicate {
-            List([Str(name), Str(capture), operands]) =>
-              decoded.push(
-                @query.Predicate::new(
-                  name,
-                  capture,
-                  operands=strings_of(operands, "Operands"),
-                ),
-              )
-            _ => raise BridgeError("invalid-argument", "Unknown predicate record.")
-          }
+  guard arg_list(args, index)[:] is [List(entries), List(rule_records)] else {
+    raise BridgeError("invalid-argument", "A form must be (patterns, rules).")
+  }
+  let built : Array[@query.Pattern?] = []
+  for at, entry in entries {
+    let pattern = match entry {
+      List([Str("node"), selector, List(parts), captures]) => {
+        let sel : @query.Selector = match selector {
+          List([Str("kind"), prefix, name]) => Kind(qname_of(prefix, name))
+          List([Str("category"), Str(name)]) => Category(name)
+          List([Str("any")]) => Wildcard
+          _ => raise BridgeError("invalid-argument", "Unknown selector record.")
         }
-        rules.push(@query.Rule::new(pattern_of(pattern), predicates=decoded))
+        let decoded : Array[@query.Part] = []
+        for part in parts {
+          let p : @query.Part = match part {
+            List([Str("child"), child]) => Child(take_entry(built, child, at))
+            List([Str("field"), prefix, name, child]) =>
+              Field(qname_of(prefix, name), take_entry(built, child, at))
+            List([Str("absent"), prefix, name]) => Absent(qname_of(prefix, name))
+            _ => raise BridgeError("invalid-argument", "Unknown part record.")
+          }
+          decoded.push(p)
+        }
+        @query.Pattern::node(sel, parts=decoded, captures=strings_of(captures, "Captures"))
       }
-      _ => raise BridgeError("invalid-argument", "Unknown rule record.")
+      List([Str("alt"), List(branches), captures]) => {
+        let decoded = []
+        for branch in branches {
+          decoded.push(take_entry(built, branch, at))
+        }
+        @query.Pattern::alternation(decoded, captures=strings_of(captures, "Captures"))
+      }
+      _ => raise BridgeError("invalid-argument", "Unknown pattern record.")
     }
+    built.push(Some(pattern))
+  }
+  let rules = []
+  for rule in rule_records {
+    guard rule is List([root, List(predicates)]) else {
+      raise BridgeError("invalid-argument", "Unknown rule record.")
+    }
+    let decoded = []
+    for predicate in predicates {
+      guard predicate is List([Str(name), Str(capture), operands]) else {
+        raise BridgeError("invalid-argument", "Unknown predicate record.")
+      }
+      decoded.push(
+        @query.Predicate::new(name, capture, operands=strings_of(operands, "Operands")),
+      )
+    }
+    rules.push(
+      @query.Rule::new(take_entry(built, root, built.length()), predicates=decoded),
+    )
+  }
+  if built.iter().any(p => p is Some(_)) {
+    raise BridgeError("invalid-argument", "A pattern table entry is not used.")
   }
   @query.QueryForm::new(rules)
 }

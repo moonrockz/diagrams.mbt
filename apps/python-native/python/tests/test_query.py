@@ -100,6 +100,25 @@ class SchemaAndCompileTest(unittest.TestCase):
         )
         self.assertEqual(ra.state, "complete")
 
+    def test_deep_forms_cross_the_boundary(self) -> None:
+        # Each nesting level must not add record depth: 30 levels are valid
+        # under the default nesting limit of 32.
+        text = "(bpmn.process " * 29 + "(bpmn.task) @t" + ")" * 29
+        form = query.parse(text)
+        self.assertEqual(query.compile_form(form).normalized, query.compile(text).normalized)
+        # A deeper typed form gets the MoonBit nesting diagnostic, not a
+        # Python recursion error.
+        deep = query.NodePattern(query.Kind(query.QName("task", "bpmn")))
+        for _ in range(1500):
+            deep = query.NodePattern(query.Wildcard(), (query.Child(deep),))
+        with self.assertRaises(query.QueryCompileError) as caught:
+            query.compile_form(query.QueryForm((query.Rule(deep),)))
+        self.assertEqual(caught.exception.diagnostics[0].code, "query/nesting-limit")
+        bigger = query.CompileLimits(nesting=1000)
+        with self.assertRaises(query.QueryCompileError) as caught:
+            query.compile_form(query.QueryForm((query.Rule(deep),)), limits=bigger)
+        self.assertEqual(caught.exception.diagnostics[0].code, "query/nesting-limit")
+
     def test_typed_forms_have_the_same_checks_without_spans(self) -> None:
         bad = query.QueryForm(
             (query.Rule(query.NodePattern(query.Kind(query.QName("nope", "bpmn")))),)

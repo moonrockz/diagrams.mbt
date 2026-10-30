@@ -352,83 +352,106 @@ def _qname_record(name: QName) -> tuple:
     return (name.prefix, name.local_name)
 
 
-def _pattern_record(pattern: Pattern) -> tuple:
+def _selector_record(selector: Selector) -> tuple:
+    if isinstance(selector, Kind):
+        return ("kind", *_qname_record(selector.name))
+    if isinstance(selector, Category):
+        return ("category", selector.name)
+    if isinstance(selector, Wildcard):
+        return ("any",)
+    raise TypeError(f"unknown selector {selector!r}")
+
+
+def _children(pattern: Pattern) -> Tuple[Pattern, ...]:
     if isinstance(pattern, NodePattern):
-        selector = pattern.selector
-        if isinstance(selector, Kind):
-            sel = ("kind", *_qname_record(selector.name))
-        elif isinstance(selector, Category):
-            sel = ("category", selector.name)
-        elif isinstance(selector, Wildcard):
-            sel = ("any",)
-        else:
-            raise TypeError(f"unknown selector {selector!r}")
-        parts = []
+        out = []
         for part in pattern.parts:
-            if isinstance(part, Child):
-                parts.append(("child", _pattern_record(part.pattern)))
-            elif isinstance(part, Field):
-                parts.append(
-                    ("field", *_qname_record(part.name), _pattern_record(part.pattern))
-                )
-            elif isinstance(part, Absent):
-                parts.append(("absent", *_qname_record(part.name)))
-            else:
+            if isinstance(part, (Child, Field)):
+                out.append(part.pattern)
+            elif not isinstance(part, Absent):
                 raise TypeError(f"unknown part {part!r}")
-        return ("node", sel, tuple(parts), tuple(pattern.captures))
+        return tuple(out)
     if isinstance(pattern, Alternation):
-        return (
-            "alt",
-            tuple(_pattern_record(b) for b in pattern.branches),
-            tuple(pattern.captures),
-        )
+        return tuple(pattern.branches)
     raise TypeError(f"unknown pattern {pattern!r}")
 
 
+def _table_add(root: Pattern, table: list) -> int:
+    # Post-order with an explicit stack, so deep forms reach the MoonBit
+    # nesting check instead of the Python recursion limit.
+    stack = [(root, 0, [])]
+    while True:
+        pattern, at, done = stack[-1]
+        children = _children(pattern)
+        if at < len(children):
+            stack[-1] = (pattern, at + 1, done)
+            stack.append((children[at], 0, []))
+            continue
+        stack.pop()
+        if isinstance(pattern, NodePattern):
+            parts = []
+            indices = iter(done)
+            for part in pattern.parts:
+                if isinstance(part, Child):
+                    parts.append(("child", next(indices)))
+                elif isinstance(part, Field):
+                    parts.append(("field", *_qname_record(part.name), next(indices)))
+                else:
+                    parts.append(("absent", *_qname_record(part.name)))
+            entry = ("node", _selector_record(pattern.selector), tuple(parts), tuple(pattern.captures))
+        else:
+            entry = ("alt", tuple(done), tuple(pattern.captures))
+        table.append(entry)
+        index = len(table) - 1
+        if not stack:
+            return index
+        stack[-1][2].append(index)
+
+
 def _form_record(form: QueryForm) -> tuple:
-    return tuple(
-        (
-            _pattern_record(rule.pattern),
-            tuple((p.name, p.capture, tuple(p.operands)) for p in rule.predicates),
+    """A flat table: ``(patterns, rules)``; see ``ops_query.mbt``."""
+    table: list = []
+    rules = []
+    for rule in form.rules:
+        root = _table_add(rule.pattern, table)
+        rules.append(
+            (root, tuple((p.name, p.capture, tuple(p.operands)) for p in rule.predicates))
         )
-        for rule in form.rules
-    )
+    return (tuple(table), tuple(rules))
 
 
 def _qname_of(prefix: Optional[str], local_name: str) -> QName:
     return QName(local_name, prefix)
 
 
-def _pattern_of(record: tuple) -> Pattern:
-    if record[0] == "node":
-        _, sel, parts, captures = record
-        if sel[0] == "kind":
-            selector: Selector = Kind(_qname_of(sel[1], sel[2]))
-        elif sel[0] == "category":
-            selector = Category(sel[1])
-        else:
-            selector = Wildcard()
-        decoded = []
-        for part in parts:
-            if part[0] == "child":
-                decoded.append(Child(_pattern_of(part[1])))
-            elif part[0] == "field":
-                decoded.append(Field(_qname_of(part[1], part[2]), _pattern_of(part[3])))
-            else:
-                decoded.append(Absent(_qname_of(part[1], part[2])))
-        return NodePattern(selector, tuple(decoded), tuple(captures))
-    _, branches, captures = record
-    return Alternation(tuple(_pattern_of(b) for b in branches), tuple(captures))
-
-
 def _form_of(record: tuple) -> QueryForm:
+    entries, rules = record
+    built: list = []
+    for entry in entries:
+        if entry[0] == "node":
+            _, sel, parts, captures = entry
+            if sel[0] == "kind":
+                selector: Selector = Kind(_qname_of(sel[1], sel[2]))
+            elif sel[0] == "category":
+                selector = Category(sel[1])
+            else:
+                selector = Wildcard()
+            decoded = []
+            for part in parts:
+                if part[0] == "child":
+                    decoded.append(Child(built[part[1]]))
+                elif part[0] == "field":
+                    decoded.append(Field(_qname_of(part[1], part[2]), built[part[3]]))
+                else:
+                    decoded.append(Absent(_qname_of(part[1], part[2])))
+            built.append(NodePattern(selector, tuple(decoded), tuple(captures)))
+        else:
+            _, branches, captures = entry
+            built.append(Alternation(tuple(built[i] for i in branches), tuple(captures)))
     return QueryForm(
         tuple(
-            Rule(
-                _pattern_of(pattern),
-                tuple(Predicate(n, c, tuple(o)) for n, c, o in predicates),
-            )
-            for pattern, predicates in record
+            Rule(built[root], tuple(Predicate(n, c, tuple(o)) for n, c, o in predicates))
+            for root, predicates in rules
         )
     )
 
