@@ -8,7 +8,7 @@ Bead: diagrams-uzj.1
 
 - [x] 1.1 Add a minimal public portable query module, BPMN adapter and Python entry path for one exact-kind capture; verify a fresh MoonBit consumer on all four targets and Python return the same node identity and projected ID from the same source.
 - [x] 1.2 Audit the pinned runtime and allocator thread-handoff constraints, then add a bounded native-lock/GIL tracer bullet; verify different Python threads can enter serially, unrelated Python code advances during native work and lock waits, and sanitizers report no error. If thread affinity requires a dedicated owner thread, update the design explicitly before continuing.
-- [ ] 1.3 Record reproducible commands, runtime findings, baseline render/query/callback timings and the proposed API mapping; verify the evidence distinguishes measured behavior from assumptions and the initial query needs no Python predicate.
+- [x] 1.3 Record reproducible commands, runtime findings, baseline render/query/callback timings and the proposed API mapping; verify the evidence distinguishes measured behavior from assumptions and the initial query needs no Python predicate.
 
 ## 2. Add the public query schema, typed form and compiler
 
@@ -49,10 +49,10 @@ Bead: diagrams-uzj.5
 
 Depends on group 1; query transport qualification also requires groups 3 and 4.
 
-- [ ] 5.1 Introduce the versioned structured C boundary, C-owned result buffers and generation-checked owner/plan/cursor tokens; verify stale/wrong/closed tokens fail safely, retained views outlive local document variables and cleanup releases resources exactly once under sanitizers.
+- [x] 5.1 Introduce the versioned structured C boundary, C-owned result buffers and generation-checked owner/plan/cursor tokens; verify stale/wrong/closed tokens fail safely, retained views outlive local document variables and cleanup releases resources exactly once under sanitizers.
 - [x] 5.2 Replace complete SVG JSON transport while preserving the public Python rendering API; verify exact SVG/diagnostic/Unicode parity, unchanged dataclass and error behavior, and no JSON round trip for complete SVG or projected batches.
 - [x] 5.3 Apply the native lock policy to initialization, allocation, reference counts, cycle collection, registries and counters; verify detached lock waits, release-before-GIL-reacquire ordering, imports/cleanup under contention, and rejection of simultaneous advancement of one cursor with bounded deadlock tests.
-- [ ] 5.4 Document boundary ownership and supported concurrency, and qualify portable bridge records plus candidate native wheels; verify Python 3.12 Limited API compatibility, all existing wheel targets, sanitizer and native-Zig integration, and unchanged subinterpreter/free-threaded restrictions.
+- [x] 5.4 Document boundary ownership and supported concurrency, and qualify portable bridge records plus candidate native wheels; verify Python 3.12 Limited API compatibility, all existing wheel targets, sanitizer and native-Zig integration, and unchanged subinterpreter/free-threaded restrictions.
 
 ## 6. Expose complete Python query and traversal parity
 
@@ -72,10 +72,10 @@ Bead: diagrams-uzj.7
 
 Depends on all prior groups.
 
-- [ ] 7.1 Run the complete shared normalized corpus on wasm, wasm-gc, js and native and on all five candidate wheels with Python 3.12/3.15; verify exact results, source identities, diagnostics, pruning, graph outcomes and resource bounds agree.
-- [ ] 7.2 Extend the reproducible measurement task for native oracle, public calls, no-op/field/substantive visitors, pruning, selective/match-all queries and batch sizes 1/64/256; verify equal workloads and report latency distributions, throughput, native/callback counts, conversion bytes, allocation growth, GIL-held time and native-lock wait with platform/toolchain evidence.
-- [ ] 7.3 Run integrated GIL-progress, reentry, contention, ownership and sanitizer qualification and review measured baselines; verify zero Python per-candidate calls for native queries, no runtime overlap, no lock-order deadlock and no unsupported parallel-speedup claim.
-- [ ] 7.4 Run mise run format, mise run check, mise run test:native-zig, the focused Python/query consumer and sanitizer tasks, candidate wheel qualification and mise exec -- openspec validate --all --strict; verify required checks pass, public interfaces are reviewed and the final compatibility map is complete.
+- [x] 7.1 Run the complete shared normalized corpus on wasm, wasm-gc, js and native and on all five candidate wheels with Python 3.12/3.15; verify exact results, source identities, diagnostics, pruning, graph outcomes and resource bounds agree.
+- [x] 7.2 Extend the reproducible measurement task for native oracle, public calls, no-op/field/substantive visitors, pruning, selective/match-all queries and batch sizes 1/64/256; verify equal workloads and report latency distributions, throughput, native/callback counts, conversion bytes, allocation growth, GIL-held time and native-lock wait with platform/toolchain evidence.
+- [x] 7.3 Run integrated GIL-progress, reentry, contention, ownership and sanitizer qualification and review measured baselines; verify zero Python per-candidate calls for native queries, no runtime overlap, no lock-order deadlock and no unsupported parallel-speedup claim.
+- [x] 7.4 Run mise run format, mise run check, mise run test:native-zig, the focused Python/query consumer and sanitizer tasks, candidate wheel qualification and mise exec -- openspec validate --all --strict; verify required checks pass, public interfaces are reviewed and the final compatibility map is complete.
 
 ## Workflow follow-up
 
