@@ -3,6 +3,8 @@ import {
   "moonrockz/diagrams",
   "moonrockz/diagrams/render",
   "moonrockz/diagrams-mermaid" @mermaid,
+  "moonrockz/diagrams-query" @query,
+  "moonrockz/diagrams-query/bpmn" @query_bpmn,
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8",
 }
