@@ -1,0 +1,656 @@
+///|
+/// Build, test and measure the Python native-binding spike (OpenSpec change
+/// `prove-python-native-binding`).
+///
+/// Usage: `mise run test:python-native`, or
+/// `moonx scripts/python-native.mbtx <command> [--python <exe>]...`.
+///
+/// - `build` builds the native MoonBit library and the oracle in release mode
+///   (C backend). Then it links the extension variants `default` and `badabi`
+///   under `_build/python-native/`.
+/// - `test` runs `build`, writes the oracle results and runs the Python tests
+///   with each interpreter.
+/// - `sanitize` compiles the generated C and the runtime sources with
+///   AddressSanitizer and UndefinedBehaviorSanitizer, and runs the tests.
+/// - `measure` runs bounded repeated calls with the `default` build and a
+///   system-allocator build. On macOS it also runs the `leaks` tool.
+///
+/// The first `--python` builds the extension against its headers. The default
+/// is `python3.12 python3.15`. Only macOS and Linux hosts are supported, and
+/// only macOS arm64 is verified.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let usage : String = "Usage: python-native.mbtx build|test|sanitize|measure [--python <exe>]..."
+
+///|
+let out_dir : String = "_build/python-native"
+
+///|
+let native_dir : String = "_build/native/release/build/moonrockz/diagrams-python-native"
+
+///|
+let spike_dir : String = "apps/python-native"
+
+///|
+let module_file : String = "_native.abi3.so"
+
+///|
+/// The runtime sources that the generated C needs when moon does not build
+/// the archive. `backtrace.c` gives `moonbit_panic`.
+let runtime_sources : Array[String] = [
+  "runtime", "env", "utf", "stdio", "backtrace",
+]
+
+///|
+/// The flags that moon gives the C compiler for generated code.
+let moon_c_flags : Array[String] = [
+  "-fwrapv", "-fno-strict-aliasing", "-ffp-contract=off", "-Wno-unused-value",
+]
+
+///|
+/// Imports that would let the extension start a process, open a socket or
+/// start a thread. None of them may appear in the linked module.
+let forbidden_imports : Array[String] = [
+  "fork", "vfork", "posix_spawn", "posix_spawnp", "execve", "execv", "execvp", "system",
+  "popen", "socket", "connect", "pthread_create",
+]
+
+///|
+priv struct Options {
+  command : String
+  pythons : Array[String]
+}
+
+///|
+fn parse_options(args : ArrayView[String]) -> Result[Options, String] {
+  guard args is [command, .. rest] else { return Err(usage) }
+  guard ["build", "test", "sanitize", "measure"].contains(command) else {
+    return Err(usage)
+  }
+  let pythons = []
+  let mut i = 0
+  while i < rest.length() {
+    guard rest[i] == "--python" && i + 1 < rest.length() else {
+      return Err(usage)
+    }
+    pythons.push(rest[i + 1])
+    i += 2
+  }
+  if pythons.is_empty() {
+    pythons.push_iter(["python3.12", "python3.15"].iter())
+  }
+  Ok({ command, pythons, })
+}
+
+///|
+priv enum Platform {
+  Darwin
+  Linux
+} derive(Eq)
+
+///|
+fn platform_of(name : String) -> Platform? {
+  match name {
+    "darwin" => Some(Darwin)
+    "linux" => Some(Linux)
+    _ => None
+  }
+}
+
+///|
+/// The linker arguments that make `output` a CPython extension module and
+/// export only its initialization function.
+fn link_args(
+  platform : Platform,
+  output : String,
+  inputs : Array[String],
+) -> Array[String] {
+  let args = match platform {
+    Darwin =>
+      [
+        "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__native",
+      ]
+    Linux => ["-shared", "-Wl,--exclude-libs,ALL"]
+  }
+  args.push_iter(["-o", output].iter())
+  args.push_iter(inputs.iter())
+  args.push("-lm")
+  args
+}
+
+///|
+/// The symbol names of `nm` output, without the Mach-O leading underscore.
+fn symbol_names(platform : Platform, nm_output : String) -> Array[String] {
+  let names = []
+  for line in nm_output.split("\n") {
+    let fields = line.split(" ").filter(f => f != "").to_array()
+    guard fields is [.., last] else { continue }
+    let name = last.to_owned()
+    names.push(
+      if platform == Darwin && name.has_prefix("_") {
+        name.view(start_offset=1).to_owned()
+      } else {
+        name
+      },
+    )
+  }
+  names
+}
+
+///|
+/// The problems in the undefined symbols of the linked module.
+fn import_problems(platform : Platform, nm_output : String) -> Array[String] {
+  let problems = []
+  for name in symbol_names(platform, nm_output) {
+    if forbidden_imports.contains(name) {
+      problems.push("imports \{name}")
+    } else if name.has_prefix("moonbit_") || name.has_prefix("diagrams_py_") {
+      problems.push("leaves \{name} unresolved")
+    }
+  }
+  problems
+}
+
+///|
+/// The problems in the defined, exported symbols of the linked module.
+fn export_problems(platform : Platform, nm_output : String) -> Array[String] {
+  let allowed = [
+    "PyInit__native", "_mh_bundle_header", "_init", "_fini", "__bss_start", "_edata",
+    "_end",
+  ]
+  symbol_names(platform, nm_output)
+  .filter(name => !allowed.contains(name))
+  .map(name => "exports \{name}")
+}
+
+///|
+/// The MoonBit toolchain root: `MOON_HOME`, or the parent of a `PATH`
+/// directory that has `moon` next to `../include/moonbit.h`.
+async fn toolchain_root() -> String? {
+  let candidates = []
+  if @env.get_env_var("MOON_HOME") is Some(home) {
+    candidates.push(home)
+  }
+  if @env.get_env_var("PATH") is Some(path) {
+    for dir in path.split(":") {
+      if dir.has_suffix("/bin") {
+        candidates.push(dir.view(end_offset=dir.length() - 4).to_owned())
+      }
+    }
+  }
+  for root in candidates {
+    if @fs.exists("\{root}/bin/moon") && @fs.exists("\{root}/include/moonbit.h") {
+      return Some(root)
+    }
+  }
+  None
+}
+
+///|
+priv struct Host {
+  platform : Platform
+  python_include : String
+  moon_root : String
+}
+
+///|
+fn[T] fail(message : String) -> T {
+  eprintln("❌ \{message}")
+  @sys.exit(1)
+  panic()
+}
+
+///|
+async fn run(
+  cmd : String,
+  args : Array[String],
+  extra_env~ : Map[String, String] = {},
+) -> Unit {
+  let code = @process.run(
+    cmd,
+    args,
+    extra_env~,
+    stdout=@stdio.stdout,
+    stderr=@stdio.stderr,
+  )
+  if code != 0 {
+    eprintln("❌ \{cmd} exited with \{code}")
+    @sys.exit(if code > 0 { code } else { 1 })
+  }
+}
+
+///|
+async fn capture(cmd : String, args : Array[String]) -> String {
+  let (code, out, err) = @process.collect_output(cmd, args)
+  if code != 0 {
+    fail("\{cmd} \{args.join(" ")} exited with \{code}: \{err.text()}")
+  }
+  out.text()
+}
+
+///|
+let python_query : String =
+  #|import sys, sysconfig
+  #|print(sys.platform)
+  #|print(sysconfig.get_paths()["include"])
+  #|print("%d.%d.%d" % sys.version_info[:3])
+  #|print(1 if sysconfig.get_config_var("Py_GIL_DISABLED") else 0)
+
+///|
+/// Checks each interpreter and returns the build host of the first one.
+async fn python_host(pythons : Array[String]) -> Host {
+  let mut host : Host? = None
+  guard toolchain_root() is Some(moon_root) else {
+    fail("cannot find the MoonBit toolchain; set MOON_HOME")
+  }
+  for python in pythons {
+    let lines = capture(python, ["-c", python_query])
+      .trim()
+      .split("\n")
+      .to_array()
+    guard lines is [platform, include_dir, version, gil_disabled] else {
+      fail("unexpected answer from \{python}")
+    }
+    guard platform_of(platform.trim().to_owned()) is Some(platform) else {
+      fail("\{python}: the spike supports only macOS and Linux")
+    }
+    if gil_disabled.trim() == "1" {
+      fail("\{python}: a free-threaded build cannot load an abi3 module")
+    }
+    println("🐍 \{python}: CPython \{version.trim()}")
+    if host is None {
+      host = Some({
+        platform,
+        python_include: include_dir.trim().to_owned(),
+        moon_root,
+      })
+    }
+  }
+  host.unwrap()
+}
+
+///|
+async fn compile(
+  host : Host,
+  source : String,
+  object : String,
+  flags : Array[String],
+) -> Unit {
+  let args = flags.copy()
+  args.push_iter(
+    [
+      "-I\{host.python_include}",
+      "-I\{host.moon_root}/include",
+      "-c",
+      source,
+      "-o",
+      object,
+    ].iter(),
+  )
+  run("cc", args)
+}
+
+///|
+async fn copy_file(from : String, to : String) -> Unit {
+  @fs.write_file(to, @fs.read_file(from).binary())
+}
+
+///|
+/// Links `objects` into the module of variant `name`, adds the Python
+/// package and checks the imports and exports of the module.
+async fn link_variant(
+  host : Host,
+  name : String,
+  objects : Array[String],
+  extra_link : Array[String],
+) -> String {
+  let package_dir = "\{out_dir}/\{name}/diagrams_mbt"
+  @fs.mkdir(package_dir, recursive=true, allow_exist=true)
+  let module_path = "\{package_dir}/\{module_file}"
+  let args = extra_link.copy()
+  args.push_iter(link_args(host.platform, module_path, objects).iter())
+  run("cc", args)
+  copy_file(
+    "\{spike_dir}/python/diagrams_mbt/__init__.py",
+    "\{package_dir}/__init__.py",
+  )
+  let (undefined, defined) = match host.platform {
+    Darwin =>
+      (capture("nm", ["-u", module_path]), capture("nm", ["-gU", module_path]))
+    Linux =>
+      (
+        capture("nm", ["-D", "--undefined-only", module_path]),
+        capture("nm", ["-D", "--defined-only", module_path]),
+      )
+  }
+  let problems = import_problems(host.platform, undefined)
+  problems.push_iter(export_problems(host.platform, defined).iter())
+  if !problems.is_empty() {
+    fail("\{module_path}: \{problems.join("; ")}")
+  }
+  println("📦 \{name}: \{module_path} exports only PyInit__native")
+  @fs.realpath("\{out_dir}/\{name}")
+}
+
+///|
+/// A variant that links the archive that moon builds for the `ffi` package.
+async fn archive_variant(
+  host : Host,
+  name : String,
+  defines : Array[String],
+) -> String {
+  let objects = "\{out_dir}/obj/\{name}"
+  @fs.mkdir(objects, recursive=true, allow_exist=true)
+  let flags = [
+    "-O2", "-fPIC", "-fvisibility=hidden", "-Wall", "-Wextra", "-Werror",
+  ]
+  flags.push_iter(defines.iter())
+  compile(
+    host,
+    "\{spike_dir}/python/adapter/native.c",
+    "\{objects}/adapter.o",
+    flags,
+  )
+  link_variant(
+    host,
+    name,
+    ["\{objects}/adapter.o", "\{native_dir}/ffi/ffi.a"],
+    [],
+  )
+}
+
+///|
+/// A variant that compiles the generated C and the runtime sources directly,
+/// with the system allocator and optional sanitizers.
+async fn source_variant(host : Host, name : String, sanitize : Bool) -> String {
+  let objects = "\{out_dir}/obj/\{name}"
+  @fs.mkdir(objects, recursive=true, allow_exist=true)
+  let flags = moon_c_flags.copy()
+  flags.push_iter(
+    [
+      "-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_SYSTEM", "-fPIC", "-fvisibility=hidden",
+      "-g",
+    ].iter(),
+  )
+  let sanitizer = ["-fsanitize=address,undefined"]
+  if sanitize {
+    flags.push_iter(["-O1", "-fno-omit-frame-pointer"].iter())
+    flags.push_iter(sanitizer.iter())
+  } else {
+    flags.push("-O2")
+  }
+  println("🛠️  \{name}: compiling the generated C (about one minute)")
+  compile(host, "\{native_dir}/ffi/ffi.c", "\{objects}/ffi.o", flags)
+  let inputs = ["\{objects}/ffi.o"]
+  for source in runtime_sources {
+    let object = "\{objects}/runtime-\{source}.o"
+    compile(host, "\{host.moon_root}/lib/runtime/\{source}.c", object, flags)
+    inputs.push(object)
+  }
+  let adapter_flags = flags.copy()
+  adapter_flags.push_iter(["-Wall", "-Wextra", "-Werror"].iter())
+  compile(
+    host,
+    "\{spike_dir}/python/adapter/native.c",
+    "\{objects}/adapter.o",
+    adapter_flags,
+  )
+  inputs.push("\{objects}/adapter.o")
+  inputs.push("\{host.moon_root}/lib/moonbit_simdutf.o")
+  inputs.push("\{host.moon_root}/lib/simdutf.o")
+  link_variant(host, name, inputs, if sanitize { sanitizer } else { [] })
+}
+
+///|
+async fn build_native() -> Unit {
+  println(
+    "🔨 Building the MoonBit library and oracle (native, release, C backend)",
+  )
+  run("moon", [
+    "build",
+    "--target",
+    "native",
+    "--release",
+    "\{spike_dir}/ffi",
+    "\{spike_dir}/oracle",
+  ])
+}
+
+///|
+async fn write_oracle() -> String {
+  let dir = "\{out_dir}/oracle"
+  if @fs.exists(dir) {
+    @fs.rmdir(dir, recursive=true)
+  }
+  @fs.mkdir(dir, recursive=true)
+  run("\{native_dir}/oracle/oracle.exe", ["\{spike_dir}/fixtures", dir])
+  @fs.realpath(dir)
+}
+
+///|
+async fn run_tests(
+  pythons : Array[String],
+  variant : String,
+  oracle : String,
+  extra_env : Map[String, String],
+) -> Unit {
+  let env = {
+    "PYTHONPATH": variant,
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "DIAGRAMS_NATIVE_FIXTURES": @fs.realpath("\{spike_dir}/fixtures"),
+    "DIAGRAMS_NATIVE_ORACLE": oracle,
+  }
+  for key, value in extra_env {
+    env[key] = value
+  }
+  let tests = "\{spike_dir}/python/tests"
+  for python in pythons {
+    println("🧪 \{python}: \{variant}")
+    run(
+      python,
+      ["-m", "unittest", "discover", "-s", tests, "-t", tests, "-v"],
+      extra_env=env,
+    )
+  }
+}
+
+///|
+/// The environment that loads the sanitizer runtime into the interpreter.
+async fn sanitizer_env(host : Host) -> Map[String, String] {
+  let (library, variable) = match host.platform {
+    Darwin => ("libclang_rt.asan_osx_dynamic.dylib", "DYLD_INSERT_LIBRARIES")
+    Linux => ("libasan.so", "LD_PRELOAD")
+  }
+  let path = capture("cc", ["-print-file-name=\{library}"]).trim().to_owned()
+  if !@fs.exists(path) {
+    fail("cannot find the sanitizer runtime \{library}")
+  }
+  let env = {
+    "ASAN_OPTIONS": "abort_on_error=1:detect_stack_use_after_return=1:detect_leaks=0",
+    "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1",
+    "DIAGRAMS_NATIVE_REPEAT": "200",
+  }
+  env[variable] = path
+  env
+}
+
+///|
+async fn measure(pythons : Array[String], variant : String) -> Unit {
+  let fixtures = @fs.realpath("\{spike_dir}/fixtures")
+  println("📏 \{pythons[0]}: \{variant}")
+  run(
+    pythons[0],
+    [
+      "-P",
+      "\{spike_dir}/python/measure.py",
+      "--fixtures",
+      fixtures,
+      "--batches",
+      "5",
+      "--calls",
+      "2000",
+      "--max-growth-per-call",
+      "0.05",
+    ],
+    extra_env={ "PYTHONPATH": variant, "PYTHONDONTWRITEBYTECODE": "1" },
+  )
+}
+
+///|
+/// The leak count of a `leaks` report line such as
+/// `Process 1: 10 leaks for 768 total leaked bytes.`.
+fn leak_count(line : String) -> Int32? {
+  guard line.contains(" leaks for ") else { return None }
+  let words = line.split(" ").filter(w => w != "").to_array()
+  for i in 1..<words.length() {
+    if words[i] == "leaks" {
+      return Some(@string.parse_int(words[i - 1])) catch { _ => None }
+    }
+  }
+  None
+}
+
+///|
+/// Runs the macOS `leaks` tool at exit, for a baseline and after calls. The
+/// leak count must not grow with the calls by more than a small margin.
+async fn leaks(python : String, variant : String) -> Unit {
+  let fixtures = @fs.realpath("\{spike_dir}/fixtures")
+  let counts = []
+  for batches in ["0", "2"] {
+    let (_, out, err) = @process.collect_output(
+      "leaks",
+      [
+        "--atExit",
+        "--",
+        python,
+        "-P",
+        "\{spike_dir}/python/measure.py",
+        "--fixtures",
+        fixtures,
+        "--batches",
+        batches,
+        "--calls",
+        "2000",
+      ],
+      extra_env={ "PYTHONPATH": variant, "PYTHONDONTWRITEBYTECODE": "1" },
+    )
+    for line in (out.text() + err.text()).split("\n") {
+      if line.contains("leaks for") || line.contains("nodes malloced") {
+        println("🔎 leaks, \{batches} batches of 2000 calls: \{line.trim()}")
+      }
+      if leak_count(line.to_owned()) is Some(count) {
+        counts.push(count)
+      }
+    }
+  }
+  guard counts is [baseline, after] else {
+    fail("cannot read the leaks reports")
+  }
+  if after > baseline + 50 {
+    fail("leaks grew from \{baseline} to \{after} after 4000 calls")
+  }
+}
+
+///|
+async fn main {
+  let options = match parse_options(@env.args()[1:]) {
+    Ok(options) => options
+    Err(message) => {
+      eprintln(message)
+      @sys.exit(2)
+      panic()
+    }
+  }
+  let host = python_host(options.pythons)
+  build_native()
+  match options.command {
+    "build" => {
+      ignore(archive_variant(host, "default", []))
+      ignore(archive_variant(host, "badabi", ["-DDIAGRAMS_PY_EXPECTED_ABI=0"]))
+    }
+    "test" => {
+      let variant = archive_variant(host, "default", [])
+      let badabi = archive_variant(host, "badabi", [
+        "-DDIAGRAMS_PY_EXPECTED_ABI=0",
+      ])
+      let oracle = write_oracle()
+      run_tests(options.pythons, variant, oracle, {
+        "DIAGRAMS_NATIVE_BADABI": badabi,
+      })
+    }
+    "sanitize" => {
+      let variant = source_variant(host, "sanitize", true)
+      let oracle = write_oracle()
+      run_tests(options.pythons, variant, oracle, sanitizer_env(host))
+    }
+    _ => {
+      measure(options.pythons, archive_variant(host, "default", []))
+      let system = source_variant(host, "sysalloc", false)
+      measure(options.pythons, system)
+      if host.platform == Darwin {
+        leaks(options.pythons[0], system)
+      }
+    }
+  }
+  println("✅ python-native \{options.command} passed")
+}
+
+///|
+test "options select a command and default interpreters" {
+  let options = parse_options(["test"]).unwrap()
+  assert_eq(options.command, "test")
+  assert_eq(options.pythons, ["python3.12", "python3.15"])
+  let options = parse_options(["measure", "--python", "py"]).unwrap()
+  assert_eq(options.pythons, ["py"])
+  assert_true(parse_options([]) is Err(_))
+  assert_true(parse_options(["deploy"]) is Err(_))
+  assert_true(parse_options(["test", "--python"]) is Err(_))
+}
+
+///|
+test "link arguments export only the module initialization" {
+  assert_eq(link_args(Darwin, "m.so", ["a.o"]), [
+    "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__native",
+    "-o", "m.so", "a.o", "-lm",
+  ])
+  assert_eq(link_args(Linux, "m.so", ["a.o", "b.a"]), [
+    "-shared", "-Wl,--exclude-libs,ALL", "-o", "m.so", "a.o", "b.a", "-lm",
+  ])
+}
+
+///|
+test "symbol checks find process imports, unresolved symbols and exports" {
+  let undefined = "                 _malloc\n                 _posix_spawn\n                 _moonbit_panic\n"
+  assert_eq(import_problems(Darwin, undefined), [
+    "imports posix_spawn", "leaves moonbit_panic unresolved",
+  ])
+  assert_eq(import_problems(Linux, "                 U fork\n"), [
+    "imports fork",
+  ])
+  assert_eq(export_problems(Darwin, "0000000000000740 T _PyInit__native\n"), [])
+  assert_eq(
+    export_problems(
+      Darwin,
+      "0000000000000740 T _PyInit__native\n0000000000000010 T _moonbit_init\n",
+    ),
+    ["exports moonbit_init"],
+  )
+}
+
+///|
+test "leak counts come from leaks report lines" {
+  assert_eq(
+    leak_count("Process 56575: 10 leaks for 768 total leaked bytes."),
+    Some(10),
+  )
+  assert_eq(leak_count("Process 1: 4949 nodes malloced for 1160 KB"), None)
+}

@@ -44,3 +44,6 @@ tests/plantuml-state-acceptance/fixtures.mbt text eol=lf
 apps/raster-browser/assets/THIRD-PARTY-NOTICES.txt -text
 apps/raster-browser/assets/*.js text eol=lf
 apps/site/assets/raster/*.js text eol=lf
+
+# Python parity fixtures: diagnostic offsets count the exact source bytes on every checkout.
+apps/python-native/fixtures/** -text

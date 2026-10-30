@@ -1,0 +1,5 @@
+flowchart TD
+  A[Start] --> B{Ready?}
+  B -->|Yes| C[Render]
+  B -->|No| D[Wait]
+  D --> B

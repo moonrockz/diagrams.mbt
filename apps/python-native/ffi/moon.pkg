@@ -1,0 +1,5 @@
+pkgtype(kind: "foreign_library")
+supported_targets = "native"
+import {
+  "moonrockz/diagrams-python-native/bridge",
+}

@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-python-native/bridge"
+
+import {
+  "moonrockz/diagrams",
+}
+
+// Values
+pub fn abi_version() -> Int32
+
+pub fn render_svg_json(String) -> String
+
+pub fn render_svg_utf8(BytesView) -> Bytes
+
+pub fn severity_name(@diagrams.Severity) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

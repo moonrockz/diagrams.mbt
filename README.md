@@ -21,6 +21,23 @@ This project shares the setup, the design principles and the release pipelines o
 the other moonrockz projects, such as
 [moon-lander](https://github.com/moonrockz/moon-lander).
 
+## Python
+
+The PyPI package [`diagrams.mbt`](https://pypi.org/project/diagrams.mbt/) renders
+Mermaid source to SVG in a Python process with the same MoonBit renderer:
+
+```shell
+pip install diagrams.mbt
+```
+
+```python
+import diagrams_mbt
+print(diagrams_mbt.render_svg("flowchart TD\n  A --> B\n").output)
+```
+
+See the [Python quick start](docs/python/getting-started.md). The package is
+experimental (0.0.x).
+
 ## Development setup
 
 Install [mise](https://mise.jdx.dev/), then run:
@@ -84,6 +101,8 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run dev:site` | Build the docs site, serve it at `http://127.0.0.1:4173/diagrams.mbt/` and build it again after a change |
 | `mise run check:site` | Check the links of the built `_site/` |
 | `mise run test:site` | Test the docs site packages and run the browser smoke test on the built site |
+| `mise run python-native:wheels` | Cross-build the Python wheels for Linux, macOS and Windows with zig |
+| `mise run test:python-native` | Build the Python extension for this host and test it with CPython 3.12 and 3.15 |
 | `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.1.2` |
 | `mise run clean` | Remove build artifacts |
 | `mise run openspec:setup` | Refresh OpenSpec skills and commands for the supported agents |
@@ -108,6 +127,8 @@ Pass `--jobs=N` after the task separator to limit parallel work in `test` or
 - `pkgs/diagrams-plantuml/` reads, prints and converts PlantUML regex, EBNF, JSON, YAML and modern/legacy activity blocks.
 - `pkgs/diagrams-svg/` lays out sequence/BPMN/swimlane/flowchart/railroad/data-tree models and writes standalone SVG and scene bindings.
 - `tests/` contains the unpublished acceptance suites and frozen Mermaid/BPMN corpora.
+- `apps/python-native/` builds the Python package `diagrams.mbt` (import `diagrams_mbt`): a native MoonBit
+  library, a CPython adapter and the wheel builder. Its MoonBit module is not published.
 - `apps/site/` is the unpublished docs site tool `moonrockz/diagrams-site`. It
   builds the static site at `https://moonrockz.github.io/diagrams.mbt/`.
 - `docs/` and `site/` hold the content of the docs site.

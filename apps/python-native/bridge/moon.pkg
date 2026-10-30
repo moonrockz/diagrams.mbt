@@ -1,0 +1,13 @@
+import {
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonbitlang/core/encoding/utf8",
+}
+
+import {
+  "moonrockz/diagrams-python-native/bridge" @python_native_bridge,
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/utf8",
+} for "test"

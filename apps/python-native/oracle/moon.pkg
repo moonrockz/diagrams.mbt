@@ -1,0 +1,11 @@
+options("is-main": true)
+supported_targets = "native"
+import {
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams-mermaid" @mermaid,
+  "moonbitlang/async/fs",
+  "moonbitlang/async",
+  "moonbitlang/core/env",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x/sys",
+}

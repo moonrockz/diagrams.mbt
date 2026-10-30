@@ -76,9 +76,12 @@ The module name `moonrockz/diagrams` is provisional. Do not add UI packages. One
 exception: the unpublished docs tool `apps/site` can use Rabbita. No other module
 can import it, and the published library stays UI-free. Consume `zig-cross`
 through `moonx`; do not vendor it. Ask before cutting a GitHub release or
-publishing to mooncakes.io. Releases run only through
+publishing to mooncakes.io or PyPI. Releases run only through
 `.github/workflows/release.yml`, which publishes when an owner-approved version
-change merges to `main`; never publish from a workstation.
+change merges to `main`; never publish from a workstation. The PyPI project
+`diagrams.mbt` uses trusted publishing from the `pypi` job of that workflow, with
+the environment `pypi`; do not rename the workflow, the job environment or the
+project without updating the PyPI publisher.
 
 ## Shared OpenSpec configuration
 

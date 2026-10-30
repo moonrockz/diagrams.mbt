@@ -1,0 +1,707 @@
+///|
+/// Cross-build the Python wheels of `diagrams.mbt` with zig, and plan their
+/// PyPI release (OpenSpec change `publish-python-package`).
+///
+/// Usage: `mise run python-native:wheels`, or
+/// `moonx scripts/python-wheels.mbtx wheels [--target <id>]... [--python <exe>]`,
+/// or `moonx scripts/python-wheels.mbtx plan`.
+///
+/// - `wheels` builds the generated C of the native `ffi` package and the oracle
+///   on this host. Then, for each target, it compiles that C, five MoonBit
+///   runtime files, the CPython adapter and the pinned mimalloc with
+///   `zig cc -target`, links the extension module and writes the wheel to
+///   `_build/python-native/dist/`. Downloads have pinned SHA-256 digests.
+/// - `plan` decides if a Release run publishes to PyPI. It writes
+///   `python_release`, `python_dry_run` and `python_version` to
+///   `$GITHUB_OUTPUT`.
+///
+/// The build host must be Linux or macOS, with `zig`, `curl`, `tar` and the
+/// `--python` interpreter (default `python3.12`) on `PATH`.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let usage : String = "Usage: python-wheels.mbtx wheels [--target <id>]... [--python <exe>] | plan"
+
+///|
+let out_dir : String = "_build/python-native"
+
+///|
+let native_dir : String = "_build/native/release/build/moonrockz/diagrams-python-native"
+
+///|
+let package_dir : String = "apps/python-native/python"
+
+///|
+let version_file : String = "apps/python-native/python/diagrams_mbt/__init__.py"
+
+///|
+/// CPython 3.12 headers (and `python3.lib` for Windows) for the Limited API
+/// build come from this python-build-standalone release.
+let headers_base : String = "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-"
+
+///|
+/// mimalloc 2.1.7 is the version that the pinned MoonBit runtime bundles
+/// (`mi_version()` is 217).
+let mimalloc_version : String = "2.1.7"
+
+///|
+let mimalloc_url : String = "https://github.com/microsoft/mimalloc/archive/refs/tags/v2.1.7.tar.gz"
+
+///|
+let mimalloc_sha256 : String = "0eed39319f139afde8515010ff59baf24de9e47ea316a315398e8027d198202d"
+
+///|
+/// The MoonBit runtime files that the generated C needs. `backtrace.c` gives
+/// `moonbit_panic`. Without `MOONBIT_USE_SIMDUTF`, `utf.c` uses scalar code.
+let runtime_sources : Array[String] = [
+  "runtime", "env", "utf", "stdio", "backtrace",
+]
+
+///|
+priv enum Os {
+  Linux
+  Macos
+  Windows
+} derive(Eq)
+
+///|
+priv struct Target {
+  id : String
+  zig : String
+  headers : String
+  platform : String
+  os : Os
+  sha256 : String
+}
+
+///|
+/// The wheel targets. `headers` is the python-build-standalone triple and
+/// `sha256` is the digest of its `install_only_stripped` archive, from the
+/// release SHA256SUMS file.
+let targets : Array[Target] = [
+  {
+    id: "linux-x86_64",
+    zig: "x86_64-linux-gnu.2.17",
+    headers: "x86_64-unknown-linux-gnu",
+    platform: "manylinux_2_17_x86_64.manylinux2014_x86_64",
+    os: Linux,
+    sha256: "ce4f6d0a6cfdb3bed6e44c2f9affd85943c76a42e25ad3a259002f31d6fb8a20",
+  },
+  {
+    id: "linux-aarch64",
+    zig: "aarch64-linux-gnu.2.17",
+    headers: "aarch64-unknown-linux-gnu",
+    platform: "manylinux_2_17_aarch64.manylinux2014_aarch64",
+    os: Linux,
+    sha256: "bb4b6392670c5d3f93876996fcaa19858a4a413a0c7720144c18b0d6f1f0db2d",
+  },
+  {
+    id: "macos-arm64",
+    zig: "aarch64-macos.11.0",
+    headers: "aarch64-apple-darwin",
+    platform: "macosx_11_0_arm64",
+    os: Macos,
+    sha256: "353d5f1b4fd2715e7053f12f068435d5bbad16b91e057006b5d01e0925709a7e",
+  },
+  {
+    id: "macos-x86_64",
+    zig: "x86_64-macos.11.0",
+    headers: "x86_64-apple-darwin",
+    platform: "macosx_11_0_x86_64",
+    os: Macos,
+    sha256: "37c38fda76fec1fbf310adcbafb7f0d96af13b5511bf8ea954c3aa8eec185734",
+  },
+  {
+    id: "windows-x86_64",
+    zig: "x86_64-windows-gnu",
+    headers: "x86_64-pc-windows-msvc",
+    platform: "win_amd64",
+    os: Windows,
+    sha256: "1f2ab53880fc67ea323398c6388e05af28addc99a8e389209f08a51fdff4b149",
+  },
+]
+
+///|
+/// The license files of each wheel: the name in `.dist-info/licenses/` and
+/// the source path. `{mimalloc}` is the extracted mimalloc directory.
+let license_files : Array[(String, String)] = [
+  ("LICENSE", "LICENSE"),
+  ("THIRD-PARTY-NOTICES.md", "apps/python-native/python/THIRD-PARTY-NOTICES.md"),
+  ("third_party/mimalloc/LICENSE", "{mimalloc}/LICENSE"),
+  ("third_party/whatwg/NOTICE-WHATWG", "pkgs/diagrams-mermaid/NOTICE-WHATWG"),
+  ("third_party/icons/NOTICE.md", "pkgs/diagrams-svg/icons/NOTICE.md"),
+  ("third_party/icons/LICENSE-ZENUML", "pkgs/diagrams-svg/icons/LICENSE-ZENUML"),
+  (
+    "third_party/icons/LICENSE-CC-BY-SA-4.0", "pkgs/diagrams-svg/icons/LICENSE-CC-BY-SA-4.0",
+  ),
+]
+
+///|
+fn headers_url(t : Target) -> String {
+  "\{headers_base}\{t.headers}-install_only_stripped.tar.gz"
+}
+
+///|
+/// The archive members to extract for `t`.
+fn header_members(t : Target) -> Array[String] {
+  match t.os {
+    Windows => ["python/include", "python/libs/python3.lib"]
+    _ => ["python/include"]
+  }
+}
+
+///|
+fn include_dir(t : Target, root : String) -> String {
+  match t.os {
+    Windows => "\{root}/python/include"
+    _ => "\{root}/python/include/python3.12"
+  }
+}
+
+///|
+fn module_file(t : Target) -> String {
+  match t.os {
+    Windows => "_native.pyd"
+    _ => "_native.abi3.so"
+  }
+}
+
+///|
+/// The `zig cc` flags for the generated C, the runtime and the adapter.
+fn compile_flags(
+  t : Target,
+  moon_root : String,
+  include_path : String,
+) -> Array[String] {
+  let flags = [
+    "-target",
+    t.zig,
+    "-fwrapv",
+    "-fno-strict-aliasing",
+    "-ffp-contract=off",
+    "-Wno-unused-value",
+    "-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_MIMALLOC",
+    "-O2",
+    "-fPIC",
+    "-fvisibility=hidden",
+    "-I\{moon_root}/include",
+    "-I\{include_path}",
+  ]
+  if t.os == Windows {
+    // `rand_s` in env.c needs this definition with the MinGW and MSVC CRTs.
+    flags.push("-D_CRT_RAND_S")
+  }
+  flags
+}
+
+///|
+/// The `zig cc` flags for the single-file mimalloc build. It does not
+/// override `malloc` and exports nothing.
+fn mimalloc_flags(t : Target, mimalloc : String) -> Array[String] {
+  [
+    "-target",
+    t.zig,
+    "-O2",
+    "-fPIC",
+    "-fvisibility=hidden",
+    "-DNDEBUG",
+    "-I\{mimalloc}/include",
+  ]
+}
+
+///|
+/// The `zig cc` arguments that link the extension module of `t`.
+fn link_args(
+  t : Target,
+  output : String,
+  objects : Array[String],
+  headers_root : String,
+) -> Array[String] {
+  let args = ["-target", t.zig, "-shared", "-s", "-o", output]
+  match t.os {
+    Macos => {
+      args.push("-Wl,-undefined,dynamic_lookup")
+      args.push("-Wl,-install_name,@rpath/\{module_file(t)}")
+    }
+    _ => ()
+  }
+  args.push_iter(objects.iter())
+  match t.os {
+    Linux => args.push("-lm")
+    Windows => args.push("\{headers_root}/python/libs/python3.lib")
+    Macos => ()
+  }
+  args
+}
+
+///|
+/// The value of `__version__ = "…"` in the package `__init__.py`.
+fn version_of(text : String) -> String? {
+  for line in text.split("\n") {
+    if line.has_prefix("__version__ = \"") {
+      let parts = line.split("\"").to_array()
+      if parts.length() >= 3 && parts[1] != "" {
+        return Some(parts[1].to_owned())
+      }
+    }
+  }
+  None
+}
+
+///|
+priv enum PyPlan {
+  Publish(String)
+  DryRun(String)
+  Skip(String)
+} derive(Eq, Debug)
+
+///|
+/// A pull request run and a `dry_run` only build and test. A tag run skips,
+/// because tags release the MoonBit modules. Any other run must be on main;
+/// it publishes when PyPI does not have the version.
+fn plan(
+  event~ : String,
+  ref_type~ : String,
+  ref_name~ : String,
+  on_main~ : Bool,
+  dry_run~ : Bool,
+  version~ : String,
+  published~ : Bool,
+) -> Result[PyPlan, String] {
+  if event == "pull_request" || dry_run {
+    return Ok(DryRun(version))
+  }
+  if ref_type == "tag" {
+    return Ok(Skip("tag runs release the MoonBit modules only"))
+  }
+  if !on_main || ref_name != "main" {
+    return Err("\{ref_name} is not on main")
+  }
+  if published {
+    return Ok(Skip("PyPI already has diagrams.mbt \{version}"))
+  }
+  Ok(Publish(version))
+}
+
+///|
+fn plan_outputs(p : PyPlan) -> String {
+  match p {
+    Publish(v) =>
+      "python_release=true\npython_dry_run=false\npython_version=\{v}\n"
+    DryRun(v) =>
+      "python_release=false\npython_dry_run=true\npython_version=\{v}\n"
+    Skip(_) => "python_release=false\npython_dry_run=false\n"
+  }
+}
+
+///|
+fn[T] fail(message : String) -> T {
+  eprintln("❌ \{message}")
+  @sys.exit(1)
+  panic()
+}
+
+///|
+async fn run(cmd : String, args : Array[String]) -> Unit {
+  let code = @process.run(cmd, args, stdout=@stdio.stdout, stderr=@stdio.stderr)
+  if code != 0 {
+    fail("\{cmd} \{args.join(" ")} exited with \{code}")
+  }
+}
+
+///|
+async fn capture(cmd : String, args : Array[String]) -> (Int32, String) {
+  let (code, out, err) = @process.collect_output(cmd, args) catch {
+    _ => return (127, "cannot start \{cmd}")
+  }
+  (code, out.text() + err.text())
+}
+
+///|
+async fn sha256_of(path : String) -> String {
+  @crypto.bytes_to_hex_string(@crypto.sha256(@fs.read_file(path).binary()))
+}
+
+///|
+/// Downloads `url` to `path` unless `path` already has `sha256`, and fails
+/// when the download has another digest.
+async fn fetch(url : String, sha256 : String, path : String) -> Unit {
+  if @fs.exists(path) && sha256_of(path) == sha256 {
+    return
+  }
+  println("⬇️  \{url}")
+  run("curl", ["-fsSL", "--retry", "3", "-o", path, url])
+  let actual = sha256_of(path)
+  if actual != sha256 {
+    @fs.remove(path)
+    fail("\{url}: SHA-256 \{actual}, expected \{sha256}")
+  }
+}
+
+///|
+/// Extracts `members` of the archive `url` into `dir`, once for each digest.
+async fn extract(
+  url : String,
+  sha256 : String,
+  dir : String,
+  members : Array[String],
+) -> Unit {
+  let stamp = "\{dir}/.sha256"
+  if @fs.exists(stamp) && @fs.read_file(stamp).text() == sha256 {
+    return
+  }
+  @fs.mkdir("\{out_dir}/downloads", recursive=true, allow_exist=true)
+  let archive = "\{out_dir}/downloads/\{sha256}.tar.gz"
+  fetch(url, sha256, archive)
+  if @fs.exists(dir) {
+    @fs.rmdir(dir, recursive=true)
+  }
+  @fs.mkdir(dir, recursive=true)
+  let args = ["-xzf", archive, "-C", dir]
+  args.push_iter(members.iter())
+  run("tar", args)
+  @fs.write_file(stamp, sha256)
+}
+
+///|
+/// The MoonBit toolchain root: `MOON_HOME`, or the parent of a `PATH`
+/// directory that has `moon` next to `../include/moonbit.h`.
+async fn toolchain_root() -> String {
+  let candidates = []
+  if @env.get_env_var("MOON_HOME") is Some(home) {
+    candidates.push(home)
+  }
+  if @env.get_env_var("PATH") is Some(path) {
+    for dir in path.split(":") {
+      if dir.has_suffix("/bin") {
+        candidates.push(dir.view(end_offset=dir.length() - 4).to_owned())
+      }
+    }
+  }
+  for root in candidates {
+    if @fs.exists("\{root}/bin/moon") && @fs.exists("\{root}/include/moonbit.h") {
+      return root
+    }
+  }
+  fail("cannot find the MoonBit toolchain; set MOON_HOME")
+}
+
+///|
+async fn copy_file(from : String, to : String) -> Unit {
+  @fs.write_file(to, @fs.read_file(from).binary())
+}
+
+///|
+/// Compiles and links the extension module of `t` and writes its wheel.
+async fn build_wheel(
+  t : Target,
+  moon_root : String,
+  mimalloc : String,
+  python : String,
+) -> Unit {
+  let headers = "\{out_dir}/headers/\{t.id}"
+  extract(headers_url(t), t.sha256, headers, header_members(t))
+  let objects_dir = "\{out_dir}/obj/wheel-\{t.id}"
+  @fs.mkdir(objects_dir, recursive=true, allow_exist=true)
+  let flags = compile_flags(t, moon_root, include_dir(t, headers))
+  let sources = ["\{native_dir}/ffi/ffi.c", "\{package_dir}/adapter/native.c"]
+  for name in runtime_sources {
+    sources.push("\{moon_root}/lib/runtime/\{name}.c")
+  }
+  let objects = []
+  for source in sources {
+    let parts = source.split("/").to_array()
+    let file = parts[parts.length() - 1].to_owned()
+    let object = "\{objects_dir}/\{file.view(end_offset=file.length() - 2)}.o"
+    let args = flags.copy()
+    args.push_iter(["-c", source, "-o", object].iter())
+    run("zig", ["cc", ..args])
+    objects.push(object)
+  }
+  let mi_object = "\{objects_dir}/mimalloc.o"
+  let mi_args = mimalloc_flags(t, mimalloc)
+  mi_args.push_iter(["-c", "\{mimalloc}/src/static.c", "-o", mi_object].iter())
+  run("zig", ["cc", ..mi_args])
+  objects.push(mi_object)
+
+  let wheel_root = "\{out_dir}/wheel-\{t.id}/diagrams_mbt"
+  if @fs.exists(wheel_root) {
+    @fs.rmdir(wheel_root, recursive=true)
+  }
+  @fs.mkdir(wheel_root, recursive=true)
+  run(
+    "zig",
+    ["cc", ..link_args(t, "\{wheel_root}/\{module_file(t)}", objects, headers)],
+  )
+  for file in ["__init__.py", "py.typed"] {
+    copy_file("\{package_dir}/diagrams_mbt/\{file}", "\{wheel_root}/\{file}")
+  }
+  let args = [
+    "-P",
+    "\{package_dir}/build_wheel.py",
+    "--package",
+    wheel_root,
+    "--platform",
+    t.platform,
+    "--readme",
+    "\{package_dir}/README.md",
+    "--out",
+    "\{out_dir}/dist",
+  ]
+  for entry in license_files {
+    let (name, source) = entry
+    args.push("--license")
+    args.push("\{name}=\{source.replace(old="{mimalloc}", new=mimalloc)}")
+  }
+  run(python, args)
+}
+
+///|
+async fn wheels(selected : Array[String], python : String) -> Unit {
+  let chosen = if selected.is_empty() {
+    targets
+  } else {
+    targets.filter(t => selected.contains(t.id))
+  }
+  if chosen.length() !=
+    (if selected.is_empty() { targets.length() } else { selected.length() }) {
+    fail("unknown target in \{selected.join(", ")}")
+  }
+  let moon_root = toolchain_root()
+  println(
+    "🔨 Building the generated C and the oracle (native, release, C backend)",
+  )
+  run("moon", [
+    "build", "--target", "native", "--release", "apps/python-native/ffi", "apps/python-native/oracle",
+  ])
+  let oracle = "\{out_dir}/oracle"
+  if @fs.exists(oracle) {
+    @fs.rmdir(oracle, recursive=true)
+  }
+  @fs.mkdir(oracle, recursive=true)
+  run("\{native_dir}/oracle/oracle.exe", ["apps/python-native/fixtures", oracle])
+  let mimalloc_root = "\{out_dir}/src/mimalloc"
+  extract(mimalloc_url, mimalloc_sha256, mimalloc_root, [])
+  let mimalloc = "\{mimalloc_root}/mimalloc-\{mimalloc_version}"
+  let dist = "\{out_dir}/dist"
+  if @fs.exists(dist) {
+    @fs.rmdir(dist, recursive=true)
+  }
+  // The targets build in parallel; each one fails the whole task.
+  @async.with_task_group() <| group => {
+    for t in chosen {
+      group.spawn_bg(() => {
+        println("🛠️  \{t.id}: zig cc -target \{t.zig}")
+        build_wheel(t, moon_root, mimalloc, python)
+      })
+    }
+  }
+  for name in @fs.readdir(dist, sort=true) {
+    println("📦 \{dist}/\{name} sha256=\{sha256_of("\{dist}/\{name}")}")
+  }
+}
+
+///|
+async fn plan_release() -> Unit {
+  guard version_of(@fs.read_file(version_file).text()) is Some(version) else {
+    fail("\{version_file} has no __version__")
+  }
+  let event = @env.get_env_var("GITHUB_EVENT_NAME").unwrap_or("")
+  let ref_type = @env.get_env_var("GITHUB_REF_TYPE").unwrap_or("")
+  let ref_name = @env.get_env_var("GITHUB_REF_NAME").unwrap_or("")
+  let dry_run = @env.get_env_var("DRY_RUN").unwrap_or("") == "true"
+  let mut on_main = false
+  let mut published = false
+  if event != "pull_request" && !dry_run && ref_type != "tag" {
+    let (fetched, out) = capture("git", ["fetch", "--quiet", "origin", "main"])
+    if fetched != 0 {
+      fail("git fetch origin main failed: \{out}")
+    }
+    let (code, _) = capture("git", [
+      "merge-base", "--is-ancestor", "HEAD", "origin/main",
+    ])
+    on_main = code == 0
+    let (status, answer) = capture("curl", [
+      "-s",
+      "-o",
+      "/dev/null",
+      "-w",
+      "%{http_code}",
+      "https://pypi.org/pypi/diagrams.mbt/\{version}/json",
+    ])
+    published = match (status, answer.trim()) {
+      (0, "200") => true
+      (0, "404") => false
+      _ => fail("cannot ask PyPI for diagrams.mbt \{version}: \{answer}")
+    }
+  }
+  match
+    plan(event~, ref_type~, ref_name~, on_main~, dry_run~, version~, published~) {
+    Err(message) => fail(message)
+    Ok(p) => {
+      println(
+        match p {
+          Publish(v) => "Publish diagrams.mbt \{v} to PyPI"
+          DryRun(v) => "Dry run for diagrams.mbt \{v}"
+          Skip(reason) => "Skip: \{reason}"
+        },
+      )
+      let outputs = plan_outputs(p)
+      match @env.get_env_var("GITHUB_OUTPUT") {
+        Some(path) if path != "" => {
+          let previous = if @fs.exists(path) {
+            @fs.read_file(path).text()
+          } else {
+            ""
+          }
+          @fs.write_file(path, previous + outputs)
+        }
+        _ => println(outputs.trim_end())
+      }
+    }
+  }
+}
+
+///|
+async fn main {
+  let args = @env.args()[1:].to_owned()
+  match args {
+    ["plan"] => plan_release()
+    ["wheels", .. rest] => {
+      let selected = []
+      let mut python = "python3.12"
+      let mut i = 0
+      while i < rest.length() {
+        match (rest[i], rest.get(i + 1)) {
+          ("--target", Some(id)) => selected.push(id)
+          ("--python", Some(exe)) => python = exe
+          _ => {
+            eprintln(usage)
+            @sys.exit(2)
+          }
+        }
+        i += 2
+      }
+      wheels(selected, python)
+    }
+    _ => {
+      eprintln(usage)
+      @sys.exit(2)
+    }
+  }
+}
+
+///|
+test "targets cover five platforms with digests" {
+  assert_eq(targets.length(), 5)
+  for t in targets {
+    assert_eq(t.sha256.length(), 64)
+  }
+  assert_eq(
+    headers_url(targets[0]),
+    "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+  )
+}
+
+///|
+test "link arguments depend on the operating system" {
+  let linux = targets[0]
+  let macos = targets[2]
+  let windows = targets[4]
+  assert_eq(link_args(linux, "m.so", ["a.o"], "h"), [
+    "-target", "x86_64-linux-gnu.2.17", "-shared", "-s", "-o", "m.so", "a.o", "-lm",
+  ])
+  assert_eq(link_args(macos, "m.so", ["a.o"], "h"), [
+    "-target", "aarch64-macos.11.0", "-shared", "-s", "-o", "m.so", "-Wl,-undefined,dynamic_lookup",
+    "-Wl,-install_name,@rpath/_native.abi3.so", "a.o",
+  ])
+  assert_eq(link_args(windows, "m.pyd", ["a.o"], "h"), [
+    "-target", "x86_64-windows-gnu", "-shared", "-s", "-o", "m.pyd", "a.o", "h/python/libs/python3.lib",
+  ])
+  assert_eq(module_file(windows), "_native.pyd")
+  assert_true(compile_flags(windows, "m", "i").contains("-D_CRT_RAND_S"))
+  assert_true(!compile_flags(linux, "m", "i").contains("-D_CRT_RAND_S"))
+  assert_eq(include_dir(linux, "r"), "r/python/include/python3.12")
+}
+
+///|
+test "version comes from __version__" {
+  assert_eq(version_of("x = 1\n__version__ = \"0.0.1\"\n"), Some("0.0.1"))
+  assert_eq(version_of("version = \"1\"\n"), None)
+}
+
+///|
+test "plan publishes a new version on main only" {
+  assert_eq(
+    plan(
+      event="push",
+      ref_type="branch",
+      ref_name="main",
+      on_main=true,
+      dry_run=false,
+      version="0.0.1",
+      published=false,
+    ),
+    Ok(Publish("0.0.1")),
+  )
+  assert_eq(
+    plan(
+      event="push",
+      ref_type="branch",
+      ref_name="main",
+      on_main=true,
+      dry_run=false,
+      version="0.0.1",
+      published=true,
+    ),
+    Ok(Skip("PyPI already has diagrams.mbt 0.0.1")),
+  )
+  assert_eq(
+    plan(
+      event="pull_request",
+      ref_type="branch",
+      ref_name="7/merge",
+      on_main=false,
+      dry_run=false,
+      version="0.0.1",
+      published=false,
+    ),
+    Ok(DryRun("0.0.1")),
+  )
+  assert_true(
+    plan(
+      event="push",
+      ref_type="tag",
+      ref_name="v0.4.0",
+      on_main=true,
+      dry_run=false,
+      version="0.0.1",
+      published=false,
+    )
+    is Ok(Skip(_)),
+  )
+  assert_true(
+    plan(
+      event="workflow_dispatch",
+      ref_type="branch",
+      ref_name="topic",
+      on_main=false,
+      dry_run=false,
+      version="0.0.1",
+      published=false,
+    )
+    is Err(_),
+  )
+  assert_eq(
+    plan_outputs(Publish("0.0.1")),
+    "python_release=true\npython_dry_run=false\npython_version=0.0.1\n",
+  )
+}
