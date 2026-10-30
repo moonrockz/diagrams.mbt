@@ -30,11 +30,19 @@ prints one JSON line for each:
 - allocation growth (Python blocks, malloc zone, resident size) over the
   warm calls, and the platform, interpreter and allocator.
 
-Distributions are in microseconds: min, p50, p90, p99, max and mean. A
-``contention`` row runs the warm calls from two threads at the same time. The
+Distributions are in microseconds: min, p50, p90, p99, max and mean. The
+number of warm calls is --warm, or fewer so that one workload takes about
+--budget seconds (at least 5 calls). For the workloads in ``CONTENTION``, a
+``contention`` row runs the calls from two threads at the same time. The
 runtime lock serializes them, so it reports the lock wait; it is not a
-parallel-speedup measurement. Workloads that will exist later (queries,
-visitors, batches) add an entry to ``WORKLOADS`` with the same row format.
+parallel-speedup measurement.
+
+The BPMN query and traversal workloads are in ``measure_bpmn.py``. A workload
+that returns a dict gives ``items``, ``callbacks`` and ``callback_ns``; the
+report then adds the Python callbacks per call, the callback-body time
+(``callback``) and the public time without it (``advance``: native work,
+boundary and binding code), and the items per second at the p50 public time.
+--workload selects workloads by name prefix.
 """
 
 from __future__ import annotations
@@ -55,8 +63,25 @@ import threading
 import time
 from typing import Callable, Dict, List
 
+import importlib.util
+
 import diagrams_mbt
 from diagrams_mbt import _native
+
+
+def _load_sibling(name: str):
+    """Import ``name.py`` next to this file. ``-P`` keeps this directory off
+    ``sys.path``, so the source ``diagrams_mbt`` here never hides the built
+    package."""
+    path = pathlib.Path(__file__).resolve().with_name(f"{name}.py")
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+measure_bpmn = _load_sibling("measure_bpmn")
 
 
 class _MallocStatistics(ctypes.Structure):
@@ -149,6 +174,18 @@ WORKLOADS: Dict[str, Workload] = {
     "render-non-bmp": _render_fixture("unicode-non-bmp"),
     "render-large-flowchart": _render_large,
 }
+WORKLOADS.update(measure_bpmn.workloads())
+
+# The workloads that also get a two-thread contention row.
+CONTENTION = {
+    "boundary-noop",
+    "render-flowchart",
+    "render-invalid",
+    "render-non-bmp",
+    "render-large-flowchart",
+    "bpmn-large-query-selective-b256",
+    "bpmn-large-visitor-noop",
+}
 
 
 def distribution(samples_ns: List[float]) -> dict:
@@ -178,8 +215,11 @@ def _stats() -> dict:
     return {k: s[k] for k in _STAT_KEYS}
 
 
-def measure_warm(call: Callable[[], object], count: int) -> dict:
+def measure_warm(call: Callable[[], object], limit: int, budget_s: float) -> dict:
+    t0 = time.perf_counter_ns()
     call()  # the first call of this workload in this process is not warm
+    first = max(1, time.perf_counter_ns() - t0)
+    count = max(5, min(limit, int(budget_s * 1e9 / first)))
     gc.collect()
     blocks = sys.getallocatedblocks()
     before_memory, before_malloc = memory(), malloc_stats()
@@ -187,13 +227,24 @@ def measure_warm(call: Callable[[], object], count: int) -> dict:
     # block growth shows the calls, not the measurement.
     rows: Dict[str, array.array] = {
         k: array.array("d", bytes(8 * count))
-        for k in ("public", "native", "lock_wait", "c_codec", "python", "gil_held")
+        for k in (
+            "public",
+            "native",
+            "lock_wait",
+            "c_codec",
+            "python",
+            "gil_held",
+            "callback",
+            "advance",
+        )
     }
     bytes_in = bytes_out = entries = 0
+    items = callbacks = 0
+    counted = False
     for i in range(count):
         a = _stats()
         t0 = time.perf_counter_ns()
-        call()
+        result = call()
         t1 = time.perf_counter_ns()
         b = _stats()
         public = t1 - t0
@@ -206,6 +257,12 @@ def measure_warm(call: Callable[[], object], count: int) -> dict:
         rows["c_codec"][i] = codec
         rows["python"][i] = max(0, public - native - wait - codec)
         rows["gil_held"][i] = max(0, public - native - wait)
+        if isinstance(result, dict):
+            counted = True
+            items += result["items"]
+            callbacks += result["callbacks"]
+            rows["callback"][i] = result["callback_ns"]
+            rows["advance"][i] = max(0, public - result["callback_ns"])
         bytes_in += b["bytes_in"] - a["bytes_in"]
         bytes_out += b["bytes_out"] - a["bytes_out"]
         entries += b["entries"] - a["entries"]
@@ -219,7 +276,9 @@ def measure_warm(call: Callable[[], object], count: int) -> dict:
         growth["malloc_blocks"] = after_malloc["blocks"] - before_malloc["blocks"]
     if "rss" in before_memory and "rss" in after_memory:
         growth["rss_bytes"] = after_memory["rss"] - before_memory["rss"]
-    return {
+    if not counted:
+        del rows["callback"], rows["advance"]
+    out = {
         "calls": count,
         "native_entries_per_call": entries / count,
         "request_bytes_per_call": bytes_in / count,
@@ -227,15 +286,23 @@ def measure_warm(call: Callable[[], object], count: int) -> dict:
         "us": {k: distribution(list(v)) for k, v in rows.items()},
         "growth": growth,
     }
+    if counted:
+        p50 = out["us"]["public"]["p50"]
+        out["items_per_call"] = items / count
+        out["python_callbacks_per_call"] = callbacks / count
+        out["items_per_s_at_p50"] = round(items / count / (p50 / 1e6), 1) if p50 else None
+    return out
 
 
 _COLD_SCRIPT = """
-import json, pathlib, sys, time
+import importlib.util, json, pathlib, sys, time
 t0 = time.perf_counter_ns()
 import diagrams_mbt
 t1 = time.perf_counter_ns()
-from measure import WORKLOADS
-call = WORKLOADS[sys.argv[1]](pathlib.Path(sys.argv[2]))
+spec = importlib.util.spec_from_file_location("measure", sys.argv[3])
+measure = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(measure)
+call = measure.WORKLOADS[sys.argv[1]](pathlib.Path(sys.argv[2]))
 t2 = time.perf_counter_ns()
 call()
 t3 = time.perf_counter_ns()
@@ -246,15 +313,10 @@ print(json.dumps({"import_ns": t1 - t0, "first_ns": t3 - t2}))
 def measure_cold(name: str, fixtures: pathlib.Path, runs: int) -> dict:
     imports: List[float] = []
     firsts: List[float] = []
-    env = dict(os.environ)
-    here = str(pathlib.Path(__file__).resolve().parent)
-    env["PYTHONPATH"] = os.pathsep.join(
-        [p for p in [env.get("PYTHONPATH"), here] if p]
-    )
+    script = str(pathlib.Path(__file__).resolve())
     for _ in range(runs):
         out = subprocess.run(
-            [sys.executable, "-B", "-P", "-c", _COLD_SCRIPT, name, str(fixtures)],
-            env=env,
+            [sys.executable, "-B", "-P", "-c", _COLD_SCRIPT, name, str(fixtures), script],
             capture_output=True,
             text=True,
             check=True,
@@ -309,14 +371,17 @@ def environment() -> dict:
     }
 
 
-def report(fixtures: pathlib.Path, names: List[str], warm: int, cold: int) -> None:
+def report(
+    fixtures: pathlib.Path, names: List[str], warm: int, cold: int, budget: float
+) -> None:
     print(json.dumps({"environment": environment()}), flush=True)
     for name in names:
         call = WORKLOADS[name](fixtures)
-        row = {"workload": name, "warm": measure_warm(call, warm)}
+        row = {"workload": name, "warm": measure_warm(call, warm, budget)}
         if cold > 0:
             row["cold"] = measure_cold(name, fixtures, cold)
-        row["contention"] = measure_contention(call, max(1, warm // 4))
+        if name in CONTENTION:
+            row["contention"] = measure_contention(call, max(1, row["warm"]["calls"] // 4))
         print(json.dumps(row), flush=True)
 
 
@@ -329,7 +394,8 @@ def main() -> int:
     parser.add_argument("--report", action="store_true")
     parser.add_argument("--warm", type=int, default=400)
     parser.add_argument("--cold", type=int, default=5)
-    parser.add_argument("--workload", action="append", choices=sorted(WORKLOADS))
+    parser.add_argument("--budget", type=float, default=2.0)
+    parser.add_argument("--workload", action="append")
     args = parser.parse_args()
 
     fixtures = sorted(pathlib.Path(args.fixtures).glob("*.mmd"))
@@ -400,12 +466,15 @@ def main() -> int:
             print("growth per call exceeds the limit", file=sys.stderr)
             return 1
     if args.report:
-        report(
-            pathlib.Path(args.fixtures),
-            args.workload or list(WORKLOADS),
-            args.warm,
-            args.cold,
-        )
+        names = [
+            n
+            for n in WORKLOADS
+            if not args.workload or any(n.startswith(w) for w in args.workload)
+        ]
+        if not names:
+            print(f"no workload matches {args.workload}", file=sys.stderr)
+            return 2
+        report(pathlib.Path(args.fixtures), names, args.warm, args.cold, args.budget)
     return 0
 
 

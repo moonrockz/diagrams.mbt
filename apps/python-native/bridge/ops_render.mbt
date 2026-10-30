@@ -6,6 +6,7 @@
 ///
 /// `echo(args...)` returns its arguments as one list. It runs no domain code;
 /// the adapter tests use it to check the record codec in both directions.
+/// The measurement operations of `ops_measure.mbt` are reached from here.
 fn render_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
   match op {
     "echo" => Some(List(ReadOnlyArray::from_array(args.to_owned())))
@@ -14,7 +15,7 @@ fn render_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
         Some(Bin(source)) => Some(rendered_record(render_svg_bytes(source)))
         _ => raise BridgeError("invalid-argument", "Argument 0 must be bytes.")
       }
-    _ => None
+    _ => measure_op(op, args)
   }
 }
 

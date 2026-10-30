@@ -508,26 +508,44 @@ async fn sanitizer_env(host : Host) -> Map[String, String] {
 }
 
 ///|
-async fn measure(pythons : Array[String], variant : String) -> Unit {
+/// The workload prefixes of the system-allocator report. That build is for
+/// malloc block counts, so it measures a bounded subset.
+let sysalloc_workloads : Array[String] = ["boundary", "render", "bpmn-medium"]
+
+///|
+/// The `measure.py` arguments. An empty `workloads` reports every workload.
+fn measure_args(fixtures : String, workloads : Array[String]) -> Array[String] {
+  let args = [
+    "-P",
+    "\{spike_dir}/python/measure.py",
+    "--fixtures",
+    fixtures,
+    "--batches",
+    "5",
+    "--calls",
+    "2000",
+    "--max-growth-per-call",
+    "0.05",
+    "--report",
+  ]
+  for workload in workloads {
+    args.push_iter(["--workload", workload].iter())
+  }
+  args
+}
+
+///|
+async fn measure(
+  pythons : Array[String],
+  variant : String,
+  workloads~ : Array[String] = [],
+) -> Unit {
   let fixtures = @fs.realpath("\{spike_dir}/fixtures")
   println("📏 \{pythons[0]}: \{variant}")
-  run(
-    pythons[0],
-    [
-      "-P",
-      "\{spike_dir}/python/measure.py",
-      "--fixtures",
-      fixtures,
-      "--batches",
-      "5",
-      "--calls",
-      "2000",
-      "--max-growth-per-call",
-      "0.05",
-      "--report",
-    ],
-    extra_env={ "PYTHONPATH": variant, "PYTHONDONTWRITEBYTECODE": "1" },
-  )
+  run(pythons[0], measure_args(fixtures, workloads), extra_env={
+    "PYTHONPATH": variant,
+    "PYTHONDONTWRITEBYTECODE": "1",
+  })
 }
 
 ///|
@@ -620,7 +638,7 @@ async fn main {
     _ => {
       measure(options.pythons, archive_variant(host, "default", []))
       let system = source_variant(host, "sysalloc", false)
-      measure(options.pythons, system)
+      measure(options.pythons, system, workloads=sysalloc_workloads)
       if host.platform == Darwin {
         leaks(options.pythons[0], system)
       }
@@ -682,6 +700,16 @@ test "variants copy the package modules and the typing marker" {
   assert_true(package_file("py.typed"))
   assert_false(package_file("__pycache__"))
   assert_false(package_file("module.pyc"))
+}
+
+///|
+test "measure arguments select workloads by prefix" {
+  let all = measure_args("f", [])
+  assert_eq(all[all.length() - 1], "--report")
+  let some = measure_args("f", ["render", "bpmn-medium"])
+  assert_eq(some[some.length() - 4:].to_owned(), [
+    "--workload", "render", "--workload", "bpmn-medium",
+  ])
 }
 
 ///|

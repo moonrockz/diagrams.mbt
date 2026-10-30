@@ -1,7 +1,7 @@
 ---
 title: Python threads and concurrency
 summary: What diagrams.mbt does with the GIL, its runtime lock, busy errors and the unsupported interpreter modes.
-order: 4
+order: 6
 ---
 # Python threads and concurrency
 
@@ -66,11 +66,14 @@ does not make them faster. Do not expect more throughput from more threads.
 | Operation | GIL released | Runtime lock held |
 | --- | --- | --- |
 | `render_svg` | During the wait for the lock and during the render | During the render only |
-| Reading arguments, building the `Rendered` value | No | No |
+| `bpmn.read`, `DocumentTree.new`, graph queries | During the wait and the native work | During the native work only |
+| `query` compile, `next_batch`, `collect` (one call per batch) | During the wait and each batch | During each batch only |
+| `walk`, `accept`, `fold`, `reduce`, `EventReader.next` (one call per event) | During the wait and each native step | During each native step only |
+| Python callbacks (visitor methods, `walk` functions) | No | No: they run between native steps |
+| Reading arguments, building Python values | No | No |
 
-Operations that later versions add (BPMN traversal, queries) follow the same
-rule: the GIL is released for each native step, and Python callbacks run
-between native steps, outside the runtime lock.
+A visitor callback can call `render_svg`, run a query or start a nested walk:
+the outer traversal does not hold the runtime lock while the callback runs.
 
 ## Busy errors
 

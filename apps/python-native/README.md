@@ -24,7 +24,7 @@ runtime lock, traversal and queries) describe it. See
 | `python/README.md` | The PyPI project description. |
 | `python/THIRD-PARTY-NOTICES.md` | The licenses of the components in each wheel. |
 | `python/tests/` | `unittest` tests that the tasks run. `test_runtime_*.py` test the boundary codec and the threads. |
-| `python/measure.py` | Bounded repeated-call measurements and a latency, lock-wait and GIL report for each workload. |
+| `python/measure.py`, `python/measure_bpmn.py` | Bounded repeated-call measurements and a latency, lock-wait, GIL and callback report for each render, query, event and visitor workload. Results: [MEASUREMENTS.md](MEASUREMENTS.md). |
 
 ## Commands
 
