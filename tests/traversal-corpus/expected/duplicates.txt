@@ -1,0 +1,187 @@
+fixture duplicates.bpmn
+read document=yes diagnostics=0
+tree diagnostics=0
+tree length=11 res=-
+#0 d=0 Document kind=- id=- parent=- step=- span=0-510 loc=corpus:duplicates.bpmn@1:1:0-14:1:510 res=- children=1 value=Document
+  field Root attrs=[] children=[1]
+  field? Root children=[1]
+  children [1]
+  path (root) depth=0
+  handle res=- ord=0 same=Found#0 rebuilt=Found#0 other=DocumentMismatch resolve=Found#0 resolve-other=DocumentMismatch
+#1 d=1 Definitions kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard id=Defs parent=0 step=Root[0]@0 span=39-509 loc=corpus:duplicates.bpmn@2:1:39-13:17:509 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard bindings=[b=http://www.omg.org/spec/BPMN/20100524/MODEL] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDefinitions text_value=- content=""
+  attr {}id raw="id" Identifier("Defs") span=108-117 loc=corpus:duplicates.bpmn@2:70:108-2:79:117
+  attr {}targetNamespace raw="targetNamespace" Uri("urn:dup") span=118-143 loc=corpus:duplicates.bpmn@2:80:118-2:105:143
+  scalar id=Identifier("Defs") name=-
+  field {}id attrs=[id] children=[]
+  field {}targetNamespace attrs=[targetNamespace] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement attrs=[] children=[2]
+  field? {}id children=[]
+  children [2]
+  path Root[0]@0 depth=1
+  handle res=- ord=1 same=Found#1 rebuilt=Found#1 other=DocumentMismatch resolve=Found#1 resolve-other=DocumentMismatch
+#2 d=2 Process kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard id=P parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 span=147-492 loc=corpus:duplicates.bpmn@3:3:147-12:15:492 res=- children=8 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tProcess text_value=- content=""
+  attr {}id raw="id" Identifier("P") span=158-164 loc=corpus:duplicates.bpmn@3:14:158-3:20:164
+  scalar id=Identifier("P") name=-
+  field {}id attrs=[id] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement attrs=[] children=[3,4,5,6,7,8,9,10]
+  field? {}id children=[]
+  children [3,4,5,6,7,8,9,10]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 depth=2
+  handle res=- ord=2 same=Found#2 rebuilt=Found#2 other=DocumentMismatch resolve=Found#2 resolve-other=DocumentMismatch
+#3 d=3 Event kind={http://www.omg.org/spec/BPMN/20100524/MODEL}startEvent/standard id=S parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 span=170-192 loc=corpus:duplicates.bpmn@4:5:170-4:27:192 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}startEvent/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tStartEvent text_value=- content=""
+  attr {}id raw="id" Identifier("S") span=184-190 loc=corpus:duplicates.bpmn@4:19:184-4:25:190
+  scalar id=Identifier("S") name=-
+  field {}id attrs=[id] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 depth=3
+  handle res=- ord=3 same=Found#3 rebuilt=Found#3 other=DocumentMismatch resolve=Found#3 resolve-other=DocumentMismatch
+#4 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=A parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@1 span=197-226 loc=corpus:duplicates.bpmn@5:5:197-5:34:226 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("A") span=205-211 loc=corpus:duplicates.bpmn@5:13:205-5:19:211
+  attr {}name raw="name" Text("first") span=212-224 loc=corpus:duplicates.bpmn@5:20:212-5:32:224
+  scalar id=Identifier("A") name=Text("first")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@1 depth=3
+  handle res=- ord=4 same=Found#4 rebuilt=Found#4 other=DocumentMismatch resolve=Found#4 resolve-other=DocumentMismatch
+#5 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=A parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@2 span=231-261 loc=corpus:duplicates.bpmn@6:5:231-6:35:261 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("A") span=239-245 loc=corpus:duplicates.bpmn@6:13:239-6:19:245
+  attr {}name raw="name" Text("second") span=246-259 loc=corpus:duplicates.bpmn@6:20:246-6:33:259
+  scalar id=Identifier("A") name=Text("second")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@2 depth=3
+  handle res=- ord=5 same=Found#5 rebuilt=Found#5 other=DocumentMismatch resolve=Found#5 resolve-other=DocumentMismatch
+#6 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=B parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3]@3 span=266-282 loc=corpus:duplicates.bpmn@7:5:266-7:21:282 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("B") span=274-280 loc=corpus:duplicates.bpmn@7:13:274-7:19:280
+  scalar id=Identifier("B") name=-
+  field {}id attrs=[id] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3]@3 depth=3
+  handle res=- ord=6 same=Found#6 rebuilt=Found#6 other=DocumentMismatch resolve=Found#6 resolve-other=DocumentMismatch
+#7 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=C parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[4]@4 span=287-303 loc=corpus:duplicates.bpmn@8:5:287-8:21:303 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("C") span=295-301 loc=corpus:duplicates.bpmn@8:13:295-8:19:301
+  scalar id=Identifier("C") name=-
+  field {}id attrs=[id] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[4]@4 depth=3
+  handle res=- ord=7 same=Found#7 rebuilt=Found#7 other=DocumentMismatch resolve=Found#7 resolve-other=DocumentMismatch
+#8 d=3 SequenceFlow kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard id=SA parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[5]@5 span=308-361 loc=corpus:duplicates.bpmn@9:5:308-9:58:361 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tSequenceFlow text_value=- content=""
+  attr {}id raw="id" Identifier("SA") span=324-331 loc=corpus:duplicates.bpmn@9:21:324-9:28:331
+  attr {}sourceRef raw="sourceRef" Reference("S"):Id,"S",{}S span=332-345 loc=corpus:duplicates.bpmn@9:29:332-9:42:345
+  attr {}targetRef raw="targetRef" Reference("B"):Id,"B",{}B span=346-359 loc=corpus:duplicates.bpmn@9:43:346-9:56:359
+  scalar id=Identifier("SA") name=-
+  field {}id attrs=[id] children=[]
+  field {}sourceRef attrs=[sourceRef] children=[]
+  field {}targetRef attrs=[targetRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[5]@5 depth=3
+  handle res=- ord=8 same=Found#8 rebuilt=Found#8 other=DocumentMismatch resolve=Found#8 resolve-other=DocumentMismatch
+#9 d=3 SequenceFlow kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard id=AB parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[6]@6 span=366-419 loc=corpus:duplicates.bpmn@10:5:366-10:58:419 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tSequenceFlow text_value=- content=""
+  attr {}id raw="id" Identifier("AB") span=382-389 loc=corpus:duplicates.bpmn@10:21:382-10:28:389
+  attr {}sourceRef raw="sourceRef" Reference("A"):Id,"A",{}A span=390-403 loc=corpus:duplicates.bpmn@10:29:390-10:42:403
+  attr {}targetRef raw="targetRef" Reference("B"):Id,"B",{}B span=404-417 loc=corpus:duplicates.bpmn@10:43:404-10:56:417
+  scalar id=Identifier("AB") name=-
+  field {}id attrs=[id] children=[]
+  field {}sourceRef attrs=[sourceRef] children=[]
+  field {}targetRef attrs=[targetRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[6]@6 depth=3
+  handle res=- ord=9 same=Found#9 rebuilt=Found#9 other=DocumentMismatch resolve=Found#9 resolve-other=DocumentMismatch
+#10 d=3 SequenceFlow kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard id=BC parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[7]@7 span=424-477 loc=corpus:duplicates.bpmn@11:5:424-11:58:477 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tSequenceFlow text_value=- content=""
+  attr {}id raw="id" Identifier("BC") span=440-447 loc=corpus:duplicates.bpmn@11:21:440-11:28:447
+  attr {}sourceRef raw="sourceRef" Reference("B"):Id,"B",{}B span=448-461 loc=corpus:duplicates.bpmn@11:29:448-11:42:461
+  attr {}targetRef raw="targetRef" Reference("C"):Id,"C",{}C span=462-475 loc=corpus:duplicates.bpmn@11:43:462-11:56:475
+  scalar id=Identifier("BC") name=-
+  field {}id attrs=[id] children=[]
+  field {}sourceRef attrs=[sourceRef] children=[]
+  field {}targetRef attrs=[targetRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[7]@7 depth=3
+  handle res=- ord=10 same=Found#10 rebuilt=Found#10 other=DocumentMismatch resolve=Found#10 resolve-other=DocumentMismatch
+walk
+  +0 +1 +2 +3 -3 +4 -4 +5 -5 +6 -6 +7 -7 +8 -8 +9
+  -9 +10 -10 -2 -1 -0
+walk-skip
+  +0 +1 +2 -2 -1 -0
+walk-stop at=7
+  +0 +1 +2 +3 -3 +4 -4 +5 -5 +6 -6 +7
+walk-subtree at=5
+  +5 -5
+fold
+  +0 +1 +2 -2 -1 -0
+  result=6
+reduce
+  3:0 4:0 5:0 6:0 7:0 8:0 9:0 10:0 2:8 1:1 0:1
+  result=11
+reduce-pruned-skip
+  2:0 1:1 0:1
+  result=3
+reduce-pruned-stop at=7
+  +0 +1 +2 +3 3:0 +4 4:0 +5 5:0 +6 6:0 +7
+  result=none
+visitor-activity
+  4:task 5:task 6:task 7:task
+visitor-full stop=7
+  +0 document:0 +1 definitions:1:definitions +2 -2 -1 -0
+events
+  +0 +1 +2 +3 -3 +4 -4 +5 -5 +6 -6 +7 -7 +8 -8 +9
+  -9 +10 -10 -2 -1 -0
+events-controls stop=7
+  +0 +1 +2 -2 -1 -0 end
+push stop=7
+  +0 +1 +2 -2 -1 -0
+cursor
+  @0:0 fc>1:1 fc>2:2 fc>3:3 fc! ns>4:3 fc! ns>5:3 fc! ns>6:3 fc! ns>7:3 fc! ns>8:3 fc! ns>9:3
+  fc! ns>10:3 fc! ns! p>2:2 ns! p>1:1 ns! p>0:0 ns! p!
+cursor-subtree at=2
+  @2:0 p!2:0 ps!2:0 ns!2:0 lc>10:1 ps>9:1 ns>10:1 ns!10:1 fc!10:1 p>2:0 p!2:0 p!2:0
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0
+> graph main
+  diagnostics=2
+    diag bpmn/duplicate-id Error span=231-261 loc=corpus:duplicates.bpmn@6:5:231-6:35:261 msg="Duplicate ID: A"
+    diag bpmn/ambiguous-reference Error span=390-403 loc=corpus:duplicates.bpmn@10:29:390-10:42:403 msg="Reference target is ambiguous on AB: A"
+  graph nodes=11 edges=17
+> lookup id:A
+  Err Ambiguous[-#4(A) -#5(A)]
+> lookup node:4
+  Ok -#4(A)
+> lookup node:6
+  Ok -#6(B)
+> route id:A id:B
+  Failed Ambiguous[-#4(A) -#5(A)]
+> route node:4 id:B
+  Failed Ambiguous[-#4(A) -#5(A)]
+> route node:6 id:C
+  Found [-#6(B) -#7(C)] edges=[SequenceFlow:-#6(B)->-#7(C) via -#10(BC)]
+> reachable node:6
+  Complete [-#6(B) -#7(C)]
+> route id:S id:C
+  Found [-#3(S) -#6(B) -#7(C)] edges=[SequenceFlow:-#3(S)->-#6(B) via -#8(SA) SequenceFlow:-#6(B)->-#7(C) via -#10(BC)]
+> reachable id:B direction=Reverse
+  Failed Ambiguous[-#4(A) -#5(A)]
+> reachable id:B direction=Reverse limits=results:1
+  Failed Limit(Results)
+> route node:4 id:B limits=results:1
+  Failed Limit(Results)
+> lookup id:A limits=results:1
+  Err Limit(Results)

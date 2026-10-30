@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:o="urn:other" xmlns:t="urn:types" id="Root" targetNamespace="urn:root">
+  <b:import namespace="urn:other" location="other" importType="http://www.omg.org/spec/BPMN/20100524/MODEL"/>
+  <b:import namespace="urn:types" location="types" importType="urn:external"/>
+  <b:itemDefinition id="Item" structureRef="t:Order"/>
+  <b:process id="Main">
+    <b:callActivity id="Call" calledElement="o:Shared"/>
+  </b:process>
+</b:definitions>

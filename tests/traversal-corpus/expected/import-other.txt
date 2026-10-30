@@ -1,0 +1,92 @@
+fixture import-other.bpmn
+read document=yes diagnostics=0
+tree diagnostics=0
+tree length=5 res=-
+#0 d=0 Document kind=- id=- parent=- step=- span=0-389 loc=corpus:import-other.bpmn@1:1:0-8:1:389 res=- children=1 value=Document
+  field Root attrs=[] children=[1]
+  field? Root children=[1]
+  children [1]
+  path (root) depth=0
+  handle res=- ord=0 same=Found#0 rebuilt=Found#0 other=DocumentMismatch resolve=Found#0 resolve-other=DocumentMismatch
+#1 d=1 Definitions kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard id=Other parent=0 step=Root[0]@0 span=39-388 loc=corpus:import-other.bpmn@2:1:39-7:17:388 res=- children=2 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard bindings=[b=http://www.omg.org/spec/BPMN/20100524/MODEL,m=urn:root] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDefinitions text_value=- content=""
+  attr {}id raw="id" Identifier("Other") span=127-137 loc=corpus:import-other.bpmn@2:89:127-2:99:137
+  attr {}targetNamespace raw="targetNamespace" Uri("urn:other") span=138-165 loc=corpus:import-other.bpmn@2:100:138-2:127:165
+  scalar id=Identifier("Other") name=-
+  field {}id attrs=[id] children=[]
+  field {}targetNamespace attrs=[targetNamespace] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}import attrs=[] children=[2]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement attrs=[] children=[3]
+  field? {}id children=[]
+  children [2,3]
+  path Root[0]@0 depth=1
+  handle res=- ord=1 same=Found#1 rebuilt=Found#1 other=DocumentMismatch resolve=Found#1 resolve-other=DocumentMismatch
+#2 d=2 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard id=- parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}import[0]@0 span=169-274 loc=corpus:import-other.bpmn@3:3:169-3:108:274 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tImport text_value=- content=""
+  attr {}namespace raw="namespace" Uri("urn:root") span=179-199 loc=corpus:import-other.bpmn@3:13:179-3:33:199
+  attr {}location raw="location" Text("root") span=200-215 loc=corpus:import-other.bpmn@3:34:200-3:49:215
+  attr {}importType raw="importType" Uri("http://www.omg.org/spec/BPMN/20100524/MODEL") span=216-272 loc=corpus:import-other.bpmn@3:50:216-3:106:272
+  scalar id=- name=-
+  field {}namespace attrs=[namespace] children=[]
+  field {}location attrs=[location] children=[]
+  field {}importType attrs=[importType] children=[]
+  field? {}namespace children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}import[0]@0 depth=2
+  handle res=- ord=2 same=Found#2 rebuilt=Found#2 other=DocumentMismatch resolve=Found#2 resolve-other=DocumentMismatch
+#3 d=2 Process kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard id=Shared parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@1 span=277-371 loc=corpus:import-other.bpmn@4:3:277-6:15:371 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tProcess text_value=- content=""
+  attr {}id raw="id" Identifier("Shared") span=288-299 loc=corpus:import-other.bpmn@4:14:288-4:25:299
+  scalar id=Identifier("Shared") name=-
+  field {}id attrs=[id] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement attrs=[] children=[4]
+  field? {}id children=[]
+  children [4]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@1 depth=2
+  handle res=- ord=3 same=Found#3 rebuilt=Found#3 other=DocumentMismatch resolve=Found#3 resolve-other=DocumentMismatch
+#4 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard id=Inner parent=3 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 span=305-356 loc=corpus:import-other.bpmn@5:5:305-5:56:356 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tCallActivity text_value=- content=""
+  attr {}id raw="id" Identifier("Inner") span=321-331 loc=corpus:import-other.bpmn@5:21:321-5:31:331
+  attr {}calledElement raw="calledElement" Reference("m:Main"):QName,"m:Main",{urn:root}Main span=332-354 loc=corpus:import-other.bpmn@5:32:332-5:54:354
+  scalar id=Identifier("Inner") name=-
+  field {}id attrs=[id] children=[]
+  field {}calledElement attrs=[calledElement] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 depth=3
+  handle res=- ord=4 same=Found#4 rebuilt=Found#4 other=DocumentMismatch resolve=Found#4 resolve-other=DocumentMismatch
+walk
+  +0 +1 +2 -2 +3 +4 -4 -3 -1 -0
+walk-skip
+  +0 +1 +2 -2 +3 +4 -4 -3 -1 -0
+walk-stop at=3
+  +0 +1 +2 -2 +3
+walk-subtree at=2
+  +2 -2
+fold
+  +0 +1 +2 -2 +3 +4 -4 -3 -1 -0
+  result=10
+reduce
+  2:0 4:0 3:1 1:2 0:1
+  result=5
+reduce-pruned-skip
+  2:0 4:0 3:1 1:2 0:1
+  result=5
+reduce-pruned-stop at=3
+  +0 +1 +2 2:0 +3
+  result=none
+visitor-activity
+  4:callActivity
+visitor-full stop=3
+  +0 document:0 +1 definitions:1:definitions +2 -2 +3 process:3:process
+events
+  +0 +1 +2 -2 +3 +4 -4 -3 -1 -0
+events-controls stop=3
+  +0 +1 +2 -2 +3 end
+push stop=3
+  +0 +1 +2 -2 +3
+cursor
+  @0:0 fc>1:1 fc>2:2 fc! ns>3:2 fc>4:3 fc! ns! p>3:2 ns! p>1:1 ns! p>0:0 ns! p!
+cursor-subtree at=0
+  @0:0 p!0:0 ps!0:0 ns!0:0 lc>1:1 ps!1:1 ns!1:1 ns!1:1 fc>2:2 p>1:1 p>0:0 p!0:0
+  path (root)

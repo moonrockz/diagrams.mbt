@@ -1,0 +1,157 @@
+fixture import-root.bpmn
+read document=yes diagnostics=0
+tree diagnostics=0
+tree length=7 res=-
+#0 d=0 Document kind=- id=- parent=- step=- span=0-543 loc=corpus:import-root.bpmn@1:1:0-10:1:543 res=- children=1 value=Document
+  field Root attrs=[] children=[1]
+  field? Root children=[1]
+  children [1]
+  path (root) depth=0
+  handle res=- ord=0 same=Found#0 rebuilt=Found#0 other=DocumentMismatch resolve=Found#0 resolve-other=DocumentMismatch
+#1 d=1 Definitions kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard id=Root parent=0 step=Root[0]@0 span=39-542 loc=corpus:import-root.bpmn@2:1:39-9:17:542 res=- children=4 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard bindings=[b=http://www.omg.org/spec/BPMN/20100524/MODEL,o=urn:other,t=urn:types] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDefinitions text_value=- content=""
+  attr {}id raw="id" Identifier("Root") span=148-157 loc=corpus:import-root.bpmn@2:110:148-2:119:157
+  attr {}targetNamespace raw="targetNamespace" Uri("urn:root") span=158-184 loc=corpus:import-root.bpmn@2:120:158-2:146:184
+  scalar id=Identifier("Root") name=-
+  field {}id attrs=[id] children=[]
+  field {}targetNamespace attrs=[targetNamespace] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}import attrs=[] children=[2,3]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement attrs=[] children=[4,5]
+  field? {}id children=[]
+  children [2,3,4,5]
+  path Root[0]@0 depth=1
+  handle res=- ord=1 same=Found#1 rebuilt=Found#1 other=DocumentMismatch resolve=Found#1 resolve-other=DocumentMismatch
+#2 d=2 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard id=- parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}import[0]@0 span=188-295 loc=corpus:import-root.bpmn@3:3:188-3:110:295 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tImport text_value=- content=""
+  attr {}namespace raw="namespace" Uri("urn:other") span=198-219 loc=corpus:import-root.bpmn@3:13:198-3:34:219
+  attr {}location raw="location" Text("other") span=220-236 loc=corpus:import-root.bpmn@3:35:220-3:51:236
+  attr {}importType raw="importType" Uri("http://www.omg.org/spec/BPMN/20100524/MODEL") span=237-293 loc=corpus:import-root.bpmn@3:52:237-3:108:293
+  scalar id=- name=-
+  field {}namespace attrs=[namespace] children=[]
+  field {}location attrs=[location] children=[]
+  field {}importType attrs=[importType] children=[]
+  field? {}namespace children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}import[0]@0 depth=2
+  handle res=- ord=2 same=Found#2 rebuilt=Found#2 other=DocumentMismatch resolve=Found#2 resolve-other=DocumentMismatch
+#3 d=2 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard id=- parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}import[1]@1 span=298-374 loc=corpus:import-root.bpmn@4:3:298-4:79:374 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}import/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tImport text_value=- content=""
+  attr {}namespace raw="namespace" Uri("urn:types") span=308-329 loc=corpus:import-root.bpmn@4:13:308-4:34:329
+  attr {}location raw="location" Text("types") span=330-346 loc=corpus:import-root.bpmn@4:35:330-4:51:346
+  attr {}importType raw="importType" Uri("urn:external") span=347-372 loc=corpus:import-root.bpmn@4:52:347-4:77:372
+  scalar id=- name=-
+  field {}namespace attrs=[namespace] children=[]
+  field {}location attrs=[location] children=[]
+  field {}importType attrs=[importType] children=[]
+  field? {}namespace children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}import[1]@1 depth=2
+  handle res=- ord=3 same=Found#3 rebuilt=Found#3 other=DocumentMismatch resolve=Found#3 resolve-other=DocumentMismatch
+#4 d=2 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}itemDefinition/standard id=Item parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@2 span=377-429 loc=corpus:import-root.bpmn@5:3:377-5:55:429 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}itemDefinition/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tItemDefinition text_value=- content=""
+  attr {}id raw="id" Identifier("Item") span=395-404 loc=corpus:import-root.bpmn@5:21:395-5:30:404
+  attr {}structureRef raw="structureRef" Reference("t:Order"):QName,"t:Order",{urn:types}Order span=405-427 loc=corpus:import-root.bpmn@5:31:405-5:53:427
+  scalar id=Identifier("Item") name=-
+  field {}id attrs=[id] children=[]
+  field {}structureRef attrs=[structureRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@2 depth=2
+  handle res=- ord=4 same=Found#4 rebuilt=Found#4 other=DocumentMismatch resolve=Found#4 resolve-other=DocumentMismatch
+#5 d=2 Process kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard id=Main parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[1]@3 span=432-525 loc=corpus:import-root.bpmn@6:3:432-8:15:525 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tProcess text_value=- content=""
+  attr {}id raw="id" Identifier("Main") span=443-452 loc=corpus:import-root.bpmn@6:14:443-6:23:452
+  scalar id=Identifier("Main") name=-
+  field {}id attrs=[id] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement attrs=[] children=[6]
+  field? {}id children=[]
+  children [6]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[1]@3 depth=2
+  handle res=- ord=5 same=Found#5 rebuilt=Found#5 other=DocumentMismatch resolve=Found#5 resolve-other=DocumentMismatch
+#6 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard id=Call parent=5 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 span=458-510 loc=corpus:import-root.bpmn@7:5:458-7:57:510 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tCallActivity text_value=- content=""
+  attr {}id raw="id" Identifier("Call") span=474-483 loc=corpus:import-root.bpmn@7:21:474-7:30:483
+  attr {}calledElement raw="calledElement" Reference("o:Shared"):QName,"o:Shared",{urn:other}Shared span=484-508 loc=corpus:import-root.bpmn@7:31:484-7:55:508
+  scalar id=Identifier("Call") name=-
+  field {}id attrs=[id] children=[]
+  field {}calledElement attrs=[calledElement] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[1]@3/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@0 depth=3
+  handle res=- ord=6 same=Found#6 rebuilt=Found#6 other=DocumentMismatch resolve=Found#6 resolve-other=DocumentMismatch
+walk
+  +0 +1 +2 -2 +3 -3 +4 -4 +5 +6 -6 -5 -1 -0
+walk-skip
+  +0 +1 +2 -2 +3 -3 +4 -4 +5 +6 -6 -5 -1 -0
+walk-stop at=4
+  +0 +1 +2 -2 +3 -3 +4
+walk-subtree at=3
+  +3 -3
+fold
+  +0 +1 +2 -2 +3 -3 +4 -4 +5 +6 -6 -5 -1 -0
+  result=14
+reduce
+  2:0 3:0 4:0 6:0 5:1 1:4 0:1
+  result=7
+reduce-pruned-skip
+  2:0 3:0 4:0 6:0 5:1 1:4 0:1
+  result=7
+reduce-pruned-stop at=4
+  +0 +1 +2 2:0 +3 3:0 +4
+  result=none
+visitor-activity
+  6:callActivity
+visitor-full stop=4
+  +0 document:0 +1 definitions:1:definitions +2 -2 +3 other:3:import -3 +4 other:4:itemDefinition
+events
+  +0 +1 +2 -2 +3 -3 +4 -4 +5 +6 -6 -5 -1 -0
+events-controls stop=4
+  +0 +1 +2 -2 +3 -3 +4 end
+push stop=4
+  +0 +1 +2 -2 +3 -3 +4
+cursor
+  @0:0 fc>1:1 fc>2:2 fc! ns>3:2 fc! ns>4:2 fc! ns>5:2 fc>6:3 fc! ns! p>5:2 ns! p>1:1 ns!
+  p>0:0 ns! p!
+cursor-subtree at=0
+  @0:0 p!0:0 ps!0:0 ns!0:0 lc>1:1 ps!1:1 ns!1:1 ns!1:1 fc>2:2 p>1:1 p>0:0 p!0:0
+  path (root)
+> graph bare resource_id=root
+  diagnostics=4
+    diag bpmn/unresolved-import Error span=188-295 loc=corpus:import-root.bpmn@3:3:188-3:110:295 msg="No supplied resource for import location: other"
+    diag bpmn/unresolved-import Error span=298-374 loc=corpus:import-root.bpmn@4:3:298-4:79:374 msg="No supplied resource for import location: types"
+    diag bpmn/unresolved-reference Error span=405-427 loc=corpus:import-root.bpmn@5:31:405-5:53:427 msg="Reference target was not found in the explicit import closure on Item: t:Order"
+    diag bpmn/unresolved-reference Error span=484-508 loc=corpus:import-root.bpmn@7:31:484-7:55:508 msg="Reference target was not found in the explicit import closure on Call: o:Shared"
+  graph nodes=7 edges=6
+> reachable id:Call kinds=Reference
+  Failed InvalidReference(root#6)
+> reachable id:Item kinds=Reference
+  Failed InvalidReference(root#4)
+> lookup symbol:types|urn:types|Order
+  Err InvalidEndpoint
+> graph full resource_id=root document=other:import-other.bpmn external=types|urn:types|urn:external|Order
+  diagnostics=0
+  graph nodes=13 edges=13
+> reachable id:Call kinds=Reference
+  Complete [root#6(Call) other#3(Shared)]
+> route id:Call qname:urn:other|Shared kinds=Reference
+  Found [root#6(Call) other#3(Shared)] edges=[Reference:root#6(Call)->other#3(Shared) via root#6(Call)]
+> route id:Call id:Main kinds=Reference,Containment
+  Found [root#6(Call) other#3(Shared) other#4(Inner) root#5(Main)] edges=[Reference:root#6(Call)->other#3(Shared) via root#6(Call) Containment:other#3(Shared)->other#4(Inner) Reference:other#4(Inner)->root#5(Main) via other#4(Inner)]
+> route id:Item symbol:types|urn:types|Order kinds=Reference
+  Found [root#4(Item) ext:types|{urn:types}Order#0] edges=[Reference:root#4(Item)->ext:types|{urn:types}Order#0 via root#4(Item)]
+> lookup symbol:types|urn:types|Order
+  Ok ext:types|{urn:types}Order#0
+> lookup qname:urn:types|Order
+  Ok ext:types|{urn:types}Order#0
+> lookup qname:urn:other|Inner
+  Ok other#4(Inner)
+> lookup node:5
+  Ok root#5(Main)
+> graph duplicate-symbol resource_id=root document=other:import-other.bpmn external=types|urn:types|urn:external|Order,Order
+  diagnostics=1
+    diag bpmn/ambiguous-reference Error span=405-427 loc=corpus:import-root.bpmn@5:31:405-5:53:427 msg="Reference target is ambiguous on Item: t:Order"
+  graph nodes=14 edges=12
+> reachable id:Item kinds=Reference
+  Failed Ambiguous[ext:types|{urn:types}Order#0 ext:types|{urn:types}Order#1]
+> lookup symbol:types|urn:types|Order
+  Err Ambiguous[ext:types|{urn:types}Order#0 ext:types|{urn:types}Order#1]

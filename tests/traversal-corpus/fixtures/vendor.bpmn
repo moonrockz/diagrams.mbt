@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:v="urn:vendor" xmlns:w="urn:vendor" id="Defs" targetNamespace="urn:vendor-test" v:origin="tool">
+  <b:process id="P" v:owner="ops" isClosed="maybe">
+    <b:extensionElements>
+      <v:task id="VendorTask" v:flag="true">left<![CDATA[&raw <x>]]><w:note>aliased</w:note><!--inside--><?vendor keep?><v:empty/>tail</v:task>
+    </b:extensionElements>
+    <b:task id="Task" name="Real task" isForCompensation="perhaps" startQuantity="2" completionQuantity="x"/>
+    <b:mystery id="Unknown" b:odd="1">kept</b:mystery>
+    <b:sequenceFlow id="Flow" sourceRef="Task" targetRef="Task"/>
+    <b:callActivity id="Call" calledElement="v:Elsewhere"/>
+  </b:process>
+</b:definitions>

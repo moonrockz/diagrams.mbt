@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Order handling with a review loop. -->
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Defs" targetNamespace="urn:orders">
+  <bpmn:process id="Orders" name="Orders" isExecutable="true">
+    <bpmn:startEvent id="Start" name="Order received"/>
+    <bpmn:task id="Check" name="Check order"/>
+    <bpmn:exclusiveGateway id="Ok" name="Complete?" default="ToFix"/>
+    <bpmn:userTask id="Fix" name="Fix order"/>
+    <bpmn:subProcess id="Ship" name="Ship">
+      <bpmn:startEvent id="ShipStart"/>
+      <bpmn:serviceTask id="Pack" name="Pack" implementation="##WebService"/>
+      <bpmn:endEvent id="ShipEnd"/>
+      <bpmn:sequenceFlow id="S1" sourceRef="ShipStart" targetRef="Pack"/>
+      <bpmn:sequenceFlow id="S2" sourceRef="Pack" targetRef="ShipEnd"/>
+    </bpmn:subProcess>
+    <bpmn:endEvent id="End"/>
+    <bpmn:sequenceFlow id="F1" sourceRef="Start" targetRef="Check"/>
+    <bpmn:sequenceFlow id="F2" sourceRef="Check" targetRef="Ok"/>
+    <bpmn:sequenceFlow id="ToShip" sourceRef="Ok" targetRef="Ship"><bpmn:conditionExpression>ok</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="ToFix" sourceRef="Ok" targetRef="Fix"/>
+    <bpmn:sequenceFlow id="Back" sourceRef="Fix" targetRef="Check"/>
+    <bpmn:sequenceFlow id="F3" sourceRef="Ship" targetRef="End"/>
+  </bpmn:process>
+  <?audit level="full"?>
+  <bpmndi:BPMNDiagram id="Diagram">
+    <bpmndi:BPMNPlane id="Plane" bpmnElement="Orders">
+      <bpmndi:BPMNShape id="Start_di" bpmnElement="Start"><dc:Bounds x="10" y="20" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Check_di" bpmnElement="Check"><dc:Bounds x="80" y="10" width="100" height="56"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1"><di:waypoint x="46" y="38"/><di:waypoint x="80" y="38"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
+<!-- trailing -->

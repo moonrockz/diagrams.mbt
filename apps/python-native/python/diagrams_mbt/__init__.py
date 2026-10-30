@@ -2,9 +2,11 @@
 
 This package is experimental (0.0.x); its API can change. ``render_svg`` calls the
 MoonBit ``render_svg`` function of ``moonrockz/diagrams-mermaid`` in this
-process through the extension module ``diagrams_mbt._native``. The extension holds
-the GIL during a call. The package makes no claim about threads, free-threaded
-CPython or subinterpreters.
+process through the extension module ``diagrams_mbt._native``. Calls from any
+thread are safe: the extension releases the GIL while MoonBit runs and while it
+waits for its process-wide runtime lock, and that lock lets only one MoonBit
+call run at a time. Free-threaded CPython and subinterpreters are not
+supported. See ``docs/python/concurrency.md``.
 
 Diagnostic positions are the MoonBit values: lines and columns start at 1,
 and columns and offsets count UTF-16 code units. Use ``code_point_index`` to
@@ -13,11 +15,10 @@ convert an offset to an index into the Python string.
 
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-from . import _native
+from . import _boundary, _native
 
 __version__ = "0.0.1"
 
@@ -76,13 +77,16 @@ def render_svg(source: str) -> Rendered:
     for example one with a lone surrogate, raises ``UnicodeEncodeError``
     before the renderer is called.
     """
-    data = json.loads(_native.render_svg_json(source))
-    if data.get("format") != ABI_VERSION:
-        raise RuntimeError(f"unexpected result format {data.get('format')!r}")
+    if not isinstance(source, str):
+        raise TypeError("source must be str")
+    # A lone surrogate raises UnicodeEncodeError here, before the renderer.
+    media_type, output, diagnostics = _boundary.call(
+        "render_svg", source.encode("utf-8")
+    )
     return Rendered(
-        output=data["output"],
-        media_type=data["media_type"],
-        diagnostics=tuple(_diagnostic(d) for d in data["diagnostics"]),
+        output=output,
+        media_type=media_type,
+        diagnostics=tuple(_diagnostic(d) for d in diagnostics),
     )
 
 
@@ -96,17 +100,16 @@ def code_point_index(source: str, utf16_offset: int) -> int:
     return len(source)
 
 
-def _position(data: dict) -> Position:
-    return Position(data["line"], data["column"], data["offset"])
+def _position(record: tuple) -> Position:
+    line, column, offset = record
+    return Position(line, column, offset)
 
 
-def _diagnostic(data: dict) -> Diagnostic:
-    span = data["span"]
+def _diagnostic(record: tuple) -> Diagnostic:
+    code, severity, message, span = record
     return Diagnostic(
-        code=data["code"],
-        severity=data["severity"],
-        message=data["message"],
-        span=None
-        if span is None
-        else Span(_position(span["start"]), _position(span["end"])),
+        code=code,
+        severity=severity,
+        message=message,
+        span=None if span is None else Span(_position(span[0]), _position(span[1])),
     )

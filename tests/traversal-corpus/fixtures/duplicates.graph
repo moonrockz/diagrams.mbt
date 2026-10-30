@@ -1,0 +1,14 @@
+# ID endpoints are ambiguous; handle endpoints select one node.
+graph main
+lookup id:A
+lookup node:4
+lookup node:6
+route id:A id:B
+route node:4 id:B
+route node:6 id:C
+reachable node:6
+route id:S id:C
+reachable id:B direction=Reverse
+reachable id:B direction=Reverse limits=results:1
+route node:4 id:B limits=results:1
+lookup id:A limits=results:1

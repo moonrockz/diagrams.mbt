@@ -1,17 +1,34 @@
 ///|
-test "valid source gives versioned JSON with SVG output" {
-  let result = @json.parse(
-    @python_native_bridge.render_svg_json("flowchart TD\n  A --> B\n"),
+/// Sends `op` with `args` through the structured boundary and returns the
+/// decoded response record.
+fn call_op(
+  op : String,
+  args : Array[@python_native_bridge.Rec],
+) -> @python_native_bridge.Rec raise @python_native_bridge.BridgeError {
+  let request = [@python_native_bridge.Rec::Str(op), ..args]
+  @python_native_bridge.decode_record(
+    @python_native_bridge.call(
+      @python_native_bridge.encode_record(
+        @python_native_bridge.Rec::list(request),
+      ),
+    ),
   )
-  guard result
-    is {
-      "format": Number(1, ..),
-      "media_type": String("image/svg+xml"),
-      "output": String(svg),
-      "diagnostics": Array([]),
-      ..
-    } else {
-    fail("unexpected result: \{result.stringify()}")
+}
+
+///|
+test "the boundary version is 2" {
+  assert_eq(@python_native_bridge.abi_version(), 2)
+  assert_true(call_op("abi_version", []) is List([Int(0L), Int(2L)]))
+}
+
+///|
+test "valid source gives a rendered record with SVG output" {
+  let response = call_op("render_svg", [
+    Bin(@utf8.encode("flowchart TD\n  A --> B\n")),
+  ])
+  guard response
+    is List([Int(0L), List([Str("image/svg+xml"), Str(svg), List([])])]) else {
+    fail("unexpected response")
   }
   assert_true(svg.has_prefix("<svg "))
 }
@@ -20,60 +37,107 @@ test "valid source gives versioned JSON with SVG output" {
 test "output equals the direct render_svg output" {
   let source = "flowchart LR\n  A[\"Rocket 🚀\"] --> B[\"𝔘nicode\"]\n"
   let direct = @mermaid.render_svg(source)
-  guard @json.parse(@python_native_bridge.render_svg_json(source))
-    is { "output": String(svg), .. } else {
+  guard call_op("render_svg", [Bin(@utf8.encode(source))])
+    is List([Int(0L), List([_, Str(svg), _])]) else {
     fail("no output")
   }
   assert_eq(Some(svg), direct.output)
 }
 
 ///|
-test "invalid syntax gives a diagnostic with a span" {
-  let result = @json.parse(
-    @python_native_bridge.render_svg_json("flowchart TD\n  A[Unclosed --> B\n"),
-  )
-  guard result
-    is {
-      "output": Null,
-      "diagnostics": Array(
-        [
-          {
-            "code": String("flowchart/syntax"),
-            "severity": String("error"),
-            "span": {
-              "start": { "line": Number(2, ..), "column": Number(3, ..), .. },
-              ..
-            },
-            ..
-          },
-        ]
-      ),
-      ..
-    } else {
-    fail("unexpected result: \{result.stringify()}")
+test "invalid syntax gives a diagnostic record with a span" {
+  let response = call_op("render_svg", [
+    Bin(@utf8.encode("flowchart TD\n  A[Unclosed --> B\n")),
+  ])
+  guard response
+    is List(
+      [
+        Int(0L),
+        List(
+          [
+            Str("image/svg+xml"),
+            Null,
+            List(
+              [
+                List(
+                  [
+                    Str("flowchart/syntax"),
+                    Str("error"),
+                    Str(_),
+                    List(
+                      [
+                        List([Int(2L), Int(3L), Int(_)]),
+                        List([Int(_), Int(_), Int(_)]),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+          ]
+        ),
+      ]
+    ) else {
+    fail("unexpected response")
   }
 }
 
 ///|
-test "UTF-8 boundary round-trips and refuses invalid bytes" {
-  let ok = @utf8.decode(
-    @python_native_bridge.render_svg_utf8(
-      @utf8.encode("flowchart TD\n  A[\"😀\"] --> B\n"),
+test "invalid UTF-8 gives a diagnostic and no output" {
+  let rendered = @python_native_bridge.render_svg_bytes(
+    b"flowchart TD\n  A[\xff] --> B\n",
+  )
+  assert_eq(rendered.output, None)
+  assert_eq(rendered.diagnostics.map(d => d.code), ["python/invalid-utf8"])
+  let response = call_op("render_svg", [Bin(b"\xff")])
+  assert_true(
+    response
+    is List(
+      [Int(0L), List([_, Null, List([List([Str("python/invalid-utf8"), ..])])])]
     ),
   )
-  guard @json.parse(ok) is { "output": String(svg), .. } else {
-    fail("no output")
+}
+
+///|
+test "render_svg refuses arguments that are not bytes" {
+  for args in [[], [@python_native_bridge.Rec::Str("flowchart TD")]] {
+    assert_true(
+      call_op("render_svg", args)
+      is List([Int(1L), Str("invalid-argument"), Str(_)]),
+    )
   }
-  assert_true(svg.contains("😀"))
-  let invalid = @utf8.decode(
-    @python_native_bridge.render_svg_utf8(b"flowchart TD\n  A[\xff] --> B\n"),
+}
+
+///|
+test "live_objects lists open-object counts" {
+  guard call_op("live_objects", []) is List([Int(0L), List(counts)]) else {
+    fail("unexpected live_objects response")
+  }
+  for entry in counts {
+    assert_true(entry is List([Str(_), Int(_)]))
+  }
+}
+
+///|
+test "severity names are lowercase" {
+  assert_eq(@python_native_bridge.severity_name(Error), "error")
+  assert_eq(@python_native_bridge.severity_name(Warning), "warning")
+  assert_eq(@python_native_bridge.severity_name(Info), "info")
+}
+
+///|
+test "echo returns its arguments" {
+  let args : Array[@python_native_bridge.Rec] = [
+    Null,
+    Int(-9223372036854775808L),
+    Str("𝔘"),
+    Bin(b"\x00"),
+  ]
+  guard call_op("echo", args) is List([Int(0L), List(echoed)]) else {
+    fail("unexpected echo response")
+  }
+  assert_eq(
+    @python_native_bridge.Rec::List(echoed),
+    @python_native_bridge.Rec::list(args),
   )
-  guard @json.parse(invalid)
-    is {
-      "output": Null,
-      "diagnostics": Array([{ "code": String("python/invalid-utf8"), .. }]),
-      ..
-    } else {
-    fail("unexpected result: \{invalid}")
-  }
 }

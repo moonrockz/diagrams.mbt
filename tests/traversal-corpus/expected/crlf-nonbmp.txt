@@ -1,0 +1,132 @@
+fixture crlf-nonbmp.bpmn
+read document=yes diagnostics=0
+tree diagnostics=0
+tree length=9 res=-
+#0 d=0 Document kind=- id=- parent=- step=- span=0-461 loc=corpus:crlf-nonbmp.bpmn@1:1:0-12:1:461 res=- children=2 value=Document
+  field Prolog attrs=[] children=[1]
+  field Root attrs=[] children=[2]
+  field? Prolog children=[1]
+  children [1,2]
+  path (root) depth=0
+  handle res=- ord=0 same=Found#0 rebuilt=Found#0 other=DocumentMismatch resolve=Found#0 resolve-other=DocumentMismatch
+#1 d=1 Comment kind=- id=- parent=0 step=Prolog[0]@0 span=40-73 loc=corpus:crlf-nonbmp.bpmn@2:1:40-2:34:73 res=- children=0 value=Comment(" 𝔘nicode 🚀 before nodes ")
+  children []
+  path Prolog[0]@0 depth=1
+  handle res=- ord=1 same=Found#1 rebuilt=Found#1 other=DocumentMismatch resolve=Found#1 resolve-other=DocumentMismatch
+#2 d=1 Definitions kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard id=Defs parent=0 step=Root[0]@1 span=75-459 loc=corpus:crlf-nonbmp.bpmn@3:1:75-11:17:459 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard bindings=[b=http://www.omg.org/spec/BPMN/20100524/MODEL] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDefinitions text_value=- content=""
+  attr {}id raw="id" Identifier("Defs") span=144-153 loc=corpus:crlf-nonbmp.bpmn@3:70:144-3:79:153
+  attr {}targetNamespace raw="targetNamespace" Uri("urn:unicode") span=154-183 loc=corpus:crlf-nonbmp.bpmn@3:80:154-3:109:183
+  scalar id=Identifier("Defs") name=-
+  field {}id attrs=[id] children=[]
+  field {}targetNamespace attrs=[targetNamespace] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement attrs=[] children=[3]
+  field? {}id children=[]
+  children [3]
+  path Root[0]@1 depth=1
+  handle res=- ord=2 same=Found#2 rebuilt=Found#2 other=DocumentMismatch resolve=Found#2 resolve-other=DocumentMismatch
+#3 d=2 Process kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard id=P parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 span=188-441 loc=corpus:crlf-nonbmp.bpmn@4:3:188-10:15:441 res=- children=4 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tProcess text_value=- content=""
+  attr {}id raw="id" Identifier("P") span=199-205 loc=corpus:crlf-nonbmp.bpmn@4:14:199-4:20:205
+  attr {}name raw="name" Text("Fête 🎉") span=206-220 loc=corpus:crlf-nonbmp.bpmn@4:21:206-4:35:220
+  scalar id=Identifier("P") name=Text("Fête 🎉")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}documentation attrs=[] children=[4]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement attrs=[] children=[6,7,8]
+  field? {}id children=[]
+  children [4,6,7,8]
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 depth=2
+  handle res=- ord=3 same=Found#3 rebuilt=Found#3 other=DocumentMismatch resolve=Found#3 resolve-other=DocumentMismatch
+#4 d=3 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}documentation/standard id=- parent=3 step={http://www.omg.org/spec/BPMN/20100524/MODEL}documentation[0]@0 span=227-286 loc=corpus:crlf-nonbmp.bpmn@5:5:227-6:30:286 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}documentation/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDocumentation text_value=- content="Line one 𝔘\nline two 🚀"
+  scalar id=- name=-
+  field Text attrs=[] children=[5]
+  field? Text children=[5]
+  children [5]
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}documentation[0]@0 depth=3
+  handle res=- ord=4 same=Found#4 rebuilt=Found#4 other=DocumentMismatch resolve=Found#4 resolve-other=DocumentMismatch
+#5 d=4 Text kind=- id=- parent=4 step=Text[0]@0 span=244-268 loc=corpus:crlf-nonbmp.bpmn@5:22:244-6:12:268 res=- children=0 value=Text("Line one 𝔘\nline two 🚀")
+  children []
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}documentation[0]@0/Text[0]@0 depth=4
+  handle res=- ord=5 same=Found#5 rebuilt=Found#5 other=DocumentMismatch resolve=Found#5 resolve-other=DocumentMismatch
+#6 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=T1 parent=3 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@1 span=292-326 loc=corpus:crlf-nonbmp.bpmn@7:5:292-7:39:326 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("T1") span=300-307 loc=corpus:crlf-nonbmp.bpmn@7:13:300-7:20:307
+  attr {}name raw="name" Text("𝔄𝔅 task") span=308-324 loc=corpus:crlf-nonbmp.bpmn@7:21:308-7:37:324
+  scalar id=Identifier("T1") name=Text("𝔄𝔅 task")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@1 depth=3
+  handle res=- ord=6 same=Found#6 rebuilt=Found#6 other=DocumentMismatch resolve=Found#6 resolve-other=DocumentMismatch
+#7 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=T2 parent=3 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@2 span=332-365 loc=corpus:crlf-nonbmp.bpmn@8:5:332-8:38:365 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("T2") span=340-347 loc=corpus:crlf-nonbmp.bpmn@8:13:340-8:20:347
+  attr {}name raw="name" Text("tab here") span=348-363 loc=corpus:crlf-nonbmp.bpmn@8:21:348-8:36:363
+  scalar id=Identifier("T2") name=Text("tab here")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@2 depth=3
+  handle res=- ord=7 same=Found#7 rebuilt=Found#7 other=DocumentMismatch resolve=Found#7 resolve-other=DocumentMismatch
+#8 d=3 SequenceFlow kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard id=F parent=3 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@3 span=371-425 loc=corpus:crlf-nonbmp.bpmn@9:5:371-9:59:425 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tSequenceFlow text_value=- content=""
+  attr {}id raw="id" Identifier("F") span=387-393 loc=corpus:crlf-nonbmp.bpmn@9:21:387-9:27:393
+  attr {}sourceRef raw="sourceRef" Reference("T1"):Id,"T1",{}T1 span=394-408 loc=corpus:crlf-nonbmp.bpmn@9:28:394-9:42:408
+  attr {}targetRef raw="targetRef" Reference("T2"):Id,"T2",{}T2 span=409-423 loc=corpus:crlf-nonbmp.bpmn@9:43:409-9:57:423
+  scalar id=Identifier("F") name=-
+  field {}id attrs=[id] children=[]
+  field {}sourceRef attrs=[sourceRef] children=[]
+  field {}targetRef attrs=[targetRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@3 depth=3
+  handle res=- ord=8 same=Found#8 rebuilt=Found#8 other=DocumentMismatch resolve=Found#8 resolve-other=DocumentMismatch
+walk
+  +0 +1 -1 +2 +3 +4 +5 -5 -4 +6 -6 +7 -7 +8 -8 -3
+  -2 -0
+walk-skip
+  +0 +1 -1 +2 -2 -0
+walk-stop at=6
+  +0 +1 -1 +2 +3 +4 +5 -5 -4 +6
+walk-subtree at=4
+  +4 +5 -5 -4
+fold
+  +0 +1 -1 +2 -2 -0
+  result=6
+reduce
+  1:0 5:0 4:1 6:0 7:0 8:0 3:4 2:1 0:2
+  result=9
+reduce-pruned-skip
+  1:0 2:0 0:2
+  result=3
+reduce-pruned-stop at=6
+  +0 +1 1:0 +2 +3 +4 +5 5:0 4:1 +6
+  result=none
+visitor-activity
+  6:task 7:task
+visitor-full stop=6
+  +0 document:0 +1 comment:1 -1 +2 -2 -0
+events
+  +0 +1 -1 +2 +3 +4 +5 -5 -4 +6 -6 +7 -7 +8 -8 -3
+  -2 -0
+events-controls stop=6
+  +0 +1 -1 +2 -2 -0 end
+push stop=6
+  +0 +1 -1 +2 -2 -0
+cursor
+  @0:0 fc>1:1 fc! ns>2:1 fc>3:2 fc>4:3 fc>5:4 fc! ns! p>4:3 ns>6:3 fc! ns>7:3 fc! ns>8:3 fc!
+  ns! p>3:2 ns! p>2:1 ns! p>0:0 ns! p!
+cursor-subtree at=3
+  @3:0 p!3:0 ps!3:0 ns!3:0 lc>8:1 ps>7:1 ns>8:1 ns!8:1 fc!8:1 p>3:0 p!3:0 p!3:0
+  path Root[0]@1/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0
+> graph main
+  diagnostics=0
+  graph nodes=9 edges=11
+> route id:T1 id:T2
+  Found [-#6(T1) -#7(T2)] edges=[SequenceFlow:-#6(T1)->-#7(T2) via -#8(F)]
+> reachable id:T2 direction=Reverse
+  Complete [-#7(T2) -#6(T1)]
