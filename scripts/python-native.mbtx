@@ -1,6 +1,7 @@
 ///|
-/// Build, test and measure the Python native-binding spike (OpenSpec change
-/// `prove-python-native-binding`).
+/// Build, test and measure the Python binding on this host (OpenSpec changes
+/// `prove-python-native-binding` and
+/// `add-portable-tree-queries-and-python-traversal`).
 ///
 /// Usage: `mise run test:python-native`, or
 /// `moonx scripts/python-native.mbtx <command> [--python <exe>]...`.
@@ -13,7 +14,9 @@
 /// - `sanitize` compiles the generated C and the runtime sources with
 ///   AddressSanitizer and UndefinedBehaviorSanitizer, and runs the tests.
 /// - `measure` runs bounded repeated calls with the `default` build and a
-///   system-allocator build. On macOS it also runs the `leaks` tool.
+///   system-allocator build, then reports latency distributions, native time,
+///   lock wait, GIL-held time and record bytes for each workload of
+///   `measure.py`. On macOS it also runs the `leaks` tool.
 ///
 /// The first `--python` builds the extension against its headers. The default
 /// is `python3.12 python3.15`. Only macOS and Linux hosts are supported, and
@@ -498,6 +501,9 @@ async fn sanitizer_env(host : Host) -> Map[String, String] {
     "DIAGRAMS_NATIVE_REPEAT": "200",
   }
   env[variable] = path
+  // macOS dyld removes DYLD_* variables from the environment of the process,
+  // so the tests give this copy to the Python child processes they start.
+  env["DIAGRAMS_NATIVE_PRELOAD"] = "\{variable}=\{path}"
   env
 }
 
@@ -518,6 +524,7 @@ async fn measure(pythons : Array[String], variant : String) -> Unit {
       "2000",
       "--max-growth-per-call",
       "0.05",
+      "--report",
     ],
     extra_env={ "PYTHONPATH": variant, "PYTHONDONTWRITEBYTECODE": "1" },
   )

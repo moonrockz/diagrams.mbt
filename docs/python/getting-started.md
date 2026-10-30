@@ -81,7 +81,14 @@ end = diagrams_mbt.code_point_index(source, d.span.end.offset)
 print(source[start:end])
 ```
 
+## Threads
+
+You can call `render_svg` from any thread. The extension releases the GIL while
+the MoonBit code runs, so other Python threads continue. MoonBit calls run one
+at a time. See [Threads and concurrency](concurrency.md).
+
 ## Next
 
 - [API reference](api.md)
 - [How the package works](how-it-works.md)
+- [Threads and concurrency](concurrency.md)
