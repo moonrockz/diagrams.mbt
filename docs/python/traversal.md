@@ -233,4 +233,4 @@ invalidate nodes that you keep.
 The shared corpus in `tests/traversal-corpus` runs each mapped operation. The
 MoonBit test compares its text on wasm, wasm-gc, js and native. The Python
 test `test_bpmn_corpus.py` writes the same text through this module. See the
-[corpus README](../../tests/traversal-corpus/README.md) for the format.
+[corpus README](https://github.com/moonrockz/diagrams.mbt/blob/main/tests/traversal-corpus/README.md) for the format.
