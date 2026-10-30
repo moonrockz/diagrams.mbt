@@ -6,7 +6,7 @@
  * This file is the only C code of the spike. It links the static archive that
  * moon builds for the native `foreign_library` package
  * `moonrockz/diagrams-python-native/ffi` into the extension module
- * `diagrams_native._diagrams_native`.
+ * `diagrams_mbt._native`.
  *
  * Boundary rules (see the change prove-python-native-binding):
  * - The adapter uses three MoonBit symbols: the generated `moonbit_init` and
@@ -64,7 +64,7 @@ PyDoc_STRVAR(render_svg_json_doc,
              "\n"
              "Render Mermaid source with the MoonBit renderer in this process\n"
              "and return the versioned JSON result. Internal; use\n"
-             "diagrams_native.render_svg.");
+             "diagrams_mbt.render_svg.");
 
 static PyObject *render_svg_json(PyObject *module, PyObject *source) {
   (void)module;
@@ -129,7 +129,7 @@ static int module_exec(PyObject *module) {
   int32_t version = diagrams_py_abi_version();
   if (version != DIAGRAMS_PY_EXPECTED_ABI) {
     PyErr_Format(PyExc_ImportError,
-                 "diagrams_native: MoonBit boundary version %d, adapter "
+                 "diagrams_mbt: MoonBit boundary version %d, adapter "
                  "expects %d",
                  (int)version, (int)DIAGRAMS_PY_EXPECTED_ABI);
     return -1;
@@ -153,7 +153,7 @@ static PyModuleDef_Slot module_slots[] = {
 
 static struct PyModuleDef module_def = {
     PyModuleDef_HEAD_INIT,
-    "diagrams_native._diagrams_native",
+    "diagrams_mbt._native",
     "In-process Mermaid-to-SVG rendering through the MoonBit native backend "
     "(feasibility spike).",
     0,
@@ -164,6 +164,6 @@ static struct PyModuleDef module_def = {
     NULL,
 };
 
-PyMODINIT_FUNC PyInit__diagrams_native(void) {
+PyMODINIT_FUNC PyInit__native(void) {
   return PyModuleDef_Init(&module_def);
 }

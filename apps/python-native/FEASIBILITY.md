@@ -1,7 +1,9 @@
 # Feasibility report: Python in-process binding over the MoonBit native backend
 
 Change: `prove-python-native-binding`. Date: 2026-10-29. Host: macOS 26.6.2,
-arm64, Apple clang 21.0.0.
+arm64, Apple clang 21.0.0. The change `publish-python-package` later renamed the
+package to `diagrams_mbt` and the extension to `diagrams_mbt._native`; this
+report uses the current names. See [Cross-build update](#cross-build-update).
 
 ## Result
 
@@ -55,7 +57,7 @@ No compiler flag or patch of generated code was necessary. Two link paths work:
 
 1. **Archive (default build).** Link the adapter object and `ffi.a` with
    `-bundle -undefined dynamic_lookup` and export only
-   `PyInit__diagrams_native`. The module imports only `libSystem`.
+   `PyInit__native`. The module imports only `libSystem`.
 2. **Generated C and runtime sources (sanitizer and system-allocator builds).**
    Compile `ffi.c` and five runtime files (`runtime.c`, `env.c`, `utf.c`,
    `stdio.c`, `backtrace.c`) with our own flags, and link the precompiled
@@ -105,7 +107,7 @@ function and imports no process, socket or thread-creation function (`fork`,
   free-threaded builds or subinterpreters.
 - **Diagnostics.** Each diagnostic has code, severity, message and an optional
   span. Lines and columns start at 1. **Columns and offsets count UTF-16 code
-  units**, as MoonBit strings do. `diagrams_native.code_point_index` converts an
+  units**, as MoonBit strings do. `diagrams_mbt.code_point_index` converts an
   offset to a Python index (tested with an emoji before the error).
 
 ## Results
@@ -188,6 +190,34 @@ not in-process and must be reported as a different design.
    needs a thread-safety design for the runtime first.
 5. Add input limits and a corpus run to bound time and memory for each call.
 
+## Cross-build update
+
+The change `publish-python-package` builds all wheels on one host with zig
+0.17.0. It does not use the moon archive, which holds precompiled host objects.
+It compiles `ffi.c`, `runtime.c`, `env.c`, `utf.c`, `stdio.c`, `backtrace.c`,
+the adapter and mimalloc 2.1.7 for each target. The pinned MoonBit runtime
+reports `mi_version()` 217, so that is the same mimalloc version. Without
+`MOONBIT_USE_SIMDUTF`, `utf.c` uses its scalar code.
+
+| Build (macOS arm64, CPython 3.15.2) | Valid flowchart, median |
+| --- | --- |
+| moon archive (mimalloc and simdutf) | 1,430 µs |
+| zig, pinned mimalloc, scalar UTF-8 | 1,416 µs |
+| zig, system allocator, scalar UTF-8 | 2,884 µs |
+
+So mimalloc gives the speed, and simdutf gives no measurable gain at this
+boundary. `moonrockz/zig-cross exec` was not usable: with a custom compiler,
+moon also compiles `dir.c`, which fails for Linux (`NAME_MAX`).
+
+Local results of the cross-built wheels: macOS arm64 (3.12.16, 3.15.2) and
+macOS x86_64 under Rosetta (3.12.16) pass the tests; Linux x86_64 and aarch64
+pass in Docker (3.12, 3.15), and `auditwheel` reports `manylinux_2_17`. All
+wheels pass `twine check --strict`. The Windows module imports only
+`python3.dll`, the Universal CRT, `ADVAPI32` and `KERNEL32`. It also exports the
+runtime functions that `moonbit.h` marks `dllexport` on Windows; Windows binds
+each import to a named DLL, so these exports cause no conflict. CI runs the
+tests on native runners for all five wheels.
+
 ## Reproduce
 
 ```shell
@@ -195,6 +225,7 @@ mise run clean
 mise run test:python-native
 mise run test:python-native-sanitize
 mise run python-native:measure
+mise run python-native:wheels
 ```
 
 ## Sources

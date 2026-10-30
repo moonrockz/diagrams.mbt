@@ -35,6 +35,12 @@
       ]
     },
     {
+      "group": "Python",
+      "items": [
+        "python/"
+      ]
+    },
+    {
       "group": "Design",
       "items": [
         "design/"

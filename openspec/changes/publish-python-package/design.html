@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>publish-python-package: design</title>
+<meta name="color-scheme" content="light dark">
+<style>
+:root { color-scheme: light dark; --bg: #fafafa; --fg: #18212f; --muted: #526071;
+  --line: #cbd5e1; --panel: #eef2f6; --link: #075caa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111827; --fg: #e5e7eb; --muted: #b0bdce;
+    --line: #475569; --panel: #1e293b; --link: #8cc8ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 1rem/1.6 system-ui, sans-serif; }
+main { max-width: 70rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); }
+h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
+h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+a { color: var(--link); }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.meta { color: var(--muted); }
+.toc, pre, details { background: var(--panel); border: 1px solid var(--line);
+  border-radius: .4rem; padding: 1rem; }
+code { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+pre { overflow-x: auto; } pre code { overflow-wrap: normal; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid var(--line); padding: .6rem; text-align: left;
+  overflow-wrap: anywhere; }
+svg { max-width: 100%; height: auto; }
+@media print { main { max-width: none; padding: 0; } pre, tr { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<main>
+<h1>publish-python-package: design</h1>
+<p class="meta">OpenSpec change | 2026-10-29 | owner approved the 0.0.1 PyPI release</p>
+
+<nav class="toc" aria-label="Contents">
+<ul>
+<li><a href="#context">Context</a></li>
+<li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li>
+</ul>
+</nav>
+
+<h2 id="context">Context</h2>
+<p>The spike <code>prove-python-native-binding</code> links the archive that moon
+builds for the host. That archive contains precompiled host objects (mimalloc and
+simdutf), so it cannot serve other platforms. A probe compiled the generated
+<code>ffi.c</code>, five runtime files and the adapter with zig 0.17.0 for Linux,
+macOS and Windows. The Linux modules passed the tests in Docker, and the macOS
+x86_64 module passed under Rosetta. With a custom compiler, moon itself also
+builds <code>dir.c</code>, which fails for Linux targets (<code>NAME_MAX</code>), so
+<code>moonrockz/zig-cross exec</code> cannot build this archive.</p>
+<p>PyPI has a pending trusted publisher for the project <code>diagrams.mbt</code>:
+repository <code>moonrockz/diagrams.mbt</code>, workflow <code>release.yml</code>,
+environment <code>pypi</code>.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p><strong>Goals:</strong> build all wheels on one Linux or macOS host, test each
+wheel on its own platform, and publish 0.0.1 with trusted publishing.</p>
+<p><strong>Non-goals:</strong> the items under "Out of Scope" in the proposal.</p>
+
+<h2 id="decisions">Decisions</h2>
+
+<h3 id="pkg-1">PKG-1. Owner: names and an independent Python version</h3>
+<p>The owner chose the PyPI project <code>diagrams.mbt</code> and the version
+0.0.1. The import package is <code>diagrams_mbt</code> (Call), because a dot is
+not valid in an import name. The Python version is independent of the shared
+MoonBit version. <code>diagrams_mbt.__version__</code> is its only source.</p>
+
+<h3 id="xb-1">XB-1. Call: compile C sources with zig directly</h3>
+<p>The task compiles <code>ffi.c</code> (C backend, release mode),
+<code>runtime.c</code>, <code>env.c</code>, <code>utf.c</code>, <code>stdio.c</code>,
+<code>backtrace.c</code> and the adapter with <code>zig cc -target</code>. It uses
+the system allocator and the scalar UTF-8 code of <code>utf.c</code>, so no
+precompiled host object is linked. Targets: <code>x86_64-linux-gnu.2.17</code>,
+<code>aarch64-linux-gnu.2.17</code>, <code>aarch64-macos.11.0</code>,
+<code>x86_64-macos.11.0</code> and <code>x86_64-windows-gnu</code>. Windows needs
+<code>-D_CRT_RAND_S</code>, and links <code>python3.lib</code> and the Universal
+CRT.</p>
+<p>Alternatives: <code>zig-cross exec</code> (fails on <code>dir.c</code> and also
+drops mimalloc), and one native runner per platform (more runners, and Windows
+would need MSVC). The MSVC target of zig needs Microsoft SDK headers, which zig
+does not include.</p>
+
+<h3 id="xb-2">XB-2. Call: pinned headers from python-build-standalone</h3>
+<p>Each target uses the CPython 3.12.16 headers of python-build-standalone
+release 20261026 for that target. The task checks the SHA-256 digest from the
+release <code>SHA256SUMS</code> before it extracts the headers, and for Windows
+<code>python3.lib</code>.</p>
+
+<h3 id="whl-1">WHL-1. Call: a dependency-free wheel builder</h3>
+<p>A small Python script writes each wheel with the standard library:
+<code>METADATA</code> 2.4 with <code>License-Expression: Apache-2.0</code>,
+<code>WHEEL</code>, <code>RECORD</code> and the license file. The task runs it
+with the pinned CPython. There is no source distribution.</p>
+
+<h3 id="ci-1">CI-1. Call: build on Linux, test on native runners</h3>
+<p>The reusable workflow <code>python-wheels.yml</code> builds the wheels and the
+oracle on <code>ubuntu-latest</code>. A matrix installs each wheel with pip from
+the built files only and runs the tests on <code>ubuntu-24.04</code>,
+<code>ubuntu-24.04-arm</code>, <code>macos-15</code>, <code>macos-15-intel</code>
+and <code>windows-2025</code> with CPython 3.12 and 3.15. Linux jobs also run
+<code>auditwheel show</code>. CI and Release call the same workflow.</p>
+
+<h3 id="rel-1">REL-1. Call: a separate Python path in release.yml</h3>
+<p>The trusted publisher names <code>release.yml</code>, so the upload job must
+be in that file, not in the reusable workflow. A push to <code>main</code> that
+changes <code>diagrams_mbt/__init__.py</code> starts the workflow. The
+<code>python-plan</code> job releases when the run is on <code>main</code> and
+PyPI returns 404 for the version; a pull request is a dry run. The
+<code>pypi</code> job has <code>environment: pypi</code> and
+<code>id-token: write</code> and uses <code>pypa/gh-action-pypi-publish</code>.
+The MoonBit plan already skips a released version, so the MoonBit path does not
+change.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table>
+<thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td>MoonBit supports only MSVC on Windows; the wheel uses the MinGW ABI.</td><td>Test the wheel on a Windows runner with two CPython versions before publication.</td></tr>
+<tr><td>The wheels are about two times slower than the mimalloc and simdutf build.</td><td>State it in the README; compiling those libraries with zig is a follow-up.</td></tr>
+<tr><td>A PyPI version cannot be uploaded again.</td><td>Publish only after all wheel tests pass; 0.0.x marks an experimental API.</td></tr>
+<tr><td>A MoonBit panic stops the Python process.</td><td>Document it; the spike report keeps the details.</td></tr>
+</tbody>
+</table>
+
+</main>
+</body>
+</html>

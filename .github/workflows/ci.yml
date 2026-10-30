@@ -133,13 +133,19 @@ jobs:
     with:
       pages: false
 
+  # The Python wheels: a zig cross-build on Linux, then a test of each wheel on its native runner.
+  python-wheels:
+    name: Python wheels
+    needs: [lint]
+    uses: ./.github/workflows/python-wheels.yml
+
   # A single required check for branch protection.
   ci-ok:
     name: ci-ok
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: always()
-    needs: [lint, build, test, test-native-zig, test-scripts, windows, site]
+    needs: [lint, build, test, test-native-zig, test-scripts, windows, site, python-wheels]
     steps:
       - name: Require every job to succeed
         env:

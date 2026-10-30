@@ -18,8 +18,8 @@ import subprocess
 import sys
 import unittest
 
-import diagrams_native
-from diagrams_native import _diagrams_native
+import diagrams_mbt
+from diagrams_mbt import _native
 
 FIXTURES = pathlib.Path(os.environ["DIAGRAMS_NATIVE_FIXTURES"])
 ORACLE = pathlib.Path(os.environ["DIAGRAMS_NATIVE_ORACLE"])
@@ -43,7 +43,7 @@ def escape(text: str) -> str:
     )
 
 
-def result_text(rendered: diagrams_native.Rendered) -> str:
+def result_text(rendered: diagrams_mbt.Rendered) -> str:
     """The same format that the native oracle writes."""
     lines = [
         f"media_type\t{rendered.media_type}",
@@ -77,7 +77,7 @@ class ParityTest(unittest.TestCase):
     def test_each_fixture_equals_direct_moonbit_output(self) -> None:
         for name in fixture_names():
             with self.subTest(fixture=name):
-                rendered = diagrams_native.render_svg(source(name))
+                rendered = diagrams_mbt.render_svg(source(name))
                 expected = (ORACLE / f"{name}.result.txt").read_bytes()
                 self.assertEqual(result_text(rendered), expected.decode("utf-8"))
                 svg = ORACLE / f"{name}.svg"
@@ -91,56 +91,56 @@ class ParityTest(unittest.TestCase):
 
 class BehaviorTest(unittest.TestCase):
     def test_valid_flowchart_renders_svg(self) -> None:
-        rendered = diagrams_native.render_svg(source("flowchart-valid"))
+        rendered = diagrams_mbt.render_svg(source("flowchart-valid"))
         self.assertTrue(rendered.ok)
         self.assertEqual(rendered.media_type, "image/svg+xml")
         self.assertTrue(rendered.output.startswith("<svg "))
         self.assertEqual(rendered.diagnostics, ())
 
     def test_invalid_syntax_gives_structured_diagnostics(self) -> None:
-        rendered = diagrams_native.render_svg(source("flowchart-invalid"))
+        rendered = diagrams_mbt.render_svg(source("flowchart-invalid"))
         self.assertFalse(rendered.ok)
         self.assertIsNone(rendered.output)
         [d] = rendered.diagnostics
         self.assertEqual(d.severity, "error")
         self.assertEqual(d.code, "flowchart/syntax")
-        self.assertIsInstance(d.span, diagrams_native.Span)
+        self.assertIsInstance(d.span, diagrams_mbt.Span)
         self.assertEqual((d.span.start.line, d.span.start.column), (2, 3))
 
     def test_empty_input_gives_diagnostic(self) -> None:
-        rendered = diagrams_native.render_svg("")
+        rendered = diagrams_mbt.render_svg("")
         self.assertIsNone(rendered.output)
         self.assertEqual(
             [d.code for d in rendered.diagnostics], ["mermaid/missing-header"]
         )
 
     def test_non_bmp_text_keeps_its_value(self) -> None:
-        rendered = diagrams_native.render_svg(source("unicode-non-bmp"))
+        rendered = diagrams_mbt.render_svg(source("unicode-non-bmp"))
         self.assertIsNotNone(rendered.output)
         for text in ["\U0001F680", "\U0001D518", "\U00010348", "漢字", "café"]:
             self.assertIn(text, rendered.output)
 
     def test_offsets_count_utf16_code_units(self) -> None:
         text = source("unicode-invalid")
-        [d] = diagrams_native.render_svg(text).diagnostics
-        start = diagrams_native.code_point_index(text, d.span.start.offset)
-        end = diagrams_native.code_point_index(text, d.span.end.offset)
+        [d] = diagrams_mbt.render_svg(text).diagnostics
+        start = diagrams_mbt.code_point_index(text, d.span.start.offset)
+        end = diagrams_mbt.code_point_index(text, d.span.end.offset)
         self.assertEqual(text[start:end], 'A["\U0001F600 emoji"] --> B[')
         # The emoji counts as two UTF-16 code units, so the offset is one
         # more than the code-point index.
         self.assertEqual(d.span.end.offset, end + 1)
 
     def test_lone_surrogate_is_refused_before_the_call(self) -> None:
-        before = _diagrams_native._runtime_info()["render_calls"]
+        before = _native._runtime_info()["render_calls"]
         with self.assertRaises(UnicodeEncodeError):
-            diagrams_native.render_svg("flowchart TD\n  A[\ud800] --> B\n")
-        after = _diagrams_native._runtime_info()["render_calls"]
+            diagrams_mbt.render_svg("flowchart TD\n  A[\ud800] --> B\n")
+        after = _native._runtime_info()["render_calls"]
         self.assertEqual(before, after)
 
     def test_wrong_argument_type_raises_type_error(self) -> None:
         for value in [b"flowchart TD", None, 1]:
             with self.subTest(value=value), self.assertRaises(TypeError):
-                _diagrams_native.render_svg_json(value)
+                _native.render_svg_json(value)
 
     def test_render_starts_no_child_process(self) -> None:
         events: list[str] = []
@@ -152,37 +152,37 @@ class BehaviorTest(unittest.TestCase):
 
         sys.addaudithook(hook)
         for name in fixture_names():
-            diagrams_native.render_svg(source(name))
+            diagrams_mbt.render_svg(source(name))
         self.assertEqual(events, [])
-        self.assertTrue(_diagrams_native.__file__.endswith(".abi3.so"))
+        self.assertTrue(_native.__file__.endswith((".abi3.so", ".pyd")))
 
 
 class LifetimeTest(unittest.TestCase):
     def test_runtime_is_initialized_once(self) -> None:
-        first = sys.modules.pop("diagrams_native._diagrams_native")
-        sys.modules.pop("diagrams_native")
+        first = sys.modules.pop("diagrams_mbt._native")
+        sys.modules.pop("diagrams_mbt")
         try:
-            module = importlib.import_module("diagrams_native")
-            self.assertIsNot(module._diagrams_native, first)
-            self.assertEqual(module._diagrams_native._runtime_info()["init_count"], 1)
+            module = importlib.import_module("diagrams_mbt")
+            self.assertIsNot(module._native, first)
+            self.assertEqual(module._native._runtime_info()["init_count"], 1)
             self.assertTrue(module.render_svg(source("state-valid")).ok)
         finally:
-            sys.modules["diagrams_native._diagrams_native"] = first
-            sys.modules["diagrams_native"] = diagrams_native
+            sys.modules["diagrams_mbt._native"] = first
+            sys.modules["diagrams_mbt"] = diagrams_mbt
 
     def test_repeated_mixed_calls_give_stable_results(self) -> None:
         names = fixture_names()
         sources = {name: source(name) for name in names}
-        first = {name: diagrams_native.render_svg(sources[name]) for name in names}
+        first = {name: diagrams_mbt.render_svg(sources[name]) for name in names}
 
         def mixed_round(round_index: int) -> int:
             refused = 0
             for offset in range(len(names)):
                 name = names[(offset + round_index) % len(names)]
-                if diagrams_native.render_svg(sources[name]) != first[name]:
+                if diagrams_mbt.render_svg(sources[name]) != first[name]:
                     self.fail(f"{name} changed in round {round_index}")
                 try:
-                    diagrams_native.render_svg("\udfff")
+                    diagrams_mbt.render_svg("\udfff")
                 except UnicodeEncodeError:
                     refused += 1
             return refused
@@ -207,7 +207,7 @@ class LifetimeTest(unittest.TestCase):
         interp = interpreters.create()
         try:
             with self.assertRaises(interpreters.ExecutionFailed) as caught:
-                interp.exec("import diagrams_native._diagrams_native")
+                interp.exec("import diagrams_mbt._native")
             self.assertEqual(caught.exception.excinfo.type.__name__, "ImportError")
         finally:
             interp.close()
@@ -218,7 +218,7 @@ class LifetimeTest(unittest.TestCase):
     def test_wrong_boundary_version_fails_import(self) -> None:
         env = dict(os.environ, PYTHONPATH=os.environ["DIAGRAMS_NATIVE_BADABI"])
         completed = subprocess.run(
-            [sys.executable, "-c", "import diagrams_native"],
+            [sys.executable, "-c", "import diagrams_mbt"],
             env=env,
             capture_output=True,
             text=True,

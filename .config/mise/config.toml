@@ -399,3 +399,11 @@ run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbt
 [tasks."python-native:measure"]
 description = "Measure bounded repeated calls of the Python native-binding spike (macOS also runs leaks)"
 run = "mise exec python@3.12.16 python@3.15.2 -- moonx scripts/python-native.mbtx measure"
+
+[tasks."python-native:wheels"]
+description = "Cross-build the diagrams.mbt Python wheels for Linux, macOS and Windows with zig (args: --target <id>)"
+run = "mise exec python@3.12.16 -- moonx scripts/python-wheels.mbtx wheels"
+
+[tasks."release:pypi-plan"]
+description = "Decide whether a Release workflow run publishes the Python wheels to PyPI (CI)"
+run = "moonx scripts/python-wheels.mbtx plan"

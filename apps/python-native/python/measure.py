@@ -31,8 +31,8 @@ import statistics
 import sys
 import time
 
-import diagrams_native
-from diagrams_native import _diagrams_native
+import diagrams_mbt
+from diagrams_mbt import _native
 
 
 class _MallocStatistics(ctypes.Structure):
@@ -100,7 +100,7 @@ def main() -> int:
 
     fixtures = sorted(pathlib.Path(args.fixtures).glob("*.mmd"))
     sources = [p.read_bytes().decode("utf-8") for p in fixtures]
-    first = [diagrams_native.render_svg(s) for s in sources]
+    first = [diagrams_mbt.render_svg(s) for s in sources]
 
     # array("d") stores floats without one Python object per sample.
     per_fixture = {p.stem: array.array("d") for p in fixtures}
@@ -113,13 +113,13 @@ def main() -> int:
         while batch > 0 and made < args.calls:
             index = made % len(sources)
             t0 = time.perf_counter()
-            result = diagrams_native.render_svg(sources[index])
+            result = diagrams_mbt.render_svg(sources[index])
             per_fixture[fixtures[index].stem].append(time.perf_counter() - t0)
             if result != first[index]:
                 print(f"mismatch for {fixtures[index].name}", file=sys.stderr)
                 return 1
             try:
-                diagrams_native.render_svg("\ud800")
+                diagrams_mbt.render_svg("\ud800")
             except UnicodeEncodeError:
                 pass
             made += 1
@@ -135,7 +135,7 @@ def main() -> int:
             "py_blocks": sys.getallocatedblocks(),
             "memory": memory(),
             "malloc": malloc_stats(),
-            "runtime": _diagrams_native._runtime_info(),
+            "runtime": _native._runtime_info(),
         }
         rows.append(row)
         print(json.dumps(row), flush=True)

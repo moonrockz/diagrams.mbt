@@ -41,7 +41,7 @@ let native_dir : String = "_build/native/release/build/moonrockz/diagrams-python
 let spike_dir : String = "apps/python-native"
 
 ///|
-let module_file : String = "_diagrams_native.abi3.so"
+let module_file : String = "_native.abi3.so"
 
 ///|
 /// The runtime sources that the generated C needs when moon does not build
@@ -117,7 +117,7 @@ fn link_args(
   let args = match platform {
     Darwin =>
       [
-        "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__diagrams_native",
+        "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__native",
       ]
     Linux => ["-shared", "-Wl,--exclude-libs,ALL"]
   }
@@ -164,8 +164,8 @@ fn import_problems(platform : Platform, nm_output : String) -> Array[String] {
 /// The problems in the defined, exported symbols of the linked module.
 fn export_problems(platform : Platform, nm_output : String) -> Array[String] {
   let allowed = [
-    "PyInit__diagrams_native", "_mh_bundle_header", "_init", "_fini", "__bss_start",
-    "_edata", "_end",
+    "PyInit__native", "_mh_bundle_header", "_init", "_fini", "__bss_start", "_edata",
+    "_end",
   ]
   symbol_names(platform, nm_output)
   .filter(name => !allowed.contains(name))
@@ -313,14 +313,14 @@ async fn link_variant(
   objects : Array[String],
   extra_link : Array[String],
 ) -> String {
-  let package_dir = "\{out_dir}/\{name}/diagrams_native"
+  let package_dir = "\{out_dir}/\{name}/diagrams_mbt"
   @fs.mkdir(package_dir, recursive=true, allow_exist=true)
   let module_path = "\{package_dir}/\{module_file}"
   let args = extra_link.copy()
   args.push_iter(link_args(host.platform, module_path, objects).iter())
   run("cc", args)
   copy_file(
-    "\{spike_dir}/python/diagrams_native/__init__.py",
+    "\{spike_dir}/python/diagrams_mbt/__init__.py",
     "\{package_dir}/__init__.py",
   )
   let (undefined, defined) = match host.platform {
@@ -337,7 +337,7 @@ async fn link_variant(
   if !problems.is_empty() {
     fail("\{module_path}: \{problems.join("; ")}")
   }
-  println("📦 \{name}: \{module_path} exports only PyInit__diagrams_native")
+  println("📦 \{name}: \{module_path} exports only PyInit__native")
   @fs.realpath("\{out_dir}/\{name}")
 }
 
@@ -356,7 +356,7 @@ async fn archive_variant(
   flags.push_iter(defines.iter())
   compile(
     host,
-    "\{spike_dir}/python/adapter/diagrams_native.c",
+    "\{spike_dir}/python/adapter/native.c",
     "\{objects}/adapter.o",
     flags,
   )
@@ -400,7 +400,7 @@ async fn source_variant(host : Host, name : String, sanitize : Bool) -> String {
   adapter_flags.push_iter(["-Wall", "-Wextra", "-Werror"].iter())
   compile(
     host,
-    "\{spike_dir}/python/adapter/diagrams_native.c",
+    "\{spike_dir}/python/adapter/native.c",
     "\{objects}/adapter.o",
     adapter_flags,
   )
@@ -619,7 +619,7 @@ test "options select a command and default interpreters" {
 ///|
 test "link arguments export only the module initialization" {
   assert_eq(link_args(Darwin, "m.so", ["a.o"]), [
-    "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__diagrams_native",
+    "-bundle", "-undefined", "dynamic_lookup", "-Wl,-exported_symbol,_PyInit__native",
     "-o", "m.so", "a.o", "-lm",
   ])
   assert_eq(link_args(Linux, "m.so", ["a.o", "b.a"]), [
@@ -636,14 +636,11 @@ test "symbol checks find process imports, unresolved symbols and exports" {
   assert_eq(import_problems(Linux, "                 U fork\n"), [
     "imports fork",
   ])
-  assert_eq(
-    export_problems(Darwin, "0000000000000740 T _PyInit__diagrams_native\n"),
-    [],
-  )
+  assert_eq(export_problems(Darwin, "0000000000000740 T _PyInit__native\n"), [])
   assert_eq(
     export_problems(
       Darwin,
-      "0000000000000740 T _PyInit__diagrams_native\n0000000000000010 T _moonbit_init\n",
+      "0000000000000740 T _PyInit__native\n0000000000000010 T _moonbit_init\n",
     ),
     ["exports moonbit_init"],
   )

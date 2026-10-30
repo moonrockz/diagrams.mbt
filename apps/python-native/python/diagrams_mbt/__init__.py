@@ -1,9 +1,9 @@
 """In-process Mermaid-to-SVG rendering through the MoonBit native backend.
 
-This package is a feasibility spike, not a stable API. ``render_svg`` calls the
+This package is experimental (0.0.x); its API can change. ``render_svg`` calls the
 MoonBit ``render_svg`` function of ``moonrockz/diagrams-mermaid`` in this
-process through the extension module ``_diagrams_native``. The extension holds
-the GIL during a call. The spike makes no claim about threads, free-threaded
+process through the extension module ``diagrams_mbt._native``. The extension holds
+the GIL during a call. The package makes no claim about threads, free-threaded
 CPython or subinterpreters.
 
 Diagnostic positions are the MoonBit values: lines and columns start at 1,
@@ -17,7 +17,9 @@ import json
 from dataclasses import dataclass
 from typing import Optional, Tuple
 
-from . import _diagrams_native
+from . import _native
+
+__version__ = "0.0.1"
 
 __all__ = [
     "ABI_VERSION",
@@ -29,7 +31,7 @@ __all__ = [
     "render_svg",
 ]
 
-ABI_VERSION: int = _diagrams_native.ABI_VERSION
+ABI_VERSION: int = _native.ABI_VERSION
 
 
 @dataclass(frozen=True)
@@ -74,7 +76,7 @@ def render_svg(source: str) -> Rendered:
     for example one with a lone surrogate, raises ``UnicodeEncodeError``
     before the renderer is called.
     """
-    data = json.loads(_diagrams_native.render_svg_json(source))
+    data = json.loads(_native.render_svg_json(source))
     if data.get("format") != ABI_VERSION:
         raise RuntimeError(f"unexpected result format {data.get('format')!r}")
     return Rendered(

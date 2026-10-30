@@ -3,8 +3,8 @@
 ## Purpose
 
 Lets Python code render Mermaid source to SVG in the same process through the
-MoonBit native backend, with structured diagnostics. This capability is an
-experimental, unpublished feasibility adapter. It is not a stable Python API.
+MoonBit native backend, with structured diagnostics. This capability is
+experimental. It is not a stable Python API.
 
 ## ADDED Requirements
 

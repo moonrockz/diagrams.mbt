@@ -218,6 +218,18 @@ with the `MOONCAKES_USER_TOKEN` organization secret (an existing version counts
 as published), and then creates the GitHub release `vX.Y.Z`.
 Repository access to that secret must be verified before the first run.
 
+### Python package
+
+The PyPI project `diagrams.mbt` has its own version: `__version__` in
+`apps/python-native/python/diagrams_mbt/__init__.py`. Ask the owner before you
+change it. When a change of that version merges to `main`, the same Release
+workflow cross-builds the wheels with zig, tests each wheel on its native
+runner, and uploads them with PyPI trusted publishing from the job environment
+`pypi`. It uploads nothing when PyPI already has the version. A PyPI version
+cannot be uploaded again, so do not merge a version change before the
+`Python wheels` checks pass on the pull request. Build the wheels locally with
+`mise run python-native:wheels`. See [the Python docs](docs/python/how-it-works.md).
+
 ## Commits and pull requests
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/), for example
