@@ -233,6 +233,10 @@ run = "moonx scripts/test-animation.mbtx"
 description = "Check generated site examples against stored canonical/HTML snapshots"
 run = "moonx scripts/gallery.mbtx --existing-output --site-assets --site-assets-only --check"
 
+[tasks."test:query-consumer"]
+description = "Qualify fresh generic-query and BPMN-query consumers on all four targets"
+run = "moonx scripts/test-query-consumer.mbtx"
+
 [tasks."test:bpmn-consumer"]
 description = "Qualify a fresh reader-only BPMN consumer on all four targets"
 run = "moonx scripts/test-bpmn-consumer.mbtx"
