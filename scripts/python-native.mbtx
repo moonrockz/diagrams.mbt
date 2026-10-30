@@ -498,6 +498,9 @@ async fn sanitizer_env(host : Host) -> Map[String, String] {
     "DIAGRAMS_NATIVE_REPEAT": "200",
   }
   env[variable] = path
+  // macOS dyld removes DYLD_* variables from the environment of the process,
+  // so the tests give this copy to the Python child processes they start.
+  env["DIAGRAMS_NATIVE_PRELOAD"] = "\{variable}=\{path}"
   env
 }
 
