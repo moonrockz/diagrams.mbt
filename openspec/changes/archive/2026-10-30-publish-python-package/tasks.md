@@ -24,7 +24,7 @@ Bead: diagrams-6va.3
 Depends on group 2.
 
 - [x] 3.1 Add the reusable `python-wheels.yml` workflow: build on Linux, then install and test each wheel on its native runner with CPython 3.12 and 3.15.
-- [ ] 3.2 Call it from `ci.yml`, require it in `ci-ok`, and verify a green pull request run.
+- [x] 3.2 Call it from `ci.yml`, require it in `ci-ok`, and verify a green pull request run.
 
 ## 4. Publish to PyPI with trusted publishing
 
@@ -34,7 +34,7 @@ Depends on group 3.
 
 - [x] 4.1 Add the PyPI plan (version on main, not on PyPI) with tests, and the `pypi` job in `release.yml` with `id-token: write`.
 - [x] 4.2 Update the README, the feasibility report and the guides; run `mise run format`, `mise run check` and `mise exec -- openspec validate --all --strict`.
-- [ ] 4.3 After the merge, verify that PyPI has `diagrams.mbt` 0.0.1 with five wheels and that a fresh install renders a diagram.
+- [x] 4.3 After the merge, verify that PyPI has `diagrams.mbt` 0.0.1 with five wheels and that a fresh install renders a diagram.
 
 ## Workflow follow-up
 
