@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>add-portable-tree-queries-and-python-traversal</title>
+<meta name="color-scheme" content="light dark">
+<style>
+:root { color-scheme: light dark; --bg: #fafafa; --fg: #18212f; --muted: #526071;
+  --line: #cbd5e1; --panel: #eef2f6; --link: #075caa; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #111827; --fg: #e5e7eb; --muted: #b0bdce;
+    --line: #475569; --panel: #1e293b; --link: #8cc8ff; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+  font: 1rem/1.6 system-ui, sans-serif; }
+main { max-width: 70rem; margin: auto; padding: clamp(1rem, 4vw, 3rem); }
+h1, h2, h3 { line-height: 1.25; overflow-wrap: anywhere; }
+h2 { margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: .4rem; }
+a { color: var(--link); }
+a:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+.meta { color: var(--muted); }
+.toc, pre, details { background: var(--panel); border: 1px solid var(--line);
+  border-radius: .4rem; padding: 1rem; }
+code { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }
+pre { overflow-x: auto; } pre code { overflow-wrap: normal; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid var(--line); padding: .6rem; text-align: left;
+  overflow-wrap: anywhere; }
+svg { max-width: 100%; height: auto; }
+@media print { main { max-width: none; padding: 0; } pre, tr { break-inside: avoid; } }
+</style>
+</head>
+<body><main>
+<h1>add-portable-tree-queries-and-python-traversal</h1>
+<p class="meta">OpenSpec change | 2026-10-30 | Proposed, planning only</p>
+<p><a href="proposal.md">Proposal</a> · <a href="tasks.md">Tasks</a> · <a href="specs/tree-query-language/spec.md">Query contract</a> · <a href="specs/bpmn-traversal/spec.md">BPMN contract</a> · <a href="specs/python-native-binding/spec.md">Python contract</a></p>
+<nav class="toc" aria-label="Contents"><ul>
+<li><a href="#context">Context</a></li><li><a href="#goals">Goals and non-goals</a></li>
+<li><a href="#decisions">Decisions</a></li><li><a href="#grammar">Language version 1</a></li>
+<li><a href="#parity">Consumer compatibility map</a></li><li><a href="#qualification">Qualification</a></li>
+<li><a href="#risks">Risks and trade-offs</a></li><li><a href="#migration">Migration plan</a></li>
+<li><a href="#references">References</a></li>
+</ul></nav>
+
+<h2 id="context">Context</h2>
+<p>See the proposal for motivation and approved planning scope. At source <code>ec16910</code>, Python 0.0.1 exposes Mermaid rendering and diagnostic-position conversion only. The portable bridge serializes the complete SVG into JSON; the C adapter holds the GIL through native work and Python decodes that JSON into dataclasses.</p>
+<p>The complete existing visitor seam belongs to <code>moonrockz/bpmn</code>: <code>DocumentTree</code>, <code>NodeRef</code>, <code>EventReader</code>, <code>Visitor</code>, <code>TreeCursor</code> and <code>DocumentGraph</code>. These preserve all retained XML content, namespace identity, source order and immutable revision identity. Other diagram and parser models do not yet share this tree contract. This change uses BPMN as its first complete adapter and tests the generic core with a second independent tree fixture. It does not claim query coverage for every diagram family.</p>
+<p>The accepted Python specification currently requires holding the GIL for each call. Its delta explicitly replaces that requirement. The pinned native runtime has process-global cycle-collector state and non-atomic reference-count operations. Releasing the GIL alone is not a thread-safety design.</p>
+
+<h2 id="goals">Goals and non-goals</h2>
+<p><strong>Goals:</strong> make query compilation and execution first-class MoonBit APIs; preserve semantics in Python; reduce callback and conversion costs; allow unrelated Python threads to progress during native work. Every exported Python domain operation maps to a public MoonBit operation.</p>
+<p><strong>Non-goals:</strong> full Tree-sitter syntax, a Tree-sitter runtime dependency, all diagram adapters, arbitrary Python query predicates, public model construction parity, simultaneous native runtime execution, subinterpreters or free-threaded wheels. The existing SVG function remains supported; this is not a broader rendering binding expansion.</p>
+
+<h2 id="decisions">Decisions</h2>
+<h3 id="api-1">API-1. Owner: one public portable query core</h3>
+<p>Add <code>pkgs/diagrams-query</code>, proposed module name <code>moonrockz/diagrams-query</code>. Its root package imports core libraries only. Its public schema and adapter contract describe kinds, categories, fields, attributes, scalar values, ordered children and stable owner-qualified node keys. Its public compiler accepts text or a typed query representation and returns the same checked plan. Independent cursors execute an immutable plan over an immutable adapter view.</p>
+<p>Place the BPMN adapter in the opt-in <code>moonrockz/diagrams-query/bpmn</code> package. It imports the independent BPMN module and the generic query package. Neither <code>moonrockz/bpmn</code> nor its reader-only consumers import the query module. Python imports the query core and adapter through its native host. No grammar, matching or namespace logic is reimplemented in Python. A new generic dependency from BPMN was rejected because it would break the existing core-only module contract.</p>
+<p>Adapter schemas have a stable identifier and version, a published kind/category/field inventory, and explicit open extension namespaces. Plans are reusable across documents with the same schema. Extension names in explicitly bound open namespaces are valid even when absent from a particular document. Unknown reserved kinds/fields and unbound prefixes are compile failures. Schema compatibility depends on the declared contract, not a hash of the current document's contents.</p>
+
+<h3 id="qry-1">QRY-1. Call: a documented Tree-sitter-style subset</h3>
+<p>Use the syntax and evaluation rules below as language version 1. Tree-sitter patterns provide familiar notation; they do not supply our grammar or semantic node schema. Matching occurs over existing domain containment, not lexer tokens or invented attribute nodes. A named-field pattern constrains an actual child field. Attribute predicates operate on real attributes. Exact kind and category selectors are distinct. Unsupported features fail explicitly rather than being silently ignored.</p>
+<p>Alternatives considered were a Python-only selector DSL, importing Tree-sitter and emitting a synthetic parse tree, and a full XPath implementation. The shared typed plan avoids a second evaluator, preserves original model identity, and permits a smaller bounded implementation. Text queries and typed construction are equivalent public entry points; users do not need to write strings to use the feature.</p>
+
+<h3 id="qry-2">QRY-2. Call: bounded matching with deterministic batches</h3>
+<p>Use an explicit heap-stack matcher. Candidate roots follow containment preorder. An unlabelled child pattern selects a direct child; sibling constraints select distinct children in increasing original positions, allowing intervening siblings. A field-labelled child additionally requires that field. Enumerate successful child assignments lexicographically. At each root, try source patterns in source order. Alternatives retain source order and duplicate successful matches; no implicit cross-pattern deduplication occurs.</p>
+<p>Check compilation and execution work before allocation or advancement. Limits cover query source units, patterns, nesting, inspected nodes/edges, pending partial matches, capture count, result count and projected output units. Query cursor state retains cumulative budgets and pending matches between batches. Terminal states are <code>Complete</code>, <code>Stopped</code> or <code>Failed(reason)</code>; a nonterminal batch is never evidence of completeness. Close is idempotent. In-progress match limits bound ambiguous child assignments, and work limits bound empty-result scans. No batch request resets a limit.</p>
+<p>Projection is separate from matching. Return only requested fields, with source-qualified handles and typed scalar tags. Do not expand every path, attribute or child list eagerly. Materialize requested paths and fields under the output budget. A caller can request identity alone or useful fields together. A typed unknown-field failure differs from a missing value on a matched node.</p>
+
+<h3 id="bpm-1">BPM-1. Call: adapt existing document identity and field rules</h3>
+<p>The adapter keeps an owning <code>DocumentTree</code> and maps its nodes to query keys without copying the underlying document. It can build bounded metadata indices that retain the original <code>NodeRef</code> handles. It uses <code>NodeRef.category</code>, <code>kind</code>, <code>fields</code>, <code>attributes</code>, <code>scalar</code>, <code>path</code> and <code>location</code>. Do not synthesize defaults or source spans. Retain expanded namespace URIs; source XML prefixes are not identity. Invalid or incomplete documents remain inspectable when the existing tree builder succeeds.</p>
+<p>A complete query searches the chosen subtree, including its root. Returned paths remain document-relative. Document, text, comments and PI nodes are queryable categories. Reference and connection elements remain ordinary contained nodes; their target IDs do not become child links. Graph lookup, reachability and routes stay explicit calls and accept captured handles directly.</p>
+
+<h3 id="api-2">API-2. Owner: parity is a checked public contract</h3>
+<p>The compatibility table below is the minimum complete surface. Publish exact final signatures and data mappings in the implementation PR and compare them against generated MoonBit interfaces. Language conventions can differ: tuples/enums/read-only arrays can map to immutable Python records and tagged outcomes; Python iterators can wrap event sources. Default values, predicate semantics, traversal order, pruning, source positions, optional values, integer widths and failure categories cannot differ.</p>
+<p>Use a shared normalized fixture format with schema/language versions, original sources, namespace options, query text, controls, projections, limits and expected results. Normalization records full source/resource revision identity plus ordinal, never an address or local allocation counter. Preserve node roles and typed scalar tags. Query syntax positions use half-open UTF-16 offsets; BPMN locations retain their existing UTF-16 units and one-based lines/columns. Python provides the existing offset conversion helper.</p>
+
+<h3 id="ffi-1">FFI-1. Call: owned buffers and opaque registry handles</h3>
+<p>Version the private C boundary independently from public package and query-language versions. Use explicit-width status, lengths and scalar tags, dedicated UTF-8 buffers, and opaque generation-checked owner/cursor/plan tokens. Do not expose MoonBit struct layouts, mangled symbols or Python pointers to the portable engine. A C-owned result record contains scalar metadata and buffers copied out while native access is serialized. Python constructs its strings and immutable records after native ownership is released. Small diagnostic metadata may remain encoded during migration, but complete SVG, node snapshots and batches must not use a JSON round trip.</p>
+<p>Keep the current <code>render_svg</code>, <code>Rendered</code>, diagnostic classes and Unicode behavior unchanged. Add document reading, inspection, query and traversal namespaces. Retained views pin their immutable document owner. Closing a cursor releases its traversal state, not independently retained nodes. Concurrent advancement of one mutable cursor fails with a documented busy result; separate cursors remain independent. Invalid or stale tokens are checked before dereference. Finalization follows the runtime lock policy and performs no Python callback.</p>
+<p>A zero-copy borrowed-memory API was rejected for this change. It would add lifetime and allocator constraints before measuring the value. Owned buffers remove the largest JSON cost without making Python retain raw MoonBit memory.</p>
+
+<h3 id="gil-1">GIL-1. Call: release the GIL and serialize runtime access</h3>
+<pre><code class="language-console">Python call, GIL held: validate arguments, retain owners, copy input
+detach Python thread state
+  acquire the native runtime mutex
+  allocate native values; render, query or advance a cursor
+  copy results into C-owned buffers; release temporary MoonBit values
+  release the native runtime mutex
+reattach Python thread state
+construct Python values or invoke a user callback</code></pre>
+<p>The mutex covers initialization, allocation, reference counting, cycle collection, query and traversal registries, and runtime counters. Waiters detach before blocking. Release the mutex before reattaching to Python; never wait for the GIL while holding it. No Python C API, callback or finalizer runs in the detached region. Pin input and owner lifetimes before detaching. Use platform synchronization primitives compatible with the existing wheel targets and Python 3.12 Limited API; qualify initialization and thread handoff on each target.</p>
+<p>The first task is a concrete synchronization tracer bullet: audit the pinned runtime's thread-affinity assumptions and allocator handoff, then execute serialized calls from different Python threads with instrumentation and sanitizers. If the runtime cannot safely move between threads even under serialization, a dedicated native owner thread is the fallback design, not concurrent entry. That fallback requires an explicit design update covering queue bounds, shutdown and callbacks before implementation continues. Do not silently retain the GIL and claim this requirement is met.</p>
+<p>Protect mutable cursor busy state independently so a second caller cannot race its advancement. Queries may retain the mutex for an operation's bounded native work; batches provide natural release points but are not a promise of fair scheduling. Existing process-aborting MoonBit panics remain a documented limitation. Free-threaded declarations and subinterpreter support do not change in this proposal.</p>
+
+<h3 id="vis-1">VIS-1. Call: Python drives resumable visits</h3>
+<p>Use the existing public <code>EventReader</code>/<code>EventSource</code> control model for Python visitor, walk, fold and reduction facades. Each native advancement returns an owned snapshot and a continuation. Resolve implemented Python handlers once per traversal. Apply <code>enter</code>, then the selected typed family handler only after <code>Continue</code>, then resume native advancement with the resulting control. Omitted Python methods keep their native default and cause no Python callback.</p>
+<p><code>SkipChildren</code> acts before the child enters and still yields the current node's leave. <code>Stop</code> and callback exceptions emit no later callbacks. Nested traversal owns a different continuation, so the callback can reenter rendering or query APIs without retaining an outer native stack frame or mutex. Python fold/reduce accumulators stay Python-owned; control and combination order must match public MoonBit functions. Use explicit stacks for bottom-up reduction and deep trees. Preserve pruned-reduce behavior, including empty child results for a skipped node and absent result on stop.</p>
+<p>Observational event batches are a separate API. They can amortize native transitions when the caller does not need immediate per-node controls. Do not pre-expose descendants before an interactive visitor decides whether to skip them. Native query predicates are fixed portable operations, not Python callbacks. Vectorcall can reduce callback argument allocation, but it cannot remove the GIL or the user's Python computation.</p>
+
+<h2 id="grammar">Language version 1</h2>
+<p>The following is the proposed public dialect, not a claim of Tree-sitter compatibility. Identifiers use ASCII letters, digits, underscore and hyphen, starting with a letter or underscore. A qualified name is <code>prefix.local</code>. Capture names also permit dots after the first character. Strings use JSON string escapes and preserve Unicode values. Whitespace separates tokens; semicolon-to-end-of-line comments are allowed.</p>
+<pre><code class="language-console">query     := rule+
+rule      := captured | '(' captured predicate+ ')'
+captured  := node capture*
+node      := '(' selector part* ')' | '[' captured+ ']'
+part      := captured | field ':' captured | '!' field
+selector  := qualified-kind | 'category.' category | '_'
+capture   := '@' capture-name
+predicate := '(' predicate-name capture string* ')'</code></pre>
+<p>Compile field names and exact predicate arities, rather than accepting arbitrary <code>string*</code> operands at execution. Qualify BPMN kinds and child fields through supplied prefixes, for example <code>bpmn.userTask</code> and <code>bpmn.flowElement:</code>. Unqualified attribute strings denote attributes with no namespace; attribute strings such as <code>vendor:flag</code> use the explicit query namespace map, not source-prefix guessing. Reserved <code>category</code> selectors include activity, process, event, gateway, document, text, comment and processing-instruction as published by the adapter. Captures bind nodes, never a copied string pretending to be a node.</p>
+<table><thead><tr><th>Predicate</th><th>Operands after its name</th><th>Rule</th></tr></thead><tbody>
+<tr><td><code>#has-attr?</code></td><td>capture, attribute</td><td>True only when the attribute is present.</td></tr>
+<tr><td><code>#missing-attr?</code></td><td>capture, attribute</td><td>True only when the attribute is absent.</td></tr>
+<tr><td><code>#attr-eq?</code>, <code>#attr-not-eq?</code></td><td>capture, attribute, literal</td><td>Require presence, then compare the decoded value. Absent is false for both.</td></tr>
+<tr><td><code>#attr-in?</code></td><td>capture, attribute, one or more literals</td><td>Require presence and membership by exact scalar string value.</td></tr>
+<tr><td><code>#text-eq?</code></td><td>capture, literal</td><td>Compare an adapter-declared scalar text value; no implicit descendant-text concatenation. A node without scalar text does not match.</td></tr>
+</tbody></table>
+<p>Predicates in a rule are conjunctive and run only after all their referenced captures bind. Captures are unique within each successful alternative; two differently named roles can refer to the same node. Compilation checks all alternatives and predicate operands. Capturing an alternative means capturing its selected branch root. Repeated pattern indices and alternative branches remain distinct results. Query version 1 has no quantifiers, adjacency anchors, regex, directives or host-defined predicate execution. Each unsupported construct gets a stable diagnostic.</p>
+<pre><code class="language-console">; Capture user tasks with the exact decoded name "Approve".
+((bpmn.userTask) @task
+  (#attr-eq? @task "name" "Approve"))
+
+; Capture direct user-task children of a process.
+(bpmn.process
+  bpmn.flowElement: (bpmn.userTask) @task) @process
+
+; Either concrete task kind, independent of source namespace prefixes.
+[ (bpmn.userTask) (bpmn.serviceTask) ] @task
+
+; All activity categories, including those with no name attribute.
+((category.activity) @activity
+  (#missing-attr? @activity "name"))</code></pre>
+<p>The first example can also match a nested user task because all candidate roots are searched. The second requires a direct schema field and does not treat a grandchild as a direct flow element. Query syntax, typed constructors and normalized-plan examples become executable shared documentation fixtures during implementation.</p>
+
+<h2 id="parity">Consumer compatibility map</h2>
+<p>Names below describe proposed Python shapes. Implementation must publish and test the exact mapping; the MoonBit operations and observable semantics are the source contract.</p>
+<table><thead><tr><th>Public MoonBit surface</th><th>Python surface</th><th>Parity evidence</th></tr></thead><tbody>
+<tr><td>Query schema, text/typed compile, plan, execution cursor and projection</td><td>Schema, compile and immutable query objects; execution and batch iterator with terminal status</td><td>Text, version, captures, fields, compile spans, all limits and terminal failures</td></tr>
+<tr><td>BPMN read results; DocumentTree construction; explicit resource set for graph operations</td><td>Read result, owning document/tree view and caller-supplied resources</td><td>Same diagnostics and owned source; no implicit I/O; no full writer/construction API expansion</td></tr>
+<tr><td>NodeRef value, kind, category, ID, attributes, scalar, fields, children, parent, step, depth, span, location, resource, path and handle; lookup and path resolve</td><td>Read-only node snapshots/views, typed content projections, immutable handles and paths</td><td>No absent defaults, original order and namespaces, source units and revision mismatch</td></tr>
+<tr><td>walk, fold, reduce and reduce_pruned</td><td>Matching callback functions and tagged Continue/SkipChildren/Stop values</td><td>Accumulator order, empty child results for skipped nodes, no result after pruned-reduce stop</td></tr>
+<tr><td>Visitor category methods plus enter/leave; accept</td><td>Optional visitor methods and accept facade</td><td>Category dispatch, native defaults, immediate controls, exceptions and nested reentry</td></tr>
+<tr><td>EventReader, EventSource, push_events</td><td>Pull reader/iterator, event-source protocol and push facade; optional observational batches</td><td>Enter/leave sequence and caller-supplied event sources; no batching past control decisions</td></tr>
+<tr><td>TreeCursor navigation and path/depth</td><td>Stateful cursor with the same moves and read-only current node</td><td>Subtree bounds, relative depth, document-relative path, unchanged position after failed move</td></tr>
+<tr><td>DocumentGraph lookup, reachable and route; node/ID/qualified/symbol endpoints</td><td>Graph view and typed endpoint/result objects</td><td>Explicit edge kinds/resources/direction, external nodes, ambiguity, route tie breaks and limits</td></tr>
+<tr><td>Existing Mermaid render_svg and Rendered</td><td>Existing diagrams_mbt.render_svg and public dataclasses</td><td>Byte-equal SVG and unchanged diagnostics, Unicode and errors after transport changes</td></tr>
+</tbody></table>
+<p>This map does not require foreign-language representations of MoonBit traits, generics, debug helpers or compiler-generated derived methods. It requires their domain operations and outcomes to be available without semantic loss. For typed visitor values, the Python read-only projection exposes the same inspectable data; it need not expose all model constructors. Model construction outside this map, other format readers, animation and raster binding coverage remain deferred.</p>
+
+<h2 id="qualification">Qualification</h2>
+<p>Create corpus fixtures for both source-backed and constructed trees. Compare the query and existing traversal oracle on wasm, wasm-gc, js and native, then compare every Python wheel against that same normalized contract. Include malformed BPMN, unknown and vendor content, namespace aliases, duplicate IDs, source-revision changes, absent values, CRLF/non-BMP locations, overlapping patterns, repeated capture roles, deep trees, every bound and partial-batch failure.</p>
+<p>Check all visitor controls, no-op defaults, fold/reduce order, nested walks and render/query calls from callbacks, exceptions, owner lifetime, stale/closed tokens, same-cursor contention and independent cursors. Test GIL progress during controlled native computation and during mutex waits with synchronization barriers and bounded deadlines. Test actual cleanup under contention, repeated imports and native module state. A heartbeat that runs only before or after native work is insufficient evidence.</p>
+<p>Benchmark native oracle, direct Python calls, no-op visitor, field-collecting visitor, pruning, substantive callbacks, selective queries, match-all queries and batch sizes 1/64/256. Use identical documents and equivalent work. Include small, medium and large source fixtures and constructed 10,000-depth trees. Record cold/warm latency distributions, throughput, callback/native entry counts, projected bytes, allocation growth, time with the GIL held and mutex wait. Distinguish measurements from instrumented builds and normal release latency. Set regression thresholds from repeatable measured baselines, not an invented speedup factor. A query must prove zero Python per-candidate callbacks, even when latency varies.</p>
+<p>Reuse the existing MoonBit task, oracle, sanitizer and wheel harnesses. Add focused portable query/traversal consumer tests and require clean installed-wheel tests on the existing Linux x86_64/arm64, macOS arm64/x86_64 and Windows x86_64 matrix with Python 3.12 and 3.15. Run native-Zig qualification for native build integration. Update build checks only where the new tests need wiring; do not silently broaden supported platforms or ABI claims.</p>
+
+<h2 id="risks">Risks and trade-offs</h2>
+<table><thead><tr><th>Risk or limitation</th><th>Mitigation</th></tr></thead><tbody>
+<tr><td>Consumers expect full Tree-sitter compatibility.</td><td>Publish version 1 grammar and predicate meanings, reject unsupported syntax, and test all examples.</td></tr>
+<tr><td>Generic traversal erases namespace, revision or scalar distinctions.</td><td>Keep expanded names and typed tags; compare owned source/revision and full node roles in cross-language fixtures.</td></tr>
+<tr><td>Queries over ambiguous child assignments become expensive.</td><td>Explicit work, pending-match, depth, result and output budgets with truthful failed terminal states.</td></tr>
+<tr><td>Runtime thread handoff is unsafe even with a mutex.</td><td>Prove serialized thread handoff first on the pinned runtime; update the design explicitly if a single-owner worker is needed.</td></tr>
+<tr><td>Python callbacks reenter, raise or retain views.</td><td>Own snapshots/continuations; release the native lock before callbacks; stop cleanly and retain the required immutable owners.</td></tr>
+<tr><td>Queries still return almost every node.</td><td>Expose projections and batches, benchmark materialization separately and retain the visitor API for expressiveness.</td></tr>
+<tr><td>Native execution is serialized and panics can abort the process.</td><td>State these limits explicitly. GIL release improves Python progress; it does not claim multi-core native throughput or panic isolation.</td></tr>
+<tr><td>Large compatibility surface grows accidentally.</td><td>Use the checked map as the acceptance boundary; require a new proposal for other diagram adapters or full model/render/raster parity.</td></tr>
+</tbody></table>
+
+<h2 id="migration">Migration plan</h2>
+<ol>
+<li>After plan approval, create the epic and task-group stories. Prove the public MoonBit query to Python path and serialized GIL release before expanding the surface.</li>
+<li>Add the portable query module, BPMN adapter, shared fixtures and complete compatibility map without changing existing BPMN behavior.</li>
+<li>Add the versioned structured boundary and resumable Python traversal. Switch existing rendering internally after exact parity passes.</li>
+<li>Qualify all targets and candidate wheels. Archive the change in the final implementation PR; close and sync beads after merge.</li>
+<li>Prepare any module/Python version changes and publication only under separate owner approval. This proposal grants no release approval.</li>
+</ol>
+<p>Prefer one coherent implementation PR if review remains practical; task groups are stories, not mandatory PR boundaries. If split, each PR must preserve the existing rendering and independent BPMN consumer contracts. Rollback leaves old published wheels intact and removes the new adapter/API adoption together; never load a plan or extension under an incompatible private ABI. No document migration is needed because trees are immutable and query plans are not a stable serialized wire format.</p>
+
+<h2 id="references">References</h2>
+<p>These sources inform the design; they do not establish performance claims for this project.</p>
+<ul>
+<li><a href="https://tree-sitter.github.io/tree-sitter/using-parsers/queries/1-syntax.html">Tree-sitter query patterns and fields</a> and <a href="https://tree-sitter.github.io/tree-sitter/using-parsers/queries/3-predicates-and-directives.html">predicates</a>: syntax inspiration; our subset has explicit domain semantics.</li>
+<li><a href="https://lxml.de/parsing.html#iterparse-and-iterwalk">lxml pull traversal and subtree skipping</a>, <a href="https://lxml.de/performance.html">node-materialization costs</a>, and <a href="https://lxml.de/FAQ.html#can-i-use-threads-to-concurrently-access-the-lxml-api">threading</a>: visitor and cursor trade-offs.</li>
+<li><a href="https://docs.pola.rs/user-guide/expressions/user-defined-python-functions/">Polars element and batch UDFs</a>: callback granularity.</li>
+<li><a href="https://docs.python.org/3/c-api/threads.html">CPython thread state and GIL</a> and <a href="https://docs.python.org/3/c-api/call.html">call protocol</a>: extension correctness and callback invocation.</li>
+<li><a href="https://github.com/moonrockz/diagrams.mbt/blob/ec16910d2f0c4a655f5dd3ad1a045d6e1f3b084e/apps/python-native/FEASIBILITY.md">Current binding evidence</a>: pinned compiler, ownership findings and runtime limitations.</li>
+</ul>
+</main></body></html>

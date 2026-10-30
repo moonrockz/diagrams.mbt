@@ -1,0 +1,31 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-tests/traversal-corpus"
+
+// Values
+pub fn deep_source(Int32) -> String
+
+pub let expected : ReadOnlyArray[CorpusFile]
+
+pub fn file(String) -> String?
+
+pub let files : ReadOnlyArray[CorpusFile]
+
+pub fn fixture_names() -> Array[String]
+
+pub fn normalize(String, (String) -> String?) -> String
+
+pub fn normalize_deep() -> String
+
+pub fn outputs() -> Array[(String, String)]
+
+// Errors
+
+// Types and methods
+pub struct CorpusFile {
+  name : String
+  text : String
+}
+
+// Type aliases
+
+// Traits

@@ -1,4 +1,4 @@
-"""Tests of the Python native-binding spike.
+"""Tests of the diagrams_mbt Python binding: rendering parity and lifetime.
 
 The build task sets these environment variables:
 
@@ -131,16 +131,25 @@ class BehaviorTest(unittest.TestCase):
         self.assertEqual(d.span.end.offset, end + 1)
 
     def test_lone_surrogate_is_refused_before_the_call(self) -> None:
-        before = _native._runtime_info()["render_calls"]
+        before = _native._runtime_info()["calls"]
         with self.assertRaises(UnicodeEncodeError):
             diagrams_mbt.render_svg("flowchart TD\n  A[\ud800] --> B\n")
-        after = _native._runtime_info()["render_calls"]
+        after = _native._runtime_info()["calls"]
         self.assertEqual(before, after)
 
     def test_wrong_argument_type_raises_type_error(self) -> None:
         for value in [b"flowchart TD", None, 1]:
             with self.subTest(value=value), self.assertRaises(TypeError):
-                _native.render_svg_json(value)
+                diagrams_mbt.render_svg(value)
+
+    def test_results_are_new_python_values(self) -> None:
+        # The SVG text and every diagnostic come from C-owned copies, not
+        # from MoonBit memory and not from a JSON document.
+        first = diagrams_mbt.render_svg(source("flowchart-valid"))
+        second = diagrams_mbt.render_svg(source("flowchart-valid"))
+        self.assertEqual(first, second)
+        self.assertIsNot(first.output, second.output)
+        self.assertIs(type(first.diagnostics), tuple)
 
     def test_render_starts_no_child_process(self) -> None:
         events: list[str] = []
@@ -226,7 +235,7 @@ class LifetimeTest(unittest.TestCase):
         )
         self.assertNotEqual(completed.returncode, 0)
         self.assertIn("ImportError", completed.stderr)
-        self.assertIn("boundary version 1, adapter expects 0", completed.stderr)
+        self.assertIn("boundary version 2, adapter expects 0", completed.stderr)
 
 
 if __name__ == "__main__":

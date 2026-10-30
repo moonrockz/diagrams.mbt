@@ -1,6 +1,7 @@
 ///|
-/// Build, test and measure the Python native-binding spike (OpenSpec change
-/// `prove-python-native-binding`).
+/// Build, test and measure the Python binding on this host (OpenSpec changes
+/// `prove-python-native-binding` and
+/// `add-portable-tree-queries-and-python-traversal`).
 ///
 /// Usage: `mise run test:python-native`, or
 /// `moonx scripts/python-native.mbtx <command> [--python <exe>]...`.
@@ -13,7 +14,9 @@
 /// - `sanitize` compiles the generated C and the runtime sources with
 ///   AddressSanitizer and UndefinedBehaviorSanitizer, and runs the tests.
 /// - `measure` runs bounded repeated calls with the `default` build and a
-///   system-allocator build. On macOS it also runs the `leaks` tool.
+///   system-allocator build, then reports latency distributions, native time,
+///   lock wait, GIL-held time and record bytes for each workload of
+///   `measure.py`. On macOS it also runs the `leaks` tool.
 ///
 /// The first `--python` builds the extension against its headers. The default
 /// is `python3.12 python3.15`. Only macOS and Linux hosts are supported, and
@@ -153,7 +156,9 @@ fn import_problems(platform : Platform, nm_output : String) -> Array[String] {
   for name in symbol_names(platform, nm_output) {
     if forbidden_imports.contains(name) {
       problems.push("imports \{name}")
-    } else if name.has_prefix("moonbit_") || name.has_prefix("diagrams_py_") {
+    } else if name.has_prefix("moonbit_") ||
+      name.has_prefix("diagrams_py_") ||
+      name.has_prefix("mi_") {
       problems.push("leaves \{name} unresolved")
     }
   }
@@ -305,6 +310,24 @@ async fn copy_file(from : String, to : String) -> Unit {
 }
 
 ///|
+/// The files of the Python package that each variant copies: the modules and
+/// the typing marker, not the tests or caches.
+fn package_file(name : String) -> Bool {
+  name.has_suffix(".py") || name == "py.typed"
+}
+
+///|
+/// Copies the Python package files next to the extension module.
+async fn copy_package(package_dir : String) -> Unit {
+  let source = "\{spike_dir}/python/diagrams_mbt"
+  for name in @fs.readdir(source, sort=true) {
+    if package_file(name) {
+      copy_file("\{source}/\{name}", "\{package_dir}/\{name}")
+    }
+  }
+}
+
+///|
 /// Links `objects` into the module of variant `name`, adds the Python
 /// package and checks the imports and exports of the module.
 async fn link_variant(
@@ -319,10 +342,7 @@ async fn link_variant(
   let args = extra_link.copy()
   args.push_iter(link_args(host.platform, module_path, objects).iter())
   run("cc", args)
-  copy_file(
-    "\{spike_dir}/python/diagrams_mbt/__init__.py",
-    "\{package_dir}/__init__.py",
-  )
+  copy_package(package_dir)
   let (undefined, defined) = match host.platform {
     Darwin =>
       (capture("nm", ["-u", module_path]), capture("nm", ["-gU", module_path]))
@@ -350,8 +370,9 @@ async fn archive_variant(
 ) -> String {
   let objects = "\{out_dir}/obj/\{name}"
   @fs.mkdir(objects, recursive=true, allow_exist=true)
+  // The moon archive links the runtime with mimalloc.
   let flags = [
-    "-O2", "-fPIC", "-fvisibility=hidden", "-Wall", "-Wextra", "-Werror",
+    "-O2", "-fPIC", "-fvisibility=hidden", "-Wall", "-Wextra", "-Werror", "-DDIAGRAMS_PY_MIMALLOC=1",
   ]
   flags.push_iter(defines.iter())
   compile(
@@ -377,8 +398,8 @@ async fn source_variant(host : Host, name : String, sanitize : Bool) -> String {
   let flags = moon_c_flags.copy()
   flags.push_iter(
     [
-      "-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_SYSTEM", "-fPIC", "-fvisibility=hidden",
-      "-g",
+      "-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_SYSTEM", "-DDIAGRAMS_PY_MIMALLOC=0",
+      "-fPIC", "-fvisibility=hidden", "-g",
     ].iter(),
   )
   let sanitizer = ["-fsanitize=address,undefined"]
@@ -480,29 +501,51 @@ async fn sanitizer_env(host : Host) -> Map[String, String] {
     "DIAGRAMS_NATIVE_REPEAT": "200",
   }
   env[variable] = path
+  // macOS dyld removes DYLD_* variables from the environment of the process,
+  // so the tests give this copy to the Python child processes they start.
+  env["DIAGRAMS_NATIVE_PRELOAD"] = "\{variable}=\{path}"
   env
 }
 
 ///|
-async fn measure(pythons : Array[String], variant : String) -> Unit {
+/// The workload prefixes of the system-allocator report. That build is for
+/// malloc block counts, so it measures a bounded subset.
+let sysalloc_workloads : Array[String] = ["boundary", "render", "bpmn-medium"]
+
+///|
+/// The `measure.py` arguments. An empty `workloads` reports every workload.
+fn measure_args(fixtures : String, workloads : Array[String]) -> Array[String] {
+  let args = [
+    "-P",
+    "\{spike_dir}/python/measure.py",
+    "--fixtures",
+    fixtures,
+    "--batches",
+    "5",
+    "--calls",
+    "2000",
+    "--max-growth-per-call",
+    "0.05",
+    "--report",
+  ]
+  for workload in workloads {
+    args.push_iter(["--workload", workload].iter())
+  }
+  args
+}
+
+///|
+async fn measure(
+  pythons : Array[String],
+  variant : String,
+  workloads~ : Array[String] = [],
+) -> Unit {
   let fixtures = @fs.realpath("\{spike_dir}/fixtures")
   println("📏 \{pythons[0]}: \{variant}")
-  run(
-    pythons[0],
-    [
-      "-P",
-      "\{spike_dir}/python/measure.py",
-      "--fixtures",
-      fixtures,
-      "--batches",
-      "5",
-      "--calls",
-      "2000",
-      "--max-growth-per-call",
-      "0.05",
-    ],
-    extra_env={ "PYTHONPATH": variant, "PYTHONDONTWRITEBYTECODE": "1" },
-  )
+  run(pythons[0], measure_args(fixtures, workloads), extra_env={
+    "PYTHONPATH": variant,
+    "PYTHONDONTWRITEBYTECODE": "1",
+  })
 }
 
 ///|
@@ -595,7 +638,7 @@ async fn main {
     _ => {
       measure(options.pythons, archive_variant(host, "default", []))
       let system = source_variant(host, "sysalloc", false)
-      measure(options.pythons, system)
+      measure(options.pythons, system, workloads=sysalloc_workloads)
       if host.platform == Darwin {
         leaks(options.pythons[0], system)
       }
@@ -636,6 +679,10 @@ test "symbol checks find process imports, unresolved symbols and exports" {
   assert_eq(import_problems(Linux, "                 U fork\n"), [
     "imports fork",
   ])
+  assert_eq(
+    import_problems(Darwin, "                 _mi_register_deferred_free\n"),
+    ["leaves mi_register_deferred_free unresolved"],
+  )
   assert_eq(export_problems(Darwin, "0000000000000740 T _PyInit__native\n"), [])
   assert_eq(
     export_problems(
@@ -644,6 +691,25 @@ test "symbol checks find process imports, unresolved symbols and exports" {
     ),
     ["exports moonbit_init"],
   )
+}
+
+///|
+test "variants copy the package modules and the typing marker" {
+  assert_true(package_file("__init__.py"))
+  assert_true(package_file("_boundary.py"))
+  assert_true(package_file("py.typed"))
+  assert_false(package_file("__pycache__"))
+  assert_false(package_file("module.pyc"))
+}
+
+///|
+test "measure arguments select workloads by prefix" {
+  let all = measure_args("f", [])
+  assert_eq(all[all.length() - 1], "--report")
+  let some = measure_args("f", ["render", "bpmn-medium"])
+  assert_eq(some[some.length() - 4:].to_owned(), [
+    "--workload", "render", "--workload", "bpmn-medium",
+  ])
 }
 
 ///|

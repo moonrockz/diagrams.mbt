@@ -1,0 +1,191 @@
+=== design-named-user-tasks
+plan (({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @task (#attr-eq? @task "name" "Approve"))
+match 0: task=process.bpmn#5{identifier:"A"}
+match 0: task=process.bpmn#8{identifier:"Inner"}
+end complete
+=== design-direct-flow-elements
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}process {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement: ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @task) @process
+match 0: task=process.bpmn#5{identifier:"A"} process=process.bpmn#3{identifier:"P"}
+end complete
+=== design-either-task-kind
+plan [({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) ({http://www.omg.org/spec/BPMN/20100524/MODEL}serviceTask)] @task
+match 0: task=process.bpmn#5{identifier:"A"}
+match 0: task=process.bpmn#6{identifier:"S"}
+match 0: task=process.bpmn#8{identifier:"Inner"}
+end complete
+=== design-unnamed-activities
+plan ((category.activity) @activity (#missing-attr? @activity "name"))
+match 0: activity=process.bpmn#6{identifier:"S",{http://www.omg.org/spec/BPMN/20100524/MODEL}serviceTask,"activity"}
+match 0: activity=process.bpmn#11{identifier:"D",{http://www.omg.org/spec/BPMN/20100524/MODEL}task,"activity"}
+end complete
+=== missing-versus-empty
+plan ((category.activity) @a (#has-attr? @a "name")) | ((category.activity) @b (#attr-eq? @b "name" "")) | ((category.activity) @c (#attr-not-eq? @c "name" "Approve")) | ((category.activity) @d (#attr-in? @d "name" "dup" "Approve"))
+match 0: a=process.bpmn#5{identifier:"A",text:"Approve"}
+match 3: d=process.bpmn#5{identifier:"A",text:"Approve"}
+match 0: a=process.bpmn#7{identifier:"Sub",text:""}
+match 1: b=process.bpmn#7{identifier:"Sub",text:""}
+match 2: c=process.bpmn#7{identifier:"Sub",text:""}
+match 0: a=process.bpmn#8{identifier:"Inner",text:"Approve"}
+match 3: d=process.bpmn#8{identifier:"Inner",text:"Approve"}
+match 0: a=process.bpmn#9{identifier:"Deep",text:"𝔘 task"}
+match 2: c=process.bpmn#9{identifier:"Deep",text:"𝔘 task"}
+match 0: a=process.bpmn#10{identifier:"D",text:"dup"}
+match 2: c=process.bpmn#10{identifier:"D",text:"dup"}
+match 3: d=process.bpmn#10{identifier:"D",text:"dup"}
+end complete
+=== overlapping-patterns-and-branches
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @u | [({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @first (category.activity) @second]
+match 0: u=process.bpmn#5{identifier:"A"}
+match 1: first=process.bpmn#5{identifier:"A"}
+match 1: second=process.bpmn#5{identifier:"A"}
+match 1: second=process.bpmn#6{identifier:"S"}
+match 1: second=process.bpmn#7{identifier:"Sub"}
+match 0: u=process.bpmn#8{identifier:"Inner"}
+match 1: first=process.bpmn#8{identifier:"Inner"}
+match 1: second=process.bpmn#8{identifier:"Inner"}
+match 1: second=process.bpmn#9{identifier:"Deep"}
+match 1: second=process.bpmn#10{identifier:"D"}
+match 1: second=process.bpmn#11{identifier:"D"}
+end complete
+=== repeated-capture-roles
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}serviceTask) @a @b
+match 0: a=process.bpmn#6{identifier:"S"} b=process.bpmn#6{identifier:"S"}
+end complete
+=== children-in-order
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}process ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @first ({http://www.omg.org/spec/BPMN/20100524/MODEL}task) @second) @p
+match 0: first=process.bpmn#5{identifier:"A"} second=process.bpmn#10{identifier:"D"} p=process.bpmn#3{identifier:"P"}
+match 0: first=process.bpmn#5{identifier:"A"} second=process.bpmn#11{identifier:"D"} p=process.bpmn#3{identifier:"P"}
+end complete
+=== absent-field
+plan ((category.activity !{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement) @leaf (#has-attr? @leaf "name"))
+match 0: leaf=process.bpmn#5{identifier:"A"}
+match 0: leaf=process.bpmn#8{identifier:"Inner"}
+match 0: leaf=process.bpmn#9{identifier:"Deep"}
+match 0: leaf=process.bpmn#10{identifier:"D"}
+end complete
+=== prefix-alias-a
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @t
+match 0: t=process.bpmn#5{identifier:"A"}
+match 0: t=process.bpmn#8{identifier:"Inner"}
+end complete
+=== prefix-alias-b
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @t
+match 0: t=process.bpmn#5{identifier:"A"}
+match 0: t=process.bpmn#8{identifier:"Inner"}
+end complete
+=== vendor-collision
+plan ({urn:v}userTask) @vendor | (({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @model (#attr-eq? @model "id" "A"))
+match 1: model=process.bpmn#5{{http://www.omg.org/spec/BPMN/20100524/MODEL}userTask,"activity",-,-,-}
+match 0: vendor=process.bpmn#16{{urn:v}userTask,"extension",text:"on",text:"x",-}
+end complete
+=== complete-content
+plan (category.document) @doc | (category.comment) @comment | (category.processing-instruction) @pi | (({urn:v}userTask (category.text) @t (category.comment) @c (category.processing-instruction) @p) (#text-eq? @p "data"))
+match 0: doc=process.bpmn#0{"document",-,-}
+match 1: comment=process.bpmn#1{"comment"," head 𝔘 ",{urn:moonrockz:bpmn:tree}prolog}
+match 3: t=process.bpmn#17{"text","text",{urn:moonrockz:bpmn:tree}text} c=process.bpmn#18{"comment","c",{urn:moonrockz:bpmn:tree}comment} p=process.bpmn#19{"processing-instruction","data",{urn:moonrockz:bpmn:tree}processing-instruction}
+match 1: comment=process.bpmn#18{"comment","c",{urn:moonrockz:bpmn:tree}comment}
+match 2: pi=process.bpmn#19{"processing-instruction","data",{urn:moonrockz:bpmn:tree}processing-instruction}
+match 2: pi=process.bpmn#24{"processing-instruction","done",{urn:moonrockz:bpmn:tree}epilog}
+end complete
+=== diagram-interchange
+plan ({http://www.omg.org/spec/BPMN/20100524/DI}BPMNShape ({http://www.omg.org/spec/DD/20100524/DC}Bounds) @bounds) @shape
+match 0: bounds=process.bpmn#23{-,{http://www.omg.org/spec/DD/20100524/DC}Bounds,"diagram-interchange",{http://www.omg.org/spec/DD/20100524/DC}Bounds} shape=process.bpmn#22{identifier:"Shape_A",{http://www.omg.org/spec/BPMN/20100524/DI}BPMNShape,"diagram-interchange",{http://www.omg.org/spec/DD/20100524/DI}DiagramElement}
+end complete
+=== projections
+plan (({http://www.omg.org/spec/BPMN/20100524/MODEL}task) @t (#attr-eq? @t "id" "Deep"))
+match 0: t=process.bpmn#9{identifier:"Deep",text:"𝔘 task",process.bpmn@458:10:5-492:10:39,/{urn:moonrockz:bpmn:tree}root[0@1]/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0@0]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3@3]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1@1],4,{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement,{http://www.omg.org/spec/BPMN/20100524/MODEL}task,"activity",-}
+end complete
+=== source-locations-after-non-bmp
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @u
+match 0: u=process.bpmn#5{process.bpmn@310:6:3-345:6:38}
+match 0: u=process.bpmn#8{process.bpmn@413:9:5-452:9:44}
+end complete
+=== subtree-root
+plan (category.activity) @a
+match 0: a=process.bpmn#7{identifier:"Sub",/{urn:moonrockz:bpmn:tree}root[0@1]/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0@0]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3@3]}
+match 0: a=process.bpmn#8{identifier:"Inner",/{urn:moonrockz:bpmn:tree}root[0@1]/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0@0]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3@3]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0@0]}
+match 0: a=process.bpmn#9{identifier:"Deep",/{urn:moonrockz:bpmn:tree}root[0@1]/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0@0]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[3@3]/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1@1]}
+end complete
+=== reference-cycle
+plan [({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) ({http://www.omg.org/spec/BPMN/20100524/MODEL}serviceTask)] @t | ({http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow (_) @child)
+match 0: t=process.bpmn#5{identifier:"A"}
+match 0: t=process.bpmn#6{identifier:"S"}
+match 0: t=process.bpmn#8{identifier:"Inner"}
+end complete
+=== collaboration-and-choreography
+plan (category.participant) @p | (category.choreography-activity) @ct | (category.conversation) @conv | (category.conversation-link) @link | (category.lane) @lane
+match 0: p=collaboration.bpmn#3{identifier:"Buyer","participant"}
+match 0: p=collaboration.bpmn#4{identifier:"Seller","participant"}
+match 2: conv=collaboration.bpmn#6{identifier:"Conv","conversation"}
+match 3: link=collaboration.bpmn#9{identifier:"CL","conversation-link"}
+match 0: p=collaboration.bpmn#11{identifier:"P1","participant"}
+match 1: ct=collaboration.bpmn#12{identifier:"CT","choreography-activity"}
+match 4: lane=collaboration.bpmn#20{identifier:"L1","lane"}
+end complete
+=== extension-kind
+plan ({urn:x}task) @vendor | ({http://www.omg.org/spec/BPMN/20100524/MODEL}task) @model
+match 1: model=collaboration.bpmn#16{identifier:"Order",{http://www.omg.org/spec/BPMN/20100524/MODEL}task,"activity"}
+match 0: vendor=collaboration.bpmn#17{-,{urn:x}task,"extension"}
+match 1: model=collaboration.bpmn#23{identifier:"Ship",{http://www.omg.org/spec/BPMN/20100524/MODEL}task,"activity"}
+end complete
+=== work-limit-after-rows
+plan (_) @n
+match 0: n=process.bpmn#0{-}
+match 0: n=process.bpmn#1{-}
+match 0: n=process.bpmn#2{-}
+match 0: n=process.bpmn#3{identifier:"P"}
+match 0: n=process.bpmn#4{identifier:"Start"}
+match 0: n=process.bpmn#5{identifier:"A"}
+match 0: n=process.bpmn#6{identifier:"S"}
+match 0: n=process.bpmn#7{identifier:"Sub"}
+match 0: n=process.bpmn#8{identifier:"Inner"}
+match 0: n=process.bpmn#9{identifier:"Deep"}
+end failed limit work
+=== results-limit
+plan (category.activity) @a
+match 0: a=process.bpmn#5{identifier:"A"}
+match 0: a=process.bpmn#6{identifier:"S"}
+end failed limit results
+=== results-limit-exact
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}userTask) @u
+match 0: u=process.bpmn#5{identifier:"A"}
+match 0: u=process.bpmn#8{identifier:"Inner"}
+end complete
+=== pending-limit
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}process (_) (_) (_))
+end failed limit pending
+=== output-limit
+plan (category.activity) @a
+end failed limit output
+=== invalid-limits
+plan (_) @n
+end failed invalid-limits
+=== unknown-projection-field
+plan ({http://www.omg.org/spec/BPMN/20100524/MODEL}task) @t
+error query/unknown-projection-field -
+=== error-quantifier
+error query/unsupported-quantifier 11-12 1:12-1:13
+=== error-anchor
+error query/unsupported-anchor 14-15 1:15-1:16
+=== error-directive
+error query/unsupported-directive 16-22 1:17-1:23
+=== error-regex
+error query/unsupported-regex 16-24 1:17-1:25
+=== error-unknown-predicate
+error query/unknown-predicate 16-29 1:17-1:30
+=== error-grouping
+error query/unsupported-grouping 13-23 1:14-1:24
+=== error-unknown-kind
+error query/unknown-kind 1-15 1:2-1:16
+=== error-unbound-prefix
+error query/unbound-prefix 1-8 1:2-1:9
+=== error-duplicate-capture
+error query/duplicate-capture 0-44 1:1-1:45
+=== error-unknown-capture
+error query/unknown-capture 16-38 1:17-1:39
+=== error-non-bmp-crlf
+error query/syntax 23-25 3:2-3:4
+=== deep-document
+plan ({urn:v}n ({urn:v}leaf) @leaf) @parent
+match 0: leaf=generated:deep#10002{10002} parent=generated:deep#10001{10001}
+end complete

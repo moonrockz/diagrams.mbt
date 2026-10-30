@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Defs" targetNamespace="urn:dup">
+  <b:process id="P">
+    <b:startEvent id="S"/>
+    <b:task id="A" name="first"/>
+    <b:task id="A" name="second"/>
+    <b:task id="B"/>
+    <b:task id="C"/>
+    <b:sequenceFlow id="SA" sourceRef="S" targetRef="B"/>
+    <b:sequenceFlow id="AB" sourceRef="A" targetRef="B"/>
+    <b:sequenceFlow id="BC" sourceRef="B" targetRef="C"/>
+  </b:process>
+</b:definitions>

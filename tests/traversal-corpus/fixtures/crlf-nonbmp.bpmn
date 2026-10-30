@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 𝔘nicode 🚀 before nodes -->
+<b:definitions xmlns:b="http://www.omg.org/spec/BPMN/20100524/MODEL" id="Defs" targetNamespace="urn:unicode">
+  <b:process id="P" name="Fête 🎉">
+    <b:documentation>Line one 𝔘
+line two 🚀</b:documentation>
+    <b:task id="T1" name="𝔄𝔅 task"/>
+    <b:task id="T2" name="tab	here"/>
+    <b:sequenceFlow id="F" sourceRef="T1" targetRef="T2"/>
+  </b:process>
+</b:definitions>

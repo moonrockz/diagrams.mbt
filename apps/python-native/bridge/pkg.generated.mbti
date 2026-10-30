@@ -2,21 +2,72 @@
 package "moonrockz/diagrams-python-native/bridge"
 
 import {
+  "moonbitlang/core/debug",
   "moonrockz/diagrams",
+  "moonrockz/diagrams/render",
 }
 
 // Values
 pub fn abi_version() -> Int32
 
-pub fn render_svg_json(String) -> String
+pub fn arg_bool(ArrayView[Rec], Int32) -> Bool raise BridgeError
 
-pub fn render_svg_utf8(BytesView) -> Bytes
+pub fn arg_int(ArrayView[Rec], Int32) -> Int64 raise BridgeError
+
+pub fn arg_int32(ArrayView[Rec], Int32) -> Int32 raise BridgeError
+
+pub fn arg_list(ArrayView[Rec], Int32) -> ReadOnlyArray[Rec] raise BridgeError
+
+pub fn arg_str(ArrayView[Rec], Int32) -> String raise BridgeError
+
+pub fn arg_str_opt(ArrayView[Rec], Int32) -> String? raise BridgeError
+
+pub fn call(BytesView) -> Bytes
+
+pub fn decode_record(BytesView) -> Rec raise BridgeError
+
+pub fn encode_record(Rec) -> Bytes
+
+pub let record_max_depth : Int32
+
+pub let record_tags : ReadOnlyArray[(String, Int32)]
+
+pub fn render_svg_bytes(BytesView) -> @render.Rendered
 
 pub fn severity_name(@diagrams.Severity) -> String
 
 // Errors
+pub suberror BridgeError {
+  BridgeError(String, String)
+} derive(@debug.Debug)
+pub fn BridgeError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+pub(all) enum Rec {
+  Null
+  Bool(Bool)
+  Int(Int64)
+  Str(String)
+  Bin(Bytes)
+  List(ReadOnlyArray[Rec])
+} derive(Eq, @debug.Debug)
+pub fn Rec::equal(Self, Self) -> Bool
+pub fn Rec::int(Int32) -> Self
+pub fn Rec::int_opt(Int32?) -> Self
+pub fn Rec::list(Array[Self]) -> Self
+pub fn Rec::not_equal(Self, Self) -> Bool
+pub fn Rec::str_opt(String?) -> Self
+pub fn Rec::to_repr(Self) -> @debug.Repr
+
+pub struct Registry[T] {
+  kind : Int32
+  // private fields
+}
+pub fn[T] Registry::add(Self[T], T) -> Int64 raise BridgeError
+pub fn[T] Registry::get(Self[T], Int64) -> T raise BridgeError
+pub fn[T] Registry::live(Self[T]) -> Int32
+pub fn[T] Registry::new(Int32) -> Self[T]
+pub fn[T] Registry::remove(Self[T], Int64) -> Bool raise BridgeError
 
 // Type aliases
 

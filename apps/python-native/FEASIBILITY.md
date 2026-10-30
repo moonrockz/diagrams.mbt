@@ -71,7 +71,10 @@ function and imports no process, socket or thread-creation function (`fork`,
 
 ## Boundary, ownership and initialization
 
-- **Boundary.** Two exports: `int32_t diagrams_py_abi_version(void)` and
+- **Boundary.** (Spike state, boundary version 1. Version 2 replaced the
+  render export with `diagrams_py_call`, which takes and returns binary
+  records; see [Runtime thread handoff](#runtime-thread-handoff).) Two exports:
+  `int32_t diagrams_py_abi_version(void)` and
   `moonbit_bytes_t diagrams_py_render_svg(moonbit_bytes_t)`. UTF-8 source goes
   in, and UTF-8 JSON (format 1: media type, output, diagnostics) comes out.
   The FFI page gives `Bytes` a stable mapping to `uint8_t*`. Python does not
@@ -97,8 +100,9 @@ function and imports no process, socket or thread-creation function (`fork`,
   each process. A second import makes a new module object but does not
   initialize the runtime again (tested). MoonBit has no shutdown function, so
   the runtime and its top-level values stay until the process stops.
-- **Concurrency.** The adapter holds the GIL during a render, so calls are
-  serialized. The runtime has process-global state, for example the cycle
+- **Concurrency.** (Spike state; see [Runtime thread handoff](#runtime-thread-handoff)
+  for the current design.) The adapter held the GIL during a render, so calls
+  were serialized. The runtime has process-global state, for example the cycle
   collector buffer. The module declares
   `Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED`; an isolated 3.15 subinterpreter
   gets `ImportError` (tested). The source sets `Py_MOD_GIL_USED` only when the
@@ -218,6 +222,129 @@ runtime functions that `moonbit.h` marks `dllexport` on Windows; Windows binds
 each import to a named DLL, so these exports cause no conflict. CI runs the
 tests on native runners for all five wheels.
 
+## Runtime thread handoff
+
+Change: `add-portable-tree-queries-and-python-traversal`, task 1.2 and group 5.
+Date: 2026-10-30. Host: macOS 26.6.2, arm64, Apple clang 21.0.0, the same
+pinned MoonBit toolchain. This section replaces the statement above that the
+adapter holds the GIL during a call.
+
+### Design under test
+
+Every MoonBit entry (initialization, `diagrams_py_call`, the counters) runs
+inside one process-wide runtime lock (`pthread_mutex_t`, `SRWLOCK` on
+Windows). A call encodes its arguments into a malloc buffer with the GIL held,
+detaches (`Py_BEGIN_ALLOW_THREADS`), waits for the lock, runs MoonBit, copies
+the response into a second malloc buffer, releases both MoonBit values,
+releases the lock and only then attaches again. No Python API runs while the
+thread is detached or holds the lock. There is no owner thread.
+
+### Audit of the pinned runtime (source evidence)
+
+Sources: `lib/runtime/runtime.c`, `env.c`, `backtrace.c`,
+`include/moonbit_runtime.h` under `mise where http:moonbit`, the generated
+`ffi.c`, and mimalloc 2.1.7 (`src/page.c`, `src/heap.c`, `src/init.c`,
+`src/prim/unix/prim.c`; archive SHA-256 as in `scripts/python-wheels.mbtx`).
+
+| Finding | Evidence | Consequence |
+| --- | --- | --- |
+| No thread-local state, no thread identity | No `_Thread_local`, `__thread` or `pthread_self` in the runtime files, the headers or the generated `ffi.c` | The runtime can move between threads when entries are serialized. |
+| Process-global state | `moonbit_cycle` and `moonbit_deferred` root lists in `runtime.c`; top-level values from `moonbit_init` | Every entry needs the lock. |
+| Non-atomic reference counts | `MOONBIT_INC_RC_CNT` / `Moonbit_increase_rc_count` are plain `+=` | The lock (acquire/release) gives the happens-before order between threads. |
+| mimalloc is thread-safe, with cross-thread frees | mimalloc design; heaps are per thread, frees from other threads use atomic lists | Values allocated on one thread and released on another are safe. |
+| mimalloc calls a registered deferred-free function from allocation slow paths, with `force` on heap abandon at thread exit (`mi_thread_done` → `_mi_heap_collect_abandon`) and at process exit (`mi_process_done` → `mi_collect(true)`) | `page.c` `_mi_deferred_free`; `heap.c` `mi_heap_collect_ex`; `init.c` | The callback can run on a thread that does not hold the lock. |
+| The runtime's callback runs `moonbit_collect_cycles()` | `runtime.c` `moonbit_mimalloc_deferred_free`, registered by `moonbit_allocator_init` from `moonbit_runtime_init` | Off-lock cycle collection would race with a locked call. |
+| That registration exists only with `MOONBIT_TRIAL_DELETION` | `moonbit_runtime.h` defaults it to 0; `moon build --dry-run` passes no such flag; `runtime-runtime.o` has no reference to `mi_register_deferred_free` | **With the pinned toolchain the hazard is latent**: the runtime registers no callback and never collects cycles. A toolchain that enables trial deletion would make it real. |
+| System-allocator builds collect only in `moonbit_malloc` | `runtime.c` and the inlined `moonbit_malloc_inlined` | They collect only during MoonBit work, which runs under the lock. |
+
+### Fix
+
+In mimalloc builds (`DIAGRAMS_PY_MIMALLOC=1`: the moon archive and all
+wheels) the adapter calls `mi_register_deferred_free(guarded_deferred_free)`
+right after `moonbit_init()`, inside the lock. This replaces any callback that
+the runtime registered. The guard reads a `_Thread_local` flag that is set
+right after the lock is taken and cleared right before it is released. On the
+holding thread it collects with the runtime's own trigger (`force` or
+`moonbit_cycle_collection_threshold()`); on any other thread it returns at
+once, and the buffered roots stay for the next collection under the lock.
+Builds must define `DIAGRAMS_PY_MIMALLOC`; the adapter does not compile
+without it.
+
+### Results (measured)
+
+| Check | Command or setup | Result |
+| --- | --- | --- |
+| Thread tests (serial entry, GIL progress during a native call, third thread runs while one caller holds the lock and another waits, mixed-load deadline, finalizers that call native code under contention, 200 short-lived threads, concurrent imports, busy guard) | `mise run test:python-native` | 37 tests pass on CPython 3.12.16 (1 skipped: subinterpreters need 3.14) and 3.15.2 (none skipped); the thread tests take about 6 s |
+| Same tests, ASan + UBSan, system allocator | `mise run test:python-native-sanitize` | 37 tests pass on 3.12 (2 skipped) and 3.15 (1 skipped; no bad-ABI build in this task), no sanitizer report |
+| Maximum threads inside the lock | `_lock_stats()["max_inside"]` after every thread test | 1 |
+| Thread exit reaches the callback off the lock | 50 threads that render and exit (default build) | `deferred_skipped` 50; `deferred_locked` 50,200; `deferred_collected` 0 (trial deletion off) |
+| Guard with trial deletion on, mimalloc, ASan + UBSan | Manual build: generated C and runtime with `-DMOONBIT_TRIAL_DELETION=1 -DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_MIMALLOC`, mimalloc 2.1.7 `static.c`, sanitizers; 60 s of 16-thread groups that render and exit while one thread renders a large flowchart | 1,360 short threads, all results equal; 11 collections under the lock; 1,361 off-lock callbacks skipped; no sanitizer report |
+| Same, unguarded (runtime callback left in place) | Same build with `DIAGRAMS_PY_MIMALLOC=0` | No failure in 60 s. The race window is small; this is **not** evidence that the unguarded build is safe. |
+| Linux wheels with the thread tests | Docker `python:3.12-slim` and `python:3.15-slim` (3.12.16, 3.15.2), aarch64 native and x86_64 emulated | 37 tests pass in each of the four runs (bad-ABI test skipped, and the subinterpreter test on 3.12) |
+| macOS wheels | arm64 natively (3.12.16, 3.15.2); x86_64 under Rosetta (python-build-standalone 3.12.16) | 37 tests pass in each run; `twine check --strict` passes for all five wheels |
+| Windows wheel | Not run locally. Imports are the same DLL set as the 0.0.1 wheel (`python3.dll`, UCRT, `KERNEL32`, `ADVAPI32`); the lock uses `SRWLOCK` | CI must run the tests |
+
+A dedicated owner thread was not needed: no evidence showed that serialized
+handoff between threads is unsafe on the pinned runtime.
+
+### Measured boundary and latency (macOS arm64, CPython 3.12.16)
+
+`mise run python-native:measure`, 400 warm calls for each workload, 5 cold
+processes. Times are microseconds, p50 (p99). `native` is the time inside the
+runtime lock; `GIL held` is the public call time minus native time and lock
+wait. These are single-thread measurements; there is no parallel speedup.
+
+| Workload | Build | Public call | Native | GIL held | Response bytes | Cold first call |
+| --- | --- | --- | --- | --- | --- | --- |
+| no-op `echo` | mimalloc | 0.8 (2.8) | 0.4 | 0.3 | 19 | 15 |
+| flowchart-valid | mimalloc | 1,821 (3,432) | 1,808 | 10.5 | 11,538 | 2,173 |
+| flowchart-invalid | mimalloc | 13.3 (17.7) | 11.5 | 1.8 | 180 | 69 |
+| unicode-non-bmp | mimalloc | 301 (415) | 297 | 3.9 | 8,613 | 674 |
+| 300-edge flowchart | mimalloc | 52,031 (72,033) | 51,987 | 42.9 | 385,019 | 44,924 |
+| flowchart-valid | system | 3,095 (4,358) | 3,091 | 5.5 | 11,538 | 3,557 |
+| 300-edge flowchart | system | 118,727 (152,734) | 118,686 | 41.4 | 385,019 | 112,730 |
+
+With two threads that call at the same time, the lock wait per call is about
+the native time per call (flowchart-valid: 1,503 µs wait, 1,696 µs native),
+and `max_inside` stays 1. Over 8,000 calls the growth is 0.0115 Python blocks
+and 0.000125 malloc blocks per call (system allocator); `leaks` reports 0
+leaks at baseline and after 4,000 calls.
+
+Old JSON transport against the new record transport, same renderer (base
+commit `fec214a` built the same way), same host, three interleaved runs of 400
+calls (40 for the large flowchart), public-call p50 in µs:
+
+| Fixture | JSON (base) | Records (this change) |
+| --- | --- | --- |
+| flowchart-invalid | 15.9, 20.4, 20.7 | 13.0, 13.1, 15.3 |
+| unicode-non-bmp | 368, 378, 366 | 285, 291, 304 |
+| sequence-valid | 259, 265, 305 | 241, 258, 258 |
+| flowchart-valid | 1,734, 1,511, 1,572 | 1,397, 1,599, 1,841 |
+| 300-edge flowchart | 43,918, 52,093, 67,372 | 44,490, 45,888, 45,569 |
+
+Only the invalid and non-BMP rows differ by more than the run-to-run spread.
+For the other rows the difference is inside the noise of this host, so this
+report claims no speedup for them.
+
+### Query and traversal measurements
+
+[MEASUREMENTS.md](MEASUREMENTS.md) has the method and tables for the BPMN
+query, event and visitor workloads (small, medium and large trees, batch sizes
+1, 64 and 256, native oracle rows, callback time, GIL-held time and lock
+wait). In short, on this host: a selective query on a 10,003-node tree makes
+no Python callback and takes 1.30 ms at p50, against 311 ms for the
+equal-work Python visitor. Most native time of events, visitors and captures
+is `@bpmn.NodeRef::category` (11.8 µs for each node snapshot record).
+
+### Assumed, not measured
+
+- Windows behavior of the lock and the GIL release (CI runs the tests).
+- Lock fairness. The lock is not fair; the tests bound waits with deadlines
+  only. One thread can wait for several calls of other threads.
+- That a future toolchain keeps the export ownership convention and the
+  `moonbit_cycle_collection_threshold` / `moonbit_collect_cycles` exports.
+  The link check now also fails on an unresolved `mi_` symbol.
+
 ## Reproduce
 
 ```shell
@@ -227,6 +354,15 @@ mise run test:python-native-sanitize
 mise run python-native:measure
 mise run python-native:wheels
 ```
+
+The trial-deletion experiment in [Runtime thread handoff](#runtime-thread-handoff)
+is manual: compile `_build/native/release/build/moonrockz/diagrams-python-native/ffi/ffi.c`
+and the five runtime files with the `sanitize` flags of
+`scripts/python-native.mbtx` plus `-DMOONBIT_TRIAL_DELETION=1
+-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_MIMALLOC`, add mimalloc 2.1.7
+`src/static.c`, compile the adapter with `-DDIAGRAMS_PY_MIMALLOC=1` (guarded) or
+`0` (unguarded), and run a thread that renders while groups of short-lived
+threads render and exit.
 
 ## Sources
 

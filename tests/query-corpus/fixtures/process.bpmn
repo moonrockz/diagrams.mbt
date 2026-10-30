@@ -1,0 +1,21 @@
+<?xml version='1.0'?>
+<!-- head 𝔘 -->
+<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' xmlns:bpmndi='http://www.omg.org/spec/BPMN/20100524/DI' xmlns:dc='http://www.omg.org/spec/DD/20100524/DC' xmlns:v='urn:v' targetNamespace='urn:t'>
+<b:process id='P'>
+  <b:startEvent id='Start'/>
+  <b:userTask id='A' name='Approve'/>
+  <b:serviceTask id='S'/>
+  <b:subProcess id='Sub' name=''>
+    <b:userTask id='Inner' name='Approve'/>
+    <b:task id='Deep' name='𝔘 task'/>
+  </b:subProcess>
+  <b:task id='D' name='dup'/>
+  <b:task id='D'/>
+  <b:exclusiveGateway id='G' default='F2'/>
+  <b:sequenceFlow id='F1' sourceRef='A' targetRef='S'/>
+  <b:sequenceFlow id='F2' sourceRef='S' targetRef='A'/>
+  <b:extensionElements><v:userTask v:flag='on' kind='x'>text<!--c--><?pi data?></v:userTask></b:extensionElements>
+</b:process>
+<bpmndi:BPMNDiagram id='Dia'><bpmndi:BPMNPlane id='Plane' bpmnElement='P'><bpmndi:BPMNShape id='Shape_A' bpmnElement='A'><dc:Bounds x='1' y='2' width='3' height='4'/></bpmndi:BPMNShape></bpmndi:BPMNPlane></bpmndi:BPMNDiagram>
+</b:definitions>
+<?end done?>

@@ -1,0 +1,12 @@
+fixture deep
+read diagnostics=0
+tree length=10004
+walk enters=10004 leaves=10004 deepest=#10003 depth=10003 id=Deep path-steps=10003
+walk-skip at=5000 enters=5001 leaves=5001
+walk-stop at=#10003 enters=10004 leaves=0
+fold depth-sum=50035006
+reduce result=10004
+reduce-pruned-stop result=none
+events count=20008
+visitor-activity count=10001
+cursor bottom=10003:10003 parents=10003

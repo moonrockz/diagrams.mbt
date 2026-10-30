@@ -1,0 +1,221 @@
+fixture vendor.bpmn
+read document=yes diagnostics=4
+  diag bpmn/invalid-scalar Error span=255-260 loc=corpus:vendor.bpmn@3:45:255-3:50:260 msg="Value does not match its declared schema scalar type"
+  diag bpmn/invalid-scalar Error span=518-525 loc=corpus:vendor.bpmn@7:59:518-7:66:525 msg="Value does not match its declared schema scalar type"
+  diag bpmn/invalid-scalar Error span=565-566 loc=corpus:vendor.bpmn@7:106:565-7:107:566 msg="Value does not match its declared schema scalar type"
+  diag bpmn/unsupported-element Error span=574-624 loc=corpus:vendor.bpmn@8:5:574-8:55:624 msg="Unknown standard element is retained as payload_mode XML"
+tree diagnostics=0
+tree length=17 res=-
+#0 d=0 Document kind=- id=- parent=- step=- span=0-783 loc=corpus:vendor.bpmn@1:1:0-13:1:783 res=- children=1 value=Document
+  field Root attrs=[] children=[1]
+  field? Root children=[1]
+  children [1]
+  path (root) depth=0
+  handle res=- ord=0 same=Found#0 rebuilt=Found#0 other=DocumentMismatch resolve=Found#0 resolve-other=DocumentMismatch
+#1 d=1 Definitions kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard id=Defs parent=0 step=Root[0]@0 span=39-782 loc=corpus:vendor.bpmn@2:1:39-12:17:782 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}definitions/standard bindings=[b=http://www.omg.org/spec/BPMN/20100524/MODEL,v=urn:vendor,w=urn:vendor] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tDefinitions text_value=- content=""
+  attr {}id raw="id" Identifier("Defs") span=150-159 loc=corpus:vendor.bpmn@2:112:150-2:121:159
+  attr {}targetNamespace raw="targetNamespace" Uri("urn:vendor-test") span=160-193 loc=corpus:vendor.bpmn@2:122:160-2:155:193
+  attr {urn:vendor}origin raw="v:origin" Text("tool") span=194-209 loc=corpus:vendor.bpmn@2:156:194-2:171:209
+  scalar id=Identifier("Defs") name=-
+  field {}id attrs=[id] children=[]
+  field {}targetNamespace attrs=[targetNamespace] children=[]
+  field {urn:vendor}origin attrs=[v:origin] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement attrs=[] children=[2]
+  field? {}id children=[]
+  children [2]
+  path Root[0]@0 depth=1
+  handle res=- ord=1 same=Found#1 rebuilt=Found#1 other=DocumentMismatch resolve=Found#1 resolve-other=DocumentMismatch
+#2 d=2 Process kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard id=P parent=1 step={http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 span=213-765 loc=corpus:vendor.bpmn@3:3:213-11:15:765 res=- children=5 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}process/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tProcess text_value=- content=""
+  attr {}id raw="id" Identifier("P") span=224-230 loc=corpus:vendor.bpmn@3:14:224-3:20:230
+  attr {urn:vendor}owner raw="v:owner" Text("ops") span=231-244 loc=corpus:vendor.bpmn@3:21:231-3:34:244
+  attr {}isClosed raw="isClosed" Invalid("maybe"):"maybe",{http://www.w3.org/2001/XMLSchema}boolean span=245-261 loc=corpus:vendor.bpmn@3:35:245-3:51:261
+  scalar id=Identifier("P") name=-
+  field {}id attrs=[id] children=[]
+  field {urn:vendor}owner attrs=[v:owner] children=[]
+  field {}isClosed attrs=[isClosed] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements attrs=[] children=[3]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement attrs=[] children=[12,15,16]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}mystery attrs=[] children=[13]
+  field? {}id children=[]
+  children [3,12,13,15,16]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0 depth=2
+  handle res=- ord=2 same=Found#2 rebuilt=Found#2 other=DocumentMismatch resolve=Found#2 resolve-other=DocumentMismatch
+#3 d=3 Other kind={http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements/standard id=- parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0 span=267-459 loc=corpus:vendor.bpmn@4:5:267-6:27:459 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tExtensionElements text_value=- content=""
+  scalar id=- name=-
+  field {urn:vendor}task attrs=[] children=[4]
+  field? {urn:vendor}task children=[4]
+  children [4]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0 depth=3
+  handle res=- ord=3 same=Found#3 rebuilt=Found#3 other=DocumentMismatch resolve=Found#3 resolve-other=DocumentMismatch
+#4 d=4 Extension kind={urn:vendor}task/foreign id=- parent=3 step={urn:vendor}task[0]@0 span=295-432 loc=corpus:vendor.bpmn@5:7:295-5:144:432 res=- children=6 value=Element
+  element kind={urn:vendor}task/foreign bindings=[] value_type=- text_value=- content="left&raw <x>tail"
+  attr {}id raw="id" Text("VendorTask") span=303-318 loc=corpus:vendor.bpmn@5:15:303-5:30:318
+  attr {urn:vendor}flag raw="v:flag" Text("true") span=319-332 loc=corpus:vendor.bpmn@5:31:319-5:44:332
+  scalar id=Text("VendorTask") name=-
+  field {}id attrs=[id] children=[]
+  field {urn:vendor}flag attrs=[v:flag] children=[]
+  field Text attrs=[] children=[5,11]
+  field {urn:vendor}note attrs=[] children=[6]
+  field Comment attrs=[] children=[8]
+  field ProcessingInstruction attrs=[] children=[9]
+  field {urn:vendor}empty attrs=[] children=[10]
+  field? {}id children=[]
+  children [5,6,8,9,10,11]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0 depth=4
+  handle res=- ord=4 same=Found#4 rebuilt=Found#4 other=DocumentMismatch resolve=Found#4 resolve-other=DocumentMismatch
+#5 d=5 Text kind=- id=- parent=4 step=Text[0]@0 span=333-357 loc=corpus:vendor.bpmn@5:45:333-5:69:357 res=- children=0 value=Text("left&raw <x>")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/Text[0]@0 depth=5
+  handle res=- ord=5 same=Found#5 rebuilt=Found#5 other=DocumentMismatch resolve=Found#5 resolve-other=DocumentMismatch
+#6 d=5 Extension kind={urn:vendor}note/foreign id=- parent=4 step={urn:vendor}note[0]@1 span=357-381 loc=corpus:vendor.bpmn@5:69:357-5:93:381 res=- children=1 value=Element
+  element kind={urn:vendor}note/foreign bindings=[] value_type=- text_value=- content="aliased"
+  scalar id=- name=-
+  field Text attrs=[] children=[7]
+  field? Text children=[7]
+  children [7]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/{urn:vendor}note[0]@1 depth=5
+  handle res=- ord=6 same=Found#6 rebuilt=Found#6 other=DocumentMismatch resolve=Found#6 resolve-other=DocumentMismatch
+#7 d=6 Text kind=- id=- parent=6 step=Text[0]@0 span=365-372 loc=corpus:vendor.bpmn@5:77:365-5:84:372 res=- children=0 value=Text("aliased")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/{urn:vendor}note[0]@1/Text[0]@0 depth=6
+  handle res=- ord=7 same=Found#7 rebuilt=Found#7 other=DocumentMismatch resolve=Found#7 resolve-other=DocumentMismatch
+#8 d=5 Comment kind=- id=- parent=4 step=Comment[0]@2 span=381-394 loc=corpus:vendor.bpmn@5:93:381-5:106:394 res=- children=0 value=Comment("inside")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/Comment[0]@2 depth=5
+  handle res=- ord=8 same=Found#8 rebuilt=Found#8 other=DocumentMismatch resolve=Found#8 resolve-other=DocumentMismatch
+#9 d=5 ProcessingInstruction kind=- id=- parent=4 step=ProcessingInstruction[0]@3 span=394-409 loc=corpus:vendor.bpmn@5:106:394-5:121:409 res=- children=0 value=PI("vendor","keep")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/ProcessingInstruction[0]@3 depth=5
+  handle res=- ord=9 same=Found#9 rebuilt=Found#9 other=DocumentMismatch resolve=Found#9 resolve-other=DocumentMismatch
+#10 d=5 Extension kind={urn:vendor}empty/foreign id=- parent=4 step={urn:vendor}empty[0]@4 span=409-419 loc=corpus:vendor.bpmn@5:121:409-5:131:419 res=- children=0 value=Element
+  element kind={urn:vendor}empty/foreign bindings=[] value_type=- text_value=- content=""
+  scalar id=- name=-
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/{urn:vendor}empty[0]@4 depth=5
+  handle res=- ord=10 same=Found#10 rebuilt=Found#10 other=DocumentMismatch resolve=Found#10 resolve-other=DocumentMismatch
+#11 d=5 Text kind=- id=- parent=4 step=Text[1]@5 span=419-423 loc=corpus:vendor.bpmn@5:131:419-5:135:423 res=- children=0 value=Text("tail")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}extensionElements[0]@0/{urn:vendor}task[0]@0/Text[1]@5 depth=5
+  handle res=- ord=11 same=Found#11 rebuilt=Found#11 other=DocumentMismatch resolve=Found#11 resolve-other=DocumentMismatch
+#12 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard id=Task parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@1 span=464-569 loc=corpus:vendor.bpmn@7:5:464-7:110:569 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}task/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tTask text_value=- content=""
+  attr {}id raw="id" Identifier("Task") span=472-481 loc=corpus:vendor.bpmn@7:13:472-7:22:481
+  attr {}name raw="name" Text("Real task") span=482-498 loc=corpus:vendor.bpmn@7:23:482-7:39:498
+  attr {}isForCompensation raw="isForCompensation" Invalid("perhaps"):"perhaps",{http://www.w3.org/2001/XMLSchema}boolean span=499-526 loc=corpus:vendor.bpmn@7:40:499-7:67:526
+  attr {}startQuantity raw="startQuantity" Integer("2") span=527-544 loc=corpus:vendor.bpmn@7:68:527-7:85:544
+  attr {}completionQuantity raw="completionQuantity" Invalid("x"):"x",{http://www.w3.org/2001/XMLSchema}integer span=545-567 loc=corpus:vendor.bpmn@7:86:545-7:108:567
+  scalar id=Identifier("Task") name=Text("Real task")
+  field {}id attrs=[id] children=[]
+  field {}name attrs=[name] children=[]
+  field {}isForCompensation attrs=[isForCompensation] children=[]
+  field {}startQuantity attrs=[startQuantity] children=[]
+  field {}completionQuantity attrs=[completionQuantity] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[0]@1 depth=3
+  handle res=- ord=12 same=Found#12 rebuilt=Found#12 other=DocumentMismatch resolve=Found#12 resolve-other=DocumentMismatch
+#13 d=3 Extension kind={http://www.omg.org/spec/BPMN/20100524/MODEL}mystery/unknown id=- parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}mystery[0]@2 span=574-624 loc=corpus:vendor.bpmn@8:5:574-8:55:624 res=- children=1 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}mystery/unknown bindings=[] value_type=- text_value=- content="kept"
+  attr {}id raw="id" Text("Unknown") span=585-597 loc=corpus:vendor.bpmn@8:16:585-8:28:597
+  attr {http://www.omg.org/spec/BPMN/20100524/MODEL}odd raw="b:odd" Text("1") span=598-607 loc=corpus:vendor.bpmn@8:29:598-8:38:607
+  scalar id=Text("Unknown") name=-
+  field {}id attrs=[id] children=[]
+  field {http://www.omg.org/spec/BPMN/20100524/MODEL}odd attrs=[b:odd] children=[]
+  field Text attrs=[] children=[14]
+  field? {}id children=[]
+  children [14]
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}mystery[0]@2 depth=3
+  handle res=- ord=13 same=Found#13 rebuilt=Found#13 other=DocumentMismatch resolve=Found#13 resolve-other=DocumentMismatch
+#14 d=4 Text kind=- id=- parent=13 step=Text[0]@0 span=608-612 loc=corpus:vendor.bpmn@8:39:608-8:43:612 res=- children=0 value=Text("kept")
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}mystery[0]@2/Text[0]@0 depth=4
+  handle res=- ord=14 same=Found#14 rebuilt=Found#14 other=DocumentMismatch resolve=Found#14 resolve-other=DocumentMismatch
+#15 d=3 SequenceFlow kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard id=Flow parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@3 span=629-690 loc=corpus:vendor.bpmn@9:5:629-9:66:690 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}sequenceFlow/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tSequenceFlow text_value=- content=""
+  attr {}id raw="id" Identifier("Flow") span=645-654 loc=corpus:vendor.bpmn@9:21:645-9:30:654
+  attr {}sourceRef raw="sourceRef" Reference("Task"):Id,"Task",{}Task span=655-671 loc=corpus:vendor.bpmn@9:31:655-9:47:671
+  attr {}targetRef raw="targetRef" Reference("Task"):Id,"Task",{}Task span=672-688 loc=corpus:vendor.bpmn@9:48:672-9:64:688
+  scalar id=Identifier("Flow") name=-
+  field {}id attrs=[id] children=[]
+  field {}sourceRef attrs=[sourceRef] children=[]
+  field {}targetRef attrs=[targetRef] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[1]@3 depth=3
+  handle res=- ord=15 same=Found#15 rebuilt=Found#15 other=DocumentMismatch resolve=Found#15 resolve-other=DocumentMismatch
+#16 d=3 Activity kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard id=Call parent=2 step={http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@4 span=695-750 loc=corpus:vendor.bpmn@10:5:695-10:60:750 res=- children=0 value=Element
+  element kind={http://www.omg.org/spec/BPMN/20100524/MODEL}callActivity/standard bindings=[] value_type={http://www.omg.org/spec/BPMN/20100524/MODEL}tCallActivity text_value=- content=""
+  attr {}id raw="id" Identifier("Call") span=711-720 loc=corpus:vendor.bpmn@10:21:711-10:30:720
+  attr {}calledElement raw="calledElement" Reference("v:Elsewhere"):QName,"v:Elsewhere",{urn:vendor}Elsewhere span=721-748 loc=corpus:vendor.bpmn@10:31:721-10:58:748
+  scalar id=Identifier("Call") name=-
+  field {}id attrs=[id] children=[]
+  field {}calledElement attrs=[calledElement] children=[]
+  field? {}id children=[]
+  children []
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}flowElement[2]@4 depth=3
+  handle res=- ord=16 same=Found#16 rebuilt=Found#16 other=DocumentMismatch resolve=Found#16 resolve-other=DocumentMismatch
+walk
+  +0 +1 +2 +3 +4 +5 -5 +6 +7 -7 -6 +8 -8 +9 -9 +10
+  -10 +11 -11 -4 -3 +12 -12 +13 +14 -14 -13 +15 -15 +16 -16 -2
+  -1 -0
+walk-skip
+  +0 +1 +2 -2 -1 -0
+walk-stop at=11
+  +0 +1 +2 +3 +4 +5 -5 +6 +7 -7 -6 +8 -8 +9 -9 +10
+  -10 +11
+walk-subtree at=8
+  +8 -8
+fold
+  +0 +1 +2 -2 -1 -0
+  result=6
+reduce
+  5:0 7:0 6:1 8:0 9:0 10:0 11:0 4:6 3:1 12:0 14:0 13:1 15:0 16:0 2:5 1:1
+  0:1
+  result=17
+reduce-pruned-skip
+  2:0 1:1 0:1
+  result=3
+reduce-pruned-stop at=11
+  +0 +1 +2 +3 +4 +5 5:0 +6 +7 7:0 6:1 +8 8:0 +9 9:0 +10
+  10:0 +11
+  result=none
+visitor-activity
+  12:task 16:callActivity
+visitor-full stop=11
+  +0 document:0 +1 definitions:1:definitions +2 -2 -1 -0
+events
+  +0 +1 +2 +3 +4 +5 -5 +6 +7 -7 -6 +8 -8 +9 -9 +10
+  -10 +11 -11 -4 -3 +12 -12 +13 +14 -14 -13 +15 -15 +16 -16 -2
+  -1 -0
+events-controls stop=11
+  +0 +1 +2 -2 -1 -0 end
+push stop=11
+  +0 +1 +2 -2 -1 -0
+cursor
+  @0:0 fc>1:1 fc>2:2 fc>3:3 fc>4:4 fc>5:5 fc! ns>6:5 fc>7:6 fc! ns! p>6:5 ns>8:5 fc! ns>9:5 fc!
+  ns>10:5 fc! ns>11:5 fc! ns! p>4:4 ns! p>3:3 ns>12:3 fc! ns>13:3 fc>14:4 fc! ns! p>13:3 ns>15:3
+  fc! ns>16:3 fc! ns! p>2:2 ns! p>1:1 ns! p>0:0 ns! p!
+cursor-subtree at=2
+  @2:0 p!2:0 ps!2:0 ns!2:0 lc>16:1 ps>15:1 ns>16:1 ns!16:1 fc!16:1 p>2:0 p!2:0 p!2:0
+  path Root[0]@0/{http://www.omg.org/spec/BPMN/20100524/MODEL}rootElement[0]@0
+> graph main
+  diagnostics=5
+    diag bpmn/invalid-containment Error span=213-765 loc=corpus:vendor.bpmn@3:3:213-11:15:765 msg="Child mystery is not allowed in process"
+    diag bpmn/invalid-field Error span=245-261 loc=corpus:vendor.bpmn@3:35:245-3:51:261 msg="Invalid attribute scalar"
+    diag bpmn/invalid-field Error span=499-526 loc=corpus:vendor.bpmn@7:40:499-7:67:526 msg="Invalid attribute scalar"
+    diag bpmn/invalid-field Error span=545-567 loc=corpus:vendor.bpmn@7:86:545-7:108:567 msg="Invalid attribute scalar"
+    diag bpmn/unresolved-reference Error span=721-748 loc=corpus:vendor.bpmn@10:31:721-10:58:748 msg="Reference target was not found in the explicit import closure on Call: v:Elsewhere"
+  graph nodes=17 edges=19
+> lookup id:VendorTask
+  Err InvalidEndpoint
+> lookup id:Task
+  Ok -#12(Task)
+> reachable id:Task
+  Complete [-#12(Task)]
+> route id:Task id:Task
+  Found [-#12(Task)] edges=[]
+> reachable id:Call kinds=Reference
+  Failed InvalidReference(-#16)

@@ -5,7 +5,9 @@ order: 2
 ---
 # Python API reference
 
-All names are in the module `diagrams_mbt`. All values are immutable dataclasses.
+All names on this page are in the module `diagrams_mbt`. All values are
+immutable dataclasses. The submodules `diagrams_mbt.bpmn` and
+`diagrams_mbt.query` have their own guides; see [Modules](#modules).
 
 ## Functions
 
@@ -41,10 +43,31 @@ Columns and offsets count UTF-16 code units.
 | `__version__` | The package version, for example `"0.0.1"` |
 | `ABI_VERSION` | The version of the boundary between the extension and the MoonBit library. The extension refuses another version at import. |
 
+## Modules
+
+| Module | Contents | Guide |
+| --- | --- | --- |
+| `diagrams_mbt` | `render_svg`, `code_point_index` and the values on this page | This page |
+| `diagrams_mbt.bpmn` | BPMN reading, document trees, node views, handles and paths, events, cursors, `walk`, `fold`, `reduce`, visitors and graph queries | [BPMN traversal](traversal.md) |
+| `diagrams_mbt.query` | Query schema, text and typed compilation, plans, cursors, batches and projected captures | [Tree queries](query.md) |
+
+The [compatibility map](compatibility.md) lists each public MoonBit operation
+and the Python operation that calls it, with defaults, controls, failures and
+limits. A test checks the map against the generated MoonBit interfaces.
+
+Failures of native objects use exception classes from
+`diagrams_mbt._boundary`: `ClosedError` (a closed object), `InvalidTokenError`
+(a token of another kind or an unknown token), `BusyError` (two threads use one
+cursor or reader at the same time) and `ResourceLimitError`. All are
+`RuntimeError` subclasses; `InvalidArgumentError` is also a `ValueError`.
+
 ## Behavior
 
-- The extension holds the GIL during a call, so calls run one at a time.
+- The extension releases the GIL while MoonBit runs and while a call waits
+  for the process-wide runtime lock. That lock lets only one MoonBit call run
+  at a time, so other Python threads continue but MoonBit work does not run in
+  parallel. See [Threads and concurrency](concurrency.md).
 - The package cannot load in a subinterpreter that has its own GIL; the
-  import raises `ImportError`.
+  import raises `ImportError`. There is no free-threaded wheel.
 - An internal renderer failure (a MoonBit panic) stops the process. It is not a
   Python exception. Do not render untrusted input in a process that must not stop.

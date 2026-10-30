@@ -1,0 +1,155 @@
+///|
+/// Verify fresh consumers of moonrockz/diagrams-query on all four targets: one
+/// that supplies its own tree adapter and imports only the generic query core,
+/// and one that queries a BPMN document through the opt-in adapter. It also
+/// checks that moonrockz/bpmn keeps its core-only imports.
+import {
+  "moonbitlang/async@0.22.5",
+  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+
+///|
+let generic_test : String =
+  #|struct Toy { kinds : Array[String]; children : Array[Array[Int]]; names : Array[String?] }
+  #|
+  #|let toy_schema : @query.Schema = @query.Schema::new(
+  #|  id="consumer/toy", version=1,
+  #|  kinds=[@query.Name::new("", "box"), @query.Name::new("", "item")],
+  #|  categories=["thing"], fields=[@query.Name::new("", "in")],
+  #|)
+  #|
+  #|impl @query.QueryTree for Toy with schema(_self) { toy_schema }
+  #|impl @query.QueryTree for Toy with root(_self) { 0 }
+  #|impl @query.QueryTree for Toy with node_count(self) { self.kinds.length() }
+  #|impl @query.QueryTree for Toy with kind(self, n) { Some(@query.Name::new("", self.kinds[n])) }
+  #|impl @query.QueryTree for Toy with category(_self, _n) { "thing" }
+  #|impl @query.QueryTree for Toy with children(self, n) { self.children[n][:] }
+  #|impl @query.QueryTree for Toy with field(_self, n) { if n == 0 { None } else { Some(@query.Name::new("", "in")) } }
+  #|impl @query.QueryTree for Toy with attribute(self, n, name) {
+  #|  if name.local_name == "name" { self.names[n].map(v => @query.ScalarValue::{ tag: "text", text: v }) } else { None }
+  #|}
+  #|impl @query.QueryTree for Toy with text(_self, _n) { None }
+  #|impl @query.QueryTree for Toy with extra(_self, _n, _name) { None }
+  #|impl @query.QueryTree for Toy with location(_self, _n) { None }
+  #|impl @query.QueryTree for Toy with path(_self, _n) { [] }
+  #|impl @query.QueryTree for Toy with depth(_self, n) { if n == 0 { 0 } else { 1 } }
+  #|
+  #|test "a consumer adapter compiles and runs a query without Python" {
+  #|  let toy = Toy::{ kinds: ["box", "item", "item"], children: [[1, 2], [], []], names: [None, Some("a"), None] }
+  #|  let plan = @query.compile("(box (item) @i) @b", toy_schema).unwrap()
+  #|  let result = plan.collect(toy)
+  #|  assert_eq(result.matches.length(), 2)
+  #|  assert_true(result.outcome is Complete)
+  #|  let named = @query.compile("((item) @i (#has-attr? @i \"name\"))", toy_schema).unwrap().collect(toy)
+  #|  assert_eq(named.matches.map(m => m.captures[0].node).iter().to_array(), [1])
+  #|  let failed = @query.compile("(box)*", toy_schema)
+  #|  assert_true(failed is Err(d) && d[0].code == "query/unsupported-quantifier")
+  #|  let limited = plan.collect(toy, limits=@query.ExecutionLimits::new(work=2))
+  #|  assert_true(limited.outcome is Failed(Limit(Work)))
+  #|}
+
+///|
+let bpmn_test : String =
+  #|test "a consumer queries a BPMN document through the opt-in adapter" {
+  #|  let source = "<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\" targetNamespace=\"urn:consumer\"><process id=\"P\"><userTask id=\"T\" name=\"Approve\"/></process></definitions>"
+  #|  let document = @bpmn.read(source).document.unwrap()
+  #|  let tree = @query_bpmn.BpmnTree::new(@bpmn.DocumentTree::new(document).tree.unwrap())
+  #|  let plan = @query_bpmn.compile("((bpmn.userTask) @t (#attr-eq? @t \"name\" \"Approve\"))").unwrap()
+  #|  let result = plan.collect(tree)
+  #|  assert_eq(result.matches.length(), 1)
+  #|  assert_eq(tree.captured(result.matches[0].captures[0]).id(), Some("T"))
+  #|}
+
+///|
+async fn run_targets(dir : String, label : String) -> Unit {
+  for target in ["wasm", "wasm-gc", "js", "native"] {
+    let code = @process.run(
+      "moon",
+      ["test", "--target", target],
+      cwd=dir,
+      stdout=@stdio.stdout,
+      stderr=@stdio.stderr,
+    )
+    if code != 0 {
+      @sys.exit(if code > 0 { code } else { 1 })
+    }
+    println("\{label} fresh consumer passed: \{target}")
+  }
+}
+
+///|
+async fn consumer(
+  name : String,
+  package_imports : String,
+  test_source : String,
+  label : String,
+) -> Unit {
+  let query = @fs.realpath("pkgs/diagrams-query")
+  let bpmn = @fs.realpath("pkgs/bpmn")
+  let dir = @fs.tmpdir(prefix=name)
+  defer @fs.rmdir(dir, recursive=true)
+  @fs.write_file(
+    "\{dir}/moon.mod",
+    "name = \"qualification/\{name}\"\nversion = \"0.0.0\"\nimport { \"moonrockz/diagrams-query@0.4.0\", \"moonrockz/bpmn@0.4.0\" }\n",
+  )
+  @fs.write_file(
+    "\{dir}/moon.work",
+    "members = [\".\", \"\{query}\", \"\{bpmn}\"]\n",
+  )
+  @fs.write_file(
+    "\{dir}/moon.pkg",
+    "import { \{package_imports} } for \"test\"\n",
+  )
+  @fs.write_file("\{dir}/consumer_test.mbt", test_source)
+  run_targets(dir, label)
+}
+
+///|
+/// The import lines of a moon.mod or moon.pkg file that name a module.
+fn imports_of(text : String) -> Array[String] {
+  let found = []
+  for line in text.split("\n") {
+    let line = line.trim().to_owned()
+    if line.has_prefix("\"moonrockz/") {
+      found.push(line)
+    }
+  }
+  found
+}
+
+///|
+async fn main {
+  for file in ["pkgs/bpmn/moon.mod", "pkgs/bpmn/moon.pkg"] {
+    let imports = imports_of(@fs.read_file(file).text())
+    let foreign = imports
+      .filter(line => !line.has_prefix("\"moonrockz/bpmn\""))
+      .join(" ")
+    if foreign != "" {
+      println(
+        "❌ \{file} imports \{foreign}; moonrockz/bpmn must stay core-only",
+      )
+      @sys.exit(1)
+    }
+  }
+  println("moonrockz/bpmn keeps its core-only imports")
+  consumer(
+    "query-core-consumer", "\"moonrockz/diagrams-query\" @query", generic_test, "Generic query",
+  )
+  consumer(
+    "query-bpmn-consumer", "\"moonrockz/diagrams-query/bpmn\" @query_bpmn, \"moonrockz/bpmn\"",
+    bpmn_test, "BPMN query",
+  )
+}
+
+///|
+test "imports_of finds module import lines" {
+  assert_eq(
+    imports_of(
+      "import {\n  \"moonrockz/bpmn\",\n  \"moonbitlang/core/debug\",\n}\n",
+    ),
+    ["\"moonrockz/bpmn\","],
+  )
+}

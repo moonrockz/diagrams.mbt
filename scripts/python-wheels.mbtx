@@ -189,6 +189,8 @@ fn compile_flags(
     "-ffp-contract=off",
     "-Wno-unused-value",
     "-DMOONBIT_ALLOCATOR=MOONBIT_ALLOCATOR_MIMALLOC",
+    // The adapter installs its guarded mimalloc deferred-free callback.
+    "-DDIAGRAMS_PY_MIMALLOC=1",
     "-O2",
     "-fPIC",
     "-fvisibility=hidden",
@@ -240,6 +242,13 @@ fn link_args(
     Macos => ()
   }
   args
+}
+
+///|
+/// The files of the Python package that each wheel holds: the modules and
+/// the typing marker, not tests or caches.
+fn package_file(name : String) -> Bool {
+  name.has_suffix(".py") || name == "py.typed"
 }
 
 ///|
@@ -441,8 +450,10 @@ async fn build_wheel(
     "zig",
     ["cc", ..link_args(t, "\{wheel_root}/\{module_file(t)}", objects, headers)],
   )
-  for file in ["__init__.py", "py.typed"] {
-    copy_file("\{package_dir}/diagrams_mbt/\{file}", "\{wheel_root}/\{file}")
+  for file in @fs.readdir("\{package_dir}/diagrams_mbt", sort=true) {
+    if package_file(file) {
+      copy_file("\{package_dir}/diagrams_mbt/\{file}", "\{wheel_root}/\{file}")
+    }
   }
   let args = [
     "-P",
@@ -628,6 +639,12 @@ test "link arguments depend on the operating system" {
   ])
   assert_eq(module_file(windows), "_native.pyd")
   assert_true(compile_flags(windows, "m", "i").contains("-D_CRT_RAND_S"))
+  for t in targets {
+    assert_true(compile_flags(t, "m", "i").contains("-DDIAGRAMS_PY_MIMALLOC=1"))
+  }
+  assert_true(package_file("_boundary.py"))
+  assert_true(package_file("py.typed"))
+  assert_false(package_file("__pycache__"))
   assert_true(!compile_flags(linux, "m", "i").contains("-D_CRT_RAND_S"))
   assert_eq(include_dir(linux, "r"), "r/python/include/python3.12")
 }

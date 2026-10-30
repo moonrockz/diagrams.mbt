@@ -1,0 +1,6 @@
+graph main
+lookup id:VendorTask
+lookup id:Task
+reachable id:Task
+route id:Task id:Task
+reachable id:Call kinds=Reference

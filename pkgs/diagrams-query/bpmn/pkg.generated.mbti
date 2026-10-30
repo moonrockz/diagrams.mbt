@@ -1,0 +1,58 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonrockz/diagrams-query/bpmn"
+
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams-query",
+}
+
+// Values
+pub fn category_name(@moonrockz/bpmn.NodeCategory) -> String
+
+pub fn compile(String, namespaces? : ArrayView[(String, String)], limits? : @diagrams-query.CompileLimits) -> Result[@diagrams-query.QueryPlan, ReadOnlyArray[@diagrams-query.QueryDiagnostic]]
+
+pub fn compile_form(@diagrams-query.QueryForm, namespaces? : ArrayView[(String, String)], limits? : @diagrams-query.CompileLimits) -> Result[@diagrams-query.QueryPlan, ReadOnlyArray[@diagrams-query.QueryDiagnostic]]
+
+pub let default_namespaces : ReadOnlyArray[(String, String)]
+
+pub fn field_name(@moonrockz/bpmn.PathField) -> @diagrams-query.Name
+
+pub let reserved_namespaces : ReadOnlyArray[String]
+
+pub fn scalar_tag(@moonrockz/bpmn.Scalar) -> String
+
+pub let schema : @diagrams-query.Schema
+
+pub let tree_namespace : String
+
+// Errors
+
+// Types and methods
+pub struct BpmnTree {
+  tree : @moonrockz/bpmn.DocumentTree
+  // private fields
+}
+pub fn BpmnTree::attribute(Self, Int32, @diagrams-query.Name) -> @diagrams-query.ScalarValue?
+pub fn BpmnTree::captured(Self, @diagrams-query.CapturedNode) -> @moonrockz/bpmn.NodeRef
+pub fn BpmnTree::category(Self, Int32) -> String
+pub fn BpmnTree::children(Self, Int32) -> ArrayView[Int32]
+pub fn BpmnTree::depth(Self, Int32) -> Int32
+pub fn BpmnTree::extra(Self, Int32, String) -> @diagrams-query.ScalarValue?
+pub fn BpmnTree::field(Self, Int32) -> @diagrams-query.Name?
+pub fn BpmnTree::index(Self, @moonrockz/bpmn.NodeRef) -> Int32?
+pub fn BpmnTree::kind(Self, Int32) -> @diagrams-query.Name?
+pub fn BpmnTree::location(Self, Int32) -> @diagrams-query.QueryLocation?
+pub fn BpmnTree::new(@moonrockz/bpmn.DocumentTree) -> Self
+pub fn BpmnTree::node(Self, Int32) -> @moonrockz/bpmn.NodeRef?
+pub fn BpmnTree::node_count(Self) -> Int32
+pub fn BpmnTree::path(Self, Int32) -> ReadOnlyArray[@diagrams-query.QueryPathStep]
+pub fn BpmnTree::root(Self) -> Int32
+pub fn BpmnTree::schema(Self) -> @diagrams-query.Schema
+pub fn BpmnTree::text(Self, Int32) -> String?
+pub fn BpmnTree::to_repr(Self) -> @debug.Repr
+pub impl @debug.Debug for BpmnTree
+pub impl @diagrams-query.QueryTree for BpmnTree
+
+// Type aliases
+
+// Traits

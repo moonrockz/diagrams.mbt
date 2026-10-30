@@ -116,7 +116,7 @@ run = "moonx scripts/lint-yaml.mbtx"
 
 [tasks.validate]
 description = "Run all validation checks"
-depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus", "validate:state-mermaid-corpus", "validate:state-plantuml-corpus", "validate:raster-fonts", "validate:raster-assets"]
+depends = ["validate:packages", "validate:versions", "validate:corpus", "validate:swimlane-corpus", "validate:bpmn-corpus", "validate:query-corpus", "validate:traversal-corpus", "validate:bpmn-schema", "validate:animation-assets", "validate:examples", "validate:plantuml-corpus", "validate:icons", "validate:native-mermaid-corpus", "validate:flowchart-mermaid-corpus", "validate:activity-corpus", "validate:state-mermaid-corpus", "validate:state-plantuml-corpus", "validate:raster-fonts", "validate:raster-assets"]
 
 [tasks."validate:packages"]
 description = "Verify the workspace package structure against moon.work"
@@ -197,6 +197,14 @@ run = "mise tasks"
 [settings]
 experimental = true
 
+[tasks."validate:query-corpus"]
+description = "Check that the embedded shared query corpus matches tests/query-corpus/fixtures"
+run = "moonx scripts/query-corpus.mbtx check"
+
+[tasks."query-corpus:generate"]
+description = "Write tests/query-corpus/inputs.generated.mbt from the shared query corpus fixtures"
+run = "moonx scripts/query-corpus.mbtx generate"
+
 [tasks."validate:bpmn-corpus"]
 description = "Check frozen BPMN schema/fixture digests and embedded test inputs"
 run = "moonx scripts/bpmn-corpus.mbtx check"
@@ -204,6 +212,18 @@ run = "moonx scripts/bpmn-corpus.mbtx check"
 [tasks."bpmn-corpus:generate"]
 description = "Embed frozen BPMN schemas and the minimal fixture for portable tests"
 run = "moonx scripts/bpmn-corpus.mbtx generate"
+
+[tasks."validate:traversal-corpus"]
+description = "Check that the shared BPMN traversal corpus and its expected outputs are embedded"
+run = "moonx scripts/traversal-corpus.mbtx check"
+
+[tasks."traversal-corpus:generate"]
+description = "Embed the BPMN traversal corpus fixtures and expected outputs for portable tests"
+run = "moonx scripts/traversal-corpus.mbtx generate"
+
+[tasks."traversal-corpus:expected"]
+description = "Refresh the expected traversal outputs from the MoonBit oracle and embed them"
+run = "moonx scripts/traversal-corpus.mbtx expected"
 
 [tasks."bpmn-schema:generate"]
 description = "Generate BPMN types and declaration coverage from pinned schemas"
@@ -232,6 +252,10 @@ run = "moonx scripts/test-animation.mbtx"
 [tasks."validate:examples"]
 description = "Check generated site examples against stored canonical/HTML snapshots"
 run = "moonx scripts/gallery.mbtx --existing-output --site-assets --site-assets-only --check"
+
+[tasks."test:query-consumer"]
+description = "Qualify fresh generic-query and BPMN-query consumers on all four targets"
+run = "moonx scripts/test-query-consumer.mbtx"
 
 [tasks."test:bpmn-consumer"]
 description = "Qualify a fresh reader-only BPMN consumer on all four targets"
