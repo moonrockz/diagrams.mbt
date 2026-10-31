@@ -53,8 +53,9 @@ runs:
       run: |
         $ErrorActionPreference = 'Stop'
         $moonbitDir = mise where http:moonbit
-        if (-not (Test-Path (Join-Path $moonbitDir 'lib/core/moon.mod') -PathType Leaf)) { throw 'The MoonBit core is missing' }
-        if (-not (Test-Path (Join-Path $moonbitDir 'bin/moonx.exe') -PathType Leaf)) { throw 'moonx is missing' }
+        foreach ($file in 'lib/core/moon.mod', 'bin/moonx.exe') {
+          if (-not (Test-Path (Join-Path $moonbitDir $file) -PathType Leaf)) { throw "MoonBit $file is missing" }
+        }
         "$moonbitDir\bin" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
         "MOON_HOME=$moonbitDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
