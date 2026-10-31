@@ -1,13 +1,16 @@
-///|
-/// Qualify fresh model-only, native reader and SVG/offline-player consumers.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/x@0.5.5/sys",
   "moonbitlang/core/env",
 }
+----
+
+///|
+/// Qualify fresh model-only, native reader and SVG/offline-player consumers.
 
 ///|
 fn version(text : String) -> String {

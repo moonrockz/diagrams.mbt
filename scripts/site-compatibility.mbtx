@@ -1,14 +1,17 @@
-///|
-/// Capture or compare legacy public routes and heading anchors before site migration.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
   "moonbitlang/core/env",
   "moonbitlang/core/json",
   "moonbitlang/core/test",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Capture or compare legacy public routes and heading anchors before site migration.
 
 ///|
 fn option(args : Array[String], flag : String, fallback : String) -> String {

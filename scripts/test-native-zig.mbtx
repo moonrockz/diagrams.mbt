@@ -1,16 +1,19 @@
-///|
-/// Run the unchanged Zig test gate. Optional Linux diagnostics observe resource
-/// pressure without reading process arguments/environment or changing coverage.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/core/env",
   "moonbitlang/core/string",
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Run the unchanged Zig test gate. Optional Linux diagnostics observe resource
+/// pressure without reading process arguments/environment or changing coverage.
 
 ///|
 priv struct MonitorState {
@@ -400,7 +403,7 @@ async fn main {
       )
     }
     let arguments = [
-      "moonrockz/zig-cross@0.1.2", "exec", "host", "--", "moonx", "scripts/test.mbtx",
+      "moonrockz/zig-cross@0.3.2", "exec", "host", "--", "moonx", "scripts/test.mbtx",
       "native",
     ]
     if options.jobs is Some(jobs) {
@@ -507,7 +510,7 @@ async test "sample cap cannot terminate a still-running command" {
   defer @fs.rmdir(directory, recursive=true)
   let fixture = directory + "/wait.mbtx"
   @fs.write_file(
-    fixture, "import { \"moonbitlang/async@0.22.5\", \"moonbitlang/x@0.5.5/sys\" }\nasync fn main { @async.sleep(60); @sys.exit(23) }\n",
+    fixture, "----\nimport { \"moonbitlang/async@0.22.7\", \"moonbitlang/x@0.5.5/sys\" }\n----\nasync fn main { @async.sleep(60); @sys.exit(23) }\n",
   )
   let mut observed = 0
   let result = run_monitored(

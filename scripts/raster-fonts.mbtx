@@ -1,17 +1,20 @@
-///|
-/// Check or regenerate licensed default font subsets and their portable literal
-/// embedding from committed originals. The compiler process uses an isolated
-/// module with the exact qualified published font dependency graph.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
   "moonbitlang/core/env",
   "moonbitlang/core/encoding/base64",
   "moonbitlang/core/json",
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Check or regenerate licensed default font subsets and their portable literal
+/// embedding from committed originals. The compiler process uses an isolated
+/// module with the exact qualified published font dependency graph.
 
 ///|
 fn field(value : Json, name : String) -> Json {
@@ -117,7 +120,7 @@ async fn main {
   main.write_string(literals.to_string())
   @fs.write_file(
     directory + "/moon.mod",
-    "name = \"qualification/font-subsets\"\nversion = \"0.0.0\"\nimport {\n  \"mizchi/font@0.7.4\",\n  \"mizchi/pixelmatch@0.6.2\",\n  \"mizchi/image@0.4.3\",\n  \"mizchi/zlib@0.4.10\",\n  \"moonbitlang/x@0.5.5\",\n  \"moonbitlang/async@0.22.5\",\n}\n",
+    "name = \"qualification/font-subsets\"\nversion = \"0.0.0\"\nimport {\n  \"mizchi/font@0.7.4\",\n  \"mizchi/pixelmatch@0.6.2\",\n  \"mizchi/image@0.4.3\",\n  \"mizchi/zlib@0.4.10\",\n  \"moonbitlang/x@0.5.5\",\n  \"moonbitlang/async@0.22.7\",\n}\n",
   )
   @fs.write_file(
     directory + "/moon.pkg",
