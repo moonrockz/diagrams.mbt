@@ -1,3 +1,13 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Check, embed and refresh the shared BPMN traversal corpus.
 ///
@@ -9,13 +19,6 @@
 ///
 /// The MoonBit test compares the oracle with the embedded text on wasm,
 /// wasm-gc, js and native. The Python tests read the same files.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/core/env",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let corpus_dir : String = "tests/traversal-corpus"

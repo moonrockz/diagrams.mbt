@@ -225,8 +225,8 @@ Source: LICENSE
    limitations under the License.
 
 
-===== MoonBit core 0.10.17+093cb8f9c NOTICE =====
-Source: moonbitlang/core@0.10.17+093cb8f9c/NOTICE
+===== MoonBit core 0.10.18+6c83a7f62 NOTICE =====
+Source: moonbitlang/core@0.10.18+6c83a7f62/NOTICE
 
 This product includes software developed at
 International Digital Economy Academy (https://www.idea.edu.cn/).

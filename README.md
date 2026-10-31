@@ -48,13 +48,14 @@ mise install
 mise exec -- moon version --all
 ```
 
-The MoonBit version is pinned in `.config/mise/config.toml`. The mise archive can
-omit the core library and `moonx`. If the version check fails or `moonx` is missing,
-complete that same installation with the official installer:
+The MoonBit version is pinned in `.config/mise/config.toml`. The binary archive
+omits the core library and `moonx`; the postinstall hook of the pin adds them to the
+same installation (on Unix with the official installer, on Windows with
+`tools/bootstrap-moonbit-windows.ps1`). If the version check fails or `moonx` is
+missing after an install that predates the hook, reinstall the pin:
 
 ```shell
-curl -fsSL https://cli.moonbitlang.com/install/unix.sh | \
-  MOON_HOME="$(mise where http:moonbit)" bash -s -- "$(mise current http:moonbit)"
+mise install --force http:moonbit
 ```
 
 Then install the hooks and check the workspace:
@@ -103,7 +104,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run test:site` | Test the docs site packages and run the browser smoke test on the built site |
 | `mise run python-native:wheels` | Cross-build the Python wheels for Linux, macOS and Windows with zig |
 | `mise run test:python-native` | Build the Python extension for this host and test it with CPython 3.12 and 3.15 |
-| `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.1.2` |
+| `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.3.2` |
 | `mise run clean` | Remove build artifacts |
 | `mise run openspec:setup` | Refresh OpenSpec skills and commands for the supported agents |
 

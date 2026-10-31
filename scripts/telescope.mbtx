@@ -1,14 +1,17 @@
-///|
-/// Download and verify the released Telescope CLI, then forward its arguments.
-/// No source checkout, local build or PATH fallback is accepted.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/core/env",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Download and verify the released Telescope CLI, then forward its arguments.
+/// No source checkout, local build or PATH fallback is accepted.
 
 ///|
 let version : String = "0.5.0"

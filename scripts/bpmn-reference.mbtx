@@ -1,16 +1,19 @@
-///|
-/// Refresh test-only semantic references. Normal validation uses frozen JSON and
-/// never installs or imports this JavaScript reference into a MoonBit module.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/core/json",
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/x@0.5.5/crypto",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Refresh test-only semantic references. Normal validation uses frozen JSON and
+/// never installs or imports this JavaScript reference into a MoonBit module.
 
 ///|
 let reference_adapter : String =

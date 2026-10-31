@@ -1,19 +1,22 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Refresh or check the PlantUML 1.2026.9 reference with the pinned JAR and
 /// the JDK that the mise task pins. This is test-only qualification tooling:
 /// no library module runs Java, a server or the upstream renderer.
 ///
 /// Usage: `mise run state-plantuml-corpus:reference [-- --check]`.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/core/env",
-  "moonbitlang/core/json",
-  "moonbitlang/x@0.5.5/crypto",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let corpus : String = "tests/corpus/plantuml-state"

@@ -1,17 +1,20 @@
-///|
-/// Refresh the independent Mermaid sequence reference fixtures. This command
-/// alone imports the full reference parser; normal tests use committed JSON.
-/// Run from the repository root with `mise run corpus:reference`.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/core/json",
   "moonbitlang/x@0.5.5/sys",
   "moonbit-community/mermaid@0.2.0/diagrams/sequence" @reference,
   "moonbit-community/mermaid@0.2.0/config",
 }
+----
+
+///|
+/// Refresh the independent Mermaid sequence reference fixtures. This command
+/// alone imports the full reference parser; normal tests use committed JSON.
+/// Run from the repository root with `mise run corpus:reference`.
 
 ///|
 async fn main {

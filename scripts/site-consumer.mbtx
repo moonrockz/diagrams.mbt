@@ -1,15 +1,18 @@
-///|
-/// Qualify the released site consumer at root and next, without a baseline recapture.
-/// --existing-output checks the current builds without compiling them again.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
   "moonbitlang/core/env",
   "moonbitlang/core/json",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Qualify the released site consumer at root and next, without a baseline recapture.
+/// --existing-output checks the current builds without compiling them again.
 
 ///|
 async fn run(args : Array[String]) -> Unit {

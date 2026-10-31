@@ -1,11 +1,14 @@
-///|
-/// Refresh or check the trusted, offline player assets embedded in MoonBit.
+----
 import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
   "moonbitlang/core/env",
   "moonbitlang/x@0.5.5/sys",
 }
+----
+
+///|
+/// Refresh or check the trusted, offline player assets embedded in MoonBit.
 
 ///|
 fn source_literal(value : String) -> String {

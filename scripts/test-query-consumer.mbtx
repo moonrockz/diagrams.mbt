@@ -1,15 +1,18 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Verify fresh consumers of moonrockz/diagrams-query on all four targets: one
 /// that supplies its own tree adapter and imports only the generic query core,
 /// and one that queries a BPMN document through the opt-in adapter. It also
 /// checks that moonrockz/bpmn keeps its core-only imports.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let generic_test : String =

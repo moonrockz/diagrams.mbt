@@ -1,3 +1,15 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Run the tests of every workspace member for one or more targets.
 ///
@@ -7,15 +19,6 @@
 /// Run from the workspace root so Moon discovers all members and nested packages.
 /// Moon applies module and package target restrictions, including legacy arrays
 /// and target-set expressions; do not duplicate its manifest parsing here.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/core/env",
-  "moonbitlang/core/string",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let all_targets : Array[String] = ["wasm", "wasm-gc", "js", "native"]

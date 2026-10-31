@@ -1,3 +1,15 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Check and embed the frozen corpus of Mermaid examples.
 ///
@@ -11,15 +23,6 @@
 ///
 /// Usage: `mise run validate:corpus` or `mise run corpus:generate`, or
 /// `moonx scripts/corpus.mbtx check|generate`. The script exits with 1 on failure.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/core/encoding/utf8",
-  "moonbitlang/core/env",
-  "moonbitlang/core/json",
-  "moonbitlang/x@0.5.5/crypto",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let corpus_dir : String = "tests/corpus/mermaid-12.2.0"

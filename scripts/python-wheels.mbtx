@@ -1,3 +1,15 @@
+----
+import {
+  "moonbitlang/async@0.22.7",
+  "moonbitlang/async@0.22.7/fs",
+  "moonbitlang/async@0.22.7/process",
+  "moonbitlang/async@0.22.7/stdio",
+  "moonbitlang/core/env",
+  "moonbitlang/x@0.5.5/crypto",
+  "moonbitlang/x@0.5.5/sys",
+}
+----
+
 ///|
 /// Cross-build the Python wheels of `diagrams.mbt` with zig, and plan their
 /// PyPI release (OpenSpec change `publish-python-package`).
@@ -17,15 +29,6 @@
 ///
 /// The build host must be Linux or macOS, with `zig`, `curl`, `tar` and the
 /// `--python` interpreter (default `python3.12`) on `PATH`.
-import {
-  "moonbitlang/async@0.22.5",
-  "moonbitlang/async@0.22.5/fs",
-  "moonbitlang/async@0.22.5/process",
-  "moonbitlang/async@0.22.5/stdio",
-  "moonbitlang/core/env",
-  "moonbitlang/x@0.5.5/crypto",
-  "moonbitlang/x@0.5.5/sys",
-}
 
 ///|
 let usage : String = "Usage: python-wheels.mbtx wheels [--target <id>]... [--python <exe>] | plan"
