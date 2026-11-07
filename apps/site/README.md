@@ -150,6 +150,6 @@ retain original SVG actions and preserve filtering and viewport state. Scripts
 disabled leaves static previews and source/download links usable. See
 [gallery controls and exports](../../docs/guides/diagram-gallery.md).
 
-See [0.6.0 adoption verification](verification-0.6.0.md) for current publication
-and consumer evidence. [0.5.0 adoption verification](verification-0.5.0.md) is the
-earlier record.
+The Telescope 0.6.0 adoption evidence is in
+[pull request 46](https://github.com/moonrockz/diagrams.mbt/pull/46).
+[0.5.0 adoption verification](verification-0.5.0.md) is the earlier record.
