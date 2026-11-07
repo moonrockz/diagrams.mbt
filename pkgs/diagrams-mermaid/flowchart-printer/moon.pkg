@@ -1,1 +1,7 @@
-import { "moonrockz/diagrams-mermaid/flowchart-syntax" @budget, "moonrockz/diagrams" @diagrams, "moonrockz/diagrams-mermaid/flowchart-ast" @ast, "moonrockz/diagrams-mermaid/swimlane-printer" @shared, "moonrockz/diagrams-mermaid/swimlane-syntax" @syntax }
+import {
+  "moonrockz/diagrams-mermaid/flowchart-syntax" @budget,
+  "moonrockz/diagrams",
+  "moonrockz/diagrams-mermaid/flowchart-ast" @ast,
+  "moonrockz/diagrams-mermaid/swimlane-printer" @shared,
+  "moonrockz/diagrams-mermaid/swimlane-syntax" @syntax,
+}

@@ -13,11 +13,12 @@ pub let sequence_references : ReadOnlyArray[(String, String)]
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Example {
   name : String
   sha256 : String
   source : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Example::equal(Self, Self) -> Bool
 pub fn Example::not_equal(Self, Self) -> Bool
 pub fn Example::to_repr(Self) -> @debug.Repr

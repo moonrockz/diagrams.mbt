@@ -6,7 +6,7 @@ struct Rng {
 }
 
 ///|
-fn Rng::below(self : Rng, n : Int) -> Int {
+fn Rng::below(self : Rng, n : Int32) -> Int32 {
   self.state = self.state * 6364136223846793005UL + 1442695040888963407UL
   ((self.state >> 33).to_int() & 0x7FFFFFFF) % n
 }
@@ -38,7 +38,7 @@ fn random_tree(rng : Rng) -> FsTree {
 }
 
 ///|
-fn random_pattern(rng : Rng, depth : Int) -> @query.Pattern {
+fn random_pattern(rng : Rng, depth : Int32) -> @query.Pattern {
   let captures = []
   for _ in 0..<rng.below(3) {
     let name = "c\{rng.names.length()}"
@@ -101,7 +101,7 @@ fn random_predicates(rng : Rng) -> Array[@query.Predicate] {
 /// the plan, choice points or budgets. Bindings are (site, node) pairs.
 struct Reference {
   tree : FsTree
-  mut site : Int
+  mut site : Int32
 }
 
 ///|
@@ -110,16 +110,22 @@ struct Reference {
 fn Reference::sites(self : Reference, pattern : @query.Pattern) -> SiteTree {
   match pattern {
     Node(_, parts, captures) => {
-      let children = parts.map(part => match part {
-        Child(p) => Some(self.sites(p))
-        Field(_, p) => Some(self.sites(p))
-        Absent(_) => None
+      let children = parts.map(part => {
+        match part {
+          Child(p) => Some(self.sites(p))
+          Field(_, p) => Some(self.sites(p))
+          Absent(_) => None
+        }
       })
       let own = captures.map(_ => {
         self.site += 1
         self.site - 1
       })
-      { pattern, children: children.iter().to_array(), own: own.iter().to_array() }
+      {
+        pattern,
+        children: children.iter().to_array(),
+        own: own.iter().to_array(),
+      }
     }
     Alternation(branches, captures) => {
       let children = branches.map(p => Some(self.sites(p)))
@@ -127,7 +133,11 @@ fn Reference::sites(self : Reference, pattern : @query.Pattern) -> SiteTree {
         self.site += 1
         self.site - 1
       })
-      { pattern, children: children.iter().to_array(), own: own.iter().to_array() }
+      {
+        pattern,
+        children: children.iter().to_array(),
+        own: own.iter().to_array(),
+      }
     }
   }
 }
@@ -136,15 +146,15 @@ fn Reference::sites(self : Reference, pattern : @query.Pattern) -> SiteTree {
 struct SiteTree {
   pattern : @query.Pattern
   children : Array[SiteTree?]
-  own : Array[Int]
+  own : Array[Int32]
 }
 
 ///|
 fn Reference::matches(
   self : Reference,
   s : SiteTree,
-  node : Int,
-) -> Array[Array[(Int, Int)]] {
+  node : Int32,
+) -> Array[Array[(Int32, Int32)]] {
   let n = self.tree.nodes[node]
   match s.pattern {
     Alternation(_, _) => {
@@ -186,10 +196,10 @@ fn Reference::assign(
   self : Reference,
   s : SiteTree,
   parts : ReadOnlyArray[@query.Part],
-  node : Int,
-  k : Int,
-  min : Int,
-) -> Array[Array[(Int, Int)]] {
+  node : Int32,
+  k : Int32,
+  min : Int32,
+) -> Array[Array[(Int32, Int32)]] {
   if k == parts.length() {
     return [[]]
   }
@@ -205,7 +215,8 @@ fn Reference::assign(
       let out = []
       for j in min..<children.length() {
         let child = children[j]
-        if parts[k] is Field(f, _) && self.tree.nodes[child].field != f.local_name {
+        if parts[k] is Field(f, _) &&
+          self.tree.nodes[child].field != f.local_name {
           continue
         }
         for first in self.matches(s.children[k].unwrap(), child) {
@@ -223,8 +234,10 @@ fn Reference::assign(
 
 ///|
 fn reference_rows(form : @query.QueryForm, tree : FsTree) -> Array[String] {
-  let reference = Reference::{ tree, site: 0 }
-  let rules = form.rules.map(rule => (reference.sites(rule.pattern), rule.predicates))
+  let reference = Reference::{ tree, site: 0, }
+  let rules = form.rules.map(rule => {
+    (reference.sites(rule.pattern), rule.predicates)
+  })
   let names = []
   for rule in form.rules {
     collect_names(rule.pattern, names)
@@ -237,24 +250,34 @@ fn reference_rows(form : @query.QueryForm, tree : FsTree) -> Array[String] {
     }
     for index, rule in rules {
       for binding in reference.matches(rule.0, node) {
-        let accepted = rule.1.iter().all(p => {
-          guard binding.iter().find_first(b => names[b.0] == p.capture) is Some((_, n)) else {
-            return false
-          }
-          let attr = tree.nodes[n].attrs.iter().find_first(a => a.0 == "name").map(a => a.1)
-          match p.name {
-            "has-attr?" => attr is Some(_)
-            "missing-attr?" => attr is None
-            "attr-eq?" => attr == Some(p.operands[1])
-            "attr-not-eq?" => attr is Some(v) && v != p.operands[1]
-            "attr-in?" => attr is Some(v) && p.operands.iter().drop(1).any(x => x == v)
-            _ => tree.nodes[n].text == Some(p.operands[0])
-          }
-        })
+        let accepted = rule.1
+          .iter()
+          .all(p => {
+            guard binding.iter().find_first(b => names[b.0] == p.capture)
+              is Some((_, n)) else {
+              return false
+            }
+            let attr = tree.nodes[n].attrs
+              .iter()
+              .find_first(a => a.0 == "name")
+              .map(a => a.1)
+            match p.name {
+              "has-attr?" => attr is Some(_)
+              "missing-attr?" => attr is None
+              "attr-eq?" => attr == Some(p.operands[1])
+              "attr-not-eq?" => attr is Some(v) && v != p.operands[1]
+              "attr-in?" =>
+                attr is Some(v) && p.operands.iter().drop(1).any(x => x == v)
+              _ => tree.nodes[n].text == Some(p.operands[0])
+            }
+          })
         if accepted {
           let sorted = binding.copy()
           sorted.sort_by_key(b => b.0)
-          out.push("\{index}: " + sorted.map(b => "\{names[b.0]}=\{b.1}").iter().join(" "))
+          out.push(
+            "\{index}: " +
+            sorted.map(b => "\{names[b.0]}=\{b.1}").iter().join(" "),
+          )
         }
       }
     }
@@ -285,7 +308,7 @@ fn collect_names(pattern : @query.Pattern, names : Array[String]) -> Unit {
 
 ///|
 test "the evaluator agrees with an independent reference evaluator" {
-  let rng = Rng::{ state: 20261030UL, names: [] }
+  let rng = Rng::{ state: 20261030UL, names: [], }
   let mut compared = 0
   let mut nonempty = 0
   for _ in 0..<1500 {
@@ -293,15 +316,22 @@ test "the evaluator agrees with an independent reference evaluator" {
     let rules = []
     for _ in 0..<(1 + rng.below(2)) {
       rng.names.clear()
-      rules.push(@query.Rule::new(random_pattern(rng, 0), predicates=random_predicates(rng)))
+      rules.push(
+        @query.Rule::new(
+          random_pattern(rng, 0),
+          predicates=random_predicates(rng),
+        ),
+      )
     }
     let form = @query.QueryForm::new(rules)
     guard @query.compile_form(form, fs_schema) is Ok(plan) else { continue }
     compared += 1
     let expected = reference_rows(form, tree)
     let result = plan.collect(tree)
-    let actual = result.matches.map(m => "\{m.pattern}: " +
-      m.captures.map(c => "\{c.name}=\{c.node}").iter().join(" "))
+    let actual = result.matches.map(m => {
+      "\{m.pattern}: " +
+      m.captures.map(c => "\{c.name}=\{c.node}").iter().join(" ")
+    })
     assert_eq(actual.iter().to_array(), expected)
     assert_true(result.outcome is Complete)
     if !expected.is_empty() {

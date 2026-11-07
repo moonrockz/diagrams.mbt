@@ -1,8 +1,9 @@
 ///|
+#derive(Eq, Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Point with Eq::{equal, not_equal}
@@ -11,12 +12,13 @@ pub extend Point with Eq::{equal, not_equal}
 pub extend Point with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rect with Eq::{equal, not_equal}
@@ -46,6 +48,7 @@ pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
 
 ///|
 /// Measured text. `x` is the horizontal centre and `box` the text bounds.
+#derive(Eq, Debug)
 pub struct Label {
   lines : ReadOnlyArray[String]
   x : Double
@@ -54,7 +57,7 @@ pub struct Label {
   box : Rect
   /// The semantic owner: a term, rule, frame or connector identity.
   owner : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Label with Eq::{equal, not_equal}
@@ -64,6 +67,7 @@ pub extend Label with @debug.Debug::{to_repr}
 
 ///|
 /// The visual form of a term.
+#derive(Eq, Debug)
 pub(all) enum Shape {
   /// A consuming terminal or literal.
   Pill
@@ -79,7 +83,7 @@ pub(all) enum Shape {
   Lookaround
   /// An empty term.
   Dot
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Shape with Eq::{equal, not_equal}
@@ -88,13 +92,14 @@ pub extend Shape with Eq::{equal, not_equal}
 pub extend Shape with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct TermBox {
   term : @trace.Term
   shape : Shape
   rect : Rect
   label : Label
   notes : ReadOnlyArray[Label]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TermBox with Eq::{equal, not_equal}
@@ -103,12 +108,13 @@ pub extend TermBox with Eq::{equal, not_equal}
 pub extend TermBox with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum FrameRole {
   /// A capturing, named or non-capturing group.
   Group
   /// The constraint region of an exclusion.
   Except
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FrameRole with Eq::{equal, not_equal}
@@ -117,12 +123,13 @@ pub extend FrameRole with Eq::{equal, not_equal}
 pub extend FrameRole with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Frame {
   owner : String
   role : FrameRole
   rect : Rect
   label : Label
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Frame with Eq::{equal, not_equal}
@@ -133,12 +140,13 @@ pub extend Frame with @debug.Debug::{to_repr}
 ///|
 /// The drawn path of one connector, as a polyline in its semantic direction.
 /// Corners are rounded when painted.
+#derive(Eq, Debug)
 pub struct Wire {
   connector : @trace.Connector
   points : ReadOnlyArray[Point]
   /// A repetition bound or count label of a return path.
   label : Label?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Wire with Eq::{equal, not_equal}
@@ -147,13 +155,14 @@ pub extend Wire with Eq::{equal, not_equal}
 pub extend Wire with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct TrackBox {
   track : @trace.Track
   label : Label
   start : Point
   end : Point
   notes : ReadOnlyArray[Label]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TrackBox with Eq::{equal, not_equal}
@@ -162,11 +171,12 @@ pub extend TrackBox with Eq::{equal, not_equal}
 pub extend TrackBox with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct NoteBox {
   id : String
   rect : Rect
   label : Label
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend NoteBox with Eq::{equal, not_equal}
@@ -237,10 +247,11 @@ pub struct Result {
 
 ///|
 /// The two railroad source models.
+#derive(Eq, Debug)
 pub(all) enum Model {
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Model with Eq::{equal, not_equal}

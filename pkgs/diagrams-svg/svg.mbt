@@ -44,17 +44,19 @@ fn style_sheet(t : @theme.Theme, selector~ : String = "svg") -> String {
 
 ///|
 /// The palette selected by fixed output.
+#derive(Eq, Debug)
 pub(all) enum Variant {
   Dark
   Light
-} derive(Eq, Debug)
+}
 
 ///|
 /// Adaptive uses CSS variables; fixed writes literal presentation attributes.
+#derive(Eq, Debug)
 pub(all) enum Mode {
   Adaptive
   Fixed(Variant)
-} derive(Eq, Debug)
+}
 
 ///|
 priv struct Paint {
@@ -964,7 +966,7 @@ fn scope_svg(
             ].contains(key) &&
             value.has_prefix("url(#") &&
             value.has_suffix(")") {
-            "url(#\{prefix}\{value.view(start_offset=5, end_offset=value.length() - 1)})"
+            "url(#\{prefix}\{value.exact_view(start=5, end=value.length() - 1)})"
           } else if (key == "href" || key == "xlink:href") &&
             value.has_prefix("#") {
             "#" + prefix + value[1:].to_owned()

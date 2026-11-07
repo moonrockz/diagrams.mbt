@@ -2,6 +2,7 @@
 /// One typed regex expression. Composite nodes are flat: a concatenation
 /// never holds another concatenation directly, and an alternation never
 /// holds another alternation directly.
+#derive(Eq, Debug)
 pub(all) enum Expr {
   /// One code point. `true` marks an escaped character such as `\.`.
   Char(String, Bool, @diagrams.Span?)
@@ -16,7 +17,7 @@ pub(all) enum Expr {
   /// A lookaround. `true` marks a positive assertion.
   Look(@model.Look, Bool, Expr, @diagrams.Span?)
   Quantified(Expr, @model.Bounds, @diagrams.Span?)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Expr with Eq::{not_equal, equal}
@@ -33,17 +34,21 @@ pub fn Expr::without_spans(self : Expr) -> Expr {
     Backreference(n, _) => Backreference(n, None)
     Set(negated, items, _) => Set(negated, items, None)
     Anchor(kind, _) => Anchor(kind, None)
-    Concat(items) => Concat(ReadOnlyArray::from_iter(items.iter().map(e => e.without_spans())))
-    Alt(items) => Alt(ReadOnlyArray::from_iter(items.iter().map(e => e.without_spans())))
+    Concat(items) =>
+      Concat(ReadOnlyArray::from_iter(items.iter().map(e => e.without_spans())))
+    Alt(items) =>
+      Alt(ReadOnlyArray::from_iter(items.iter().map(e => e.without_spans())))
     Group(kind, inner, _) => Group(kind, inner.without_spans(), None)
     Look(look, positive, inner, _) =>
       Look(look, positive, inner.without_spans(), None)
-    Quantified(inner, bounds, _) => Quantified(inner.without_spans(), bounds, None)
+    Quantified(inner, bounds, _) =>
+      Quantified(inner.without_spans(), bounds, None)
   }
 }
 
 ///|
 /// One parsed regex block.
+#derive(Eq, Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
@@ -51,7 +56,7 @@ pub struct Document {
   /// The source spelling of the pattern line, for display.
   text : String
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Document with Eq::{not_equal, equal}
@@ -63,8 +68,8 @@ pub extend Document with @debug.Debug::{to_repr}
 pub fn Document::new(
   pattern : Expr,
   name? : String,
-  statements? : ArrayView[@envelope.Statement] = [],
-  text? : String = "",
+  statements~ : ArrayView[@envelope.Statement] = [],
+  text~ : String = "",
 ) -> Document {
   {
     name,
@@ -78,7 +83,7 @@ pub fn Document::new(
 ///|
 /// The document without source locations and source spelling.
 pub fn Document::without_spans(self : Document) -> Document {
-  { ..self, pattern: self.pattern.without_spans(), text: "", span: None }
+  { ..self, pattern: self.pattern.without_spans(), text: "", span: None, }
 }
 
 ///|

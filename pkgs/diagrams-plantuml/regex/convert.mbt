@@ -10,8 +10,8 @@ pub struct Conversion {
 /// them. Node identities are ordered ownership paths, never labels.
 pub fn to_regex(
   document : Document,
-  id? : String = "regex",
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  id~ : String = "regex",
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Conversion {
   let nodes : Array[@model.Node] = []
   let mut failure : String? = None
@@ -23,7 +23,7 @@ pub fn to_regex(
     }
     id
   }
-  fn convert(expr : Expr, id : String, depth : Int) -> String {
+  fn convert(expr : Expr, id : String, depth : Int32) -> String {
     if depth > limits.depth {
       failure = Some("Regex depth limit exceeded")
       return id
@@ -39,7 +39,7 @@ pub fn to_regex(
       Anchor(kind, span) => add(id, Anchor(kind), span)
       Concat(items) => {
         // Group the items into merged literal runs and other expressions.
-        let runs : Array[(Int, Array[Expr])] = []
+        let runs : Array[(Int32, Array[Expr])] = []
         for i, item in items {
           match (item, runs.last()) {
             (Char(_, _, _), Some((_, run))) if run.last() is Some(Char(_, _, _)) =>
@@ -61,7 +61,8 @@ pub fn to_regex(
             }
           }
           let span = match (first, last) {
-            (Some(a), Some(b)) => Some(@diagrams.Span::{ start: a.start, end: b.end })
+            (Some(a), Some(b)) =>
+              Some(@diagrams.Span::{ start: a.start, end: b.end, })
             _ => None
           }
           add(id, Literal(text.to_string()), span)
@@ -132,7 +133,7 @@ pub fn to_regex(
     ),
   )
   if !findings.is_empty() {
-    return { regex: None, diagnostics: findings }
+    return { regex: None, diagnostics: findings, }
   }
-  { regex: Some(model), diagnostics: [] }
+  { regex: Some(model), diagnostics: [], }
 }

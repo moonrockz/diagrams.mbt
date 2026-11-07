@@ -1,5 +1,6 @@
 ///|
 /// Editable native statements. Open/close/separator values retain lexical order.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Declaration(String, String, String, Bool)
   Close
@@ -9,14 +10,15 @@ pub(all) enum Kind {
   Note(String, String?, String, String?)
   Direction(@flowchart.Direction)
   Presentation(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Statement {
   kind : Kind
   explicit_label : Bool
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Statement::new(
@@ -34,12 +36,13 @@ pub fn Statement::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Document {
   name : String?
   complete : Bool
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Statement]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Document::new(

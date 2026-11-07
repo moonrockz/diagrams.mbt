@@ -1,5 +1,6 @@
 ///|
 /// The native line types of the pinned YAML profile.
+#derive(Eq)
 priv enum Ty {
   Empty
   TextOnly
@@ -10,7 +11,7 @@ priv enum Ty {
   Block
   Folded
   Flow
-} derive(Eq)
+}
 
 ///|
 /// One classified line. Positions are indexes into the expanded text, in

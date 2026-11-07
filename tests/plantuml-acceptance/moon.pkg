@@ -1,14 +1,14 @@
 import {
   "moonbitlang/core/json",
   "moonbitlang/core/test",
-  "moonrockz/diagrams/render" @render,
-  "moonrockz/diagrams/animation" @animation,
+  "moonrockz/diagrams/render",
+  "moonrockz/diagrams/animation",
   "moonrockz/diagrams/railroad-trace" @trace,
   "moonrockz/diagrams-svg" @svg,
   "moonrockz/diagrams-animated" @animated,
   "moonrockz/diagrams-tests/plantuml-acceptance" @corpus,
-  "moonrockz/diagrams/regex" @regex,
-  "moonrockz/diagrams/ebnf" @ebnf,
+  "moonrockz/diagrams/regex",
+  "moonrockz/diagrams/ebnf",
   "moonrockz/diagrams-plantuml" @plantuml,
   "moonrockz/diagrams-plantuml/json" @pjson,
   "moonrockz/diagrams-plantuml/yaml" @pyaml,
@@ -16,3 +16,7 @@ import {
   "moonrockz/diagrams-plantuml/data",
   "moonrockz/diagrams/data-tree" @data_tree,
 } for "test"
+
+// The generator writes these files and its check compares them byte for byte, so the formatter
+// skips them.
+formatter(ignore: [ "corpus.generated.mbt" ])

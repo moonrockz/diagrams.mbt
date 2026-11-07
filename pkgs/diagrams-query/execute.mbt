@@ -1,11 +1,12 @@
 ///|
 /// A captured node with its projected values. `node` is the adapter node of
 /// the cursor's tree, so a capture is always qualified by that tree.
+#derive(Eq, Debug)
 pub struct CapturedNode {
   name : String
-  node : Int
+  node : Int32
   values : ReadOnlyArray[Projected]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend CapturedNode with Eq::{equal, not_equal}
@@ -16,10 +17,11 @@ pub extend CapturedNode with @debug.Debug::{to_repr}
 ///|
 /// One successful match: the source pattern index and the bound captures in
 /// source order of their capture sites.
+#derive(Eq, Debug)
 pub struct QueryMatch {
-  pattern : Int
+  pattern : Int32
   captures : ReadOnlyArray[CapturedNode]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QueryMatch with Eq::{equal, not_equal}
@@ -30,12 +32,13 @@ pub extend QueryMatch with @debug.Debug::{to_repr}
 ///|
 /// The result of one batch request. `Rows` is data and never claims
 /// completion; the next request gives the terminal state.
+#derive(Eq, Debug)
 pub(all) enum QueryBatch {
   Rows(ReadOnlyArray[QueryMatch])
   Complete
   Stopped
   Failed(QueryFailure)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QueryBatch with Eq::{equal, not_equal}
@@ -44,12 +47,13 @@ pub extend QueryBatch with Eq::{equal, not_equal}
 pub extend QueryBatch with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum CursorState {
   Running
   Complete
   Stopped
   Failed(QueryFailure)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend CursorState with Eq::{equal, not_equal}
@@ -59,8 +63,8 @@ pub extend CursorState with @debug.Debug::{to_repr}
 
 ///|
 priv enum Goal {
-  GMatch(Int, Int)
-  GParts(Int, Int, Int, Int)
+  GMatch(Int32, Int32)
+  GParts(Int32, Int32, Int32, Int32)
 }
 
 ///|
@@ -72,16 +76,16 @@ priv enum Goals {
 ///|
 priv enum Binds {
   BNil
-  BCons(Int, Int, Binds)
+  BCons(Int32, Int32, Binds)
 }
 
 ///|
 priv struct Choice {
   alt : Bool
-  pnode : Int
-  node : Int
-  part : Int
-  mut next : Int
+  pnode : Int32
+  node : Int32
+  part : Int32
+  mut next : Int32
   cont : Goals
   binds : Binds
 }
@@ -103,19 +107,19 @@ pub struct QueryCursor[T] {
   priv projection : Projection
   priv limits : ExecutionLimits
   priv mut state : CursorState
-  priv roots : Array[Int]
-  priv mut candidate : Int
-  priv mut pattern : Int
+  priv roots : Array[Int32]
+  priv mut candidate : Int32
+  priv mut pattern : Int32
   priv mut goals : Goals?
   priv mut binds : Binds
   priv choices : Array[Choice]
-  priv mut work : Int
-  priv mut results : Int
-  priv mut output : Int
+  priv mut work : Int32
+  priv mut results : Int32
+  priv mut output : Int32
 }
 
 ///|
-pub impl[T] @debug.Debug for QueryCursor[T] with to_repr(self) {
+pub impl[T] @debug.Debug for QueryCursor[T] with fn to_repr(self) {
   @debug.Repr::Repr(("QueryCursor", self.state, self.results))
 }
 
@@ -129,9 +133,9 @@ pub extend QueryCursor with @debug.Debug::{to_repr}
 pub fn[T : QueryTree] QueryPlan::execute(
   self : QueryPlan,
   tree : T,
-  root? : Int,
+  root? : Int32,
   projection? : Projection,
-  limits? : ExecutionLimits = ExecutionLimits::new(),
+  limits~ : ExecutionLimits = ExecutionLimits::new(),
 ) -> QueryCursor[T] {
   let schema = tree.schema()
   let projection = projection.unwrap_or(Projection::identity(schema))
@@ -165,7 +169,11 @@ pub fn[T : QueryTree] QueryPlan::execute(
     projection,
     limits,
     state,
-    roots: if state is Running { [root] } else { [] },
+    roots: if state is Running {
+      [root]
+    } else {
+      []
+    },
     candidate: -1,
     pattern: 0,
     goals: None,
@@ -184,13 +192,13 @@ pub fn[T] QueryCursor::state(self : QueryCursor[T]) -> CursorState {
 
 ///|
 /// The work units used so far.
-pub fn[T] QueryCursor::work(self : QueryCursor[T]) -> Int {
+pub fn[T] QueryCursor::work(self : QueryCursor[T]) -> Int32 {
   self.work
 }
 
 ///|
 /// The matches delivered so far.
-pub fn[T] QueryCursor::delivered(self : QueryCursor[T]) -> Int {
+pub fn[T] QueryCursor::delivered(self : QueryCursor[T]) -> Int32 {
   self.results
 }
 
@@ -228,7 +236,7 @@ fn[T] QueryCursor::spend(self : QueryCursor[T]) -> Bool {
 }
 
 ///|
-fn bind(sites : Array[Int], node : Int, binds : Binds) -> Binds {
+fn bind(sites : Array[Int32], node : Int32, binds : Binds) -> Binds {
   let mut result = binds
   for site in sites {
     result = BCons(site, node, result)
@@ -237,7 +245,7 @@ fn bind(sites : Array[Int], node : Int, binds : Binds) -> Binds {
 }
 
 ///|
-fn[T : QueryTree] select(tree : T, sel : CSel, node : Int) -> Bool {
+fn[T : QueryTree] select(tree : T, sel : CSel, node : Int32) -> Bool {
   match sel {
     CAny => true
     CKind(name) => tree.kind(node) == Some(name)
@@ -279,7 +287,10 @@ fn[T : QueryTree] QueryCursor::backtrack(self : QueryCursor[T]) -> Step? {
         self.goals = Some(
           Cons(
             GMatch(pattern, child),
-            Cons(GParts(top.pnode, top.node, top.part + 1, position + 1), top.cont),
+            Cons(
+              GParts(top.pnode, top.node, top.part + 1, position + 1),
+              top.cont,
+            ),
           ),
         )
         self.binds = top.binds
@@ -292,10 +303,7 @@ fn[T : QueryTree] QueryCursor::backtrack(self : QueryCursor[T]) -> Step? {
 }
 
 ///|
-fn[T] QueryCursor::push_choice(
-  self : QueryCursor[T],
-  choice : Choice,
-) -> Step? {
+fn[T] QueryCursor::push_choice(self : QueryCursor[T], choice : Choice) -> Step? {
   if self.choices.length() >= self.limits.pending {
     return Some(Fail(Limit(Pending)))
   }
@@ -401,7 +409,11 @@ fn[T : QueryTree] QueryCursor::advance(self : QueryCursor[T]) -> Step {
 }
 
 ///|
-fn binding(binds : Binds, names : ReadOnlyArray[String], name : String) -> Int? {
+fn binding(
+  binds : Binds,
+  names : ReadOnlyArray[String],
+  name : String,
+) -> Int32? {
   let mut at = binds
   while at is BCons(site, node, rest) {
     if names[site] == name {
@@ -450,7 +462,7 @@ fn[T : QueryTree] QueryCursor::accepts(
 fn[T : QueryTree] QueryCursor::row(
   self : QueryCursor[T],
 ) -> Result[QueryMatch, QueryFailure] {
-  let bound : Array[(Int, Int)] = []
+  let bound : Array[(Int32, Int32)] = []
   let mut at = self.binds
   while at is BCons(site, node, rest) {
     bound.push((site, node))
@@ -475,7 +487,7 @@ fn[T : QueryTree] QueryCursor::row(
       values: ReadOnlyArray::from_array(values),
     })
   }
-  Ok({ pattern: self.pattern, captures: ReadOnlyArray::from_array(captures) })
+  Ok({ pattern: self.pattern, captures: ReadOnlyArray::from_array(captures), })
 }
 
 ///|
@@ -565,7 +577,7 @@ fn[T] QueryCursor::fail(self : QueryCursor[T], failure : QueryFailure) -> Unit {
 /// is returned by the next request, so `Rows` never implies completion.
 pub fn[T : QueryTree] QueryCursor::next_batch(
   self : QueryCursor[T],
-  max : Int,
+  max : Int32,
 ) -> QueryBatch {
   let rows = []
   let limit = if max < 1 { 1 } else { max }
@@ -587,10 +599,11 @@ pub fn[T : QueryTree] QueryCursor::next_batch(
 
 ///|
 /// All matches of an execution and its terminal state.
+#derive(Eq, Debug)
 pub struct QueryResult {
   matches : ReadOnlyArray[QueryMatch]
   outcome : CursorState
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QueryResult with Eq::{equal, not_equal}
@@ -604,14 +617,14 @@ pub extend QueryResult with @debug.Debug::{to_repr}
 pub fn[T : QueryTree] QueryPlan::collect(
   self : QueryPlan,
   tree : T,
-  root? : Int,
+  root? : Int32,
   projection? : Projection,
-  limits? : ExecutionLimits = ExecutionLimits::new(),
+  limits~ : ExecutionLimits = ExecutionLimits::new(),
 ) -> QueryResult {
   let cursor = self.execute(tree, root?, projection?, limits~)
   let matches = []
   while cursor.next_match() is Some(row) {
     matches.push(row)
   }
-  { matches: ReadOnlyArray::from_array(matches), outcome: cursor.state }
+  { matches: ReadOnlyArray::from_array(matches), outcome: cursor.state, }
 }

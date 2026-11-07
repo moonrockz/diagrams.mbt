@@ -15,7 +15,11 @@ async fn copy_input(from : String, to : String) -> Unit {
     if @fs.kind(source, follow_symlink=false) is Directory {
       copy_input(source, target)
     } else {
-      @fs.write_file(target, @fs.read_file(source).binary(), create_mode=CreateOrTruncate)
+      @fs.write_file(
+        target,
+        @fs.read_file(source).binary(),
+        create_mode=CreateOrTruncate,
+      )
     }
   }
 }

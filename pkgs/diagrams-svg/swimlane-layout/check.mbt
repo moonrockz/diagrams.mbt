@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum Rule {
   Overlap
   Fit
@@ -7,14 +8,15 @@ pub(all) enum Rule {
   Containment
   Endpoint
   Limit
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}
@@ -116,7 +118,7 @@ pub fn check(
       exhausted = true
     }
   }
-  let boundaries=Map(boundary_attachments.map(p => (p,true)))
+  let boundaries = Map(boundary_attachments.map(p => (p, true)))
   let intended : Map[(String, String), Bool] = Map([])
   for pair in intentional_containment {
     if !charge(pair.0.length() + pair.1.length() + 1) {
@@ -159,7 +161,8 @@ pub fn check(
     }
     if shape.parent is Some(parent) {
       if by_id.get(parent) is Some(parent_shape) {
-        if !parent_shape.box.contains(shape.box, tolerance=0.1) && !boundaries.contains((shape.id,parent)) {
+        if !parent_shape.box.contains(shape.box, tolerance=0.1) &&
+          !boundaries.contains((shape.id, parent)) {
           add(
             Containment,
             [shape.id, parent],

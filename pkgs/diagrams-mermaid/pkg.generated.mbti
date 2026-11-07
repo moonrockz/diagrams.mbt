@@ -79,23 +79,26 @@ pub let zenuml_diagnostic_codes : ReadOnlyArray[String]
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct DiagramPrintResult {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn DiagramPrintResult::equal(Self, Self) -> Bool
 pub fn DiagramPrintResult::not_equal(Self, Self) -> Bool
 pub fn DiagramPrintResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiagramReadResult {
   tree : DiagramTree
   ast : ParsedDiagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn DiagramReadResult::equal(Self, Self) -> Bool
 pub fn DiagramReadResult::not_equal(Self, Self) -> Bool
 pub fn DiagramReadResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DiagramTree {
   State(@state-cst.Node)
   Flowchart(@swimlane-cst.Node)
@@ -104,12 +107,13 @@ pub(all) enum DiagramTree {
   Zenuml(@zenuml-cst.Node)
   Architecture(@architecture-cst.Node)
   Unsupported(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn DiagramTree::equal(Self, Self) -> Bool
 pub fn DiagramTree::not_equal(Self, Self) -> Bool
 pub fn DiagramTree::text(Self) -> String
 pub fn DiagramTree::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ParsedDiagram {
   State(@state-ast.Diagram)
   Flowchart(@flowchart-ast.Diagram)
@@ -117,7 +121,7 @@ pub(all) enum ParsedDiagram {
   Swimlane(@swimlane-ast.Diagram)
   Zenuml(@zenuml-ast.Diagram)
   Architecture(@architecture-ast.Diagram)
-} derive(Eq, @debug.Debug)
+}
 pub fn ParsedDiagram::equal(Self, Self) -> Bool
 pub fn ParsedDiagram::not_equal(Self, Self) -> Bool
 pub fn ParsedDiagram::to_repr(Self) -> @debug.Repr

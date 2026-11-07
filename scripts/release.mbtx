@@ -19,11 +19,12 @@ import {
 ///   `site-X.Y.tar.gz`. When the release exists, it only attaches the files.
 
 ///|
+#derive(Eq, Debug)
 priv enum Plan {
   Release(String)
   DryRun(String)
   Skip(String)
-} derive(Eq, Debug)
+}
 
 ///|
 /// A pull request run and a `dry_run` only check. Any other run must be on

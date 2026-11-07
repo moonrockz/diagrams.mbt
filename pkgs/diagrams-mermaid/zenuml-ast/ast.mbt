@@ -1,5 +1,6 @@
 ///|
 /// Typed native statements. Open statements and End retain explicit nesting.
+#derive(Eq, Debug)
 pub(all) enum StatementKind {
   Participant(id~ : String, label~ : String?, annotator~ : String?)
   Call(
@@ -19,13 +20,14 @@ pub(all) enum StatementKind {
   Comment(String)
   Title(String)
   Metadata(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Debug)
 pub(all) struct Statement {
   kind : StatementKind
   span : @diagrams.Span
-} derive(Debug)
+}
 
 ///|
 pub impl Eq for Statement with fn equal(a, b) {
@@ -33,9 +35,10 @@ pub impl Eq for Statement with fn equal(a, b) {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Diagram {
   statements : ReadOnlyArray[Statement]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Diagram::new(statements : ArrayView[Statement]) -> Diagram {

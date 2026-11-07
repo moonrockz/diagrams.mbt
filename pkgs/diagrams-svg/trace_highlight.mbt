@@ -1,12 +1,13 @@
 ///|
 /// The visibility and style of one static trace highlight channel. A missing
 /// colour selects the theme default for the channel.
+#derive(Eq, Debug)
 pub struct ChannelStyle {
   visible : Bool
   color : @theme.Color?
   width : Double
   dashed : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ChannelStyle with Eq::{equal, not_equal}
@@ -36,6 +37,7 @@ pub fn ChannelStyle::hidden() -> ChannelStyle {
 /// the taken path or prefix, and failure points. `attempts` selects attempt
 /// identities; `None` selects every attempt. The request never changes the
 /// diagram model, its source or its geometry.
+#derive(Eq, Debug)
 pub struct TraceHighlight {
   trace : @railroad_trace.Trace
   attempts : ReadOnlyArray[String]?
@@ -44,7 +46,7 @@ pub struct TraceHighlight {
   taken : ChannelStyle
   failure : ChannelStyle
   limits : @railroad_trace.TraceLimits
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TraceHighlight with Eq::{equal, not_equal}

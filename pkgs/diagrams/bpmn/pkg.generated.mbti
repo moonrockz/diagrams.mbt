@@ -11,25 +11,28 @@ import {
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum AssociationDirection {
   None
   One
   Both
-} derive(Eq, @debug.Debug)
+}
 pub fn AssociationDirection::equal(Self, Self) -> Bool
 pub fn AssociationDirection::not_equal(Self, Self) -> Bool
 pub fn AssociationDirection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Bounds {
   x : Int32
   y : Int32
   width : Int32
   height : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Bounds::equal(Self, Self) -> Bool
 pub fn Bounds::not_equal(Self, Self) -> Bool
 pub fn Bounds::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Bpmn {
   id : String
   label : String
@@ -38,13 +41,14 @@ pub struct Bpmn {
   plane : SourceIdentity?
   nodes : ReadOnlyArray[Node]
   flows : ReadOnlyArray[Flow]
-} derive(Eq, @debug.Debug)
+}
 pub fn Bpmn::equal(Self, Self) -> Bool
 pub fn Bpmn::new(String, ArrayView[Node], ArrayView[Flow], label? : String, source? : SourceIdentity, kind? : ViewKind, plane? : SourceIdentity) -> Self
 pub fn Bpmn::not_equal(Self, Self) -> Bool
 pub fn Bpmn::scope(Self, limits? : ScopeLimits) -> ScopeResult
 pub fn Bpmn::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ConnectionKind {
   SequenceFlow
   MessageFlow
@@ -52,11 +56,12 @@ pub(all) enum ConnectionKind {
   DataInputAssociation
   DataOutputAssociation
   DataAssociation
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectionKind::equal(Self, Self) -> Bool
 pub fn ConnectionKind::not_equal(Self, Self) -> Bool
 pub fn ConnectionKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct EdgeGeometry {
   identity : SourceIdentity
   points : ReadOnlyArray[ExactPoint]
@@ -64,12 +69,13 @@ pub struct EdgeGeometry {
   source_shape : SourceIdentity?
   target_shape : SourceIdentity?
   message_visible : MessageVisibility?
-} derive(Eq, @debug.Debug)
+}
 pub fn EdgeGeometry::equal(Self, Self) -> Bool
 pub fn EdgeGeometry::new(SourceIdentity, ArrayView[ExactPoint], label? : LabelGeometry, source_shape? : SourceIdentity, target_shape? : SourceIdentity, message_visible? : MessageVisibility) -> Self
 pub fn EdgeGeometry::not_equal(Self, Self) -> Bool
 pub fn EdgeGeometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EventKind {
   Message
   Timer
@@ -81,41 +87,45 @@ pub(all) enum EventKind {
   Cancel
   Compensation
   Terminate
-} derive(Eq, @debug.Debug)
+}
 pub fn EventKind::equal(Self, Self) -> Bool
 pub fn EventKind::not_equal(Self, Self) -> Bool
 pub fn EventKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct EventMarker {
   kind : EventKind
   identity : SourceIdentity?
   settings : ReadOnlyArray[(String, String)]
-} derive(Eq, @debug.Debug)
+}
 pub fn EventMarker::equal(Self, Self) -> Bool
 pub fn EventMarker::new(EventKind, identity? : SourceIdentity, settings? : ArrayView[(String, String)]) -> Self
 pub fn EventMarker::not_equal(Self, Self) -> Bool
 pub fn EventMarker::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExactBounds {
   x : Number
   y : Number
   width : Number
   height : Number
-} derive(Eq, @debug.Debug)
+}
 pub fn ExactBounds::equal(Self, Self) -> Bool
 pub fn ExactBounds::new(Number, Number, Number, Number) -> Self
 pub fn ExactBounds::not_equal(Self, Self) -> Bool
 pub fn ExactBounds::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExactPoint {
   x : Number
   y : Number
-} derive(Eq, @debug.Debug)
+}
 pub fn ExactPoint::equal(Self, Self) -> Bool
 pub fn ExactPoint::new(Number, Number) -> Self
 pub fn ExactPoint::not_equal(Self, Self) -> Bool
 pub fn ExactPoint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Flow {
   id : String
   identity : SourceIdentity
@@ -132,13 +142,14 @@ pub struct Flow {
   is_default : Bool
   direction : AssociationDirection
   properties : RenderProperties?
-} derive(Eq, @debug.Debug)
+}
 pub fn Flow::equal(Self, Self) -> Bool
 pub fn Flow::new(String, String, String, points? : ArrayView[Point], identity? : SourceIdentity, kind? : ConnectionKind, has_source? : Bool, semantic_source? : SourceIdentity, semantic_target? : SourceIdentity, geometry? : EdgeGeometry, label? : String, condition? : String, is_default? : Bool, direction? : AssociationDirection, properties? : RenderProperties) -> Self
 pub fn Flow::not_equal(Self, Self) -> Bool
 pub fn Flow::to_repr(Self) -> @debug.Repr
 pub fn Flow::with_properties(Self, RenderProperties) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct Font {
   name : String?
   size : Number?
@@ -146,49 +157,54 @@ pub struct Font {
   italic : Bool?
   underline : Bool?
   strike_through : Bool?
-} derive(Eq, @debug.Debug)
+}
 pub fn Font::equal(Self, Self) -> Bool
 pub fn Font::new(name? : String, size? : Number, bold? : Bool, italic? : Bool, underline? : Bool, strike_through? : Bool) -> Self
 pub fn Font::not_equal(Self, Self) -> Bool
 pub fn Font::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GeometryPolicy {
   PreferDi
   RequireDi
   Automatic
-} derive(Eq, @debug.Debug)
+}
 pub fn GeometryPolicy::equal(Self, Self) -> Bool
 pub fn GeometryPolicy::not_equal(Self, Self) -> Bool
 pub fn GeometryPolicy::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct LabelGeometry {
   bounds : ExactBounds?
   style : SourceIdentity?
   font : Font?
-} derive(Eq, @debug.Debug)
+}
 pub fn LabelGeometry::equal(Self, Self) -> Bool
 pub fn LabelGeometry::new(bounds? : ExactBounds, style? : SourceIdentity, font? : Font) -> Self
 pub fn LabelGeometry::not_equal(Self, Self) -> Bool
 pub fn LabelGeometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Link {
   target : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Link::equal(Self, Self) -> Bool
 pub fn Link::new(String) -> Self
 pub fn Link::not_equal(Self, Self) -> Bool
 pub fn Link::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum LoopKind {
   None
   Standard
   Sequential
   Parallel
-} derive(Eq, @debug.Debug)
+}
 pub fn LoopKind::equal(Self, Self) -> Bool
 pub fn LoopKind::not_equal(Self, Self) -> Bool
 pub fn LoopKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Markers {
   loop_kind : LoopKind
   called_kind : NodeKind?
@@ -201,20 +217,22 @@ pub struct Markers {
   instantiate : Bool
   events : ReadOnlyArray[EventMarker]
   details : ReadOnlyArray[(String, String)]
-} derive(Eq, @debug.Debug)
+}
 pub fn Markers::equal(Self, Self) -> Bool
 pub fn Markers::new(loop_kind? : LoopKind, called_kind? : NodeKind, called_element? : SourceIdentity, compensation? : Bool, event_subprocess? : Bool, interrupting? : Bool, parallel_multiple? : Bool, collection? : Bool, instantiate? : Bool, events? : ArrayView[EventMarker], details? : ArrayView[(String, String)]) -> Self
 pub fn Markers::not_equal(Self, Self) -> Bool
 pub fn Markers::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum MessageVisibility {
   Initiating
   NonInitiating
-} derive(Eq, @debug.Debug)
+}
 pub fn MessageVisibility::equal(Self, Self) -> Bool
 pub fn MessageVisibility::not_equal(Self, Self) -> Bool
 pub fn MessageVisibility::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   id : String
   source : SourceIdentity
@@ -227,7 +245,7 @@ pub struct Node {
   expanded : Bool?
   black_box : Bool
   properties : RenderProperties?
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::new(String, NodeKind, bounds? : Bounds, label? : String, source? : SourceIdentity, geometry? : ShapeGeometry, ownership? : Ownership, markers? : Markers, expanded? : Bool, black_box? : Bool, properties? : RenderProperties) -> Self
 pub fn Node::not_equal(Self, Self) -> Bool
@@ -236,6 +254,7 @@ pub fn Node::with_black_box(Self, Bool) -> Self
 pub fn Node::with_ownership(Self, Ownership) -> Self
 pub fn Node::with_properties(Self, RenderProperties) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeKind {
   StartEvent
   EndEvent
@@ -270,44 +289,48 @@ pub(all) enum NodeKind {
   Group
   TextAnnotation
   Message
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeKind::equal(Self, Self) -> Bool
 pub fn NodeKind::not_equal(Self, Self) -> Bool
 pub fn NodeKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Number {
   token : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Number::equal(Self, Self) -> Bool
 pub fn Number::not_equal(Self, Self) -> Bool
 pub fn Number::parse(String) -> Self?
 pub fn Number::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Ownership {
   pool : String?
   lanes : ReadOnlyArray[String]
   subprocess : String?
   attached_to : String?
   groups : ReadOnlyArray[String]
-} derive(Eq, @debug.Debug)
+}
 pub fn Ownership::equal(Self, Self) -> Bool
 pub fn Ownership::new(pool? : String, lanes? : ArrayView[String], subprocess? : String, attached_to? : String, groups? : ArrayView[String]) -> Self
 pub fn Ownership::not_equal(Self, Self) -> Bool
 pub fn Ownership::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Point {
   x : Int32
   y : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Point::equal(Self, Self) -> Bool
 pub fn Point::not_equal(Self, Self) -> Bool
 pub fn Point::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct RenderProperties {
   description : String?
   sublabel : String?
   link : Link?
-} derive(Eq, @debug.Debug)
+}
 pub fn RenderProperties::equal(Self, Self) -> Bool
 pub fn RenderProperties::new(description? : String, sublabel? : String, link? : Link) -> Self
 pub fn RenderProperties::not_equal(Self, Self) -> Bool
@@ -322,10 +345,11 @@ pub struct Scope {
 }
 pub fn Scope::node_index(Self, String) -> Int32?
 
+#derive(Eq, @debug.Debug)
 pub struct ScopeLimits {
   nodes : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ScopeLimits::equal(Self, Self) -> Bool
 pub fn ScopeLimits::new(nodes? : Int32, work? : Int32) -> Self
 pub fn ScopeLimits::not_equal(Self, Self) -> Bool
@@ -336,6 +360,7 @@ pub struct ScopeResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct ShapeGeometry {
   identity : SourceIdentity
   bounds : ExactBounds?
@@ -344,26 +369,28 @@ pub struct ShapeGeometry {
   expanded : Bool?
   marker_visible : Bool?
   message_visible : Bool?
-} derive(Eq, @debug.Debug)
+}
 pub fn ShapeGeometry::equal(Self, Self) -> Bool
 pub fn ShapeGeometry::new(SourceIdentity, bounds? : ExactBounds, label? : LabelGeometry, horizontal? : Bool, expanded? : Bool, marker_visible? : Bool, message_visible? : Bool) -> Self
 pub fn ShapeGeometry::not_equal(Self, Self) -> Bool
 pub fn ShapeGeometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SourceIdentity {
   resource_id : String?
   source_id : String?
   path : ReadOnlyArray[Int32]
-} derive(Eq, @debug.Debug)
+}
 pub fn SourceIdentity::equal(Self, Self) -> Bool
 pub fn SourceIdentity::new(source_id? : String, resource_id? : String, path? : ArrayView[Int32]) -> Self
 pub fn SourceIdentity::not_equal(Self, Self) -> Bool
 pub fn SourceIdentity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ViewKind {
   Process
   Collaboration
-} derive(Eq, @debug.Debug)
+}
 pub fn ViewKind::equal(Self, Self) -> Bool
 pub fn ViewKind::not_equal(Self, Self) -> Bool
 pub fn ViewKind::to_repr(Self) -> @debug.Repr

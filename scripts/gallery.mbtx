@@ -250,7 +250,7 @@ async fn main {
     if line.trim() == "" {
       continue
     }
-    let path = line.view(start_offset=66).trim().to_owned()
+    let path = line.exact_view(start=66).trim().to_owned()
     let name = path
       .replace_all(old="examples/", new="")
       .replace_all(old=".mmd", new="")

@@ -1,10 +1,11 @@
 ///|
 /// Explicit bounds for data-tree validation and indexing.
+#derive(Eq, Debug)
 pub struct Limits {
-  nodes : Int
-  depth : Int
-  work : Int
-} derive(Eq, Debug)
+  nodes : Int32
+  depth : Int32
+  work : Int32
+}
 
 ///|
 pub extend Limits with Eq::{equal, not_equal}
@@ -14,11 +15,11 @@ pub extend Limits with @debug.Debug::{to_repr}
 
 ///|
 pub fn Limits::new(
-  nodes? : Int = 10000,
-  depth? : Int = 256,
-  work? : Int = 1000000,
+  nodes~ : Int32 = 10000,
+  depth~ : Int32 = 256,
+  work~ : Int32 = 1000000,
 ) -> Limits {
-  { nodes, depth, work }
+  { nodes, depth, work, }
 }
 
 ///|
@@ -34,11 +35,11 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 /// has exactly one owning entry occurrence.
 pub struct Index {
   tree : DataTree
-  priv positions : Map[String, Int]
+  priv positions : Map[String, Int32]
   priv members : Map[String, Member]
   priv owners : Map[String, String]
   priv containers : Map[String, String]
-  priv depths : Map[String, Int]
+  priv depths : Map[String, Int32]
   /// Node identities in pre-order.
   order : ReadOnlyArray[String]
 }
@@ -72,7 +73,7 @@ pub fn Index::container(self : Index, entry : String) -> String? {
 }
 
 ///|
-pub fn Index::depth(self : Index, node : String) -> Int? {
+pub fn Index::depth(self : Index, node : String) -> Int32? {
   self.depths.get(node)
 }
 
@@ -81,7 +82,7 @@ pub fn Index::depth(self : Index, node : String) -> Int? {
 /// without recursion. Scalar text is never interpreted as a reference.
 pub fn Index::build(
   tree : DataTree,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> IndexResult {
   let out : Array[@diagrams.Diagnostic] = []
   let mut work = 0
@@ -91,7 +92,7 @@ pub fn Index::build(
       out.push(@diagrams.Diagnostic::error("data-tree/" + code, message))
     }
   }
-  fn charge(units : Int) -> Bool {
+  fn charge(units : Int32) -> Bool {
     if halted {
       return false
     }
@@ -104,7 +105,7 @@ pub fn Index::build(
     true
   }
   fn failed() -> IndexResult {
-    { index: None, diagnostics: ReadOnlyArray::from_array(out) }
+    { index: None, diagnostics: ReadOnlyArray::from_array(out), }
   }
   if limits.nodes <= 0 || limits.depth <= 0 || limits.work <= 0 {
     error("model-limit", "Data-tree limits must be positive")
@@ -117,7 +118,7 @@ pub fn Index::build(
   if tree.id.is_empty() {
     error("invalid-identity", "A data tree needs a view identity")
   }
-  let positions : Map[String, Int] = Map([])
+  let positions : Map[String, Int32] = Map([])
   let members : Map[String, Member] = Map([])
   let containers : Map[String, String] = Map([])
   for i, node in tree.nodes {
@@ -192,7 +193,7 @@ pub fn Index::build(
     return failed()
   }
   let owners : Map[String, String] = Map([])
-  let depths : Map[String, Int] = Map([(tree.root, 0)])
+  let depths : Map[String, Int32] = Map([(tree.root, 0)])
   let order : Array[String] = []
   let stack = [tree.root]
   while stack.pop() is Some(id) {
@@ -220,7 +221,10 @@ pub fn Index::build(
       }
       let depth = depths[id] + 1
       if depth > limits.depth {
-        error("model-limit", "Data-tree depth limit exceeded at '\{entry.value}'")
+        error(
+          "model-limit",
+          "Data-tree depth limit exceeded at '\{entry.value}'",
+        )
         return failed()
       }
       owners[entry.value] = entry.id
@@ -266,7 +270,7 @@ pub fn Index::build(
 /// Validate a constructed data tree. An empty result means the tree is valid.
 pub fn validate(
   tree : DataTree,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> ReadOnlyArray[@diagrams.Diagnostic] {
   Index::build(tree, limits~).diagnostics
 }

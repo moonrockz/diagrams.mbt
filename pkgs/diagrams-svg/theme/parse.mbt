@@ -3,60 +3,121 @@
 /// need a viewer context, such as currentColor, are deliberately unresolved.
 pub fn parse_color(source : String) -> Color? {
   let s = source.trim().to_owned().to_lower()
-  if s == "transparent" { return Some(Color::rgba(0, 0, 0, 0)) }
-  if named_colors.get(s) is Some(rgb) { return Some(Color::hex(rgb)) }
+  if s == "transparent" {
+    return Some(Color::rgba(0, 0, 0, 0))
+  }
+  if named_colors.get(s) is Some(rgb) {
+    return Some(Color::hex(rgb))
+  }
   if s.has_prefix("#") {
-    let digits = s.view(start_offset=1).to_owned()
+    let digits = s.exact_view(start=1).to_owned()
     let n = digits.length()
     guard n == 3 || n == 4 || n == 6 || n == 8 else { return None }
-    let values : Array[Int] = []
+    let values : Array[Int32] = []
     for c in digits {
       let d = "0123456789abcdef".find(c.to_string())
       guard d is Some(d) else { return None }
       values.push(d)
     }
     let short = n < 5
-    let channel = (i : Int) => if short { values[i] * 17 } else { values[i * 2] * 16 + values[i * 2 + 1] }
-    let alpha = if n == 4 || n == 8 { (channel(3) * 100 + 127) / 255 } else { 100 }
+    let channel = (i : Int32) => {
+      if short {
+        values[i] * 17
+      } else {
+        values[i * 2] * 16 + values[i * 2 + 1]
+      }
+    }
+    let alpha = if n == 4 || n == 8 {
+      (channel(3) * 100 + 127) / 255
+    } else {
+      100
+    }
     return Some(Color::rgba(channel(0), channel(1), channel(2), alpha))
   }
   let rgba = s.has_prefix("rgba(")
   guard (rgba || s.has_prefix("rgb(")) && s.has_suffix(")") else { return None }
-  let body = s.view(start_offset=if rgba { 5 } else { 4 }, end_offset=s.length() - 1)
+  let body = s.exact_view(start=if rgba { 5 } else { 4 }, end=s.length() - 1)
   let comma = body.contains(",")
   let parts = if comma {
-    if body.contains("/") { return None }
+    if body.contains("/") {
+      return None
+    }
     body.split(",").map(p => p.trim().to_owned()).to_array()
   } else {
     let sides = body.split("/").to_array()
-    if sides.length() > 2 { return None }
-    let channels = sides[0].to_owned().replace_all(old="\t", new=" ").replace_all(old="\r", new=" ").replace_all(old="\n", new=" ")
-      .split(" ").filter(p => p != "").map(p => p.to_owned()).to_array()
-    if channels.length() != 3 { return None }
-    if sides.length() == 2 { channels.push(sides[1].trim().to_owned()) }
+    if sides.length() > 2 {
+      return None
+    }
+    let channels = sides[0]
+      .to_owned()
+      .replace_all(old="\t", new=" ")
+      .replace_all(old="\r", new=" ")
+      .replace_all(old="\n", new=" ")
+      .split(" ")
+      .filter(p => p != "")
+      .map(p => p.to_owned())
+      .to_array()
+    if channels.length() != 3 {
+      return None
+    }
+    if sides.length() == 2 {
+      channels.push(sides[1].trim().to_owned())
+    }
     channels
   }
   guard parts.length() == 3 || parts.length() == 4 else { return None }
   fn number(s : String, maximum : Double) -> Double? {
     let percent = s.has_suffix("%")
-    let raw = if percent { s.view(end_offset=s.length() - 1).to_owned() } else { s }
+    let raw = if percent {
+      s.exact_view(end=s.length() - 1).to_owned()
+    } else {
+      s
+    }
     // Read decimal CSS numbers, including exponents, without accepting NaN.
-    guard raw != "" && raw.iter().all(c => (c >= '0' && c <= '9') || c == '.' || c == '+' || c == '-' || c == 'e') else { return None }
-    let n = try @string.parse_double(raw) catch { _ => return None }
+    guard raw != "" &&
+      raw
+      .iter()
+      .all(c => {
+        (c >= '0' && c <= '9') || c == '.' || c == '+' || c == '-' || c == 'e'
+      }) else {
+      return None
+    }
+    let n = @string.parse_double(raw) catch { _ => return None }
     let value = if percent { n * maximum / 100.0 } else { n }
-    Some(if value < 0.0 { 0.0 } else if value > maximum { maximum } else { value })
+    Some(
+      if value < 0.0 {
+        0.0
+      } else if value > maximum {
+        maximum
+      } else {
+        value
+      },
+    )
   }
-  guard number(parts[0], 255.0) is Some(r) && number(parts[1], 255.0) is Some(g) && number(parts[2], 255.0) is Some(b) else { return None }
+  guard number(parts[0], 255.0) is Some(r) &&
+    number(parts[1], 255.0) is Some(g) &&
+    number(parts[2], 255.0) is Some(b) else {
+    return None
+  }
   let alpha = if parts.length() == 4 {
     guard number(parts[3], 1.0) is Some(a) else { return None }
     (a * 100.0).round().to_int()
-  } else { 100 }
-  Some(Color::rgba(r.round().to_int(), g.round().to_int(), b.round().to_int(), alpha))
+  } else {
+    100
+  }
+  Some(
+    Color::rgba(
+      r.round().to_int(),
+      g.round().to_int(),
+      b.round().to_int(),
+      alpha,
+    ),
+  )
 }
 
 ///|
 // CSS named-colour values, https://www.w3.org/TR/css-color-4/#named-colors
-let named_colors : Map[String, Int] = {
+let named_colors : Map[String, Int32] = {
   "aliceblue": 0xf0f8ff,
   "antiquewhite": 0xfaebd7,
   "aqua": 0x00ffff,

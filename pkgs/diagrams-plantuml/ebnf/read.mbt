@@ -7,6 +7,7 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 ]
 
 ///|
+#derive(Eq)
 priv enum Sym {
   Literal
   Definition
@@ -30,36 +31,42 @@ priv enum Sym {
   CommentBelow
   SpecialSeq
   NotMark
-} derive(Eq)
+}
 
 ///|
 priv struct Tok {
   sym : Sym
   data : String
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 }
 
 ///|
 priv struct Failure {
   code : String
   message : String
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 }
 
 ///|
-fn letter_or_digit(c : Int) -> Bool {
+fn letter_or_digit(c : Int32) -> Bool {
   (c >= 48 && c <= 57) ||
   (c >= 65 && c <= 90) ||
   (c >= 97 && c <= 122) ||
-  (c >= 0xaa && c != 0xd7 && c != 0xf7 && (c < 0xd800 || c > 0xdfff) && c != 0xfeff &&
-  !(c >= 0x2000 && c <= 0x206f) &&
-  !(c >= 0x3000 && c <= 0x303f))
+  (
+    c >= 0xaa &&
+    c != 0xd7 &&
+    c != 0xf7 &&
+    (c < 0xd800 || c > 0xdfff) &&
+    c != 0xfeff &&
+    !(c >= 0x2000 && c <= 0x206f) &&
+    !(c >= 0x3000 && c <= 0x303f)
+  )
 }
 
 ///|
-fn literal_char(c : Int) -> Bool {
+fn literal_char(c : Int32) -> Bool {
   c == 45 || c == 95 || letter_or_digit(c)
 }
 
@@ -67,11 +74,11 @@ fn literal_char(c : Int) -> Bool {
 /// Text with a source offset for each UTF-16 unit.
 priv struct Source {
   text : String
-  offsets : Array[Int]
+  offsets : Array[Int32]
 }
 
 ///|
-fn Source::offset(self : Source, i : Int) -> Int {
+fn Source::offset(self : Source, i : Int32) -> Int32 {
   if i < self.offsets.length() {
     self.offsets[i]
   } else if self.offsets.is_empty() {
@@ -86,25 +93,25 @@ fn Source::offset(self : Source, i : Int) -> Int {
 /// up to the first `;`. Units in `skip` read as spaces.
 fn tokenize(
   source : Source,
-  from : Int,
-  skip : ArrayView[(Int, Int)],
-) -> Result[(Array[Tok], Int), Failure] {
+  from : Int32,
+  skip : ArrayView[(Int32, Int32)],
+) -> Result[(Array[Tok], Int32), Failure] {
   let text = source.text
   let n = text.length()
   let out : Array[Tok] = []
   let mut i = from
-  fn at(k : Int) -> Int {
+  fn at(k : Int32) -> Int32 {
     if k < n {
       text.code_unit_at(k).to_int()
     } else {
       0
     }
   }
-  fn skipped(k : Int) -> Bool {
+  fn skipped(k : Int32) -> Bool {
     skip.iter().any(r => k >= r.0 && k < r.1)
   }
-  fn tok(sym : Sym, data : String, a : Int, b : Int) -> Tok {
-    { sym, data, start: source.offset(a), end: source.offset(b - 1) + 1 }
+  fn tok(sym : Sym, data : String, a : Int32, b : Int32) -> Tok {
+    { sym, data, start: source.offset(a), end: source.offset(b - 1) + 1, }
   }
   while i < n {
     let c = at(i)
@@ -212,7 +219,7 @@ fn tokenize(
 }
 
 ///|
-fn priority(sym : Sym) -> Int {
+fn priority(sym : Sym) -> Int32 {
   match sym {
     RepetitionSymbol => 3
     Concatenation => 2
@@ -236,11 +243,23 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
   }
   fn pop_below() -> Unit {
     let t = stack.pop().unwrap()
-    output.push(if t.sym == CommentToken { { ..t, sym: CommentBelow } } else { t })
+    output.push(
+      if t.sym == CommentToken {
+        { ..t, sym: CommentBelow, }
+      } else {
+        t
+      },
+    )
   }
   fn pop_above() -> Unit {
     let t = stack.pop().unwrap()
-    output.push(if t.sym == CommentToken { { ..t, sym: CommentAbove } } else { t })
+    output.push(
+      if t.sym == CommentToken {
+        { ..t, sym: CommentAbove, }
+      } else {
+        t
+      },
+    )
   }
   for token in tokens {
     match token.sym {
@@ -252,14 +271,16 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
       }
       CommentToken => stack.push(token)
       NotMark => {
-        stack.push({ ..token, sym: Concatenation })
+        stack.push({ ..token, sym: Concatenation, })
         stack.push(token)
       }
       Concatenation | Alternation | RepetitionSymbol => {
-        while (stack.last() is Some(top) &&
-          operator(top.sym) &&
-          priority(top.sym) > priority(token.sym)) ||
-          top_is(CommentToken) {
+        while (
+                stack.last() is Some(top) &&
+                operator(top.sym) &&
+                priority(top.sym) > priority(token.sym)
+              ) ||
+              top_is(CommentToken) {
           pop_below()
         }
         stack.push(token)
@@ -273,11 +294,11 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
           return None
         }
       }
-      OptionalOpen => stack.push({ ..token, sym: OptionalMark })
-      RepetitionOpen => stack.push({ ..token, sym: ZeroMark })
+      OptionalOpen => stack.push({ ..token, sym: OptionalMark, })
+      RepetitionOpen => stack.push({ ..token, sym: ZeroMark, })
       OptionalClose | RepetitionClose | RepetitionMinusClose => {
         while (stack.last() is Some(top) && operator(top.sym)) ||
-          top_is(CommentToken) {
+              top_is(CommentToken) {
           pop_below()
         }
         guard stack.pop() is Some(first) else { return None }
@@ -291,9 +312,9 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
         }
         output.push(
           if token.sym == RepetitionMinusClose {
-            { ..first, sym: OneMark, end: token.end }
+            { ..first, sym: OneMark, end: token.end, }
           } else {
-            { ..first, end: token.end }
+            { ..first, end: token.end, }
           },
         )
         while top_is(CommentToken) {
@@ -306,7 +327,7 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
   while stack.pop() is Some(t) {
     match t.sym {
       OptionalMark | OneMark | ZeroMark => return None
-      CommentToken => output.push({ ..t, sym: CommentBelow })
+      CommentToken => output.push({ ..t, sym: CommentBelow, })
       _ => output.push(t)
     }
   }
@@ -320,15 +341,15 @@ fn shunting(tokens : ArrayView[Tok]) -> Array[Tok]? {
 ///|
 priv struct Entry {
   expr : Expr
-  start : Int
-  end : Int
-  depth : Int
+  start : Int32
+  end : Int32
+  depth : Int32
 }
 
 ///|
 priv struct Built {
   rule : Rule
-  warnings : Array[(String, String, Int, Int)]
+  warnings : Array[(String, String, Int32, Int32)]
 }
 
 ///|
@@ -340,11 +361,11 @@ fn is_decimal(text : String) -> Bool {
 /// Build one rule from its source text.
 fn build_rule(
   source : Source,
-  from : Int,
-  skip : ArrayView[(Int, Int)],
+  from : Int32,
+  skip : ArrayView[(Int32, Int32)],
   above : String?,
   below : String?,
-  span : (Int, Int) -> @diagrams.Span,
+  span : (Int32, Int32) -> @diagrams.Span,
   limits : @envelope.Limits,
 ) -> Result[Built, Failure] {
   let (tokens, stop) = match tokenize(source, from, skip) {
@@ -354,7 +375,7 @@ fn build_rule(
   let whole_start = source.offset(from)
   let whole_end = source.offset(stop - 1) + 1
   fn syntax(message : String) -> Result[Built, Failure] {
-    Err({ code: "ebnf/syntax", message, start: whole_start, end: whole_end })
+    Err({ code: "ebnf/syntax", message, start: whole_start, end: whole_end, })
   }
   if tokens.length() > limits.nodes {
     return Err({
@@ -365,7 +386,13 @@ fn build_rule(
     })
   }
   // Text after the terminating semicolon is ignored by PlantUML 1.2026.9.
-  let rest = @envelope.trim(@cst.slice(source.text, stop.min(source.text.length()), source.text.length()))
+  let rest = @envelope.trim(
+    @cst.slice(
+      source.text,
+      stop.min(source.text.length()),
+      source.text.length(),
+    ),
+  )
   if !rest.is_empty() {
     return Err({
       code: "ebnf/trailing-text",
@@ -383,7 +410,13 @@ fn build_rule(
   let warnings = []
   if tokens.length() == 2 {
     return Ok({
-      rule: { name, body: None, above, below, span: Some(span(whole_start, whole_end)) },
+      rule: {
+        name,
+        body: None,
+        above,
+        below,
+        span: Some(span(whole_start, whole_end)),
+      },
       warnings,
     })
   }
@@ -392,7 +425,7 @@ fn build_rule(
   }
   let stack : Array[Entry] = []
   fn leaf(expr : Expr, t : Tok) {
-    stack.push({ expr, start: t.start, end: t.end, depth: 1 })
+    stack.push({ expr, start: t.start, end: t.end, depth: 1, })
   }
   for t in postfix {
     let s = Some(span(t.start, t.end))
@@ -408,9 +441,9 @@ fn build_rule(
         let text = @envelope.trim(t.data)
         fn noted(n : Notes) -> Notes {
           if t.sym == CommentAbove {
-            { ..n, above: Some(text) }
+            { ..n, above: Some(text), }
           } else {
-            { ..n, below: Some(text) }
+            { ..n, below: Some(text), }
           }
         }
         let expr : Expr = match top.expr {
@@ -420,8 +453,10 @@ fn build_rule(
           other => {
             warnings.push(
               (
-                "ebnf/dropped-note", "PlantUML 1.2026.9 shows notes only on terms; this note is not shown",
-                t.start, t.end,
+                "ebnf/dropped-note",
+                "PlantUML 1.2026.9 shows notes only on terms; this note is not shown",
+                t.start,
+                t.end,
               ),
             )
             other
@@ -462,7 +497,11 @@ fn build_rule(
           })
         }
         stack.push({
-          expr: if t.sym == Concatenation { Concat(items) } else { Alt(items) },
+          expr: if t.sym == Concatenation {
+            Concat(items)
+          } else {
+            Alt(items)
+          },
           start: left.start.min(right.start),
           end: left.end.max(right.end),
           depth,
@@ -505,7 +544,7 @@ fn build_rule(
             end,
           })
         }
-        stack.push({ expr, start, end, depth })
+        stack.push({ expr, start, end, depth, })
       }
       _ => return syntax("The rule has a syntax error")
     }
@@ -526,11 +565,12 @@ fn build_rule(
 ///|
 /// Find the last `*)` in `text` between `from` and `limit` whose comment has
 /// visible text. Returns the index of `*`.
-fn comment_ends(text : String, from : Int, limit : Int) -> Array[Int] {
+fn comment_ends(text : String, from : Int32, limit : Int32) -> Array[Int32] {
   let ends = []
   let mut k = limit - 2
   while k >= from {
-    if text.code_unit_at(k).to_int() == 42 && text.code_unit_at(k + 1).to_int() == 41 {
+    if text.code_unit_at(k).to_int() == 42 &&
+      text.code_unit_at(k + 1).to_int() == 41 {
       if !@envelope.trim(@cst.slice(text, from, k)).is_empty() {
         ends.push(k)
       }
@@ -542,10 +582,10 @@ fn comment_ends(text : String, from : Int, limit : Int) -> Array[Int] {
 
 ///|
 priv struct SingleRule {
-  name_start : Int
+  name_start : Int32
   above : String?
   below : String?
-  skip : Array[(Int, Int)]
+  skip : Array[(Int32, Int32)]
 }
 
 ///|
@@ -555,11 +595,15 @@ fn single_rule(text : String) -> SingleRule? {
   if n == 0 || text.code_unit_at(n - 1).to_int() != 59 {
     return None
   }
-  fn space(k : Int) -> Bool {
+  fn space(k : Int32) -> Bool {
     k < n &&
     (text.code_unit_at(k).to_int() == 32 || text.code_unit_at(k).to_int() == 9)
   }
-  fn after_name(start : Int, above : String?, skip : Array[(Int, Int)]) -> SingleRule? {
+  fn after_name(
+    start : Int32,
+    above : String?,
+    skip : Array[(Int32, Int32)],
+  ) -> SingleRule? {
     if start >= n {
       return None
     }
@@ -576,7 +620,7 @@ fn single_rule(text : String) -> SingleRule? {
       j += 1
     }
     if j < n && text.code_unit_at(j).to_int() == 61 {
-      return Some({ name_start: start, above, below: None, skip })
+      return Some({ name_start: start, above, below: None, skip, })
     }
     if j + 1 < n &&
       text.code_unit_at(j).to_int() == 40 &&
@@ -600,13 +644,17 @@ fn single_rule(text : String) -> SingleRule? {
     }
     None
   }
-  if n >= 2 && text.code_unit_at(0).to_int() == 40 && text.code_unit_at(1).to_int() == 42 {
+  if n >= 2 &&
+    text.code_unit_at(0).to_int() == 40 &&
+    text.code_unit_at(1).to_int() == 42 {
     for e in comment_ends(text, 2, n) {
       let mut m = e + 2
       while space(m) {
         m += 1
       }
-      if after_name(m, Some(@envelope.trim(@cst.slice(text, 2, e))), [(0, e + 2)])
+      if after_name(m, Some(@envelope.trim(@cst.slice(text, 2, e))), [
+          (0, e + 2),
+        ])
         is Some(rule) {
         return Some(rule)
       }
@@ -627,12 +675,18 @@ fn multi_rule_start(text : String) -> Bool {
   }
   let mut k = 0
   while k < n &&
-    (letter_or_digit(text.code_unit_at(k).to_int()) || text.code_unit_at(k).to_int() == 95 ||
-    text.code_unit_at(k).to_int() == 45) {
+        (
+          letter_or_digit(text.code_unit_at(k).to_int()) ||
+          text.code_unit_at(k).to_int() == 95 ||
+          text.code_unit_at(k).to_int() == 45
+        ) {
     k += 1
   }
   while k < n &&
-    (text.code_unit_at(k).to_int() == 32 || text.code_unit_at(k).to_int() == 9) {
+        (
+          text.code_unit_at(k).to_int() == 32 ||
+          text.code_unit_at(k).to_int() == 9
+        ) {
     k += 1
   }
   k < n && text.code_unit_at(k).to_int() == 61
@@ -652,29 +706,29 @@ pub struct ReadResult {
 /// error here.
 pub fn read(
   scan : @envelope.Scan,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> ReadResult {
   let diagnostics = scan.diagnostics.iter().to_array()
   let lines = scan.lines
   let n = lines.length()
   let items : Array[Item_] = []
   let roles : Array[@cst.NodeKind?] = Array::make(n, None)
-  fn report(code : String, message : String, start : Int, end : Int) {
+  fn report(code : String, message : String, start : Int32, end : Int32) {
     if diagnostics.length() < limits.diagnostics {
       diagnostics.push(
         @diagrams.Diagnostic::error(code, message, span=scan.span(start, end)),
       )
     }
   }
-  fn body(k : Int) -> Bool {
+  fn body(k : Int32) -> Bool {
     k < n && lines[k].role is Body
   }
-  fn trimmed(k : Int) -> String {
+  fn trimmed(k : Int32) -> String {
     @envelope.trim(lines[k].text)
   }
   // The first non-trivia line at or after `k` that `test` accepts, within
   // consecutive body lines.
-  fn find_end(k : Int, accept : (String) -> Bool) -> Int? {
+  fn find_end(k : Int32, accept : (String) -> Bool) -> Int32? {
     let mut j = k
     while j < n {
       if !body(j) {
@@ -700,20 +754,29 @@ pub fn read(
       i += 1
       continue
     }
-    let lead = line.text.length() - line.text.iter().drop_while(c => c == ' ' || c == '\t').count()
+    let lead = line.text.length() -
+      line.text.iter().drop_while(c => c == ' ' || c == '\t').count()
     // A whole-line note.
     if t.has_prefix("(*") {
-      let mut close : Int? = None
+      let mut close : Int32? = None
       let mut k = 2
       while k + 1 < t.length() {
-        if t.code_unit_at(k).to_int() == 42 && t.code_unit_at(k + 1).to_int() == 41 {
+        if t.code_unit_at(k).to_int() == 42 &&
+          t.code_unit_at(k + 1).to_int() == 41 {
           close = Some(k)
           break
         }
         k += 1
       }
-      if close is Some(c) && @envelope.trim(@cst.slice(t, c + 2, t.length())).is_empty() {
-        items.push(Note_([@envelope.trim(@cst.slice(t, 2, c))], line.offset + lead, line.offset + line.text.length()))
+      if close is Some(c) &&
+        @envelope.trim(@cst.slice(t, c + 2, t.length())).is_empty() {
+        items.push(
+          Note_(
+            [@envelope.trim(@cst.slice(t, 2, c))],
+            line.offset + lead,
+            line.offset + line.text.length(),
+          ),
+        )
         roles[i] = Some(Note)
         i += 1
         continue
@@ -726,7 +789,7 @@ pub fn read(
       }
       if find_end(i + 1, ending) is Some(last) {
         let notes = []
-        for k in i..=last {
+        for k in i..<=last {
           let mut s = trimmed(k)
           if k == i {
             s = @cst.slice(s, width, s.length())
@@ -736,8 +799,14 @@ pub fn read(
           }
           notes.push(@envelope.trim(s))
         }
-        items.push(Note_(notes, line.offset + lead, lines[last].offset + lines[last].text.length()))
-        for k in i..=last {
+        items.push(
+          Note_(
+            notes,
+            line.offset + lead,
+            lines[last].offset + lines[last].text.length(),
+          ),
+        )
+        for k in i..<=last {
           roles[k] = Some(Note)
         }
         i = last + 1
@@ -745,10 +814,15 @@ pub fn read(
       }
     }
     let base = line.offset + lead
-    let one : Source = { text: t, offsets: Array::makei(t.length(), k => base + k) }
+    let one : Source = {
+      text: t,
+      offsets: Array::makei(t.length(), k => base + k),
+    }
     match single_rule(t) {
       Some(rule) => {
-        items.push(Rule_(one, rule.name_start, rule.skip, rule.above, rule.below))
+        items.push(
+          Rule_(one, rule.name_start, rule.skip, rule.above, rule.below),
+        )
         roles[i] = Some(Rule)
         i += 1
         continue
@@ -760,9 +834,10 @@ pub fn read(
         Some(last) => {
           let text = StringBuilder()
           let offsets = []
-          for k in i..=last {
+          for k in i..<=last {
             let raw = lines[k]
-            let lk = raw.text.length() - raw.text.iter().drop_while(c => c == ' ' || c == '\t').count()
+            let lk = raw.text.length() -
+              raw.text.iter().drop_while(c => c == ' ' || c == '\t').count()
             let s = trimmed(k)
             if k > i {
               text.write_char('\n')
@@ -774,7 +849,9 @@ pub fn read(
             }
             roles[k] = Some(Rule)
           }
-          items.push(Rule_({ text: text.to_string(), offsets }, 0, [], None, None))
+          items.push(
+            Rule_({ text: text.to_string(), offsets, }, 0, [], None, None),
+          )
           i = last + 1
           continue
         }
@@ -782,8 +859,10 @@ pub fn read(
       }
     }
     report(
-      "ebnf/syntax", "Expected a rule or a note",
-      line.offset, line.offset + line.text.length(),
+      "ebnf/syntax",
+      "Expected a rule or a note",
+      line.offset,
+      line.offset + line.text.length(),
     )
     roles[i] = Some(Error)
     i += 1
@@ -792,13 +871,28 @@ pub fn read(
   for item in items {
     match item {
       Note_(texts, a, b) =>
-        out_items.push(Note(ReadOnlyArray::from_array(texts), Some(scan.span(a, b))))
+        out_items.push(
+          Note(ReadOnlyArray::from_array(texts), Some(scan.span(a, b))),
+        )
       Rule_(source, from, skip, above, below) =>
-        match build_rule(source, from, skip, above, below, (a, b) => scan.span(a, b), limits) {
+        match
+          build_rule(
+            source,
+            from,
+            skip,
+            above,
+            below,
+            (a, b) => scan.span(a, b),
+            limits,
+          ) {
           Ok(built) => {
             for w in built.warnings {
               diagnostics.push(
-                @diagrams.Diagnostic::warning(w.0, w.1, span=scan.span(w.2, w.3)),
+                @diagrams.Diagnostic::warning(
+                  w.0,
+                  w.1,
+                  span=scan.span(w.2, w.3),
+                ),
               )
             }
             out_items.push(Rule(built.rule))
@@ -810,8 +904,10 @@ pub fn read(
   }
   if out_items.is_empty() && !diagnostics.iter().any(d => d.severity == Error) {
     report(
-      "ebnf/missing-rule", "An EBNF block needs a rule or a note",
-      scan.source.length(), scan.source.length(),
+      "ebnf/missing-rule",
+      "An EBNF block needs a rule or a note",
+      scan.source.length(),
+      scan.source.length(),
     )
   }
   let nodes = []
@@ -837,7 +933,11 @@ pub fn read(
     document: if failed {
       None
     } else {
-      Some({ name: scan.name, statements: scan.statements, items: ReadOnlyArray::from_array(out_items) })
+      Some({
+        name: scan.name,
+        statements: scan.statements,
+        items: ReadOnlyArray::from_array(out_items),
+      })
     },
     diagnostics: ReadOnlyArray::from_array(diagnostics),
   }
@@ -845,6 +945,6 @@ pub fn read(
 
 ///|
 priv enum Item_ {
-  Note_(Array[String], Int, Int)
-  Rule_(Source, Int, Array[(Int, Int)], String?, String?)
+  Note_(Array[String], Int32, Int32)
+  Rule_(Source, Int32, Array[(Int32, Int32)], String?, String?)
 }

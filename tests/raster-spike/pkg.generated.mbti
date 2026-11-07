@@ -33,11 +33,12 @@ pub(all) struct SvgXmlAttribute {
   value : String
 }
 
+#derive(Eq)
 pub(all) enum SvgXmlKind {
   Document
   Element
   Text
-} derive(Eq)
+}
 pub fn SvgXmlKind::equal(Self, Self) -> Bool
 pub fn SvgXmlKind::not_equal(Self, Self) -> Bool
 

@@ -28,8 +28,8 @@ async fn main {
     if line.trim() == "" {
       continue
     }
-    let digest = line.view(end_offset=64).to_owned()
-    let path = line.view(start_offset=66).trim().to_owned()
+    let digest = line.exact_view(end=64).to_owned()
+    let path = line.exact_view(start=66).trim().to_owned()
     let name = path
       .replace_all(old="examples/", new="")
       .replace_all(old=".mmd", new="")
@@ -37,7 +37,7 @@ async fn main {
     // The public sequence parser accepts the grammar body. Front matter is
     // handled outside it in mermaid.js. The corpus has one front-matter case.
     let body = source
-      .view(start_offset=source.find("sequenceDiagram").unwrap())
+      .exact_view(start=source.find("sequenceDiagram").unwrap())
       .to_owned()
     let db = @reference.parse(
       protect_entities(body) + "\n",
@@ -91,9 +91,9 @@ fn protect_entities(source : String) -> String {
         end += 1
       }
       if end > i + 1 && end < source.length() && source.code_unit_at(end) == 59 {
-        out.write_view(source.view(start_offset=copied, end_offset=i))
+        out.write_view(source.exact_view(start=copied, end=i))
         out.write_string(if digits { "ﬂ°°" } else { "ﬂ°" })
-        out.write_view(source.view(start_offset=i + 1, end_offset=end))
+        out.write_view(source.exact_view(start=i + 1, end~))
         out.write_string("¶ß")
         i = end + 1
         copied = i
@@ -102,6 +102,6 @@ fn protect_entities(source : String) -> String {
     }
     i += 1
   }
-  out.write_view(source.view(start_offset=copied))
+  out.write_view(source.exact_view(start=copied))
   out.to_string()
 }

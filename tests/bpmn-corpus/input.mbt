@@ -1,5 +1,10 @@
 ///|
-pub struct Input { name : String; sha256 : String; source : String } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Input {
+  name : String
+  sha256 : String
+  source : String
+}
 
 ///|
 pub extend Input with Eq::{equal, not_equal}

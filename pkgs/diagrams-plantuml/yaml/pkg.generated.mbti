@@ -24,12 +24,13 @@ pub fn to_data_tree(Document, id? : String, limits? : @envelope.Limits) -> Conve
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Content {
   Dash
   Item(Scalar)
   Text(Scalar)
   Pair(Bool, Scalar, Entry)
-} derive(Eq, @debug.Debug)
+}
 pub fn Content::equal(Self, Self) -> Bool
 pub fn Content::not_equal(Self, Self) -> Bool
 pub fn Content::to_repr(Self) -> @debug.Repr
@@ -39,34 +40,37 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   highlights : ReadOnlyArray[@data.Selector]
   lines : ReadOnlyArray[Line]
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(ArrayView[Line], name? : String, statements? : ArrayView[@envelope.Statement], highlights? : ArrayView[@data.Selector]) -> Self
 pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Entry {
   Empty
   Value(Scalar)
   Flow(ReadOnlyArray[String])
   Block(ReadOnlyArray[String])
   Folded
-} derive(Eq, @debug.Debug)
+}
 pub fn Entry::equal(Self, Self) -> Bool
 pub fn Entry::not_equal(Self, Self) -> Bool
 pub fn Entry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Line {
   indent : Int32
   content : Content
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Line::equal(Self, Self) -> Bool
 pub fn Line::logical_equal(Self, Self) -> Bool
 pub fn Line::native_indent(Self) -> Int32
@@ -80,10 +84,11 @@ pub struct ReadResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Scalar {
   text : String
   raw : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Scalar::equal(Self, Self) -> Bool
 pub fn Scalar::new(String) -> Self
 pub fn Scalar::not_equal(Self, Self) -> Bool

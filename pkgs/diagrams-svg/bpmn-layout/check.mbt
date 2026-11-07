@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum Rule {
   Overlap
   Fit
@@ -8,14 +9,15 @@ pub(all) enum Rule {
   Attachment
   Endpoint
   Limit
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}

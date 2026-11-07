@@ -1,11 +1,12 @@
 ///|
 /// A syntax-only tree adapter for the generated SVG profile. DOCTYPE is
 /// rejected before parsing, so entity expansion cannot exceed caller budgets.
+#derive(Eq)
 priv enum SvgXmlKind {
   Document
   Element
   Text
-} derive(Eq)
+}
 
 ///|
 priv struct SvgXmlAttribute {

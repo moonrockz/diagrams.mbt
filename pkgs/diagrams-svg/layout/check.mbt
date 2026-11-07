@@ -1,11 +1,12 @@
 ///|
 /// A legibility rule.
+#derive(Eq, Debug)
 pub(all) enum Rule {
   Overlap
   Fit
   Size
   Contrast
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{not_equal, equal}
@@ -15,10 +16,11 @@ pub extend Rule with @debug.Debug::{to_repr}
 
 ///|
 /// One break of a legibility rule.
+#derive(Eq, Debug)
 pub(all) struct Finding {
   rule : Rule
   message : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Finding with Eq::{not_equal, equal}

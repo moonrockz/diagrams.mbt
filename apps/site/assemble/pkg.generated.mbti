@@ -10,7 +10,8 @@ import {
 // Errors
 
 // Types and methods
-type Release derive(Eq, @debug.Debug)
+#derive(Eq, @debug.Debug)
+type Release
 
 // Type aliases
 

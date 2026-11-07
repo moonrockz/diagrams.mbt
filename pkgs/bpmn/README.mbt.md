@@ -33,7 +33,10 @@ test "inspect XML namespaces and mixed content without a renderer" {
   let root = result.tree.nodes[1]
   assert_eq(root.name.unwrap().namespace_uri, "urn:r")
   assert_eq(root.attributes[2].value, "😀")
-  assert_eq(root.children.map(i => result.tree.nodes[i].kind).iter().to_array(), [Text, CData, Element, Text])
+  assert_eq(
+    root.children.map(i => result.tree.nodes[i].kind).iter().to_array(),
+    [Text, CData, Element, Text],
+  )
   // This XML vocabulary has no typed BPMN projection yet.
   assert_eq(result.document, None)
 }
@@ -151,13 +154,12 @@ All codes below have error severity. BPMN lowering codes are separate.
 test "the documented inventory agrees with the exported codes" {
   assert_eq(@bpmn.xml_diagnostic_codes.iter().to_array(), [
     "xml/invalid-limits", "xml/source-limit", "xml/node-limit", "xml/depth-limit",
-    "xml/token-limit", "xml/diagnostic-limit", "xml/invalid-character",
-    "xml/invalid-name", "xml/invalid-tag", "xml/unclosed-tag", "xml/mismatched-tag",
-    "xml/duplicate-attribute", "xml/undeclared-prefix", "xml/invalid-namespace",
-    "xml/character-reference", "xml/outside-root", "xml/root-required",
-    "xml/invalid-comment", "xml/unclosed-comment", "xml/unclosed-cdata",
-    "xml/invalid-pi", "xml/unclosed-pi", "xml/invalid-declaration", "xml/encoding",
-    "xml/prohibited-declaration", "xml/cdata-close",
+    "xml/token-limit", "xml/diagnostic-limit", "xml/invalid-character", "xml/invalid-name",
+    "xml/invalid-tag", "xml/unclosed-tag", "xml/mismatched-tag", "xml/duplicate-attribute",
+    "xml/undeclared-prefix", "xml/invalid-namespace", "xml/character-reference",
+    "xml/outside-root", "xml/root-required", "xml/invalid-comment", "xml/unclosed-comment",
+    "xml/unclosed-cdata", "xml/invalid-pi", "xml/unclosed-pi", "xml/invalid-declaration",
+    "xml/encoding", "xml/prohibited-declaration", "xml/cdata-close",
   ])
 }
 ```
@@ -202,7 +204,9 @@ in later groups. Reading or writing does not validate all BPMN constraints.
 ///|
 test "construct immutable foundations without inserting defaults" {
   let documentation = @bpmn.Documentation::new([Text("Review & approve")])
-  let process = @bpmn.Element::new(Process, attributes=[("id", "P")], children=[documentation.element])
+  let process = @bpmn.Element::new(Process, attributes=[("id", "P")], children=[
+    documentation.element,
+  ])
   let definitions = @bpmn.Definitions::new("urn:example", children=[process])
   let document = definitions.document()
   assert_eq(definitions.roots()[0].base().id(), Present("P"))
@@ -242,9 +246,14 @@ type identity instead of producing a document that reads back differently. An ex
 ```mbt check
 ///|
 test "constructed references carry expanded identity" {
-  let source = @bpmn.Reference::new(@bpmn.ExpandedName::new("urn:other", "Task"))
+  let source = @bpmn.Reference::new(
+    @bpmn.ExpandedName::new("urn:other", "Task"),
+  )
   let flow = @bpmn.Element::from_values(MessageFlow, values=[
-    @bpmn.Attribute::new(@bpmn.ExpandedName::new("", "sourceRef"), Reference(source)),
+    @bpmn.Attribute::new(
+      @bpmn.ExpandedName::new("", "sourceRef"),
+      Reference(source),
+    ),
   ])
   let document = @bpmn.Definitions::new("urn:example", children=[flow]).document()
   let xml = @bpmn.write(document)
@@ -312,13 +321,18 @@ is preserved through a character reference instead.
 ```mbt check
 ///|
 test "invalid QName binding returns an explicit failure" {
-  let flow = @bpmn.Element::new(MessageFlow, attributes=[("sourceRef", "missing:T")])
+  let flow = @bpmn.Element::new(MessageFlow, attributes=[
+    ("sourceRef", "missing:T"),
+  ])
   let document = @bpmn.Definitions::new("urn:example", children=[flow]).document()
   let result = @bpmn.try_write(document)
   assert_eq(result.output, None)
   assert_eq(result.diagnostics[0].code, "bpmn/unbound-qname")
   let reserved = @bpmn.Element::new(Definitions, bindings=[("xml", "urn:wrong")])
-  assert_eq(@bpmn.try_write(@bpmn.Document::new(reserved)).diagnostics[0].code, "bpmn/namespace-conflict")
+  assert_eq(
+    @bpmn.try_write(@bpmn.Document::new(reserved)).diagnostics[0].code,
+    "bpmn/namespace-conflict",
+  )
 }
 ```
 
@@ -364,15 +378,30 @@ The BPMN Error wrapper is `BpmnError` because `Error` is reserved by MoonBit.
 ```mbt check
 ///|
 test "construct and inspect a typed process" {
-  let task = @bpmn.UserTask::new(id="Review", name="Review request", implementation=Unspecified)
-  let process = @bpmn.Process::new(id="P", is_executable=false, contents=[Element(task.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
+  let task = @bpmn.UserTask::new(
+    id="Review",
+    name="Review request",
+    implementation=Unspecified,
+  )
+  let process = @bpmn.Process::new(id="P", is_executable=false, contents=[
+    Element(task.element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    process.element,
+  ]).document()
   assert_eq(task.is_for_compensation(), Absent)
   assert_eq(process.flow_element().value().unwrap()[0].element.kind, UserTask)
   let reread = @bpmn.read(@bpmn.write(document)).document.unwrap()
   let view = @bpmn.Process::from_element(reread.root.children[0]).unwrap()
   assert_eq(view.is_executable(), Present(false))
-  assert_eq(@bpmn.UserTask::from_element(view.flow_element().value().unwrap()[0].element).unwrap().name(), Present("Review request"))
+  assert_eq(
+    @bpmn.UserTask::from_element(
+      view.flow_element().value().unwrap()[0].element,
+    )
+    .unwrap()
+    .name(),
+    Present("Review request"),
+  )
 }
 ```
 
@@ -387,11 +416,27 @@ through `xsi:type`.
 ```mbt check
 ///|
 test "construct descriptive conditions and ID references" {
-  let condition = @bpmn.FormalExpression::new(language="urn:description", contents=[Text("approved == true")]).element.with_kind(ConditionExpression)
-  let flow = @bpmn.SequenceFlow::new(id="F", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A"), kind=Id), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B"), kind=Id), contents=[Element(condition)])
-  let process = @bpmn.Process::new(id="P", contents=[Element(@bpmn.Task::new(id="A").element), Element(@bpmn.Task::new(id="B").element), Element(flow.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
-  assert_eq(flow.condition_expression().value().unwrap().element.content, "approved == true")
+  let condition = @bpmn.FormalExpression::new(language="urn:description", contents=[
+    Text("approved == true"),
+  ]).element.with_kind(ConditionExpression)
+  let flow = @bpmn.SequenceFlow::new(
+    id="F",
+    source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A"), kind=Id),
+    target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B"), kind=Id),
+    contents=[Element(condition)],
+  )
+  let process = @bpmn.Process::new(id="P", contents=[
+    Element(@bpmn.Task::new(id="A").element),
+    Element(@bpmn.Task::new(id="B").element),
+    Element(flow.element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    process.element,
+  ]).document()
+  assert_eq(
+    flow.condition_expression().value().unwrap().element.content,
+    "approved == true",
+  )
   assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
 }
 ```
@@ -399,15 +444,40 @@ test "construct descriptive conditions and ID references" {
 ```mbt check
 ///|
 test "construct a collaboration independently of rendering" {
-  let buyer = @bpmn.Process::new(id="Buyer", contents=[Element(@bpmn.SendTask::new(id="Send").element)])
-  let seller = @bpmn.Process::new(id="Seller", contents=[Element(@bpmn.ReceiveTask::new(id="Receive").element)])
-  let buyer_pool = @bpmn.Participant::new(id="BuyerPool", process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")))
-  let seller_pool = @bpmn.Participant::new(id="SellerPool", process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Seller")))
-  let message = @bpmn.MessageFlow::new(id="Request", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Send")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Receive")))
-  let collaboration = @bpmn.Collaboration::new(id="Exchange", contents=[Element(buyer_pool.element), Element(seller_pool.element), Element(message.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[buyer.element, seller.element, collaboration.element]).document()
+  let buyer = @bpmn.Process::new(id="Buyer", contents=[
+    Element(@bpmn.SendTask::new(id="Send").element),
+  ])
+  let seller = @bpmn.Process::new(id="Seller", contents=[
+    Element(@bpmn.ReceiveTask::new(id="Receive").element),
+  ])
+  let buyer_pool = @bpmn.Participant::new(
+    id="BuyerPool",
+    process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")),
+  )
+  let seller_pool = @bpmn.Participant::new(
+    id="SellerPool",
+    process_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Seller")),
+  )
+  let message = @bpmn.MessageFlow::new(
+    id="Request",
+    source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Send")),
+    target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Receive")),
+  )
+  let collaboration = @bpmn.Collaboration::new(id="Exchange", contents=[
+    Element(buyer_pool.element),
+    Element(seller_pool.element),
+    Element(message.element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    buyer.element,
+    seller.element,
+    collaboration.element,
+  ]).document()
   assert_eq(collaboration.participant().value().unwrap().length(), 2)
-  assert_eq(@bpmn.read(@bpmn.write(document, format=Pretty)).document, Some(document))
+  assert_eq(
+    @bpmn.read(@bpmn.write(document, format=Pretty)).document,
+    Some(document),
+  )
 }
 ```
 
@@ -438,14 +508,31 @@ views. They are not converted into generic tasks.
 ```mbt check
 ///|
 test "construct a choreography document without rendering it" {
-  let task = @bpmn.ChoreographyTask::new(id="Exchange", initiating_participant_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A")), contents=[
-    Element(@bpmn.Element::new(ParticipantRef, content="A")),
-    Element(@bpmn.Element::new(ParticipantRef, content="B")),
-    Element(@bpmn.Element::new(MessageFlowRef, content="M")),
+  let task = @bpmn.ChoreographyTask::new(
+    id="Exchange",
+    initiating_participant_ref=@bpmn.Reference::new(
+      @bpmn.ExpandedName::new("", "A"),
+    ),
+    contents=[
+      Element(@bpmn.Element::new(ParticipantRef, content="A")),
+      Element(@bpmn.Element::new(ParticipantRef, content="B")),
+      Element(@bpmn.Element::new(MessageFlowRef, content="M")),
+    ],
+  )
+  let flow = @bpmn.MessageFlow::new(
+    id="M",
+    source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A")),
+    target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B")),
+  )
+  let choreography = @bpmn.Choreography::new(id="C", contents=[
+    Element(@bpmn.Participant::new(id="A").element),
+    Element(@bpmn.Participant::new(id="B").element),
+    Element(flow.element),
+    Element(task.element),
   ])
-  let flow = @bpmn.MessageFlow::new(id="M", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "A")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "B")))
-  let choreography = @bpmn.Choreography::new(id="C", contents=[Element(@bpmn.Participant::new(id="A").element), Element(@bpmn.Participant::new(id="B").element), Element(flow.element), Element(task.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[choreography.element]).document()
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    choreography.element,
+  ]).document()
   assert_eq(task.loop_type(), Absent)
   assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
 }
@@ -454,10 +541,24 @@ test "construct a choreography document without rendering it" {
 ```mbt check
 ///|
 test "construct a conversation and its participant links" {
-  let conversation = @bpmn.Conversation::new(id="Order", name="Order details", contents=[Element(@bpmn.Element::new(ParticipantRef, content="Buyer")), Element(@bpmn.Element::new(ParticipantRef, content="Seller"))])
-  let link = @bpmn.ConversationLink::new(id="BuyerLink", source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")), target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Order")))
-  let collaboration = @bpmn.Collaboration::new(id="C", contents=[Element(@bpmn.Participant::new(id="Buyer").element), Element(@bpmn.Participant::new(id="Seller").element), Element(conversation.element), Element(link.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[collaboration.element]).document()
+  let conversation = @bpmn.Conversation::new(id="Order", name="Order details", contents=[
+    Element(@bpmn.Element::new(ParticipantRef, content="Buyer")),
+    Element(@bpmn.Element::new(ParticipantRef, content="Seller")),
+  ])
+  let link = @bpmn.ConversationLink::new(
+    id="BuyerLink",
+    source_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Buyer")),
+    target_ref=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "Order")),
+  )
+  let collaboration = @bpmn.Collaboration::new(id="C", contents=[
+    Element(@bpmn.Participant::new(id="Buyer").element),
+    Element(@bpmn.Participant::new(id="Seller").element),
+    Element(conversation.element),
+    Element(link.element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    collaboration.element,
+  ]).document()
   assert_eq(collaboration.conversation_node().value().unwrap().length(), 1)
   assert_eq(@bpmn.read(@bpmn.write(document)).document, Some(document))
 }
@@ -472,14 +573,41 @@ label styles, waypoints and participant-band references remain distinct fields.
 ```mbt check
 ///|
 test "construct exact DI bounds and a plane" {
-  let bounds = @bpmn.DcBounds::new(x=@bpmn.ExactNumber::parse("123.456789012345678901").unwrap(), y=@bpmn.ExactNumber::parse("0").unwrap(), width=@bpmn.ExactNumber::parse("100").unwrap(), height=@bpmn.ExactNumber::parse("80").unwrap())
-  let shape = @bpmn.BpmnShape::new(id="Shape", bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "T")), is_expanded=false, contents=[Element(bounds.element)])
-  let plane = @bpmn.BpmnPlane::new(id="Plane", bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "P")), contents=[Element(shape.element)])
-  let diagram = @bpmn.BpmnDiagram::new(id="Diagram", contents=[Element(plane.element)])
-  let process = @bpmn.Process::new(id="P", contents=[Element(@bpmn.Task::new(id="T").element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[process.element, diagram.element]).document()
-  assert_eq(shape.bounds().value().unwrap().x().value().unwrap().token, "123.456789012345678901")
-  assert_eq(@bpmn.read(@bpmn.write(document, format=Pretty)).document, Some(document))
+  let bounds = @bpmn.DcBounds::new(
+    x=@bpmn.ExactNumber::parse("123.456789012345678901").unwrap(),
+    y=@bpmn.ExactNumber::parse("0").unwrap(),
+    width=@bpmn.ExactNumber::parse("100").unwrap(),
+    height=@bpmn.ExactNumber::parse("80").unwrap(),
+  )
+  let shape = @bpmn.BpmnShape::new(
+    id="Shape",
+    bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "T")),
+    is_expanded=false,
+    contents=[Element(bounds.element)],
+  )
+  let plane = @bpmn.BpmnPlane::new(
+    id="Plane",
+    bpmn_element=@bpmn.Reference::new(@bpmn.ExpandedName::new("", "P")),
+    contents=[Element(shape.element)],
+  )
+  let diagram = @bpmn.BpmnDiagram::new(id="Diagram", contents=[
+    Element(plane.element),
+  ])
+  let process = @bpmn.Process::new(id="P", contents=[
+    Element(@bpmn.Task::new(id="T").element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    process.element,
+    diagram.element,
+  ]).document()
+  assert_eq(
+    shape.bounds().value().unwrap().x().value().unwrap().token,
+    "123.456789012345678901",
+  )
+  assert_eq(
+    @bpmn.read(@bpmn.write(document, format=Pretty)).document,
+    Some(document),
+  )
 }
 ```
 
@@ -504,10 +632,21 @@ binding is silently reassigned to change an opaque value.
 ```mbt check
 ///|
 test "construct a mixed vendor extension with a QName-sensitive value" {
-  let payload = @bpmn.XmlElement::new(@bpmn.ExpandedName::new("urn:vendor", "payload"), attributes=[(@bpmn.ExpandedName::new("", "ref"), "q:Target")], contents=[Text("before "), Comment("inert"), Text(" after")], bindings=[("q", "urn:target"), ("unused", "urn:retained")])
-  let extensions = @bpmn.ExtensionElements::new(contents=[Element(payload.element)])
-  let process = @bpmn.Process::new(id="P", contents=[Element(extensions.element)])
-  let document = @bpmn.Definitions::new("urn:example", children=[process.element]).document()
+  let payload = @bpmn.XmlElement::new(
+    @bpmn.ExpandedName::new("urn:vendor", "payload"),
+    attributes=[(@bpmn.ExpandedName::new("", "ref"), "q:Target")],
+    contents=[Text("before "), Comment("inert"), Text(" after")],
+    bindings=[("q", "urn:target"), ("unused", "urn:retained")],
+  )
+  let extensions = @bpmn.ExtensionElements::new(contents=[
+    Element(payload.element),
+  ])
+  let process = @bpmn.Process::new(id="P", contents=[
+    Element(extensions.element),
+  ])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    process.element,
+  ]).document()
   let copy = @bpmn.read(@bpmn.write(document)).document.unwrap()
   let retained = copy.root.children[0].children[0].children[0].xml().unwrap()
   assert_eq(retained.namespace_binding("q"), Some("urn:target"))
@@ -574,19 +713,30 @@ have error findings and still retain the original inspectable document.
 ```mbt check
 ///|
 test "validate a valid process and inspect incomplete authored fields" {
-  let task=@bpmn.Task::new(id="T")
-  let process=@bpmn.Process::new(id="P",contents=[Element(task.element)])
-  let document=@bpmn.Definitions::new("urn:example",children=[process.element]).document()
-  let valid=@bpmn.validate(document)
+  let task = @bpmn.Task::new(id="T")
+  let process = @bpmn.Process::new(id="P", contents=[Element(task.element)])
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    process.element,
+  ]).document()
+  let valid = @bpmn.validate(document)
   assert_true(valid.complete)
-  assert_eq(valid.findings,[])
+  assert_eq(valid.findings, [])
   assert_true(valid.index.unwrap().lookup("T") is Found(_))
-  let bad=@bpmn.SequenceFlow::new(id="MissingEndpoints")
-  let document=@bpmn.Definitions::new("urn:example",children=[@bpmn.Process::new(contents=[Element(bad.element)]).element]).document()
-  let invalid=@bpmn.validate(document)
+  let bad = @bpmn.SequenceFlow::new(id="MissingEndpoints")
+  let document = @bpmn.Definitions::new("urn:example", children=[
+    @bpmn.Process::new(contents=[Element(bad.element)]).element,
+  ]).document()
+  let invalid = @bpmn.validate(document)
   assert_true(invalid.complete)
-  assert_eq(invalid.document,Some(document))
-  assert_true(invalid.findings.iter().any(f => f.diagnostic.code == "bpmn/required-field" && f.element_id == Some("MissingEndpoints")))
+  assert_eq(invalid.document, Some(document))
+  assert_true(
+    invalid.findings
+    .iter()
+    .any(f => {
+      f.diagnostic.code == "bpmn/required-field" &&
+      f.element_id == Some("MissingEndpoints")
+    }),
+  )
   assert_true(invalid.findings.iter().all(f => f.diagnostic.location == None))
 }
 ```
@@ -609,19 +759,35 @@ reference that requires a BPMN process, task or other specific BPMN type.
 ```mbt check
 ///|
 test "resolve an imported process using only explicit resources" {
-  let model="http://www.omg.org/spec/BPMN/20100524/MODEL"
-  let imported=@bpmn.Definitions::new("urn:imported",children=[@bpmn.Process::new(id="Reusable").element]).document()
-  let reference=@bpmn.Reference::new(@bpmn.ExpandedName::new("urn:imported","Reusable"))
-  let participant=@bpmn.Participant::new(id="Pool",process_ref=reference)
-  let document=@bpmn.Definitions::new("urn:main",children=[@bpmn.Import::new("urn:imported","reusable.bpmn",model).element,@bpmn.Collaboration::new(contents=[Element(participant.element)]).element]).document()
-  let resources=@bpmn.ResourceSet::new(documents=[@bpmn.DocumentResource::new("reusable.bpmn",imported)])
-  let index=@bpmn.validate_structure(document).index
-  let result=@bpmn.resolve_references(index,resources~)
-  assert_eq(result.findings,[])
-  assert_true(result.resolve(reference) is Found(found) && found.resource_id == Some("reusable.bpmn"))
-  let missing=@bpmn.resolve_references(index)
+  let model = "http://www.omg.org/spec/BPMN/20100524/MODEL"
+  let imported = @bpmn.Definitions::new("urn:imported", children=[
+    @bpmn.Process::new(id="Reusable").element,
+  ]).document()
+  let reference = @bpmn.Reference::new(
+    @bpmn.ExpandedName::new("urn:imported", "Reusable"),
+  )
+  let participant = @bpmn.Participant::new(id="Pool", process_ref=reference)
+  let document = @bpmn.Definitions::new("urn:main", children=[
+    @bpmn.Import::new("urn:imported", "reusable.bpmn", model).element,
+    @bpmn.Collaboration::new(contents=[Element(participant.element)]).element,
+  ]).document()
+  let resources = @bpmn.ResourceSet::new(documents=[
+    @bpmn.DocumentResource::new("reusable.bpmn", imported),
+  ])
+  let index = @bpmn.validate_structure(document).index
+  let result = @bpmn.resolve_references(index, resources~)
+  assert_eq(result.findings, [])
+  assert_true(
+    result.resolve(reference) is Found(found) &&
+    found.resource_id == Some("reusable.bpmn"),
+  )
+  let missing = @bpmn.resolve_references(index)
   assert_true(missing.complete)
-  assert_true(missing.findings.iter().any(f => f.diagnostic.code == "bpmn/unresolved-import"))
+  assert_true(
+    missing.findings
+    .iter()
+    .any(f => f.diagnostic.code == "bpmn/unresolved-import"),
+  )
 }
 ```
 
@@ -659,33 +825,33 @@ All listed codes have error severity.
 test "document the complete structural and reference diagnostic inventory" {
   let codes : ReadOnlyArray[String] = [
     "bpmn/validation-invalid-limits", // A bound is not positive.
-    "bpmn/validation-node-limit", // Structure record budget exhausted.
-    "bpmn/validation-depth-limit", // Containment depth exhausted.
-    "bpmn/validation-token-limit", // One value exceeds its token bound.
-    "bpmn/validation-diagnostic-limit", // Finding budget exhausted.
-    "bpmn/duplicate-id", // Multiple declared IDs have the same value.
-    "bpmn/required-field", // Required field or selected branch is absent.
-    "bpmn/field-cardinality", // Too many occurrences of one field.
-    "bpmn/invalid-containment", // Wrong root, child or text containment.
-    "bpmn/child-order", // Child is outside schema sequence order.
-    "bpmn/choice-conflict", // Multiple choice branches are present.
-    "bpmn/abstract-element", // Abstract declaration was instantiated.
-    "bpmn/invalid-field", // Undeclared field or invalid scalar alternative.
-    "bpmn/invalid-type", // Incompatible actual or containment type.
-    "bpmn/unresolved-reference", // No identity in the explicit import closure.
-    "bpmn/ambiguous-reference", // Several identities match.
-    "bpmn/invalid-reference", // Invalid/unbound QName, IDREF or external symbol.
-    "bpmn/wrong-reference-kind", // Identity exists with an incorrect type.
-    "bpmn/sequence-flow-scope", // Flow endpoint crosses its flow scope.
-    "bpmn/boundary-attachment", // Attachment is outside the owning flow scope.
-    "bpmn/reference-endpoint", // Default, lane, incoming/outgoing inconsistency.
-    "bpmn/unresolved-import", // Location key was not supplied.
-    "bpmn/ambiguous-import", // Several resources have the same location key.
-    "bpmn/import-namespace", // Import and supplied namespace differ.
-    "bpmn/import-type", // Import and supplied resource type differ.
-    "bpmn/resource-limit", // Resource or lookup-work budget exhausted.
+     "bpmn/validation-node-limit", // Structure record budget exhausted.
+     "bpmn/validation-depth-limit", // Containment depth exhausted.
+     "bpmn/validation-token-limit", // One value exceeds its token bound.
+     "bpmn/validation-diagnostic-limit", // Finding budget exhausted.
+     "bpmn/duplicate-id", // Multiple declared IDs have the same value.
+     "bpmn/required-field", // Required field or selected branch is absent.
+     "bpmn/field-cardinality", // Too many occurrences of one field.
+     "bpmn/invalid-containment", // Wrong root, child or text containment.
+     "bpmn/child-order", // Child is outside schema sequence order.
+     "bpmn/choice-conflict", // Multiple choice branches are present.
+     "bpmn/abstract-element", // Abstract declaration was instantiated.
+     "bpmn/invalid-field", // Undeclared field or invalid scalar alternative.
+     "bpmn/invalid-type", // Incompatible actual or containment type.
+     "bpmn/unresolved-reference", // No identity in the explicit import closure.
+     "bpmn/ambiguous-reference", // Several identities match.
+     "bpmn/invalid-reference", // Invalid/unbound QName, IDREF or external symbol.
+     "bpmn/wrong-reference-kind", // Identity exists with an incorrect type.
+     "bpmn/sequence-flow-scope", // Flow endpoint crosses its flow scope.
+     "bpmn/boundary-attachment", // Attachment is outside the owning flow scope.
+     "bpmn/reference-endpoint", // Default, lane, incoming/outgoing inconsistency.
+     "bpmn/unresolved-import", // Location key was not supplied.
+     "bpmn/ambiguous-import", // Several resources have the same location key.
+     "bpmn/import-namespace", // Import and supplied namespace differ.
+     "bpmn/import-type", // Import and supplied resource type differ.
+     "bpmn/resource-limit", // Resource or lookup-work budget exhausted.
   ]
-  assert_eq(@bpmn.validation_diagnostic_codes,codes)
+  assert_eq(@bpmn.validation_diagnostic_codes, codes)
 }
 ```
 
@@ -726,19 +892,32 @@ hash-only ownership test.
 ```mbt check
 ///|
 test "locate a nested task and reject a handle from another revision" {
-  let task=@bpmn.Task::new(id="T")
-  let sub=@bpmn.SubProcess::new(id="Sub",contents=[Element(task.element)])
-  let doc=@bpmn.Definitions::new("urn:t",children=[@bpmn.Process::new(id="P",contents=[Element(sub.element)]).element]).document()
-  let tree=@bpmn.DocumentTree::new(doc).tree.unwrap()
-  let tasks=[]
-  @bpmn.walk(tree.root(),n => { if n.id() == Some("T") { tasks.push(n) }; Continue })
-  let node=tasks[0]
-  assert_eq(node.parent().unwrap().id(),Some("Sub"))
-  assert_eq(node.path().steps().last().unwrap().field,Named(@bpmn.Kind::FlowElement.name()))
-  assert_eq(node.location(),None)
+  let task = @bpmn.Task::new(id="T")
+  let sub = @bpmn.SubProcess::new(id="Sub", contents=[Element(task.element)])
+  let doc = @bpmn.Definitions::new("urn:t", children=[
+    @bpmn.Process::new(id="P", contents=[Element(sub.element)]).element,
+  ]).document()
+  let tree = @bpmn.DocumentTree::new(doc).tree.unwrap()
+  let tasks = []
+  @bpmn.walk(tree.root(), n => {
+    if n.id() == Some("T") {
+      tasks.push(n)
+    }
+    Continue
+  })
+  let node = tasks[0]
+  assert_eq(node.parent().unwrap().id(), Some("Sub"))
+  assert_eq(
+    node.path().steps().last().unwrap().field,
+    Named(@bpmn.Kind::FlowElement.name()),
+  )
+  assert_eq(node.location(), None)
   assert_true(node.path().resolve(tree) is Found(found) && found == node)
-  let changed=@bpmn.Definitions::new("urn:changed").document()
-  assert_true(@bpmn.DocumentTree::new(changed).tree.unwrap().lookup(node.handle()) is DocumentMismatch)
+  let changed = @bpmn.Definitions::new("urn:changed").document()
+  assert_true(
+    @bpmn.DocumentTree::new(changed).tree.unwrap().lookup(node.handle())
+    is DocumentMismatch,
+  )
 }
 ```
 
@@ -758,19 +937,29 @@ other event producers, and `push_events` drives them with the same controls.
 ```mbt check
 ///|
 test "walking folding reduction and pull events count the same nodes" {
-  let doc=@bpmn.Definitions::new("urn:t",children=[@bpmn.Process::new(contents=[Element(@bpmn.Task::new(id="T").element)]).element]).document()
-  let root=@bpmn.DocumentTree::new(doc).tree.unwrap().root()
-  let mut entered=0
-  @bpmn.walk(root,_ => { entered+=1; Continue })
-  let folded=@bpmn.fold(root,0,(count,_) => (count+1,Continue))
-  let reduced=@bpmn.reduce(root,(_ : @bpmn.NodeRef,children : ArrayView[Int]) => 1+children.iter().fold(init=0,(sum,n) => sum+n))
-  let reader=@bpmn.EventReader::new(root)
-  assert_eq(reader.iter().count(),entered*2)
-  assert_eq(folded,entered); assert_eq(reduced,entered)
-  let cursor=@bpmn.TreeCursor::new(root)
+  let doc = @bpmn.Definitions::new("urn:t", children=[
+    @bpmn.Process::new(contents=[Element(@bpmn.Task::new(id="T").element)]).element,
+  ]).document()
+  let root = @bpmn.DocumentTree::new(doc).tree.unwrap().root()
+  let mut entered = 0
+  @bpmn.walk(root, _ => {
+    entered += 1
+    Continue
+  })
+  let folded = @bpmn.fold(root, 0, (count, _) => (count + 1, Continue))
+  let reduced = @bpmn.reduce(root, (
+    _ : @bpmn.NodeRef,
+    children : ArrayView[Int32],
+  ) => 1 + children.iter().fold(init=0, (sum, n) => sum + n))
+  let reader = @bpmn.EventReader::new(root)
+  assert_eq(reader.iter().count(), entered * 2)
+  assert_eq(folded, entered)
+  assert_eq(reduced, entered)
+  let cursor = @bpmn.TreeCursor::new(root)
   assert_true(cursor.goto_first_child())
-  assert_eq(cursor.node().category(),Definitions)
-  assert_true(cursor.goto_parent()); assert_eq(cursor.node(),root)
+  assert_eq(cursor.node().category(), Definitions)
+  assert_true(cursor.goto_parent())
+  assert_eq(cursor.node(), root)
 }
 ```
 
@@ -827,13 +1016,22 @@ are structural routes, not execution paths or token simulations.
 ```mbt check
 ///|
 test "query a bounded structural route without executing a process" {
-  let source="<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:t'><b:process><b:task id='A'/><b:task id='B'/><b:task id='C'/><b:sequenceFlow id='AB' sourceRef='A' targetRef='B'/><b:sequenceFlow id='BC' sourceRef='B' targetRef='C'/></b:process></b:definitions>"
-  let graph=@bpmn.DocumentGraph::new(@bpmn.read(source).document.unwrap()).graph.unwrap()
-  guard graph.route(Id("A"),Id("C")) is Found(route) else { fail("route missing") }
-  assert_eq(route.nodes.iter().map(n => n.id()).to_array(),[Some("A"),Some("B"),Some("C")])
-  assert_eq(route.edges[0].connection.unwrap().id(),Some("AB"))
-  assert_true(graph.route(Id("C"),Id("A")) is Unreachable)
-  assert_true(graph.route(Id("A"),Id("C"),limits=@bpmn.GraphLimits::new(nodes=1)) is Failed(Limit(Nodes)))
+  let source = "<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:t'><b:process><b:task id='A'/><b:task id='B'/><b:task id='C'/><b:sequenceFlow id='AB' sourceRef='A' targetRef='B'/><b:sequenceFlow id='BC' sourceRef='B' targetRef='C'/></b:process></b:definitions>"
+  let graph = @bpmn.DocumentGraph::new(@bpmn.read(source).document.unwrap()).graph.unwrap()
+  guard graph.route(Id("A"), Id("C")) is Found(route) else {
+    fail("route missing")
+  }
+  assert_eq(route.nodes.iter().map(n => n.id()).to_array(), [
+    Some("A"),
+    Some("B"),
+    Some("C"),
+  ])
+  assert_eq(route.edges[0].connection.unwrap().id(), Some("AB"))
+  assert_true(graph.route(Id("C"), Id("A")) is Unreachable)
+  assert_true(
+    graph.route(Id("A"), Id("C"), limits=@bpmn.GraphLimits::new(nodes=1))
+    is Failed(Limit(Nodes)),
+  )
 }
 ```
 
@@ -857,8 +1055,14 @@ own budget. Document validation and traversal bounds also apply while building.
 ```mbt check
 ///|
 test "document traversal and graph construction code inventories" {
-  assert_eq(@bpmn.traversal_diagnostic_codes,["bpmn/traversal-invalid-limits","bpmn/traversal-node-limit","bpmn/traversal-depth-limit","bpmn/traversal-token-limit"])
-  assert_eq(@bpmn.graph_diagnostic_codes,["bpmn/graph-invalid-limits","bpmn/graph-work-limit","bpmn/graph-node-limit","bpmn/graph-edge-limit"])
+  assert_eq(@bpmn.traversal_diagnostic_codes, [
+    "bpmn/traversal-invalid-limits", "bpmn/traversal-node-limit", "bpmn/traversal-depth-limit",
+    "bpmn/traversal-token-limit",
+  ])
+  assert_eq(@bpmn.graph_diagnostic_codes, [
+    "bpmn/graph-invalid-limits", "bpmn/graph-work-limit", "bpmn/graph-node-limit",
+    "bpmn/graph-edge-limit",
+  ])
 }
 ```
 

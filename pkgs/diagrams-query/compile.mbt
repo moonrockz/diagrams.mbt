@@ -7,8 +7,8 @@ priv enum CSel {
 
 ///|
 priv enum CPart {
-  CChild(Int)
-  CField(Name, Int)
+  CChild(Int32)
+  CField(Name, Int32)
   CAbsent(Name)
 }
 
@@ -18,8 +18,8 @@ priv struct CNode {
   alternation : Bool
   sel : CSel
   parts : Array[CPart]
-  branches : Array[Int]
-  sites : Array[Int]
+  branches : Array[Int32]
+  sites : Array[Int32]
 }
 
 ///|
@@ -42,7 +42,7 @@ priv struct CPred {
 
 ///|
 priv struct CRule {
-  root : Int
+  root : Int32
   predicates : Array[CPred]
 }
 
@@ -53,10 +53,10 @@ priv struct CRule {
 /// each bound site with its name. `normalized()` is the public normalized
 /// representation: equal plans have equal normalized text.
 pub struct QueryPlan {
-  language_version : Int
+  language_version : Int32
   schema_id : String
-  schema_version : Int
-  pattern_count : Int
+  schema_version : Int32
+  pattern_count : Int32
   capture_names : ReadOnlyArray[String]
   priv rules : ReadOnlyArray[CRule]
   priv nodes : ReadOnlyArray[CNode]
@@ -64,7 +64,7 @@ pub struct QueryPlan {
 }
 
 ///|
-pub impl @debug.Debug for QueryPlan with to_repr(self) {
+pub impl @debug.Debug for QueryPlan with fn to_repr(self) {
   @debug.Repr::Repr(("QueryPlan", self.schema_id, self.text))
 }
 
@@ -88,10 +88,10 @@ priv struct Checker {
   diagnostics : Array[QueryDiagnostic]
   nodes : Array[CNode]
   site_names : Array[String]
-  site_paths : Array[Array[(Int, Int)]]
+  site_paths : Array[Array[(Int32, Int32)]]
   text : StringBuilder
-  mut span_at : Int
-  mut predicates : Int
+  mut span_at : Int32
+  mut predicates : Int32
 }
 
 ///|
@@ -123,14 +123,14 @@ fn Checker::stop(
 }
 
 ///|
-fn Checker::resolve(
-  self : Checker,
-  name : QName,
-  span : QuerySpan?,
-) -> Name? {
+fn Checker::resolve(self : Checker, name : QName, span : QuerySpan?) -> Name? {
   if (name.prefix is Some(prefix) && !is_identifier(prefix)) ||
     !is_identifier(name.local_name) {
-    self.report("query/invalid-name", "\{name.local_name} is not a valid name.", span)
+    self.report(
+      "query/invalid-name",
+      "\{name.local_name} is not a valid name.",
+      span,
+    )
     return None
   }
   match name.prefix {
@@ -188,17 +188,22 @@ fn write_json_string(text : StringBuilder, value : String) -> Unit {
 fn Checker::captures(
   self : Checker,
   captures : ReadOnlyArray[String],
-  path : Array[(Int, Int)],
-) -> Array[Int] raise CheckStop {
+  path : Array[(Int32, Int32)],
+) -> Array[Int32] raise CheckStop {
   let sites = []
   for name in captures {
     let span = self.next_span()
     if !is_capture_name(name) {
-      self.report("query/invalid-name", "\{name} is not a valid capture name.", span)
+      self.report(
+        "query/invalid-name",
+        "\{name} is not a valid capture name.",
+        span,
+      )
     }
     if self.site_names.length() >= self.limits.captures {
       raise self.stop(
-        "query/capture-limit", "The number of captures exceeds the compile limit.", span,
+        "query/capture-limit", "The number of captures exceeds the compile limit.",
+        span,
       )
     }
     sites.push(self.site_names.length())
@@ -214,9 +219,9 @@ fn Checker::captures(
 fn Checker::pattern(
   self : Checker,
   pattern : Pattern,
-  depth : Int,
-  path : Array[(Int, Int)],
-) -> Int raise CheckStop {
+  depth : Int32,
+  path : Array[(Int32, Int32)],
+) -> Int32 raise CheckStop {
   let span = self.next_span()
   if depth > self.limits.nesting {
     raise self.stop(
@@ -225,11 +230,18 @@ fn Checker::pattern(
   }
   if self.nodes.length() >= self.limits.pattern_nodes {
     raise self.stop(
-      "query/pattern-limit", "The number of patterns exceeds the compile limit.", span,
+      "query/pattern-limit", "The number of patterns exceeds the compile limit.",
+      span,
     )
   }
   let id = self.nodes.length()
-  self.nodes.push({ alternation: false, sel: CAny, parts: [], branches: [], sites: [] })
+  self.nodes.push({
+    alternation: false,
+    sel: CAny,
+    parts: [],
+    branches: [],
+    sites: [],
+  })
   match pattern {
     Node(selector, parts, captures) => {
       let selector_span = self.next_span()
@@ -271,7 +283,8 @@ fn Checker::pattern(
       for part in parts {
         self.text.write_string(" ")
         match part {
-          Child(child) => compiled.push(CChild(self.pattern(child, depth + 1, path)))
+          Child(child) =>
+            compiled.push(CChild(self.pattern(child, depth + 1, path)))
           Field(qname, child) => {
             let field = self.field(qname, self.next_span())
             self.text.write_string(": ")
@@ -285,11 +298,19 @@ fn Checker::pattern(
       }
       self.text.write_string(")")
       let sites = self.captures(captures, path)
-      self.nodes[id] = { alternation: false, sel, parts: compiled, branches: [], sites }
+      self.nodes[id] = {
+        alternation: false,
+        sel,
+        parts: compiled,
+        branches: [],
+        sites,
+      }
     }
     Alternation(branches, captures) => {
       if branches.is_empty() {
-        self.report("query/syntax", "An alternation needs at least one pattern.", span)
+        self.report(
+          "query/syntax", "An alternation needs at least one pattern.", span,
+        )
       }
       self.text.write_string("[")
       let compiled = []
@@ -303,7 +324,13 @@ fn Checker::pattern(
       }
       self.text.write_string("]")
       let sites = self.captures(captures, path)
-      self.nodes[id] = { alternation: true, sel: CAny, parts: [], branches: compiled, sites }
+      self.nodes[id] = {
+        alternation: true,
+        sel: CAny,
+        parts: [],
+        branches: compiled,
+        sites,
+      }
     }
   }
   id
@@ -330,7 +357,7 @@ fn Checker::field(self : Checker, qname : QName, span : QuerySpan?) -> Name {
 ///|
 /// True when the capture sites `a` and `b` lie in different branches of one
 /// alternation, so no successful match binds both.
-fn exclusive(a : Array[(Int, Int)], b : Array[(Int, Int)]) -> Bool {
+fn exclusive(a : Array[(Int32, Int32)], b : Array[(Int32, Int32)]) -> Bool {
   let mut i = 0
   while i < a.length() && i < b.length() && a[i].0 == b[i].0 {
     if a[i].1 != b[i].1 {
@@ -350,15 +377,21 @@ fn Checker::attribute(
   match operand.find(":") {
     None => {
       if operand == "" {
-        self.report("query/invalid-name", "An attribute name cannot be empty.", span)
+        self.report(
+          "query/invalid-name", "An attribute name cannot be empty.", span,
+        )
       }
       Name::new("", operand)
     }
     Some(colon) => {
-      let prefix = operand.view(end_offset=colon).to_owned()
-      let local_name = operand.view(start_offset=colon + 1).to_owned()
+      let prefix = operand.exact_view(end=colon).to_owned()
+      let local_name = operand.exact_view(start=colon + 1).to_owned()
       if local_name == "" || local_name.contains(":") {
-        self.report("query/invalid-name", "\{operand} is not a valid attribute name.", span)
+        self.report(
+          "query/invalid-name",
+          "\{operand} is not a valid attribute name.",
+          span,
+        )
         return Name::new("", operand)
       }
       match self.namespaces.get(prefix) {
@@ -380,13 +413,14 @@ fn Checker::attribute(
 fn Checker::predicate(
   self : Checker,
   predicate : Predicate,
-  first_site : Int,
+  first_site : Int32,
 ) -> CPred? raise CheckStop {
   let span = self.next_span()
   self.predicates += 1 + predicate.operands.length()
   if self.predicates > self.limits.predicates {
     raise self.stop(
-      "query/pattern-limit", "The number of predicates exceeds the compile limit.", span,
+      "query/pattern-limit", "The number of predicates exceeds the compile limit.",
+      span,
     )
   }
   if unsupported_predicate(predicate.name) is Some((code, message)) {
@@ -465,8 +499,8 @@ fn Checker::predicate(
 pub fn compile_form(
   form : QueryForm,
   schema : Schema,
-  namespaces? : ArrayView[(String, String)] = [],
-  limits? : CompileLimits = CompileLimits::new(),
+  namespaces~ : ArrayView[(String, String)] = [],
+  limits~ : CompileLimits = CompileLimits::new(),
 ) -> Result[QueryPlan, ReadOnlyArray[QueryDiagnostic]] {
   if !limits.valid() {
     return Err([invalid_limits()])
@@ -510,7 +544,8 @@ pub fn compile_form(
       let span = checker.next_span()
       if rules.length() >= limits.patterns {
         raise checker.stop(
-          "query/pattern-limit", "The number of patterns exceeds the compile limit.", span,
+          "query/pattern-limit", "The number of patterns exceeds the compile limit.",
+          span,
         )
       }
       if rules.length() > 0 {
@@ -543,7 +578,7 @@ pub fn compile_form(
       if grouped {
         checker.text.write_string(")")
       }
-      rules.push({ root, predicates })
+      rules.push({ root, predicates, })
     }
     false
   } catch {
@@ -569,8 +604,8 @@ pub fn compile_form(
 pub fn compile(
   source : String,
   schema : Schema,
-  namespaces? : ArrayView[(String, String)] = [],
-  limits? : CompileLimits = CompileLimits::new(),
+  namespaces~ : ArrayView[(String, String)] = [],
+  limits~ : CompileLimits = CompileLimits::new(),
 ) -> Result[QueryPlan, ReadOnlyArray[QueryDiagnostic]] {
   match parse(source, limits~) {
     Ok(form) => compile_form(form, schema, namespaces~, limits~)

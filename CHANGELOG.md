@@ -24,6 +24,11 @@
   instead of JSON, releases the GIL during native work and while it waits for
   the runtime lock, and serializes all MoonBit runtime access. `render_svg`
   output and diagnostics are unchanged.
+- The libraries need MoonBit 0.10.20 (`0.10.20+65efd5b93`) or later. The source
+  uses the `#derive(...)` attribute and the `exact_view` string API.
+- Mermaid flowchart and swimlane labels `.inf` and `-.inf` stay `Infinity` and
+  `-Infinity` on MoonBit 0.10.20, whose core writes non-finite JSON numbers as
+  quoted strings.
 
 ## 0.4.0 - 2026-10-28
 

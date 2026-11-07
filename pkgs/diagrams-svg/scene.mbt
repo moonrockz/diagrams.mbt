@@ -8,6 +8,7 @@ pub struct PathBinding {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum NodeBindingKind {
   Bpmn(String)
   Message(Int32)
@@ -22,7 +23,7 @@ pub(all) enum NodeBindingKind {
   DataRow(String)
   /// A data container or scalar root box, by node identity.
   DataBox(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend NodeBindingKind with Eq::{equal, not_equal}

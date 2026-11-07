@@ -64,13 +64,13 @@ See `moonrockz/diagrams-svg/bpmn-layout` for the pure geometry and legibility AP
 ```mbt check
 ///|
 test "render semantic input or require supplied DI explicitly" {
-  let source="<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:userTask id='T' name='Review'/></b:process></b:definitions>"
-  let automatic=@adapter.render_svg(source,geometry_policy=Automatic)
+  let source = "<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:userTask id='T' name='Review'/></b:process></b:definitions>"
+  let automatic = @adapter.render_svg(source, geometry_policy=Automatic)
   assert_true(automatic.output != None)
-  assert_eq(automatic.diagnostics,[])
-  let required=@adapter.render_svg(source,geometry_policy=RequireDi)
-  assert_eq(required.output,None)
-  assert_eq(required.diagnostics[0].code,"bpmn/incomplete-di")
+  assert_eq(automatic.diagnostics, [])
+  let required = @adapter.render_svg(source, geometry_policy=RequireDi)
+  assert_eq(required.output, None)
+  assert_eq(required.diagnostics[0].code, "bpmn/incomplete-di")
 }
 ```
 
@@ -116,9 +116,13 @@ supply active styles, markup or links. The model has no dependency on `bpmn`.
 ```mbt check
 ///|
 test "conversion retains an anonymous node without editing the source" {
-  let document = @bpmn.read("<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:task/></b:process></b:definitions>").document.unwrap()
+  let document = @bpmn.read(
+    "<b:definitions xmlns:b='http://www.omg.org/spec/BPMN/20100524/MODEL' targetNamespace='urn:example'><b:process id='P'><b:task/></b:process></b:definitions>",
+  ).document.unwrap()
   let before = @bpmn.write(document)
-  guard @adapter.to_diagram(document).diagram is Some(Bpmn(view)) else { fail("missing process") }
+  guard @adapter.to_diagram(document).diagram is Some(Bpmn(view)) else {
+    fail("missing process")
+  }
   assert_eq(view.nodes[0].source.source_id, None)
   assert_eq(view.nodes[0].source.path, [0, 0, 0])
   assert_eq(@bpmn.write(document), before)

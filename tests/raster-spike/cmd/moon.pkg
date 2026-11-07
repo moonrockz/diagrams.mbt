@@ -1,7 +1,8 @@
-options("is-main": true)
+pkgtype(kind: "executable")
+
 import {
-  "mizchi/svg" @svg,
-  "walkzzz/image/src/pure/codec" @codec,
+  "mizchi/svg",
+  "walkzzz/image/src/pure/codec",
   "moonrockz/diagrams-tests/raster-spike" @spike,
   "mizchi/font",
   "mizchi/image",

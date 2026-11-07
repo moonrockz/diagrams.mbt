@@ -1,22 +1,25 @@
 ///|
 /// The native PlantUML activity grammar selected by the document.
+#derive(Eq, Debug)
 pub(all) enum Dialect {
   Modern
   Legacy
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Endpoint {
   Start(Bool)
   Final
   Action(String, String?, String)
   Alias(String)
   Synchronization(String)
-} derive(Eq, Debug)
+}
 
 ///|
 /// Typed statements retain control structure and editable values. The sequence
 /// is flat: opening and closing statements retain their native source order.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Action(String, String, String)
   Start
@@ -58,13 +61,14 @@ pub(all) enum Kind {
   LegacyDecision(Endpoint?, String, String, String)
   ActionList(String, Int32)
   Presentation(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Statement {
   kind : Kind
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Statement::new(kind : Kind, span? : @diagrams.Span) -> Statement {
@@ -72,12 +76,13 @@ pub fn Statement::new(kind : Kind, span? : @diagrams.Span) -> Statement {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Document {
   dialect : Dialect
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Statement]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Document::new(

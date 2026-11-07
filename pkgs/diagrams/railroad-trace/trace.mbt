@@ -1,10 +1,11 @@
 ///|
 /// The typed subject of a trace request. An EBNF subject names its start rule
 /// by rule identity.
+#derive(Eq, Debug)
 pub(all) enum Subject {
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar, String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Subject with Eq::{equal, not_equal}
@@ -31,13 +32,14 @@ pub fn Subject::model_id(self : Subject) -> String {
 ///|
 /// The provenance of a trace: subject kind, model and view identity and the
 /// structural fingerprint of the model.
+#derive(Eq, Debug)
 pub struct SubjectIdentity {
   kind : SubjectKind
   model_id : String
   view_id : String
   fingerprint : String
   start_rule : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend SubjectIdentity with Eq::{equal, not_equal}
@@ -62,13 +64,14 @@ pub fn Subject::identity(self : Subject, view_id? : String) -> SubjectIdentity {
 ///|
 /// Explicit trace bounds. Providers honor them cooperatively; validation
 /// enforces them for every supplied trace.
+#derive(Eq, Debug)
 pub struct TraceLimits {
-  input : Int
-  attempts : Int
-  steps : Int
-  depth : Int
-  work : Int
-} derive(Eq, Debug)
+  input : Int32
+  attempts : Int32
+  steps : Int32
+  depth : Int32
+  work : Int32
+}
 
 ///|
 pub extend TraceLimits with Eq::{equal, not_equal}
@@ -78,13 +81,13 @@ pub extend TraceLimits with @debug.Debug::{to_repr}
 
 ///|
 pub fn TraceLimits::new(
-  input? : Int = 65536,
-  attempts? : Int = 256,
-  steps? : Int = 100000,
-  depth? : Int = 256,
-  work? : Int = 1000000,
+  input~ : Int32 = 65536,
+  attempts~ : Int32 = 256,
+  steps~ : Int32 = 100000,
+  depth~ : Int32 = 256,
+  work~ : Int32 = 1000000,
 ) -> TraceLimits {
-  { input, attempts, steps, depth, work }
+  { input, attempts, steps, depth, work, }
 }
 
 ///|
@@ -98,12 +101,13 @@ pub fn TraceLimits::valid(self : TraceLimits) -> Bool {
 
 ///|
 /// One immutable request to an external matching or parsing engine.
+#derive(Eq, Debug)
 pub struct TraceRequest {
   subject : Subject
   view_id : String
   input : String
   limits : TraceLimits
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TraceRequest with Eq::{equal, not_equal}
@@ -116,9 +120,14 @@ pub fn TraceRequest::regex(
   model : @regex.Regex,
   input : String,
   view_id? : String,
-  limits? : TraceLimits = TraceLimits::new(),
+  limits~ : TraceLimits = TraceLimits::new(),
 ) -> TraceRequest {
-  { subject: Regex(model), view_id: view_id.unwrap_or(model.id), input, limits }
+  {
+    subject: Regex(model),
+    view_id: view_id.unwrap_or(model.id),
+    input,
+    limits,
+  }
 }
 
 ///|
@@ -127,7 +136,7 @@ pub fn TraceRequest::ebnf(
   start_rule : String,
   input : String,
   view_id? : String,
-  limits? : TraceLimits = TraceLimits::new(),
+  limits~ : TraceLimits = TraceLimits::new(),
 ) -> TraceRequest {
   {
     subject: Ebnf(grammar, start_rule),
@@ -154,10 +163,11 @@ pub fn TraceRequest::topology(self : TraceRequest) -> TopologyResult {
 
 ///|
 /// A half-open UTF-16 span of the input.
+#derive(Eq, Debug)
 pub struct InputSpan {
-  start : Int
-  end : Int
-} derive(Eq, Debug)
+  start : Int32
+  end : Int32
+}
 
 ///|
 pub extend InputSpan with Eq::{equal, not_equal}
@@ -166,17 +176,18 @@ pub extend InputSpan with Eq::{equal, not_equal}
 pub extend InputSpan with @debug.Debug::{to_repr}
 
 ///|
-pub fn InputSpan::new(start : Int, end : Int) -> InputSpan {
-  { start, end }
+pub fn InputSpan::new(start : Int32, end : Int32) -> InputSpan {
+  { start, end, }
 }
 
 ///|
 /// One oriented trace step. A visit passes through a term from its entry to
 /// its exit. A traversal follows a drawn connector, forward or reversed.
+#derive(Eq, Debug)
 pub(all) enum Step {
   Visit(String, InputSpan?)
   Traverse(String, Bool)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Step with Eq::{equal, not_equal}
@@ -186,6 +197,7 @@ pub extend Step with @debug.Debug::{to_repr}
 
 ///|
 /// The place where an attempt failed.
+#derive(Eq, Debug)
 pub(all) enum FailureTarget {
   /// A consuming term, reference or empty term.
   Terminal(String)
@@ -195,7 +207,7 @@ pub(all) enum FailureTarget {
   Entry(String)
   /// The exit boundary of a node, rule or pattern, such as the end of input.
   Exit(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FailureTarget with Eq::{equal, not_equal}
@@ -204,11 +216,12 @@ pub extend FailureTarget with Eq::{equal, not_equal}
 pub extend FailureTarget with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct FailurePoint {
   target : FailureTarget
-  position : Int?
+  position : Int32?
   message : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FailurePoint with Eq::{equal, not_equal}
@@ -219,17 +232,18 @@ pub extend FailurePoint with @debug.Debug::{to_repr}
 ///|
 pub fn FailurePoint::new(
   target : FailureTarget,
-  position? : Int,
+  position? : Int32,
   message? : String,
 ) -> FailurePoint {
-  { target, position, message }
+  { target, position, message, }
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum AttemptStatus {
   Matched
   NotMatched
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AttemptStatus with Eq::{equal, not_equal}
@@ -240,6 +254,7 @@ pub extend AttemptStatus with @debug.Debug::{to_repr}
 ///|
 /// One finite attempt of an external engine. Repeated or backtracked steps
 /// stay separate, even when they reuse a term or connector.
+#derive(Eq, Debug)
 pub struct Attempt {
   id : String
   status : AttemptStatus
@@ -248,7 +263,7 @@ pub struct Attempt {
   /// True when consecutive steps must meet at shared points.
   continuous : Bool
   label : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Attempt with Eq::{equal, not_equal}
@@ -262,7 +277,7 @@ pub fn Attempt::new(
   status : AttemptStatus,
   steps : ArrayView[Step],
   failure? : FailurePoint,
-  continuous? : Bool = true,
+  continuous~ : Bool = true,
   label? : String,
 ) -> Attempt {
   {
@@ -278,12 +293,13 @@ pub fn Attempt::new(
 ///|
 /// Immutable evidence that an external engine supplied. It is separate from
 /// the diagram and is never computed by this library.
+#derive(Eq, Debug)
 pub struct Trace {
   subject : SubjectIdentity
   input : String
   provider : String
   attempts : ReadOnlyArray[Attempt]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Trace with Eq::{equal, not_equal}
@@ -309,13 +325,14 @@ pub fn Trace::new(
 ///|
 /// The outcome of a provider. Unsupported, exhausted and error results are
 /// not evidence of a non-match.
+#derive(Eq, Debug)
 pub(all) enum TraceResult {
   Matched(Trace)
   NotMatched(Trace)
   Unsupported(String)
   Exhausted(String)
   ProviderError(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TraceResult with Eq::{equal, not_equal}
@@ -328,5 +345,5 @@ pub extend TraceResult with @debug.Debug::{to_repr}
 /// parser. This library bundles no implementation. A provider that supports
 /// one subject kind returns `Unsupported` for the other.
 pub(open) trait RailroadTraceProvider {
-  trace(Self, TraceRequest) -> TraceResult
+  fn trace(Self, TraceRequest) -> TraceResult
 }

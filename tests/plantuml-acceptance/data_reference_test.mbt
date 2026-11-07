@@ -13,13 +13,13 @@ fn reference_text(text : String) -> String {
       text.code_unit_at(i + 1).to_int() >= 0xdc00 &&
       text.code_unit_at(i + 1).to_int() <= 0xdfff
     if pair {
-      out.write_string(text.view(start_offset=i, end_offset=i + 2).to_owned())
+      out.write_string(text.exact_view(start=i, end=i + 2).to_owned())
       i += 2
     } else if c >= 0xd800 && c <= 0xdfff {
       out.write_string("⟨U+" + c.to_string(radix=16).to_upper() + "⟩")
       i += 1
     } else {
-      out.write_string(text.view(start_offset=i, end_offset=i + 1).to_owned())
+      out.write_string(text.exact_view(start=i, end=i + 1).to_owned())
       i += 1
     }
   }

@@ -1,5 +1,6 @@
 ///|
 /// Explicit bounds for structured-data layout and painting.
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
@@ -8,7 +9,7 @@ pub struct Limits {
   width : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Limits with Eq::{equal, not_equal}
@@ -29,10 +30,11 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Point with Eq::{equal, not_equal}
@@ -41,12 +43,13 @@ pub extend Point with Eq::{equal, not_equal}
 pub extend Point with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rect with Eq::{equal, not_equal}
@@ -86,6 +89,7 @@ pub fn Rect::bottom(self : Rect) -> Double {
 
 ///|
 /// The kind of a value, as written in the `data-type` attribute.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Object
   Array
@@ -93,7 +97,7 @@ pub(all) enum Kind {
   Number
   Boolean
   Null
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Kind with Eq::{equal, not_equal}
@@ -127,6 +131,7 @@ pub fn kind_of(value : @model.Value) -> Kind {
 
 ///|
 /// The ink of a label. Each scalar kind has its own ink.
+#derive(Eq, Debug)
 pub(all) enum Ink {
   Key
   Index
@@ -137,7 +142,7 @@ pub(all) enum Ink {
   /// The summary of a nested container and the mark of an empty one.
   Container
   Title
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Ink with Eq::{equal, not_equal}
@@ -228,13 +233,14 @@ pub fn palette(p : @theme.Palette) -> @theme.Palette {
 ///|
 /// One measured label. `lines` are the wrapped lines; with the line breaks
 /// that wrapping replaced, they give the complete text.
+#derive(Eq, Debug)
 pub struct Label {
   lines : ReadOnlyArray[String]
   box : Rect
   size : Double
   weight : Int32
   ink : Ink
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Label with Eq::{equal, not_equal}
@@ -244,6 +250,7 @@ pub extend Label with @debug.Debug::{to_repr}
 
 ///|
 /// One member row of a container box.
+#derive(Eq, Debug)
 pub struct Row {
   /// The member identity.
   entry : String
@@ -258,7 +265,7 @@ pub struct Row {
   highlighted : Bool
   /// The start of the connector to a nested container.
   port : Point?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Row with Eq::{equal, not_equal}
@@ -268,6 +275,7 @@ pub extend Row with @debug.Debug::{to_repr}
 
 ///|
 /// One box: a container with its rows, or a scalar root.
+#derive(Eq, Debug)
 pub struct Box {
   node : String
   kind : Kind
@@ -279,7 +287,7 @@ pub struct Box {
   label : Label?
   highlighted : Bool
   depth : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Box with Eq::{equal, not_equal}
@@ -291,13 +299,14 @@ pub extend Box with @debug.Debug::{to_repr}
 /// A drawn connector from a row to the box of its nested container. The
 /// points are the start, the end of the straight part, two curve controls
 /// and the end.
+#derive(Eq, Debug)
 pub struct Connector {
   /// The member identity of the row that owns the connector.
   entry : String
   source : String
   target : String
   points : ReadOnlyArray[Point]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Connector with Eq::{equal, not_equal}
@@ -351,6 +360,7 @@ pub fn Connector::samples(
 
 ///|
 /// The measured geometry of one data view.
+#derive(Eq, Debug)
 pub struct Geometry {
   tree : @model.DataTree
   width : Int32
@@ -358,7 +368,7 @@ pub struct Geometry {
   title : Label?
   boxes : ReadOnlyArray[Box]
   connectors : ReadOnlyArray[Connector]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Geometry with Eq::{equal, not_equal}

@@ -20,6 +20,7 @@ pub fn valid_id(String) -> Bool
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   source : Int32
   output : Int32
@@ -29,17 +30,18 @@ pub struct Limits {
   depth : Int32
   diagnostics : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(source? : Int32, output? : Int32, states? : Int32, regions? : Int32, transitions? : Int32, depth? : Int32, diagnostics? : Int32, work? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ReadResult {
   tree : @state-cst.Node
   ast : @state-ast.Diagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr

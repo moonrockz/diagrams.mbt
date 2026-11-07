@@ -1,9 +1,10 @@
 ///|
 /// A node of an XML document.
+#derive(Eq, Debug)
 pub(all) enum Node {
   Element(String, ReadOnlyArray[(String, String)], ReadOnlyArray[Node])
   Text(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Node with Eq::{not_equal, equal}
@@ -15,8 +16,8 @@ pub extend Node with @debug.Debug::{to_repr}
 /// An element with the name `name`, its attributes in order and its children.
 pub fn element(
   name : String,
-  attrs? : ArrayView[(String, String)] = [],
-  children? : ArrayView[Node] = [],
+  attrs~ : ArrayView[(String, String)] = [],
+  children~ : ArrayView[Node] = [],
 ) -> Node {
   Element(
     name,
@@ -36,7 +37,9 @@ pub fn text(content : String) -> Node {
 fn forbidden(c : Char) -> Bool {
   let n = c.to_int()
   (n < 0x20 && n != 0x09 && n != 0x0a && n != 0x0d) ||
-  (n >= 0xd800 && n <= 0xdfff) || n == 0xfffe || n == 0xffff
+  (n >= 0xd800 && n <= 0xdfff) ||
+  n == 0xfffe ||
+  n == 0xffff
 }
 
 ///|
@@ -56,7 +59,7 @@ fn write_escaped(buf : StringBuilder, s : String, attribute : Bool) -> Unit {
 }
 
 ///|
-fn write_node(buf : StringBuilder, node : Node, depth : Int) -> Unit {
+fn write_node(buf : StringBuilder, node : Node, depth : Int32) -> Unit {
   match node {
     Text(s) => write_escaped(buf, s, false)
     Element(name, attrs, children) => {

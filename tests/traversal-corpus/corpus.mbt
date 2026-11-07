@@ -26,7 +26,7 @@ pub fn fixture_names() -> Array[String] {
 /// name of its file in `expected/`, in name order.
 pub fn outputs() -> Array[(String, String)] {
   let out = fixture_names().map(name => {
-    let stem = name.view(end_offset=name.length() - 5).to_owned()
+    let stem = name.exact_view(end=name.length() - 5).to_owned()
     (stem + ".txt", normalize(name, file))
   })
   out.push(("deep.txt", normalize_deep()))

@@ -1,8 +1,9 @@
 ///|
 /// Lossless source, including malformed and unsupported regions.
+#derive(Eq, Debug)
 pub struct Node {
   source : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Node::new(source : String) -> Node {

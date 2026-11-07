@@ -1,8 +1,8 @@
 ///|
 priv struct Printer {
   limits : @envelope.Limits
-  mut used : Int
-  mut work : Int
+  mut used : Int32
+  mut work : Int32
   mut failure : @diagrams.Diagnostic?
 }
 
@@ -22,7 +22,8 @@ fn Printer::fail(self : Printer, message : String) -> String {
 ///|
 fn Printer::charge(self : Printer, text : String) -> String {
   self.work += 1
-  if self.work > self.limits.work || text.length() > self.limits.output - self.used {
+  if self.work > self.limits.work ||
+    text.length() > self.limits.output - self.used {
     if self.failure is None {
       self.failure = Some(
         @diagrams.Diagnostic::error("ebnf/limit", "EBNF output limit exceeded"),
@@ -59,7 +60,7 @@ fn valid_name(name : String) -> Bool {
 
 ///|
 /// Levels: 0 alternation, 1 concatenation, 2 count, 3 primary.
-fn expr_text(p : Printer, e : Expr, level : Int, depth : Int) -> String {
+fn expr_text(p : Printer, e : Expr, level : Int32, depth : Int32) -> String {
   if depth > p.limits.depth {
     return p.fail("the expression is too deep")
   }
@@ -97,7 +98,9 @@ fn expr_text(p : Printer, e : Expr, level : Int, depth : Int) -> String {
             guard units.pop() is Some(left) else {
               return p.fail("an exclusion needs a term on its left")
             }
-            units.push("(" + left + " - " + expr_text(p, excluded, 0, depth + 1) + ")")
+            units.push(
+              "(" + left + " - " + expr_text(p, excluded, 0, depth + 1) + ")",
+            )
           }
           Concat(_) => return p.fail("a nested concatenation is not flat")
           _ => units.push(expr_text(p, item, 1, depth + 1))
@@ -149,8 +152,8 @@ fn expr_text(p : Printer, e : Expr, level : Int, depth : Int) -> String {
 
 ///|
 let statement_words : Array[String] = [
-  "title", "caption", "header", "footer", "legend", "skinparam", "skin", "scale", "hide",
-  "show", "sprite", "rotate", "page", "minwidth", "mainframe",
+  "title", "caption", "header", "footer", "legend", "skinparam", "skin", "scale",
+  "hide", "show", "sprite", "rotate", "page", "minwidth", "mainframe",
 ]
 
 ///|
@@ -158,9 +161,9 @@ let statement_words : Array[String] = [
 /// line, derived from typed values.
 pub fn print_body(
   document : Document,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]] {
-  let p = Printer::{ limits, used: 0, work: 0, failure: None }
+  let p = Printer::{ limits, used: 0, work: 0, failure: None, }
   let out = StringBuilder()
   for item in document.items {
     match item {
@@ -171,7 +174,9 @@ pub fn print_body(
         for i, line in lines {
           let ends = line.has_suffix("*)")
           if line.contains("\n") || line != @envelope.trim(line) {
-            ignore(p.fail("a note line cannot have a line break or outer spaces"))
+            ignore(
+              p.fail("a note line cannot have a line break or outer spaces"),
+            )
           }
           if lines.length() == 1 {
             if line.contains("*)") {

@@ -1,5 +1,6 @@
 ///|
 /// A colour family of the archify classic preset.
+#derive(Eq, Debug)
 pub(all) enum Family {
   Frontend
   Backend
@@ -8,7 +9,7 @@ pub(all) enum Family {
   Security
   MessageBus
   External
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Family with Eq::{not_equal, equal}
@@ -33,17 +34,24 @@ pub fn Family::name(self : Family) -> String {
 ///|
 /// The families, in the order of the CSS that the renderer writes.
 pub let all_families : ReadOnlyArray[Family] = [
-  Frontend, Backend, Database, Cloud, Security, MessageBus, External,
+  Frontend,
+  Backend,
+  Database,
+  Cloud,
+  Security,
+  MessageBus,
+  External,
 ]
 
 ///|
 /// The colours of one family. `fill` and `stroke` are archify's values. `ink`
 /// is the colour of text in this family, with at least 4.5:1 contrast.
+#derive(Eq, Debug)
 pub(all) struct FamilyColors {
   fill : Color
   stroke : Color
   ink : Color
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FamilyColors with Eq::{not_equal, equal}
@@ -53,6 +61,7 @@ pub extend FamilyColors with @debug.Debug::{to_repr}
 
 ///|
 /// The colours of one theme variant, dark or light.
+#derive(Eq, Debug)
 pub(all) struct Palette {
   bg : Color
   text : Color
@@ -66,7 +75,7 @@ pub(all) struct Palette {
   security : FamilyColors
   messagebus : FamilyColors
   external : FamilyColors
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Palette with Eq::{not_equal, equal}
@@ -90,10 +99,11 @@ pub fn Palette::family(self : Palette, f : Family) -> FamilyColors {
 
 ///|
 /// A theme with a dark and a light variant.
+#derive(Eq, Debug)
 pub(all) struct Theme {
   dark : Palette
   light : Palette
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Theme with Eq::{not_equal, equal}
@@ -102,8 +112,20 @@ pub extend Theme with Eq::{not_equal, equal}
 pub extend Theme with @debug.Debug::{to_repr}
 
 ///|
-fn fam(fill : Color, stroke : Int, background : Int, mask : Int) -> FamilyColors {
-  { fill, stroke: Color::hex(stroke), ink: text_shade(Color::hex(stroke), [Color::hex(background), Color::hex(mask)]) }
+fn fam(
+  fill : Color,
+  stroke : Int32,
+  background : Int32,
+  mask : Int32,
+) -> FamilyColors {
+  {
+    fill,
+    stroke: Color::hex(stroke),
+    ink: text_shade(Color::hex(stroke), [
+      Color::hex(background),
+      Color::hex(mask),
+    ]),
+  }
 }
 
 ///|
@@ -151,7 +173,10 @@ let cycle : Array[Family] = [Frontend, Backend, Database, Cloud, MessageBus]
 ///|
 /// The colour family of a participant kind. A participant with no specific
 /// kind gets the family at `cycle_index` of a fixed cycle.
-pub fn family_of(kind : @sequence.ParticipantKind, cycle_index : Int) -> Family {
+pub fn family_of(
+  kind : @sequence.ParticipantKind,
+  cycle_index : Int32,
+) -> Family {
   match kind {
     Actor | Client => Frontend
     Service | Control => Backend

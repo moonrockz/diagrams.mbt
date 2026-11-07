@@ -1,51 +1,57 @@
 ///|
 /// Binary format metadata. Still options exclude GIF; animation has its own
 /// bounded interval and sampling options.
+#derive(Eq, Debug)
 pub(all) enum RasterFormat {
   Png
   Jpeg
   Gif
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum ExportTheme {
   Light
   Dark
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rgba {
   red : Int32
   green : Int32
   blue : Int32
   alpha : Int32
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum RasterSize {
   Original
   Scale(Double)
   Width(Int32)
   Height(Int32)
   Fit(Int32, Int32)
-} derive(Eq, Debug)
+}
 
 ///|
 /// PNG permits transparent backgrounds. JPEG requires an opaque background
 /// and quality between 1 and 100, checked before rendering.
+#derive(Eq, Debug)
 pub(all) enum StillFormat {
   Png
   Jpeg(quality~ : Int32)
-} derive(Eq, Debug)
+}
 
 ///|
 /// Values are checked before source parsing, font parsing or allocation.
+#derive(Eq, Debug)
 pub(all) struct StillOptions {
   format : StillFormat
   size : RasterSize
   background : Rgba
   theme : ExportTheme
-} derive(Eq, Debug)
+}
 
 ///|
 /// A supplied face is selected by family, weight and italic style. The default
@@ -65,6 +71,7 @@ pub(all) struct FontSet {
 
 ///|
 /// Limits bound work before unsafe arithmetic and allocation.
+#derive(Eq, Debug)
 pub(all) struct RasterLimits {
   max_source_units : Int32
   max_svg_nodes : Int32
@@ -74,14 +81,15 @@ pub(all) struct RasterLimits {
   max_output_bytes : Int32
   max_frames : Int32
   max_cumulative_pixels : Int64
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct RasterDiagnostic {
   code : String
   message : String
   source_id : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub(all) struct RasterImage {

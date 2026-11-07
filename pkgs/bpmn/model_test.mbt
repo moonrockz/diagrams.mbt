@@ -12,7 +12,11 @@ test "constructor arrays are owned and walks keep containment order" {
 
 ///|
 test "malformed and unsupported sources reproduce without a complete document" {
-  for source in ["<definitions>", "<!DOCTYPE d SYSTEM 'file:///secret'><definitions/>", "<x:definitions/>", "<definitions xmlns='http://www.omg.org/spec/BPMN/20100524/MODEL'><task></process></definitions>"] {
+  for
+    source in [
+      "<definitions>", "<!DOCTYPE d SYSTEM 'file:///secret'><definitions/>", "<x:definitions/>",
+      "<definitions xmlns='http://www.omg.org/spec/BPMN/20100524/MODEL'><task></process></definitions>",
+    ] {
     let result = @bpmn.read(source)
     assert_eq(result.tree.text(), source)
     assert_eq(result.document, None)

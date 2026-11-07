@@ -1,24 +1,27 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum Side {
   Left
   Right
   Top
   Bottom
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Axis {
   Row
   Column
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Group {
   id : String
   label : String
   parent : String?
   icon : @icons.Reference?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Group::new(
@@ -31,13 +34,14 @@ pub fn Group::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Service {
   id : String
   label : String
   parent : String?
   icon : @icons.Reference?
   icon_text : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Service::new(
@@ -51,10 +55,11 @@ pub fn Service::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Junction {
   id : String
   parent : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Junction::new(id : String, parent? : String) -> Junction {
@@ -62,11 +67,12 @@ pub fn Junction::new(id : String, parent? : String) -> Junction {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Endpoint {
   id : String
   side : Side
   group : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Endpoint::new(
@@ -78,6 +84,7 @@ pub fn Endpoint::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Connection {
   id : String
   source : Endpoint
@@ -85,7 +92,7 @@ pub struct Connection {
   label : String?
   source_head : Bool
   target_head : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Connection::new(
@@ -100,10 +107,11 @@ pub fn Connection::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Alignment {
   axis : Axis
   members : ReadOnlyArray[String]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Alignment::new(axis : Axis, members : ArrayView[String]) -> Alignment {
@@ -111,6 +119,7 @@ pub fn Alignment::new(axis : Axis, members : ArrayView[String]) -> Alignment {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Architecture {
   id : String
   groups : ReadOnlyArray[Group]
@@ -121,7 +130,7 @@ pub struct Architecture {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Architecture::new(

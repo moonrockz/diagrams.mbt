@@ -245,7 +245,8 @@ test "aggregate glyph budget precedes outlining and missing glyph lookup" {
   assert_true(fonts.fonts is None)
   assert_eq(fonts.diagnostics[0].code, "raster/glyph-limit")
   let long_label = "<svg width=\"32\" height=\"32\"><text>" +
-    "A".repeat(1000000) + "</text></svg>"
+    "A".repeat(1000000) +
+    "</text></svg>"
   let result = rasterize(long_label, limits~)
   assert_eq(result.diagnostics[0].code, "raster/glyph-limit")
 }

@@ -1,9 +1,10 @@
 ///|
 /// The quote character of a terminal string.
+#derive(Eq, Debug)
 pub(all) enum Quote {
   Double
   Single
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Quote with Eq::{equal, not_equal}
@@ -14,6 +15,7 @@ pub extend Quote with @debug.Debug::{to_repr}
 ///|
 /// The meaning of one grammar expression node. Composite kinds name their
 /// children by node identity, so a grammar is a flat, bounded arena.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   /// A quoted terminal string.
   Terminal(String, Quote)
@@ -36,7 +38,7 @@ pub(all) enum Kind {
   Count(String, String)
   /// `x - y`: the left term, constrained so that it does not match the excluded term.
   Exclusion(String, String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Kind with Eq::{equal, not_equal}
@@ -45,13 +47,14 @@ pub extend Kind with Eq::{equal, not_equal}
 pub extend Kind with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Node {
   id : String
   kind : Kind
   notes_above : ReadOnlyArray[String]
   notes_below : ReadOnlyArray[String]
   source : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Node with Eq::{equal, not_equal}
@@ -63,8 +66,8 @@ pub extend Node with @debug.Debug::{to_repr}
 pub fn Node::new(
   id : String,
   kind : Kind,
-  notes_above? : ArrayView[String] = [],
-  notes_below? : ArrayView[String] = [],
+  notes_above~ : ArrayView[String] = [],
+  notes_below~ : ArrayView[String] = [],
   source? : @diagrams.Span,
 ) -> Node {
   {
@@ -117,6 +120,7 @@ pub fn Node::label(self : Node) -> String {
 
 ///|
 /// One named rule. A rule without a body is an empty definition.
+#derive(Eq, Debug)
 pub struct Rule {
   id : String
   name : String
@@ -124,7 +128,7 @@ pub struct Rule {
   note_above : String?
   note_below : String?
   source : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}
@@ -141,15 +145,16 @@ pub fn Rule::new(
   note_below? : String,
   source? : @diagrams.Span,
 ) -> Rule {
-  { id, name, body, note_above, note_below, source }
+  { id, name, body, note_above, note_below, source, }
 }
 
 ///|
 /// One ordered grammar statement: a rule or a free-standing note.
+#derive(Eq, Debug)
 pub(all) enum Item {
   Rule(Rule)
   Note(String, String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Item with Eq::{equal, not_equal}
@@ -159,6 +164,7 @@ pub extend Item with @debug.Debug::{to_repr}
 
 ///|
 /// One immutable grammar diagram. It describes a grammar; it does not parse input.
+#derive(Eq, Debug)
 pub struct Grammar {
   id : String
   items : ReadOnlyArray[Item]
@@ -166,7 +172,7 @@ pub struct Grammar {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Grammar with Eq::{equal, not_equal}

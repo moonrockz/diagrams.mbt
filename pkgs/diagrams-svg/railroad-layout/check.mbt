@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum Rule {
   /// A connector crosses a term or label, or two terms overlap.
   Overlap
@@ -10,7 +11,7 @@ pub(all) enum Rule {
   /// A connector has no length.
   Length
   Limit
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}
@@ -19,11 +20,12 @@ pub extend Rule with Eq::{equal, not_equal}
 pub extend Rule with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Finding with Eq::{equal, not_equal}
@@ -51,12 +53,13 @@ pub fn term_colors(
 
 ///|
 /// The four static trace highlight channels.
+#derive(Eq, Debug)
 pub(all) enum Channel {
   Matched
   NotMatched
   Taken
   Failure
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Channel with Eq::{equal, not_equal}
@@ -66,7 +69,10 @@ pub extend Channel with @debug.Debug::{to_repr}
 
 ///|
 /// The theme colour of a highlight channel.
-pub fn channel_color(palette : @theme.Palette, channel : Channel) -> @theme.Color {
+pub fn channel_color(
+  palette : @theme.Palette,
+  channel : Channel,
+) -> @theme.Color {
   match channel {
     Matched => palette.backend.ink
     NotMatched => palette.messagebus.ink
@@ -127,15 +133,19 @@ fn near(a : Point, b : Point) -> Bool {
 pub fn check(
   geometry : Geometry,
   palette : @theme.Palette,
-  work_limit? : Int = 1000000,
-  highlight_colors? : ArrayView[@theme.Color] = [],
+  work_limit~ : Int32 = 1000000,
+  highlight_colors~ : ArrayView[@theme.Color] = [],
 ) -> Array[Finding] {
   let out : Array[Finding] = []
   let mut work = 0
-  fn charge(units : Int) -> Bool {
+  fn charge(units : Int32) -> Bool {
     if units > work_limit - work {
       if out.is_empty() || out[out.length() - 1].rule != Limit {
-        out.push({ rule: Limit, identities: [], message: "Legibility check work limit exceeded" })
+        out.push({
+          rule: Limit,
+          identities: [],
+          message: "Legibility check work limit exceeded",
+        })
       }
       return false
     }
@@ -228,9 +238,14 @@ pub fn check(
         return out
       }
       let r = term.rect
-      let inside = wire.points.iter().all(p => {
-        p.x >= r.x && p.x <= r.x + r.width && p.y >= r.y && p.y <= r.y + r.height
-      })
+      let inside = wire.points
+        .iter()
+        .all(p => {
+          p.x >= r.x &&
+          p.x <= r.x + r.width &&
+          p.y >= r.y &&
+          p.y <= r.y + r.height
+        })
       if term.shape == Lookaround && inside {
         continue
       }

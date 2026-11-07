@@ -40,10 +40,7 @@ fn parse_sums(text : String) -> Array[(String, String)] raise Failure {
       raise Failure("not a shasum line: \{line}")
     }
     out.push(
-      (
-        line.view(end_offset=64).to_owned(),
-        line.view(start_offset=66).to_owned(),
-      ),
+      (line.exact_view(end=64).to_owned(), line.exact_view(start=66).to_owned()),
     )
   }
   out

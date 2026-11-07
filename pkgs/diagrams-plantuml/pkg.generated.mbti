@@ -46,6 +46,7 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Document {
   Regex(@regex.Document)
   Ebnf(@ebnf.Document)
@@ -53,16 +54,17 @@ pub(all) enum Document {
   Yaml(@yaml.Document)
   Activity(@activity.Document)
   State(@state.Document)
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::kind(Self) -> @envelope.Kind
 pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PrintResult {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn PrintResult::equal(Self, Self) -> Bool
 pub fn PrintResult::not_equal(Self, Self) -> Bool
 pub fn PrintResult::to_repr(Self) -> @debug.Repr

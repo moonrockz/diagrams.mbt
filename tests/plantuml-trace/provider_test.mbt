@@ -25,7 +25,7 @@ fn steps_between(
   topology : @trace.Topology,
   from : String,
   to : String,
-  spans? : Map[String, @trace.InputSpan] = Map([]),
+  spans~ : Map[String, @trace.InputSpan] = Map([]),
 ) -> Array[@trace.Step] {
   let previous : Map[String, (String, @trace.Step)] = Map([])
   let queue = [from]
@@ -75,11 +75,11 @@ fn topology_of(request : @trace.TraceRequest) -> @trace.Topology {
 /// A regex-only stub. It knows the scripted inputs "ab" and "cx" for the
 /// pattern `ab|cd` and supports no grammar.
 struct RegexStub {
-  calls : Ref[Int]
+  calls : Ref[Int32]
 }
 
 ///|
-impl @trace.RailroadTraceProvider for RegexStub with trace(self, request) {
+impl @trace.RailroadTraceProvider for RegexStub with fn trace(self, request) {
   self.calls.val += 1
   guard request.subject is Regex(model) else {
     return Unsupported("this stub has no grammar support")
@@ -96,7 +96,12 @@ impl @trace.RailroadTraceProvider for RegexStub with trace(self, request) {
           @trace.Attempt::new(
             "a0",
             Matched,
-            steps_between(t, start, end, spans=Map([("p.0", @trace.InputSpan::new(0, 2))])),
+            steps_between(
+              t,
+              start,
+              end,
+              spans=Map([("p.0", @trace.InputSpan::new(0, 2))]),
+            ),
           ),
         ]),
       )
@@ -111,13 +116,21 @@ impl @trace.RailroadTraceProvider for RegexStub with trace(self, request) {
             "a0",
             NotMatched,
             first_prefix,
-            failure=@trace.FailurePoint::new(Terminal("p.0"), position=0, message="expected ab"),
+            failure=@trace.FailurePoint::new(
+              Terminal("p.0"),
+              position=0,
+              message="expected ab",
+            ),
           ),
           @trace.Attempt::new(
             "a1",
             NotMatched,
             second_prefix,
-            failure=@trace.FailurePoint::new(Terminal("p.1"), position=1, message="expected d"),
+            failure=@trace.FailurePoint::new(
+              Terminal("p.1"),
+              position=1,
+              message="expected d",
+            ),
           ),
         ]),
       )
@@ -133,7 +146,7 @@ impl @trace.RailroadTraceProvider for RegexStub with trace(self, request) {
 
 ///|
 test "a regex-only provider renders success and failure evidence" {
-  let stub = RegexStub::{ calls: Ref(0) }
+  let stub = RegexStub::{ calls: Ref(0), }
   let diagram : @render.Diagram = Regex(regex_model())
   let renderer = @svg.SvgRenderer::new(mode=Fixed(Light), id_prefix="t")
   let ok = renderer.render_traced(diagram, stub, "ab")
@@ -152,7 +165,7 @@ test "a regex-only provider renders success and failure evidence" {
 
 ///|
 test "a regex-only provider reports unsupported grammar requests" {
-  let stub = RegexStub::{ calls: Ref(0) }
+  let stub = RegexStub::{ calls: Ref(0), }
   let grammar = grammar_model("r = \"x\";")
   let rule = grammar.rules()[0].id
   let result = @svg.SvgRenderer::new().render_traced(
@@ -168,7 +181,7 @@ test "a regex-only provider reports unsupported grammar requests" {
 
 ///|
 test "exhausted and error outcomes are not non-matches" {
-  let stub = RegexStub::{ calls: Ref(0) }
+  let stub = RegexStub::{ calls: Ref(0), }
   let diagram : @render.Diagram = Regex(regex_model())
   let exhausted = @svg.SvgRenderer::new().render_traced(diagram, stub, "budget")
   assert_true(exhausted.rendered.output is None)
@@ -180,7 +193,7 @@ test "exhausted and error outcomes are not non-matches" {
 
 ///|
 fn failure_trace() -> @trace.Trace {
-  let stub = RegexStub::{ calls: Ref(0) }
+  let stub = RegexStub::{ calls: Ref(0), }
   let request = @trace.TraceRequest::regex(regex_model(), "cx")
   match stub.trace(request) {
     NotMatched(trace) => trace
@@ -235,7 +248,9 @@ test "overlapping attempts keep both classifications and can be selected" {
     ),
     @trace.Attempt::new("pass", Matched, steps_between(t, start, end)),
   ])
-  let both = render_with(@svg.TraceHighlight::new(back, taken=@svg.ChannelStyle::new()))
+  let both = render_with(
+    @svg.TraceHighlight::new(back, taken=@svg.ChannelStyle::new()),
+  )
   // The start connector is in both attempts.
   let start_id = t.connector_of(t.tracks[0].id, Start).unwrap().id
   let layered = both.split("data-target=\"" + start_id + "\"").count() - 1
@@ -252,7 +267,11 @@ test "unvisited alternatives stay neutral" {
   let request = @trace.TraceRequest::regex(regex_model(), "ab")
   let t = topology_of(request)
   let trace = @trace.Trace::new(request, "regex-stub", [
-    @trace.Attempt::new("a", Matched, steps_between(t, t.tracks[0].start, t.tracks[0].end)),
+    @trace.Attempt::new(
+      "a",
+      Matched,
+      steps_between(t, t.tracks[0].start, t.tracks[0].end),
+    ),
   ])
   let svg = render_with(@svg.TraceHighlight::new(trace))
   let second = t.connector_of("p", Split(1)).unwrap().id
@@ -285,15 +304,26 @@ test "stale or foreign traces and invalid spans are rejected" {
     @trace.Attempt::new(
       "a",
       Matched,
-      steps_between(t, t.tracks[0].start, t.tracks[0].end, spans=Map([("p.0", @trace.InputSpan::new(1, 9))])),
+      steps_between(
+        t,
+        t.tracks[0].start,
+        t.tracks[0].end,
+        spans=Map([("p.0", @trace.InputSpan::new(1, 9))]),
+      ),
     ),
   ])
-  let result = @svg.render_regex(regex_model(), trace=@svg.TraceHighlight::new(bad))
+  let result = @svg.render_regex(
+    regex_model(),
+    trace=@svg.TraceHighlight::new(bad),
+  )
   assert_true(result.output is None)
   assert_eq(result.diagnostics[0].code, "trace/invalid-span")
   // A discontinuous attempt and a label-only target.
   let jump = @trace.Trace::new(request, "regex-stub", [
-    @trace.Attempt::new("a", Matched, [Traverse(t.connector_of("p", Join(0)).unwrap().id, false), Visit("p.1", None)]),
+    @trace.Attempt::new("a", Matched, [
+      Traverse(t.connector_of("p", Join(0)).unwrap().id, false),
+      Visit("p.1", None),
+    ]),
   ])
   assert_eq(
     @svg.render_regex(regex_model(), trace=@svg.TraceHighlight::new(jump)).diagnostics[0].code,
@@ -321,7 +351,15 @@ test "no highlight request gives the ordinary bytes and geometry is unchanged" {
   // Every drawn connector keeps its path.
   for part in plain.split("data-connector=\"").drop(1) {
     let id = part.split("\"").next().unwrap().to_owned()
-    let d = part.split("d=\"").drop(1).next().unwrap().split("\"").next().unwrap().to_owned()
+    let d = part
+      .split("d=\"")
+      .drop(1)
+      .next()
+      .unwrap()
+      .split("\"")
+      .next()
+      .unwrap()
+      .to_owned()
     assert_true(traced.contains("data-connector=\"" + id + "\""), msg=id)
     assert_true(traced.contains("d=\"" + d + "\""), msg=id)
   }
@@ -333,7 +371,7 @@ test "no highlight request gives the ordinary bytes and geometry is unchanged" {
 struct GrammarStub {}
 
 ///|
-impl @trace.RailroadTraceProvider for GrammarStub with trace(_, request) {
+impl @trace.RailroadTraceProvider for GrammarStub with fn trace(_, request) {
   guard request.subject is Ebnf(_, start) else {
     return Unsupported("this stub has no regex support")
   }
@@ -342,7 +380,11 @@ impl @trace.RailroadTraceProvider for GrammarStub with trace(_, request) {
   let main = steps_between(t, track.start, track.end)
   match request.input {
     "xz" =>
-      Matched(@trace.Trace::new(request, "grammar-stub", [@trace.Attempt::new("p", Matched, main)]))
+      Matched(
+        @trace.Trace::new(request, "grammar-stub", [
+          @trace.Attempt::new("p", Matched, main),
+        ]),
+      )
     _ =>
       NotMatched(
         @trace.Trace::new(request, "grammar-stub", [
@@ -350,7 +392,11 @@ impl @trace.RailroadTraceProvider for GrammarStub with trace(_, request) {
             "p",
             NotMatched,
             main,
-            failure=@trace.FailurePoint::new(Exit(start), position=2, message="expected end of input"),
+            failure=@trace.FailurePoint::new(
+              Exit(start),
+              position=2,
+              message="expected end of input",
+            ),
           ),
         ]),
       )
@@ -360,35 +406,61 @@ impl @trace.RailroadTraceProvider for GrammarStub with trace(_, request) {
 ///|
 test "a grammar provider reports an end-boundary failure" {
   let source = "@startebnf\nr = \"x\", y;\ny = \"z\";\n@endebnf\n"
-  let ok = @plantuml.render_traced_svg(source, GrammarStub::{  }, "xz", start_rule="r")
+  let ok = @plantuml.render_traced_svg(
+    source,
+    GrammarStub::{ },
+    "xz",
+    start_rule="r",
+  )
   assert_true(ok.run.result is Some(Matched(_)))
   assert_true(ok.rendered.output.unwrap().contains("rr-trace-matched"))
-  let failed = @plantuml.render_traced_svg(source, GrammarStub::{  }, "xzq", start_rule="r")
+  let failed = @plantuml.render_traced_svg(
+    source,
+    GrammarStub::{ },
+    "xzq",
+    start_rule="r",
+  )
   let svg = failed.rendered.output.unwrap()
   assert_true(svg.contains("rr-trace-boundary"))
   assert_true(svg.contains("expected end of input"))
   // A missing start rule never reaches the provider.
-  let missing = @plantuml.render_traced_svg(source, GrammarStub::{  }, "xz", start_rule="nope")
+  let missing = @plantuml.render_traced_svg(
+    source,
+    GrammarStub::{ },
+    "xz",
+    start_rule="nope",
+  )
   assert_true(missing.run.result is None)
   // A regex request to a grammar-only stub is unsupported.
-  let regex = @svg.SvgRenderer::new().render_traced(Regex(regex_model()), GrammarStub::{  }, "x")
+  let regex = @svg.SvgRenderer::new().render_traced(
+    Regex(regex_model()),
+    GrammarStub::{ },
+    "x",
+  )
   assert_true(regex.run.result is Some(Unsupported(_)))
 }
 
 ///|
 test "rendering, scenes, playback and export never call a provider" {
-  let stub = RegexStub::{ calls: Ref(0) }
-  let trace = match stub.trace(@trace.TraceRequest::regex(regex_model(), "cx")) {
+  let stub = RegexStub::{ calls: Ref(0), }
+  let trace = match
+    stub.trace(@trace.TraceRequest::regex(regex_model(), "cx")) {
     NotMatched(trace) => trace
     _ => abort("trace")
   }
   assert_eq(stub.calls.val, 1)
-  let renderer = @svg.SvgRenderer::new(id_prefix="t", trace=@svg.TraceHighlight::new(trace))
+  let renderer = @svg.SvgRenderer::new(
+    id_prefix="t",
+    trace=@svg.TraceHighlight::new(trace),
+  )
   let diagram : @render.Diagram = Regex(regex_model())
   let direct = @render.Renderer::render(renderer, diagram).output.unwrap()
   let scene = renderer.scene(diagram).scene.unwrap()
   assert_eq(scene.canonical_svg, direct)
-  let html = @render.Renderer::render(@animated.AnimatedRenderer::new(svg=renderer), diagram)
+  let html = @render.Renderer::render(
+    @animated.AnimatedRenderer::new(svg=renderer),
+    diagram,
+  )
   assert_true(html.output.unwrap().contains("rr-trace-failure"))
   assert_eq(stub.calls.val, 1)
 }
@@ -401,19 +473,27 @@ extend RegexStub with @trace.RailroadTraceProvider::{trace}
 struct CachedStub {}
 
 ///|
-impl @trace.RailroadTraceProvider for CachedStub with trace(_, request) {
+impl @trace.RailroadTraceProvider for CachedStub with fn trace(_, request) {
   let other = @trace.TraceRequest::regex(regex_model(), "ab")
   let t = topology_of(request)
   Matched(
     @trace.Trace::new(other, "cached", [
-      @trace.Attempt::new("a", Matched, steps_between(t, t.tracks[0].start, t.tracks[0].end)),
+      @trace.Attempt::new(
+        "a",
+        Matched,
+        steps_between(t, t.tracks[0].start, t.tracks[0].end),
+      ),
     ]),
   )
 }
 
 ///|
 test "evidence for another input is rejected" {
-  let result = @svg.SvgRenderer::new().render_traced(Regex(regex_model()), CachedStub::{  }, "cd")
+  let result = @svg.SvgRenderer::new().render_traced(
+    Regex(regex_model()),
+    CachedStub::{ },
+    "cd",
+  )
   assert_true(result.run.validated is None)
   assert_true(result.rendered.output is None)
   assert_eq(result.rendered.diagnostics[0].code, "trace/input-mismatch")

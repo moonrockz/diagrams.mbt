@@ -50,3 +50,6 @@ apps/python-native/fixtures/** -text
 
 # Query corpus fixtures keep their CRLF and non-BMP bytes on every checkout.
 tests/query-corpus/fixtures/* -text
+
+# Managed OpenSpec schema files are compared byte for byte with mission-control-tools on Windows too.
+openspec/schemas/html-design/** text eol=lf

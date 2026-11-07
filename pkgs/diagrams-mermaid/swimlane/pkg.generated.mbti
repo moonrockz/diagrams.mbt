@@ -16,10 +16,11 @@ pub fn to_swimlane(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, id?
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Conversion {
   swimlane : @moonrockz/diagrams/swimlane.Swimlane?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Conversion::equal(Self, Self) -> Bool
 pub fn Conversion::not_equal(Self, Self) -> Bool
 pub fn Conversion::to_repr(Self) -> @debug.Repr

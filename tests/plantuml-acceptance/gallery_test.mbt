@@ -94,8 +94,15 @@ fn diagram_of(source : String) -> @render.Diagram {
 }
 
 ///|
-fn svg(diagram : @render.Diagram, mode : @svg.Mode, trace? : @svg.TraceHighlight) -> String {
-  let rendered = @render.Renderer::render(@svg.SvgRenderer::new(mode~, trace?), diagram)
+fn svg(
+  diagram : @render.Diagram,
+  mode : @svg.Mode,
+  trace? : @svg.TraceHighlight,
+) -> String {
+  let rendered = @render.Renderer::render(
+    @svg.SvgRenderer::new(mode~, trace?),
+    diagram,
+  )
   for d in rendered.diagnostics {
     if d.code.has_suffix("legibility") {
       println("LEGIBILITY " + d.message)
@@ -127,7 +134,7 @@ fn steps(
   t : @trace.Topology,
   from : String,
   to : String,
-  spans? : Map[String, @trace.InputSpan] = Map([]),
+  spans~ : Map[String, @trace.InputSpan] = Map([]),
 ) -> Array[@trace.Step] {
   let previous : Map[String, (String, @trace.Step)] = Map([])
   let queue = [from]
@@ -170,13 +177,16 @@ fn steps(
 struct GalleryStub {}
 
 ///|
-impl @trace.RailroadTraceProvider for GalleryStub with trace(_, request) {
+impl @trace.RailroadTraceProvider for GalleryStub with fn trace(_, request) {
   let t = request.topology().topology.unwrap()
   let track = match request.subject {
     Ebnf(_, start) => t.tracks.iter().find_first(k => k.id == start).unwrap()
     Regex(_) => t.tracks[0]
   }
-  let terms = t.terms.iter().filter(x => x.rule == track.id && !x.constraint).collect()
+  let terms = t.terms
+    .iter()
+    .filter(x => x.rule == track.id && !x.constraint)
+    .collect()
   let target = terms[terms.length() / 2]
   let attempts = [
     @trace.Attempt::new(
@@ -195,7 +205,13 @@ impl @trace.RailroadTraceProvider for GalleryStub with trace(_, request) {
     ),
   ]
   if request.input.has_prefix("ok") {
-    attempts.push(@trace.Attempt::new("attempt-2", Matched, steps(t, track.start, track.end)))
+    attempts.push(
+      @trace.Attempt::new(
+        "attempt-2",
+        Matched,
+        steps(t, track.start, track.end),
+      ),
+    )
     Matched(@trace.Trace::new(request, "gallery-stub", attempts))
   } else {
     NotMatched(@trace.Trace::new(request, "gallery-stub", attempts))
@@ -207,15 +223,15 @@ fn traced(
   diagram : @render.Diagram,
   input : String,
   start? : String,
-  matched? : @svg.ChannelStyle = @svg.ChannelStyle::new(),
-  not_matched? : @svg.ChannelStyle = @svg.ChannelStyle::new(dashed=true),
-  taken? : @svg.ChannelStyle = @svg.ChannelStyle::hidden(),
-  failure? : @svg.ChannelStyle = @svg.ChannelStyle::new(),
-  mode? : @svg.Mode = Fixed(Light),
+  matched~ : @svg.ChannelStyle = @svg.ChannelStyle::new(),
+  not_matched~ : @svg.ChannelStyle = @svg.ChannelStyle::new(dashed=true),
+  taken~ : @svg.ChannelStyle = @svg.ChannelStyle::hidden(),
+  failure~ : @svg.ChannelStyle = @svg.ChannelStyle::new(),
+  mode~ : @svg.Mode = Fixed(Light),
 ) -> String {
   let result = @svg.SvgRenderer::new(mode~).render_traced(
     diagram,
-    GalleryStub::{  },
+    GalleryStub::{ },
     input,
     start_rule?=start,
     matched~,
@@ -255,7 +271,11 @@ test "PlantUML review gallery" (t : @test.Test) {
     row(name + ".puml", "source", source)
     for variant in [("dark", @svg.Mode::Fixed(Dark)), ("light", Fixed(Light))] {
       row(name + "-" + variant.0 + ".svg", "svg", svg(diagram, variant.1))
-      row(name + "-" + variant.0 + ".html", "player", player(diagram, variant.1))
+      row(
+        name + "-" + variant.0 + ".html",
+        "player",
+        player(diagram, variant.1),
+      )
     }
     // Static export of a player equals the direct render.
     let scene = @svg.SvgRenderer::new(mode=Fixed(Dark)).scene(diagram).scene.unwrap()
@@ -294,7 +314,13 @@ test "PlantUML review gallery" (t : @test.Test) {
     row(
       name + "-trace-dark.svg",
       "svg",
-      traced(diagram, "ok input", start?, taken=@svg.ChannelStyle::new(), mode=Fixed(Dark)),
+      traced(
+        diagram,
+        "ok input",
+        start?,
+        taken=@svg.ChannelStyle::new(),
+        mode=Fixed(Dark),
+      ),
     )
   }
   // An explicit EBNF scenario that follows a branch and a return loop.
@@ -309,14 +335,31 @@ test "PlantUML review gallery" (t : @test.Test) {
   }
   let track = topology.tracks[0]
   let walk = steps(topology, track.start, track.end)
-  let back = topology.connectors.iter().find_first(c => c.rule == track.id && c.role == Return).unwrap()
-  let actions = walk.map(s => match s {
-    Visit(id, _) => @animation.Motion::Visit(@animation.railroad_key(catalog.view_id, id), 600L)
-    Traverse(id, _) => Step(@animation.railroad_key(catalog.view_id, id), 400L)
+  let back = topology.connectors
+    .iter()
+    .find_first(c => c.rule == track.id && c.role == Return)
+    .unwrap()
+  let actions = walk.map(s => {
+    match s {
+      Visit(id, _) =>
+        @animation.Motion::Visit(
+          @animation.railroad_key(catalog.view_id, id),
+          600L,
+        )
+      Traverse(id, _) =>
+        Step(@animation.railroad_key(catalog.view_id, id), 400L)
+    }
   })
   actions.push(Step(@animation.railroad_key(catalog.view_id, back.id), 600L))
-  let plan = @animation.PlaybackPlan::scenario(catalog, @animation.Motion::serial(actions)).plan.unwrap()
-  row("ebnf-scenario.html", "player", player(diagram, Fixed(Light), playback=plan))
+  let plan = @animation.PlaybackPlan::scenario(
+    catalog,
+    @animation.Motion::serial(actions),
+  ).plan.unwrap()
+  row(
+    "ebnf-scenario.html",
+    "player",
+    player(diagram, Fixed(Light), playback=plan),
+  )
   // A player keeps configured static trace highlights in its canonical SVG.
   let request = @trace.TraceRequest::ebnf(
     match diagram {
@@ -326,12 +369,19 @@ test "PlantUML review gallery" (t : @test.Test) {
     track.id,
     "bad input",
   )
-  let evidence = match GalleryStub::{  }.trace(request) {
+  let evidence = match GalleryStub::{ }.trace(request) {
     NotMatched(t) => t
     _ => abort("trace")
   }
-  let highlight = @svg.TraceHighlight::new(evidence, taken=@svg.ChannelStyle::new())
-  row("ebnf-arithmetic-trace-light.svg", "svg", svg(diagram, Fixed(Light), trace=highlight))
+  let highlight = @svg.TraceHighlight::new(
+    evidence,
+    taken=@svg.ChannelStyle::new(),
+  )
+  row(
+    "ebnf-arithmetic-trace-light.svg",
+    "svg",
+    svg(diagram, Fixed(Light), trace=highlight),
+  )
   row(
     "ebnf-arithmetic-trace-light.html",
     "player",

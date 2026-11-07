@@ -26,12 +26,13 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   name : String?
   complete : Bool
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Statement]
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(ArrayView[Statement], name? : String, complete? : Bool, statements? : ArrayView[@envelope.Statement]) -> Self
@@ -39,6 +40,7 @@ pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::without_spans(Self) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Declaration(String, String, String, Bool)
   Close
@@ -48,7 +50,7 @@ pub(all) enum Kind {
   Note(String, String?, String, String?)
   Direction(@flowchart.Direction)
   Presentation(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
@@ -59,11 +61,12 @@ pub struct ReadResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Statement {
   kind : Kind
   explicit_label : Bool
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Statement::equal(Self, Self) -> Bool
 pub fn Statement::new(Kind, span? : @diagrams.Span, explicit_label? : Bool) -> Self
 pub fn Statement::not_equal(Self, Self) -> Bool

@@ -17,3 +17,7 @@ import {
   "moonrockz/diagrams/regex",
   "moonrockz/diagrams/render",
 } for "test"
+
+// The generator writes these files and its check compares them byte for byte, so the formatter
+// skips them.
+formatter(ignore: [ "assets.generated.mbt" ])

@@ -40,12 +40,16 @@ test "query a BPMN document" {
     #|  </process>
     #|</definitions>
   let document = @model.read(source).document.unwrap()
-  let tree = @bpmn.BpmnTree::new(@model.DocumentTree::new(document).tree.unwrap())
+  let tree = @bpmn.BpmnTree::new(
+    @model.DocumentTree::new(document).tree.unwrap(),
+  )
   // All candidate roots are searched, so the nested task matches too.
   let named = @bpmn.compile(
     "((bpmn.userTask) @task (#attr-eq? @task \"name\" \"Approve\"))",
   ).unwrap()
-  let ids = named.collect(tree).matches.map(m => tree.captured(m.captures[0]).id())
+  let ids = named.collect(tree).matches.map(m => {
+    tree.captured(m.captures[0]).id()
+  })
   assert_eq(ids.iter().to_array(), [Some("A"), Some("B")])
   // A field pattern constrains direct children only.
   let direct = @bpmn.compile(

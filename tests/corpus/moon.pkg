@@ -7,3 +7,7 @@ import {
   "moonbitlang/core/encoding/utf8",
   "moonbitlang/x/crypto",
 } for "test"
+
+// The generator writes these files and its check compares them byte for byte, so the formatter
+// skips them.
+formatter(ignore: [ "examples.generated.mbt", "reference.generated.mbt" ])

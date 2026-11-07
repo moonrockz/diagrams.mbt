@@ -1,26 +1,29 @@
 ///|
 /// Explicit presentation style. Omission preserves intrinsic family geometry.
+#derive(Eq, Debug)
 pub(all) enum ConnectorStyle {
   Elbow
   Rounded
   Curved
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum CrossingMode {
   Bridge
   Plain
-} derive(Eq, Debug)
+}
 
 ///|
 /// Per-call connector budgets. Every candidate and generated segment is charged.
+#derive(Eq, Debug)
 pub struct ConnectorLimits {
   candidates : Int32
   subdivisions : Int32
   segments : Int32
   crossings : Int32
   output_units : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn ConnectorLimits::new(
@@ -34,6 +37,7 @@ pub fn ConnectorLimits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct ConnectorOptions {
   style : ConnectorStyle?
   crossing : CrossingMode
@@ -42,7 +46,7 @@ pub struct ConnectorOptions {
   bridge_radius : Double
   style_supplied_bpmn : Bool
   limits : ConnectorLimits
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn ConnectorOptions::new(
@@ -66,24 +70,27 @@ pub fn ConnectorOptions::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct ConnectorPoint {
   x : Double
   y : Double
-} derive(Eq, Debug)
+}
 
 ///|
 /// Absolute SVG commands. Source route points remain separate from these values.
+#derive(Eq, Debug)
 pub(all) enum ConnectorCommand {
   Move(ConnectorPoint)
   Line(ConnectorPoint)
   Quadratic(ConnectorPoint, ConnectorPoint)
   Cubic(ConnectorPoint, ConnectorPoint, ConnectorPoint)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct ConnectorPath {
   commands : ReadOnlyArray[ConnectorCommand]
-} derive(Eq, Debug)
+}
 
 ///|
 fn cn(value : Double) -> String {

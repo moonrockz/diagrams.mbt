@@ -1,8 +1,9 @@
 ///|
+#derive(Eq, Debug)
 pub struct Printed {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Printed with Eq::{equal, not_equal}

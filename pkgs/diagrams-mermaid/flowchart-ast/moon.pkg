@@ -1,1 +1,4 @@
-import { "moonbitlang/core/debug", "moonrockz/diagrams-mermaid/swimlane-ast" @shared }
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams-mermaid/swimlane-ast" @shared,
+}

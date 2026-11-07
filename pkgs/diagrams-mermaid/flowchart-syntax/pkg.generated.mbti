@@ -19,11 +19,12 @@ pub fn read(String, header? : String, limits? : @swimlane-syntax.Limits) -> Read
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct ReadResult {
   tree : @swimlane-cst.Node
   ast : @flowchart-ast.Diagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr

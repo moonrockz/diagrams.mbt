@@ -17,7 +17,7 @@ priv struct Failed {
 
 ///|
 fn fail(code : String, message : String) -> Failed {
-  { code: "mermaid/\{code}", message }
+  { code: "mermaid/\{code}", message, }
 }
 
 ///|
@@ -65,7 +65,9 @@ fn Scanner::id_name(
       close += 1
     }
     guard close < n && close > k + 2 else {
-      return Some(fail("invalid-participant", "the configuration has no closing `}`"))
+      return Some(
+        fail("invalid-participant", "the configuration has no closing `}`"),
+      )
     }
     out.push(self.token(Config, k + 2, close))
     out.push(self.token(ConfigClose, close, close + 1))
@@ -118,7 +120,7 @@ fn Scanner::id_name(
 
 ///|
 /// True when `as` and a space or a line break are at `i`.
-fn Scanner::alias_at(self : Scanner, i : Int) -> Bool {
+fn Scanner::alias_at(self : Scanner, i : Int32) -> Bool {
   self.starts_ci(i, "as") &&
   (is_hspace(self.cu(i + 2)) || is_newline(self.cu(i + 2)))
 }
@@ -143,10 +145,15 @@ fn Scanner::as_label(self : Scanner, out : Array[@cst.Element]) -> Bool {
 fn Scanner::participant(self : Scanner, out : Array[@cst.Element]) -> Failed? {
   if self.keyword(out, "create") {
     guard self.space(out) else {
-      return Some(fail("invalid-participant", "`create` needs `participant` or `actor`"))
+      return Some(
+        fail("invalid-participant", "`create` needs `participant` or `actor`"),
+      )
     }
-    guard self.keyword_at(self.pos, "participant") || self.keyword_at(self.pos, "actor") else {
-      return Some(fail("invalid-participant", "`create` needs `participant` or `actor`"))
+    guard self.keyword_at(self.pos, "participant") ||
+      self.keyword_at(self.pos, "actor") else {
+      return Some(
+        fail("invalid-participant", "`create` needs `participant` or `actor`"),
+      )
     }
   }
   ignore(self.keyword(out, "participant") || self.keyword(out, "actor"))
@@ -165,7 +172,9 @@ fn Scanner::id_statement(
 ) -> Failed? {
   ignore(self.keyword(out, word))
   guard self.space(out) else {
-    return Some(fail("invalid-participant", "`\{word}` needs a participant name"))
+    return Some(
+      fail("invalid-participant", "`\{word}` needs a participant name"),
+    )
   }
   self.id_name(out, config=false, as_label=false)
 }
@@ -211,7 +220,10 @@ fn Scanner::link(
   out : Array[@cst.Element],
   word : String,
 ) -> Failed? {
-  let bad = fail("invalid-link", "`\{word}` needs a participant name, `:` and a text")
+  let bad = fail(
+    "invalid-link",
+    "`\{word}` needs a participant name, `:` and a text",
+  )
   ignore(self.keyword(out, word))
   ignore(self.space(out))
   guard self.name(out) else { return Some(bad) }
@@ -222,7 +234,7 @@ fn Scanner::link(
 ///|
 /// True when `word` at `i` is the start of a `link`-like statement: it is
 /// followed by spaces and a character that can start a name.
-fn Scanner::link_at(self : Scanner, i : Int, word : String) -> Bool {
+fn Scanner::link_at(self : Scanner, i : Int32, word : String) -> Bool {
   guard self.keyword_at(i, word) else { return false }
   let mut k = i + word.length()
   guard is_hspace(self.cu(k)) else { return false }
@@ -273,7 +285,8 @@ fn Scanner::accessibility(
     if close >= self.src.length() {
       self.pos = close
       self.error(
-        "mermaid/unclosed-description", "the description has no closing `}`",
+        "mermaid/unclosed-description",
+        "the description has no closing `}`",
         open,
         open + 1,
       )
@@ -292,7 +305,7 @@ fn Scanner::accessibility(
 
 ///|
 /// True when `accTitle` or `accDescr` at `i` starts its statement.
-fn Scanner::accessibility_at(self : Scanner, i : Int, word : String) -> Bool {
+fn Scanner::accessibility_at(self : Scanner, i : Int32, word : String) -> Bool {
   guard self.starts_ci(i, word) else { return false }
   let mut k = i + word.length()
   while is_hspace(self.cu(k)) {
@@ -320,7 +333,9 @@ fn Scanner::number(self : Scanner, out : Array[@cst.Element]) -> Bool {
     return false
   }
   let after = self.cu(i)
-  guard after == -1 || is_hspace(after) || is_newline(after) else { return false }
+  guard after == -1 || is_hspace(after) || is_newline(after) else {
+    return false
+  }
   out.push(self.token(Number, start, i))
   self.pos = i
   true
@@ -353,7 +368,9 @@ fn Scanner::autonumber(self : Scanner, out : Array[@cst.Element]) -> Failed? {
   }
   let c = self.cu(k)
   guard c == -1 || is_newline(c) || c == ';'.to_int() || self.comment_at(k) else {
-    return Some(fail("invalid-autonumber", "`autonumber` takes a start, a step, or `off`"))
+    return Some(
+      fail("invalid-autonumber", "`autonumber` takes a start, a step, or `off`"),
+    )
   }
   None
 }
@@ -361,7 +378,9 @@ fn Scanner::autonumber(self : Scanner, out : Array[@cst.Element]) -> Failed? {
 ///|
 /// A message: a sender, an arrow with its modifiers, a receiver and a text.
 fn Scanner::message(self : Scanner, out : Array[@cst.Element]) -> Failed? {
-  let unknown = fail("unknown-statement", "this is not a sequence diagram statement")
+  let unknown = fail(
+    "unknown-statement", "this is not a sequence diagram statement",
+  )
   guard self.name(out) else { return Some(unknown) }
   ignore(self.space(out))
   let pre = self.starts(self.pos, "()")
@@ -408,11 +427,12 @@ fn Scanner::statement(
     self.keyword_at(i, "create") {
     return (Participant, Plain, self.participant(out))
   }
-  for pair in [
-    ("destroy", @cst.NodeKind::Destroy),
-    ("activate", Activate),
-    ("deactivate", Deactivate),
-  ] {
+  for
+    pair in [
+      ("destroy", @cst.NodeKind::Destroy),
+      ("activate", Activate),
+      ("deactivate", Deactivate),
+    ] {
     if self.keyword_at(i, pair.0) {
       return (pair.1, Plain, self.id_statement(out, pair.0))
     }
@@ -435,12 +455,13 @@ fn Scanner::statement(
   if self.keyword_at(i, "note") {
     return (Note, Plain, self.note(out))
   }
-  for pair in [
-    ("links", @cst.NodeKind::Links),
-    ("link", Link),
-    ("properties", Properties),
-    ("details", Details),
-  ] {
+  for
+    pair in [
+      ("links", @cst.NodeKind::Links),
+      ("link", Link),
+      ("properties", Properties),
+      ("details", Details),
+    ] {
     if self.link_at(i, pair.0) {
       return (pair.1, Plain, self.link(out, pair.0))
     }

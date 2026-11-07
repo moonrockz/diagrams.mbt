@@ -27,11 +27,12 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Item]
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(ArrayView[Item], name? : String, statements? : ArrayView[@envelope.Statement]) -> Self
@@ -39,6 +40,7 @@ pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::without_spans(Self) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Expr {
   Terminal(String, @moonrockz/diagrams/ebnf.Quote, Notes, @diagrams.Span?)
   Name(String, Notes, @diagrams.Span?)
@@ -50,24 +52,26 @@ pub(all) enum Expr {
   OneOrMore(Expr, @diagrams.Span?)
   Count(String, Expr, @diagrams.Span?)
   Not(Expr, @diagrams.Span?)
-} derive(Eq, @debug.Debug)
+}
 pub fn Expr::equal(Self, Self) -> Bool
 pub fn Expr::not_equal(Self, Self) -> Bool
 pub fn Expr::to_repr(Self) -> @debug.Repr
 pub fn Expr::without_spans(Self) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Item {
   Rule(Rule)
   Note(ReadOnlyArray[String], @diagrams.Span?)
-} derive(Eq, @debug.Debug)
+}
 pub fn Item::equal(Self, Self) -> Bool
 pub fn Item::not_equal(Self, Self) -> Bool
 pub fn Item::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Notes {
   above : String?
   below : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Notes::equal(Self, Self) -> Bool
 pub fn Notes::not_equal(Self, Self) -> Bool
 pub fn Notes::to_repr(Self) -> @debug.Repr
@@ -78,13 +82,14 @@ pub struct ReadResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Rule {
   name : String
   body : Expr?
   above : String?
   below : String?
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::new(String, body? : Expr, above? : String, below? : String) -> Self
 pub fn Rule::not_equal(Self, Self) -> Bool

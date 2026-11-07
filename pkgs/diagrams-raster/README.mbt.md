@@ -133,16 +133,25 @@ that inspect frames.
 ```mbt check
 ///|
 test "export a bounded source-bound animation" {
-  let view = @swimlane.Swimlane::new("review", [
-    @swimlane.Node::new("A"), @swimlane.Node::new("B"),
-  ], [@swimlane.Connection::new("AB", "A", "B")])
+  let view = @swimlane.Swimlane::new(
+    "review",
+    [@swimlane.Node::new("A"), @swimlane.Node::new("B")],
+    [@swimlane.Connection::new("AB", "A", "B")],
+  )
   let scene = @svg.SvgRenderer::new().scene(@render.Diagram::Swimlane(view)).scene.unwrap()
   let key = scene.catalog.connection("AB").unwrap().key
-  let plan = @animation.PlaybackPlan::scenario(scene.catalog,
+  let plan = @animation.PlaybackPlan::scenario(
+    scene.catalog,
     @animation.Motion::serial([Step(key, 100L), Step(key, 100L)]),
   ).plan.unwrap()
-  let result = @raster.export_gif(scene, plan,
-    options=@raster.GifOptions::new(size=Width(64), frame_rate=10, loop_behavior=Once),
+  let result = @raster.export_gif(
+    scene,
+    plan,
+    options=@raster.GifOptions::new(
+      size=Width(64),
+      frame_rate=10,
+      loop_behavior=Once,
+    ),
   )
   assert_eq(result.image.unwrap().media_type, "image/gif")
 }

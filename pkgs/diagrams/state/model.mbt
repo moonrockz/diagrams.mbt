@@ -1,5 +1,6 @@
 ///|
 /// Source-independent state roles. History and boundaries describe drawn structure.
+#derive(Eq, Debug)
 pub(all) enum Role {
   Simple
   Composite
@@ -17,15 +18,17 @@ pub(all) enum Role {
   ExpansionInput
   ExpansionOutput
   Unsupported(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Separator {
   Horizontal
   Vertical
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct State {
   id : String
   label : String
@@ -35,7 +38,7 @@ pub struct State {
   expanded : Bool
   direction : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn State::new(
@@ -61,6 +64,7 @@ pub fn State::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Region {
   id : String
   owner : String?
@@ -68,7 +72,7 @@ pub struct Region {
   separator : Separator
   direction : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Region::new(
@@ -90,6 +94,7 @@ pub fn Region::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Transition {
   id : String
   source : String
@@ -102,7 +107,7 @@ pub struct Transition {
   direction : @flowchart.FlowDirection
   direction_hint : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Transition::new(
@@ -145,6 +150,7 @@ pub fn Transition::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Note {
   id : String
   text : String
@@ -153,7 +159,7 @@ pub struct Note {
   placement : String
   region : String
   origin : @flowchart.SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Note::new(
@@ -177,6 +183,7 @@ pub fn Note::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct StateDiagram {
   id : String
   states : ReadOnlyArray[State]
@@ -187,7 +194,7 @@ pub struct StateDiagram {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn StateDiagram::new(

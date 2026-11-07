@@ -9,3 +9,7 @@ import {
 import {
   "moonrockz/diagrams-tests/query-corpus" @corpus,
 } for "test"
+
+// The generator writes these files and its check compares them byte for byte, so the formatter
+// skips them.
+formatter(ignore: [ "inputs.generated.mbt" ])

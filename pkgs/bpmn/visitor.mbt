@@ -27,85 +27,183 @@ pub(open) trait Visitor {
 }
 
 ///|
-impl Visitor with visit_definitions(_self,_value,_node) { Continue }
+impl Visitor with fn visit_definitions(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_process(_self,_value,_node) { Continue }
+impl Visitor with fn visit_process(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_activity(_self,_value,_node) { Continue }
+impl Visitor with fn visit_activity(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_event(_self,_value,_node) { Continue }
+impl Visitor with fn visit_event(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_gateway(_self,_value,_node) { Continue }
+impl Visitor with fn visit_gateway(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_sequence_flow(_self,_value,_node) { Continue }
+impl Visitor with fn visit_sequence_flow(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_collaboration(_self,_value,_node) { Continue }
+impl Visitor with fn visit_collaboration(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_participant(_self,_value,_node) { Continue }
+impl Visitor with fn visit_participant(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_lane(_self,_value,_node) { Continue }
+impl Visitor with fn visit_lane(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_choreography(_self,_value,_node) { Continue }
+impl Visitor with fn visit_choreography(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_choreography_activity(_self,_value,_node) { Continue }
+impl Visitor with fn visit_choreography_activity(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_conversation(_self,_value,_node) { Continue }
+impl Visitor with fn visit_conversation(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_conversation_link(_self,_value,_node) { Continue }
+impl Visitor with fn visit_conversation_link(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_extension(_self,_value,_node) { Continue }
+impl Visitor with fn visit_extension(_self, _value, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_document(_self,_node) { Continue }
+impl Visitor with fn visit_document(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_diagram_interchange(_self,_node) { Continue }
+impl Visitor with fn visit_diagram_interchange(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_text(_self,_node) { Continue }
+impl Visitor with fn visit_text(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_comment(_self,_node) { Continue }
+impl Visitor with fn visit_comment(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_processing_instruction(_self,_node) { Continue }
+impl Visitor with fn visit_processing_instruction(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with visit_other(_self,_node) { Continue }
+impl Visitor with fn visit_other(_self, _node) {
+  Continue
+}
 
 ///|
-impl Visitor with leave(_self,_node) { () }
+impl Visitor with fn leave(_self, _node) {
+  ()
+}
 
 ///|
 fn[V : Visitor] dispatch_visitor(visitor : V, node : NodeRef) -> Control {
   match node.category() {
-    Definitions => visitor.visit_definitions(Definitions::from_element(node.element().unwrap()).unwrap(),node)
-    Process => visitor.visit_process(Process::from_element(node.element().unwrap()).unwrap(),node)
-    Activity => visitor.visit_activity(Activity::from_element(node.element().unwrap()).unwrap(),node)
-    Event => visitor.visit_event(Event::from_element(node.element().unwrap()).unwrap(),node)
-    Gateway => visitor.visit_gateway(Gateway::from_element(node.element().unwrap()).unwrap(),node)
-    SequenceFlow => visitor.visit_sequence_flow(SequenceFlow::from_element(node.element().unwrap()).unwrap(),node)
-    Collaboration => visitor.visit_collaboration(Collaboration::from_element(node.element().unwrap()).unwrap(),node)
-    Participant => visitor.visit_participant(Participant::from_element(node.element().unwrap()).unwrap(),node)
-    Lane => visitor.visit_lane(Lane::from_element(node.element().unwrap()).unwrap(),node)
-    Choreography => visitor.visit_choreography(Choreography::from_element(node.element().unwrap()).unwrap(),node)
-    ChoreographyActivity => visitor.visit_choreography_activity(ChoreographyActivity::from_element(node.element().unwrap()).unwrap(),node)
-    Conversation => visitor.visit_conversation(ConversationNode::from_element(node.element().unwrap()).unwrap(),node)
-    ConversationLink => visitor.visit_conversation_link(ConversationLink::from_element(node.element().unwrap()).unwrap(),node)
-    Extension => visitor.visit_extension(XmlElement::from_element(node.element().unwrap()).unwrap(),node)
+    Definitions =>
+      visitor.visit_definitions(
+        Definitions::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Process =>
+      visitor.visit_process(
+        Process::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Activity =>
+      visitor.visit_activity(
+        Activity::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Event =>
+      visitor.visit_event(
+        Event::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Gateway =>
+      visitor.visit_gateway(
+        Gateway::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    SequenceFlow =>
+      visitor.visit_sequence_flow(
+        SequenceFlow::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Collaboration =>
+      visitor.visit_collaboration(
+        Collaboration::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Participant =>
+      visitor.visit_participant(
+        Participant::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Lane =>
+      visitor.visit_lane(
+        Lane::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Choreography =>
+      visitor.visit_choreography(
+        Choreography::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    ChoreographyActivity =>
+      visitor.visit_choreography_activity(
+        ChoreographyActivity::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Conversation =>
+      visitor.visit_conversation(
+        ConversationNode::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    ConversationLink =>
+      visitor.visit_conversation_link(
+        ConversationLink::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
+    Extension =>
+      visitor.visit_extension(
+        XmlElement::from_element(node.element().unwrap()).unwrap(),
+        node,
+      )
     Document => visitor.visit_document(node)
     DiagramInterchange => visitor.visit_diagram_interchange(node)
     Text => visitor.visit_text(node)
@@ -116,7 +214,20 @@ fn[V : Visitor] dispatch_visitor(visitor : V, node : NodeRef) -> Control {
 }
 
 ///|
-pub fn[V : Visitor] accept(root : NodeRef, visitor : V) -> Unit { walk(root,node => match visitor.enter(node) { Continue => dispatch_visitor(visitor,node); other => other },leave=node => visitor.leave(node)) }
+pub fn[V : Visitor] accept(root : NodeRef, visitor : V) -> Unit {
+  walk(
+    root,
+    node => {
+      match visitor.enter(node) {
+        Continue => dispatch_visitor(visitor, node)
+        other => other
+      }
+    },
+    leave=node => visitor.leave(node),
+  )
+}
 
 ///|
-impl Visitor with enter(_self,_node) { Continue }
+impl Visitor with fn enter(_self, _node) {
+  Continue
+}

@@ -1404,7 +1404,8 @@ pub let typed_model_fields : ReadOnlyArray[(TypeId,SchemaFieldKind,ExpandedName)
 
 ///|
 /// Immutable typed view of schema BPMNDiagram.
-pub struct BpmnDiagram { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnDiagram { element : Element }
 
 ///|
 pub extend BpmnDiagram with Eq::{equal, not_equal}
@@ -1459,7 +1460,8 @@ pub fn BpmnDiagram::bpmn_label_style(self : BpmnDiagram) -> Field[ReadOnlyArray[
 
 ///|
 /// Immutable typed view of schema BPMNPlane.
-pub struct BpmnPlane { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnPlane { element : Element }
 
 ///|
 pub extend BpmnPlane with Eq::{equal, not_equal}
@@ -1502,7 +1504,8 @@ pub fn BpmnPlane::bpmn_element(self : BpmnPlane) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema BPMNEdge.
-pub struct BpmnEdge { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnEdge { element : Element }
 
 ///|
 pub extend BpmnEdge with Eq::{equal, not_equal}
@@ -1568,7 +1571,8 @@ pub fn BpmnEdge::message_visible_kind(self : BpmnEdge) -> Field[BpmnMessageVisib
 
 ///|
 /// Immutable typed view of schema BPMNShape.
-pub struct BpmnShape { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnShape { element : Element }
 
 ///|
 pub extend BpmnShape with Eq::{equal, not_equal}
@@ -1652,7 +1656,8 @@ pub fn BpmnShape::choreography_activity_shape(self : BpmnShape) -> Field[Referen
 
 ///|
 /// Immutable typed view of schema BPMNLabel.
-pub struct BpmnLabel { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnLabel { element : Element }
 
 ///|
 pub extend BpmnLabel with Eq::{equal, not_equal}
@@ -1695,7 +1700,8 @@ pub fn BpmnLabel::label_style(self : BpmnLabel) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema BPMNLabelStyle.
-pub struct BpmnLabelStyle { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnLabelStyle { element : Element }
 
 ///|
 pub extend BpmnLabelStyle with Eq::{equal, not_equal}
@@ -1727,7 +1733,8 @@ pub fn BpmnLabelStyle::font(self : BpmnLabelStyle) -> Field[DcFont] {
 
 ///|
 /// Immutable typed view of schema Font.
-pub struct DcFont { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DcFont { element : Element }
 
 ///|
 pub extend DcFont with Eq::{equal, not_equal}
@@ -1784,7 +1791,8 @@ pub fn DcFont::is_strike_through(self : DcFont) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema Point.
-pub struct DcPoint { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DcPoint { element : Element }
 
 ///|
 pub extend DcPoint with Eq::{equal, not_equal}
@@ -1817,7 +1825,8 @@ pub fn DcPoint::y(self : DcPoint) -> Field[ExactNumber] {
 
 ///|
 /// Immutable typed view of schema Bounds.
-pub struct DcBounds { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DcBounds { element : Element }
 
 ///|
 pub extend DcBounds with Eq::{equal, not_equal}
@@ -1862,7 +1871,8 @@ pub fn DcBounds::height(self : DcBounds) -> Field[ExactNumber] {
 
 ///|
 /// Immutable typed view of schema DiagramElement.
-pub struct DiDiagramElement { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiDiagramElement { element : Element }
 
 ///|
 pub extend DiDiagramElement with Eq::{equal, not_equal}
@@ -1887,7 +1897,8 @@ pub fn DiDiagramElement::id(self : DiDiagramElement) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema Anonymous_DiagramElement_extension_1.
-pub struct DiAnonymousDiagramElementExtension1 { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiAnonymousDiagramElementExtension1 { element : Element }
 
 ///|
 pub extend DiAnonymousDiagramElementExtension1 with Eq::{equal, not_equal}
@@ -1902,7 +1913,8 @@ pub fn DiAnonymousDiagramElementExtension1::from_element(element : Element) -> D
 
 ///|
 /// Immutable typed view of schema Diagram.
-pub struct DiDiagram { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiDiagram { element : Element }
 
 ///|
 pub extend DiDiagram with Eq::{equal, not_equal}
@@ -1937,7 +1949,8 @@ pub fn DiDiagram::id(self : DiDiagram) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema Node.
-pub struct DiNode { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiNode { element : Element }
 
 ///|
 pub extend DiNode with Eq::{equal, not_equal}
@@ -1962,7 +1975,8 @@ pub fn DiNode::id(self : DiNode) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema Edge.
-pub struct DiEdge { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiEdge { element : Element }
 
 ///|
 pub extend DiEdge with Eq::{equal, not_equal}
@@ -1992,7 +2006,8 @@ pub fn DiEdge::waypoint(self : DiEdge) -> Field[ReadOnlyArray[DcPoint]] {
 
 ///|
 /// Immutable typed view of schema LabeledEdge.
-pub struct DiLabeledEdge { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiLabeledEdge { element : Element }
 
 ///|
 pub extend DiLabeledEdge with Eq::{equal, not_equal}
@@ -2022,7 +2037,8 @@ pub fn DiLabeledEdge::waypoint(self : DiLabeledEdge) -> Field[ReadOnlyArray[DcPo
 
 ///|
 /// Immutable typed view of schema Shape.
-pub struct DiShape { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiShape { element : Element }
 
 ///|
 pub extend DiShape with Eq::{equal, not_equal}
@@ -2052,7 +2068,8 @@ pub fn DiShape::bounds(self : DiShape) -> Field[DcBounds] {
 
 ///|
 /// Immutable typed view of schema LabeledShape.
-pub struct DiLabeledShape { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiLabeledShape { element : Element }
 
 ///|
 pub extend DiLabeledShape with Eq::{equal, not_equal}
@@ -2082,7 +2099,8 @@ pub fn DiLabeledShape::bounds(self : DiLabeledShape) -> Field[DcBounds] {
 
 ///|
 /// Immutable typed view of schema Label.
-pub struct DiLabel { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiLabel { element : Element }
 
 ///|
 pub extend DiLabel with Eq::{equal, not_equal}
@@ -2112,7 +2130,8 @@ pub fn DiLabel::bounds(self : DiLabel) -> Field[DcBounds] {
 
 ///|
 /// Immutable typed view of schema Plane.
-pub struct DiPlane { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiPlane { element : Element }
 
 ///|
 pub extend DiPlane with Eq::{equal, not_equal}
@@ -2142,7 +2161,8 @@ pub fn DiPlane::diagram_element(self : DiPlane) -> Field[ReadOnlyArray[DiDiagram
 
 ///|
 /// Immutable typed view of schema Style.
-pub struct DiStyle { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DiStyle { element : Element }
 
 ///|
 pub extend DiStyle with Eq::{equal, not_equal}
@@ -2162,7 +2182,8 @@ pub fn DiStyle::id(self : DiStyle) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tActivity.
-pub struct Activity { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Activity { element : Element }
 
 ///|
 pub extend Activity with Eq::{equal, not_equal}
@@ -2272,7 +2293,8 @@ pub fn Activity::default_(self : Activity) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tAdHocSubProcess.
-pub struct AdHocSubProcess { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct AdHocSubProcess { element : Element }
 
 ///|
 pub extend AdHocSubProcess with Eq::{equal, not_equal}
@@ -2432,7 +2454,8 @@ pub fn AdHocSubProcess::ordering(self : AdHocSubProcess) -> Field[AdHocOrdering]
 
 ///|
 /// Immutable typed view of schema tArtifact.
-pub struct Artifact { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Artifact { element : Element }
 
 ///|
 pub extend Artifact with Eq::{equal, not_equal}
@@ -2462,7 +2485,8 @@ pub fn Artifact::id(self : Artifact) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tAssignment.
-pub struct Assignment { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Assignment { element : Element }
 
 ///|
 pub extend Assignment with Eq::{equal, not_equal}
@@ -2509,7 +2533,8 @@ pub fn Assignment::to(self : Assignment) -> Field[Expression] {
 
 ///|
 /// Immutable typed view of schema tAssociation.
-pub struct Association { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Association { element : Element }
 
 ///|
 pub extend Association with Eq::{equal, not_equal}
@@ -2564,7 +2589,8 @@ pub fn Association::association_direction(self : Association) -> Field[Associati
 
 ///|
 /// Immutable typed view of schema tAuditing.
-pub struct Auditing { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Auditing { element : Element }
 
 ///|
 pub extend Auditing with Eq::{equal, not_equal}
@@ -2601,7 +2627,8 @@ pub fn Auditing::id(self : Auditing) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tBaseElementWithMixedContent.
-pub struct BaseElementWithMixedContent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BaseElementWithMixedContent { element : Element }
 
 ///|
 pub extend BaseElementWithMixedContent with Eq::{equal, not_equal}
@@ -2631,7 +2658,8 @@ pub fn BaseElementWithMixedContent::id(self : BaseElementWithMixedContent) -> Fi
 
 ///|
 /// Immutable typed view of schema tBoundaryEvent.
-pub struct BoundaryEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BoundaryEvent { element : Element }
 
 ///|
 pub extend BoundaryEvent with Eq::{equal, not_equal}
@@ -2747,7 +2775,8 @@ pub fn BoundaryEvent::attached_to_ref(self : BoundaryEvent) -> Field[Reference] 
 
 ///|
 /// Immutable typed view of schema tBusinessRuleTask.
-pub struct BusinessRuleTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BusinessRuleTask { element : Element }
 
 ///|
 pub extend BusinessRuleTask with Eq::{equal, not_equal}
@@ -2875,7 +2904,8 @@ pub fn BusinessRuleTask::implementation(self : BusinessRuleTask) -> Field[Implem
 
 ///|
 /// Immutable typed view of schema tCallableElement.
-pub struct CallableElement { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CallableElement { element : Element }
 
 ///|
 pub extend CallableElement with Eq::{equal, not_equal}
@@ -2933,7 +2963,8 @@ pub fn CallableElement::name(self : CallableElement) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tCallActivity.
-pub struct CallActivity { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CallActivity { element : Element }
 
 ///|
 pub extend CallActivity with Eq::{equal, not_equal}
@@ -3061,7 +3092,8 @@ pub fn CallActivity::called_element(self : CallActivity) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tCallChoreography.
-pub struct CallChoreography { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CallChoreography { element : Element }
 
 ///|
 pub extend CallChoreography with Eq::{equal, not_equal}
@@ -3162,7 +3194,8 @@ pub fn CallChoreography::called_choreography_ref(self : CallChoreography) -> Fie
 
 ///|
 /// Immutable typed view of schema tCallConversation.
-pub struct CallConversation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CallConversation { element : Element }
 
 ///|
 pub extend CallConversation with Eq::{equal, not_equal}
@@ -3231,7 +3264,8 @@ pub fn CallConversation::called_collaboration_ref(self : CallConversation) -> Fi
 
 ///|
 /// Immutable typed view of schema tCancelEventDefinition.
-pub struct CancelEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CancelEventDefinition { element : Element }
 
 ///|
 pub extend CancelEventDefinition with Eq::{equal, not_equal}
@@ -3268,7 +3302,8 @@ pub fn CancelEventDefinition::id(self : CancelEventDefinition) -> Field[String] 
 
 ///|
 /// Immutable typed view of schema tCatchEvent.
-pub struct CatchEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CatchEvent { element : Element }
 
 ///|
 pub extend CatchEvent with Eq::{equal, not_equal}
@@ -3363,7 +3398,8 @@ pub fn CatchEvent::parallel_multiple(self : CatchEvent) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tCategory.
-pub struct Category { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Category { element : Element }
 
 ///|
 pub extend Category with Eq::{equal, not_equal}
@@ -3411,7 +3447,8 @@ pub fn Category::name(self : Category) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tCategoryValue.
-pub struct CategoryValue { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CategoryValue { element : Element }
 
 ///|
 pub extend CategoryValue with Eq::{equal, not_equal}
@@ -3454,7 +3491,8 @@ pub fn CategoryValue::value(self : CategoryValue) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tChoreography.
-pub struct Choreography { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Choreography { element : Element }
 
 ///|
 pub extend Choreography with Eq::{equal, not_equal}
@@ -3558,7 +3596,8 @@ pub fn Choreography::flow_element(self : Choreography) -> Field[ReadOnlyArray[Fl
 
 ///|
 /// Immutable typed view of schema tChoreographyActivity.
-pub struct ChoreographyActivity { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ChoreographyActivity { element : Element }
 
 ///|
 pub extend ChoreographyActivity with Eq::{equal, not_equal}
@@ -3638,7 +3677,8 @@ pub fn ChoreographyActivity::loop_type(self : ChoreographyActivity) -> Field[Cho
 
 ///|
 /// Immutable typed view of schema tChoreographyTask.
-pub struct ChoreographyTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ChoreographyTask { element : Element }
 
 ///|
 pub extend ChoreographyTask with Eq::{equal, not_equal}
@@ -3733,7 +3773,8 @@ pub fn ChoreographyTask::message_flow_ref(self : ChoreographyTask) -> Field[Read
 
 ///|
 /// Immutable typed view of schema tCollaboration.
-pub struct Collaboration { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Collaboration { element : Element }
 
 ///|
 pub extend Collaboration with Eq::{equal, not_equal}
@@ -3832,7 +3873,8 @@ pub fn Collaboration::is_closed(self : Collaboration) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tCompensateEventDefinition.
-pub struct CompensateEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CompensateEventDefinition { element : Element }
 
 ///|
 pub extend CompensateEventDefinition with Eq::{equal, not_equal}
@@ -3881,7 +3923,8 @@ pub fn CompensateEventDefinition::activity_ref(self : CompensateEventDefinition)
 
 ///|
 /// Immutable typed view of schema tComplexBehaviorDefinition.
-pub struct ComplexBehaviorDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ComplexBehaviorDefinition { element : Element }
 
 ///|
 pub extend ComplexBehaviorDefinition with Eq::{equal, not_equal}
@@ -3928,7 +3971,8 @@ pub fn ComplexBehaviorDefinition::event(self : ComplexBehaviorDefinition) -> Fie
 
 ///|
 /// Immutable typed view of schema tComplexGateway.
-pub struct ComplexGateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ComplexGateway { element : Element }
 
 ///|
 pub extend ComplexGateway with Eq::{equal, not_equal}
@@ -4013,7 +4057,8 @@ pub fn ComplexGateway::default_(self : ComplexGateway) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tConditionalEventDefinition.
-pub struct ConditionalEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ConditionalEventDefinition { element : Element }
 
 ///|
 pub extend ConditionalEventDefinition with Eq::{equal, not_equal}
@@ -4055,7 +4100,8 @@ pub fn ConditionalEventDefinition::condition(self : ConditionalEventDefinition) 
 
 ///|
 /// Immutable typed view of schema tConversation.
-pub struct Conversation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Conversation { element : Element }
 
 ///|
 pub extend Conversation with Eq::{equal, not_equal}
@@ -4113,7 +4159,8 @@ pub fn Conversation::name(self : Conversation) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tConversationAssociation.
-pub struct ConversationAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ConversationAssociation { element : Element }
 
 ///|
 pub extend ConversationAssociation with Eq::{equal, not_equal}
@@ -4162,7 +4209,8 @@ pub fn ConversationAssociation::outer_conversation_node_ref(self : ConversationA
 
 ///|
 /// Immutable typed view of schema tConversationLink.
-pub struct ConversationLink { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ConversationLink { element : Element }
 
 ///|
 pub extend ConversationLink with Eq::{equal, not_equal}
@@ -4217,7 +4265,8 @@ pub fn ConversationLink::target_ref(self : ConversationLink) -> Field[Reference]
 
 ///|
 /// Immutable typed view of schema tConversationNode.
-pub struct ConversationNode { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ConversationNode { element : Element }
 
 ///|
 pub extend ConversationNode with Eq::{equal, not_equal}
@@ -4267,7 +4316,8 @@ pub fn ConversationNode::name(self : ConversationNode) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tCorrelationKey.
-pub struct CorrelationKey { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CorrelationKey { element : Element }
 
 ///|
 pub extend CorrelationKey with Eq::{equal, not_equal}
@@ -4315,7 +4365,8 @@ pub fn CorrelationKey::name(self : CorrelationKey) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tCorrelationProperty.
-pub struct CorrelationProperty { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CorrelationProperty { element : Element }
 
 ///|
 pub extend CorrelationProperty with Eq::{equal, not_equal}
@@ -4369,7 +4420,8 @@ pub fn CorrelationProperty::type_(self : CorrelationProperty) -> Field[Reference
 
 ///|
 /// Immutable typed view of schema tCorrelationPropertyBinding.
-pub struct CorrelationPropertyBinding { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CorrelationPropertyBinding { element : Element }
 
 ///|
 pub extend CorrelationPropertyBinding with Eq::{equal, not_equal}
@@ -4417,7 +4469,8 @@ pub fn CorrelationPropertyBinding::correlation_property_ref(self : CorrelationPr
 
 ///|
 /// Immutable typed view of schema tCorrelationPropertyRetrievalExpression.
-pub struct CorrelationPropertyRetrievalExpression { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CorrelationPropertyRetrievalExpression { element : Element }
 
 ///|
 pub extend CorrelationPropertyRetrievalExpression with Eq::{equal, not_equal}
@@ -4465,7 +4518,8 @@ pub fn CorrelationPropertyRetrievalExpression::message_ref(self : CorrelationPro
 
 ///|
 /// Immutable typed view of schema tCorrelationSubscription.
-pub struct CorrelationSubscription { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct CorrelationSubscription { element : Element }
 
 ///|
 pub extend CorrelationSubscription with Eq::{equal, not_equal}
@@ -4513,7 +4567,8 @@ pub fn CorrelationSubscription::correlation_key_ref(self : CorrelationSubscripti
 
 ///|
 /// Immutable typed view of schema tDataAssociation.
-pub struct DataAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataAssociation { element : Element }
 
 ///|
 pub extend DataAssociation with Eq::{equal, not_equal}
@@ -4570,7 +4625,8 @@ pub fn DataAssociation::assignment(self : DataAssociation) -> Field[ReadOnlyArra
 
 ///|
 /// Immutable typed view of schema tDataInput.
-pub struct DataInput { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataInput { element : Element }
 
 ///|
 pub extend DataInput with Eq::{equal, not_equal}
@@ -4630,7 +4686,8 @@ pub fn DataInput::is_collection(self : DataInput) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tDataInputAssociation.
-pub struct DataInputAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataInputAssociation { element : Element }
 
 ///|
 pub extend DataInputAssociation with Eq::{equal, not_equal}
@@ -4687,7 +4744,8 @@ pub fn DataInputAssociation::assignment(self : DataInputAssociation) -> Field[Re
 
 ///|
 /// Immutable typed view of schema tDataObject.
-pub struct DataObject { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataObject { element : Element }
 
 ///|
 pub extend DataObject with Eq::{equal, not_equal}
@@ -4762,7 +4820,8 @@ pub fn DataObject::is_collection(self : DataObject) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tDataObjectReference.
-pub struct DataObjectReference { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataObjectReference { element : Element }
 
 ///|
 pub extend DataObjectReference with Eq::{equal, not_equal}
@@ -4837,7 +4896,8 @@ pub fn DataObjectReference::data_object_ref(self : DataObjectReference) -> Field
 
 ///|
 /// Immutable typed view of schema tDataOutput.
-pub struct DataOutput { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataOutput { element : Element }
 
 ///|
 pub extend DataOutput with Eq::{equal, not_equal}
@@ -4897,7 +4957,8 @@ pub fn DataOutput::is_collection(self : DataOutput) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tDataOutputAssociation.
-pub struct DataOutputAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataOutputAssociation { element : Element }
 
 ///|
 pub extend DataOutputAssociation with Eq::{equal, not_equal}
@@ -4954,7 +5015,8 @@ pub fn DataOutputAssociation::assignment(self : DataOutputAssociation) -> Field[
 
 ///|
 /// Immutable typed view of schema tDataState.
-pub struct DataState { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataState { element : Element }
 
 ///|
 pub extend DataState with Eq::{equal, not_equal}
@@ -4997,7 +5059,8 @@ pub fn DataState::name(self : DataState) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tDataStore.
-pub struct DataStore { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataStore { element : Element }
 
 ///|
 pub extend DataStore with Eq::{equal, not_equal}
@@ -5063,7 +5126,8 @@ pub fn DataStore::item_subject_ref(self : DataStore) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tDataStoreReference.
-pub struct DataStoreReference { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct DataStoreReference { element : Element }
 
 ///|
 pub extend DataStoreReference with Eq::{equal, not_equal}
@@ -5138,7 +5202,8 @@ pub fn DataStoreReference::data_store_ref(self : DataStoreReference) -> Field[Re
 
 ///|
 /// Immutable typed view of schema tEndEvent.
-pub struct EndEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct EndEvent { element : Element }
 
 ///|
 pub extend EndEvent with Eq::{equal, not_equal}
@@ -5236,7 +5301,8 @@ pub fn EndEvent::event_definition_ref(self : EndEvent) -> Field[ReadOnlyArray[Re
 
 ///|
 /// Immutable typed view of schema tEndPoint.
-pub struct EndPoint { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct EndPoint { element : Element }
 
 ///|
 pub extend EndPoint with Eq::{equal, not_equal}
@@ -5273,7 +5339,8 @@ pub fn EndPoint::id(self : EndPoint) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tError.
-pub struct BpmnError { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct BpmnError { element : Element }
 
 ///|
 pub extend BpmnError with Eq::{equal, not_equal}
@@ -5328,7 +5395,8 @@ pub fn BpmnError::structure_ref(self : BpmnError) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tErrorEventDefinition.
-pub struct ErrorEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ErrorEventDefinition { element : Element }
 
 ///|
 pub extend ErrorEventDefinition with Eq::{equal, not_equal}
@@ -5371,7 +5439,8 @@ pub fn ErrorEventDefinition::error_ref(self : ErrorEventDefinition) -> Field[Ref
 
 ///|
 /// Immutable typed view of schema tEscalation.
-pub struct Escalation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Escalation { element : Element }
 
 ///|
 pub extend Escalation with Eq::{equal, not_equal}
@@ -5426,7 +5495,8 @@ pub fn Escalation::structure_ref(self : Escalation) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tEscalationEventDefinition.
-pub struct EscalationEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct EscalationEventDefinition { element : Element }
 
 ///|
 pub extend EscalationEventDefinition with Eq::{equal, not_equal}
@@ -5469,7 +5539,8 @@ pub fn EscalationEventDefinition::escalation_ref(self : EscalationEventDefinitio
 
 ///|
 /// Immutable typed view of schema tEvent.
-pub struct Event { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Event { element : Element }
 
 ///|
 pub extend Event with Eq::{equal, not_equal}
@@ -5534,7 +5605,8 @@ pub fn Event::property(self : Event) -> Field[ReadOnlyArray[Property]] {
 
 ///|
 /// Immutable typed view of schema tEventBasedGateway.
-pub struct EventBasedGateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct EventBasedGateway { element : Element }
 
 ///|
 pub extend EventBasedGateway with Eq::{equal, not_equal}
@@ -5620,7 +5692,8 @@ pub fn EventBasedGateway::event_gateway_type(self : EventBasedGateway) -> Field[
 
 ///|
 /// Immutable typed view of schema tEventDefinition.
-pub struct EventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct EventDefinition { element : Element }
 
 ///|
 pub extend EventDefinition with Eq::{equal, not_equal}
@@ -5650,7 +5723,8 @@ pub fn EventDefinition::id(self : EventDefinition) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tExclusiveGateway.
-pub struct ExclusiveGateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ExclusiveGateway { element : Element }
 
 ///|
 pub extend ExclusiveGateway with Eq::{equal, not_equal}
@@ -5730,7 +5804,8 @@ pub fn ExclusiveGateway::default_(self : ExclusiveGateway) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tExpression.
-pub struct Expression { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Expression { element : Element }
 
 ///|
 pub extend Expression with Eq::{equal, not_equal}
@@ -5767,7 +5842,8 @@ pub fn Expression::id(self : Expression) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tExtension.
-pub struct Extension { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Extension { element : Element }
 
 ///|
 pub extend Extension with Eq::{equal, not_equal}
@@ -5805,7 +5881,8 @@ pub fn Extension::must_understand(self : Extension) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tExtensionElements.
-pub struct ExtensionElements { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ExtensionElements { element : Element }
 
 ///|
 pub extend ExtensionElements with Eq::{equal, not_equal}
@@ -5826,7 +5903,8 @@ pub fn ExtensionElements::new(contents? : ArrayView[Content] = []) -> ExtensionE
 
 ///|
 /// Immutable typed view of schema tFlowElement.
-pub struct FlowElement { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct FlowElement { element : Element }
 
 ///|
 pub extend FlowElement with Eq::{equal, not_equal}
@@ -5876,7 +5954,8 @@ pub fn FlowElement::name(self : FlowElement) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tFlowNode.
-pub struct FlowNode { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct FlowNode { element : Element }
 
 ///|
 pub extend FlowNode with Eq::{equal, not_equal}
@@ -5936,7 +6015,8 @@ pub fn FlowNode::outgoing(self : FlowNode) -> Field[ReadOnlyArray[Reference]] {
 
 ///|
 /// Immutable typed view of schema tFormalExpression.
-pub struct FormalExpression { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct FormalExpression { element : Element }
 
 ///|
 pub extend FormalExpression with Eq::{equal, not_equal}
@@ -5985,7 +6065,8 @@ pub fn FormalExpression::evaluates_to_type_ref(self : FormalExpression) -> Field
 
 ///|
 /// Immutable typed view of schema tGateway.
-pub struct Gateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Gateway { element : Element }
 
 ///|
 pub extend Gateway with Eq::{equal, not_equal}
@@ -6059,7 +6140,8 @@ pub fn Gateway::gateway_direction(self : Gateway) -> Field[GatewayDirection] {
 
 ///|
 /// Immutable typed view of schema tGlobalBusinessRuleTask.
-pub struct GlobalBusinessRuleTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalBusinessRuleTask { element : Element }
 
 ///|
 pub extend GlobalBusinessRuleTask with Eq::{equal, not_equal}
@@ -6128,7 +6210,8 @@ pub fn GlobalBusinessRuleTask::implementation(self : GlobalBusinessRuleTask) -> 
 
 ///|
 /// Immutable typed view of schema tGlobalChoreographyTask.
-pub struct GlobalChoreographyTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalChoreographyTask { element : Element }
 
 ///|
 pub extend GlobalChoreographyTask with Eq::{equal, not_equal}
@@ -6238,7 +6321,8 @@ pub fn GlobalChoreographyTask::initiating_participant_ref(self : GlobalChoreogra
 
 ///|
 /// Immutable typed view of schema tGlobalConversation.
-pub struct GlobalConversation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalConversation { element : Element }
 
 ///|
 pub extend GlobalConversation with Eq::{equal, not_equal}
@@ -6337,7 +6421,8 @@ pub fn GlobalConversation::is_closed(self : GlobalConversation) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tGlobalManualTask.
-pub struct GlobalManualTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalManualTask { element : Element }
 
 ///|
 pub extend GlobalManualTask with Eq::{equal, not_equal}
@@ -6400,7 +6485,8 @@ pub fn GlobalManualTask::resource_role(self : GlobalManualTask) -> Field[ReadOnl
 
 ///|
 /// Immutable typed view of schema tGlobalScriptTask.
-pub struct GlobalScriptTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalScriptTask { element : Element }
 
 ///|
 pub extend GlobalScriptTask with Eq::{equal, not_equal}
@@ -6474,7 +6560,8 @@ pub fn GlobalScriptTask::script_language(self : GlobalScriptTask) -> Field[Strin
 
 ///|
 /// Immutable typed view of schema tGlobalTask.
-pub struct GlobalTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalTask { element : Element }
 
 ///|
 pub extend GlobalTask with Eq::{equal, not_equal}
@@ -6537,7 +6624,8 @@ pub fn GlobalTask::resource_role(self : GlobalTask) -> Field[ReadOnlyArray[Resou
 
 ///|
 /// Immutable typed view of schema tGlobalUserTask.
-pub struct GlobalUserTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct GlobalUserTask { element : Element }
 
 ///|
 pub extend GlobalUserTask with Eq::{equal, not_equal}
@@ -6611,7 +6699,8 @@ pub fn GlobalUserTask::implementation(self : GlobalUserTask) -> Field[Implementa
 
 ///|
 /// Immutable typed view of schema tGroup.
-pub struct Group { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Group { element : Element }
 
 ///|
 pub extend Group with Eq::{equal, not_equal}
@@ -6654,7 +6743,8 @@ pub fn Group::category_value_ref(self : Group) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tHumanPerformer.
-pub struct HumanPerformer { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct HumanPerformer { element : Element }
 
 ///|
 pub extend HumanPerformer with Eq::{equal, not_equal}
@@ -6712,7 +6802,8 @@ pub fn HumanPerformer::name(self : HumanPerformer) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tImplicitThrowEvent.
-pub struct ImplicitThrowEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ImplicitThrowEvent { element : Element }
 
 ///|
 pub extend ImplicitThrowEvent with Eq::{equal, not_equal}
@@ -6810,7 +6901,8 @@ pub fn ImplicitThrowEvent::event_definition_ref(self : ImplicitThrowEvent) -> Fi
 
 ///|
 /// Immutable typed view of schema tInclusiveGateway.
-pub struct InclusiveGateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct InclusiveGateway { element : Element }
 
 ///|
 pub extend InclusiveGateway with Eq::{equal, not_equal}
@@ -6890,7 +6982,8 @@ pub fn InclusiveGateway::default_(self : InclusiveGateway) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tInputSet.
-pub struct InputSet { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct InputSet { element : Element }
 
 ///|
 pub extend InputSet with Eq::{equal, not_equal}
@@ -6953,7 +7046,8 @@ pub fn InputSet::name(self : InputSet) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tInterface.
-pub struct Interface { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Interface { element : Element }
 
 ///|
 pub extend Interface with Eq::{equal, not_equal}
@@ -7007,7 +7101,8 @@ pub fn Interface::implementation_ref(self : Interface) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tIntermediateCatchEvent.
-pub struct IntermediateCatchEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct IntermediateCatchEvent { element : Element }
 
 ///|
 pub extend IntermediateCatchEvent with Eq::{equal, not_equal}
@@ -7111,7 +7206,8 @@ pub fn IntermediateCatchEvent::parallel_multiple(self : IntermediateCatchEvent) 
 
 ///|
 /// Immutable typed view of schema tIntermediateThrowEvent.
-pub struct IntermediateThrowEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct IntermediateThrowEvent { element : Element }
 
 ///|
 pub extend IntermediateThrowEvent with Eq::{equal, not_equal}
@@ -7209,7 +7305,8 @@ pub fn IntermediateThrowEvent::event_definition_ref(self : IntermediateThrowEven
 
 ///|
 /// Immutable typed view of schema tInputOutputBinding.
-pub struct InputOutputBinding { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct InputOutputBinding { element : Element }
 
 ///|
 pub extend InputOutputBinding with Eq::{equal, not_equal}
@@ -7264,7 +7361,8 @@ pub fn InputOutputBinding::output_data_ref(self : InputOutputBinding) -> Field[R
 
 ///|
 /// Immutable typed view of schema tInputOutputSpecification.
-pub struct InputOutputSpecification { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct InputOutputSpecification { element : Element }
 
 ///|
 pub extend InputOutputSpecification with Eq::{equal, not_equal}
@@ -7321,7 +7419,8 @@ pub fn InputOutputSpecification::output_set(self : InputOutputSpecification) -> 
 
 ///|
 /// Immutable typed view of schema tItemDefinition.
-pub struct ItemDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ItemDefinition { element : Element }
 
 ///|
 pub extend ItemDefinition with Eq::{equal, not_equal}
@@ -7376,7 +7475,8 @@ pub fn ItemDefinition::item_kind(self : ItemDefinition) -> Field[ItemKind] {
 
 ///|
 /// Immutable typed view of schema tLane.
-pub struct Lane { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Lane { element : Element }
 
 ///|
 pub extend Lane with Eq::{equal, not_equal}
@@ -7440,7 +7540,8 @@ pub fn Lane::partition_element_ref(self : Lane) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tLaneSet.
-pub struct LaneSet { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct LaneSet { element : Element }
 
 ///|
 pub extend LaneSet with Eq::{equal, not_equal}
@@ -7488,7 +7589,8 @@ pub fn LaneSet::name(self : LaneSet) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tLinkEventDefinition.
-pub struct LinkEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct LinkEventDefinition { element : Element }
 
 ///|
 pub extend LinkEventDefinition with Eq::{equal, not_equal}
@@ -7541,7 +7643,8 @@ pub fn LinkEventDefinition::name(self : LinkEventDefinition) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tLoopCharacteristics.
-pub struct LoopCharacteristics { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct LoopCharacteristics { element : Element }
 
 ///|
 pub extend LoopCharacteristics with Eq::{equal, not_equal}
@@ -7571,7 +7674,8 @@ pub fn LoopCharacteristics::id(self : LoopCharacteristics) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tManualTask.
-pub struct ManualTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ManualTask { element : Element }
 
 ///|
 pub extend ManualTask with Eq::{equal, not_equal}
@@ -7693,7 +7797,8 @@ pub fn ManualTask::default_(self : ManualTask) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tMessage.
-pub struct Message { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Message { element : Element }
 
 ///|
 pub extend Message with Eq::{equal, not_equal}
@@ -7742,7 +7847,8 @@ pub fn Message::item_ref(self : Message) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tMessageEventDefinition.
-pub struct MessageEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct MessageEventDefinition { element : Element }
 
 ///|
 pub extend MessageEventDefinition with Eq::{equal, not_equal}
@@ -7790,7 +7896,8 @@ pub fn MessageEventDefinition::message_ref(self : MessageEventDefinition) -> Fie
 
 ///|
 /// Immutable typed view of schema tMessageFlow.
-pub struct MessageFlow { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct MessageFlow { element : Element }
 
 ///|
 pub extend MessageFlow with Eq::{equal, not_equal}
@@ -7851,7 +7958,8 @@ pub fn MessageFlow::message_ref(self : MessageFlow) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tMessageFlowAssociation.
-pub struct MessageFlowAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct MessageFlowAssociation { element : Element }
 
 ///|
 pub extend MessageFlowAssociation with Eq::{equal, not_equal}
@@ -7900,7 +8008,8 @@ pub fn MessageFlowAssociation::outer_message_flow_ref(self : MessageFlowAssociat
 
 ///|
 /// Immutable typed view of schema tMonitoring.
-pub struct Monitoring { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Monitoring { element : Element }
 
 ///|
 pub extend Monitoring with Eq::{equal, not_equal}
@@ -7937,7 +8046,8 @@ pub fn Monitoring::id(self : Monitoring) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tMultiInstanceLoopCharacteristics.
-pub struct MultiInstanceLoopCharacteristics { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct MultiInstanceLoopCharacteristics { element : Element }
 
 ///|
 pub extend MultiInstanceLoopCharacteristics with Eq::{equal, not_equal}
@@ -8033,7 +8143,8 @@ pub fn MultiInstanceLoopCharacteristics::none_behavior_event_ref(self : MultiIns
 
 ///|
 /// Immutable typed view of schema tOperation.
-pub struct Operation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Operation { element : Element }
 
 ///|
 pub extend Operation with Eq::{equal, not_equal}
@@ -8097,7 +8208,8 @@ pub fn Operation::implementation_ref(self : Operation) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tOutputSet.
-pub struct OutputSet { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct OutputSet { element : Element }
 
 ///|
 pub extend OutputSet with Eq::{equal, not_equal}
@@ -8160,7 +8272,8 @@ pub fn OutputSet::name(self : OutputSet) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tParallelGateway.
-pub struct ParallelGateway { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ParallelGateway { element : Element }
 
 ///|
 pub extend ParallelGateway with Eq::{equal, not_equal}
@@ -8234,7 +8347,8 @@ pub fn ParallelGateway::gateway_direction(self : ParallelGateway) -> Field[Gatew
 
 ///|
 /// Immutable typed view of schema tParticipant.
-pub struct Participant { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Participant { element : Element }
 
 ///|
 pub extend Participant with Eq::{equal, not_equal}
@@ -8298,7 +8412,8 @@ pub fn Participant::process_ref(self : Participant) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tParticipantAssociation.
-pub struct ParticipantAssociation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ParticipantAssociation { element : Element }
 
 ///|
 pub extend ParticipantAssociation with Eq::{equal, not_equal}
@@ -8345,7 +8460,8 @@ pub fn ParticipantAssociation::outer_participant_ref(self : ParticipantAssociati
 
 ///|
 /// Immutable typed view of schema tParticipantMultiplicity.
-pub struct ParticipantMultiplicity { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ParticipantMultiplicity { element : Element }
 
 ///|
 pub extend ParticipantMultiplicity with Eq::{equal, not_equal}
@@ -8394,7 +8510,8 @@ pub fn ParticipantMultiplicity::maximum(self : ParticipantMultiplicity) -> Field
 
 ///|
 /// Immutable typed view of schema tPartnerEntity.
-pub struct PartnerEntity { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct PartnerEntity { element : Element }
 
 ///|
 pub extend PartnerEntity with Eq::{equal, not_equal}
@@ -8442,7 +8559,8 @@ pub fn PartnerEntity::name(self : PartnerEntity) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tPartnerRole.
-pub struct PartnerRole { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct PartnerRole { element : Element }
 
 ///|
 pub extend PartnerRole with Eq::{equal, not_equal}
@@ -8490,7 +8608,8 @@ pub fn PartnerRole::name(self : PartnerRole) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tPerformer.
-pub struct Performer { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Performer { element : Element }
 
 ///|
 pub extend Performer with Eq::{equal, not_equal}
@@ -8548,7 +8667,8 @@ pub fn Performer::name(self : Performer) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tPotentialOwner.
-pub struct PotentialOwner { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct PotentialOwner { element : Element }
 
 ///|
 pub extend PotentialOwner with Eq::{equal, not_equal}
@@ -8606,7 +8726,8 @@ pub fn PotentialOwner::name(self : PotentialOwner) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tProcess.
-pub struct Process { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Process { element : Element }
 
 ///|
 pub extend Process with Eq::{equal, not_equal}
@@ -8733,7 +8854,8 @@ pub fn Process::definitional_collaboration_ref(self : Process) -> Field[Referenc
 
 ///|
 /// Immutable typed view of schema tProperty.
-pub struct Property { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Property { element : Element }
 
 ///|
 pub extend Property with Eq::{equal, not_equal}
@@ -8787,7 +8909,8 @@ pub fn Property::item_subject_ref(self : Property) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tReceiveTask.
-pub struct ReceiveTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ReceiveTask { element : Element }
 
 ///|
 pub extend ReceiveTask with Eq::{equal, not_equal}
@@ -8933,7 +9056,8 @@ pub fn ReceiveTask::operation_ref(self : ReceiveTask) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tRelationship.
-pub struct Relationship { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Relationship { element : Element }
 
 ///|
 pub extend Relationship with Eq::{equal, not_equal}
@@ -8992,7 +9116,8 @@ pub fn Relationship::direction(self : Relationship) -> Field[RelationshipDirecti
 
 ///|
 /// Immutable typed view of schema tRendering.
-pub struct Rendering { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Rendering { element : Element }
 
 ///|
 pub extend Rendering with Eq::{equal, not_equal}
@@ -9029,7 +9154,8 @@ pub fn Rendering::id(self : Rendering) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tResource.
-pub struct Resource { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Resource { element : Element }
 
 ///|
 pub extend Resource with Eq::{equal, not_equal}
@@ -9077,7 +9203,8 @@ pub fn Resource::name(self : Resource) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tResourceAssignmentExpression.
-pub struct ResourceAssignmentExpression { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ResourceAssignmentExpression { element : Element }
 
 ///|
 pub extend ResourceAssignmentExpression with Eq::{equal, not_equal}
@@ -9119,7 +9246,8 @@ pub fn ResourceAssignmentExpression::expression(self : ResourceAssignmentExpress
 
 ///|
 /// Immutable typed view of schema tResourceParameter.
-pub struct ResourceParameter { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ResourceParameter { element : Element }
 
 ///|
 pub extend ResourceParameter with Eq::{equal, not_equal}
@@ -9174,7 +9302,8 @@ pub fn ResourceParameter::is_required(self : ResourceParameter) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tResourceParameterBinding.
-pub struct ResourceParameterBinding { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ResourceParameterBinding { element : Element }
 
 ///|
 pub extend ResourceParameterBinding with Eq::{equal, not_equal}
@@ -9222,7 +9351,8 @@ pub fn ResourceParameterBinding::parameter_ref(self : ResourceParameterBinding) 
 
 ///|
 /// Immutable typed view of schema tResourceRole.
-pub struct ResourceRole { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ResourceRole { element : Element }
 
 ///|
 pub extend ResourceRole with Eq::{equal, not_equal}
@@ -9280,7 +9410,8 @@ pub fn ResourceRole::name(self : ResourceRole) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tScriptTask.
-pub struct ScriptTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ScriptTask { element : Element }
 
 ///|
 pub extend ScriptTask with Eq::{equal, not_equal}
@@ -9413,7 +9544,8 @@ pub fn ScriptTask::script_format(self : ScriptTask) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tScript.
-pub struct Script { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Script { element : Element }
 
 ///|
 pub extend Script with Eq::{equal, not_equal}
@@ -9434,7 +9566,8 @@ pub fn Script::new(contents? : ArrayView[Content] = []) -> Script {
 
 ///|
 /// Immutable typed view of schema tSendTask.
-pub struct SendTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SendTask { element : Element }
 
 ///|
 pub extend SendTask with Eq::{equal, not_equal}
@@ -9574,7 +9707,8 @@ pub fn SendTask::operation_ref(self : SendTask) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tSequenceFlow.
-pub struct SequenceFlow { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SequenceFlow { element : Element }
 
 ///|
 pub extend SequenceFlow with Eq::{equal, not_equal}
@@ -9655,7 +9789,8 @@ pub fn SequenceFlow::is_immediate(self : SequenceFlow) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tServiceTask.
-pub struct ServiceTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ServiceTask { element : Element }
 
 ///|
 pub extend ServiceTask with Eq::{equal, not_equal}
@@ -9789,7 +9924,8 @@ pub fn ServiceTask::operation_ref(self : ServiceTask) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tSignal.
-pub struct Signal { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Signal { element : Element }
 
 ///|
 pub extend Signal with Eq::{equal, not_equal}
@@ -9838,7 +9974,8 @@ pub fn Signal::structure_ref(self : Signal) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tSignalEventDefinition.
-pub struct SignalEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SignalEventDefinition { element : Element }
 
 ///|
 pub extend SignalEventDefinition with Eq::{equal, not_equal}
@@ -9881,7 +10018,8 @@ pub fn SignalEventDefinition::signal_ref(self : SignalEventDefinition) -> Field[
 
 ///|
 /// Immutable typed view of schema tStandardLoopCharacteristics.
-pub struct StandardLoopCharacteristics { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct StandardLoopCharacteristics { element : Element }
 
 ///|
 pub extend StandardLoopCharacteristics with Eq::{equal, not_equal}
@@ -9935,7 +10073,8 @@ pub fn StandardLoopCharacteristics::loop_maximum(self : StandardLoopCharacterist
 
 ///|
 /// Immutable typed view of schema tStartEvent.
-pub struct StartEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct StartEvent { element : Element }
 
 ///|
 pub extend StartEvent with Eq::{equal, not_equal}
@@ -10045,7 +10184,8 @@ pub fn StartEvent::is_interrupting(self : StartEvent) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tSubChoreography.
-pub struct SubChoreography { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SubChoreography { element : Element }
 
 ///|
 pub extend SubChoreography with Eq::{equal, not_equal}
@@ -10145,7 +10285,8 @@ pub fn SubChoreography::artifact(self : SubChoreography) -> Field[ReadOnlyArray[
 
 ///|
 /// Immutable typed view of schema tSubConversation.
-pub struct SubConversation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SubConversation { element : Element }
 
 ///|
 pub extend SubConversation with Eq::{equal, not_equal}
@@ -10208,7 +10349,8 @@ pub fn SubConversation::conversation_node(self : SubConversation) -> Field[ReadO
 
 ///|
 /// Immutable typed view of schema tSubProcess.
-pub struct SubProcess { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct SubProcess { element : Element }
 
 ///|
 pub extend SubProcess with Eq::{equal, not_equal}
@@ -10351,7 +10493,8 @@ pub fn SubProcess::triggered_by_event(self : SubProcess) -> Field[Bool] {
 
 ///|
 /// Immutable typed view of schema tTask.
-pub struct Task { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Task { element : Element }
 
 ///|
 pub extend Task with Eq::{equal, not_equal}
@@ -10473,7 +10616,8 @@ pub fn Task::default_(self : Task) -> Field[Reference] {
 
 ///|
 /// Immutable typed view of schema tTerminateEventDefinition.
-pub struct TerminateEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct TerminateEventDefinition { element : Element }
 
 ///|
 pub extend TerminateEventDefinition with Eq::{equal, not_equal}
@@ -10510,7 +10654,8 @@ pub fn TerminateEventDefinition::id(self : TerminateEventDefinition) -> Field[St
 
 ///|
 /// Immutable typed view of schema tTextAnnotation.
-pub struct TextAnnotation { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct TextAnnotation { element : Element }
 
 ///|
 pub extend TextAnnotation with Eq::{equal, not_equal}
@@ -10558,7 +10703,8 @@ pub fn TextAnnotation::text_format(self : TextAnnotation) -> Field[String] {
 
 ///|
 /// Immutable typed view of schema tText.
-pub struct Text { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Text { element : Element }
 
 ///|
 pub extend Text with Eq::{equal, not_equal}
@@ -10579,7 +10725,8 @@ pub fn Text::new(contents? : ArrayView[Content] = []) -> Text {
 
 ///|
 /// Immutable typed view of schema tThrowEvent.
-pub struct ThrowEvent { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct ThrowEvent { element : Element }
 
 ///|
 pub extend ThrowEvent with Eq::{equal, not_equal}
@@ -10669,7 +10816,8 @@ pub fn ThrowEvent::event_definition_ref(self : ThrowEvent) -> Field[ReadOnlyArra
 
 ///|
 /// Immutable typed view of schema tTimerEventDefinition.
-pub struct TimerEventDefinition { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct TimerEventDefinition { element : Element }
 
 ///|
 pub extend TimerEventDefinition with Eq::{equal, not_equal}
@@ -10721,7 +10869,8 @@ pub fn TimerEventDefinition::time_cycle(self : TimerEventDefinition) -> Field[Ex
 
 ///|
 /// Immutable typed view of schema tTransaction.
-pub struct Transaction { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct Transaction { element : Element }
 
 ///|
 pub extend Transaction with Eq::{equal, not_equal}
@@ -10870,7 +11019,8 @@ pub fn Transaction::method_(self : Transaction) -> Field[TransactionMethod] {
 
 ///|
 /// Immutable typed view of schema tUserTask.
-pub struct UserTask { element : Element } derive(Eq, Debug)
+#derive(Eq, Debug)
+pub struct UserTask { element : Element }
 
 ///|
 pub extend UserTask with Eq::{equal, not_equal}

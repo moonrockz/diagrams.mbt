@@ -2,6 +2,7 @@
 /// A normalized semantic tree. Both the pinned PlantUML tiles and the
 /// library models normalize to it, so the comparison ignores drawing order
 /// quirks and keeps the structure.
+#derive(Eq, Debug)
 priv enum Norm {
   Lit(String)
   Box(String)
@@ -18,7 +19,7 @@ priv enum Norm {
   Look(Norm)
   Not(Norm)
   Empty
-} derive(Eq, Debug)
+}
 
 ///|
 fn Norm::text(self : Norm) -> String {

@@ -1,7 +1,20 @@
-import { "moonbitlang/core/debug" }
+import {
+  "moonbitlang/core/debug",
+}
 
 import {
- "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
- "moonbitlang/core/encoding/utf8",
- "moonbitlang/x/crypto",
+  "moonrockz/diagrams-tests/bpmn-corpus" @corpus,
+  "moonbitlang/core/encoding/utf8",
+  "moonbitlang/x/crypto",
 } for "test"
+
+// The generator writes these files and its check compares them byte for byte, so the formatter
+// skips them.
+formatter(
+  ignore: [
+    "graphical.generated.mbt",
+    "inputs.generated.mbt",
+    "models.generated.mbt",
+    "render.generated.mbt",
+  ],
+)

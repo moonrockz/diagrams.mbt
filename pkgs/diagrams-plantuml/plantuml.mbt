@@ -8,6 +8,7 @@ pub let plantuml_commit : String = "18d0aae311a4f1eb3723bb4b0ad939185e22f166"
 
 ///|
 /// One parsed native block of a supported kind.
+#derive(Eq, Debug)
 pub(all) enum Document {
   Regex(@regex_syntax.Document)
   Ebnf(@ebnf_syntax.Document)
@@ -15,7 +16,7 @@ pub(all) enum Document {
   Yaml(@yaml_syntax.Document)
   Activity(@activity.Document)
   State(@state.Document)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Document with Eq::{not_equal, equal}
@@ -155,10 +156,11 @@ pub fn read_body(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct PrintResult {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend PrintResult with Eq::{not_equal, equal}

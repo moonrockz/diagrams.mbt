@@ -1,6 +1,7 @@
 ///|
 /// One final visible connector and its untouched original route. Identities refer
 /// to source connections, message indices or hierarchy/grammar occurrences.
+#derive(Eq, Debug)
 pub struct ResolvedConnector {
   id : String
   source : String
@@ -8,24 +9,26 @@ pub struct ResolvedConnector {
   route : ConnectorPath
   path : ConnectorPath
   mask : String?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct ConnectorGeometry {
   paths : ReadOnlyArray[ResolvedConnector]
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 /// A protected outline or label rectangle. `owner` can identify an endpoint
 /// whose attachment is intentional. Use an empty owner for unrelated content.
+#derive(Eq, Debug)
 pub(all) struct ConnectorObstacle {
   owner : String
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, Debug)
+}
 
 ///|
 /// Inspect a rendered artifact. This accepts only this renderer's generated SVG,

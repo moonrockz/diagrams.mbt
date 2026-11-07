@@ -20,21 +20,23 @@ pub fn to_diagram(@moonrockz/bpmn.Document, selector? : ViewSelector, resources?
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Conversion {
   diagram : @render.Diagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Conversion::equal(Self, Self) -> Bool
 pub fn Conversion::not_equal(Self, Self) -> Bool
 pub fn Conversion::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ViewSelector {
   Automatic
   Process(String)
   Collaboration(String)
   Plane(String)
   View(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn ViewSelector::equal(Self, Self) -> Bool
 pub fn ViewSelector::not_equal(Self, Self) -> Bool
 pub fn ViewSelector::to_repr(Self) -> @debug.Repr

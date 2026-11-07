@@ -10,8 +10,28 @@ fn test_cmap4(segments : Int32, wide : Bool) -> Bytes {
   @font.write_be16(bytes, 18, segments * 2)
   for i in 0..<segments {
     @font.write_be16(bytes, 26 + i * 2, if wide { 65534 } else { 65 })
-    @font.write_be16(bytes, 28 + segments * 2 + i * 2, if wide { 0 } else { 65 })
-    @font.write_be16(bytes, 28 + segments * 4 + i * 2, if wide { if i == segments - 1 { 1 } else { 0 } } else { 55536 })
+    @font.write_be16(
+      bytes,
+      28 + segments * 2 + i * 2,
+      if wide {
+        0
+      } else {
+        65
+      },
+    )
+    @font.write_be16(
+      bytes,
+      28 + segments * 4 + i * 2,
+      if wide {
+        if i == segments - 1 {
+          1
+        } else {
+          0
+        }
+      } else {
+        55536
+      },
+    )
   }
   Bytes::from_array(bytes)
 }
@@ -55,7 +75,10 @@ test "valid signed-wrapping cmap survives outlining and subsetting" {
   assert_eq(image.diagnostics.length(), 0)
   let subset = fonts.subset_for_svg(source)
   assert_eq(subset.diagnostics.length(), 0)
-  assert_eq(rasterize(source, fonts=subset.fonts.unwrap()).image.unwrap().bytes, image.image.unwrap().bytes)
+  assert_eq(
+    rasterize(source, fonts=subset.fonts.unwrap()).image.unwrap().bytes,
+    image.image.unwrap().bytes,
+  )
 }
 
 ///|
@@ -69,9 +92,12 @@ test "overlapping font table copies share the source budget" {
     @font.write_be32(bytes, 24 + i * 16, 1000)
   }
   let code = try {
-    ignore(validated_font_bytes(Bytes::from_array(bytes), {
-      ..RasterLimits::default(), max_source_units: 2000,
-    }))
+    ignore(
+      validated_font_bytes(Bytes::from_array(bytes), {
+        ..RasterLimits::default(),
+        max_source_units: 2000,
+      }),
+    )
     "success"
   } catch {
     error => raster_diagnostic(error).code

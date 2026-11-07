@@ -1,5 +1,6 @@
 ///|
 /// The kind of a token in the lossless syntax tree.
+#derive(Eq, Debug)
 pub(all) enum TokenKind {
   Keyword
   Identifier
@@ -21,7 +22,7 @@ pub(all) enum TokenKind {
   Directive
   FrontMatter
   Unknown
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TokenKind with Eq::{not_equal, equal}
@@ -32,11 +33,12 @@ pub extend TokenKind with @debug.Debug::{to_repr}
 ///|
 /// One token. `offset` is the UTF-16 offset of its first code unit in the
 /// source. The concatenated token texts of a tree are equal to the source.
+#derive(Eq, Debug)
 pub struct Token {
   kind : TokenKind
   text : String
-  offset : Int
-} derive(Eq, Debug)
+  offset : Int32
+}
 
 ///|
 pub extend Token with Eq::{not_equal, equal}
@@ -46,8 +48,8 @@ pub extend Token with @debug.Debug::{to_repr}
 
 ///|
 /// A token.
-pub fn Token::new(kind : TokenKind, text : String, offset : Int) -> Token {
-  { kind, text, offset }
+pub fn Token::new(kind : TokenKind, text : String, offset : Int32) -> Token {
+  { kind, text, offset, }
 }
 
 ///|
@@ -56,6 +58,7 @@ pub fn Token::new(kind : TokenKind, text : String, offset : Int) -> Token {
 /// node for each `else`, `and` or `option`, and a `BlockEnd`. Whitespace,
 /// line breaks, separators, comments, directives and front matter are tokens
 /// of the parent node.
+#derive(Eq, Debug)
 pub(all) enum NodeKind {
   Document
   Header
@@ -78,7 +81,7 @@ pub(all) enum NodeKind {
   Section
   BlockEnd
   Error
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend NodeKind with Eq::{not_equal, equal}
@@ -88,10 +91,11 @@ pub extend NodeKind with @debug.Debug::{to_repr}
 
 ///|
 /// One element of a node: a token or a child node.
+#derive(Eq, Debug)
 pub(all) enum Element {
   Token(Token)
   Node(Node)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Element with Eq::{not_equal, equal}
@@ -101,10 +105,11 @@ pub extend Element with @debug.Debug::{to_repr}
 
 ///|
 /// A node of the lossless syntax tree.
+#derive(Eq, Debug)
 pub struct Node {
   kind : NodeKind
   children : ReadOnlyArray[Element]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Node with Eq::{not_equal, equal}
@@ -115,7 +120,7 @@ pub extend Node with @debug.Debug::{to_repr}
 ///|
 /// A node. The node keeps a copy of `children`.
 pub fn Node::new(kind : NodeKind, children : ArrayView[Element]) -> Node {
-  { kind, children: ReadOnlyArray::from_array(children) }
+  { kind, children: ReadOnlyArray::from_array(children), }
 }
 
 ///|
@@ -160,7 +165,7 @@ pub fn Node::text(self : Node) -> String {
 ///|
 /// The UTF-16 offsets of the first code unit of this node and of the code unit
 /// after its last token. A node with no tokens gives `None`.
-pub fn Node::range(self : Node) -> (Int, Int)? {
+pub fn Node::range(self : Node) -> (Int32, Int32)? {
   let tokens = self.tokens()
   guard tokens.last() is Some(last) else { return None }
   Some((tokens[0].offset, last.offset + last.text.length()))
@@ -169,7 +174,7 @@ pub fn Node::range(self : Node) -> (Int, Int)? {
 ///|
 /// The position of the UTF-16 offset `offset` in `source`. Lines and columns
 /// start at 1. `\r\n`, `\n` and a single `\r` each end a line.
-pub fn position(source : String, offset : Int) -> @diagrams.Position {
+pub fn position(source : String, offset : Int32) -> @diagrams.Position {
   let mut line = 1
   let mut start = 0
   let mut i = 0
@@ -187,11 +192,11 @@ pub fn position(source : String, offset : Int) -> @diagrams.Position {
     }
     i += 1
   }
-  { offset, line, column: offset - start + 1 }
+  { offset, line, column: offset - start + 1, }
 }
 
 ///|
 /// The span from the UTF-16 offset `start` to `end` in `source`.
-pub fn span(source : String, start : Int, end : Int) -> @diagrams.Span {
-  { start: position(source, start), end: position(source, end) }
+pub fn span(source : String, start : Int32, end : Int32) -> @diagrams.Span {
+  { start: position(source, start), end: position(source, end), }
 }

@@ -131,10 +131,13 @@ test "alternations keep source order and overlapping patterns stay distinct" {
 ///|
 test "one node can have two capture roles" {
   let result = plan("(link) @a @b").collect(sample())
-  inspect(rows(result), content=(
-    #|0: a=4 b=4
-    #|complete
-  ))
+  inspect(
+    rows(result),
+    content=(
+      #|0: a=4 b=4
+      #|complete
+    ),
+  )
 }
 
 ///|
@@ -224,10 +227,13 @@ test "extension namespaces resolve through the query namespace map" {
   let other = @query.compile("(y.widget) @w", fs_schema, namespaces=[
     ("y", "urn:x"),
   ]).unwrap()
-  inspect(rows(other.collect(t)), content=(
-    #|0: w=8
-    #|complete
-  ))
+  inspect(
+    rows(other.collect(t)),
+    content=(
+      #|0: w=8
+      #|complete
+    ),
+  )
   // An extension name that no document contains still compiles.
   inspect(codes("(x.anything)"), content="ok")
   // The reserved empty namespace needs declared names.

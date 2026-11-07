@@ -83,7 +83,7 @@ fn split_breaks(text : String) -> Array[String] {
   while i < n {
     let c = text.code_unit_at(i).to_int()
     if c == 10 || c == 13 {
-      out.push(text.view(start_offset=start, end_offset=i).to_owned())
+      out.push(text.exact_view(start~, end=i).to_owned())
       i += if c == 13 && i + 1 < n && text.code_unit_at(i + 1).to_int() == 10 {
         2
       } else {
@@ -94,7 +94,7 @@ fn split_breaks(text : String) -> Array[String] {
       i += 1
     }
   }
-  out.push(text.view(start_offset=start, end_offset=n).to_owned())
+  out.push(text.exact_view(start~, end=n).to_owned())
   out
 }
 
@@ -126,9 +126,7 @@ fn wrap(
         if !budget.charge(next - start) {
           return lines
         }
-        let candidate = segment
-          .view(start_offset=start, end_offset=next)
-          .to_owned()
+        let candidate = segment.exact_view(start~, end=next).to_owned()
         if end > start && font.measure(candidate).width.to_double() > max_width {
           break
         }
@@ -140,7 +138,7 @@ fn wrap(
       if end < n && after_space > start {
         end = after_space
       }
-      lines.push(segment.view(start_offset=start, end_offset=end).to_owned())
+      lines.push(segment.exact_view(start~, end~).to_owned())
       start = end
     }
   }

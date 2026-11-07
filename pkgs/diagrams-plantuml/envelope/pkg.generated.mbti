@@ -25,6 +25,7 @@ pub fn trim(String) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Regex
   Ebnf
@@ -32,12 +33,13 @@ pub(all) enum Kind {
   Yaml
   Activity
   State
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 pub fn Kind::word(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   source : Int32
   output : Int32
@@ -47,30 +49,32 @@ pub struct Limits {
   edges : Int32
   work : Int32
   diagnostics : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(source? : Int32, output? : Int32, depth? : Int32, nodes? : Int32, regions? : Int32, edges? : Int32, work? : Int32, diagnostics? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::valid(Self) -> Bool
 
+#derive(Eq, @debug.Debug)
 pub struct Line {
   number : Int32
   offset : Int32
   text : String
   newline : String
   role : Role
-} derive(Eq, @debug.Debug)
+}
 pub fn Line::equal(Self, Self) -> Bool
 pub fn Line::not_equal(Self, Self) -> Bool
 pub fn Line::to_repr(Self) -> @debug.Repr
 pub fn Line::tokens(Self, @cst.TokenKind) -> Array[@cst.Element]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Role {
   Body
   Statement(@cst.Node)
   Continuation
-} derive(Eq, @debug.Debug)
+}
 pub fn Role::equal(Self, Self) -> Bool
 pub fn Role::not_equal(Self, Self) -> Bool
 pub fn Role::to_repr(Self) -> @debug.Repr
@@ -91,6 +95,7 @@ pub fn Scan::line_nodes(Self, (Line) -> @cst.Node?) -> Array[@cst.Node]
 pub fn Scan::span(Self, Int32, Int32) -> @diagrams.Span
 pub fn Scan::title(Self) -> String?
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Statement {
   Title(String)
   Caption(String)
@@ -104,7 +109,7 @@ pub(all) enum Statement {
   Hide(String)
   Pragma(String)
   Option(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Statement::equal(Self, Self) -> Bool
 pub fn Statement::lines(Self) -> Array[String]
 pub fn Statement::not_equal(Self, Self) -> Bool

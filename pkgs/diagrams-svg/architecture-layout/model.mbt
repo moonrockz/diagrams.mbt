@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
@@ -7,7 +8,7 @@ pub struct Limits {
   coordinate : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -23,18 +24,20 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Point {
   x : Int32
   y : Int32
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rect {
   x : Int32
   y : Int32
   width : Int32
   height : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Rect::contains(self : Rect, other : Rect) -> Bool {
@@ -53,13 +56,15 @@ pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Group
   Service
   Junction
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Shape {
   id : String
   kind : Kind
@@ -68,23 +73,25 @@ pub(all) struct Shape {
   parent : String?
   font_size : Int32
   header_height : Int32
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Connection {
   connection : @model.Connection
   points : ReadOnlyArray[Point]
   label_box : Rect?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Geometry {
   model : @model.Architecture
   shapes : ReadOnlyArray[Shape]
   connections : ReadOnlyArray[Connection]
   width : Int32
   height : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub(all) struct LayoutResult {
@@ -93,11 +100,12 @@ pub(all) struct LayoutResult {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Finding {
   code : String
   message : String
   element : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn measure(text : String, size~ : Int32 = 13) -> Int32 {

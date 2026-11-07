@@ -1,16 +1,14 @@
 ///|
 /// Characters that the reader gives a meaning outside a character set.
 fn special(c : String) -> Bool {
-  [
-    "^", "$", "|", "[", "(", ")", "*", "+", "?", "{", ".", "\\",
-  ].contains(c)
+  ["^", "$", "|", "[", "(", ")", "*", "+", "?", "{", ".", "\\"].contains(c)
 }
 
 ///|
 priv struct Writer {
   out : StringBuilder
-  limit : Int
-  mut used : Int
+  limit : Int32
+  mut used : Int32
   mut failure : String?
 }
 
@@ -80,14 +78,15 @@ fn bounds_text(bounds : @model.Bounds) -> String? {
     return Some(canonical.spelling)
   }
   match tokenize("a" + bounds.spelling, 0) {
-    Ok([_, { lex: Quantifier(read), .. }]) if read == bounds => Some(bounds.spelling)
+    Ok([_, { lex: Quantifier(read), .. }]) if read == bounds =>
+      Some(bounds.spelling)
     _ => None
   }
 }
 
 ///|
 priv enum Job {
-  Expr(Expr, Int)
+  Expr(Expr, Int32)
   Text(String)
 }
 
@@ -96,9 +95,14 @@ priv enum Job {
 /// read back to the same value gives a diagnostic instead of text.
 pub fn print_pattern(
   expr : Expr,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]] {
-  let w = Writer::{ out: StringBuilder(), limit: limits.output, used: 0, failure: None }
+  let w = Writer::{
+    out: StringBuilder(),
+    limit: limits.output,
+    used: 0,
+    failure: None,
+  }
   // Contexts: 0 = alternative, 1 = concatenation item, 2 = quantified operand.
   let jobs : Array[Job] = [Expr(expr, 0)]
   let mut work = 0
@@ -119,7 +123,9 @@ pub fn print_pattern(
               w.unrepresentable("a character holds one code point")
             } else if escaped {
               if alphanumeric {
-                w.unrepresentable("an escaped letter or digit has another meaning")
+                w.unrepresentable(
+                  "an escaped letter or digit has another meaning",
+                )
               } else {
                 w.write("\\" + c)
               }
@@ -226,7 +232,9 @@ pub fn print_pattern(
                 // `x*?` reads as one reluctant quantifier, not two.
                 if text.has_prefix("?") &&
                   inner is Quantified(_, { reluctant: false, .. }, _) {
-                  w.unrepresentable("an optional quantifier after a greedy quantifier reads as reluctant")
+                  w.unrepresentable(
+                    "an optional quantifier after a greedy quantifier reads as reluctant",
+                  )
                 }
                 jobs.push(Text(text))
                 jobs.push(Expr(inner, 2))
@@ -250,9 +258,10 @@ pub fn print_pattern(
         @envelope.has_preprocessor_call(text)
       let first = text.split(" ").next().map(s => s.to_owned()).unwrap_or("")
       let statement = [
-        "title", "caption", "header", "footer", "legend", "skinparam", "skin", "scale",
-        "hide", "show", "sprite", "rotate", "page", "minwidth", "mainframe", "<style>",
-      ].contains(first) ||
+          "title", "caption", "header", "footer", "legend", "skinparam", "skin",
+          "scale", "hide", "show", "sprite", "rotate", "page", "minwidth", "mainframe",
+          "<style>",
+        ].contains(first) ||
         text.has_prefix("title:")
       if text.is_empty() {
         Err([
@@ -288,7 +297,7 @@ pub fn print_pattern(
 /// The canonical body of a regex document: one pattern line with a line break.
 pub fn print_body(
   document : Document,
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Result[String, ReadOnlyArray[@diagrams.Diagnostic]] {
   match print_pattern(document.pattern, limits~) {
     Ok(text) => Ok(text + "\n")

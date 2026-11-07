@@ -69,11 +69,12 @@ let runtime_sources : Array[String] = [
 ]
 
 ///|
+#derive(Eq)
 priv enum Os {
   Linux
   Macos
   Windows
-} derive(Eq)
+}
 
 ///|
 priv struct Target {
@@ -269,11 +270,12 @@ fn version_of(text : String) -> String? {
 }
 
 ///|
+#derive(Eq, Debug)
 priv enum PyPlan {
   Publish(String)
   DryRun(String)
   Skip(String)
-} derive(Eq, Debug)
+}
 
 ///|
 /// A pull request run and a `dry_run` only build and test. A tag run skips,
@@ -394,7 +396,7 @@ async fn toolchain_root() -> String {
   if @env.get_env_var("PATH") is Some(path) {
     for dir in path.split(":") {
       if dir.has_suffix("/bin") {
-        candidates.push(dir.view(end_offset=dir.length() - 4).to_owned())
+        candidates.push(dir.exact_view(end=dir.length() - 4).to_owned())
       }
     }
   }
@@ -432,7 +434,7 @@ async fn build_wheel(
   for source in sources {
     let parts = source.split("/").to_array()
     let file = parts[parts.length() - 1].to_owned()
-    let object = "\{objects_dir}/\{file.view(end_offset=file.length() - 2)}.o"
+    let object = "\{objects_dir}/\{file.exact_view(end=file.length() - 2)}.o"
     let args = flags.copy()
     args.push_iter(["-c", source, "-o", object].iter())
     run("zig", ["cc", ..args])

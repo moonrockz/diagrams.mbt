@@ -515,4 +515,4 @@ if (failures.length) {
   for (const f of failures) console.error(`FAIL: ${f}`);
   process.exit(1);
 }
-console.log(`Published Telescope0.5 ${treeName}: ${galleryInventory.length} entries, ${galleryInventory.length * 12} responsive detail cases, ${galleryConversions} real UI conversions match compiled-library bytes (${portableComparisons} also match four-target portable fixtures); branding/assets, root-scoped links, cancellation/error/recovery, option race, isolation, filters/tabs and landing screenshots passed.`);
+console.log(`Published Telescope0.6 ${treeName}: ${galleryInventory.length} entries, ${galleryInventory.length * 12} responsive detail cases, ${galleryConversions} real UI conversions match compiled-library bytes (${portableComparisons} also match four-target portable fixtures); branding/assets, root-scoped links, cancellation/error/recovery, option race, isolation, filters/tabs and landing screenshots passed.`);

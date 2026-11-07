@@ -28,6 +28,8 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Lint
         run: mise run lint
+      - name: Check the shared OpenSpec schema
+        run: mission-control-tools openspec check --bundle
       - name: Validate workspace
         run: mise run validate
 

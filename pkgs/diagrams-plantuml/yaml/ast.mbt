@@ -3,10 +3,11 @@
 /// profile removes one pair of matching outer quotes; there is no escape
 /// processing. `raw` is the source spelling, or `None` for a constructed
 /// value. Logical comparison and canonical writing use only `text`.
+#derive(Eq, Debug)
 pub struct Scalar {
   text : String
   raw : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Scalar with Eq::{equal, not_equal}
@@ -21,6 +22,7 @@ pub fn Scalar::new(text : String) -> Scalar {
 
 ///|
 /// The part of a `key:` line after the colon.
+#derive(Eq, Debug)
 pub(all) enum Entry {
   /// `key:` with no value. The native profile reads the next lines to
   /// decide between an empty string, joined text and a nested collection.
@@ -33,7 +35,7 @@ pub(all) enum Entry {
   Block(ReadOnlyArray[String])
   /// `key: >`. The pinned profile refuses folded text.
   Folded
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Entry with Eq::{equal, not_equal}
@@ -43,6 +45,7 @@ pub extend Entry with @debug.Debug::{to_repr}
 
 ///|
 /// The content of one native YAML line.
+#derive(Eq, Debug)
 pub(all) enum Content {
   /// A lone `-`: a list item whose content is on the next lines.
   Dash
@@ -53,7 +56,7 @@ pub(all) enum Content {
   Text(Scalar)
   /// `key: ...`, or `- key: ...` when the flag is true.
   Pair(Bool, Scalar, Entry)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Content with Eq::{equal, not_equal}
@@ -64,11 +67,12 @@ pub extend Content with @debug.Debug::{to_repr}
 ///|
 /// One native YAML line. `indent` is the number of leading spaces, with a
 /// tab counted as four spaces, before any `- `.
+#derive(Eq, Debug)
 pub struct Line {
   indent : Int32
   content : Content
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Line with Eq::{equal, not_equal}
@@ -96,12 +100,13 @@ pub fn Line::native_indent(self : Line) -> Int32 {
 /// One parsed YAML diagram block: the native line forms in source order.
 /// Comment-only and blank lines are trivia; block content lines belong to
 /// their `key: |` line.
+#derive(Eq, Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   highlights : ReadOnlyArray[@data.Selector]
   lines : ReadOnlyArray[Line]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Document with Eq::{equal, not_equal}

@@ -19,32 +19,32 @@ priv enum Tok {
 ///|
 priv struct Token {
   tok : Tok
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
 }
 
 ///|
 priv suberror ParseError {
-  ParseError(String, String, Int, Int)
+  ParseError(String, String, Int32, Int32)
 }
 
 ///|
-fn String::code_unit_at_int(self : String, i : Int) -> Int {
+fn String::code_unit_at_int(self : String, i : Int32) -> Int32 {
   self.code_unit_at(i).to_int()
 }
 
 ///|
-fn is_name_start(unit : Int) -> Bool {
+fn is_name_start(unit : Int32) -> Bool {
   (unit >= 'a' && unit <= 'z') || (unit >= 'A' && unit <= 'Z') || unit == '_'
 }
 
 ///|
-fn is_name_unit(unit : Int) -> Bool {
+fn is_name_unit(unit : Int32) -> Bool {
   is_name_start(unit) || (unit >= '0' && unit <= '9') || unit == '-'
 }
 
 ///|
-fn is_space(unit : Int) -> Bool {
+fn is_space(unit : Int32) -> Bool {
   unit == ' ' || unit == '\t' || unit == '\n' || unit == '\r'
 }
 
@@ -62,17 +62,19 @@ pub fn is_identifier(text : String) -> Bool {
 pub fn is_capture_name(text : String) -> Bool {
   text.length() > 0 &&
   is_name_start(text.code_unit_at_int(0)) &&
-  text.iter().all(c => c.to_int() < 128 && (is_name_unit(c.to_int()) || c == '.'))
+  text
+  .iter()
+  .all(c => c.to_int() < 128 && (is_name_unit(c.to_int()) || c == '.'))
 }
 
 ///|
 priv struct Lexer {
   source : String
-  mut at : Int
+  mut at : Int32
 }
 
 ///|
-fn Lexer::unit(self : Lexer, i : Int) -> Int {
+fn Lexer::unit(self : Lexer, i : Int32) -> Int32 {
   if i < self.source.length() {
     self.source.code_unit_at_int(i)
   } else {
@@ -81,7 +83,7 @@ fn Lexer::unit(self : Lexer, i : Int) -> Int {
 }
 
 ///|
-fn Lexer::name_end(self : Lexer, start : Int, dots : Bool) -> Int {
+fn Lexer::name_end(self : Lexer, start : Int32, dots : Bool) -> Int32 {
   let mut i = start
   while is_name_unit(self.unit(i)) || (dots && self.unit(i) == '.') {
     i += 1
@@ -90,21 +92,18 @@ fn Lexer::name_end(self : Lexer, start : Int, dots : Bool) -> Int {
 }
 
 ///|
-fn Lexer::string(self : Lexer, start : Int) -> Token raise ParseError {
+fn Lexer::string(self : Lexer, start : Int32) -> Token raise ParseError {
   let buffer = StringBuilder()
   let mut i = start + 1
   while true {
     let unit = self.unit(i)
     if unit == -1 {
       raise ParseError(
-        "query/unterminated-string",
-        "The string has no closing quote.",
-        start,
-        i,
+        "query/unterminated-string", "The string has no closing quote.", start, i,
       )
     }
     if unit == '"' {
-      return { tok: Str(buffer.to_string()), start, end: i + 1 }
+      return { tok: Str(buffer.to_string()), start, end: i + 1, }
     }
     if unit < 0x20 {
       raise ParseError(
@@ -115,7 +114,7 @@ fn Lexer::string(self : Lexer, start : Int) -> Token raise ParseError {
       )
     }
     if unit != '\\' {
-      buffer.write_char(Int::unsafe_to_char(unit))
+      buffer.write_char(Int32::unsafe_to_char(unit))
       i += 1
       continue
     }
@@ -163,7 +162,7 @@ fn Lexer::string(self : Lexer, start : Int) -> Token raise ParseError {
       }
       value = value * 16 + v
     }
-    buffer.write_char(Int::unsafe_to_char(value))
+    buffer.write_char(Int32::unsafe_to_char(value))
     i += 6
   }
   panic()
@@ -202,7 +201,7 @@ fn Lexer::next(self : Lexer) -> Token raise ParseError {
   if single is Some(tok) {
     let end = if unit == -1 { start } else { start + 1 }
     self.at = end
-    return { tok, start, end }
+    return { tok, start, end, }
   }
   let token = if unit == '"' {
     self.string(start)
@@ -216,16 +215,24 @@ fn Lexer::next(self : Lexer) -> Token raise ParseError {
       )
     }
     let end = self.name_end(start + 1, true)
-    { tok: Capture(self.source.view(start_offset=start + 1, end_offset=end).to_owned()), start, end }
+    {
+      tok: Capture(self.source.exact_view(start=start + 1, end~).to_owned()),
+      start,
+      end,
+    }
   } else if unit == '#' {
     let mut end = self.name_end(start + 1, false)
     if self.unit(end) == '?' || self.unit(end) == '!' {
       end += 1
     }
-    { tok: Hash(self.source.view(start_offset=start + 1, end_offset=end).to_owned()), start, end }
+    {
+      tok: Hash(self.source.exact_view(start=start + 1, end~).to_owned()),
+      start,
+      end,
+    }
   } else if is_name_start(unit) {
     let end = self.name_end(start, false)
-    let first = self.source.view(start_offset=start, end_offset=end).to_owned()
+    let first = self.source.exact_view(start~, end~).to_owned()
     if self.unit(end) == '.' && is_name_start(self.unit(end + 1)) {
       let local_end = self.name_end(end + 1, false)
       if self.unit(local_end) == '.' && is_name_start(self.unit(local_end + 1)) {
@@ -237,10 +244,11 @@ fn Lexer::next(self : Lexer) -> Token raise ParseError {
         )
       }
       let local_name = self.source
-        .view(start_offset=end + 1, end_offset=local_end).to_owned()
-      { tok: Qualified(first, local_name), start, end: local_end }
+        .exact_view(start=end + 1, end=local_end)
+        .to_owned()
+      { tok: Qualified(first, local_name), start, end: local_end, }
     } else {
-      { tok: Ident(first), start, end }
+      { tok: Ident(first), start, end, }
     }
   } else if (unit >= '0' && unit <= '9') || unit == '-' {
     raise ParseError(
@@ -265,18 +273,18 @@ fn Lexer::next(self : Lexer) -> Token raise ParseError {
 ///|
 priv struct Parser {
   tokens : Array[Token]
-  mut at : Int
-  spans : Array[(Int, Int)]
+  mut at : Int32
+  spans : Array[(Int32, Int32)]
   limits : CompileLimits
-  mut depth : Int
-  mut nodes : Int
-  mut captures : Int
-  mut predicates : Int
-  mut last_end : Int
+  mut depth : Int32
+  mut nodes : Int32
+  mut captures : Int32
+  mut predicates : Int32
+  mut last_end : Int32
 }
 
 ///|
-fn Parser::peek(self : Parser, ahead? : Int = 0) -> Token {
+fn Parser::peek(self : Parser, ahead~ : Int32 = 0) -> Token {
   let i = self.at + ahead
   if i < self.tokens.length() {
     self.tokens[i]
@@ -296,7 +304,7 @@ fn Parser::take(self : Parser) -> Token {
 }
 
 ///|
-fn Parser::reserve(self : Parser) -> Int {
+fn Parser::reserve(self : Parser) -> Int32 {
   self.spans.push((0, 0))
   self.spans.length() - 1
 }
@@ -306,28 +314,49 @@ fn Parser::fail(self : Parser, token : Token, what : String) -> ParseError {
   ignore(self)
   match token.tok {
     End =>
-      ParseError("query/syntax", "The query ends early; expected \{what}.", token.start, token.end)
+      ParseError(
+        "query/syntax",
+        "The query ends early; expected \{what}.",
+        token.start,
+        token.end,
+      )
     Quantifier =>
       ParseError(
-        "query/unsupported-quantifier", "Quantifiers are not supported in query version 1.",
-        token.start, token.end,
+        "query/unsupported-quantifier",
+        "Quantifiers are not supported in query version 1.",
+        token.start,
+        token.end,
       )
     Dot =>
       ParseError(
-        "query/unsupported-anchor", "Anchors are not supported in query version 1.", token.start,
+        "query/unsupported-anchor",
+        "Anchors are not supported in query version 1.",
+        token.start,
         token.end,
       )
     Str(_) =>
       ParseError(
-        "query/unsupported-anonymous-node", "Anonymous string nodes are not supported in query version 1.",
-        token.start, token.end,
+        "query/unsupported-anonymous-node",
+        "Anonymous string nodes are not supported in query version 1.",
+        token.start,
+        token.end,
       )
-    _ => ParseError("query/syntax", "Unexpected token; expected \{what}.", token.start, token.end)
+    _ =>
+      ParseError(
+        "query/syntax",
+        "Unexpected token; expected \{what}.",
+        token.start,
+        token.end,
+      )
   }
 }
 
 ///|
-fn Parser::expect(self : Parser, tok : Tok, what : String) -> Token raise ParseError {
+fn Parser::expect(
+  self : Parser,
+  tok : Tok,
+  what : String,
+) -> Token raise ParseError {
   let token = self.peek()
   let same = match (token.tok, tok) {
     (RParen, RParen) | (RBracket, RBracket) | (Colon, Colon) => true
@@ -343,12 +372,17 @@ fn Parser::enter(self : Parser, token : Token) -> Unit raise ParseError {
   self.nodes += 1
   if self.depth > self.limits.nesting {
     raise ParseError(
-      "query/nesting-limit", "The pattern nesting exceeds the compile limit.", token.start, token.end,
+      "query/nesting-limit",
+      "The pattern nesting exceeds the compile limit.",
+      token.start,
+      token.end,
     )
   }
   if self.nodes > self.limits.pattern_nodes {
     raise ParseError(
-      "query/pattern-limit", "The number of patterns exceeds the compile limit.", token.start,
+      "query/pattern-limit",
+      "The number of patterns exceeds the compile limit.",
+      token.start,
       token.end,
     )
   }
@@ -372,13 +406,17 @@ fn Parser::captured(self : Parser) -> Pattern raise ParseError {
         Qualified(prefix, name) => Kind(QName::new(name, prefix~))
         Hash(_) =>
           raise ParseError(
-            "query/syntax", "A predicate needs a pattern before it.", selector_token.start,
+            "query/syntax",
+            "A predicate needs a pattern before it.",
+            selector_token.start,
             selector_token.end,
           )
         LParen | LBracket =>
           raise ParseError(
-            "query/unsupported-grouping", "Sibling groups are not supported in query version 1.",
-            open.start, selector_token.end,
+            "query/unsupported-grouping",
+            "Sibling groups are not supported in query version 1.",
+            open.start,
+            selector_token.end,
           )
         _ => raise self.fail(selector_token, "a kind, category or _")
       }
@@ -407,7 +445,10 @@ fn Parser::captured(self : Parser) -> Pattern raise ParseError {
           }
           Ident("_") =>
             raise ParseError(
-              "query/syntax", "Write the wildcard child as (_).", token.start, token.end,
+              "query/syntax",
+              "Write the wildcard child as (_).",
+              token.start,
+              token.end,
             )
           _ => raise self.fail(token, "a child pattern, field or )")
         }
@@ -431,7 +472,10 @@ fn Parser::captured(self : Parser) -> Pattern raise ParseError {
       let close = self.expect(RBracket, "]")
       if branches.is_empty() {
         raise ParseError(
-          "query/syntax", "An alternation needs at least one pattern.", open.start, close.end,
+          "query/syntax",
+          "An alternation needs at least one pattern.",
+          open.start,
+          close.end,
         )
       }
       self.spans[slot] = (open.start, close.end)
@@ -449,7 +493,9 @@ fn Parser::captured(self : Parser) -> Pattern raise ParseError {
     self.captures += 1
     if self.captures > self.limits.captures {
       raise ParseError(
-        "query/capture-limit", "The number of captures exceeds the compile limit.", token.start,
+        "query/capture-limit",
+        "The number of captures exceeds the compile limit.",
+        token.start,
         token.end,
       )
     }
@@ -460,8 +506,10 @@ fn Parser::captured(self : Parser) -> Pattern raise ParseError {
     raise self.fail(self.peek(), "")
   }
   match pattern {
-    Node(selector, parts, _) => Node(selector, parts, ReadOnlyArray::from_array(captures))
-    Alternation(branches, _) => Alternation(branches, ReadOnlyArray::from_array(captures))
+    Node(selector, parts, _) =>
+      Node(selector, parts, ReadOnlyArray::from_array(captures))
+    Alternation(branches, _) =>
+      Alternation(branches, ReadOnlyArray::from_array(captures))
   }
 }
 
@@ -472,7 +520,10 @@ fn Parser::field_name(self : Parser, token : Token) -> QName raise ParseError {
     Ident(name) => QName::new(name)
     Qualified("category", _) =>
       raise ParseError(
-        "query/syntax", "category is not a field prefix.", token.start, token.end,
+        "query/syntax",
+        "category is not a field prefix.",
+        token.start,
+        token.end,
       )
     Qualified(prefix, name) => QName::new(name, prefix~)
     _ => raise self.fail(token, "a field name")
@@ -484,7 +535,9 @@ fn Parser::field_name(self : Parser, token : Token) -> QName raise ParseError {
 fn unsupported_predicate(name : String) -> (String, String)? {
   if name.has_suffix("!") {
     return Some(
-      ("query/unsupported-directive", "Directives are not supported in query version 1."),
+      (
+        "query/unsupported-directive", "Directives are not supported in query version 1.",
+      ),
     )
   }
   let regex = [
@@ -508,7 +561,9 @@ fn Parser::predicate(self : Parser) -> Predicate raise ParseError {
   let name_token = self.take()
   guard name_token.tok is Hash(name) else {
     raise ParseError(
-      "query/unsupported-grouping", "Sibling groups are not supported in query version 1.", open.start,
+      "query/unsupported-grouping",
+      "Sibling groups are not supported in query version 1.",
+      open.start,
       name_token.end,
     )
   }
@@ -518,7 +573,9 @@ fn Parser::predicate(self : Parser) -> Predicate raise ParseError {
   let capture_token = self.take()
   guard capture_token.tok is Capture(capture) else {
     raise ParseError(
-      "query/predicate-arity", "A predicate needs a capture as its first operand.", name_token.start,
+      "query/predicate-arity",
+      "A predicate needs a capture as its first operand.",
+      name_token.start,
       capture_token.end,
     )
   }
@@ -532,8 +589,10 @@ fn Parser::predicate(self : Parser) -> Predicate raise ParseError {
     match close.tok {
       Capture(_) =>
         raise ParseError(
-          "query/predicate-arity", "Predicate operands after the capture must be strings.",
-          close.start, close.end,
+          "query/predicate-arity",
+          "Predicate operands after the capture must be strings.",
+          close.start,
+          close.end,
         )
       _ => raise self.fail(close, "a string or )")
     }
@@ -542,7 +601,9 @@ fn Parser::predicate(self : Parser) -> Predicate raise ParseError {
   self.predicates += 1 + operands.length()
   if self.predicates > self.limits.predicates {
     raise ParseError(
-      "query/pattern-limit", "The number of predicates exceeds the compile limit.", open.start,
+      "query/pattern-limit",
+      "The number of predicates exceeds the compile limit.",
+      open.start,
       close.end,
     )
   }
@@ -552,16 +613,19 @@ fn Parser::predicate(self : Parser) -> Predicate raise ParseError {
 
 ///|
 /// rule := captured | '(' captured predicate+ ')'
-fn Parser::rule(self : Parser, index : Int) -> Rule raise ParseError {
+fn Parser::rule(self : Parser, index : Int32) -> Rule raise ParseError {
   let open = self.peek()
   if index >= self.limits.patterns {
     raise ParseError(
-      "query/pattern-limit", "The number of patterns exceeds the compile limit.", open.start,
+      "query/pattern-limit",
+      "The number of patterns exceeds the compile limit.",
+      open.start,
       open.end,
     )
   }
   let slot = self.reserve()
-  let grouped = open.tok is LParen && self.peek(ahead=1).tok is (LParen | LBracket)
+  let grouped = open.tok is LParen &&
+    self.peek(ahead=1).tok is (LParen | LBracket)
   if !grouped {
     let pattern = self.captured()
     self.spans[slot] = (open.start, self.last_end)
@@ -577,8 +641,10 @@ fn Parser::rule(self : Parser, index : Int) -> Rule raise ParseError {
   guard close.tok is RParen else { raise self.fail(close, "a predicate or )") }
   if predicates.is_empty() {
     raise ParseError(
-      "query/unsupported-grouping", "Sibling groups are not supported in query version 1; a parenthesized pattern needs predicates.",
-      open.start, close.end,
+      "query/unsupported-grouping",
+      "Sibling groups are not supported in query version 1; a parenthesized pattern needs predicates.",
+      open.start,
+      close.end,
     )
   }
   self.take() |> ignore
@@ -591,7 +657,7 @@ fn Parser::rule(self : Parser, index : Int) -> Rule raise ParseError {
 /// The form keeps source spans for the diagnostics of `compile_form`.
 pub fn parse(
   source : String,
-  limits? : CompileLimits = CompileLimits::new(),
+  limits~ : CompileLimits = CompileLimits::new(),
 ) -> Result[QueryForm, ReadOnlyArray[QueryDiagnostic]] {
   if !limits.valid() {
     return Err([invalid_limits()])
@@ -606,7 +672,7 @@ pub fn parse(
       ),
     ])
   }
-  let lexer = Lexer::{ source, at: 0 }
+  let lexer = Lexer::{ source, at: 0, }
   let parser = Parser::{
     tokens: [],
     at: 0,
@@ -631,7 +697,12 @@ pub fn parse(
       rules.push(parser.rule(rules.length()))
     }
     if rules.is_empty() {
-      raise ParseError("query/empty-query", "The query has no pattern.", 0, source.length())
+      raise ParseError(
+        "query/empty-query",
+        "The query has no pattern.",
+        0,
+        source.length(),
+      )
     }
     rules
   } catch {
@@ -640,11 +711,17 @@ pub fn parse(
   }
   Ok({
     rules: ReadOnlyArray::from_array(result),
-    spans: ReadOnlyArray::from_array(parser.spans.map(s => lines.span(s.0, s.1))),
+    spans: ReadOnlyArray::from_array(
+      parser.spans.map(s => lines.span(s.0, s.1)),
+    ),
   })
 }
 
 ///|
 fn invalid_limits() -> QueryDiagnostic {
-  error("query/invalid-limits", "Every compile limit must be positive and nesting at most 1000.", None)
+  error(
+    "query/invalid-limits",
+    "Every compile limit must be positive and nesting at most 1000.",
+    None,
+  )
 }

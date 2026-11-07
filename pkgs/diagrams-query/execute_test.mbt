@@ -2,8 +2,8 @@
 fn batches(
   plan : @query.QueryPlan,
   tree : FsTree,
-  size : Int,
-  limits? : @query.ExecutionLimits = @query.ExecutionLimits::new(),
+  size : Int32,
+  limits~ : @query.ExecutionLimits = @query.ExecutionLimits::new(),
   projection? : @query.Projection,
 ) -> (Array[@query.QueryMatch], @query.QueryBatch) raise {
   let cursor = plan.execute(tree, projection?, limits~)
@@ -28,7 +28,9 @@ test "text and typed forms give equal plans and results" {
       @query.Pattern::node(
         Kind(@query.QName::new("dir")),
         parts=[
-          Child(@query.Pattern::node(Kind(@query.QName::new("file")), captures=["f"])),
+          Child(
+            @query.Pattern::node(Kind(@query.QName::new("file")), captures=["f"]),
+          ),
           Field(
             @query.QName::new("meta"),
             @query.Pattern::node(Kind(@query.QName::new("link")), captures=["l"]),
@@ -52,7 +54,9 @@ test "text and typed forms give equal plans and results" {
   let parsed = @query.parse(source).unwrap()
   assert_eq(parsed, form)
   let from_text = @query.compile(source, fs_schema, namespaces=[("x", "urn:x")]).unwrap()
-  let from_form = @query.compile_form(form, fs_schema, namespaces=[("x", "urn:x")]).unwrap()
+  let from_form = @query.compile_form(form, fs_schema, namespaces=[
+    ("x", "urn:x"),
+  ]).unwrap()
   assert_eq(from_text.normalized(), from_form.normalized())
   inspect(
     from_text.normalized(),
@@ -70,20 +74,18 @@ test "text and typed forms give equal plans and results" {
   inspect(diagnostics[0].code, content="query/unknown-kind")
   assert_eq(diagnostics[0].span, None)
   let regex = @query.QueryForm::new([
-    @query.Rule::new(
-      @query.Pattern::node(Wildcard, captures=["n"]),
-      predicates=[@query.Predicate::new("match?", "n", operands=["x"])],
-    ),
+    @query.Rule::new(@query.Pattern::node(Wildcard, captures=["n"]), predicates=[
+      @query.Predicate::new("match?", "n", operands=["x"]),
+    ]),
   ])
   inspect(
     @query.compile_form(regex, fs_schema).unwrap_err()[0].code,
     content="query/unsupported-regex",
   )
   let arity = @query.QueryForm::new([
-    @query.Rule::new(
-      @query.Pattern::node(Wildcard, captures=["n"]),
-      predicates=[@query.Predicate::attr_in("n", "name", [])],
-    ),
+    @query.Rule::new(@query.Pattern::node(Wildcard, captures=["n"]), predicates=[
+      @query.Predicate::attr_in("n", "name", []),
+    ]),
   ])
   inspect(
     @query.compile_form(arity, fs_schema).unwrap_err()[0].code,
@@ -116,10 +118,13 @@ test "plans are reusable and cursors are independent" {
   // The plan runs again on another tree.
   let other = FsTree::new()
   other.add("file") |> ignore
-  inspect(rows(p.collect(other)), content=(
-    #|0: f=0
-    #|complete
-  ))
+  inspect(
+    rows(p.collect(other)),
+    content=(
+      #|0: f=0
+      #|complete
+    ),
+  )
 }
 
 ///|
@@ -183,9 +188,15 @@ test "a bound reached after a batch is a failure, and budgets are cumulative" {
     wide.add("file", parent=root) |> ignore
   }
   let ambiguous = plan("(dir (file) (file) (file) (file))")
-  let pending = ambiguous.collect(wide, limits=@query.ExecutionLimits::new(pending=3))
+  let pending = ambiguous.collect(
+    wide,
+    limits=@query.ExecutionLimits::new(pending=3),
+  )
   debug_inspect(pending.outcome, content="Failed(Limit(Pending))")
-  let work = ambiguous.collect(wide, limits=@query.ExecutionLimits::new(work=5000))
+  let work = ambiguous.collect(
+    wide,
+    limits=@query.ExecutionLimits::new(work=5000),
+  )
   debug_inspect(work.outcome, content="Failed(Limit(Work))")
   // Work limits bound scans that find nothing.
   let none = plan("(x.widget) @w").collect(
@@ -236,11 +247,14 @@ test "incompatible schemas and invalid roots are refused without searching" {
 test "a subtree search includes its root and keeps document-relative paths" {
   let projection = @query.Projection::new(fs_schema, [Path, Depth]).unwrap()
   let result = plan("(file) @f").collect(sample(), root=1, projection~)
-  inspect(rows(result), content=(
-    #|0: f=2
-    #|0: f=3
-    #|complete
-  ))
+  inspect(
+    rows(result),
+    content=(
+      #|0: f=2
+      #|0: f=3
+      #|complete
+    ),
+  )
   debug_inspect(
     result.matches[1].captures[0].values.iter().to_array(),
     content=(
@@ -262,7 +276,6 @@ test "a subtree search includes its root and keeps document-relative paths" {
       #|  ),
       #|  Int(2),
       #|]
-
     ),
   )
 }
@@ -310,20 +323,31 @@ test "projection keeps absent, empty and scalar distinctions" {
   // Field selection does not change matching or capture order.
   assert_eq(
     result.matches.map(m => m.captures.map(c => c.node)),
-    plan("(file) @f").collect(sample()).matches.map(m => m.captures.map(c => c.node)),
+    plan("(file) @f").collect(sample()).matches.map(m => {
+      m.captures.map(c => c.node)
+    }),
   )
   // Unknown fields are input failures, not absent data.
   let unknown = @query.Projection::new(fs_schema, [Extra("owner")])
-  inspect(unknown.map_err(d => d[0].code).unwrap_err(), content="query/unknown-projection-field")
+  inspect(
+    unknown.map_err(d => d[0].code).unwrap_err(),
+    content="query/unknown-projection-field",
+  )
   let unbound = @query.Projection::new(fs_schema, [Attribute("v:flag")])
-  inspect(unbound.map_err(d => d[0].code).unwrap_err(), content="query/unbound-prefix")
-  debug_inspect(@query.FieldRequest::parse("attr:v:flag"), content="Attribute(\"v:flag\")")
+  inspect(
+    unbound.map_err(d => d[0].code).unwrap_err(),
+    content="query/unbound-prefix",
+  )
+  debug_inspect(
+    @query.FieldRequest::parse("attr:v:flag"),
+    content="Attribute(\"v:flag\")",
+  )
   debug_inspect(@query.FieldRequest::parse("id"), content="Extra(\"id\")")
 }
 
 ///|
 /// A tree with `n` nodes: dirs with files, links and nested dirs.
-fn big_tree(n : Int) -> FsTree {
+fn big_tree(n : Int32) -> FsTree {
   let t = FsTree::new()
   t.add("dir", attrs=[("name", "root")]) |> ignore
   for i in 1..<n {
@@ -350,13 +374,19 @@ test "10,000-depth trees match without host-stack recursion" {
     parent = t.add(if i == 9999 { "file" } else { "dir" }, parent~)
   }
   let result = plan("(dir (file) @f) @d").collect(t)
-  inspect(rows(result), content=(
-    #|0: f=9999 d=9998
-    #|complete
-  ))
+  inspect(
+    rows(result),
+    content=(
+      #|0: f=9999 d=9998
+      #|complete
+    ),
+  )
   let all = plan("(_) @n").collect(t)
   inspect(all.matches.length(), content="10000")
   let projection = @query.Projection::new(fs_schema, [Depth]).unwrap()
   let deepest = plan("(file) @f").collect(t, projection~)
-  debug_inspect(deepest.matches[0].captures[0].values.iter().to_array(), content="[Int(9999)]")
+  debug_inspect(
+    deepest.matches[0].captures[0].values.iter().to_array(),
+    content="[Int(9999)]",
+  )
 }
