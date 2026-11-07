@@ -26,20 +26,22 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Dialect {
   Modern
   Legacy
-} derive(Eq, @debug.Debug)
+}
 pub fn Dialect::equal(Self, Self) -> Bool
 pub fn Dialect::not_equal(Self, Self) -> Bool
 pub fn Dialect::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   dialect : Dialect
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Statement]
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(Dialect, ArrayView[Statement], name? : String, statements? : ArrayView[@envelope.Statement]) -> Self
@@ -47,17 +49,19 @@ pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::without_spans(Self) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Endpoint {
   Start(Bool)
   Final
   Action(String, String?, String)
   Alias(String)
   Synchronization(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Endpoint::equal(Self, Self) -> Bool
 pub fn Endpoint::not_equal(Self, Self) -> Bool
 pub fn Endpoint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Action(String, String, String)
   Start
@@ -99,7 +103,7 @@ pub(all) enum Kind {
   LegacyDecision(Endpoint?, String, String, String)
   ActionList(String, Int32)
   Presentation(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
@@ -110,10 +114,11 @@ pub struct ReadResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Statement {
   kind : Kind
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Statement::equal(Self, Self) -> Bool
 pub fn Statement::new(Kind, span? : @diagrams.Span) -> Self
 pub fn Statement::not_equal(Self, Self) -> Bool

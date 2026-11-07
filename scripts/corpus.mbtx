@@ -52,10 +52,7 @@ fn parse_sums(text : String) -> Array[(String, String)] raise Failure {
       raise Failure("not a shasum line: \{line}")
     }
     out.push(
-      (
-        line.view(end_offset=64).to_owned(),
-        line.view(start_offset=66).to_owned(),
-      ),
+      (line.exact_view(end=64).to_owned(), line.exact_view(start=66).to_owned()),
     )
   }
   out
@@ -90,11 +87,11 @@ fn literal(text : String) -> String {
 /// The name of an example: its file name without the folder and the `.mmd` extension.
 fn example_name(path : String) -> String {
   let base = match path.rev_find("/") {
-    Some(i) => path.view(start_offset=i + 1).to_owned()
+    Some(i) => path.exact_view(start=i + 1).to_owned()
     None => path
   }
   if base.has_suffix(".mmd") {
-    base.view(end_offset=base.length() - 4).to_owned()
+    base.exact_view(end=base.length() - 4).to_owned()
   } else {
     base
   }

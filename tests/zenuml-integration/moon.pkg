@@ -8,7 +8,7 @@ import {
   "moonrockz/diagrams-mermaid/zenuml-syntax" @zenuml_syntax,
   "moonrockz/diagrams-mermaid/architecture-syntax" @architecture_syntax,
   "moonrockz/diagrams-mermaid/swimlane-syntax" @swimlane_syntax,
-  "moonrockz/diagrams-svg/icons" @icons,
+  "moonrockz/diagrams-svg/icons",
   "moonrockz/diagrams/icons" @icon_ref,
   "moonrockz/diagrams-svg/writer",
 } for "test"

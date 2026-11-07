@@ -396,7 +396,8 @@ fn normalize_generated_svg(
                   source_id,
                   limits,
                 )
-                guard outlined.length() <= limits.max_source_units - emitted_units else {
+                guard outlined.length() <=
+                  limits.max_source_units - emitted_units else {
                   raise raster_fail(
                     "raster/glyph-limit",
                     "Outlined SVG exceeds the glyph/source budget",

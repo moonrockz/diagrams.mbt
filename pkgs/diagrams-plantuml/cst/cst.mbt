@@ -1,6 +1,7 @@
 ///|
 /// The kind of a token in the lossless syntax tree. All four body languages
 /// share these kinds.
+#derive(Eq, Debug)
 pub(all) enum TokenKind {
   /// `@startregex`, `@endjson` and similar block markers.
   Marker
@@ -28,7 +29,7 @@ pub(all) enum TokenKind {
   Directive
   /// Text that could not be read.
   Error
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TokenKind with Eq::{not_equal, equal}
@@ -39,11 +40,12 @@ pub extend TokenKind with @debug.Debug::{to_repr}
 ///|
 /// One token. `offset` is the UTF-16 offset of its first code unit in the
 /// source. The concatenated token texts of a tree are equal to the source.
+#derive(Eq, Debug)
 pub struct Token {
   kind : TokenKind
   text : String
-  offset : Int
-} derive(Eq, Debug)
+  offset : Int32
+}
 
 ///|
 pub extend Token with Eq::{not_equal, equal}
@@ -52,13 +54,14 @@ pub extend Token with Eq::{not_equal, equal}
 pub extend Token with @debug.Debug::{to_repr}
 
 ///|
-pub fn Token::new(kind : TokenKind, text : String, offset : Int) -> Token {
-  { kind, text, offset }
+pub fn Token::new(kind : TokenKind, text : String, offset : Int32) -> Token {
+  { kind, text, offset, }
 }
 
 ///|
 /// The kind of a node. Each source line, or each multi-line statement, is one
 /// node under the document.
+#derive(Eq, Debug)
 pub(all) enum NodeKind {
   Document
   Start
@@ -88,7 +91,7 @@ pub(all) enum NodeKind {
   /// Text after the end marker.
   Trailing
   Error
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend NodeKind with Eq::{not_equal, equal}
@@ -97,17 +100,19 @@ pub extend NodeKind with Eq::{not_equal, equal}
 pub extend NodeKind with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Element {
   Token(Token)
   Node(Node)
-} derive(Eq, Debug)
+}
 
 ///|
 /// A node of the lossless syntax tree.
+#derive(Eq, Debug)
 pub struct Node {
   kind : NodeKind
   children : ReadOnlyArray[Element]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Element with Eq::{not_equal, equal}
@@ -123,7 +128,7 @@ pub extend Node with @debug.Debug::{to_repr}
 
 ///|
 pub fn Node::new(kind : NodeKind, children : ArrayView[Element]) -> Node {
-  { kind, children: ReadOnlyArray::from_array(children) }
+  { kind, children: ReadOnlyArray::from_array(children), }
 }
 
 ///|
@@ -134,7 +139,10 @@ pub fn Node::tokens(self : Node) -> Array[Token] {
   while stack.pop() is Some(element) {
     match element {
       Token(token) => out.push(token)
-      Node(node) => for child in node.children.rev_iter() { stack.push(child) }
+      Node(node) =>
+        for child in node.children.rev_iter() {
+          stack.push(child)
+        }
     }
   }
   out
@@ -164,7 +172,7 @@ pub fn Node::nodes(self : Node) -> Array[Node] {
 
 ///|
 /// The half-open UTF-16 range of the node, or `None` for an empty node.
-pub fn Node::range(self : Node) -> (Int, Int)? {
+pub fn Node::range(self : Node) -> (Int32, Int32)? {
   let tokens = self.tokens()
   match (tokens.get(0), tokens.last()) {
     (Some(first), Some(last)) =>
@@ -176,8 +184,8 @@ pub fn Node::range(self : Node) -> (Int, Int)? {
 ///|
 /// A line index of a source text for UTF-16 positions.
 pub struct Lines {
-  priv starts : Array[Int]
-  priv length : Int
+  priv starts : Array[Int32]
+  priv length : Int32
 }
 
 ///|
@@ -188,13 +196,13 @@ pub fn Lines::new(source : String) -> Lines {
       starts.push(i + 1)
     }
   }
-  { starts, length: source.length() }
+  { starts, length: source.length(), }
 }
 
 ///|
 /// The position of a UTF-16 offset. Lines and columns start at 1; columns
 /// count UTF-16 code units. A CR before LF belongs to its line.
-pub fn Lines::position(self : Lines, offset : Int) -> @diagrams.Position {
+pub fn Lines::position(self : Lines, offset : Int32) -> @diagrams.Position {
   let offset = offset.max(0).min(self.length)
   let mut low = 0
   let mut high = self.starts.length() - 1
@@ -206,22 +214,22 @@ pub fn Lines::position(self : Lines, offset : Int) -> @diagrams.Position {
       high = middle - 1
     }
   }
-  { offset, line: low + 1, column: offset - self.starts[low] + 1 }
+  { offset, line: low + 1, column: offset - self.starts[low] + 1, }
 }
 
 ///|
-pub fn Lines::span(self : Lines, start : Int, end : Int) -> @diagrams.Span {
-  { start: self.position(start), end: self.position(end) }
+pub fn Lines::span(self : Lines, start : Int32, end : Int32) -> @diagrams.Span {
+  { start: self.position(start), end: self.position(end), }
 }
 
 ///|
 /// The span of a half-open UTF-16 range of `source`.
-pub fn span(source : String, start : Int, end : Int) -> @diagrams.Span {
+pub fn span(source : String, start : Int32, end : Int32) -> @diagrams.Span {
   Lines::new(source).span(start, end)
 }
 
 ///|
 /// The owned text of the half-open UTF-16 range `start` to `end` of `text`.
-pub fn slice(text : String, start : Int, end : Int) -> String {
-  text.view(start_offset=start, end_offset=end).to_owned()
+pub fn slice(text : String, start : Int32, end : Int32) -> String {
+  text.exact_view(start~, end~).to_owned()
 }

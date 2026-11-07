@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub struct Limits {
   source : Int32
   output : Int32
@@ -8,7 +9,7 @@ pub struct Limits {
   depth : Int32
   diagnostics : Int32
   work : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -25,11 +26,12 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct ReadResult {
   tree : @cst.Node
   ast : @ast.Diagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn trim(s : String) -> String {

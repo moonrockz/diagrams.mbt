@@ -1,5 +1,6 @@
 ///|
 /// Multi-kind entry points preserve the sequence-only API.
+#derive(Eq, Debug)
 pub(all) enum ParsedDiagram {
   State(@state_ast.Diagram)
   Flowchart(@flowchart_ast.Diagram)
@@ -7,9 +8,10 @@ pub(all) enum ParsedDiagram {
   Swimlane(@swimlane_ast.Diagram)
   Zenuml(@zenuml_ast.Diagram)
   Architecture(@architecture_ast.Diagram)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum DiagramTree {
   State(@state_cst.Node)
   Flowchart(@swimlane_cst.Node)
@@ -18,7 +20,7 @@ pub(all) enum DiagramTree {
   Zenuml(@zenuml_cst.Node)
   Architecture(@architecture_cst.Node)
   Unsupported(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn DiagramTree::text(self : DiagramTree) -> String {
@@ -34,17 +36,19 @@ pub fn DiagramTree::text(self : DiagramTree) -> String {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct DiagramReadResult {
   tree : DiagramTree
   ast : ParsedDiagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct DiagramPrintResult {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn read_diagram(

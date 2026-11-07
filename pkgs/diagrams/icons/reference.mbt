@@ -1,9 +1,10 @@
 ///|
 /// An icon identity. Geometry and provider assets belong to renderers.
+#derive(Eq, Debug)
 pub struct Reference {
   pack : String
   key : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Reference::new(pack : String, key : String) -> Reference {

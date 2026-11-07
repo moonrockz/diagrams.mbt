@@ -71,8 +71,8 @@ fn split_once(text : String, sep : Char) -> (String, String) {
   match text.find(sep.to_string()) {
     Some(i) =>
       (
-        text.view(end_offset=i).to_owned(),
-        text.view(start_offset=i + 1).to_owned(),
+        text.exact_view(end=i).to_owned(),
+        text.exact_view(start=i + 1).to_owned(),
       )
     None => (text, "")
   }

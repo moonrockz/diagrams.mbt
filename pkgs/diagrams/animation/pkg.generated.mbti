@@ -27,6 +27,7 @@ pub fn railroad_key(String, String) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Active {
   ordinal : Int32
   key : String
@@ -35,7 +36,7 @@ pub struct Active {
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
   visit : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Active::equal(Self, Self) -> Bool
 pub fn Active::not_equal(Self, Self) -> Bool
 pub fn Active::to_repr(Self) -> @debug.Repr
@@ -69,33 +70,37 @@ pub struct CatalogResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Choice {
   Alternative(Int32)
   Repetitions(Int32)
   Optional(Bool)
   ExceptionSections(ReadOnlyArray[Int32])
-} derive(Eq, @debug.Debug)
+}
 pub fn Choice::equal(Self, Self) -> Bool
 pub fn Choice::not_equal(Self, Self) -> Bool
 pub fn Choice::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Control {
   Message(Int32)
   Frame(Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn Control::equal(Self, Self) -> Bool
 pub fn Control::not_equal(Self, Self) -> Bool
 pub fn Control::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Direction {
   Forward
   Reverse
   Both
-} derive(Eq, @debug.Debug)
+}
 pub fn Direction::equal(Self, Self) -> Bool
 pub fn Direction::not_equal(Self, Self) -> Bool
 pub fn Direction::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EdgeKind {
   SequenceFlow
   MessageFlow
@@ -107,17 +112,18 @@ pub(all) enum EdgeKind {
   Undirected
   Railroad
   Containment
-} derive(Eq, @debug.Debug)
+}
 pub fn EdgeKind::equal(Self, Self) -> Bool
 pub fn EdgeKind::not_equal(Self, Self) -> Bool
 pub fn EdgeKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct FrameInfo {
   key : String
   path : ReadOnlyArray[Int32]
   kind : @sequence.FrameKind
   sections : ReadOnlyArray[SectionInfo]
-} derive(Eq, @debug.Debug)
+}
 pub fn FrameInfo::equal(Self, Self) -> Bool
 pub fn FrameInfo::not_equal(Self, Self) -> Bool
 pub fn FrameInfo::to_repr(Self) -> @debug.Repr
@@ -132,17 +138,19 @@ pub fn Graph::lookup(Self, String, limits? : Limits) -> Result[GraphNode, QueryF
 pub fn Graph::reachable(Self, String, kinds? : ArrayView[EdgeKind], direction? : Direction, limits? : Limits) -> ReachabilityResult
 pub fn Graph::route(Self, String, String, kinds? : ArrayView[EdgeKind], direction? : Direction, limits? : Limits) -> RouteResult
 
+#derive(Eq, @debug.Debug)
 pub struct GraphEdge {
   kind : EdgeKind
   source : String
   target : String
   occurrence : String?
   reversed : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphEdge::equal(Self, Self) -> Bool
 pub fn GraphEdge::not_equal(Self, Self) -> Bool
 pub fn GraphEdge::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GraphNode {
   id : String
   label : String
@@ -150,11 +158,12 @@ pub struct GraphNode {
   occurrence : String?
   source_node : @bpmn.Node?
   swimlane_node : @swimlane.Node?
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphNode::equal(Self, Self) -> Bool
 pub fn GraphNode::not_equal(Self, Self) -> Bool
 pub fn GraphNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum LimitKind {
   Nodes
   Edges
@@ -162,11 +171,12 @@ pub(all) enum LimitKind {
   Work
   Steps
   Depth
-} derive(Eq, @debug.Debug)
+}
 pub fn LimitKind::equal(Self, Self) -> Bool
 pub fn LimitKind::not_equal(Self, Self) -> Bool
 pub fn LimitKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
@@ -174,37 +184,40 @@ pub struct Limits {
   results : Int32
   work : Int32
   depth : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, edges? : Int32, steps? : Int32, results? : Int32, work? : Int32, depth? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::valid(Self) -> Bool
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Motion {
   Step(String, Int64)
   OrientedStep(String, Int64, Bool)
   Visit(String, Int64)
   Serial(ReadOnlyArray[Motion])
   Parallel(ReadOnlyArray[Motion])
-} derive(Eq, @debug.Debug)
+}
 pub fn Motion::equal(Self, Self) -> Bool
 pub fn Motion::not_equal(Self, Self) -> Bool
 pub fn Motion::parallel(ArrayView[Self]) -> Self
 pub fn Motion::serial(ArrayView[Self]) -> Self
 pub fn Motion::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct MotionPlan {
   view_id : String
   flow_id : String
   duration_ms : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn MotionPlan::equal(Self, Self) -> Bool
 pub fn MotionPlan::new(String, String, duration_ms? : Int32) -> Self?
 pub fn MotionPlan::not_equal(Self, Self) -> Bool
 pub fn MotionPlan::sample(Self, Int32) -> (Int32, Int32)
 pub fn MotionPlan::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeKind {
   Bpmn(@bpmn.NodeKind)
   Message
@@ -228,11 +241,12 @@ pub(all) enum NodeKind {
   ArchitectureGroup
   RailroadPoint
   DataValue
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeKind::equal(Self, Self) -> Bool
 pub fn NodeKind::not_equal(Self, Self) -> Bool
 pub fn NodeKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Occurrence {
   key : String
   index : Int32
@@ -246,12 +260,13 @@ pub struct Occurrence {
   railroad_term : @railroad-trace.Term?
   data_member : @data-tree.Member?
   data_node : @data-tree.Node?
-} derive(Eq, @debug.Debug)
+}
 pub fn Occurrence::equal(Self, Self) -> Bool
 pub fn Occurrence::is_visit(Self) -> Bool
 pub fn Occurrence::not_equal(Self, Self) -> Bool
 pub fn Occurrence::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
@@ -262,7 +277,7 @@ pub(all) enum OccurrenceKind {
   Railroad(@railroad-trace.ConnectorRole)
   DataConnector
   Visit(VisitKind)
-} derive(Eq, @debug.Debug)
+}
 pub fn OccurrenceKind::equal(Self, Self) -> Bool
 pub fn OccurrenceKind::not_equal(Self, Self) -> Bool
 pub fn OccurrenceKind::to_repr(Self) -> @debug.Repr
@@ -272,21 +287,23 @@ pub struct PlanResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum PlaybackMode {
   Finite
   Illustrative
-} derive(Eq, @debug.Debug)
+}
 pub fn PlaybackMode::equal(Self, Self) -> Bool
 pub fn PlaybackMode::not_equal(Self, Self) -> Bool
 pub fn PlaybackMode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PlaybackPlan {
   view_id : String
   mode : PlaybackMode
   duration_ms : Int64
   steps : ReadOnlyArray[ScheduledStep]
   // private fields
-} derive(Eq, @debug.Debug)
+}
 pub fn PlaybackPlan::equal(Self, Self) -> Bool
 pub fn PlaybackPlan::illustrative(Catalog, duration_ms? : Int64, kinds? : ArrayView[@bpmn.ConnectionKind], limits? : Limits) -> PlanResult
 pub fn PlaybackPlan::matches(Self, Catalog) -> Bool
@@ -298,24 +315,27 @@ pub fn PlaybackPlan::scenario(Catalog, Motion, limits? : Limits) -> PlanResult
 pub fn PlaybackPlan::sequence(Catalog, selections? : ArrayView[Selection], duration_ms? : Int64, limits? : Limits) -> PlanResult
 pub fn PlaybackPlan::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum QueryFailure {
   InvalidEndpoint(String)
   OutsideView(String)
   InvalidLimits
   Limit(LimitKind)
-} derive(Eq, @debug.Debug)
+}
 pub fn QueryFailure::equal(Self, Self) -> Bool
 pub fn QueryFailure::not_equal(Self, Self) -> Bool
 pub fn QueryFailure::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ReachabilityResult {
   Complete(ReadOnlyArray[GraphNode])
   Failed(QueryFailure)
-} derive(Eq, @debug.Debug)
+}
 pub fn ReachabilityResult::equal(Self, Self) -> Bool
 pub fn ReachabilityResult::not_equal(Self, Self) -> Bool
 pub fn ReachabilityResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Route {
   view_id : String
   direction : Direction
@@ -323,30 +343,33 @@ pub struct Route {
   edges : ReadOnlyArray[GraphEdge]
   reversed : ReadOnlyArray[Bool]
   // private fields
-} derive(Eq, @debug.Debug)
+}
 pub fn Route::equal(Self, Self) -> Bool
 pub fn Route::not_equal(Self, Self) -> Bool
 pub fn Route::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RouteResult {
   Found(Route)
   Unreachable
   Failed(QueryFailure)
-} derive(Eq, @debug.Debug)
+}
 pub fn RouteResult::equal(Self, Self) -> Bool
 pub fn RouteResult::not_equal(Self, Self) -> Bool
 pub fn RouteResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Sample {
   elapsed_ms : Int64
   duration_ms : Int64
   finished : Bool
   active : ReadOnlyArray[Active]
-} derive(Eq, @debug.Debug)
+}
 pub fn Sample::equal(Self, Self) -> Bool
 pub fn Sample::not_equal(Self, Self) -> Bool
 pub fn Sample::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ScheduledStep {
   ordinal : Int32
   occurrence : Occurrence
@@ -355,29 +378,32 @@ pub struct ScheduledStep {
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
   visit : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn ScheduledStep::equal(Self, Self) -> Bool
 pub fn ScheduledStep::not_equal(Self, Self) -> Bool
 pub fn ScheduledStep::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SectionInfo {
   role : @sequence.SectionRole
   label : String?
   controls : ReadOnlyArray[Control]
-} derive(Eq, @debug.Debug)
+}
 pub fn SectionInfo::equal(Self, Self) -> Bool
 pub fn SectionInfo::not_equal(Self, Self) -> Bool
 pub fn SectionInfo::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Selection {
   frame_key : String
   choice : Choice
-} derive(Eq, @debug.Debug)
+}
 pub fn Selection::equal(Self, Self) -> Bool
 pub fn Selection::new(String, Choice) -> Self
 pub fn Selection::not_equal(Self, Self) -> Bool
 pub fn Selection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum VisitKind {
   StateNode(@state.Role)
   StateNote
@@ -386,7 +412,7 @@ pub(all) enum VisitKind {
   RailroadTerm(@railroad-trace.TermKind)
   DataRow
   DataBox
-} derive(Eq, @debug.Debug)
+}
 pub fn VisitKind::equal(Self, Self) -> Bool
 pub fn VisitKind::not_equal(Self, Self) -> Bool
 pub fn VisitKind::to_repr(Self) -> @debug.Repr

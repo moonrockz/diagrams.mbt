@@ -48,7 +48,11 @@ fn frame_kind(word : String) -> FrameKind? {
 fn statement(source : String, node : @cst.Node) -> Statement? {
   let tokens = significant(node)
   guard tokens.last() is Some(last) else { return None }
-  let span = @cst.span(source, tokens[0].offset, last.offset + last.text.length())
+  let span = @cst.span(
+    source,
+    tokens[0].offset,
+    last.offset + last.text.length(),
+  )
   let names = texts_of(tokens, Identifier)
   let kind : StatementKind = match node.kind {
     Participant => {
@@ -127,7 +131,7 @@ fn statement(source : String, node : @cst.Node) -> Statement? {
         Properties => Properties
         _ => Details
       }
-      Link({ kind, participant: names[0], text: first_text(tokens) })
+      Link({ kind, participant: names[0], text: first_text(tokens), })
     }
     Title => Title(first_text(tokens))
     AccTitle => AccTitle(first_text(tokens))
@@ -142,10 +146,14 @@ fn statement(source : String, node : @cst.Node) -> Statement? {
     }
     Block => {
       let parts = node.nodes()
-      guard parts.length() > 0 && parts[0].kind == BlockStart else { return None }
+      guard parts.length() > 0 && parts[0].kind == BlockStart else {
+        return None
+      }
       let opener = significant(parts[0])
       let word = opener[0].text.to_lower()
-      let sections : Array[(String, Array[Statement])] = [(first_text(opener), [])]
+      let sections : Array[(String, Array[Statement])] = [
+        (first_text(opener), []),
+      ]
       for part in parts[1:] {
         match part.kind {
           Section => sections.push((first_text(significant(part)), []))
@@ -176,7 +184,7 @@ fn statement(source : String, node : @cst.Node) -> Statement? {
     }
     _ => return None
   }
-  Some({ kind, span })
+  Some({ kind, span, })
 }
 
 ///|

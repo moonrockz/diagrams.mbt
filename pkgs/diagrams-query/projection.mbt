@@ -2,6 +2,7 @@
 /// A field that a projection reads from each captured node. The node identity
 /// is always part of a capture, so a projection with no fields returns
 /// identities alone.
+#derive(Eq, Debug)
 pub(all) enum FieldRequest {
   Kind
   Category
@@ -12,7 +13,7 @@ pub(all) enum FieldRequest {
   Field
   Attribute(String)
   Extra(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FieldRequest with Eq::{equal, not_equal}
@@ -35,7 +36,7 @@ pub fn FieldRequest::parse(name : String) -> FieldRequest {
     "field" => Field
     _ =>
       if name.has_prefix("attr:") {
-        Attribute(name.view(start_offset=5).to_owned())
+        Attribute(name.exact_view(start=5).to_owned())
       } else {
         Extra(name)
       }
@@ -45,15 +46,16 @@ pub fn FieldRequest::parse(name : String) -> FieldRequest {
 ///|
 /// A projected value. `Absent` means that the node has no such value; it is
 /// different from an empty string.
+#derive(Eq, Debug)
 pub(all) enum Projected {
   Absent
   Text(String)
   Scalar(ScalarValue)
   Name(Name)
-  Int(Int)
+  Int(Int32)
   Location(QueryLocation)
   Path(ReadOnlyArray[QueryPathStep])
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Projected with Eq::{equal, not_equal}
@@ -78,13 +80,13 @@ priv enum RField {
 /// A checked field selection for one schema.
 pub struct Projection {
   schema_id : String
-  schema_version : Int
+  schema_version : Int32
   fields : ReadOnlyArray[FieldRequest]
   priv resolved : ReadOnlyArray[RField]
 }
 
 ///|
-pub impl @debug.Debug for Projection with to_repr(self) {
+pub impl @debug.Debug for Projection with fn to_repr(self) {
   @debug.Repr::Repr(self.fields.iter().to_array())
 }
 
@@ -93,7 +95,7 @@ pub extend Projection with @debug.Debug::{to_repr}
 
 ///|
 /// The most fields that one projection can request.
-pub let max_projection_fields : Int = 256
+pub let max_projection_fields : Int32 = 256
 
 ///|
 /// Checks `fields` against `schema`. An unknown extra field, an unbound
@@ -101,11 +103,15 @@ pub let max_projection_fields : Int = 256
 pub fn Projection::new(
   schema : Schema,
   fields : ArrayView[FieldRequest],
-  namespaces? : ArrayView[(String, String)] = [],
+  namespaces~ : ArrayView[(String, String)] = [],
 ) -> Result[Projection, ReadOnlyArray[QueryDiagnostic]] {
   if fields.length() > max_projection_fields {
     return Err([
-      error("query/projection-limit", "A projection requests too many fields.", None),
+      error(
+        "query/projection-limit",
+        "A projection requests too many fields.",
+        None,
+      ),
     ])
   }
   let diagnostics = []
@@ -137,19 +143,27 @@ pub fn Projection::new(
           None if name != "" => Some(RAttribute(Name::new("", name)))
           None => {
             diagnostics.push(
-              error("query/invalid-name", "An attribute name cannot be empty.", None),
+              error(
+                "query/invalid-name",
+                "An attribute name cannot be empty.",
+                None,
+              ),
             )
             None
           }
           Some(colon) => {
-            let prefix = name.view(end_offset=colon).to_owned()
-            let local_name = name.view(start_offset=colon + 1).to_owned()
+            let prefix = name.exact_view(end=colon).to_owned()
+            let local_name = name.exact_view(start=colon + 1).to_owned()
             match namespaces.iter().find_first(b => b.0 == prefix) {
               Some((_, uri)) if local_name != "" && !local_name.contains(":") =>
                 Some(RAttribute(Name::new(uri, local_name)))
               Some(_) => {
                 diagnostics.push(
-                  error("query/invalid-name", "\{name} is not a valid attribute name.", None),
+                  error(
+                    "query/invalid-name",
+                    "\{name} is not a valid attribute name.",
+                    None,
+                  ),
                 )
                 None
               }
@@ -185,15 +199,16 @@ pub fn Projection::new(
 ///|
 /// A projection with no fields: identities only.
 pub fn Projection::identity(schema : Schema) -> Projection {
-  { schema_id: schema.id, schema_version: schema.version, fields: [], resolved: [] }
+  {
+    schema_id: schema.id,
+    schema_version: schema.version,
+    fields: [],
+    resolved: [],
+  }
 }
 
 ///|
-fn[T : QueryTree] project(
-  tree : T,
-  node : Int,
-  field : RField,
-) -> Projected {
+fn[T : QueryTree] project(tree : T, node : Int32, field : RField) -> Projected {
   match field {
     RKind =>
       match tree.kind(node) {
@@ -233,18 +248,23 @@ fn[T : QueryTree] project(
 
 ///|
 /// The output units of a projected value: one, plus its text code units.
-fn Projected::units(self : Projected) -> Int {
+fn Projected::units(self : Projected) -> Int32 {
   1 +
   (match self {
     Absent | Int(_) => 0
     Text(text) => text.length()
     Scalar(value) => value.tag.length() + value.text.length()
     Name(name) => name.namespace_uri.length() + name.local_name.length()
-    Location(location) => location.source_id.map(s => s.length()).unwrap_or(0) + 6
+    Location(location) =>
+      location.source_id.map(s => s.length()).unwrap_or(0) + 6
     Path(steps) =>
-      steps.iter().fold(init=0, (sum, step) => sum +
+      steps
+      .iter()
+      .fold(init=0, (sum, step) => {
+        sum +
         step.field.namespace_uri.length() +
         step.field.local_name.length() +
-        2)
+        2
+      })
   })
 }

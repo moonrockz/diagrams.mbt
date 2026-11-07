@@ -104,7 +104,7 @@ Tasks are MoonBit scripts under `scripts/`, run through `moonx` by mise.
 | `mise run test:site` | Test the docs site packages and run the browser smoke test on the built site |
 | `mise run python-native:wheels` | Cross-build the Python wheels for Linux, macOS and Windows with zig |
 | `mise run test:python-native` | Build the Python extension for this host and test it with CPython 3.12 and 3.15 |
-| `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.3.2` |
+| `mise run test:native-zig` | Test native code using external `moonrockz/zig-cross@0.4.1` |
 | `mise run clean` | Remove build artifacts |
 | `mise run openspec:setup` | Refresh OpenSpec skills and commands for the supported agents |
 

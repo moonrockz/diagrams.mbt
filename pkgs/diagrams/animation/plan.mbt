@@ -1,10 +1,11 @@
 ///|
 /// The first-slice pure plan names one authored connection and a duration.
+#derive(Eq, Debug)
 pub struct MotionPlan {
   view_id : String
   flow_id : String
   duration_ms : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend MotionPlan with Eq::{equal, not_equal}

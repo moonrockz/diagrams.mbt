@@ -30,21 +30,23 @@ pub struct Resolution {
   complete : Bool
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Segment {
   Name(String)
   Occurrence(String, Int32)
   Any
   Deep
-} derive(Eq, @debug.Debug)
+}
 pub fn Segment::equal(Self, Self) -> Bool
 pub fn Segment::not_equal(Self, Self) -> Bool
 pub fn Segment::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Selector {
   segments : ReadOnlyArray[Segment]
   stereotype : String?
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Selector::equal(Self, Self) -> Bool
 pub fn Selector::is_plain(Self) -> Bool
 pub fn Selector::logical_equal(Self, Self) -> Bool

@@ -10,7 +10,9 @@ test "the Mermaid source reproduces, prints canonically and converts" {
   let ast = r.ast.unwrap()
   assert_eq(@mermaid.print(ast), source)
   let s = @mermaid.to_sequence(ast).sequence
-  assert_eq(s.participants.map(p => p.id).iter().to_array(), ["Client", "U", "API"])
+  assert_eq(s.participants.map(p => p.id).iter().to_array(), [
+    "Client", "U", "API",
+  ])
 }
 
 ///|

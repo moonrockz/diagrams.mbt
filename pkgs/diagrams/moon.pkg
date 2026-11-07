@@ -3,7 +3,7 @@ import {
 }
 
 import {
-  "moonrockz/diagrams" @diagrams,
+  "moonrockz/diagrams",
 } for "test"
 
 options(

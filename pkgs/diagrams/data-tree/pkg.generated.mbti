@@ -16,6 +16,7 @@ pub fn validate(DataTree, limits? : Limits) -> ReadOnlyArray[@diagrams.Diagnosti
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct DataTree {
   id : String
   root : String
@@ -24,16 +25,17 @@ pub struct DataTree {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn DataTree::equal(Self, Self) -> Bool
 pub fn DataTree::new(String, String, ArrayView[Node], highlights? : ArrayView[Highlight], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
 pub fn DataTree::not_equal(Self, Self) -> Bool
 pub fn DataTree::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Highlight {
   targets : ReadOnlyArray[String]
   style : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Highlight::equal(Self, Self) -> Bool
 pub fn Highlight::new(ArrayView[String], style? : String) -> Self
 pub fn Highlight::not_equal(Self, Self) -> Bool
@@ -56,41 +58,45 @@ pub struct IndexResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Key {
   Name(String)
   Index(Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn Key::equal(Self, Self) -> Bool
 pub fn Key::not_equal(Self, Self) -> Bool
 pub fn Key::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Member {
   id : String
   key : Key
   value : String
   source : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Member::equal(Self, Self) -> Bool
 pub fn Member::index(String, Int32, String, source? : @diagrams.Span) -> Self
 pub fn Member::named(String, String, String, source? : @diagrams.Span) -> Self
 pub fn Member::not_equal(Self, Self) -> Bool
 pub fn Member::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   id : String
   value : Value
   source : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::array(String, ArrayView[Member], source? : @diagrams.Span) -> Self
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::is_container(Self) -> Bool
@@ -100,6 +106,7 @@ pub fn Node::not_equal(Self, Self) -> Bool
 pub fn Node::object(String, ArrayView[Member], source? : @diagrams.Span) -> Self
 pub fn Node::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Value {
   Object(ReadOnlyArray[Member])
   Array(ReadOnlyArray[Member])
@@ -107,7 +114,7 @@ pub(all) enum Value {
   Number(String)
   Boolean(Bool)
   Null
-} derive(Eq, @debug.Debug)
+}
 pub fn Value::equal(Self, Self) -> Bool
 pub fn Value::not_equal(Self, Self) -> Bool
 pub fn Value::scalar_text(Self) -> String?

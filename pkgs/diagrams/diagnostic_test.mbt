@@ -1,11 +1,11 @@
 ///|
 test "a diagnostic keeps its code, severity, message and span" {
-  let start = @diagrams.Position::{ offset: 4, line: 2, column: 1 }
-  let end = @diagrams.Position::{ offset: 9, line: 2, column: 6 }
+  let start = @diagrams.Position::{ offset: 4, line: 2, column: 1, }
+  let end = @diagrams.Position::{ offset: 9, line: 2, column: 6, }
   let d = @diagrams.Diagnostic::error(
     "mermaid/unknown-statement",
     "unknown statement",
-    span=@diagrams.Span::{ start, end },
+    span=@diagrams.Span::{ start, end, },
   )
   assert_eq(d.code, "mermaid/unknown-statement")
   assert_eq(d.severity, @diagrams.Severity::Error)

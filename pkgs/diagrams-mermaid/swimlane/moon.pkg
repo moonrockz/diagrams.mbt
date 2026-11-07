@@ -1,1 +1,7 @@
-import { "moonbitlang/core/debug", "moonrockz/diagrams" @diagrams, "moonrockz/diagrams/swimlane" @model, "moonrockz/diagrams-mermaid/swimlane-ast" @ast, "moonrockz/diagrams-mermaid/swimlane-syntax" @syntax }
+import {
+  "moonbitlang/core/debug",
+  "moonrockz/diagrams",
+  "moonrockz/diagrams/swimlane" @model,
+  "moonrockz/diagrams-mermaid/swimlane-ast" @ast,
+  "moonrockz/diagrams-mermaid/swimlane-syntax" @syntax,
+}

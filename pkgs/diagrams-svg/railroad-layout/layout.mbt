@@ -21,7 +21,7 @@ let wrap_units : Int32 = 40
 
 ///|
 fn cut(text : String, start : Int32, end : Int32) -> String {
-  text.view(start_offset=start, end_offset=end).to_owned()
+  text.exact_view(start~, end~).to_owned()
 }
 
 ///|

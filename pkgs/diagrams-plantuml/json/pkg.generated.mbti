@@ -29,23 +29,25 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   highlights : ReadOnlyArray[@data.Selector]
   value : Value
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(Value, name? : String, statements? : ArrayView[@envelope.Statement], highlights? : ArrayView[@data.Selector]) -> Self
 pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Member {
   name : Str
   value : Value
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Member::equal(Self, Self) -> Bool
 pub fn Member::new(String, Value) -> Self
 pub fn Member::not_equal(Self, Self) -> Bool
@@ -57,19 +59,21 @@ pub struct ReadResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Str {
   text : String
   raw : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Str::equal(Self, Self) -> Bool
 pub fn Str::new(String) -> Self
 pub fn Str::not_equal(Self, Self) -> Bool
 pub fn Str::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Value {
   kind : ValueKind
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Value::array(ArrayView[Self]) -> Self
 pub fn Value::boolean(Bool) -> Self
 pub fn Value::equal(Self, Self) -> Bool
@@ -82,6 +86,7 @@ pub fn Value::object(ArrayView[Member]) -> Self
 pub fn Value::string(String) -> Self
 pub fn Value::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ValueKind {
   Object(ReadOnlyArray[Member])
   Array(ReadOnlyArray[Value])
@@ -89,7 +94,7 @@ pub(all) enum ValueKind {
   Number(String)
   Boolean(Bool)
   Null
-} derive(Eq, @debug.Debug)
+}
 pub fn ValueKind::equal(Self, Self) -> Bool
 pub fn ValueKind::not_equal(Self, Self) -> Bool
 pub fn ValueKind::to_repr(Self) -> @debug.Repr

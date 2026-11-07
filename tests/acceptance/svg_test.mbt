@@ -1,12 +1,23 @@
 ///|
-fn corpus_svg(index : Int, mode : @svg.Mode) -> String raise {
+fn corpus_svg(index : Int32, mode : @svg.Mode) -> String raise {
   let e = @corpus.mermaid_12_2_0[index]
   let s = @mermaid.to_sequence(@mermaid.read(e.source).ast.unwrap()).sequence
   let r = @render.Renderer::render(@svg.SvgRenderer::new(mode~), Sequence(s))
-  assert_eq(r.diagnostics.length(), 0, msg="example \{e.name}: \{r.diagnostics.map(d => d.message).iter().to_array().join("; ")}")
+  assert_eq(
+    r.diagnostics.length(),
+    0,
+    msg="example \{e.name}: \{r.diagnostics.map(d => d.message).iter().to_array().join("; ")}",
+  )
   let svg = r.output.unwrap()
-  for forbidden in ["<script", "@import", "href=", "data:font", "<foreignObject", " onload="] { assert_false(svg.contains(forbidden), msg=e.name) }
-  for url in svg.split("url(").drop(1) { assert_true(url.has_prefix("#"), msg=e.name) }
+  for
+    forbidden in [
+      "<script", "@import", "href=", "data:font", "<foreignObject", " onload=",
+    ] {
+    assert_false(svg.contains(forbidden), msg=e.name)
+  }
+  for url in svg.split("url(").drop(1) {
+    assert_true(url.has_prefix("#"), msg=e.name)
+  }
   svg
 }
 

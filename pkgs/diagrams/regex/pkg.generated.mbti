@@ -14,6 +14,7 @@ pub fn validate(Regex, limits? : Limits) -> ReadOnlyArray[@diagrams.Diagnostic]
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum AnchorKind {
   LineStart
   LineEnd
@@ -23,38 +24,41 @@ pub(all) enum AnchorKind {
   PreviousMatchEnd
   WordBoundary
   NonWordBoundary
-} derive(Eq, @debug.Debug)
+}
 pub fn AnchorKind::equal(Self, Self) -> Bool
 pub fn AnchorKind::not_equal(Self, Self) -> Bool
 pub fn AnchorKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Bounds {
   min : Int32
   max : Int32?
   reluctant : Bool
   spelling : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Bounds::equal(Self, Self) -> Bool
 pub fn Bounds::new(Int32, max? : Int32, reluctant? : Bool, spelling? : String) -> Self
 pub fn Bounds::not_equal(Self, Self) -> Bool
 pub fn Bounds::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ClassKind {
   Any
   Shorthand(Char)
   Property(String)
   CodePoint(String)
   Posix(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn ClassKind::equal(Self, Self) -> Bool
 pub fn ClassKind::not_equal(Self, Self) -> Bool
 pub fn ClassKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GroupKind {
   Capturing
   NonCapturing
   Named(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn GroupKind::equal(Self, Self) -> Bool
 pub fn GroupKind::not_equal(Self, Self) -> Bool
 pub fn GroupKind::to_repr(Self) -> @debug.Repr
@@ -74,6 +78,7 @@ pub struct IndexResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Literal(String)
   Class(ClassKind)
@@ -85,34 +90,37 @@ pub(all) enum Kind {
   Group(GroupKind, String)
   Repeat(Bounds, String)
   Assertion(Look, Bool, String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Look {
   Ahead
   Behind
-} derive(Eq, @debug.Debug)
+}
 pub fn Look::equal(Self, Self) -> Bool
 pub fn Look::not_equal(Self, Self) -> Bool
 pub fn Look::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   id : String
   kind : Kind
   source : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::children(Self) -> ReadOnlyArray[String]
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::is_leaf(Self) -> Bool
@@ -121,6 +129,7 @@ pub fn Node::new(String, Kind, source? : @diagrams.Span) -> Self
 pub fn Node::not_equal(Self, Self) -> Bool
 pub fn Node::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Regex {
   id : String
   root : String
@@ -129,18 +138,19 @@ pub struct Regex {
   accessibility_title : String?
   accessibility_description : String?
   pattern : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Regex::equal(Self, Self) -> Bool
 pub fn Regex::new(String, String, ArrayView[Node], title? : String, accessibility_title? : String, accessibility_description? : String, pattern? : String) -> Self
 pub fn Regex::node(Self, String) -> Node?
 pub fn Regex::not_equal(Self, Self) -> Bool
 pub fn Regex::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum SetItem {
   Char(String)
   Range(String, String)
   Escape(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn SetItem::equal(Self, Self) -> Bool
 pub fn SetItem::not_equal(Self, Self) -> Bool
 pub fn SetItem::to_repr(Self) -> @debug.Repr

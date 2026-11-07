@@ -132,8 +132,17 @@ test "exact integral aspect ratios do not gain a derived pixel" {
   assert_eq(still_dimensions(swimlane, Height(819), limits), (672, 819))
   assert_eq(still_dimensions(swimlane, Fit(672, 819), limits), (672, 819))
   // The integral path's largest allowed intermediate product remains in Int64.
-  assert_eq(ratio_dimension(2147483647.0, 2147483647, 2147483647.0), 2147483647.0)
+  assert_eq(
+    ratio_dimension(2147483647.0, 2147483647, 2147483647.0),
+    2147483647.0,
+  )
   // Fractional input and an overflowing floating product retain a finite ratio.
-  assert_eq(still_dimensions("<svg viewBox=\"0 0 10.5 21\"/>", Width(165), limits), (165, 330))
-  assert_eq(still_dimensions("<svg viewBox=\"0 0 1e308 1e308\"/>", Width(165), limits), (165, 165))
+  assert_eq(
+    still_dimensions("<svg viewBox=\"0 0 10.5 21\"/>", Width(165), limits),
+    (165, 330),
+  )
+  assert_eq(
+    still_dimensions("<svg viewBox=\"0 0 1e308 1e308\"/>", Width(165), limits),
+    (165, 165),
+  )
 }

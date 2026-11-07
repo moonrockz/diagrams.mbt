@@ -2,10 +2,11 @@
 /// A JSON string. `text` is the decoded value. `raw` is the source spelling
 /// with its quotes, or `None` for a constructed value. Logical comparison
 /// and canonical writing use only `text`.
+#derive(Eq, Debug)
 pub struct Str {
   text : String
   raw : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Str with Eq::{equal, not_equal}
@@ -20,6 +21,7 @@ pub fn Str::new(text : String) -> Str {
 
 ///|
 /// The kind and content of one JSON value.
+#derive(Eq, Debug)
 pub(all) enum ValueKind {
   /// Member occurrences in source order. Repeated names stay separate.
   Object(ReadOnlyArray[Member])
@@ -29,7 +31,7 @@ pub(all) enum ValueKind {
   Number(String)
   Boolean(Bool)
   Null
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ValueKind with Eq::{equal, not_equal}
@@ -39,10 +41,11 @@ pub extend ValueKind with @debug.Debug::{to_repr}
 
 ///|
 /// One JSON value with its source span.
+#derive(Eq, Debug)
 pub struct Value {
   kind : ValueKind
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Value with Eq::{equal, not_equal}
@@ -52,11 +55,12 @@ pub extend Value with @debug.Debug::{to_repr}
 
 ///|
 /// One object member occurrence.
+#derive(Eq, Debug)
 pub struct Member {
   name : Str
   value : Value
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Member with Eq::{equal, not_equal}
@@ -105,12 +109,13 @@ pub fn Value::null() -> Value {
 
 ///|
 /// One parsed JSON diagram block.
+#derive(Eq, Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   highlights : ReadOnlyArray[@data.Selector]
   value : Value
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Document with Eq::{equal, not_equal}

@@ -9,9 +9,9 @@ struct FsNode {
   field : String
   attrs : Array[(String, String)]
   text : String?
-  children : Array[Int]
-  parent : Int?
-  depth : Int
+  children : Array[Int32]
+  parent : Int32?
+  depth : Int32
 }
 
 ///|
@@ -39,7 +39,7 @@ let fs_schema : @query.Schema = @query.Schema::new(
 
 ///|
 fn FsTree::new() -> FsTree {
-  { nodes: [], schema: fs_schema }
+  { nodes: [], schema: fs_schema, }
 }
 
 ///|
@@ -47,12 +47,12 @@ fn FsTree::new() -> FsTree {
 fn FsTree::add(
   self : FsTree,
   kind : String,
-  parent? : Int,
-  field? : String = "entry",
-  attrs? : Array[(String, String)] = [],
+  parent? : Int32,
+  field~ : String = "entry",
+  attrs~ : Array[(String, String)] = [],
   text? : String,
-  ns? : String = "",
-) -> Int {
+  ns~ : String = "",
+) -> Int32 {
   let id = self.nodes.length()
   let depth = match parent {
     Some(p) => self.nodes[p].depth + 1
@@ -77,37 +77,37 @@ fn FsTree::add(
 }
 
 ///|
-impl @query.QueryTree for FsTree with schema(self) {
+impl @query.QueryTree for FsTree with fn schema(self) {
   self.schema
 }
 
 ///|
-impl @query.QueryTree for FsTree with root(_self) {
+impl @query.QueryTree for FsTree with fn root(_self) {
   0
 }
 
 ///|
-impl @query.QueryTree for FsTree with node_count(self) {
+impl @query.QueryTree for FsTree with fn node_count(self) {
   self.nodes.length()
 }
 
 ///|
-impl @query.QueryTree for FsTree with kind(self, node) {
+impl @query.QueryTree for FsTree with fn kind(self, node) {
   Some(@query.Name::new(self.nodes[node].ns, self.nodes[node].kind))
 }
 
 ///|
-impl @query.QueryTree for FsTree with category(self, node) {
+impl @query.QueryTree for FsTree with fn category(self, node) {
   self.nodes[node].category
 }
 
 ///|
-impl @query.QueryTree for FsTree with children(self, node) {
+impl @query.QueryTree for FsTree with fn children(self, node) {
   self.nodes[node].children[:]
 }
 
 ///|
-impl @query.QueryTree for FsTree with field(self, node) {
+impl @query.QueryTree for FsTree with fn field(self, node) {
   match self.nodes[node].parent {
     Some(_) => Some(@query.Name::new("", self.nodes[node].field))
     None => None
@@ -115,23 +115,23 @@ impl @query.QueryTree for FsTree with field(self, node) {
 }
 
 ///|
-impl @query.QueryTree for FsTree with attribute(self, node, name) {
+impl @query.QueryTree for FsTree with fn attribute(self, node, name) {
   if name.namespace_uri != "" {
     return None
   }
   self.nodes[node].attrs
   .iter()
   .find_first(a => a.0 == name.local_name)
-  .map(a => @query.ScalarValue::{ tag: "text", text: a.1 })
+  .map(a => @query.ScalarValue::{ tag: "text", text: a.1, })
 }
 
 ///|
-impl @query.QueryTree for FsTree with text(self, node) {
+impl @query.QueryTree for FsTree with fn text(self, node) {
   self.nodes[node].text
 }
 
 ///|
-impl @query.QueryTree for FsTree with extra(self, node, name) {
+impl @query.QueryTree for FsTree with fn extra(self, node, name) {
   if name == "size" {
     self.nodes[node].text.map(t => @query.ScalarValue::{
       tag: "number",
@@ -143,19 +143,20 @@ impl @query.QueryTree for FsTree with extra(self, node, name) {
 }
 
 ///|
-impl @query.QueryTree for FsTree with location(_self, _node) {
+impl @query.QueryTree for FsTree with fn location(_self, _node) {
   None
 }
 
 ///|
-impl @query.QueryTree for FsTree with path(self, node) {
+impl @query.QueryTree for FsTree with fn path(self, node) {
   let steps = []
   let mut at = node
   while self.nodes[at].parent is Some(parent) {
     let position = self.nodes[parent].children.search(at).unwrap()
     let mut index = 0
     for i in 0..<position {
-      if self.nodes[self.nodes[parent].children[i]].field == self.nodes[at].field {
+      if self.nodes[self.nodes[parent].children[i]].field ==
+        self.nodes[at].field {
         index += 1
       }
     }
@@ -171,7 +172,7 @@ impl @query.QueryTree for FsTree with path(self, node) {
 }
 
 ///|
-impl @query.QueryTree for FsTree with depth(self, node) {
+impl @query.QueryTree for FsTree with fn depth(self, node) {
   self.nodes[node].depth
 }
 
@@ -201,7 +202,8 @@ fn sample() -> FsTree {
 fn plan(text : String) -> @query.QueryPlan {
   match @query.compile(text, fs_schema, namespaces=[("x", "urn:x")]) {
     Ok(plan) => plan
-    Err(diagnostics) => abort("compile failed: \{diagnostics[0].code} \{diagnostics[0].message}")
+    Err(diagnostics) =>
+      abort("compile failed: \{diagnostics[0].code} \{diagnostics[0].message}")
   }
 }
 
@@ -222,7 +224,7 @@ fn rows(result : @query.QueryResult) -> String {
 }
 
 ///|
-fn run(text : String, tree? : FsTree = sample()) -> String {
+fn run(text : String, tree~ : FsTree = sample()) -> String {
   rows(plan(text).collect(tree))
 }
 

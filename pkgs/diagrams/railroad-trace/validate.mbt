@@ -4,8 +4,7 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
   "trace/subject-mismatch", "trace/stale", "trace/invalid-target", "trace/invalid-role",
   "trace/discontinuous", "trace/invalid-span", "trace/invalid-attempt", "trace/limit",
   "trace/invalid-request", "trace/unsupported", "trace/exhausted", "trace/provider-error",
-  "trace/input-mismatch",
-  "railroad/topology-limit",
+  "trace/input-mismatch", "railroad/topology-limit",
 ]
 
 ///|
@@ -41,12 +40,12 @@ pub fn validate_trace(
   trace : Trace,
   subject : Subject,
   view_id? : String,
-  limits? : TraceLimits = TraceLimits::new(),
+  limits~ : TraceLimits = TraceLimits::new(),
 ) -> TraceValidation {
   let out : Array[@diagrams.Diagnostic] = []
   fn fail(code : String, message : String) -> TraceValidation {
     out.push(@diagrams.Diagnostic::error(code, message))
-    { validated: None, diagnostics: ReadOnlyArray::from_array(out) }
+    { validated: None, diagnostics: ReadOnlyArray::from_array(out), }
   }
   if !limits.valid() {
     return fail("trace/limit", "Trace limits must be positive")
@@ -91,7 +90,7 @@ pub fn validate_trace(
       )
   }
   guard built.topology is Some(topology) else {
-    return { validated: None, diagnostics: built.diagnostics }
+    return { validated: None, diagnostics: built.diagnostics, }
   }
   let ids : Map[String, Bool] = Map([])
   let mut steps = 0
@@ -176,7 +175,7 @@ pub fn validate_trace(
       }
     }
   }
-  { validated: Some({ trace, topology }), diagnostics: [] }
+  { validated: Some({ trace, topology, }), diagnostics: [], }
 }
 
 ///|
@@ -186,10 +185,13 @@ pub fn validate_result(
   result : TraceResult,
   subject : Subject,
   view_id? : String,
-  limits? : TraceLimits = TraceLimits::new(),
+  limits~ : TraceLimits = TraceLimits::new(),
 ) -> TraceValidation {
   fn fail(code : String, message : String) -> TraceValidation {
-    { validated: None, diagnostics: [@diagrams.Diagnostic::error(code, message)] }
+    {
+      validated: None,
+      diagnostics: [@diagrams.Diagnostic::error(code, message)],
+    }
   }
   match result {
     Matched(trace) | NotMatched(trace) => {
@@ -202,10 +204,14 @@ pub fn validate_result(
       validate_trace(trace, subject, view_id?, limits~)
     }
     Unsupported(reason) =>
-      fail("trace/unsupported", "The provider does not support this subject: " + reason)
+      fail(
+        "trace/unsupported",
+        "The provider does not support this subject: " + reason,
+      )
     Exhausted(reason) =>
       fail("trace/exhausted", "The provider exhausted its budget: " + reason)
-    ProviderError(reason) => fail("trace/provider-error", "The provider failed: " + reason)
+    ProviderError(reason) =>
+      fail("trace/provider-error", "The provider failed: " + reason)
   }
 }
 
@@ -253,7 +259,7 @@ pub fn[P : RailroadTraceProvider] run(
 ) -> TraceRun {
   let invalid = request.validate()
   if !invalid.is_empty() {
-    return { result: None, validated: None, diagnostics: invalid }
+    return { result: None, validated: None, diagnostics: invalid, }
   }
   let result = provider.trace(request)
   // Evidence for another input is never accepted for this request.
@@ -276,7 +282,11 @@ pub fn[P : RailroadTraceProvider] run(
     view_id=request.view_id,
     limits=request.limits,
   )
-  { result: Some(result), validated: checked.validated, diagnostics: checked.diagnostics }
+  {
+    result: Some(result),
+    validated: checked.validated,
+    diagnostics: checked.diagnostics,
+  }
 }
 
 ///|
@@ -284,5 +294,9 @@ pub fn[P : RailroadTraceProvider] run(
 pub fn TraceRun::refused(
   diagnostics : ArrayView[@diagrams.Diagnostic],
 ) -> TraceRun {
-  { result: None, validated: None, diagnostics: ReadOnlyArray::from_array(diagnostics) }
+  {
+    result: None,
+    validated: None,
+    diagnostics: ReadOnlyArray::from_array(diagnostics),
+  }
 }

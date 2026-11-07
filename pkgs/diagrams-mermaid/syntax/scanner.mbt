@@ -19,13 +19,13 @@ let name_stops : Array[String] = [
 /// A cursor over the whole source. It makes tokens with UTF-16 offsets.
 priv struct Scanner {
   src : String
-  mut pos : Int
+  mut pos : Int32
   diagnostics : Array[@diagrams.Diagnostic]
 }
 
 ///|
 fn Scanner::new(src : String) -> Scanner {
-  { src, pos: 0, diagnostics: [] }
+  { src, pos: 0, diagnostics: [], }
 }
 
 ///|
@@ -35,7 +35,7 @@ fn Scanner::at_end(self : Scanner) -> Bool {
 
 ///|
 /// The code unit at `i`, or -1 after the end.
-fn Scanner::cu(self : Scanner, i : Int) -> Int {
+fn Scanner::cu(self : Scanner, i : Int32) -> Int32 {
   if i >= 0 && i < self.src.length() {
     self.src.at(i).to_int()
   } else {
@@ -44,16 +44,16 @@ fn Scanner::cu(self : Scanner, i : Int) -> Int {
 }
 
 ///|
-fn Scanner::slice(self : Scanner, start : Int, end : Int) -> String {
-  self.src.view(start_offset=start, end_offset=end).to_owned()
+fn Scanner::slice(self : Scanner, start : Int32, end : Int32) -> String {
+  self.src.exact_view(start~, end~).to_owned()
 }
 
 ///|
 fn Scanner::token(
   self : Scanner,
   kind : @cst.TokenKind,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> @cst.Element {
   Token(@cst.Token::new(kind, self.slice(start, end), start))
 }
@@ -63,26 +63,30 @@ fn Scanner::error(
   self : Scanner,
   code : String,
   message : String,
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> Unit {
   self.diagnostics.push(
-    @diagrams.Diagnostic::error(code, message, span=@cst.span(self.src, start, end)),
+    @diagrams.Diagnostic::error(
+      code,
+      message,
+      span=@cst.span(self.src, start, end),
+    ),
   )
 }
 
 ///|
-fn is_hspace(c : Int) -> Bool {
+fn is_hspace(c : Int32) -> Bool {
   c == ' '.to_int() || c == '\t'.to_int() || c == 0x0b || c == 0x0c
 }
 
 ///|
-fn is_newline(c : Int) -> Bool {
+fn is_newline(c : Int32) -> Bool {
   c == '\n'.to_int() || c == '\r'.to_int()
 }
 
 ///|
-fn is_word(c : Int) -> Bool {
+fn is_word(c : Int32) -> Bool {
   (c >= 'a'.to_int() && c <= 'z'.to_int()) ||
   (c >= 'A'.to_int() && c <= 'Z'.to_int()) ||
   (c >= '0'.to_int() && c <= '9'.to_int()) ||
@@ -90,12 +94,12 @@ fn is_word(c : Int) -> Bool {
 }
 
 ///|
-fn is_digit(c : Int) -> Bool {
+fn is_digit(c : Int32) -> Bool {
   c >= '0'.to_int() && c <= '9'.to_int()
 }
 
 ///|
-fn lower(c : Int) -> Int {
+fn lower(c : Int32) -> Int32 {
   if c >= 'A'.to_int() && c <= 'Z'.to_int() {
     c + 32
   } else {
@@ -104,7 +108,7 @@ fn lower(c : Int) -> Int {
 }
 
 ///|
-fn one_of(c : Int, chars : String) -> Bool {
+fn one_of(c : Int32, chars : String) -> Bool {
   for i in 0..<chars.length() {
     if chars.at(i).to_int() == c {
       return true
@@ -114,15 +118,17 @@ fn one_of(c : Int, chars : String) -> Bool {
 }
 
 ///|
-/// True when the source at `i` starts with `word`.
-fn Scanner::starts(self : Scanner, i : Int, word : String) -> Bool {
-  i >= 0 && self.src.view(start_offset=i).has_prefix(word)
+/// True when the source at `i` starts with `word`. `i` is a UTF-16 code unit offset that can be
+/// inside a surrogate pair, so the view does not check surrogate boundaries.
+fn Scanner::starts(self : Scanner, i : Int32, word : String) -> Bool {
+  let n = self.src.length()
+  i >= 0 && i <= n && self.src.unsafe_view(start=i, end=n).has_prefix(word)
 }
 
 ///|
 /// True when the source at `i` starts with `word`, without regard to ASCII
 /// letter case.
-fn Scanner::starts_ci(self : Scanner, i : Int, word : String) -> Bool {
+fn Scanner::starts_ci(self : Scanner, i : Int32, word : String) -> Bool {
   if i + word.length() > self.src.length() {
     return false
   }
@@ -137,7 +143,7 @@ fn Scanner::starts_ci(self : Scanner, i : Int, word : String) -> Bool {
 ///|
 /// True when the keyword `word` is at `i`: the text matches without regard to
 /// case, and no word character follows it.
-fn Scanner::keyword_at(self : Scanner, i : Int, word : String) -> Bool {
+fn Scanner::keyword_at(self : Scanner, i : Int32, word : String) -> Bool {
   self.starts_ci(i, word) && !is_word(self.cu(i + word.length()))
 }
 
@@ -145,7 +151,7 @@ fn Scanner::keyword_at(self : Scanner, i : Int, word : String) -> Bool {
 /// The length of an entity code such as `#9829;` or `#infin;` at `i`, or 0.
 /// Mermaid encodes these codes before it parses, so a `#` or `;` in them does
 /// not start a comment or end a statement.
-fn Scanner::entity_at(self : Scanner, i : Int) -> Int {
+fn Scanner::entity_at(self : Scanner, i : Int32) -> Int32 {
   guard self.cu(i) == '#'.to_int() else { return 0 }
   let mut j = i + 1
   while is_word(self.cu(j)) {
@@ -161,14 +167,14 @@ fn Scanner::entity_at(self : Scanner, i : Int) -> Int {
 ///|
 /// True when a comment starts at `i`: `%%` that is not a directive, or `#`
 /// that is not an entity code.
-fn Scanner::comment_at(self : Scanner, i : Int) -> Bool {
+fn Scanner::comment_at(self : Scanner, i : Int32) -> Bool {
   (self.starts(i, "%%") && !self.starts(i, "%%{")) ||
   (self.cu(i) == '#'.to_int() && self.entity_at(i) == 0)
 }
 
 ///|
 /// The offset of the end of the line that `i` is on, before its line break.
-fn Scanner::line_end(self : Scanner, i : Int) -> Int {
+fn Scanner::line_end(self : Scanner, i : Int32) -> Int32 {
   let mut j = i
   while j < self.src.length() && !is_newline(self.cu(j)) {
     j += 1
@@ -178,7 +184,7 @@ fn Scanner::line_end(self : Scanner, i : Int) -> Int {
 
 ///|
 /// `end` moved back over spaces and tabs, but not before `start`.
-fn Scanner::trim_back(self : Scanner, start : Int, end : Int) -> Int {
+fn Scanner::trim_back(self : Scanner, start : Int32, end : Int32) -> Int32 {
   let mut e = end
   while e > start && is_hspace(self.cu(e - 1)) {
     e -= 1
@@ -189,7 +195,7 @@ fn Scanner::trim_back(self : Scanner, start : Int, end : Int) -> Int {
 ///|
 /// The end of a text that stops at a comment, a semicolon or a line break.
 /// Entity codes are part of the text.
-fn Scanner::text_end(self : Scanner, i : Int) -> Int {
+fn Scanner::text_end(self : Scanner, i : Int32) -> Int32 {
   let mut j = i
   while j < self.src.length() {
     let c = self.cu(j)
@@ -236,7 +242,7 @@ fn Scanner::keyword(
 fn Scanner::text_to(
   self : Scanner,
   out : Array[@cst.Element],
-  end : Int,
+  end : Int32,
 ) -> Unit {
   let e = self.trim_back(self.pos, end)
   if e > self.pos {
@@ -277,7 +283,7 @@ fn Scanner::colon_text(self : Scanner, out : Array[@cst.Element]) -> Bool {
 
 ///|
 /// The longest arrow at `i`, or `None`.
-fn Scanner::arrow_at(self : Scanner, i : Int) -> String? {
+fn Scanner::arrow_at(self : Scanner, i : Int32) -> String? {
   let mut best : String? = None
   for a in arrows {
     if self.starts(i, a) {

@@ -27,13 +27,14 @@ pub struct Conversion {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   pattern : Expr
   text : String
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::logical_equal(Self, Self) -> Bool
 pub fn Document::new(Expr, name? : String, statements? : ArrayView[@envelope.Statement], text? : String) -> Self
@@ -41,6 +42,7 @@ pub fn Document::not_equal(Self, Self) -> Bool
 pub fn Document::to_repr(Self) -> @debug.Repr
 pub fn Document::without_spans(Self) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Expr {
   Char(String, Bool, @diagrams.Span?)
   Class(@moonrockz/diagrams/regex.ClassKind, @diagrams.Span?)
@@ -52,7 +54,7 @@ pub(all) enum Expr {
   Group(@moonrockz/diagrams/regex.GroupKind, Expr, @diagrams.Span?)
   Look(@moonrockz/diagrams/regex.Look, Bool, Expr, @diagrams.Span?)
   Quantified(Expr, @moonrockz/diagrams/regex.Bounds, @diagrams.Span?)
-} derive(Eq, @debug.Debug)
+}
 pub fn Expr::equal(Self, Self) -> Bool
 pub fn Expr::not_equal(Self, Self) -> Bool
 pub fn Expr::to_repr(Self) -> @debug.Repr

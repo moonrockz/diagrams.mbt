@@ -7,7 +7,8 @@ pub let tree_namespace : String = "urn:moonrockz:bpmn:tree"
 /// The OMG namespaces whose kinds and fields must be in the schema inventory.
 pub let reserved_namespaces : ReadOnlyArray[String] = [
   "http://www.omg.org/spec/BPMN/20100524/MODEL", "http://www.omg.org/spec/BPMN/20100524/DI",
-  "http://www.omg.org/spec/DD/20100524/DC", "http://www.omg.org/spec/DD/20100524/DI", tree_namespace,
+  "http://www.omg.org/spec/DD/20100524/DC", "http://www.omg.org/spec/DD/20100524/DI",
+  tree_namespace,
 ]
 
 ///|
@@ -49,9 +50,10 @@ pub fn category_name(category : @model.NodeCategory) -> String {
 
 ///|
 let categories : ReadOnlyArray[String] = [
-  "document", "definitions", "process", "activity", "event", "gateway", "sequence-flow", "collaboration",
-  "participant", "lane", "choreography", "choreography-activity", "conversation", "conversation-link",
-  "diagram-interchange", "extension", "other", "text", "comment", "processing-instruction",
+  "document", "definitions", "process", "activity", "event", "gateway", "sequence-flow",
+  "collaboration", "participant", "lane", "choreography", "choreography-activity",
+  "conversation", "conversation-link", "diagram-interchange", "extension", "other",
+  "text", "comment", "processing-instruction",
 ]
 
 ///|
@@ -106,9 +108,10 @@ fn build_schema() -> @query.Schema {
       fields.push(name_of(name))
     }
   }
-  for special in [
-    "text", "comment", "processing-instruction", "root", "prolog", "epilog",
-  ] {
+  for
+    special in [
+      "text", "comment", "processing-instruction", "root", "prolog", "epilog",
+    ] {
     fields.push(@query.Name::new(tree_namespace, special))
   }
   @query.Schema::new(
@@ -139,13 +142,13 @@ pub let schema : @query.Schema = build_schema()
 pub struct BpmnTree {
   tree : @model.DocumentTree
   priv nodes : ReadOnlyArray[@model.NodeRef]
-  priv children : ReadOnlyArray[ReadOnlyArray[Int]]
+  priv children : ReadOnlyArray[ReadOnlyArray[Int32]]
   priv kinds : ReadOnlyArray[@query.Name?]
   priv categories : ReadOnlyArray[String]
 }
 
 ///|
-pub impl @debug.Debug for BpmnTree with to_repr(self) {
+pub impl @debug.Debug for BpmnTree with fn to_repr(self) {
   @debug.Repr::Repr(("BpmnTree", self.tree.resource_id(), self.nodes.length()))
 }
 
@@ -155,7 +158,7 @@ pub extend BpmnTree with @debug.Debug::{to_repr}
 ///|
 pub fn BpmnTree::new(tree : @model.DocumentTree) -> BpmnTree {
   let nodes : Array[@model.NodeRef] = []
-  let children : Array[ReadOnlyArray[Int]] = []
+  let children : Array[ReadOnlyArray[Int32]] = []
   let kinds : Array[@query.Name?] = []
   let categories : Array[String] = []
   let reader = @model.EventReader::new(tree.root())
@@ -181,14 +184,14 @@ pub fn BpmnTree::new(tree : @model.DocumentTree) -> BpmnTree {
 
 ///|
 /// The node with adapter index `node`.
-pub fn BpmnTree::node(self : BpmnTree, node : Int) -> @model.NodeRef? {
+pub fn BpmnTree::node(self : BpmnTree, node : Int32) -> @model.NodeRef? {
   self.nodes.get(node)
 }
 
 ///|
 /// The adapter index of `node`, or `None` when it belongs to another
 /// document revision.
-pub fn BpmnTree::index(self : BpmnTree, node : @model.NodeRef) -> Int? {
+pub fn BpmnTree::index(self : BpmnTree, node : @model.NodeRef) -> Int32? {
   match self.tree.lookup(node.handle()) {
     Found(_) => Some(node.handle().ordinal)
     _ => None
@@ -205,54 +208,57 @@ pub fn BpmnTree::captured(
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with schema(_self) {
+pub impl @query.QueryTree for BpmnTree with fn schema(_self) {
   schema
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with root(_self) {
+pub impl @query.QueryTree for BpmnTree with fn root(_self) {
   0
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with node_count(self) {
+pub impl @query.QueryTree for BpmnTree with fn node_count(self) {
   self.nodes.length()
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with kind(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn kind(self, node) {
   self.kinds[node]
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with category(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn category(self, node) {
   self.categories[node]
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with children(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn children(self, node) {
   self.children[node][:]
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with field(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn field(self, node) {
   self.nodes[node].step().map(step => field_name(step.field))
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with attribute(self, node, name) {
+pub impl @query.QueryTree for BpmnTree with fn attribute(self, node, name) {
   for attribute in self.nodes[node].attributes() {
     if attribute.name is Some(n) &&
       n.namespace_uri == name.namespace_uri &&
       n.local_name == name.local_name {
-      return Some({ tag: scalar_tag(attribute.value), text: attribute.value.token() })
+      return Some({
+        tag: scalar_tag(attribute.value),
+        text: attribute.value.token(),
+      })
     }
   }
   None
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with text(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn text(self, node) {
   match self.nodes[node].value() {
     Text(text) | Comment(text) => Some(text)
     ProcessingInstruction(data~, ..) => Some(data)
@@ -262,15 +268,15 @@ pub impl @query.QueryTree for BpmnTree with text(self, node) {
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with extra(self, node, name) {
+pub impl @query.QueryTree for BpmnTree with fn extra(self, node, name) {
   match name {
-    "id" => self.nodes[node].id().map(id => { tag: "identifier", text: id })
+    "id" => self.nodes[node].id().map(id => { tag: "identifier", text: id, })
     _ => None
   }
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with location(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn location(self, node) {
   self.nodes[node]
   .location()
   .map(location => {
@@ -289,7 +295,7 @@ pub impl @query.QueryTree for BpmnTree with location(self, node) {
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with path(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn path(self, node) {
   self.nodes[node]
   .path()
   .steps()
@@ -301,7 +307,7 @@ pub impl @query.QueryTree for BpmnTree with path(self, node) {
 }
 
 ///|
-pub impl @query.QueryTree for BpmnTree with depth(self, node) {
+pub impl @query.QueryTree for BpmnTree with fn depth(self, node) {
   self.nodes[node].depth()
 }
 
@@ -327,8 +333,8 @@ pub extend BpmnTree with @query.QueryTree::{
 /// bindings. Later bindings can not rebind a default prefix.
 pub fn compile(
   source : String,
-  namespaces? : ArrayView[(String, String)] = [],
-  limits? : @query.CompileLimits = @query.CompileLimits::new(),
+  namespaces~ : ArrayView[(String, String)] = [],
+  limits~ : @query.CompileLimits = @query.CompileLimits::new(),
 ) -> Result[@query.QueryPlan, ReadOnlyArray[@query.QueryDiagnostic]] {
   let bindings = default_namespaces.iter().to_array()
   bindings.append(namespaces.to_owned())
@@ -340,8 +346,8 @@ pub fn compile(
 /// any extra bindings, with the same checks as `compile`.
 pub fn compile_form(
   form : @query.QueryForm,
-  namespaces? : ArrayView[(String, String)] = [],
-  limits? : @query.CompileLimits = @query.CompileLimits::new(),
+  namespaces~ : ArrayView[(String, String)] = [],
+  limits~ : @query.CompileLimits = @query.CompileLimits::new(),
 ) -> Result[@query.QueryPlan, ReadOnlyArray[@query.QueryDiagnostic]] {
   let bindings = default_namespaces.iter().to_array()
   bindings.append(namespaces.to_owned())

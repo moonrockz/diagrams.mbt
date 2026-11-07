@@ -1,10 +1,11 @@
 ///|
 /// Explicit source binding; positions use the library UTF-16 span contract.
+#derive(Eq, Debug)
 pub struct SourceBinding {
   format : String
   path : String
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn SourceBinding::new(
@@ -16,6 +17,7 @@ pub fn SourceBinding::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Role {
   Generic
   Action
@@ -27,9 +29,10 @@ pub(all) enum Role {
   ActivityFinal
   FlowFinal
   Connector
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum ConnectionRole {
   Flow
   Branch
@@ -38,24 +41,26 @@ pub(all) enum ConnectionRole {
   Parallel
   NoteAttachment
   Layout
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum RegionKind {
   Conditional
   Loop
   Parallel
   Split
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Branch {
   id : String
   label : String
   members : ReadOnlyArray[String]
   condition : String?
   origin : SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Branch::new(
@@ -69,6 +74,7 @@ pub fn Branch::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Region {
   id : String
   kind : RegionKind
@@ -80,7 +86,7 @@ pub struct Region {
   condition : String?
   join_specification : String?
   origin : SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Region::new(
@@ -110,6 +116,7 @@ pub fn Region::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Note {
   id : String
   text : String
@@ -119,7 +126,7 @@ pub struct Note {
   groups : ReadOnlyArray[String]
   lane : String?
   origin : SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Note::new(
@@ -145,50 +152,56 @@ pub fn Note::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Direction {
   TB
   BT
   LR
   RL
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum LabelKind {
   Text
   Markdown
   Html
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum LineStyle {
   Solid
   Dotted
   Thick
   Invisible
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Marker {
   None
   Arrow
   Circle
   Cross
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum FlowDirection {
   Forward
   Backward
   Both
   Undirected
   Invisible
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct RenderProperties {
   link : String?
   metadata : ReadOnlyArray[(String, String)]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn RenderProperties::new(
@@ -199,12 +212,13 @@ pub fn RenderProperties::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Lane {
   id : String
   label : String
   direction : Direction?
   expanded : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Lane::new(
@@ -217,6 +231,7 @@ pub fn Lane::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Group {
   id : String
   label : String
@@ -224,7 +239,7 @@ pub struct Group {
   lane : String?
   direction : Direction?
   expanded : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Group::new(
@@ -239,6 +254,7 @@ pub fn Group::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Node {
   id : String
   label : String
@@ -251,7 +267,7 @@ pub struct Node {
   role : Role
   regions : ReadOnlyArray[String]
   origin : SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Node::new(
@@ -283,6 +299,7 @@ pub fn Node::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Connection {
   id : String
   source : String
@@ -297,7 +314,7 @@ pub struct Connection {
   direction_hint : Direction?
   role : ConnectionRole
   origin : SourceBinding?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Connection::new(
@@ -343,6 +360,7 @@ pub fn Connection::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Flowchart {
   notes : ReadOnlyArray[Note]
   regions : ReadOnlyArray[Region]
@@ -355,7 +373,7 @@ pub struct Flowchart {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Flowchart::new(

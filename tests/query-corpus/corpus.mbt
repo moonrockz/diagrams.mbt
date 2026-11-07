@@ -10,7 +10,7 @@ priv struct Case {
   document : String
   namespaces : Array[(String, String)]
   fields : Array[String]
-  limits : Array[Int]?
+  limits : Array[Int32]?
   root_id : String?
   query : String
 }
@@ -26,7 +26,7 @@ fn parse_cases(text : String) -> Array[Case] raise Failure {
       i += 1
       continue
     }
-    let name = line.view(start_offset=4).to_owned()
+    let name = line.exact_view(start=4).to_owned()
     i += 1
     let mut document = ""
     let namespaces = []
@@ -53,8 +53,8 @@ fn parse_cases(text : String) -> Array[Case] raise Failure {
         break
       }
       let colon = current.find(": ").unwrap()
-      let key = current.view(end_offset=colon).to_owned()
-      let value = current.view(start_offset=colon + 2).to_owned()
+      let key = current.exact_view(end=colon).to_owned()
+      let value = current.exact_view(start=colon + 2).to_owned()
       match key {
         "document" => document = value
         "namespaces" => {
@@ -62,11 +62,14 @@ fn parse_cases(text : String) -> Array[Case] raise Failure {
           namespaces.push((parts[0], parts[1]))
         }
         "fields" => fields = value.split(" ").map(p => p.to_owned()).to_array()
-        "limits" =>
-        {
+        "limits" => {
           let values = []
           for p in value.split(" ") {
-            values.push(@string.parse_int(p) catch { _ => fail("bad limit in \{name}") })
+            values.push(
+              @string.parse_int(p) catch {
+                _ => fail("bad limit in \{name}")
+              },
+            )
           }
           limits = Some(values)
         }
@@ -83,7 +86,7 @@ fn parse_cases(text : String) -> Array[Case] raise Failure {
         _ => fail("unknown key \{key} in \{name}")
       }
     }
-    cases.push({ name, document, namespaces, fields, limits, root_id, query })
+    cases.push({ name, document, namespaces, fields, limits, root_id, query, })
   }
   cases
 }
@@ -183,10 +186,10 @@ fn failure_text(failure : @query.QueryFailure) -> String {
 fn run_batches(
   plan : @query.QueryPlan,
   tree : @query_bpmn.BpmnTree,
-  root : Int?,
+  root : Int32?,
   projection : @query.Projection,
   limits : @query.ExecutionLimits,
-  size : Int,
+  size : Int32,
   document : String,
 ) -> Array[String] {
   let cursor = plan.execute(tree, root?, projection~, limits~)
@@ -278,7 +281,15 @@ fn run_case(case : Case, fixtures : Map[String, String]) -> Array[String] {
   }
   let one = run_batches(plan, tree, root, projection, limits, 1, case.document)
   let mid = run_batches(plan, tree, root, projection, limits, 64, case.document)
-  let big = run_batches(plan, tree, root, projection, limits, 256, case.document)
+  let big = run_batches(
+    plan,
+    tree,
+    root,
+    projection,
+    limits,
+    256,
+    case.document,
+  )
   if one != mid || one != big {
     lines.push("batch-mismatch")
   }

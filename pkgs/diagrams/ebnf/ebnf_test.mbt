@@ -36,7 +36,11 @@ fn codes(grammar : @ebnf.Grammar) -> Array[String] {
 test "validation reports invalid constructed grammars without recursion" {
   let rule : @ebnf.Item = Rule(@ebnf.Rule::new("r", "a", body="s"))
   assert_eq(
-    codes(@ebnf.Grammar::new("g", [rule], [@ebnf.Node::new("s", Sequence(["missing"]))])),
+    codes(
+      @ebnf.Grammar::new("g", [rule], [
+        @ebnf.Node::new("s", Sequence(["missing"])),
+      ]),
+    ),
     ["ebnf/missing-node"],
   )
   // A containment cycle.
@@ -61,11 +65,19 @@ test "validation reports invalid constructed grammars without recursion" {
   )
   // An explicit target must name a rule; a name alone may stay unresolved.
   assert_eq(
-    codes(@ebnf.Grammar::new("g", [rule], [@ebnf.Node::new("s", Reference("x", Some("nope")))])),
+    codes(
+      @ebnf.Grammar::new("g", [rule], [
+        @ebnf.Node::new("s", Reference("x", Some("nope"))),
+      ]),
+    ),
     ["ebnf/invalid-reference"],
   )
   assert_eq(
-    codes(@ebnf.Grammar::new("g", [rule], [@ebnf.Node::new("s", Reference("x", None))])),
+    codes(
+      @ebnf.Grammar::new("g", [rule], [
+        @ebnf.Node::new("s", Reference("x", None)),
+      ]),
+    ),
     ["ebnf/unresolved-reference"],
   )
   // An exclusion keeps both terms and validation terminates on recursion.

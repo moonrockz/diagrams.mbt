@@ -4,6 +4,7 @@
 /// The C adapter gives Python `Null` as `None`, `Bool` as `bool`, `Int` as
 /// `int`, `Str` as `str`, `Bin` as `bytes` and `List` as `tuple`. Python
 /// arguments use the same values in the other direction.
+#derive(Eq, Debug)
 pub(all) enum Rec {
   Null
   Bool(Bool)
@@ -11,7 +12,7 @@ pub(all) enum Rec {
   Str(String)
   Bin(Bytes)
   List(ReadOnlyArray[Rec])
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rec with Eq::{equal, not_equal}
@@ -40,9 +41,10 @@ pub let record_max_depth : Int32 = 64
 ///|
 /// A failure of a boundary operation. The adapter raises the Python exception
 /// that `code` names; see `diagrams_mbt._boundary`.
+#derive(Debug)
 pub suberror BridgeError {
   BridgeError(String, String)
-} derive(Debug)
+}
 
 ///|
 pub extend BridgeError with @debug.Debug::{to_repr}

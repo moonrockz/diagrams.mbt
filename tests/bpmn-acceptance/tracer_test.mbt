@@ -1,5 +1,7 @@
 ///|
-fn fixture() -> String { @corpus.inputs[5].source }
+fn fixture() -> String {
+  @corpus.inputs[5].source
+}
 
 ///|
 fn diagram() -> @render.Diagram raise {
@@ -26,11 +28,18 @@ test "minimal source partitions, reproduces, round trips and walks its task" {
   let ids : Array[String] = []
   let tasks : Array[String] = []
   doc.walk(e => {
-    if e.attribute("id") is Some(id) { ids.push(id) }
-    if e.kind == Task { tasks.push(e.attribute("name").unwrap()) }
+    if e.attribute("id") is Some(id) {
+      ids.push(id)
+    }
+    if e.kind == Task {
+      tasks.push(e.attribute("name").unwrap())
+    }
   })
   assert_eq(tasks, ["Review request"])
-  assert_eq(ids, ["Definitions_1", "Process_1", "Start", "Review", "End", "Flow_1", "Flow_2", "Diagram_1", "Plane_1", "Start_di", "Review_di", "End_di", "Flow_1_di", "Flow_2_di"])
+  assert_eq(ids, [
+    "Definitions_1", "Process_1", "Start", "Review", "End", "Flow_1", "Flow_2", "Diagram_1",
+    "Plane_1", "Start_di", "Review_di", "End_di", "Flow_1_di", "Flow_2_di",
+  ])
 }
 
 ///|
@@ -38,13 +47,18 @@ test "first BPMN static output uses the renderer contract and frozen bytes" {
   let d = diagram()
   let rendered = @svg.SvgRenderer::new().render(d)
   assert_eq(rendered.media_type, "image/svg+xml")
-  assert_eq(rendered.diagnostics.length(), 0,msg=@debug.to_string(rendered.diagnostics))
+  assert_eq(
+    rendered.diagnostics.length(),
+    0,
+    msg=@debug.to_string(rendered.diagnostics),
+  )
   let svg = rendered.output.unwrap()
   assert_false(svg.contains("<script"))
   assert_true(svg.contains("data-source-id=\"Review\""))
   assert_eq(@adapter.render_svg(fixture()).output, rendered.output)
   let t = @test.Test("bpmn-static")
-  t.write(svg); t.snapshot(filename="minimal.svg")
+  t.write(svg)
+  t.snapshot(filename="minimal.svg")
 }
 
 ///|
@@ -52,9 +66,14 @@ test "first BPMN animated output has frozen HTML bytes on every target" {
   let d = diagram()
   let animated = @animated.AnimatedRenderer::new().render(d)
   assert_eq(animated.media_type, "text/html")
-  assert_eq(animated.diagnostics.length(), 0,msg=@debug.to_string(animated.diagnostics))
+  assert_eq(
+    animated.diagnostics.length(),
+    0,
+    msg=@debug.to_string(animated.diagnostics),
+  )
   let t = @test.Test("bpmn-animation")
-  t.write(animated.output.unwrap()); t.snapshot(filename="minimal.html")
+  t.write(animated.output.unwrap())
+  t.snapshot(filename="minimal.html")
 }
 
 ///|
@@ -66,19 +85,33 @@ test "pure plan samples exact progress and rejects invalid durations and binding
   assert_eq(plan.sample(1000), (1000, 1000))
   assert_eq(plan.sample(2000), (1000, 1000))
   assert_eq(@animation.MotionPlan::new("P", "F", duration_ms=0), None)
-  for p in [@animation.MotionPlan::new("other", "Flow_1").unwrap(), @animation.MotionPlan::new("Process_1", "missing").unwrap()] {
+  for
+    p in [
+      @animation.MotionPlan::new("other", "Flow_1").unwrap(),
+      @animation.MotionPlan::new("Process_1", "missing").unwrap(),
+    ] {
     let result = @animated.AnimatedRenderer::new(plan=p).render(diagram())
     assert_eq(result.output, None)
     assert_eq(result.diagnostics[0].code, "animation/plan-mismatch")
   }
-  let result = @animated.AnimatedRenderer::new().render(Sequence(@sequence.Sequence::new([], [])))
+  let result = @animated.AnimatedRenderer::new().render(
+    Sequence(@sequence.Sequence::new([], [])),
+  )
   assert_eq(result.output, None)
   assert_eq(result.diagnostics[0].code, "animation/no-flow")
 }
 
 ///|
 test "bad DI or endpoints never gives partial success" {
-  for source in [fixture().replace(old="width=\"180\"", new="width=\"-1\""), fixture().replace(old="targetRef=\"Review\"", new="targetRef=\"absent\""), fixture().replace(old="bpmnElement=\"Review\"", new="bpmnElement=\"absent\"")] {
+  for
+    source in [
+      fixture().replace(old="width=\"180\"", new="width=\"-1\""),
+      fixture().replace(old="targetRef=\"Review\"", new="targetRef=\"absent\""),
+      fixture().replace(
+        old="bpmnElement=\"Review\"",
+        new="bpmnElement=\"absent\"",
+      ),
+    ] {
     let result = @adapter.render_svg(source)
     assert_eq(result.output, None)
     assert_true(result.diagnostics.length() > 0)
@@ -87,7 +120,10 @@ test "bad DI or endpoints never gives partial success" {
 
 ///|
 test "markup-like labels remain SVG text and never enter script context" {
-  let hostile = fixture().replace(old="id=\"Review\" name=\"Review request\"", new="id=\"Review\" name=\"&lt;/script&gt;&lt;img onerror=&quot;boom&quot;&gt;😀 &amp; done\"")
+  let hostile = fixture().replace(
+    old="id=\"Review\" name=\"Review request\"",
+    new="id=\"Review\" name=\"&lt;/script&gt;&lt;img onerror=&quot;boom&quot;&gt;😀 &amp; done\"",
+  )
   let read = @bpmn.read(hostile)
   assert_eq(read.diagnostics.length(), 0)
   let doc = read.document.unwrap()
@@ -101,20 +137,38 @@ test "markup-like labels remain SVG text and never enter script context" {
 
 ///|
 test "compensation markers are painted instead of downgraded to plain tasks" {
-  let source = fixture().replace(old="id=\"Review\" name=", new="id=\"Review\" isForCompensation=\"true\" name=")
+  let source = fixture().replace(
+    old="id=\"Review\" name=",
+    new="id=\"Review\" isForCompensation=\"true\" name=",
+  )
   let result = @adapter.render_svg(source)
-  assert_true(result.output.unwrap().contains("M12 2 L1 12 L12 22 Z M23 2 L12 12 L23 22 Z"))
-  assert_false(result.diagnostics.iter().any(d => d.code == "bpmn/unsupported-view"))
+  assert_true(
+    result.output
+    .unwrap()
+    .contains("M12 2 L1 12 L12 22 Z M23 2 L12 12 L23 22 Z"),
+  )
+  assert_false(
+    result.diagnostics.iter().any(d => d.code == "bpmn/unsupported-view"),
+  )
 }
 
 ///|
 test "all frozen normative XSD inputs have complete namespace-aware XML trees" {
   for input in @corpus.inputs {
-    if !input.name.has_suffix(".xsd") { continue }
+    if !input.name.has_suffix(".xsd") {
+      continue
+    }
     let r = @bpmn.read(input.source, source_id=input.name)
     assert_eq(r.tree.text(), input.source)
     assert_true(r.tree.complete, msg=input.name)
-    let schemas = r.tree.nodes.filter(n => n.kind == Element && n.name.unwrap().namespace_uri == "http://www.w3.org/2001/XMLSchema" && n.name.unwrap().local_name == "schema").iter().to_array()
+    let schemas = r.tree.nodes
+      .filter(n => {
+        n.kind == Element &&
+        n.name.unwrap().namespace_uri == "http://www.w3.org/2001/XMLSchema" &&
+        n.name.unwrap().local_name == "schema"
+      })
+      .iter()
+      .to_array()
     assert_eq(schemas.length(), 1)
   }
 }

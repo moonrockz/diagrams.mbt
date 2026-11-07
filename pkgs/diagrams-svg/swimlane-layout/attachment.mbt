@@ -2,11 +2,12 @@
 /// Bounded attachment policy shared by automatic graph routers. Coordinates are
 /// fractions of measured bounds; each adapter projects them onto its real outline.
 /// Point profiles try unused cardinal points before spreading a crowded side.
+#derive(Eq, Debug)
 pub struct AttachmentProfile {
   point_preferred : Bool
   extent : Double
   padding : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn attachment_profile(

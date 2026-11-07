@@ -17,11 +17,12 @@ pub let render_inputs : ReadOnlyArray[Input]
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Input {
   name : String
   sha256 : String
   source : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Input::equal(Self, Self) -> Bool
 pub fn Input::not_equal(Self, Self) -> Bool
 pub fn Input::to_repr(Self) -> @debug.Repr

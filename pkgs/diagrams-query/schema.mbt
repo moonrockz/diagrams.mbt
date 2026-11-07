@@ -1,14 +1,15 @@
 ///|
 /// The version of the query language that this package compiles.
-pub let language_version : Int = 1
+pub let language_version : Int32 = 1
 
 ///|
 /// An expanded name: a namespace URI and a local name. The empty URI means
 /// no namespace. Source prefixes are never part of a name.
+#derive(Eq, Hash, Compare, Debug)
 pub struct Name {
   namespace_uri : String
   local_name : String
-} derive(Eq, Hash, Compare, Debug)
+}
 
 ///|
 pub extend Name with Hash::{hash, hash_combine}
@@ -24,7 +25,7 @@ pub extend Name with @debug.Debug::{to_repr}
 
 ///|
 pub fn Name::new(namespace_uri : String, local_name : String) -> Name {
-  { namespace_uri, local_name }
+  { namespace_uri, local_name, }
 }
 
 ///|
@@ -49,7 +50,7 @@ pub fn Name::clark(self : Name) -> String {
 /// adapter-specific projection fields, for example `id`.
 pub struct Schema {
   id : String
-  version : Int
+  version : Int32
   kinds : ReadOnlyArray[Name]
   categories : ReadOnlyArray[String]
   fields : ReadOnlyArray[Name]
@@ -63,7 +64,7 @@ pub struct Schema {
 }
 
 ///|
-pub impl Eq for Schema with equal(a, b) {
+pub impl Eq for Schema with fn equal(a, b) {
   a.id == b.id &&
   a.version == b.version &&
   a.kinds == b.kinds &&
@@ -79,7 +80,7 @@ pub impl Eq for Schema with equal(a, b) {
 pub extend Schema with Eq::{equal, not_equal}
 
 ///|
-pub impl @debug.Debug for Schema with to_repr(self) {
+pub impl @debug.Debug for Schema with fn to_repr(self) {
   @debug.Repr::Repr(("Schema", self.id, self.version))
 }
 
@@ -89,14 +90,14 @@ pub extend Schema with @debug.Debug::{to_repr}
 ///|
 pub fn Schema::new(
   id~ : String,
-  version~ : Int,
+  version~ : Int32,
   kinds~ : ArrayView[Name],
   categories~ : ArrayView[String],
   fields~ : ArrayView[Name],
-  reserved_namespaces? : ArrayView[String] = [],
-  open_extensions? : Bool = false,
-  scalar_tags? : ArrayView[String] = ["text"],
-  extra_fields? : ArrayView[String] = [],
+  reserved_namespaces~ : ArrayView[String] = [],
+  open_extensions~ : Bool = false,
+  scalar_tags~ : ArrayView[String] = ["text"],
+  extra_fields~ : ArrayView[String] = [],
 ) -> Schema {
   let kind_set : Map[Name, Bool] = Map([])
   for kind in kinds {
@@ -116,7 +117,9 @@ pub fn Schema::new(
     kinds: ReadOnlyArray::from_array(kinds.to_owned()),
     categories: ReadOnlyArray::from_array(categories.to_owned()),
     fields: ReadOnlyArray::from_array(fields.to_owned()),
-    reserved_namespaces: ReadOnlyArray::from_array(reserved_namespaces.to_owned()),
+    reserved_namespaces: ReadOnlyArray::from_array(
+      reserved_namespaces.to_owned(),
+    ),
     open_extensions,
     scalar_tags: ReadOnlyArray::from_array(scalar_tags.to_owned()),
     extra_fields: ReadOnlyArray::from_array(extra_fields.to_owned()),

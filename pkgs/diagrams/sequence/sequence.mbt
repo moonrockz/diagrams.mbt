@@ -1,5 +1,6 @@
 ///|
 /// What a participant is. A renderer uses the kind to select a style.
+#derive(Eq, Debug)
 pub(all) enum ParticipantKind {
   Participant
   Actor
@@ -12,7 +13,7 @@ pub(all) enum ParticipantKind {
   Service
   Resource
   Client
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ParticipantKind with Eq::{not_equal, equal}
@@ -22,6 +23,7 @@ pub extend ParticipantKind with @debug.Debug::{to_repr}
 
 ///|
 /// One participant of a sequence. `id` is unique in the sequence.
+#derive(Eq, Debug)
 pub struct Participant {
   id : String
   label : String
@@ -30,7 +32,7 @@ pub struct Participant {
   link : Link?
   icon : @icons.Reference?
   properties : ParticipantProperties?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Participant with Eq::{not_equal, equal}
@@ -54,10 +56,11 @@ pub fn Participant::new(
 
 ///|
 /// The line of a message.
+#derive(Eq, Debug)
 pub(all) enum LineStyle {
   Solid
   Dotted
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend LineStyle with Eq::{not_equal, equal}
@@ -67,6 +70,7 @@ pub extend LineStyle with @debug.Debug::{to_repr}
 
 ///|
 /// What a message line has at one of its ends.
+#derive(Eq, Debug)
 pub(all) enum Head {
   NoHead
   Arrow
@@ -75,7 +79,7 @@ pub(all) enum Head {
   Async
   HalfArrow(upper~ : Bool, filled~ : Bool)
   Central(Head)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Head with Eq::{not_equal, equal}
@@ -85,6 +89,7 @@ pub extend Head with @debug.Debug::{to_repr}
 
 ///|
 /// A message from `sender` to `receiver`.
+#derive(Eq, Debug)
 pub struct Message {
   sender : String
   receiver : String
@@ -95,7 +100,7 @@ pub struct Message {
   link : Link?
   properties : MessageProperties?
   number : Double?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Message with Eq::{not_equal, equal}
@@ -131,6 +136,7 @@ pub fn Message::new(
 
 ///|
 /// One event of a sequence, in diagram order.
+#derive(Eq, Debug)
 pub(all) enum Event {
   Message(Message)
   Note(Note)
@@ -140,7 +146,7 @@ pub(all) enum Event {
   Destroy(String)
   Frame(Frame)
   Autonumber(Autonumber)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Event with Eq::{not_equal, equal}
@@ -150,13 +156,14 @@ pub extend Event with @debug.Debug::{to_repr}
 
 ///|
 /// A sequence diagram without a link to one diagram format.
+#derive(Eq, Debug)
 pub struct Sequence {
   participants : ReadOnlyArray[Participant]
   events : ReadOnlyArray[Event]
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Sequence with Eq::{not_equal, equal}

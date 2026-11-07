@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum StatementKind {
   Group(id~ : String, icon~ : String?, label~ : String?, parent~ : String?)
   Service(
@@ -21,13 +22,14 @@ pub(all) enum StatementKind {
   AccTitle(String)
   AccDescription(String)
   Comment(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Debug)
 pub(all) struct Statement {
   kind : StatementKind
   span : @diagrams.Span
-} derive(Debug)
+}
 
 ///|
 pub impl Eq for Statement with fn equal(a, b) {
@@ -35,11 +37,12 @@ pub impl Eq for Statement with fn equal(a, b) {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Diagram {
   statements : ReadOnlyArray[Statement]
   front_matter : String?
   directives : ReadOnlyArray[String]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Diagram::new(

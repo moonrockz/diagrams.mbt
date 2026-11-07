@@ -20,6 +20,7 @@ import {
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
@@ -30,17 +31,18 @@ pub(all) enum Diagram {
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar)
   DataTree(@data-tree.DataTree)
-} derive(Eq, @debug.Debug)
+}
 pub fn Diagram::equal(Self, Self) -> Bool
 pub fn Diagram::kind_name(Self) -> String
 pub fn Diagram::not_equal(Self, Self) -> Bool
 pub fn Diagram::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Rendered {
   output : String?
   media_type : String
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Rendered::equal(Self, Self) -> Bool
 pub fn Rendered::failed(String, ArrayView[@diagrams.Diagnostic]) -> Self
 pub fn Rendered::not_equal(Self, Self) -> Bool

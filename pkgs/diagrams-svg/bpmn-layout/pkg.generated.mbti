@@ -26,6 +26,7 @@ pub fn svg_number(Double) -> String?
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Connection {
   flow : @bpmn.Flow
   index : Int32
@@ -34,20 +35,22 @@ pub struct Connection {
   points : ReadOnlyArray[@bpmn.ExactPoint]
   line : ReadOnlyArray[Point]
   label : Label?
-} derive(Eq, @debug.Debug)
+}
 pub fn Connection::equal(Self, Self) -> Bool
 pub fn Connection::not_equal(Self, Self) -> Bool
 pub fn Connection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Finding::equal(Self, Self) -> Bool
 pub fn Finding::not_equal(Self, Self) -> Bool
 pub fn Finding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Geometry {
   view : @bpmn.Bpmn
   shapes : ReadOnlyArray[Shape]
@@ -57,11 +60,12 @@ pub struct Geometry {
   translate_y : Int64
   width : Int64
   height : Int64
-} derive(Eq, @debug.Debug)
+}
 pub fn Geometry::equal(Self, Self) -> Bool
 pub fn Geometry::not_equal(Self, Self) -> Bool
 pub fn Geometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Label {
   text : String
   font : @bpmn.Font
@@ -73,52 +77,57 @@ pub struct Label {
   mask : Bool
   owner : String
   family : @theme.Family?
-} derive(Eq, @debug.Debug)
+}
 pub fn Label::equal(Self, Self) -> Bool
 pub fn Label::not_equal(Self, Self) -> Bool
 pub fn Label::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
   work : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, edges? : Int32, work? : Int32, output_units? : Int32, minimum_approach? : Double) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::with_minimum_approach(Self, Double) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Point::equal(Self, Self) -> Bool
 pub fn Point::not_equal(Self, Self) -> Bool
 pub fn Point::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Rect::contains(Self, Self, tolerance? : Double) -> Bool
 pub fn Rect::equal(Self, Self) -> Bool
 pub fn Rect::not_equal(Self, Self) -> Bool
 pub fn Rect::overlaps(Self, Self) -> Bool
 pub fn Rect::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Result {
   geometry : Geometry?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Result::equal(Self, Self) -> Bool
 pub fn Result::not_equal(Self, Self) -> Bool
 pub fn Result::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Rule {
   Overlap
   Fit
@@ -128,26 +137,28 @@ pub(all) enum Rule {
   Attachment
   Endpoint
   Limit
-} derive(Eq, @debug.Debug)
+}
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::not_equal(Self, Self) -> Bool
 pub fn Rule::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Shape {
   node : @bpmn.Node
   index : Int32
   bounds : @bpmn.ExactBounds
   box : Rect
   label : Label?
-} derive(Eq, @debug.Debug)
+}
 pub fn Shape::equal(Self, Self) -> Bool
 pub fn Shape::not_equal(Self, Self) -> Bool
 pub fn Shape::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Source {
   Supplied
   Automatic
-} derive(Eq, @debug.Debug)
+}
 pub fn Source::equal(Self, Self) -> Bool
 pub fn Source::not_equal(Self, Self) -> Bool
 pub fn Source::to_repr(Self) -> @debug.Repr

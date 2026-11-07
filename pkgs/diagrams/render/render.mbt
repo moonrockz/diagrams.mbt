@@ -1,5 +1,6 @@
 ///|
 /// A diagram of one kind. Each kind has its own format-independent model.
+#derive(Eq, Debug)
 pub(all) enum Diagram {
   Sequence(@sequence.Sequence)
   Bpmn(@bpmn.Bpmn)
@@ -10,7 +11,7 @@ pub(all) enum Diagram {
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar)
   DataTree(@data_tree.DataTree)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Diagram with Eq::{not_equal, equal}
@@ -37,11 +38,12 @@ pub fn Diagram::kind_name(self : Diagram) -> String {
 ///|
 /// The result of a renderer. `output` is absent when the renderer cannot
 /// render the diagram; `diagnostics` then has an error.
+#derive(Eq, Debug)
 pub struct Rendered {
   output : String?
   media_type : String
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rendered with Eq::{not_equal, equal}

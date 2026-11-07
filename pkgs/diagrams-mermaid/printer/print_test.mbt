@@ -11,7 +11,9 @@ fn canonical(source : String) -> String {
 ///|
 test "the printer writes canonical Mermaid" {
   assert_eq(
-    canonical("%% c\nsequenceDiagram\nparticipant  A\n actor B   as Bob\nA  ->>  B :hi there\n"),
+    canonical(
+      "%% c\nsequenceDiagram\nparticipant  A\n actor B   as Bob\nA  ->>  B :hi there\n",
+    ),
     "sequenceDiagram\n  participant A\n  actor B as Bob\n  A->>B: hi there\n",
   )
 }
@@ -68,7 +70,9 @@ test "each statement has one canonical spelling" {
 ///|
 test "frames are indented two spaces for each level" {
   assert_eq(
-    canonical("sequenceDiagram\nalt sick\nB->>A: no\nelse\nloop daily\nB->>A: yes\nend\nend\nbox Group\nparticipant C\nend\n"),
+    canonical(
+      "sequenceDiagram\nalt sick\nB->>A: no\nelse\nloop daily\nB->>A: yes\nend\nend\nbox Group\nparticipant C\nend\n",
+    ),
     (
       #|sequenceDiagram
       #|  alt sick
@@ -89,14 +93,18 @@ test "frames are indented two spaces for each level" {
 ///|
 test "front matter and directives come before the header" {
   assert_eq(
-    canonical("---\ntitle: T\n---\nsequenceDiagram\n%%{init: {\"wrap\": true}}%%\nA->>B: x\n"),
+    canonical(
+      "---\ntitle: T\n---\nsequenceDiagram\n%%{init: {\"wrap\": true}}%%\nA->>B: x\n",
+    ),
     "---\ntitle: T\n---\n%%{init: {\"wrap\": true}}%%\nsequenceDiagram\n  A->>B: x\n",
   )
 }
 
 ///|
 test "reading the printed text gives the same AST, and printing again gives the same text" {
-  let d = ast_of("sequenceDiagram\nactor C as Client\nloop poll\nC->>API: GET /forecast\nAPI-->>C: 200\nend\nnote over C: done\n")
+  let d = ast_of(
+    "sequenceDiagram\nactor C as Client\nloop poll\nC->>API: GET /forecast\nAPI-->>C: 200\nend\nnote over C: done\n",
+  )
   let text = @printer.print(d)
   let again = ast_of(text)
   assert_eq(again, d)

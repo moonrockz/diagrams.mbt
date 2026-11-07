@@ -1,6 +1,7 @@
 ///|
 /// Source statements retain declaration order. Composite boundaries and region
 /// separators remain explicit; behavior labels are never evaluated.
+#derive(Eq, Debug)
 pub(all) enum StatementKind {
   State(
     id~ : String,
@@ -28,13 +29,14 @@ pub(all) enum StatementKind {
   Presentation(String)
   Comment(String)
   Invalid(String)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Debug)
 pub(all) struct Statement {
   kind : StatementKind
   span : @diagrams.Span
-} derive(Debug)
+}
 
 ///|
 pub impl Eq for Statement with fn equal(a, b) {
@@ -42,12 +44,13 @@ pub impl Eq for Statement with fn equal(a, b) {
 }
 
 ///|
+#derive(Debug)
 pub struct Diagram {
   header : String
   statements : ReadOnlyArray[Statement]
   front_matter : String?
   directives : ReadOnlyArray[String]
-} derive(Debug)
+}
 
 ///|
 pub fn Diagram::new(

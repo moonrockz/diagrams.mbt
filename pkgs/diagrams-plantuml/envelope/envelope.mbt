@@ -1,5 +1,6 @@
 ///|
 /// The four supported native diagram kinds.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Regex
   Ebnf
@@ -7,7 +8,7 @@ pub(all) enum Kind {
   Yaml
   Activity
   State
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Kind with Eq::{not_equal, equal}
@@ -41,6 +42,7 @@ pub fn kind_of_word(word : String) -> Kind? {
 
 ///|
 /// Explicit positive bounds for reading, writing and conversion.
+#derive(Eq, Debug)
 pub struct Limits {
   source : Int32
   output : Int32
@@ -50,7 +52,7 @@ pub struct Limits {
   edges : Int32
   work : Int32
   diagnostics : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Limits with Eq::{not_equal, equal}
@@ -87,6 +89,7 @@ pub fn Limits::valid(self : Limits) -> Bool {
 ///|
 /// One retained presentation or metadata statement. Library themes and
 /// options paint the diagram; these values are inert author data.
+#derive(Eq, Debug)
 pub(all) enum Statement {
   Title(String)
   Caption(String)
@@ -105,7 +108,7 @@ pub(all) enum Statement {
   Pragma(String)
   /// The text after `!option`, such as `useDescriptiveNames true`.
   Option(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Statement with Eq::{not_equal, equal}
@@ -162,6 +165,7 @@ pub fn Statement::lines(self : Statement) -> Array[String] {
 
 ///|
 /// The role of one source line inside the block.
+#derive(Eq, Debug)
 pub(all) enum Role {
   /// A line for the kind reader.
   Body
@@ -170,7 +174,7 @@ pub(all) enum Role {
   Statement(@cst.Node)
   /// A continuation line of a multi-line statement.
   Continuation
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Role with Eq::{not_equal, equal}
@@ -180,13 +184,14 @@ pub extend Role with @debug.Debug::{to_repr}
 
 ///|
 /// One source line between the block markers, without its line break.
+#derive(Eq, Debug)
 pub struct Line {
   number : Int32
   offset : Int32
   text : String
   newline : String
   role : Role
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Line with Eq::{not_equal, equal}
@@ -230,11 +235,11 @@ pub struct Scan {
 ///|
 /// The stable diagnostic codes of envelope scanning.
 pub let diagnostic_codes : ReadOnlyArray[String] = [
-  "plantuml/ambiguous-kind", "plantuml/source-limit", "plantuml/invalid-limits", "plantuml/missing-start-marker",
-  "plantuml/unsupported-diagram", "plantuml/missing-end-marker", "plantuml/wrong-end-marker",
-  "plantuml/multiple-blocks", "plantuml/text-outside-block", "plantuml/unsupported-directive",
-  "plantuml/unsupported-preprocessing", "plantuml/unsupported-statement", "plantuml/unclosed-block",
-  "plantuml/unapplied-presentation", "plantuml/diagnostic-limit",
+  "plantuml/ambiguous-kind", "plantuml/source-limit", "plantuml/invalid-limits",
+  "plantuml/missing-start-marker", "plantuml/unsupported-diagram", "plantuml/missing-end-marker",
+  "plantuml/wrong-end-marker", "plantuml/multiple-blocks", "plantuml/text-outside-block",
+  "plantuml/unsupported-directive", "plantuml/unsupported-preprocessing", "plantuml/unsupported-statement",
+  "plantuml/unclosed-block", "plantuml/unapplied-presentation", "plantuml/diagnostic-limit",
 ]
 
 ///|
@@ -628,31 +633,50 @@ pub fn scan(source : String, limits~ : Limits = Limits::new()) -> Scan {
     for raw in body_raws {
       let t = trim(raw.text)
       if comment {
-        if t.has_suffix("'/") { comment = false }
+        if t.has_suffix("'/") {
+          comment = false
+        }
         continue
       }
       if shared_end is Some(end) {
-        if t == end { shared_end = None }
+        if t == end {
+          shared_end = None
+        }
         continue
       }
       if note {
-        if t == "end note" || t == "endnote" { note = false }
+        if t == "end note" || t == "endnote" {
+          note = false
+        }
         continue
       }
       if action_text {
-        if t.contains(";") { action_text = false }
+        if t.contains(";") {
+          action_text = false
+        }
         continue
       }
       if t.has_prefix("/'") {
         comment = !t.has_suffix("'/")
         continue
       }
-      if t.has_prefix("'") { continue }
-      if t == "<style>" { shared_end = Some("</style>"); continue }
-      if t.has_prefix("skinparam ") && t.has_suffix("{") { shared_end = Some("}"); continue }
-      if t == "legend" || t.has_prefix("legend ") { shared_end = Some("endlegend"); continue }
+      if t.has_prefix("'") {
+        continue
+      }
+      if t == "<style>" {
+        shared_end = Some("</style>")
+        continue
+      }
+      if t.has_prefix("skinparam ") && t.has_suffix("{") {
+        shared_end = Some("}")
+        continue
+      }
+      if t == "legend" || t.has_prefix("legend ") {
+        shared_end = Some("endlegend")
+        continue
+      }
       if t.has_prefix("note ") || t == "note" || t.has_prefix("floating note") {
-        note = !t.contains(":") && !t.has_prefix("note \"" )
+        note = !t.contains(":") && !t.has_prefix("note \"")
         continue
       }
       if t.has_prefix(":") && !t.contains(";") && !t.has_suffix(")") {
@@ -660,28 +684,48 @@ pub fn scan(source : String, limits~ : Limits = Limits::new()) -> Scan {
         action_text = true
         continue
       }
-      if has_word(t.to_lower(), "state") || t.has_prefix("[*]") ||
-        t.contains("[H]") || t.contains("[H*]") ||
+      if has_word(t.to_lower(), "state") ||
+        t.has_prefix("[*]") ||
+        t.contains("[H]") ||
+        t.contains("[H*]") ||
         (t.contains("-->") && t.has_suffix("[*]")) {
         state_seen = true
       }
-      if t == "start" || t == "stop" || t == "end" ||
-        t.has_prefix(":") || t.has_prefix("- ") || t.has_prefix("* ") ||
-        t.has_prefix("** ") || t.has_prefix("-- ") || t.has_prefix("(*)") ||
-        t.has_prefix("(*top)") || has_word(t, "while") ||
-        has_word(t, "repeat") || has_word(t, "fork") ||
+      if t == "start" ||
+        t == "stop" ||
+        t == "end" ||
+        t.has_prefix(":") ||
+        t.has_prefix("- ") ||
+        t.has_prefix("* ") ||
+        t.has_prefix("** ") ||
+        t.has_prefix("-- ") ||
+        t.has_prefix("(*)") ||
+        t.has_prefix("(*top)") ||
+        has_word(t, "while") ||
+        has_word(t, "repeat") ||
+        has_word(t, "fork") ||
         (t.has_prefix("if ") && !t.has_prefix("state ")) ||
         (t.has_prefix("|") && !t.has_prefix("||")) {
         activity_seen = true
       }
     }
     if state_seen && activity_seen {
-      error("plantuml/ambiguous-kind", "Mixed UML families; use an explicit supported body kind", 0, source.length())
+      error(
+        "plantuml/ambiguous-kind",
+        "Mixed UML families; use an explicit supported body kind",
+        0,
+        source.length(),
+      )
       kind = None
     } else if state_seen {
       kind = Some(State)
     } else if !activity_seen {
-      error("plantuml/unsupported-diagram", "Unsupported or ambiguous UML body; use read_body(State, body) for state arrows", 0, source.length())
+      error(
+        "plantuml/unsupported-diagram",
+        "Unsupported or ambiguous UML body; use read_body(State, body) for state arrows",
+        0,
+        source.length(),
+      )
       kind = None
     }
   }

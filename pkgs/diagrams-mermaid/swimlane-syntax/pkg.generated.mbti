@@ -26,6 +26,7 @@ pub fn trim_space(String) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   source : Int32
   output : Int32
@@ -36,17 +37,18 @@ pub struct Limits {
   diagnostics : Int32
   metadata_depth : Int32
   metadata_work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(source? : Int32, output? : Int32, nodes? : Int32, edges? : Int32, depth? : Int32, work? : Int32, diagnostics? : Int32, metadata_depth? : Int32, metadata_work? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ReadResult {
   tree : @swimlane-cst.Node
   ast : @swimlane-ast.Diagram?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr

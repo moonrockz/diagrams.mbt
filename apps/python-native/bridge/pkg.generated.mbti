@@ -37,12 +37,14 @@ pub fn render_svg_bytes(BytesView) -> @render.Rendered
 pub fn severity_name(@diagrams.Severity) -> String
 
 // Errors
+#derive(@debug.Debug)
 pub suberror BridgeError {
   BridgeError(String, String)
-} derive(@debug.Debug)
+}
 pub fn BridgeError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Rec {
   Null
   Bool(Bool)
@@ -50,7 +52,7 @@ pub(all) enum Rec {
   Str(String)
   Bin(Bytes)
   List(ReadOnlyArray[Rec])
-} derive(Eq, @debug.Debug)
+}
 pub fn Rec::equal(Self, Self) -> Bool
 pub fn Rec::int(Int32) -> Self
 pub fn Rec::int_opt(Int32?) -> Self

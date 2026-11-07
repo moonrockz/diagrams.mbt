@@ -32,7 +32,8 @@ fn query_op(op : String, args : ArrayView[Rec]) -> Rec? raise BridgeError {
     "query_parse" =>
       match @query.parse(arg_str(args, 0), limits=compile_limits(args, 1)) {
         Ok(form) => Rec::list([Str("ok"), form_record(form)])
-        Err(diagnostics) => Rec::list([Str("error"), diagnostics_record(diagnostics)])
+        Err(diagnostics) =>
+          Rec::list([Str("error"), diagnostics_record(diagnostics)])
       }
     "query_compile" =>
       compiled(
@@ -95,7 +96,7 @@ let views : Registry[@query_bpmn.BpmnTree] = Registry::new(18)
 
 ///|
 /// Open query objects by registry name.
-fn query_live() -> Array[(String, Int)] {
+fn query_live() -> Array[(String, Int32)] {
   [
     ("query_plan", plans.live()),
     ("query_cursor", cursors.live()),
@@ -105,12 +106,17 @@ fn query_live() -> Array[(String, Int)] {
 
 ///|
 fn schema_record(schema : @query.Schema) -> Rec {
-  let names = (names : ReadOnlyArray[@query.Name]) => Rec::list(
-    names.iter().map(n => Rec::list([Str(n.namespace_uri), Str(n.local_name)])).to_array(),
-  )
-  let strings = (items : ReadOnlyArray[String]) => Rec::list(
-    items.iter().map(s => Rec::Str(s)).to_array(),
-  )
+  let names = (names : ReadOnlyArray[@query.Name]) => {
+    Rec::list(
+      names
+      .iter()
+      .map(n => Rec::list([Str(n.namespace_uri), Str(n.local_name)]))
+      .to_array(),
+    )
+  }
+  let strings = (items : ReadOnlyArray[String]) => {
+    Rec::list(items.iter().map(s => Rec::Str(s)).to_array())
+  }
   Rec::list([
     Str(schema.id),
     Rec::int(schema.version),
@@ -135,7 +141,7 @@ fn schema_record(schema : @query.Schema) -> Rec {
 ///|
 fn namespace_bindings(
   args : ArrayView[Rec],
-  index : Int,
+  index : Int32,
 ) -> Array[(String, String)] raise BridgeError {
   let bindings = []
   for item in arg_list(args, index) {
@@ -153,9 +159,9 @@ fn namespace_bindings(
 ///|
 fn limit_values(
   args : ArrayView[Rec],
-  index : Int,
-  count : Int,
-) -> Array[Int]? raise BridgeError {
+  index : Int32,
+  count : Int32,
+) -> Array[Int32]? raise BridgeError {
   match args.get(index) {
     None | Some(Null) => None
     Some(List(items)) if items.length() == count => {
@@ -167,7 +173,8 @@ fn limit_values(
     }
     _ =>
       raise BridgeError(
-        "invalid-argument", "Limits must be None or a tuple of \{count} ints.",
+        "invalid-argument",
+        "Limits must be None or a tuple of \{count} ints.",
       )
   }
 }
@@ -175,7 +182,7 @@ fn limit_values(
 ///|
 fn compile_limits(
   args : ArrayView[Rec],
-  index : Int,
+  index : Int32,
 ) -> @query.CompileLimits raise BridgeError {
   match limit_values(args, index, 6) {
     None => @query.CompileLimits::new()
@@ -194,7 +201,7 @@ fn compile_limits(
 ///|
 fn execution_limits(
   args : ArrayView[Rec],
-  index : Int,
+  index : Int32,
 ) -> @query.ExecutionLimits raise BridgeError {
   match limit_values(args, index, 4) {
     None => @query.ExecutionLimits::new()
@@ -214,24 +221,29 @@ fn position_rec(p : @query.QueryPosition) -> Rec {
 }
 
 ///|
-fn diagnostics_record(diagnostics : ReadOnlyArray[@query.QueryDiagnostic]) -> Rec {
+fn diagnostics_record(
+  diagnostics : ReadOnlyArray[@query.QueryDiagnostic],
+) -> Rec {
   Rec::list(
     diagnostics
     .iter()
-    .map(d => Rec::list([
-      Str(d.code),
-      Str(
-        match d.severity {
-          Error => "error"
-          Warning => "warning"
+    .map(d => {
+      Rec::list([
+        Str(d.code),
+        Str(
+          match d.severity {
+            Error => "error"
+            Warning => "warning"
+          },
+        ),
+        Str(d.message),
+        match d.span {
+          Some(span) =>
+            Rec::list([position_rec(span.start), position_rec(span.end)])
+          None => Null
         },
-      ),
-      Str(d.message),
-      match d.span {
-        Some(span) => Rec::list([position_rec(span.start), position_rec(span.end)])
-        None => Null
-      },
-    ]))
+      ])
+    })
     .to_array(),
   )
 }
@@ -252,7 +264,8 @@ fn compiled(
         Rec::int(plan.pattern_count),
         Rec::list(plan.capture_names.iter().map(n => Rec::Str(n)).to_array()),
       ])
-    Err(diagnostics) => Rec::list([Str("error"), diagnostics_record(diagnostics)])
+    Err(diagnostics) =>
+      Rec::list([Str("error"), diagnostics_record(diagnostics)])
   }
 }
 
@@ -264,7 +277,7 @@ fn qname_rec(name : @query.QName) -> Array[Rec] {
 ///|
 /// Adds `pattern` to `table` after its sub-patterns and returns its index.
 /// Recursion depth is the pattern nesting, which `parse` bounds.
-fn table_add(pattern : @query.Pattern, table : Array[Rec]) -> Int {
+fn table_add(pattern : @query.Pattern, table : Array[Rec]) -> Int32 {
   let entry = match pattern {
     Node(selector, parts, captures) => {
       let sel = match selector {
@@ -279,7 +292,10 @@ fn table_add(pattern : @query.Pattern, table : Array[Rec]) -> Int {
       let part_records = []
       for part in parts {
         match part {
-          Child(p) => part_records.push(Rec::list([Str("child"), Rec::int(table_add(p, table))]))
+          Child(p) =>
+            part_records.push(
+              Rec::list([Str("child"), Rec::int(table_add(p, table))]),
+            )
           Field(name, p) => {
             let child = table_add(p, table)
             let items = [Rec::Str("field")]
@@ -333,11 +349,13 @@ fn form_record(form : @query.QueryForm) -> Rec {
         Rec::list(
           rule.predicates
           .iter()
-          .map(p => Rec::list([
-            Str(p.name),
-            Str(p.capture),
-            Rec::list(p.operands.iter().map(o => Rec::Str(o)).to_array()),
-          ]))
+          .map(p => {
+            Rec::list([
+              Str(p.name),
+              Str(p.capture),
+              Rec::list(p.operands.iter().map(o => Rec::Str(o)).to_array()),
+            ])
+          })
           .to_array(),
         ),
       ]),
@@ -379,7 +397,7 @@ fn qname_of(prefix : Rec, local_name : Rec) -> @query.QName raise BridgeError {
 fn take_entry(
   built : Array[@query.Pattern?],
   index : Rec,
-  owner : Int,
+  owner : Int32,
 ) -> @query.Pattern raise BridgeError {
   guard index is Int(i) && i >= 0L && i < owner.to_int64() else {
     raise BridgeError(
@@ -387,14 +405,19 @@ fn take_entry(
     )
   }
   guard built[i.to_int()] is Some(pattern) else {
-    raise BridgeError("invalid-argument", "A pattern table entry is used twice.")
+    raise BridgeError(
+      "invalid-argument", "A pattern table entry is used twice.",
+    )
   }
   built[i.to_int()] = None
   pattern
 }
 
 ///|
-fn form_of(args : ArrayView[Rec], index : Int) -> @query.QueryForm raise BridgeError {
+fn form_of(
+  args : ArrayView[Rec],
+  index : Int32,
+) -> @query.QueryForm raise BridgeError {
   guard arg_list(args, index)[:] is [List(entries), List(rule_records)] else {
     raise BridgeError("invalid-argument", "A form must be (patterns, rules).")
   }
@@ -414,19 +437,27 @@ fn form_of(args : ArrayView[Rec], index : Int) -> @query.QueryForm raise BridgeE
             List([Str("child"), child]) => Child(take_entry(built, child, at))
             List([Str("field"), prefix, name, child]) =>
               Field(qname_of(prefix, name), take_entry(built, child, at))
-            List([Str("absent"), prefix, name]) => Absent(qname_of(prefix, name))
+            List([Str("absent"), prefix, name]) =>
+              Absent(qname_of(prefix, name))
             _ => raise BridgeError("invalid-argument", "Unknown part record.")
           }
           decoded.push(p)
         }
-        @query.Pattern::node(sel, parts=decoded, captures=strings_of(captures, "Captures"))
+        @query.Pattern::node(
+          sel,
+          parts=decoded,
+          captures=strings_of(captures, "Captures"),
+        )
       }
       List([Str("alt"), List(branches), captures]) => {
         let decoded = []
         for branch in branches {
           decoded.push(take_entry(built, branch, at))
         }
-        @query.Pattern::alternation(decoded, captures=strings_of(captures, "Captures"))
+        @query.Pattern::alternation(
+          decoded,
+          captures=strings_of(captures, "Captures"),
+        )
       }
       _ => raise BridgeError("invalid-argument", "Unknown pattern record.")
     }
@@ -443,11 +474,18 @@ fn form_of(args : ArrayView[Rec], index : Int) -> @query.QueryForm raise BridgeE
         raise BridgeError("invalid-argument", "Unknown predicate record.")
       }
       decoded.push(
-        @query.Predicate::new(name, capture, operands=strings_of(operands, "Operands")),
+        @query.Predicate::new(
+          name,
+          capture,
+          operands=strings_of(operands, "Operands"),
+        ),
       )
     }
     rules.push(
-      @query.Rule::new(take_entry(built, root, built.length()), predicates=decoded),
+      @query.Rule::new(
+        take_entry(built, root, built.length()),
+        predicates=decoded,
+      ),
     )
   }
   if built.iter().any(p => p is Some(_)) {
@@ -466,7 +504,10 @@ fn execute(args : ArrayView[Rec]) -> Rec raise BridgeError {
   let root = match args.get(2) {
     Some(Int(ordinal)) => Some(ordinal.to_int())
     Some(Null) | None => None
-    _ => raise BridgeError("invalid-argument", "Argument 2 must be an int or None.")
+    _ =>
+      raise BridgeError(
+        "invalid-argument", "Argument 2 must be an int or None.",
+      )
   }
   let fields = strings_of(args.get(3).unwrap_or(List([])), "Fields")
   let projection = @query.Projection::new(
@@ -475,7 +516,8 @@ fn execute(args : ArrayView[Rec]) -> Rec raise BridgeError {
     namespaces=namespace_bindings(args, 4),
   )
   match projection {
-    Err(diagnostics) => Rec::list([Str("error"), diagnostics_record(diagnostics)])
+    Err(diagnostics) =>
+      Rec::list([Str("error"), diagnostics_record(diagnostics)])
     Ok(projection) => {
       let cursor = plan.execute(
         view,
@@ -483,7 +525,7 @@ fn execute(args : ArrayView[Rec]) -> Rec raise BridgeError {
         projection~,
         limits=execution_limits(args, 5),
       )
-      Rec::list([Str("ok"), Int(cursors.add({ view, cursor }))])
+      Rec::list([Str("ok"), Int(cursors.add({ view, cursor, }))])
     }
   }
 }
@@ -525,8 +567,10 @@ fn value_record(value : @query.Projected) -> Rec {
   match value {
     Absent => Rec::list([Str("absent")])
     Text(text) => Rec::list([Str("text"), Str(text)])
-    Scalar(scalar) => Rec::list([Str("scalar"), Str(scalar.tag), Str(scalar.text)])
-    Name(name) => Rec::list([Str("name"), Str(name.namespace_uri), Str(name.local_name)])
+    Scalar(scalar) =>
+      Rec::list([Str("scalar"), Str(scalar.tag), Str(scalar.text)])
+    Name(name) =>
+      Rec::list([Str("name"), Str(name.namespace_uri), Str(name.local_name)])
     Int(n) => Rec::list([Str("int"), Rec::int(n)])
     Location(location) =>
       Rec::list([
@@ -539,12 +583,14 @@ fn value_record(value : @query.Projected) -> Rec {
       Rec::list([
         Str("path"),
         List(
-          steps.map(step => Rec::list([
-            Str(step.field.namespace_uri),
-            Str(step.field.local_name),
-            Rec::int(step.index),
-            Rec::int(step.position),
-          ])),
+          steps.map(step => {
+            Rec::list([
+              Str(step.field.namespace_uri),
+              Str(step.field.local_name),
+              Rec::int(step.index),
+              Rec::int(step.position),
+            ])
+          }),
         ),
       ])
   }
@@ -557,16 +603,20 @@ fn batch_record(entry : QueryCursorEntry, batch : @query.QueryBatch) -> Rec {
       Rec::list([
         Str("rows"),
         List(
-          rows.map(row => Rec::list([
-            Rec::int(row.pattern),
-            List(
-              row.captures.map(c => Rec::list([
-                Str(c.name),
-                node_record(entry.view.captured(c)),
-                List(c.values.map(value_record)),
-              ])),
-            ),
-          ])),
+          rows.map(row => {
+            Rec::list([
+              Rec::int(row.pattern),
+              List(
+                row.captures.map(c => {
+                  Rec::list([
+                    Str(c.name),
+                    node_record(entry.view.captured(c)),
+                    List(c.values.map(value_record)),
+                  ])
+                }),
+              ),
+            ])
+          }),
         ),
       ])
     Complete => Rec::list([Str("complete")])

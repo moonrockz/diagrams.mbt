@@ -1,10 +1,11 @@
 ///|
 /// Explicit bounds for model validation and indexing.
+#derive(Eq, Debug)
 pub struct Limits {
-  nodes : Int
-  depth : Int
-  work : Int
-} derive(Eq, Debug)
+  nodes : Int32
+  depth : Int32
+  work : Int32
+}
 
 ///|
 pub extend Limits with Eq::{equal, not_equal}
@@ -14,11 +15,11 @@ pub extend Limits with @debug.Debug::{to_repr}
 
 ///|
 pub fn Limits::new(
-  nodes? : Int = 10000,
-  depth? : Int = 256,
-  work? : Int = 1000000,
+  nodes~ : Int32 = 10000,
+  depth~ : Int32 = 256,
+  work~ : Int32 = 1000000,
 ) -> Limits {
-  { nodes, depth, work }
+  { nodes, depth, work, }
 }
 
 ///|
@@ -33,9 +34,9 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 /// except the root has exactly one parent, so the arena is a finite tree.
 pub struct Index {
   regex : Regex
-  priv positions : Map[String, Int]
+  priv positions : Map[String, Int32]
   priv parents : Map[String, String]
-  priv depths : Map[String, Int]
+  priv depths : Map[String, Int32]
   /// Node identities in pre-order (drawing order).
   order : ReadOnlyArray[String]
 }
@@ -57,13 +58,16 @@ pub fn Index::parent(self : Index, id : String) -> String? {
 }
 
 ///|
-pub fn Index::depth(self : Index, id : String) -> Int? {
+pub fn Index::depth(self : Index, id : String) -> Int32? {
   self.depths.get(id)
 }
 
 ///|
 /// Validate identities, ownership, bounds and explicit limits without recursion.
-pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexResult {
+pub fn Index::build(
+  regex : Regex,
+  limits~ : Limits = Limits::new(),
+) -> IndexResult {
   let out : Array[@diagrams.Diagnostic] = []
   let mut work = 0
   let mut halted = false
@@ -72,7 +76,7 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
       out.push(@diagrams.Diagnostic::error("regex/" + code, message))
     }
   }
-  fn charge(units : Int) -> Bool {
+  fn charge(units : Int32) -> Bool {
     if halted {
       return false
     }
@@ -85,7 +89,7 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
     true
   }
   fn failed() -> IndexResult {
-    { index: None, diagnostics: ReadOnlyArray::from_array(out) }
+    { index: None, diagnostics: ReadOnlyArray::from_array(out), }
   }
   if limits.nodes <= 0 || limits.depth <= 0 || limits.work <= 0 {
     error("model-limit", "Regex limits must be positive")
@@ -98,7 +102,7 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
   if regex.id.is_empty() {
     error("invalid-identity", "A regex model needs a view identity")
   }
-  let positions : Map[String, Int] = Map([])
+  let positions : Map[String, Int32] = Map([])
   for i, node in regex.nodes {
     if !charge(node.id.length() + 1) {
       return failed()
@@ -121,7 +125,10 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
         }
       Backreference(number) =>
         if number.is_empty() || number.iter().any(c => c < '0' || c > '9') {
-          error("invalid-node", "Backreference '\{node.id}' needs a group number")
+          error(
+            "invalid-node",
+            "Backreference '\{node.id}' needs a group number",
+          )
         }
       Class(Property(name)) | Class(Posix(name)) | Class(CodePoint(name)) =>
         if name.is_empty() {
@@ -159,7 +166,7 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
     return failed()
   }
   let parents : Map[String, String] = Map([])
-  let depths : Map[String, Int] = Map([(regex.root, 0)])
+  let depths : Map[String, Int32] = Map([(regex.root, 0)])
   let order : Array[String] = []
   let stack : Array[String] = [regex.root]
   while stack.pop() is Some(id) {
@@ -220,7 +227,7 @@ pub fn Index::build(regex : Regex, limits? : Limits = Limits::new()) -> IndexRes
 /// Validate a constructed model. An empty result means the model is valid.
 pub fn validate(
   regex : Regex,
-  limits? : Limits = Limits::new(),
+  limits~ : Limits = Limits::new(),
 ) -> ReadOnlyArray[@diagrams.Diagnostic] {
   Index::build(regex, limits~).diagnostics
 }

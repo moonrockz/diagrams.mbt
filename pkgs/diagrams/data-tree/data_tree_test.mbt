@@ -24,11 +24,18 @@ test "scalar kinds, exact numbers and roots stay distinct" {
   assert_true(@data_tree.valid_number("12345678901234567890123"))
   assert_true(@data_tree.valid_number("-0.0"))
   assert_false(@data_tree.valid_number("01"))
-  for root in [@data_tree.Node::object("r", []), @data_tree.Node::array("r", []), @data_tree.Node::new("r", Null)] {
+  for
+    root in [
+      @data_tree.Node::object("r", []),
+      @data_tree.Node::array("r", []),
+      @data_tree.Node::new("r", Null),
+    ] {
     assert_eq(codes(@data_tree.DataTree::new("d", "r", [root])), [])
   }
   // Text that looks like a reference is one scalar.
-  let tree = @data_tree.DataTree::new("d", "r", [@data_tree.Node::new("r", Text("*customer"))])
+  let tree = @data_tree.DataTree::new("d", "r", [
+    @data_tree.Node::new("r", Text("*customer")),
+  ])
   assert_eq(codes(tree), [])
 }
 
@@ -46,7 +53,9 @@ test "invalid containment, keys, numbers and highlights are reported" {
   assert_eq(
     codes(
       @data_tree.DataTree::new("d", "r", [
-        @data_tree.Node::object("r", [@data_tree.Member::named("m", "a", "missing")]),
+        @data_tree.Node::object("r", [
+          @data_tree.Member::named("m", "a", "missing"),
+        ]),
       ]),
     ),
     ["data-tree/missing-node"],
@@ -61,17 +70,18 @@ test "invalid containment, keys, numbers and highlights are reported" {
     ["data-tree/invalid-key"],
   )
   assert_eq(
-    codes(@data_tree.DataTree::new("d", "r", [@data_tree.Node::new("r", Number("1e"))])),
+    codes(
+      @data_tree.DataTree::new("d", "r", [
+        @data_tree.Node::new("r", Number("1e")),
+      ]),
+    ),
     ["data-tree/invalid-number"],
   )
   assert_eq(
     codes(
-      @data_tree.DataTree::new(
-        "d",
-        "r",
-        [@data_tree.Node::new("r", Null)],
-        highlights=[@data_tree.Highlight::new(["nope"])],
-      ),
+      @data_tree.DataTree::new("d", "r", [@data_tree.Node::new("r", Null)], highlights=[
+        @data_tree.Highlight::new(["nope"]),
+      ]),
     ),
     ["data-tree/invalid-highlight"],
   )
@@ -79,10 +89,14 @@ test "invalid containment, keys, numbers and highlights are reported" {
 
 ///|
 test "depth and work limits stop validation" {
-  let nodes = [@data_tree.Node::array("n0", [@data_tree.Member::index("m0", 0, "n1")])]
+  let nodes = [
+    @data_tree.Node::array("n0", [@data_tree.Member::index("m0", 0, "n1")]),
+  ]
   for i in 1..<50 {
     nodes.push(
-      @data_tree.Node::array("n\{i}", [@data_tree.Member::index("m\{i}", 0, "n\{i + 1}")]),
+      @data_tree.Node::array("n\{i}", [
+        @data_tree.Member::index("m\{i}", 0, "n\{i + 1}"),
+      ]),
     )
   }
   nodes.push(@data_tree.Node::new("n50", Null))

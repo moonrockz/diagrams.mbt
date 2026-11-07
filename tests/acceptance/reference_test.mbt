@@ -12,9 +12,9 @@ fn field(doc : Json, key : String) -> Json {
 fn display_text(text : String) -> String {
   let text = text.trim().to_owned()
   let text = if text.has_prefix("wrap:") {
-    text.view(start_offset=5).trim().to_owned()
+    text.exact_view(start=5).trim().to_owned()
   } else if text.has_prefix("nowrap:") {
-    text.view(start_offset=7).trim().to_owned()
+    text.exact_view(start=7).trim().to_owned()
   } else {
     text
   }

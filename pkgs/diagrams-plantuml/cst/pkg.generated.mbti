@@ -14,10 +14,11 @@ pub fn span(String, Int32, Int32) -> @diagrams.Span
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Element {
   Token(Token)
   Node(Node)
-} derive(Eq, @debug.Debug)
+}
 pub fn Element::equal(Self, Self) -> Bool
 pub fn Element::not_equal(Self, Self) -> Bool
 pub fn Element::to_repr(Self) -> @debug.Repr
@@ -29,10 +30,11 @@ pub fn Lines::new(String) -> Self
 pub fn Lines::position(Self, Int32) -> @diagrams.Position
 pub fn Lines::span(Self, Int32, Int32) -> @diagrams.Span
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   kind : NodeKind
   children : ReadOnlyArray[Element]
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::new(NodeKind, ArrayView[Element]) -> Self
 pub fn Node::nodes(Self) -> Array[Self]
@@ -42,6 +44,7 @@ pub fn Node::text(Self) -> String
 pub fn Node::to_repr(Self) -> @debug.Repr
 pub fn Node::tokens(Self) -> Array[Token]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeKind {
   Document
   Start
@@ -66,21 +69,23 @@ pub(all) enum NodeKind {
   Blank
   Trailing
   Error
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeKind::equal(Self, Self) -> Bool
 pub fn NodeKind::not_equal(Self, Self) -> Bool
 pub fn NodeKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Token {
   kind : TokenKind
   text : String
   offset : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Token::equal(Self, Self) -> Bool
 pub fn Token::new(TokenKind, String, Int32) -> Self
 pub fn Token::not_equal(Self, Self) -> Bool
 pub fn Token::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TokenKind {
   Marker
   Keyword
@@ -97,7 +102,7 @@ pub(all) enum TokenKind {
   Newline
   Directive
   Error
-} derive(Eq, @debug.Debug)
+}
 pub fn TokenKind::equal(Self, Self) -> Bool
 pub fn TokenKind::not_equal(Self, Self) -> Bool
 pub fn TokenKind::to_repr(Self) -> @debug.Repr

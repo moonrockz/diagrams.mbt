@@ -103,15 +103,16 @@ test "unsupported features fail with stable codes" {
     categories=["thing"],
     fields=[],
   )
-  for case in [
-    ("(box)*", "query/unsupported-quantifier"),
-    ("(box . (box))", "query/unsupported-anchor"),
-    ("((box) @b (#set! @b \"k\"))", "query/unsupported-directive"),
-    ("((box) @b (#match? @b \"x\"))", "query/unsupported-regex"),
-    ("(box \"+\")", "query/unsupported-anonymous-node"),
-    ("((box) (box))", "query/unsupported-grouping"),
-    ("((box) @b (#eq? @b \"x\"))", "query/unknown-predicate"),
-  ] {
+  for
+    case in [
+      ("(box)*", "query/unsupported-quantifier"),
+      ("(box . (box))", "query/unsupported-anchor"),
+      ("((box) @b (#set! @b \"k\"))", "query/unsupported-directive"),
+      ("((box) @b (#match? @b \"x\"))", "query/unsupported-regex"),
+      ("(box \"+\")", "query/unsupported-anonymous-node"),
+      ("((box) (box))", "query/unsupported-grouping"),
+      ("((box) @b (#eq? @b \"x\"))", "query/unknown-predicate"),
+    ] {
     let diagnostics = @query.compile(case.0, schema).unwrap_err()
     assert_eq(diagnostics[0].code, case.1)
     assert_true(diagnostics[0].span is Some(_))
@@ -136,7 +137,7 @@ normalized form, with expanded `{uri}local` names.
 ///|
 struct Shelf {
   kinds : Array[String]
-  children : Array[Array[Int]]
+  children : Array[Array[Int32]]
   names : Array[String?]
 }
 
@@ -151,37 +152,37 @@ let shelf_schema : @query.Schema = @query.Schema::new(
 )
 
 ///|
-impl @query.QueryTree for Shelf with schema(_self) {
+impl @query.QueryTree for Shelf with fn schema(_self) {
   shelf_schema
 }
 
 ///|
-impl @query.QueryTree for Shelf with root(_self) {
+impl @query.QueryTree for Shelf with fn root(_self) {
   0
 }
 
 ///|
-impl @query.QueryTree for Shelf with node_count(self) {
+impl @query.QueryTree for Shelf with fn node_count(self) {
   self.kinds.length()
 }
 
 ///|
-impl @query.QueryTree for Shelf with kind(self, node) {
+impl @query.QueryTree for Shelf with fn kind(self, node) {
   Some(@query.Name::new("", self.kinds[node]))
 }
 
 ///|
-impl @query.QueryTree for Shelf with category(_self, _node) {
+impl @query.QueryTree for Shelf with fn category(_self, _node) {
   "item"
 }
 
 ///|
-impl @query.QueryTree for Shelf with children(self, node) {
+impl @query.QueryTree for Shelf with fn children(self, node) {
   self.children[node][:]
 }
 
 ///|
-impl @query.QueryTree for Shelf with field(_self, node) {
+impl @query.QueryTree for Shelf with fn field(_self, node) {
   if node == 0 {
     None
   } else {
@@ -190,36 +191,36 @@ impl @query.QueryTree for Shelf with field(_self, node) {
 }
 
 ///|
-impl @query.QueryTree for Shelf with attribute(self, node, name) {
+impl @query.QueryTree for Shelf with fn attribute(self, node, name) {
   if name == @query.Name::new("", "name") {
-    self.names[node].map(text => @query.ScalarValue::{ tag: "text", text })
+    self.names[node].map(text => @query.ScalarValue::{ tag: "text", text, })
   } else {
     None
   }
 }
 
 ///|
-impl @query.QueryTree for Shelf with text(_self, _node) {
+impl @query.QueryTree for Shelf with fn text(_self, _node) {
   None
 }
 
 ///|
-impl @query.QueryTree for Shelf with extra(_self, _node, _name) {
+impl @query.QueryTree for Shelf with fn extra(_self, _node, _name) {
   None
 }
 
 ///|
-impl @query.QueryTree for Shelf with location(_self, _node) {
+impl @query.QueryTree for Shelf with fn location(_self, _node) {
   None
 }
 
 ///|
-impl @query.QueryTree for Shelf with path(_self, _node) {
+impl @query.QueryTree for Shelf with fn path(_self, _node) {
   []
 }
 
 ///|
-impl @query.QueryTree for Shelf with depth(_self, node) {
+impl @query.QueryTree for Shelf with fn depth(_self, node) {
   if node == 0 {
     0
   } else {
@@ -256,12 +257,14 @@ test "text and typed queries give the same plan and matches" {
   let result = a.collect(shelf)
   assert_eq(result, b.collect(shelf))
   assert_eq(result.matches.length(), 1)
-  assert_eq(result.matches[0].captures.map(c => (c.name, c.node)).iter().to_array(), [
-    ("b", 1),
-    ("s", 0),
-  ])
+  assert_eq(
+    result.matches[0].captures.map(c => (c.name, c.node)).iter().to_array(),
+    [("b", 1), ("s", 0)],
+  )
   // A missing name and an empty name are different.
-  let empty = @query.compile("((book) @b (#attr-eq? @b \"name\" \"\"))", shelf_schema)
+  let empty = @query.compile(
+      "((book) @b (#attr-eq? @b \"name\" \"\"))", shelf_schema,
+    )
     .unwrap()
     .collect(shelf)
   assert_eq(empty.matches.map(m => m.captures[0].node).iter().to_array(), [2])

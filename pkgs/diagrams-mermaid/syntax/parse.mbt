@@ -19,8 +19,8 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 /// An open frame: its keyword, the span of the keyword, and its children.
 priv struct Frame {
   keyword : String
-  start : Int
-  end : Int
+  start : Int32
+  end : Int32
   children : Array[@cst.Element]
 }
 
@@ -52,7 +52,8 @@ fn Scanner::front_matter(self : Scanner, out : Array[@cst.Element]) -> Unit {
   guard is_newline(self.cu(j)) else { return }
   let mut line = j
   while line < self.src.length() {
-    let next = if self.cu(line) == '\r'.to_int() && self.cu(line + 1) == '\n'.to_int() {
+    let next = if self.cu(line) == '\r'.to_int() &&
+      self.cu(line + 1) == '\n'.to_int() {
       line + 2
     } else {
       line + 1
@@ -96,11 +97,12 @@ fn Scanner::trivia(self : Scanner, out : Array[@cst.Element]) -> Bool {
     self.pos = i + 1
     true
   } else if self.starts(i, "%%{") {
-    let end = match self.src.view(start_offset=i + 3).find("}%%") {
+    let end = match self.src.exact_view(start=i + 3).find("}%%") {
       Some(k) => i + 3 + k + 3
       None => {
         self.error(
-          "mermaid/unclosed-directive", "the directive has no closing `}%%`",
+          "mermaid/unclosed-directive",
+          "the directive has no closing `}%%`",
           i,
           i + 3,
         )
@@ -123,7 +125,7 @@ fn Scanner::trivia(self : Scanner, out : Array[@cst.Element]) -> Bool {
 ///|
 /// The end of a statement that did not parse: the next semicolon or line
 /// break, without the spaces before it.
-fn Scanner::error_end(self : Scanner, start : Int) -> Int {
+fn Scanner::error_end(self : Scanner, start : Int32) -> Int32 {
   let mut j = start
   while j < self.src.length() {
     let entity = self.entity_at(j)
@@ -177,8 +179,7 @@ pub fn parse(source : String) -> ParseResult {
       reported = true
       s.error(
         "mermaid/missing-header", "a sequence diagram starts with `sequenceDiagram`",
-        start,
-        end,
+        start, end,
       )
     }
     let in_box = match stack.last() {
@@ -192,14 +193,14 @@ pub fn parse(source : String) -> ParseResult {
       !(event is Close) {
       s.error(
         "mermaid/invalid-in-box", "a box can only have participant declarations",
-        start,
-        end,
+        start, end,
       )
-    } else if in_box && node_kind == Participant && s.keyword_at(start, "create") {
+    } else if in_box &&
+      node_kind == Participant &&
+      s.keyword_at(start, "create") {
       s.error(
         "mermaid/invalid-in-box", "a box can only have participant declarations",
-        start,
-        end,
+        start, end,
       )
     }
     if node_kind == Error {
@@ -211,8 +212,7 @@ pub fn parse(source : String) -> ParseResult {
         if header {
           s.error(
             "mermaid/unexpected-header", "a sequence diagram has one `sequenceDiagram` header",
-            start,
-            end,
+            start, end,
           )
           target.push(Node(@cst.Node::new(Error, tokens)))
           continue
@@ -234,7 +234,8 @@ pub fn parse(source : String) -> ParseResult {
             f.children.push(Node(@cst.Node::new(Section, tokens)))
           _ => {
             s.error(
-              "mermaid/misplaced-section", "`\{word}` can only be in a frame that allows it",
+              "mermaid/misplaced-section",
+              "`\{word}` can only be in a frame that allows it",
               start,
               end,
             )
@@ -252,7 +253,9 @@ pub fn parse(source : String) -> ParseResult {
             parent.push(Node(@cst.Node::new(Block, f.children)))
           }
           None => {
-            s.error("mermaid/unexpected-end", "this `end` has no open frame", start, end)
+            s.error(
+              "mermaid/unexpected-end", "this `end` has no open frame", start, end,
+            )
             target.push(Node(@cst.Node::new(Error, tokens)))
           }
         }
@@ -260,7 +263,8 @@ pub fn parse(source : String) -> ParseResult {
   }
   while stack.pop() is Some(f) {
     s.error(
-      "mermaid/missing-end", "this `\{f.keyword}` has no `end`",
+      "mermaid/missing-end",
+      "this `\{f.keyword}` has no `end`",
       f.start,
       f.end,
     )
@@ -272,7 +276,8 @@ pub fn parse(source : String) -> ParseResult {
   }
   if !header && !reported {
     s.error(
-      "mermaid/missing-header", "a sequence diagram starts with `sequenceDiagram`",
+      "mermaid/missing-header",
+      "a sequence diagram starts with `sequenceDiagram`",
       source.length(),
       source.length(),
     )

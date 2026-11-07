@@ -1,9 +1,10 @@
 ///|
 /// GIF motion samples the final measured connector, including bridge curves.
 /// Segment subdivision is bounded and independent of a browser clock or DOM.
+#derive(Debug)
 suberror GifError {
   GifInvalid(String)
-} derive(Debug)
+}
 
 ///|
 pub extend GifError with @debug.Debug::{to_repr}

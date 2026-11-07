@@ -1,10 +1,11 @@
 ///|
 /// Explicit bounds for grammar validation and indexing.
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
   work : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Limits with Eq::{equal, not_equal}
@@ -31,11 +32,12 @@ pub let diagnostic_codes : ReadOnlyArray[String] = [
 
 ///|
 /// How a reference resolved. Unresolved and ambiguous names stay renderable.
+#derive(Eq, Debug)
 pub(all) enum Resolution {
   Resolved(String)
   Unresolved
   Ambiguous(ReadOnlyArray[String])
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Resolution with Eq::{equal, not_equal}

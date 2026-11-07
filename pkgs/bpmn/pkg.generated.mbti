@@ -61,17 +61,19 @@ pub fn write(Document, format? : WriteFormat, limits? : Limits) -> String raise 
 pub let xml_diagnostic_codes : ReadOnlyArray[String]
 
 // Errors
+#derive(Eq, @debug.Debug)
 pub(all) suberror WriteError {
   Failed(ReadOnlyArray[Diagnostic])
-} derive(Eq, @debug.Debug)
+}
 pub fn WriteError::equal(Self, Self) -> Bool
 pub fn WriteError::not_equal(Self, Self) -> Bool
 pub fn WriteError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Activity {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Activity::auditing(Self) -> Field[Auditing]
 pub fn Activity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Activity::completion_quantity(Self) -> Field[ExactInteger]
@@ -96,19 +98,21 @@ pub fn Activity::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn Activity::start_quantity(Self) -> Field[ExactInteger]
 pub fn Activity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum AdHocOrdering {
   Parallel
   Sequential
-} derive(Eq, @debug.Debug)
+}
 pub fn AdHocOrdering::equal(Self, Self) -> Bool
 pub fn AdHocOrdering::not_equal(Self, Self) -> Bool
 pub fn AdHocOrdering::parse(String) -> Self?
 pub fn AdHocOrdering::to_repr(Self) -> @debug.Repr
 pub fn AdHocOrdering::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct AdHocSubProcess {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn AdHocSubProcess::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn AdHocSubProcess::auditing(Self) -> Field[Auditing]
 pub fn AdHocSubProcess::cancel_remaining_instances(Self) -> Field[Bool]
@@ -141,30 +145,33 @@ pub fn AdHocSubProcess::start_quantity(Self) -> Field[ExactInteger]
 pub fn AdHocSubProcess::to_repr(Self) -> @debug.Repr
 pub fn AdHocSubProcess::triggered_by_event(Self) -> Field[Bool]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum AnonymousTImplementation78 {
   Unspecified
   WebService
-} derive(Eq, @debug.Debug)
+}
 pub fn AnonymousTImplementation78::equal(Self, Self) -> Bool
 pub fn AnonymousTImplementation78::not_equal(Self, Self) -> Bool
 pub fn AnonymousTImplementation78::parse(String) -> Self?
 pub fn AnonymousTImplementation78::to_repr(Self) -> @debug.Repr
 pub fn AnonymousTImplementation78::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum AnonymousTTransactionMethod144 {
   Compensate
   Image
   Store
-} derive(Eq, @debug.Debug)
+}
 pub fn AnonymousTTransactionMethod144::equal(Self, Self) -> Bool
 pub fn AnonymousTTransactionMethod144::not_equal(Self, Self) -> Bool
 pub fn AnonymousTTransactionMethod144::parse(String) -> Self?
 pub fn AnonymousTTransactionMethod144::to_repr(Self) -> @debug.Repr
 pub fn AnonymousTTransactionMethod144::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct Artifact {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Artifact::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Artifact::equal(Self, Self) -> Bool
 pub fn Artifact::extension_elements(Self) -> Field[ExtensionElements]
@@ -173,9 +180,10 @@ pub fn Artifact::id(Self) -> Field[String]
 pub fn Artifact::not_equal(Self, Self) -> Bool
 pub fn Artifact::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Assignment {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Assignment::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Assignment::equal(Self, Self) -> Bool
 pub fn Assignment::extension_elements(Self) -> Field[ExtensionElements]
@@ -187,9 +195,10 @@ pub fn Assignment::not_equal(Self, Self) -> Bool
 pub fn Assignment::to(Self) -> Field[Expression]
 pub fn Assignment::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Association {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Association::association_direction(Self) -> Field[AssociationDirection]
 pub fn Association::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Association::equal(Self, Self) -> Bool
@@ -202,33 +211,36 @@ pub fn Association::source_ref(Self) -> Field[Reference]
 pub fn Association::target_ref(Self) -> Field[Reference]
 pub fn Association::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum AssociationDirection {
   None
   One
   Both
-} derive(Eq, @debug.Debug)
+}
 pub fn AssociationDirection::equal(Self, Self) -> Bool
 pub fn AssociationDirection::not_equal(Self, Self) -> Bool
 pub fn AssociationDirection::parse(String) -> Self?
 pub fn AssociationDirection::to_repr(Self) -> @debug.Repr
 pub fn AssociationDirection::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct Attribute {
   name : ExpandedName?
   raw_name : String
   value : Scalar
   span : Span?
   // private fields
-} derive(Eq, @debug.Debug)
+}
 pub fn Attribute::equal(Self, Self) -> Bool
 pub fn Attribute::location(Self) -> Location?
 pub fn Attribute::new(ExpandedName, Scalar) -> Self
 pub fn Attribute::not_equal(Self, Self) -> Bool
 pub fn Attribute::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Auditing {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Auditing::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Auditing::equal(Self, Self) -> Bool
 pub fn Auditing::extension_elements(Self) -> Field[ExtensionElements]
@@ -238,9 +250,10 @@ pub fn Auditing::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn Auditing::not_equal(Self, Self) -> Bool
 pub fn Auditing::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BaseElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BaseElement::documentation(Self) -> ReadOnlyArray[Documentation]
 pub fn BaseElement::equal(Self, Self) -> Bool
 pub fn BaseElement::extension_elements(Self) -> Element?
@@ -249,9 +262,10 @@ pub fn BaseElement::id(Self) -> Field[String]
 pub fn BaseElement::not_equal(Self, Self) -> Bool
 pub fn BaseElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BaseElementWithMixedContent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BaseElementWithMixedContent::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn BaseElementWithMixedContent::equal(Self, Self) -> Bool
 pub fn BaseElementWithMixedContent::extension_elements(Self) -> Field[ExtensionElements]
@@ -260,9 +274,10 @@ pub fn BaseElementWithMixedContent::id(Self) -> Field[String]
 pub fn BaseElementWithMixedContent::not_equal(Self, Self) -> Bool
 pub fn BaseElementWithMixedContent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BoundaryEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BoundaryEvent::attached_to_ref(Self) -> Field[Reference]
 pub fn BoundaryEvent::auditing(Self) -> Field[Auditing]
 pub fn BoundaryEvent::cancel_activity(Self) -> Field[Bool]
@@ -287,9 +302,10 @@ pub fn BoundaryEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn BoundaryEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn BoundaryEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnDiagram {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnDiagram::bpmn_label_style(Self) -> Field[ReadOnlyArray[BpmnLabelStyle]]
 pub fn BpmnDiagram::bpmn_plane(Self) -> Field[BpmnPlane]
 pub fn BpmnDiagram::documentation(Self) -> Field[String]
@@ -302,9 +318,10 @@ pub fn BpmnDiagram::not_equal(Self, Self) -> Bool
 pub fn BpmnDiagram::resolution(Self) -> Field[ExactNumber]
 pub fn BpmnDiagram::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnEdge {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnEdge::bpmn_element(Self) -> Field[Reference]
 pub fn BpmnEdge::bpmn_label(Self) -> Field[BpmnLabel]
 pub fn BpmnEdge::equal(Self, Self) -> Bool
@@ -319,6 +336,7 @@ pub fn BpmnEdge::target_element(Self) -> Field[Reference]
 pub fn BpmnEdge::to_repr(Self) -> @debug.Repr
 pub fn BpmnEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum BpmnEnum {
   BpmnParticipantBandKind(BpmnParticipantBandKind)
   BpmnMessageVisibleKind(BpmnMessageVisibleKind)
@@ -335,16 +353,17 @@ pub(all) enum BpmnEnum {
   RelationshipDirection(RelationshipDirection)
   TransactionMethod(TransactionMethod)
   AnonymousTTransactionMethod144(AnonymousTTransactionMethod144)
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnEnum::equal(Self, Self) -> Bool
 pub fn BpmnEnum::not_equal(Self, Self) -> Bool
 pub fn BpmnEnum::to_repr(Self) -> @debug.Repr
 pub fn BpmnEnum::token(Self) -> String
 pub fn BpmnEnum::type_id(Self) -> TypeId
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnError {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnError::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn BpmnError::equal(Self, Self) -> Bool
 pub fn BpmnError::error_code(Self) -> Field[String]
@@ -357,9 +376,10 @@ pub fn BpmnError::not_equal(Self, Self) -> Bool
 pub fn BpmnError::structure_ref(Self) -> Field[Reference]
 pub fn BpmnError::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnLabel {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnLabel::bounds(Self) -> Field[DcBounds]
 pub fn BpmnLabel::equal(Self, Self) -> Bool
 pub fn BpmnLabel::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
@@ -370,9 +390,10 @@ pub fn BpmnLabel::new(id? : String, label_style? : Reference, contents? : ArrayV
 pub fn BpmnLabel::not_equal(Self, Self) -> Bool
 pub fn BpmnLabel::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnLabelStyle {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnLabelStyle::equal(Self, Self) -> Bool
 pub fn BpmnLabelStyle::font(Self) -> Field[DcFont]
 pub fn BpmnLabelStyle::from_element(Element) -> Self?
@@ -381,16 +402,18 @@ pub fn BpmnLabelStyle::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn BpmnLabelStyle::not_equal(Self, Self) -> Bool
 pub fn BpmnLabelStyle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum BpmnMessageVisibleKind {
   Initiating
   NonInitiating
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnMessageVisibleKind::equal(Self, Self) -> Bool
 pub fn BpmnMessageVisibleKind::not_equal(Self, Self) -> Bool
 pub fn BpmnMessageVisibleKind::parse(String) -> Self?
 pub fn BpmnMessageVisibleKind::to_repr(Self) -> @debug.Repr
 pub fn BpmnMessageVisibleKind::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum BpmnParticipantBandKind {
   TopInitiating
   MiddleInitiating
@@ -398,16 +421,17 @@ pub(all) enum BpmnParticipantBandKind {
   TopNonInitiating
   MiddleNonInitiating
   BottomNonInitiating
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnParticipantBandKind::equal(Self, Self) -> Bool
 pub fn BpmnParticipantBandKind::not_equal(Self, Self) -> Bool
 pub fn BpmnParticipantBandKind::parse(String) -> Self?
 pub fn BpmnParticipantBandKind::to_repr(Self) -> @debug.Repr
 pub fn BpmnParticipantBandKind::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnPlane {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnPlane::bpmn_element(Self) -> Field[Reference]
 pub fn BpmnPlane::diagram_element(Self) -> Field[ReadOnlyArray[DiDiagramElement]]
 pub fn BpmnPlane::equal(Self, Self) -> Bool
@@ -418,9 +442,10 @@ pub fn BpmnPlane::new(id? : String, bpmn_element? : Reference, contents? : Array
 pub fn BpmnPlane::not_equal(Self, Self) -> Bool
 pub fn BpmnPlane::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BpmnShape {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BpmnShape::bounds(Self) -> Field[DcBounds]
 pub fn BpmnShape::bpmn_element(Self) -> Field[Reference]
 pub fn BpmnShape::bpmn_label(Self) -> Field[BpmnLabel]
@@ -438,9 +463,10 @@ pub fn BpmnShape::not_equal(Self, Self) -> Bool
 pub fn BpmnShape::participant_band_kind(Self) -> Field[BpmnParticipantBandKind]
 pub fn BpmnShape::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct BusinessRuleTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn BusinessRuleTask::auditing(Self) -> Field[Auditing]
 pub fn BusinessRuleTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn BusinessRuleTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -467,9 +493,10 @@ pub fn BusinessRuleTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole
 pub fn BusinessRuleTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn BusinessRuleTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CallActivity {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CallActivity::auditing(Self) -> Field[Auditing]
 pub fn CallActivity::called_element(Self) -> Field[Reference]
 pub fn CallActivity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -496,9 +523,10 @@ pub fn CallActivity::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn CallActivity::start_quantity(Self) -> Field[ExactInteger]
 pub fn CallActivity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CallChoreography {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CallChoreography::auditing(Self) -> Field[Auditing]
 pub fn CallChoreography::called_choreography_ref(Self) -> Field[Reference]
 pub fn CallChoreography::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -520,9 +548,10 @@ pub fn CallChoreography::participant_association(Self) -> Field[ReadOnlyArray[Pa
 pub fn CallChoreography::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn CallChoreography::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CallConversation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CallConversation::called_collaboration_ref(Self) -> Field[Reference]
 pub fn CallConversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
 pub fn CallConversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -538,9 +567,10 @@ pub fn CallConversation::participant_association(Self) -> Field[ReadOnlyArray[Pa
 pub fn CallConversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn CallConversation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CallableElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CallableElement::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CallableElement::equal(Self, Self) -> Bool
 pub fn CallableElement::extension_elements(Self) -> Field[ExtensionElements]
@@ -554,9 +584,10 @@ pub fn CallableElement::not_equal(Self, Self) -> Bool
 pub fn CallableElement::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn CallableElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CancelEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CancelEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CancelEventDefinition::equal(Self, Self) -> Bool
 pub fn CancelEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -566,9 +597,10 @@ pub fn CancelEventDefinition::new(id? : String, contents? : ArrayView[Content]) 
 pub fn CancelEventDefinition::not_equal(Self, Self) -> Bool
 pub fn CancelEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CatchEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CatchEvent::auditing(Self) -> Field[Auditing]
 pub fn CatchEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn CatchEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
@@ -590,9 +622,10 @@ pub fn CatchEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn CatchEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn CatchEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Category {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Category::category_value(Self) -> Field[ReadOnlyArray[CategoryValue]]
 pub fn Category::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Category::equal(Self, Self) -> Bool
@@ -604,9 +637,10 @@ pub fn Category::new(id? : String, name? : String, contents? : ArrayView[Content
 pub fn Category::not_equal(Self, Self) -> Bool
 pub fn Category::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CategoryValue {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CategoryValue::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CategoryValue::equal(Self, Self) -> Bool
 pub fn CategoryValue::extension_elements(Self) -> Field[ExtensionElements]
@@ -617,9 +651,10 @@ pub fn CategoryValue::not_equal(Self, Self) -> Bool
 pub fn CategoryValue::to_repr(Self) -> @debug.Repr
 pub fn CategoryValue::value(Self) -> Field[String]
 
+#derive(Eq, @debug.Debug)
 pub struct Choreography {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Choreography::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn Choreography::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Choreography::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
@@ -642,9 +677,10 @@ pub fn Choreography::participant(Self) -> Field[ReadOnlyArray[Participant]]
 pub fn Choreography::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
 pub fn Choreography::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ChoreographyActivity {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ChoreographyActivity::auditing(Self) -> Field[Auditing]
 pub fn ChoreographyActivity::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyActivity::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
@@ -663,21 +699,23 @@ pub fn ChoreographyActivity::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyActivity::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyActivity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ChoreographyLoopType {
   None
   Standard
   MultiInstanceSequential
   MultiInstanceParallel
-} derive(Eq, @debug.Debug)
+}
 pub fn ChoreographyLoopType::equal(Self, Self) -> Bool
 pub fn ChoreographyLoopType::not_equal(Self, Self) -> Bool
 pub fn ChoreographyLoopType::parse(String) -> Self?
 pub fn ChoreographyLoopType::to_repr(Self) -> @debug.Repr
 pub fn ChoreographyLoopType::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct ChoreographyTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ChoreographyTask::auditing(Self) -> Field[Auditing]
 pub fn ChoreographyTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyTask::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
@@ -698,9 +736,10 @@ pub fn ChoreographyTask::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyTask::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ChoreographyTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Collaboration {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Collaboration::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn Collaboration::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Collaboration::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
@@ -722,9 +761,10 @@ pub fn Collaboration::participant(Self) -> Field[ReadOnlyArray[Participant]]
 pub fn Collaboration::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
 pub fn Collaboration::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CompensateEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CompensateEventDefinition::activity_ref(Self) -> Field[Reference]
 pub fn CompensateEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CompensateEventDefinition::equal(Self, Self) -> Bool
@@ -736,9 +776,10 @@ pub fn CompensateEventDefinition::not_equal(Self, Self) -> Bool
 pub fn CompensateEventDefinition::to_repr(Self) -> @debug.Repr
 pub fn CompensateEventDefinition::wait_for_completion(Self) -> Field[Bool]
 
+#derive(Eq, @debug.Debug)
 pub struct ComplexBehaviorDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ComplexBehaviorDefinition::condition(Self) -> Field[FormalExpression]
 pub fn ComplexBehaviorDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ComplexBehaviorDefinition::equal(Self, Self) -> Bool
@@ -750,9 +791,10 @@ pub fn ComplexBehaviorDefinition::new(id? : String, contents? : ArrayView[Conten
 pub fn ComplexBehaviorDefinition::not_equal(Self, Self) -> Bool
 pub fn ComplexBehaviorDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ComplexGateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ComplexGateway::activation_condition(Self) -> Field[Expression]
 pub fn ComplexGateway::auditing(Self) -> Field[Auditing]
 pub fn ComplexGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -771,9 +813,10 @@ pub fn ComplexGateway::not_equal(Self, Self) -> Bool
 pub fn ComplexGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ComplexGateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConditionalEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ConditionalEventDefinition::condition(Self) -> Field[Expression]
 pub fn ConditionalEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ConditionalEventDefinition::equal(Self, Self) -> Bool
@@ -784,28 +827,31 @@ pub fn ConditionalEventDefinition::new(id? : String, contents? : ArrayView[Conte
 pub fn ConditionalEventDefinition::not_equal(Self, Self) -> Bool
 pub fn ConditionalEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Content {
   Text(String)
   Element(Element)
   Comment(String)
   ProcessingInstruction(target~ : String, data~ : String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Content::equal(Self, Self) -> Bool
 pub fn Content::not_equal(Self, Self) -> Bool
 pub fn Content::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Control {
   Continue
   SkipChildren
   Stop
-} derive(Eq, @debug.Debug)
+}
 pub fn Control::equal(Self, Self) -> Bool
 pub fn Control::not_equal(Self, Self) -> Bool
 pub fn Control::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Conversation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Conversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
 pub fn Conversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Conversation::equal(Self, Self) -> Bool
@@ -819,9 +865,10 @@ pub fn Conversation::not_equal(Self, Self) -> Bool
 pub fn Conversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Conversation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConversationAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ConversationAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ConversationAssociation::equal(Self, Self) -> Bool
 pub fn ConversationAssociation::extension_elements(Self) -> Field[ExtensionElements]
@@ -833,9 +880,10 @@ pub fn ConversationAssociation::not_equal(Self, Self) -> Bool
 pub fn ConversationAssociation::outer_conversation_node_ref(Self) -> Field[Reference]
 pub fn ConversationAssociation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConversationLink {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ConversationLink::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ConversationLink::equal(Self, Self) -> Bool
 pub fn ConversationLink::extension_elements(Self) -> Field[ExtensionElements]
@@ -848,9 +896,10 @@ pub fn ConversationLink::source_ref(Self) -> Field[Reference]
 pub fn ConversationLink::target_ref(Self) -> Field[Reference]
 pub fn ConversationLink::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConversationNode {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ConversationNode::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
 pub fn ConversationNode::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ConversationNode::equal(Self, Self) -> Bool
@@ -863,9 +912,10 @@ pub fn ConversationNode::not_equal(Self, Self) -> Bool
 pub fn ConversationNode::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ConversationNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CorrelationKey {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CorrelationKey::correlation_property_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn CorrelationKey::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CorrelationKey::equal(Self, Self) -> Bool
@@ -877,9 +927,10 @@ pub fn CorrelationKey::new(id? : String, name? : String, contents? : ArrayView[C
 pub fn CorrelationKey::not_equal(Self, Self) -> Bool
 pub fn CorrelationKey::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CorrelationProperty {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CorrelationProperty::correlation_property_retrieval_expression(Self) -> Field[ReadOnlyArray[CorrelationPropertyRetrievalExpression]]
 pub fn CorrelationProperty::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CorrelationProperty::equal(Self, Self) -> Bool
@@ -892,9 +943,10 @@ pub fn CorrelationProperty::not_equal(Self, Self) -> Bool
 pub fn CorrelationProperty::to_repr(Self) -> @debug.Repr
 pub fn CorrelationProperty::type_(Self) -> Field[Reference]
 
+#derive(Eq, @debug.Debug)
 pub struct CorrelationPropertyBinding {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CorrelationPropertyBinding::correlation_property_ref(Self) -> Field[Reference]
 pub fn CorrelationPropertyBinding::data_path(Self) -> Field[FormalExpression]
 pub fn CorrelationPropertyBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -906,9 +958,10 @@ pub fn CorrelationPropertyBinding::new(id? : String, correlation_property_ref? :
 pub fn CorrelationPropertyBinding::not_equal(Self, Self) -> Bool
 pub fn CorrelationPropertyBinding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CorrelationPropertyRetrievalExpression {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CorrelationPropertyRetrievalExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn CorrelationPropertyRetrievalExpression::equal(Self, Self) -> Bool
 pub fn CorrelationPropertyRetrievalExpression::extension_elements(Self) -> Field[ExtensionElements]
@@ -920,9 +973,10 @@ pub fn CorrelationPropertyRetrievalExpression::new(id? : String, message_ref? : 
 pub fn CorrelationPropertyRetrievalExpression::not_equal(Self, Self) -> Bool
 pub fn CorrelationPropertyRetrievalExpression::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct CorrelationSubscription {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn CorrelationSubscription::correlation_key_ref(Self) -> Field[Reference]
 pub fn CorrelationSubscription::correlation_property_binding(Self) -> Field[ReadOnlyArray[CorrelationPropertyBinding]]
 pub fn CorrelationSubscription::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -934,19 +988,21 @@ pub fn CorrelationSubscription::new(id? : String, correlation_key_ref? : Referen
 pub fn CorrelationSubscription::not_equal(Self, Self) -> Bool
 pub fn CorrelationSubscription::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Cst {
   tokens : ReadOnlyArray[Token]
   nodes : ReadOnlyArray[XmlNode]
   complete : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Cst::equal(Self, Self) -> Bool
 pub fn Cst::not_equal(Self, Self) -> Bool
 pub fn Cst::text(Self) -> String
 pub fn Cst::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
 pub fn DataAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataAssociation::equal(Self, Self) -> Bool
@@ -960,9 +1016,10 @@ pub fn DataAssociation::target_ref(Self) -> Field[Reference]
 pub fn DataAssociation::to_repr(Self) -> @debug.Repr
 pub fn DataAssociation::transformation(Self) -> Field[FormalExpression]
 
+#derive(Eq, @debug.Debug)
 pub struct DataInput {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataInput::data_state(Self) -> Field[DataState]
 pub fn DataInput::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataInput::equal(Self, Self) -> Bool
@@ -976,9 +1033,10 @@ pub fn DataInput::new(id? : String, name? : String, item_subject_ref? : Referenc
 pub fn DataInput::not_equal(Self, Self) -> Bool
 pub fn DataInput::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataInputAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataInputAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
 pub fn DataInputAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataInputAssociation::equal(Self, Self) -> Bool
@@ -992,9 +1050,10 @@ pub fn DataInputAssociation::target_ref(Self) -> Field[Reference]
 pub fn DataInputAssociation::to_repr(Self) -> @debug.Repr
 pub fn DataInputAssociation::transformation(Self) -> Field[FormalExpression]
 
+#derive(Eq, @debug.Debug)
 pub struct DataObject {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataObject::auditing(Self) -> Field[Auditing]
 pub fn DataObject::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn DataObject::data_state(Self) -> Field[DataState]
@@ -1011,9 +1070,10 @@ pub fn DataObject::new(id? : String, name? : String, item_subject_ref? : Referen
 pub fn DataObject::not_equal(Self, Self) -> Bool
 pub fn DataObject::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataObjectReference {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataObjectReference::auditing(Self) -> Field[Auditing]
 pub fn DataObjectReference::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn DataObjectReference::data_object_ref(Self) -> Field[Reference]
@@ -1030,9 +1090,10 @@ pub fn DataObjectReference::new(id? : String, name? : String, item_subject_ref? 
 pub fn DataObjectReference::not_equal(Self, Self) -> Bool
 pub fn DataObjectReference::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataOutput {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataOutput::data_state(Self) -> Field[DataState]
 pub fn DataOutput::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataOutput::equal(Self, Self) -> Bool
@@ -1046,9 +1107,10 @@ pub fn DataOutput::new(id? : String, name? : String, item_subject_ref? : Referen
 pub fn DataOutput::not_equal(Self, Self) -> Bool
 pub fn DataOutput::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataOutputAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataOutputAssociation::assignment(Self) -> Field[ReadOnlyArray[Assignment]]
 pub fn DataOutputAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataOutputAssociation::equal(Self, Self) -> Bool
@@ -1062,9 +1124,10 @@ pub fn DataOutputAssociation::target_ref(Self) -> Field[Reference]
 pub fn DataOutputAssociation::to_repr(Self) -> @debug.Repr
 pub fn DataOutputAssociation::transformation(Self) -> Field[FormalExpression]
 
+#derive(Eq, @debug.Debug)
 pub struct DataState {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataState::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn DataState::equal(Self, Self) -> Bool
 pub fn DataState::extension_elements(Self) -> Field[ExtensionElements]
@@ -1075,9 +1138,10 @@ pub fn DataState::new(id? : String, name? : String, contents? : ArrayView[Conten
 pub fn DataState::not_equal(Self, Self) -> Bool
 pub fn DataState::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataStore {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataStore::capacity(Self) -> Field[ExactInteger]
 pub fn DataStore::data_state(Self) -> Field[DataState]
 pub fn DataStore::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1092,9 +1156,10 @@ pub fn DataStore::new(id? : String, name? : String, capacity? : ExactInteger, is
 pub fn DataStore::not_equal(Self, Self) -> Bool
 pub fn DataStore::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DataStoreReference {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DataStoreReference::auditing(Self) -> Field[Auditing]
 pub fn DataStoreReference::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn DataStoreReference::data_state(Self) -> Field[DataState]
@@ -1111,9 +1176,10 @@ pub fn DataStoreReference::new(id? : String, name? : String, item_subject_ref? :
 pub fn DataStoreReference::not_equal(Self, Self) -> Bool
 pub fn DataStoreReference::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DcBounds {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DcBounds::equal(Self, Self) -> Bool
 pub fn DcBounds::from_element(Element) -> Self?
 pub fn DcBounds::height(Self) -> Field[ExactNumber]
@@ -1124,9 +1190,10 @@ pub fn DcBounds::width(Self) -> Field[ExactNumber]
 pub fn DcBounds::x(Self) -> Field[ExactNumber]
 pub fn DcBounds::y(Self) -> Field[ExactNumber]
 
+#derive(Eq, @debug.Debug)
 pub struct DcFont {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DcFont::equal(Self, Self) -> Bool
 pub fn DcFont::from_element(Element) -> Self?
 pub fn DcFont::is_bold(Self) -> Field[Bool]
@@ -1139,9 +1206,10 @@ pub fn DcFont::not_equal(Self, Self) -> Bool
 pub fn DcFont::size(Self) -> Field[ExactNumber]
 pub fn DcFont::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DcPoint {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DcPoint::equal(Self, Self) -> Bool
 pub fn DcPoint::from_element(Element) -> Self?
 pub fn DcPoint::new(x? : ExactNumber, y? : ExactNumber, contents? : ArrayView[Content]) -> Self
@@ -1150,9 +1218,10 @@ pub fn DcPoint::to_repr(Self) -> @debug.Repr
 pub fn DcPoint::x(Self) -> Field[ExactNumber]
 pub fn DcPoint::y(Self) -> Field[ExactNumber]
 
+#derive(Eq, @debug.Debug)
 pub struct Definitions {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Definitions::document(Self) -> Document
 pub fn Definitions::equal(Self, Self) -> Bool
 pub fn Definitions::exporter(Self) -> Field[String]
@@ -1169,17 +1238,19 @@ pub fn Definitions::target_namespace(Self) -> Field[String]
 pub fn Definitions::to_repr(Self) -> @debug.Repr
 pub fn Definitions::type_language(Self) -> Field[String]
 
+#derive(Eq, @debug.Debug)
 pub struct DiAnonymousDiagramElementExtension1 {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiAnonymousDiagramElementExtension1::equal(Self, Self) -> Bool
 pub fn DiAnonymousDiagramElementExtension1::from_element(Element) -> Self?
 pub fn DiAnonymousDiagramElementExtension1::not_equal(Self, Self) -> Bool
 pub fn DiAnonymousDiagramElementExtension1::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiDiagram {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiDiagram::documentation(Self) -> Field[String]
 pub fn DiDiagram::equal(Self, Self) -> Bool
 pub fn DiDiagram::from_element(Element) -> Self?
@@ -1189,9 +1260,10 @@ pub fn DiDiagram::not_equal(Self, Self) -> Bool
 pub fn DiDiagram::resolution(Self) -> Field[ExactNumber]
 pub fn DiDiagram::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiDiagramElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiDiagramElement::equal(Self, Self) -> Bool
 pub fn DiDiagramElement::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
 pub fn DiDiagramElement::from_element(Element) -> Self?
@@ -1199,9 +1271,10 @@ pub fn DiDiagramElement::id(Self) -> Field[String]
 pub fn DiDiagramElement::not_equal(Self, Self) -> Bool
 pub fn DiDiagramElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiEdge {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiEdge::equal(Self, Self) -> Bool
 pub fn DiEdge::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
 pub fn DiEdge::from_element(Element) -> Self?
@@ -1210,9 +1283,10 @@ pub fn DiEdge::not_equal(Self, Self) -> Bool
 pub fn DiEdge::to_repr(Self) -> @debug.Repr
 pub fn DiEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
 
+#derive(Eq, @debug.Debug)
 pub struct DiLabel {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiLabel::bounds(Self) -> Field[DcBounds]
 pub fn DiLabel::equal(Self, Self) -> Bool
 pub fn DiLabel::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
@@ -1221,9 +1295,10 @@ pub fn DiLabel::id(Self) -> Field[String]
 pub fn DiLabel::not_equal(Self, Self) -> Bool
 pub fn DiLabel::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiLabeledEdge {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiLabeledEdge::equal(Self, Self) -> Bool
 pub fn DiLabeledEdge::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
 pub fn DiLabeledEdge::from_element(Element) -> Self?
@@ -1232,9 +1307,10 @@ pub fn DiLabeledEdge::not_equal(Self, Self) -> Bool
 pub fn DiLabeledEdge::to_repr(Self) -> @debug.Repr
 pub fn DiLabeledEdge::waypoint(Self) -> Field[ReadOnlyArray[DcPoint]]
 
+#derive(Eq, @debug.Debug)
 pub struct DiLabeledShape {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiLabeledShape::bounds(Self) -> Field[DcBounds]
 pub fn DiLabeledShape::equal(Self, Self) -> Bool
 pub fn DiLabeledShape::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
@@ -1243,9 +1319,10 @@ pub fn DiLabeledShape::id(Self) -> Field[String]
 pub fn DiLabeledShape::not_equal(Self, Self) -> Bool
 pub fn DiLabeledShape::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiNode {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiNode::equal(Self, Self) -> Bool
 pub fn DiNode::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
 pub fn DiNode::from_element(Element) -> Self?
@@ -1253,9 +1330,10 @@ pub fn DiNode::id(Self) -> Field[String]
 pub fn DiNode::not_equal(Self, Self) -> Bool
 pub fn DiNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiPlane {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiPlane::diagram_element(Self) -> Field[ReadOnlyArray[DiDiagramElement]]
 pub fn DiPlane::equal(Self, Self) -> Bool
 pub fn DiPlane::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
@@ -1264,9 +1342,10 @@ pub fn DiPlane::id(Self) -> Field[String]
 pub fn DiPlane::not_equal(Self, Self) -> Bool
 pub fn DiPlane::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiShape {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiShape::bounds(Self) -> Field[DcBounds]
 pub fn DiShape::equal(Self, Self) -> Bool
 pub fn DiShape::extension(Self) -> Field[DiAnonymousDiagramElementExtension1]
@@ -1275,32 +1354,35 @@ pub fn DiShape::id(Self) -> Field[String]
 pub fn DiShape::not_equal(Self, Self) -> Bool
 pub fn DiShape::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DiStyle {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn DiStyle::equal(Self, Self) -> Bool
 pub fn DiStyle::from_element(Element) -> Self?
 pub fn DiStyle::id(Self) -> Field[String]
 pub fn DiStyle::not_equal(Self, Self) -> Bool
 pub fn DiStyle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Diagnostic {
   code : String
   severity : Severity
   message : String
   span : Span?
   location : Location?
-} derive(Eq, @debug.Debug)
+}
 pub fn Diagnostic::equal(Self, Self) -> Bool
 pub fn Diagnostic::not_equal(Self, Self) -> Bool
 pub fn Diagnostic::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct Document {
   root : Element
   prolog : ReadOnlyArray[Content]
   epilog : ReadOnlyArray[Content]
   // private fields
-} derive(@debug.Debug)
+}
 pub fn Document::definitions(Self) -> Definitions?
 pub fn Document::equal(Self, Self) -> Bool
 pub fn Document::new(Element, prolog? : ArrayView[Content], epilog? : ArrayView[Content]) -> Self
@@ -1321,19 +1403,21 @@ pub fn DocumentGraph::route(Self, GraphEndpoint, GraphEndpoint, kinds? : ArrayVi
 pub fn DocumentGraph::to_repr(Self) -> @debug.Repr
 pub impl @debug.Debug for DocumentGraph
 
+#derive(@debug.Debug)
 pub struct DocumentIndex {
   document : Document
   nodes : ReadOnlyArray[IndexedElement]
   complete : Bool
   // private fields
-} derive(@debug.Debug)
+}
 pub fn DocumentIndex::lookup(Self, String) -> IdLookup
 pub fn DocumentIndex::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct DocumentResource {
   location : String
   document : Document
-} derive(Eq, @debug.Debug)
+}
 pub fn DocumentResource::equal(Self, Self) -> Bool
 pub fn DocumentResource::new(String, Document) -> Self
 pub fn DocumentResource::not_equal(Self, Self) -> Bool
@@ -1351,9 +1435,10 @@ pub fn DocumentTree::root(Self) -> NodeRef
 pub fn DocumentTree::to_repr(Self) -> @debug.Repr
 pub impl @debug.Debug for DocumentTree
 
+#derive(Eq, @debug.Debug)
 pub struct Documentation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Documentation::equal(Self, Self) -> Bool
 pub fn Documentation::from_element(Element) -> Self?
 pub fn Documentation::id(Self) -> Field[String]
@@ -1362,6 +1447,7 @@ pub fn Documentation::not_equal(Self, Self) -> Bool
 pub fn Documentation::text_format(Self) -> Field[String]
 pub fn Documentation::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct Element {
   kind : Kind
   attributes : ReadOnlyArray[(String, String)]
@@ -1374,7 +1460,7 @@ pub struct Element {
   text_value : Scalar?
   span : Span?
   // private fields
-} derive(@debug.Debug)
+}
 pub fn Element::attribute(Self, String) -> String?
 pub fn Element::boolean(Self, String) -> Field[Bool]
 pub fn Element::enumeration(Self, String) -> Field[BpmnEnum]
@@ -1397,9 +1483,10 @@ pub fn Element::with_kind(Self, Kind) -> Self
 pub fn Element::xml(Self) -> XmlElement?
 pub impl Eq for Element
 
+#derive(Eq, @debug.Debug)
 pub struct EndEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn EndEvent::auditing(Self) -> Field[Auditing]
 pub fn EndEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn EndEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
@@ -1421,9 +1508,10 @@ pub fn EndEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn EndEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn EndEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct EndPoint {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn EndPoint::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn EndPoint::equal(Self, Self) -> Bool
 pub fn EndPoint::extension_elements(Self) -> Field[ExtensionElements]
@@ -1433,9 +1521,10 @@ pub fn EndPoint::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn EndPoint::not_equal(Self, Self) -> Bool
 pub fn EndPoint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ErrorEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ErrorEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ErrorEventDefinition::equal(Self, Self) -> Bool
 pub fn ErrorEventDefinition::error_ref(Self) -> Field[Reference]
@@ -1446,9 +1535,10 @@ pub fn ErrorEventDefinition::new(id? : String, error_ref? : Reference, contents?
 pub fn ErrorEventDefinition::not_equal(Self, Self) -> Bool
 pub fn ErrorEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Escalation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Escalation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Escalation::equal(Self, Self) -> Bool
 pub fn Escalation::escalation_code(Self) -> Field[String]
@@ -1461,9 +1551,10 @@ pub fn Escalation::not_equal(Self, Self) -> Bool
 pub fn Escalation::structure_ref(Self) -> Field[Reference]
 pub fn Escalation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct EscalationEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn EscalationEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn EscalationEventDefinition::equal(Self, Self) -> Bool
 pub fn EscalationEventDefinition::escalation_ref(Self) -> Field[Reference]
@@ -1474,9 +1565,10 @@ pub fn EscalationEventDefinition::new(id? : String, escalation_ref? : Reference,
 pub fn EscalationEventDefinition::not_equal(Self, Self) -> Bool
 pub fn EscalationEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Event {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Event::auditing(Self) -> Field[Auditing]
 pub fn Event::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Event::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1492,9 +1584,10 @@ pub fn Event::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Event::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn Event::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct EventBasedGateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn EventBasedGateway::auditing(Self) -> Field[Auditing]
 pub fn EventBasedGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn EventBasedGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1513,19 +1606,21 @@ pub fn EventBasedGateway::not_equal(Self, Self) -> Bool
 pub fn EventBasedGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn EventBasedGateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EventBasedGatewayType {
   Exclusive
   Parallel
-} derive(Eq, @debug.Debug)
+}
 pub fn EventBasedGatewayType::equal(Self, Self) -> Bool
 pub fn EventBasedGatewayType::not_equal(Self, Self) -> Bool
 pub fn EventBasedGatewayType::parse(String) -> Self?
 pub fn EventBasedGatewayType::to_repr(Self) -> @debug.Repr
 pub fn EventBasedGatewayType::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct EventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn EventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn EventDefinition::equal(Self, Self) -> Bool
 pub fn EventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -1544,26 +1639,29 @@ pub fn EventReader::skip_children(Self) -> Unit
 pub fn EventReader::stop(Self) -> Unit
 pub impl EventSource for EventReader
 
+#derive(Eq, @debug.Debug)
 pub struct ExactInteger {
   token : String
-} derive(Eq, @debug.Debug)
+}
 pub fn ExactInteger::equal(Self, Self) -> Bool
 pub fn ExactInteger::not_equal(Self, Self) -> Bool
 pub fn ExactInteger::parse(String) -> Self?
 pub fn ExactInteger::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExactNumber {
   token : String
-} derive(Eq, @debug.Debug)
+}
 pub fn ExactNumber::equal(Self, Self) -> Bool
 pub fn ExactNumber::is_finite(Self) -> Bool
 pub fn ExactNumber::not_equal(Self, Self) -> Bool
 pub fn ExactNumber::parse(String) -> Self?
 pub fn ExactNumber::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExclusiveGateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ExclusiveGateway::auditing(Self) -> Field[Auditing]
 pub fn ExclusiveGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ExclusiveGateway::default_(Self) -> Field[Reference]
@@ -1581,18 +1679,20 @@ pub fn ExclusiveGateway::not_equal(Self, Self) -> Bool
 pub fn ExclusiveGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ExclusiveGateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExpandedName {
   namespace_uri : String
   local_name : String
-} derive(Eq, @debug.Debug)
+}
 pub fn ExpandedName::equal(Self, Self) -> Bool
 pub fn ExpandedName::new(String, String) -> Self
 pub fn ExpandedName::not_equal(Self, Self) -> Bool
 pub fn ExpandedName::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Expression {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Expression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Expression::equal(Self, Self) -> Bool
 pub fn Expression::extension_elements(Self) -> Field[ExtensionElements]
@@ -1602,9 +1702,10 @@ pub fn Expression::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn Expression::not_equal(Self, Self) -> Bool
 pub fn Expression::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Extension {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Extension::definition(Self) -> Field[Reference]
 pub fn Extension::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Extension::equal(Self, Self) -> Bool
@@ -1614,47 +1715,52 @@ pub fn Extension::new(definition? : Reference, must_understand? : Bool, contents
 pub fn Extension::not_equal(Self, Self) -> Bool
 pub fn Extension::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExtensionElements {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ExtensionElements::equal(Self, Self) -> Bool
 pub fn ExtensionElements::from_element(Element) -> Self?
 pub fn ExtensionElements::new(contents? : ArrayView[Content]) -> Self
 pub fn ExtensionElements::not_equal(Self, Self) -> Bool
 pub fn ExtensionElements::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExternalNode {
   symbol : ResolvedSymbol
   occurrence : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ExternalNode::equal(Self, Self) -> Bool
 pub fn ExternalNode::not_equal(Self, Self) -> Bool
 pub fn ExternalNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ExternalResource {
   location : String
   namespace_uri : String
   import_type : String
   symbols : ReadOnlyArray[String]
-} derive(Eq, @debug.Debug)
+}
 pub fn ExternalResource::equal(Self, Self) -> Bool
 pub fn ExternalResource::new(String, String, String, ArrayView[String]) -> Self
 pub fn ExternalResource::not_equal(Self, Self) -> Bool
 pub fn ExternalResource::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Field[T] {
   Absent
   Present(T)
   InvalidValue(Scalar)
-} derive(Eq, @debug.Debug)
+}
 pub fn[T : Eq] Field::equal(Self[T], Self[T]) -> Bool
 pub fn[T : Eq] Field::not_equal(Self[T], Self[T]) -> Bool
 pub fn[T : @debug.Debug] Field::to_repr(Self[T]) -> @debug.Repr
 pub fn[T] Field::value(Self[T]) -> T?
 
+#derive(Eq, @debug.Debug)
 pub struct FlowElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn FlowElement::auditing(Self) -> Field[Auditing]
 pub fn FlowElement::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn FlowElement::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1667,9 +1773,10 @@ pub fn FlowElement::name(Self) -> Field[String]
 pub fn FlowElement::not_equal(Self, Self) -> Bool
 pub fn FlowElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct FlowNode {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn FlowNode::auditing(Self) -> Field[Auditing]
 pub fn FlowNode::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn FlowNode::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1684,9 +1791,10 @@ pub fn FlowNode::not_equal(Self, Self) -> Bool
 pub fn FlowNode::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn FlowNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct FormalExpression {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn FormalExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn FormalExpression::equal(Self, Self) -> Bool
 pub fn FormalExpression::evaluates_to_type_ref(Self) -> Field[Reference]
@@ -1698,9 +1806,10 @@ pub fn FormalExpression::new(id? : String, language? : String, evaluates_to_type
 pub fn FormalExpression::not_equal(Self, Self) -> Bool
 pub fn FormalExpression::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Gateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Gateway::auditing(Self) -> Field[Auditing]
 pub fn Gateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Gateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -1717,21 +1826,23 @@ pub fn Gateway::not_equal(Self, Self) -> Bool
 pub fn Gateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Gateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GatewayDirection {
   Unspecified
   Converging
   Diverging
   Mixed
-} derive(Eq, @debug.Debug)
+}
 pub fn GatewayDirection::equal(Self, Self) -> Bool
 pub fn GatewayDirection::not_equal(Self, Self) -> Bool
 pub fn GatewayDirection::parse(String) -> Self?
 pub fn GatewayDirection::to_repr(Self) -> @debug.Repr
 pub fn GatewayDirection::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalBusinessRuleTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalBusinessRuleTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn GlobalBusinessRuleTask::equal(Self, Self) -> Bool
 pub fn GlobalBusinessRuleTask::extension_elements(Self) -> Field[ExtensionElements]
@@ -1747,9 +1858,10 @@ pub fn GlobalBusinessRuleTask::resource_role(Self) -> Field[ReadOnlyArray[Resour
 pub fn GlobalBusinessRuleTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalBusinessRuleTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalChoreographyTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalChoreographyTask::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn GlobalChoreographyTask::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalChoreographyTask::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
@@ -1773,9 +1885,10 @@ pub fn GlobalChoreographyTask::participant(Self) -> Field[ReadOnlyArray[Particip
 pub fn GlobalChoreographyTask::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
 pub fn GlobalChoreographyTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalConversation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalConversation::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn GlobalConversation::choreography_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalConversation::conversation_association(Self) -> Field[ReadOnlyArray[ConversationAssociation]]
@@ -1797,9 +1910,10 @@ pub fn GlobalConversation::participant(Self) -> Field[ReadOnlyArray[Participant]
 pub fn GlobalConversation::participant_association(Self) -> Field[ReadOnlyArray[ParticipantAssociation]]
 pub fn GlobalConversation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalManualTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalManualTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn GlobalManualTask::equal(Self, Self) -> Bool
 pub fn GlobalManualTask::extension_elements(Self) -> Field[ExtensionElements]
@@ -1814,9 +1928,10 @@ pub fn GlobalManualTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole
 pub fn GlobalManualTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalManualTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalScriptTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalScriptTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn GlobalScriptTask::equal(Self, Self) -> Bool
 pub fn GlobalScriptTask::extension_elements(Self) -> Field[ExtensionElements]
@@ -1833,9 +1948,10 @@ pub fn GlobalScriptTask::script_language(Self) -> Field[String]
 pub fn GlobalScriptTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalScriptTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn GlobalTask::equal(Self, Self) -> Bool
 pub fn GlobalTask::extension_elements(Self) -> Field[ExtensionElements]
@@ -1850,9 +1966,10 @@ pub fn GlobalTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn GlobalTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GlobalUserTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn GlobalUserTask::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn GlobalUserTask::equal(Self, Self) -> Bool
 pub fn GlobalUserTask::extension_elements(Self) -> Field[ExtensionElements]
@@ -1869,31 +1986,35 @@ pub fn GlobalUserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn GlobalUserTask::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn GlobalUserTask::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct GraphBuildResult {
   graph : DocumentGraph?
   diagnostics : ReadOnlyArray[Diagnostic]
-} derive(@debug.Debug)
+}
 pub fn GraphBuildResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphDirection {
   Forward
   Reverse
   Both
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphDirection::equal(Self, Self) -> Bool
 pub fn GraphDirection::not_equal(Self, Self) -> Bool
 pub fn GraphDirection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GraphEdge {
   kind : GraphEdgeKind
   source : GraphNode
   target : GraphNode
   connection : NodeRef?
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphEdge::equal(Self, Self) -> Bool
 pub fn GraphEdge::not_equal(Self, Self) -> Bool
 pub fn GraphEdge::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphEdgeKind {
   Containment
   SequenceFlow
@@ -1902,21 +2023,23 @@ pub(all) enum GraphEdgeKind {
   DataAssociation
   ConversationLink
   Reference
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphEdgeKind::equal(Self, Self) -> Bool
 pub fn GraphEdgeKind::not_equal(Self, Self) -> Bool
 pub fn GraphEdgeKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphEndpoint {
   Node(NodeHandle)
   Id(String)
   Qualified(ExpandedName)
   Symbol(ResolvedSymbol)
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphEndpoint::equal(Self, Self) -> Bool
 pub fn GraphEndpoint::not_equal(Self, Self) -> Bool
 pub fn GraphEndpoint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphFailure {
   InvalidEndpoint
   DocumentMismatch
@@ -1924,52 +2047,57 @@ pub(all) enum GraphFailure {
   Ambiguous(ReadOnlyArray[GraphNode])
   Limit(GraphLimit)
   InvalidLimits
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphFailure::equal(Self, Self) -> Bool
 pub fn GraphFailure::not_equal(Self, Self) -> Bool
 pub fn GraphFailure::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphLimit {
   Nodes
   Edges
   Results
   Work
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphLimit::equal(Self, Self) -> Bool
 pub fn GraphLimit::not_equal(Self, Self) -> Bool
 pub fn GraphLimit::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GraphLimits {
   nodes : Int32
   edges : Int32
   results : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphLimits::equal(Self, Self) -> Bool
 pub fn GraphLimits::new(nodes? : Int32, edges? : Int32, results? : Int32, work? : Int32) -> Self
 pub fn GraphLimits::not_equal(Self, Self) -> Bool
 pub fn GraphLimits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GraphNode {
   Document(NodeRef)
   External(ExternalNode)
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphNode::equal(Self, Self) -> Bool
 pub fn GraphNode::id(Self) -> String?
 pub fn GraphNode::not_equal(Self, Self) -> Bool
 pub fn GraphNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct GraphRoute {
   nodes : ReadOnlyArray[GraphNode]
   edges : ReadOnlyArray[GraphEdge]
-} derive(Eq, @debug.Debug)
+}
 pub fn GraphRoute::equal(Self, Self) -> Bool
 pub fn GraphRoute::not_equal(Self, Self) -> Bool
 pub fn GraphRoute::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Group {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Group::category_value_ref(Self) -> Field[Reference]
 pub fn Group::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Group::equal(Self, Self) -> Bool
@@ -1980,9 +2108,10 @@ pub fn Group::new(id? : String, category_value_ref? : Reference, contents? : Arr
 pub fn Group::not_equal(Self, Self) -> Bool
 pub fn Group::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct HumanPerformer {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn HumanPerformer::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn HumanPerformer::equal(Self, Self) -> Bool
 pub fn HumanPerformer::extension_elements(Self) -> Field[ExtensionElements]
@@ -1996,30 +2125,33 @@ pub fn HumanPerformer::resource_parameter_binding(Self) -> Field[ReadOnlyArray[R
 pub fn HumanPerformer::resource_ref(Self) -> Field[Reference]
 pub fn HumanPerformer::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum IdLookup {
   Found(IndexedElement)
   Ambiguous(ReadOnlyArray[IndexedElement])
   Missing
   Incomplete
-} derive(Eq, @debug.Debug)
+}
 pub fn IdLookup::equal(Self, Self) -> Bool
 pub fn IdLookup::not_equal(Self, Self) -> Bool
 pub fn IdLookup::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Implementation {
   Unspecified
   WebService
   Uri(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Implementation::equal(Self, Self) -> Bool
 pub fn Implementation::not_equal(Self, Self) -> Bool
 pub fn Implementation::parse(String) -> Self?
 pub fn Implementation::to_repr(Self) -> @debug.Repr
 pub fn Implementation::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct ImplicitThrowEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ImplicitThrowEvent::auditing(Self) -> Field[Auditing]
 pub fn ImplicitThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ImplicitThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
@@ -2041,9 +2173,10 @@ pub fn ImplicitThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ImplicitThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn ImplicitThrowEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Import {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Import::equal(Self, Self) -> Bool
 pub fn Import::from_element(Element) -> Self?
 pub fn Import::import_type(Self) -> Field[String]
@@ -2053,9 +2186,10 @@ pub fn Import::new(String, String, String) -> Self
 pub fn Import::not_equal(Self, Self) -> Bool
 pub fn Import::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct InclusiveGateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn InclusiveGateway::auditing(Self) -> Field[Auditing]
 pub fn InclusiveGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn InclusiveGateway::default_(Self) -> Field[Reference]
@@ -2073,6 +2207,7 @@ pub fn InclusiveGateway::not_equal(Self, Self) -> Bool
 pub fn InclusiveGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn InclusiveGateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct IndexedElement {
   ordinal : Int32
   element : Element
@@ -2082,21 +2217,23 @@ pub struct IndexedElement {
   depth : Int32
   scope : Int32?
   payload : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn IndexedElement::equal(Self, Self) -> Bool
 pub fn IndexedElement::not_equal(Self, Self) -> Bool
 pub fn IndexedElement::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct IndexedResource {
   resource_id : String?
   index : DocumentIndex
   records : Int32
-} derive(@debug.Debug)
+}
 pub fn IndexedResource::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct InputOutputBinding {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn InputOutputBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn InputOutputBinding::equal(Self, Self) -> Bool
 pub fn InputOutputBinding::extension_elements(Self) -> Field[ExtensionElements]
@@ -2109,9 +2246,10 @@ pub fn InputOutputBinding::operation_ref(Self) -> Field[Reference]
 pub fn InputOutputBinding::output_data_ref(Self) -> Field[Reference]
 pub fn InputOutputBinding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct InputOutputSpecification {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn InputOutputSpecification::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
 pub fn InputOutputSpecification::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
 pub fn InputOutputSpecification::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -2125,9 +2263,10 @@ pub fn InputOutputSpecification::not_equal(Self, Self) -> Bool
 pub fn InputOutputSpecification::output_set(Self) -> Field[ReadOnlyArray[OutputSet]]
 pub fn InputOutputSpecification::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct InputSet {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn InputSet::data_input_refs(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn InputSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn InputSet::equal(Self, Self) -> Bool
@@ -2142,9 +2281,10 @@ pub fn InputSet::output_set_refs(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn InputSet::to_repr(Self) -> @debug.Repr
 pub fn InputSet::while_executing_input_refs(Self) -> Field[ReadOnlyArray[Reference]]
 
+#derive(Eq, @debug.Debug)
 pub struct Interface {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Interface::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Interface::equal(Self, Self) -> Bool
 pub fn Interface::extension_elements(Self) -> Field[ExtensionElements]
@@ -2157,9 +2297,10 @@ pub fn Interface::not_equal(Self, Self) -> Bool
 pub fn Interface::operation(Self) -> Field[ReadOnlyArray[Operation]]
 pub fn Interface::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct IntermediateCatchEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn IntermediateCatchEvent::auditing(Self) -> Field[Auditing]
 pub fn IntermediateCatchEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn IntermediateCatchEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
@@ -2182,9 +2323,10 @@ pub fn IntermediateCatchEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn IntermediateCatchEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn IntermediateCatchEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct IntermediateThrowEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn IntermediateThrowEvent::auditing(Self) -> Field[Auditing]
 pub fn IntermediateThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn IntermediateThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
@@ -2206,9 +2348,10 @@ pub fn IntermediateThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn IntermediateThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn IntermediateThrowEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ItemDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ItemDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ItemDefinition::equal(Self, Self) -> Bool
 pub fn ItemDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -2221,16 +2364,18 @@ pub fn ItemDefinition::not_equal(Self, Self) -> Bool
 pub fn ItemDefinition::structure_ref(Self) -> Field[Reference]
 pub fn ItemDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ItemKind {
   Information
   Physical
-} derive(Eq, @debug.Debug)
+}
 pub fn ItemKind::equal(Self, Self) -> Bool
 pub fn ItemKind::not_equal(Self, Self) -> Bool
 pub fn ItemKind::parse(String) -> Self?
 pub fn ItemKind::to_repr(Self) -> @debug.Repr
 pub fn ItemKind::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   DcFont
   DiEdge
@@ -2442,7 +2587,7 @@ pub(all) enum Kind {
   CorrelationPropertyRetrievalExpression
   Foreign(ExpandedName)
   Unknown(ExpandedName)
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::declared_type(Self) -> ExpandedName?
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::local_name(Self) -> String
@@ -2452,9 +2597,10 @@ pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::substitutes(Self, ExpandedName) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Lane {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Lane::child_lane_set(Self) -> Field[LaneSet]
 pub fn Lane::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Lane::equal(Self, Self) -> Bool
@@ -2469,9 +2615,10 @@ pub fn Lane::partition_element(Self) -> Field[BaseElement]
 pub fn Lane::partition_element_ref(Self) -> Field[Reference]
 pub fn Lane::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct LaneSet {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn LaneSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn LaneSet::equal(Self, Self) -> Bool
 pub fn LaneSet::extension_elements(Self) -> Field[ExtensionElements]
@@ -2483,6 +2630,7 @@ pub fn LaneSet::new(id? : String, name? : String, contents? : ArrayView[Content]
 pub fn LaneSet::not_equal(Self, Self) -> Bool
 pub fn LaneSet::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   source_units : Int32
   output_units : Int32
@@ -2490,15 +2638,16 @@ pub struct Limits {
   depth : Int32
   token_units : Int32
   diagnostics : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(source_units? : Int32, output_units? : Int32, nodes? : Int32, depth? : Int32, token_units? : Int32, diagnostics? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct LinkEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn LinkEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn LinkEventDefinition::equal(Self, Self) -> Bool
 pub fn LinkEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -2511,18 +2660,20 @@ pub fn LinkEventDefinition::source(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn LinkEventDefinition::target(Self) -> Field[Reference]
 pub fn LinkEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Location {
   source_id : String?
   start : Position
   end : Position
-} derive(Eq, @debug.Debug)
+}
 pub fn Location::equal(Self, Self) -> Bool
 pub fn Location::not_equal(Self, Self) -> Bool
 pub fn Location::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct LoopCharacteristics {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn LoopCharacteristics::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn LoopCharacteristics::equal(Self, Self) -> Bool
 pub fn LoopCharacteristics::extension_elements(Self) -> Field[ExtensionElements]
@@ -2531,9 +2682,10 @@ pub fn LoopCharacteristics::id(Self) -> Field[String]
 pub fn LoopCharacteristics::not_equal(Self, Self) -> Bool
 pub fn LoopCharacteristics::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ManualTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ManualTask::auditing(Self) -> Field[Auditing]
 pub fn ManualTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ManualTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -2559,9 +2711,10 @@ pub fn ManualTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn ManualTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn ManualTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Message {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Message::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Message::equal(Self, Self) -> Bool
 pub fn Message::extension_elements(Self) -> Field[ExtensionElements]
@@ -2573,9 +2726,10 @@ pub fn Message::new(id? : String, name? : String, item_ref? : Reference, content
 pub fn Message::not_equal(Self, Self) -> Bool
 pub fn Message::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct MessageEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn MessageEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn MessageEventDefinition::equal(Self, Self) -> Bool
 pub fn MessageEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -2587,9 +2741,10 @@ pub fn MessageEventDefinition::not_equal(Self, Self) -> Bool
 pub fn MessageEventDefinition::operation_ref(Self) -> Field[Reference]
 pub fn MessageEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct MessageFlow {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn MessageFlow::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn MessageFlow::equal(Self, Self) -> Bool
 pub fn MessageFlow::extension_elements(Self) -> Field[ExtensionElements]
@@ -2603,9 +2758,10 @@ pub fn MessageFlow::source_ref(Self) -> Field[Reference]
 pub fn MessageFlow::target_ref(Self) -> Field[Reference]
 pub fn MessageFlow::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct MessageFlowAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn MessageFlowAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn MessageFlowAssociation::equal(Self, Self) -> Bool
 pub fn MessageFlowAssociation::extension_elements(Self) -> Field[ExtensionElements]
@@ -2617,9 +2773,10 @@ pub fn MessageFlowAssociation::not_equal(Self, Self) -> Bool
 pub fn MessageFlowAssociation::outer_message_flow_ref(Self) -> Field[Reference]
 pub fn MessageFlowAssociation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Monitoring {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Monitoring::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Monitoring::equal(Self, Self) -> Bool
 pub fn Monitoring::extension_elements(Self) -> Field[ExtensionElements]
@@ -2629,21 +2786,23 @@ pub fn Monitoring::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn Monitoring::not_equal(Self, Self) -> Bool
 pub fn Monitoring::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum MultiInstanceFlowCondition {
   None
   One
   All
   Complex
-} derive(Eq, @debug.Debug)
+}
 pub fn MultiInstanceFlowCondition::equal(Self, Self) -> Bool
 pub fn MultiInstanceFlowCondition::not_equal(Self, Self) -> Bool
 pub fn MultiInstanceFlowCondition::parse(String) -> Self?
 pub fn MultiInstanceFlowCondition::to_repr(Self) -> @debug.Repr
 pub fn MultiInstanceFlowCondition::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct MultiInstanceLoopCharacteristics {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn MultiInstanceLoopCharacteristics::behavior(Self) -> Field[MultiInstanceFlowCondition]
 pub fn MultiInstanceLoopCharacteristics::completion_condition(Self) -> Field[Expression]
 pub fn MultiInstanceLoopCharacteristics::complex_behavior_definition(Self) -> Field[ReadOnlyArray[ComplexBehaviorDefinition]]
@@ -2664,6 +2823,7 @@ pub fn MultiInstanceLoopCharacteristics::one_behavior_event_ref(Self) -> Field[R
 pub fn MultiInstanceLoopCharacteristics::output_data_item(Self) -> Field[DataOutput]
 pub fn MultiInstanceLoopCharacteristics::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeCategory {
   Document
   Definitions
@@ -2685,16 +2845,17 @@ pub(all) enum NodeCategory {
   Text
   Comment
   ProcessingInstruction
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeCategory::equal(Self, Self) -> Bool
 pub fn NodeCategory::not_equal(Self, Self) -> Bool
 pub fn NodeCategory::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct NodeField {
   field : PathField
   attributes : ReadOnlyArray[Attribute]
   children : ReadOnlyArray[NodeRef]
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeField::equal(Self, Self) -> Bool
 pub fn NodeField::not_equal(Self, Self) -> Bool
 pub fn NodeField::to_repr(Self) -> @debug.Repr
@@ -2710,11 +2871,12 @@ pub fn NodeHandle::to_repr(Self) -> @debug.Repr
 pub impl Eq for NodeHandle
 pub impl @debug.Debug for NodeHandle
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeLookup {
   Found(NodeRef)
   DocumentMismatch
   InvalidHandle
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeLookup::equal(Self, Self) -> Bool
 pub fn NodeLookup::not_equal(Self, Self) -> Bool
 pub fn NodeLookup::to_repr(Self) -> @debug.Repr
@@ -2758,20 +2920,22 @@ pub fn NodeRef::value(Self) -> NodeValue
 pub impl Eq for NodeRef
 pub impl @debug.Debug for NodeRef
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeValue {
   Document
   Element(Element)
   Text(String)
   Comment(String)
   ProcessingInstruction(target~ : String, data~ : String)
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeValue::equal(Self, Self) -> Bool
 pub fn NodeValue::not_equal(Self, Self) -> Bool
 pub fn NodeValue::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Operation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Operation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Operation::equal(Self, Self) -> Bool
 pub fn Operation::error_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -2786,9 +2950,10 @@ pub fn Operation::not_equal(Self, Self) -> Bool
 pub fn Operation::out_message_ref(Self) -> Field[Reference]
 pub fn Operation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct OutputSet {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn OutputSet::data_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn OutputSet::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn OutputSet::equal(Self, Self) -> Bool
@@ -2803,9 +2968,10 @@ pub fn OutputSet::optional_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn OutputSet::to_repr(Self) -> @debug.Repr
 pub fn OutputSet::while_executing_output_refs(Self) -> Field[ReadOnlyArray[Reference]]
 
+#derive(Eq, @debug.Debug)
 pub struct ParallelGateway {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ParallelGateway::auditing(Self) -> Field[Auditing]
 pub fn ParallelGateway::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ParallelGateway::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -2822,9 +2988,10 @@ pub fn ParallelGateway::not_equal(Self, Self) -> Bool
 pub fn ParallelGateway::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ParallelGateway::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Participant {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Participant::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Participant::end_point_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Participant::equal(Self, Self) -> Bool
@@ -2839,9 +3006,10 @@ pub fn Participant::participant_multiplicity(Self) -> Field[ParticipantMultiplic
 pub fn Participant::process_ref(Self) -> Field[Reference]
 pub fn Participant::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ParticipantAssociation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ParticipantAssociation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ParticipantAssociation::equal(Self, Self) -> Bool
 pub fn ParticipantAssociation::extension_elements(Self) -> Field[ExtensionElements]
@@ -2853,9 +3021,10 @@ pub fn ParticipantAssociation::not_equal(Self, Self) -> Bool
 pub fn ParticipantAssociation::outer_participant_ref(Self) -> Field[Reference]
 pub fn ParticipantAssociation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ParticipantMultiplicity {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ParticipantMultiplicity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ParticipantMultiplicity::equal(Self, Self) -> Bool
 pub fn ParticipantMultiplicity::extension_elements(Self) -> Field[ExtensionElements]
@@ -2867,9 +3036,10 @@ pub fn ParticipantMultiplicity::new(id? : String, minimum? : ExactInteger, maxim
 pub fn ParticipantMultiplicity::not_equal(Self, Self) -> Bool
 pub fn ParticipantMultiplicity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PartnerEntity {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn PartnerEntity::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn PartnerEntity::equal(Self, Self) -> Bool
 pub fn PartnerEntity::extension_elements(Self) -> Field[ExtensionElements]
@@ -2881,9 +3051,10 @@ pub fn PartnerEntity::not_equal(Self, Self) -> Bool
 pub fn PartnerEntity::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn PartnerEntity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PartnerRole {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn PartnerRole::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn PartnerRole::equal(Self, Self) -> Bool
 pub fn PartnerRole::extension_elements(Self) -> Field[ExtensionElements]
@@ -2895,6 +3066,7 @@ pub fn PartnerRole::not_equal(Self, Self) -> Bool
 pub fn PartnerRole::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn PartnerRole::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum PathField {
   Named(ExpandedName)
   Text
@@ -2903,23 +3075,25 @@ pub(all) enum PathField {
   Root
   Prolog
   Epilog
-} derive(Eq, @debug.Debug)
+}
 pub fn PathField::equal(Self, Self) -> Bool
 pub fn PathField::not_equal(Self, Self) -> Bool
 pub fn PathField::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PathStep {
   field : PathField
   index : Int32
   content_index : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn PathStep::equal(Self, Self) -> Bool
 pub fn PathStep::not_equal(Self, Self) -> Bool
 pub fn PathStep::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Performer {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Performer::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Performer::equal(Self, Self) -> Bool
 pub fn Performer::extension_elements(Self) -> Field[ExtensionElements]
@@ -2933,18 +3107,20 @@ pub fn Performer::resource_parameter_binding(Self) -> Field[ReadOnlyArray[Resour
 pub fn Performer::resource_ref(Self) -> Field[Reference]
 pub fn Performer::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Position {
   offset : Int32
   line : Int32
   column : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Position::equal(Self, Self) -> Bool
 pub fn Position::not_equal(Self, Self) -> Bool
 pub fn Position::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct PotentialOwner {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn PotentialOwner::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn PotentialOwner::equal(Self, Self) -> Bool
 pub fn PotentialOwner::extension_elements(Self) -> Field[ExtensionElements]
@@ -2958,9 +3134,10 @@ pub fn PotentialOwner::resource_parameter_binding(Self) -> Field[ReadOnlyArray[R
 pub fn PotentialOwner::resource_ref(Self) -> Field[Reference]
 pub fn PotentialOwner::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Process {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Process::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn Process::auditing(Self) -> Field[Auditing]
 pub fn Process::correlation_subscription(Self) -> Field[ReadOnlyArray[CorrelationSubscription]]
@@ -2987,20 +3164,22 @@ pub fn Process::supported_interface_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Process::supports(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Process::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ProcessType {
   None
   Public
   Private
-} derive(Eq, @debug.Debug)
+}
 pub fn ProcessType::equal(Self, Self) -> Bool
 pub fn ProcessType::not_equal(Self, Self) -> Bool
 pub fn ProcessType::parse(String) -> Self?
 pub fn ProcessType::to_repr(Self) -> @debug.Repr
 pub fn ProcessType::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct Property {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Property::data_state(Self) -> Field[DataState]
 pub fn Property::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Property::equal(Self, Self) -> Bool
@@ -3013,27 +3192,30 @@ pub fn Property::new(id? : String, name? : String, item_subject_ref? : Reference
 pub fn Property::not_equal(Self, Self) -> Bool
 pub fn Property::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ReachabilityResult {
   Complete(ReadOnlyArray[GraphNode])
   Failed(GraphFailure)
-} derive(Eq, @debug.Debug)
+}
 pub fn ReachabilityResult::equal(Self, Self) -> Bool
 pub fn ReachabilityResult::not_equal(Self, Self) -> Bool
 pub fn ReachabilityResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ReadResult {
   tree : Cst
   document : Document?
   source_map : SourceMap?
   diagnostics : ReadOnlyArray[Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn ReadResult::equal(Self, Self) -> Bool
 pub fn ReadResult::not_equal(Self, Self) -> Bool
 pub fn ReadResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ReceiveTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ReceiveTask::auditing(Self) -> Field[Auditing]
 pub fn ReceiveTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ReceiveTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -3063,11 +3245,12 @@ pub fn ReceiveTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn ReceiveTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn ReceiveTask::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct Reference {
   kind : ReferenceKind
   spelling : String
   name : ExpandedName?
-} derive(@debug.Debug)
+}
 pub fn Reference::equal(Self, Self) -> Bool
 pub fn Reference::new(ExpandedName, kind? : ReferenceKind) -> Self
 pub fn Reference::not_equal(Self, Self) -> Bool
@@ -3075,14 +3258,16 @@ pub fn Reference::parse(String, bindings? : ArrayView[(String, String)], kind? :
 pub fn Reference::to_repr(Self) -> @debug.Repr
 pub impl Eq for Reference
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ReferenceKind {
   Id
   QName
-} derive(Eq, @debug.Debug)
+}
 pub fn ReferenceKind::equal(Self, Self) -> Bool
 pub fn ReferenceKind::not_equal(Self, Self) -> Bool
 pub fn ReferenceKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ReferenceResolution {
   Found(ResolvedElement)
   External(ResolvedSymbol)
@@ -3090,32 +3275,35 @@ pub(all) enum ReferenceResolution {
   Unresolved
   Invalid
   Limit
-} derive(Eq, @debug.Debug)
+}
 pub fn ReferenceResolution::equal(Self, Self) -> Bool
 pub fn ReferenceResolution::not_equal(Self, Self) -> Bool
 pub fn ReferenceResolution::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct ReferenceResult {
   index : DocumentIndex
   references : ReadOnlyArray[ResolvedReference]
   findings : ReadOnlyArray[ValidationFinding]
   complete : Bool
   // private fields
-} derive(@debug.Debug)
+}
 pub fn ReferenceResult::indexed_resources(Self) -> ReadOnlyArray[IndexedResource]
 pub fn ReferenceResult::resolve(Self, Reference) -> ReferenceResolution
 pub fn ReferenceResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ReferenceRule {
   owner : TypeId
   field : ExpandedName
   kind : SchemaFieldKind
   target : ReferenceTarget
-} derive(Eq, @debug.Debug)
+}
 pub fn ReferenceRule::equal(Self, Self) -> Bool
 pub fn ReferenceRule::not_equal(Self, Self) -> Bool
 pub fn ReferenceRule::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ReferenceTarget {
   Bpmn(TypeId)
   AnyElement
@@ -3123,14 +3311,15 @@ pub(all) enum ReferenceTarget {
   ItemAwareElement
   Plane
   External
-} derive(Eq, @debug.Debug)
+}
 pub fn ReferenceTarget::equal(Self, Self) -> Bool
 pub fn ReferenceTarget::not_equal(Self, Self) -> Bool
 pub fn ReferenceTarget::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Relationship {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Relationship::direction(Self) -> Field[RelationshipDirection]
 pub fn Relationship::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Relationship::equal(Self, Self) -> Bool
@@ -3144,21 +3333,23 @@ pub fn Relationship::target(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Relationship::to_repr(Self) -> @debug.Repr
 pub fn Relationship::type_(Self) -> Field[String]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RelationshipDirection {
   None
   Forward
   Backward
   Both
-} derive(Eq, @debug.Debug)
+}
 pub fn RelationshipDirection::equal(Self, Self) -> Bool
 pub fn RelationshipDirection::not_equal(Self, Self) -> Bool
 pub fn RelationshipDirection::parse(String) -> Self?
 pub fn RelationshipDirection::to_repr(Self) -> @debug.Repr
 pub fn RelationshipDirection::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct Rendering {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Rendering::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Rendering::equal(Self, Self) -> Bool
 pub fn Rendering::extension_elements(Self) -> Field[ExtensionElements]
@@ -3168,37 +3359,41 @@ pub fn Rendering::new(id? : String, contents? : ArrayView[Content]) -> Self
 pub fn Rendering::not_equal(Self, Self) -> Bool
 pub fn Rendering::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResolvedElement {
   resource_id : String?
   node : IndexedElement
-} derive(Eq, @debug.Debug)
+}
 pub fn ResolvedElement::equal(Self, Self) -> Bool
 pub fn ResolvedElement::not_equal(Self, Self) -> Bool
 pub fn ResolvedElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResolvedReference {
   source : IndexedElement
   field : ExpandedName
   value : Reference
   target : ReferenceTarget
   resolution : ReferenceResolution
-} derive(Eq, @debug.Debug)
+}
 pub fn ResolvedReference::equal(Self, Self) -> Bool
 pub fn ResolvedReference::not_equal(Self, Self) -> Bool
 pub fn ResolvedReference::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResolvedSymbol {
   resource_id : String
   name : ExpandedName
-} derive(Eq, @debug.Debug)
+}
 pub fn ResolvedSymbol::equal(Self, Self) -> Bool
 pub fn ResolvedSymbol::new(String, ExpandedName) -> Self
 pub fn ResolvedSymbol::not_equal(Self, Self) -> Bool
 pub fn ResolvedSymbol::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Resource {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Resource::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Resource::equal(Self, Self) -> Bool
 pub fn Resource::extension_elements(Self) -> Field[ExtensionElements]
@@ -3210,9 +3405,10 @@ pub fn Resource::not_equal(Self, Self) -> Bool
 pub fn Resource::resource_parameter(Self) -> Field[ReadOnlyArray[ResourceParameter]]
 pub fn Resource::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResourceAssignmentExpression {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceAssignmentExpression::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ResourceAssignmentExpression::equal(Self, Self) -> Bool
 pub fn ResourceAssignmentExpression::expression(Self) -> Field[Expression]
@@ -3223,9 +3419,10 @@ pub fn ResourceAssignmentExpression::new(id? : String, contents? : ArrayView[Con
 pub fn ResourceAssignmentExpression::not_equal(Self, Self) -> Bool
 pub fn ResourceAssignmentExpression::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResourceParameter {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceParameter::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ResourceParameter::equal(Self, Self) -> Bool
 pub fn ResourceParameter::extension_elements(Self) -> Field[ExtensionElements]
@@ -3238,9 +3435,10 @@ pub fn ResourceParameter::not_equal(Self, Self) -> Bool
 pub fn ResourceParameter::to_repr(Self) -> @debug.Repr
 pub fn ResourceParameter::type_(Self) -> Field[Reference]
 
+#derive(Eq, @debug.Debug)
 pub struct ResourceParameterBinding {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceParameterBinding::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ResourceParameterBinding::equal(Self, Self) -> Bool
 pub fn ResourceParameterBinding::expression(Self) -> Field[Expression]
@@ -3252,9 +3450,10 @@ pub fn ResourceParameterBinding::not_equal(Self, Self) -> Bool
 pub fn ResourceParameterBinding::parameter_ref(Self) -> Field[Reference]
 pub fn ResourceParameterBinding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResourceRole {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceRole::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn ResourceRole::equal(Self, Self) -> Bool
 pub fn ResourceRole::extension_elements(Self) -> Field[ExtensionElements]
@@ -3268,33 +3467,37 @@ pub fn ResourceRole::resource_parameter_binding(Self) -> Field[ReadOnlyArray[Res
 pub fn ResourceRole::resource_ref(Self) -> Field[Reference]
 pub fn ResourceRole::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ResourceSet {
   documents : ReadOnlyArray[DocumentResource]
   external : ReadOnlyArray[ExternalResource]
-} derive(Eq, @debug.Debug)
+}
 pub fn ResourceSet::equal(Self, Self) -> Bool
 pub fn ResourceSet::new(documents? : ArrayView[DocumentResource], external? : ArrayView[ExternalResource]) -> Self
 pub fn ResourceSet::not_equal(Self, Self) -> Bool
 pub fn ResourceSet::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct RootElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn RootElement::base(Self) -> BaseElement
 pub fn RootElement::equal(Self, Self) -> Bool
 pub fn RootElement::from_element(Element) -> Self?
 pub fn RootElement::not_equal(Self, Self) -> Bool
 pub fn RootElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RouteResult {
   Found(GraphRoute)
   Unreachable
   Failed(GraphFailure)
-} derive(Eq, @debug.Debug)
+}
 pub fn RouteResult::equal(Self, Self) -> Bool
 pub fn RouteResult::not_equal(Self, Self) -> Bool
 pub fn RouteResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Scalar {
   Text(String)
   Identifier(String)
@@ -3305,22 +3508,24 @@ pub(all) enum Scalar {
   Reference(Reference)
   Enumeration(BpmnEnum)
   Invalid(raw~ : String, expected~ : ExpandedName)
-} derive(Eq, @debug.Debug)
+}
 pub fn Scalar::equal(Self, Self) -> Bool
 pub fn Scalar::not_equal(Self, Self) -> Bool
 pub fn Scalar::to_repr(Self) -> @debug.Repr
 pub fn Scalar::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub struct SchemaElement {
   name : ExpandedName
   value_type : ExpandedName?
   substitution_group : ExpandedName?
   abstract_element : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn SchemaElement::equal(Self, Self) -> Bool
 pub fn SchemaElement::not_equal(Self, Self) -> Bool
 pub fn SchemaElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SchemaField {
   owner : TypeId
   kind : SchemaFieldKind
@@ -3334,21 +3539,23 @@ pub struct SchemaField {
   group : String
   namespace_constraint : String
   source_path : String
-} derive(Eq, @debug.Debug)
+}
 pub fn SchemaField::equal(Self, Self) -> Bool
 pub fn SchemaField::not_equal(Self, Self) -> Bool
 pub fn SchemaField::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum SchemaFieldKind {
   Attribute
   Child
   AnyAttribute
   AnyChild
-} derive(Eq, @debug.Debug)
+}
 pub fn SchemaFieldKind::equal(Self, Self) -> Bool
 pub fn SchemaFieldKind::not_equal(Self, Self) -> Bool
 pub fn SchemaFieldKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SchemaGroup {
   owner : TypeId
   path : String
@@ -3356,11 +3563,12 @@ pub struct SchemaGroup {
   choice : Bool
   minimum : Int32
   maximum : Int32?
-} derive(Eq, @debug.Debug)
+}
 pub fn SchemaGroup::equal(Self, Self) -> Bool
 pub fn SchemaGroup::not_equal(Self, Self) -> Bool
 pub fn SchemaGroup::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SchemaType {
   id : TypeId
   name : ExpandedName
@@ -3371,7 +3579,7 @@ pub struct SchemaType {
   anonymous : Bool
   enum_values : ReadOnlyArray[String]
   union_members : ReadOnlyArray[ExpandedName]
-} derive(Eq, @debug.Debug)
+}
 pub fn SchemaType::equal(Self, Self) -> Bool
 pub fn SchemaType::fields(Self) -> ReadOnlyArray[SchemaField]
 pub fn SchemaType::has_mixed_content(Self) -> Bool
@@ -3379,18 +3587,20 @@ pub fn SchemaType::is_subtype_of(Self, ExpandedName) -> Bool
 pub fn SchemaType::not_equal(Self, Self) -> Bool
 pub fn SchemaType::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Script {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Script::equal(Self, Self) -> Bool
 pub fn Script::from_element(Element) -> Self?
 pub fn Script::new(contents? : ArrayView[Content]) -> Self
 pub fn Script::not_equal(Self, Self) -> Bool
 pub fn Script::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ScriptTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ScriptTask::auditing(Self) -> Field[Auditing]
 pub fn ScriptTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ScriptTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -3418,9 +3628,10 @@ pub fn ScriptTask::script_format(Self) -> Field[String]
 pub fn ScriptTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn ScriptTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SendTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SendTask::auditing(Self) -> Field[Auditing]
 pub fn SendTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn SendTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -3449,9 +3660,10 @@ pub fn SendTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn SendTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn SendTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SequenceFlow {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SequenceFlow::auditing(Self) -> Field[Auditing]
 pub fn SequenceFlow::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn SequenceFlow::condition_expression(Self) -> Field[Expression]
@@ -3469,9 +3681,10 @@ pub fn SequenceFlow::source_ref(Self) -> Field[Reference]
 pub fn SequenceFlow::target_ref(Self) -> Field[Reference]
 pub fn SequenceFlow::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ServiceTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ServiceTask::auditing(Self) -> Field[Auditing]
 pub fn ServiceTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ServiceTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -3499,17 +3712,19 @@ pub fn ServiceTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn ServiceTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn ServiceTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Severity {
   Error
   Warning
-} derive(Eq, @debug.Debug)
+}
 pub fn Severity::equal(Self, Self) -> Bool
 pub fn Severity::not_equal(Self, Self) -> Bool
 pub fn Severity::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Signal {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Signal::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn Signal::equal(Self, Self) -> Bool
 pub fn Signal::extension_elements(Self) -> Field[ExtensionElements]
@@ -3521,9 +3736,10 @@ pub fn Signal::not_equal(Self, Self) -> Bool
 pub fn Signal::structure_ref(Self) -> Field[Reference]
 pub fn Signal::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SignalEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SignalEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn SignalEventDefinition::equal(Self, Self) -> Bool
 pub fn SignalEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -3534,28 +3750,31 @@ pub fn SignalEventDefinition::not_equal(Self, Self) -> Bool
 pub fn SignalEventDefinition::signal_ref(Self) -> Field[Reference]
 pub fn SignalEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SourceMap {
   source_id : String?
   length : Int32
   line_starts : ReadOnlyArray[Int32]
-} derive(Eq, @debug.Debug)
+}
 pub fn SourceMap::equal(Self, Self) -> Bool
 pub fn SourceMap::location(Self, Span) -> Location?
 pub fn SourceMap::not_equal(Self, Self) -> Bool
 pub fn SourceMap::position(Self, Int32) -> Position?
 pub fn SourceMap::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Span {
   start : Int32
   end : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Span::equal(Self, Self) -> Bool
 pub fn Span::not_equal(Self, Self) -> Bool
 pub fn Span::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct StandardLoopCharacteristics {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn StandardLoopCharacteristics::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn StandardLoopCharacteristics::equal(Self, Self) -> Bool
 pub fn StandardLoopCharacteristics::extension_elements(Self) -> Field[ExtensionElements]
@@ -3568,9 +3787,10 @@ pub fn StandardLoopCharacteristics::not_equal(Self, Self) -> Bool
 pub fn StandardLoopCharacteristics::test_before(Self) -> Field[Bool]
 pub fn StandardLoopCharacteristics::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct StartEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn StartEvent::auditing(Self) -> Field[Auditing]
 pub fn StartEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn StartEvent::data_output(Self) -> Field[ReadOnlyArray[DataOutput]]
@@ -3594,16 +3814,18 @@ pub fn StartEvent::parallel_multiple(Self) -> Field[Bool]
 pub fn StartEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn StartEvent::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct StructureResult {
   index : DocumentIndex
   findings : ReadOnlyArray[ValidationFinding]
   complete : Bool
-} derive(@debug.Debug)
+}
 pub fn StructureResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SubChoreography {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SubChoreography::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn SubChoreography::auditing(Self) -> Field[Auditing]
 pub fn SubChoreography::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -3625,9 +3847,10 @@ pub fn SubChoreography::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn SubChoreography::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn SubChoreography::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SubConversation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SubConversation::conversation_node(Self) -> Field[ReadOnlyArray[ConversationNode]]
 pub fn SubConversation::correlation_key(Self) -> Field[ReadOnlyArray[CorrelationKey]]
 pub fn SubConversation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
@@ -3642,9 +3865,10 @@ pub fn SubConversation::not_equal(Self, Self) -> Bool
 pub fn SubConversation::participant_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn SubConversation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SubProcess {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn SubProcess::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn SubProcess::auditing(Self) -> Field[Auditing]
 pub fn SubProcess::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -3674,9 +3898,10 @@ pub fn SubProcess::start_quantity(Self) -> Field[ExactInteger]
 pub fn SubProcess::to_repr(Self) -> @debug.Repr
 pub fn SubProcess::triggered_by_event(Self) -> Field[Bool]
 
+#derive(Eq, @debug.Debug)
 pub struct Task {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Task::auditing(Self) -> Field[Auditing]
 pub fn Task::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn Task::completion_quantity(Self) -> Field[ExactInteger]
@@ -3702,9 +3927,10 @@ pub fn Task::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn Task::start_quantity(Self) -> Field[ExactInteger]
 pub fn Task::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct TerminateEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn TerminateEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn TerminateEventDefinition::equal(Self, Self) -> Bool
 pub fn TerminateEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -3714,18 +3940,20 @@ pub fn TerminateEventDefinition::new(id? : String, contents? : ArrayView[Content
 pub fn TerminateEventDefinition::not_equal(Self, Self) -> Bool
 pub fn TerminateEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Text {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Text::equal(Self, Self) -> Bool
 pub fn Text::from_element(Element) -> Self?
 pub fn Text::new(contents? : ArrayView[Content]) -> Self
 pub fn Text::not_equal(Self, Self) -> Bool
 pub fn Text::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct TextAnnotation {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn TextAnnotation::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn TextAnnotation::equal(Self, Self) -> Bool
 pub fn TextAnnotation::extension_elements(Self) -> Field[ExtensionElements]
@@ -3737,9 +3965,10 @@ pub fn TextAnnotation::text(Self) -> Field[Text]
 pub fn TextAnnotation::text_format(Self) -> Field[String]
 pub fn TextAnnotation::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ThrowEvent {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn ThrowEvent::auditing(Self) -> Field[Auditing]
 pub fn ThrowEvent::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ThrowEvent::data_input(Self) -> Field[ReadOnlyArray[DataInput]]
@@ -3760,9 +3989,10 @@ pub fn ThrowEvent::outgoing(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn ThrowEvent::property(Self) -> Field[ReadOnlyArray[Property]]
 pub fn ThrowEvent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct TimerEventDefinition {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn TimerEventDefinition::documentation(Self) -> Field[ReadOnlyArray[Documentation]]
 pub fn TimerEventDefinition::equal(Self, Self) -> Bool
 pub fn TimerEventDefinition::extension_elements(Self) -> Field[ExtensionElements]
@@ -3775,15 +4005,17 @@ pub fn TimerEventDefinition::time_date(Self) -> Field[Expression]
 pub fn TimerEventDefinition::time_duration(Self) -> Field[Expression]
 pub fn TimerEventDefinition::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Token {
   kind : TokenKind
   text : String
   span : Span
-} derive(Eq, @debug.Debug)
+}
 pub fn Token::equal(Self, Self) -> Bool
 pub fn Token::not_equal(Self, Self) -> Bool
 pub fn Token::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TokenKind {
   Open
   EndOpen
@@ -3801,14 +4033,15 @@ pub(all) enum TokenKind {
   CData
   Declaration
   Error
-} derive(Eq, @debug.Debug)
+}
 pub fn TokenKind::equal(Self, Self) -> Bool
 pub fn TokenKind::not_equal(Self, Self) -> Bool
 pub fn TokenKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Transaction {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn Transaction::artifact(Self) -> Field[ReadOnlyArray[Artifact]]
 pub fn Transaction::auditing(Self) -> Field[Auditing]
 pub fn Transaction::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
@@ -3839,30 +4072,33 @@ pub fn Transaction::start_quantity(Self) -> Field[ExactInteger]
 pub fn Transaction::to_repr(Self) -> @debug.Repr
 pub fn Transaction::triggered_by_event(Self) -> Field[Bool]
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TransactionMethod {
   Compensate
   Image
   Store
   Uri(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn TransactionMethod::equal(Self, Self) -> Bool
 pub fn TransactionMethod::not_equal(Self, Self) -> Bool
 pub fn TransactionMethod::parse(String) -> Self?
 pub fn TransactionMethod::to_repr(Self) -> @debug.Repr
 pub fn TransactionMethod::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TraversalEvent {
   Enter(NodeRef)
   Leave(NodeRef)
-} derive(Eq, @debug.Debug)
+}
 pub fn TraversalEvent::equal(Self, Self) -> Bool
 pub fn TraversalEvent::not_equal(Self, Self) -> Bool
 pub fn TraversalEvent::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct TreeBuildResult {
   tree : DocumentTree?
   diagnostics : ReadOnlyArray[Diagnostic]
-} derive(@debug.Debug)
+}
 pub fn TreeBuildResult::to_repr(Self) -> @debug.Repr
 
 pub struct TreeCursor {
@@ -3878,6 +4114,7 @@ pub fn TreeCursor::new(NodeRef) -> Self
 pub fn TreeCursor::node(Self) -> NodeRef
 pub fn TreeCursor::path(Self) -> NodePath
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TypeId {
   Definitions
   Import
@@ -4049,15 +4286,16 @@ pub(all) enum TypeId {
   TransactionMethod
   AnonymousTTransactionMethod144
   UserTask
-} derive(Eq, @debug.Debug)
+}
 pub fn TypeId::equal(Self, Self) -> Bool
 pub fn TypeId::name(Self) -> ExpandedName
 pub fn TypeId::not_equal(Self, Self) -> Bool
 pub fn TypeId::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct UserTask {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn UserTask::auditing(Self) -> Field[Auditing]
 pub fn UserTask::category_value_ref(Self) -> Field[ReadOnlyArray[Reference]]
 pub fn UserTask::completion_quantity(Self) -> Field[ExactInteger]
@@ -4085,6 +4323,7 @@ pub fn UserTask::resource_role(Self) -> Field[ReadOnlyArray[ResourceRole]]
 pub fn UserTask::start_quantity(Self) -> Field[ExactInteger]
 pub fn UserTask::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ValidationFinding {
   stage : ValidationStage
   diagnostic : Diagnostic
@@ -4092,45 +4331,50 @@ pub struct ValidationFinding {
   node : Int32?
   element_id : String?
   field : ExpandedName?
-} derive(Eq, @debug.Debug)
+}
 pub fn ValidationFinding::equal(Self, Self) -> Bool
 pub fn ValidationFinding::not_equal(Self, Self) -> Bool
 pub fn ValidationFinding::to_repr(Self) -> @debug.Repr
 
+#derive(@debug.Debug)
 pub struct ValidationResult {
   document : Document?
   index : DocumentIndex?
   references : ReadOnlyArray[ResolvedReference]
   findings : ReadOnlyArray[ValidationFinding]
   complete : Bool
-} derive(@debug.Debug)
+}
 pub fn ValidationResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ValidationStage {
   Syntax
   Structure
   References
-} derive(Eq, @debug.Debug)
+}
 pub fn ValidationStage::equal(Self, Self) -> Bool
 pub fn ValidationStage::not_equal(Self, Self) -> Bool
 pub fn ValidationStage::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum WriteFormat {
   Compact
   Pretty
-} derive(Eq, @debug.Debug)
+}
 pub fn WriteFormat::equal(Self, Self) -> Bool
 pub fn WriteFormat::not_equal(Self, Self) -> Bool
 pub fn WriteFormat::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct WriteResult {
   output : String?
   diagnostics : ReadOnlyArray[Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn WriteResult::equal(Self, Self) -> Bool
 pub fn WriteResult::not_equal(Self, Self) -> Bool
 pub fn WriteResult::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct XmlAttribute {
   raw_name : String
   name : ExpandedName
@@ -4138,24 +4382,26 @@ pub struct XmlAttribute {
   span : Span
   value_span : Span
   namespace_declaration : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn XmlAttribute::equal(Self, Self) -> Bool
 pub fn XmlAttribute::not_equal(Self, Self) -> Bool
 pub fn XmlAttribute::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum XmlContent {
   Text(String)
   Element(XmlElement)
   Comment(String)
   ProcessingInstruction(target~ : String, data~ : String)
-} derive(Eq, @debug.Debug)
+}
 pub fn XmlContent::equal(Self, Self) -> Bool
 pub fn XmlContent::not_equal(Self, Self) -> Bool
 pub fn XmlContent::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct XmlElement {
   element : Element
-} derive(Eq, @debug.Debug)
+}
 pub fn XmlElement::attributes(Self) -> ReadOnlyArray[Attribute]
 pub fn XmlElement::bindings(Self) -> ReadOnlyArray[(String, String)]
 pub fn XmlElement::contents(Self) -> ReadOnlyArray[Content]
@@ -4167,6 +4413,7 @@ pub fn XmlElement::new(ExpandedName, attributes? : ArrayView[(ExpandedName, Stri
 pub fn XmlElement::not_equal(Self, Self) -> Bool
 pub fn XmlElement::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct XmlNode {
   kind : XmlNodeKind
   raw_name : String
@@ -4178,11 +4425,12 @@ pub struct XmlNode {
   span : Span
   value : String
   complete : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn XmlNode::equal(Self, Self) -> Bool
 pub fn XmlNode::not_equal(Self, Self) -> Bool
 pub fn XmlNode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum XmlNodeKind {
   Document
   Element
@@ -4192,7 +4440,7 @@ pub(all) enum XmlNodeKind {
   CData
   Declaration
   Error
-} derive(Eq, @debug.Debug)
+}
 pub fn XmlNodeKind::equal(Self, Self) -> Bool
 pub fn XmlNodeKind::not_equal(Self, Self) -> Bool
 pub fn XmlNodeKind::to_repr(Self) -> @debug.Repr

@@ -14,7 +14,7 @@ import {
 /// No source checkout, local build or PATH fallback is accepted.
 
 ///|
-let version : String = "0.5.0"
+let version : String = "0.6.0"
 
 ///|
 async fn output(command : String, args : Array[String]) -> String {
@@ -30,11 +30,11 @@ async fn install() -> String {
   let (platform, expected) = match (system, machine) {
     ("Darwin", "arm64") =>
       (
-        "macos-arm64", "8af13f0e2727eac93e5020f11c9a52400087cef9900d746e4c581b4337a2f153",
+        "macos-arm64", "834460add3631024267708d5527bae9fecb19c74561e1ef720b8a5bc7b567d5b",
       )
     ("Linux", "x86_64") =>
       (
-        "linux-x64", "ed25fe34173e7032035708bcfdaec06500bacfa9366916851b75ca675fb8ed6a",
+        "linux-x64", "8d944df86dfeee5b89bc1836f98a0f3fbc0b2409ee61de64b46288238ea32b7a",
       )
     _ => fail("Telescope \{version} is not qualified for \{system}/\{machine}")
   }

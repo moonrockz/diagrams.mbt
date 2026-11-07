@@ -17,7 +17,7 @@ async fn main {
     let names = @fs.readdir(fixtures).filter(name => name.has_suffix(".mmd"))
     names.sort()
     for name in names {
-      let stem = name.view(end_offset=name.length() - 4).to_owned()
+      let stem = name.exact_view(end=name.length() - 4).to_owned()
       let source = @utf8.decode(@fs.read_file("\{fixtures}/\{name}").binary())
       let rendered = @mermaid.render_svg(source)
       if rendered.output is Some(svg) {

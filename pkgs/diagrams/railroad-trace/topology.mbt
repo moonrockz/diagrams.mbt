@@ -1,9 +1,10 @@
 ///|
 /// The two railroad subject kinds.
+#derive(Eq, Debug)
 pub(all) enum SubjectKind {
   Regex
   Ebnf
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend SubjectKind with Eq::{equal, not_equal}
@@ -13,6 +14,7 @@ pub extend SubjectKind with @debug.Debug::{to_repr}
 
 ///|
 /// The role of one visible term. Terms are visit targets.
+#derive(Eq, Debug)
 pub(all) enum TermKind {
   /// A consuming literal, class, set, terminal string or special sequence.
   Consumed
@@ -24,7 +26,7 @@ pub(all) enum TermKind {
   Assertion
   /// An empty grammar term.
   Empty
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TermKind with Eq::{equal, not_equal}
@@ -35,6 +37,7 @@ pub extend TermKind with @debug.Debug::{to_repr}
 ///|
 /// One visible term occurrence. Equal labels in different positions have
 /// different identities.
+#derive(Eq, Debug)
 pub struct Term {
   id : String
   kind : TermKind
@@ -45,7 +48,7 @@ pub struct Term {
   constraint : Bool
   entry : String
   exit : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Term with Eq::{equal, not_equal}
@@ -55,6 +58,7 @@ pub extend Term with @debug.Debug::{to_repr}
 
 ///|
 /// The structural role of a drawn connector.
+#derive(Eq, Debug)
 pub(all) enum ConnectorRole {
   /// From a rule or pattern start marker to its body.
   Start
@@ -63,9 +67,9 @@ pub(all) enum ConnectorRole {
   /// Between two adjacent terms of a sequence.
   Gap
   /// From a choice junction into alternative `n`.
-  Split(Int)
+  Split(Int32)
   /// From alternative `n` to the choice junction.
-  Join(Int)
+  Join(Int32)
   /// Into a group, optional or repeated term, or a constraint region.
   Enter
   /// Out of a group, optional or repeated term, or a constraint region.
@@ -76,7 +80,7 @@ pub(all) enum ConnectorRole {
   Return
   /// The direct path of a rule that has no body.
   Empty
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ConnectorRole with Eq::{equal, not_equal}
@@ -102,6 +106,7 @@ pub fn ConnectorRole::name(self : ConnectorRole) -> String {
 
 ///|
 /// One drawn connector between two points, in its semantic direction.
+#derive(Eq, Debug)
 pub struct Connector {
   id : String
   /// The node, rule or model identity that owns this connector.
@@ -111,7 +116,7 @@ pub struct Connector {
   to : String
   rule : String
   constraint : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Connector with Eq::{equal, not_equal}
@@ -121,12 +126,13 @@ pub extend Connector with @debug.Debug::{to_repr}
 
 ///|
 /// One rule, or the single pattern of a regex, with its boundary points.
+#derive(Eq, Debug)
 pub struct Track {
   id : String
   name : String
   start : String
   end : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Track with Eq::{equal, not_equal}
@@ -148,11 +154,11 @@ pub struct Topology {
   /// A deterministic, finite drawing walk over every term and connector, in
   /// source order. It illustrates structure; it is not a feasible match.
   walk : ReadOnlyArray[Step]
-  priv term_index : Map[String, Int]
-  priv connector_index : Map[String, Int]
+  priv term_index : Map[String, Int32]
+  priv connector_index : Map[String, Int32]
   priv entries : Map[String, String]
   priv exits : Map[String, String]
-  priv outgoing : Map[String, Array[Int]]
+  priv outgoing : Map[String, Array[Int32]]
   priv points : Map[String, Bool]
 }
 
@@ -264,7 +270,7 @@ fn Fingerprint::finish(self : Fingerprint) -> String {
 
 ///|
 fn regex_fingerprint(model : @regex.Regex) -> String {
-  let f = Fingerprint::{ hash: 14695981039346656037 }
+  let f = Fingerprint::{ hash: 14695981039346656037, }
   f.text("regex")
   f.text(model.id)
   f.text(model.root)
@@ -296,7 +302,7 @@ fn regex_fingerprint(model : @regex.Regex) -> String {
 
 ///|
 fn ebnf_fingerprint(grammar : @ebnf.Grammar) -> String {
-  let f = Fingerprint::{ hash: 14695981039346656037 }
+  let f = Fingerprint::{ hash: 14695981039346656037, }
   f.text("ebnf")
   f.text(grammar.id)
   for item in grammar.items {
@@ -373,19 +379,19 @@ priv struct Builder {
   walk : Array[Step]
   terms : Array[Term]
   connectors : Array[Connector]
-  term_index : Map[String, Int]
-  connector_index : Map[String, Int]
+  term_index : Map[String, Int32]
+  connector_index : Map[String, Int32]
   entries : Map[String, String]
   exits : Map[String, String]
-  outgoing : Map[String, Array[Int]]
+  outgoing : Map[String, Array[Int32]]
   points : Map[String, Bool]
   diagnostics : Array[@diagrams.Diagnostic]
-  limit : Int
-  mut work : Int
+  limit : Int32
+  mut work : Int32
 }
 
 ///|
-fn Builder::charge(self : Builder, units : Int) -> Bool {
+fn Builder::charge(self : Builder, units : Int32) -> Bool {
   if units > self.limit - self.work {
     if self.diagnostics.is_empty() {
       self.diagnostics.push(
@@ -418,7 +424,7 @@ fn Builder::connect(
   }
   self.points[from] = true
   self.points[to] = true
-  self.connectors.push({ id, owner, role, from, to, rule, constraint })
+  self.connectors.push({ id, owner, role, from, to, rule, constraint, })
 }
 
 ///|
@@ -525,17 +531,52 @@ fn Builder::track(
         }
       Choice(items) =>
         for k, item in items {
-          self.connect(id, Split(k), self.entries[id], self.entries[item], rule, inside)
-          self.connect(id, Join(k), self.exits[item], self.exits[id], rule, inside)
+          self.connect(
+            id,
+            Split(k),
+            self.entries[id],
+            self.entries[item],
+            rule,
+            inside,
+          )
+          self.connect(
+            id,
+            Join(k),
+            self.exits[item],
+            self.exits[id],
+            rule,
+            inside,
+          )
         }
       Wrap(child, bypass, back) => {
-        self.connect(id, Enter, self.entries[id], self.entries[child], rule, inside)
+        self.connect(
+          id,
+          Enter,
+          self.entries[id],
+          self.entries[child],
+          rule,
+          inside,
+        )
         self.connect(id, Leave, self.exits[child], self.exits[id], rule, inside)
         if bypass {
-          self.connect(id, Bypass, self.entries[id], self.exits[id], rule, inside)
+          self.connect(
+            id,
+            Bypass,
+            self.entries[id],
+            self.exits[id],
+            rule,
+            inside,
+          )
         }
         if back {
-          self.connect(id, Return, self.exits[child], self.entries[child], rule, inside)
+          self.connect(
+            id,
+            Return,
+            self.exits[child],
+            self.entries[child],
+            rule,
+            inside,
+          )
         }
       }
       Exclude(_, _) => ()
@@ -645,20 +686,22 @@ fn ebnf_shape(index : @ebnf.Index, id : String) -> Shape {
   let node = index.node(id).unwrap()
   match node.kind {
     Terminal(_, _) | Special(_) => Leaf(Consumed)
-    Reference(_, _) => Leaf(Reference(index.resolution(id).unwrap_or(Unresolved)))
+    Reference(_, _) =>
+      Leaf(Reference(index.resolution(id).unwrap_or(Unresolved)))
     Empty => Leaf(Empty)
     Sequence(items) => Sequence(items)
     Choice(items) => Choice(items)
     Optional(child) => Wrap(child, true, false)
     ZeroOrMore(child) => Wrap(child, true, true)
     OneOrMore(child) => Wrap(child, false, true)
-    Count(count, child) => Wrap(child, count == "0", count != "1" && count != "0")
+    Count(count, child) =>
+      Wrap(child, count == "0", count != "1" && count != "0")
     Exclusion(left, excluded) => Exclude(left, excluded)
   }
 }
 
 ///|
-fn new_builder(limit : Int) -> Builder {
+fn new_builder(limit : Int32) -> Builder {
   {
     walk: [],
     terms: [],
@@ -714,11 +757,11 @@ fn Builder::finish(
 /// identity is the model identity.
 pub fn Topology::regex(
   model : @regex.Regex,
-  limits? : @regex.Limits = @regex.Limits::new(),
+  limits~ : @regex.Limits = @regex.Limits::new(),
 ) -> TopologyResult {
   let indexed = @regex.Index::build(model, limits~)
   guard indexed.index is Some(index) else {
-    return { topology: None, diagnostics: indexed.diagnostics }
+    return { topology: None, diagnostics: indexed.diagnostics, }
   }
   let b = new_builder(limits.work)
   let start = point_id(model.id, "start")
@@ -737,7 +780,7 @@ pub fn Topology::regex(
     ),
   )
   b.finish(Regex, model.id, regex_fingerprint(model), [
-    { id: model.id, name: model.title.unwrap_or(model.id), start, end },
+    { id: model.id, name: model.title.unwrap_or(model.id), start, end, },
   ])
 }
 
@@ -746,11 +789,11 @@ pub fn Topology::regex(
 /// terms; no connector joins two rules.
 pub fn Topology::ebnf(
   grammar : @ebnf.Grammar,
-  limits? : @ebnf.Limits = @ebnf.Limits::new(),
+  limits~ : @ebnf.Limits = @ebnf.Limits::new(),
 ) -> TopologyResult {
   let indexed = @ebnf.Index::build(grammar, limits~)
   guard indexed.index is Some(index) else {
-    return { topology: None, diagnostics: indexed.diagnostics }
+    return { topology: None, diagnostics: indexed.diagnostics, }
   }
   let b = new_builder(limits.work)
   let tracks = []
@@ -760,12 +803,12 @@ pub fn Topology::ebnf(
     let end = point_id(rule.id, "end")
     b.entries[rule.id] = start
     b.exits[rule.id] = end
-    tracks.push({ id: rule.id, name: rule.name, start, end })
+    tracks.push({ id: rule.id, name: rule.name, start, end, })
     let order = []
     // The index lists rule bodies in rule order.
     if rule.body is Some(_) {
       while cursor < index.order.length() &&
-        index.owner(index.order[cursor]) == Some(rule.id) {
+            index.owner(index.order[cursor]) == Some(rule.id) {
         order.push(index.order[cursor])
         cursor += 1
       }

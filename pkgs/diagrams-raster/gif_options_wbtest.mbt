@@ -66,10 +66,21 @@ test "tiny pixel and byte budgets reject enormous schedules before timing alloca
     interval=Interval(start_ms=0L, end_ms=21474836460L),
   )
   let limits = { ..gif_test_limits(), max_frames: 2147483647, }
-  for (bounded, expected) in [
-    ({ ..limits, max_cumulative_pixels: 1L, }, "raster/cumulative-pixel-limit"),
-    ({ ..limits, max_cumulative_pixels: 9223372036854775807L, max_output_bytes: 1, }, "raster/output-limit"),
-  ] {
+  for
+    (bounded, expected) in [
+      (
+        { ..limits, max_cumulative_pixels: 1L, },
+        "raster/cumulative-pixel-limit",
+      ),
+      (
+        {
+          ..limits,
+          max_cumulative_pixels: 9223372036854775807L,
+          max_output_bytes: 1,
+        },
+        "raster/output-limit",
+      ),
+    ] {
     let code = try {
       ignore(gif_times(1L, options, bounded, pixels=1L))
       "success"

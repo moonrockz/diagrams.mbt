@@ -20,7 +20,10 @@ test "child elements are indented, one on each line" {
     @writer.element("rect"),
     @writer.element("g", children=[@writer.element("path")]),
   ])
-  assert_eq(@writer.to_string(n), "<g>\n  <rect/>\n  <g>\n    <path/>\n  </g>\n</g>\n")
+  assert_eq(
+    @writer.to_string(n),
+    "<g>\n  <rect/>\n  <g>\n    <path/>\n  </g>\n</g>\n",
+  )
 }
 
 ///|
@@ -42,6 +45,11 @@ test "control characters that XML does not allow are removed" {
 
 ///|
 test "XML attribute whitespace survives parsing and noncharacters are removed" {
-  let n = @writer.element("text", attrs=[("data-id", "a\tb\nc\rd")], children=[@writer.text("x\u{fffe}\u{ffff}y\rZ😀")])
-  assert_eq(@writer.to_string(n), "<text data-id=\"a&#x9;b&#xa;c&#xd;d\">xy&#xd;Z😀</text>\n")
+  let n = @writer.element("text", attrs=[("data-id", "a\tb\nc\rd")], children=[
+    @writer.text("x\u{fffe}\u{ffff}y\rZ😀"),
+  ])
+  assert_eq(
+    @writer.to_string(n),
+    "<text data-id=\"a&#x9;b&#xa;c&#xd;d\">xy&#xd;Z😀</text>\n",
+  )
 }

@@ -1,5 +1,6 @@
 ///|
 /// Explicit bounds for railroad layout and painting.
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
@@ -8,7 +9,7 @@ pub struct Limits {
   width : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Limits with Eq::{equal, not_equal}

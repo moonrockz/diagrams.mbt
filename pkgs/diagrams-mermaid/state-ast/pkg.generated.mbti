@@ -11,27 +11,30 @@ import {
 // Errors
 
 // Types and methods
+#derive(@debug.Debug)
 pub struct Diagram {
   header : String
   statements : ReadOnlyArray[Statement]
   front_matter : String?
   directives : ReadOnlyArray[String]
-} derive(@debug.Debug)
+}
 pub fn Diagram::equal(Self, Self) -> Bool
 pub fn Diagram::new(ArrayView[Statement], header? : String, front_matter? : String, directives? : ArrayView[String]) -> Self
 pub fn Diagram::not_equal(Self, Self) -> Bool
 pub fn Diagram::to_repr(Self) -> @debug.Repr
 pub impl Eq for Diagram
 
+#derive(@debug.Debug)
 pub(all) struct Statement {
   kind : StatementKind
   span : @diagrams.Span
-} derive(@debug.Debug)
+}
 pub fn Statement::equal(Self, Self) -> Bool
 pub fn Statement::not_equal(Self, Self) -> Bool
 pub fn Statement::to_repr(Self) -> @debug.Repr
 pub impl Eq for Statement
 
+#derive(Eq, @debug.Debug)
 pub(all) enum StatementKind {
   State(id~ : String, label~ : String?, role~ : String?, description~ : String?, classes~ : ReadOnlyArray[String])
   Composite(id~ : String, label~ : String?)
@@ -47,7 +50,7 @@ pub(all) enum StatementKind {
   Presentation(String)
   Comment(String)
   Invalid(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn StatementKind::equal(Self, Self) -> Bool
 pub fn StatementKind::not_equal(Self, Self) -> Bool
 pub fn StatementKind::to_repr(Self) -> @debug.Repr

@@ -16,10 +16,11 @@ pub fn print(@swimlane-ast.Diagram, limits? : @swimlane-syntax.Limits, header? :
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Printed {
   output : String?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Printed::equal(Self, Self) -> Bool
 pub fn Printed::not_equal(Self, Self) -> Bool
 pub fn Printed::to_repr(Self) -> @debug.Repr

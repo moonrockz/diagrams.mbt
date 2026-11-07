@@ -22,18 +22,20 @@ pub fn validate(Flowchart, nodes_limit? : Int32, edges_limit? : Int32, depth_lim
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Branch {
   id : String
   label : String
   members : ReadOnlyArray[String]
   condition : String?
   origin : SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Branch::equal(Self, Self) -> Bool
 pub fn Branch::new(String, label? : String, members? : ArrayView[String], condition? : String, origin? : SourceBinding) -> Self
 pub fn Branch::not_equal(Self, Self) -> Bool
 pub fn Branch::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Connection {
   id : String
   source : String
@@ -48,12 +50,13 @@ pub struct Connection {
   direction_hint : Direction?
   role : ConnectionRole
   origin : SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Connection::equal(Self, Self) -> Bool
 pub fn Connection::new(String, String, String, label? : String, label_kind? : LabelKind, style? : LineStyle, source_marker? : Marker, target_marker? : Marker, min_length? : Int32, direction_hint? : Direction, role? : ConnectionRole, origin? : SourceBinding) -> Self
 pub fn Connection::not_equal(Self, Self) -> Bool
 pub fn Connection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ConnectionRole {
   Flow
   Branch
@@ -62,32 +65,35 @@ pub(all) enum ConnectionRole {
   Parallel
   NoteAttachment
   Layout
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectionRole::equal(Self, Self) -> Bool
 pub fn ConnectionRole::not_equal(Self, Self) -> Bool
 pub fn ConnectionRole::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Direction {
   TB
   BT
   LR
   RL
-} derive(Eq, @debug.Debug)
+}
 pub fn Direction::equal(Self, Self) -> Bool
 pub fn Direction::not_equal(Self, Self) -> Bool
 pub fn Direction::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum FlowDirection {
   Forward
   Backward
   Both
   Undirected
   Invisible
-} derive(Eq, @debug.Debug)
+}
 pub fn FlowDirection::equal(Self, Self) -> Bool
 pub fn FlowDirection::not_equal(Self, Self) -> Bool
 pub fn FlowDirection::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Flowchart {
   notes : ReadOnlyArray[Note]
   regions : ReadOnlyArray[Region]
@@ -100,13 +106,14 @@ pub struct Flowchart {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Flowchart::equal(Self, Self) -> Bool
 pub fn Flowchart::new(String, ArrayView[Node], ArrayView[Connection], direction? : Direction, lanes? : ArrayView[Lane], groups? : ArrayView[Group], title? : String, accessibility_title? : String, accessibility_description? : String, notes? : ArrayView[Note], regions? : ArrayView[Region]) -> Self
 pub fn Flowchart::not_equal(Self, Self) -> Bool
 pub fn Flowchart::to_repr(Self) -> @debug.Repr
 pub fn Flowchart::with_nodes(Self, ArrayView[Node]) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct Group {
   id : String
   label : String
@@ -114,52 +121,57 @@ pub struct Group {
   lane : String?
   direction : Direction?
   expanded : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Group::equal(Self, Self) -> Bool
 pub fn Group::new(String, label? : String, parent? : String, lane? : String, direction? : Direction, expanded? : Bool) -> Self
 pub fn Group::not_equal(Self, Self) -> Bool
 pub fn Group::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum LabelKind {
   Text
   Markdown
   Html
-} derive(Eq, @debug.Debug)
+}
 pub fn LabelKind::equal(Self, Self) -> Bool
 pub fn LabelKind::not_equal(Self, Self) -> Bool
 pub fn LabelKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Lane {
   id : String
   label : String
   direction : Direction?
   expanded : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn Lane::equal(Self, Self) -> Bool
 pub fn Lane::new(String, label? : String, direction? : Direction, expanded? : Bool) -> Self
 pub fn Lane::not_equal(Self, Self) -> Bool
 pub fn Lane::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum LineStyle {
   Solid
   Dotted
   Thick
   Invisible
-} derive(Eq, @debug.Debug)
+}
 pub fn LineStyle::equal(Self, Self) -> Bool
 pub fn LineStyle::not_equal(Self, Self) -> Bool
 pub fn LineStyle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Marker {
   None
   Arrow
   Circle
   Cross
-} derive(Eq, @debug.Debug)
+}
 pub fn Marker::equal(Self, Self) -> Bool
 pub fn Marker::not_equal(Self, Self) -> Bool
 pub fn Marker::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   id : String
   label : String
@@ -172,13 +184,14 @@ pub struct Node {
   role : Role
   regions : ReadOnlyArray[String]
   origin : SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::new(String, label? : String, label_kind? : LabelKind, shape? : String, metadata? : ArrayView[(String, String)], lane? : String, groups? : ArrayView[String], properties? : RenderProperties, role? : Role, regions? : ArrayView[String], origin? : SourceBinding) -> Self
 pub fn Node::not_equal(Self, Self) -> Bool
 pub fn Node::to_repr(Self) -> @debug.Repr
 pub fn Node::with_label(Self, String) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct Note {
   id : String
   text : String
@@ -188,12 +201,13 @@ pub struct Note {
   groups : ReadOnlyArray[String]
   lane : String?
   origin : SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Note::equal(Self, Self) -> Bool
 pub fn Note::new(String, String, targets? : ArrayView[String], connection_targets? : ArrayView[String], placement? : String, groups? : ArrayView[String], lane? : String, origin? : SourceBinding) -> Self
 pub fn Note::not_equal(Self, Self) -> Bool
 pub fn Note::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Region {
   id : String
   kind : RegionKind
@@ -205,31 +219,34 @@ pub struct Region {
   condition : String?
   join_specification : String?
   origin : SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Region::equal(Self, Self) -> Bool
 pub fn Region::new(String, RegionKind, parent? : String, entry? : String, exit? : String, members? : ArrayView[String], branches? : ArrayView[Branch], condition? : String, join_specification? : String, origin? : SourceBinding) -> Self
 pub fn Region::not_equal(Self, Self) -> Bool
 pub fn Region::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RegionKind {
   Conditional
   Loop
   Parallel
   Split
-} derive(Eq, @debug.Debug)
+}
 pub fn RegionKind::equal(Self, Self) -> Bool
 pub fn RegionKind::not_equal(Self, Self) -> Bool
 pub fn RegionKind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct RenderProperties {
   link : String?
   metadata : ReadOnlyArray[(String, String)]
-} derive(Eq, @debug.Debug)
+}
 pub fn RenderProperties::equal(Self, Self) -> Bool
 pub fn RenderProperties::new(link? : String, metadata? : ArrayView[(String, String)]) -> Self
 pub fn RenderProperties::not_equal(Self, Self) -> Bool
 pub fn RenderProperties::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Role {
   Generic
   Action
@@ -241,16 +258,17 @@ pub(all) enum Role {
   ActivityFinal
   FlowFinal
   Connector
-} derive(Eq, @debug.Debug)
+}
 pub fn Role::equal(Self, Self) -> Bool
 pub fn Role::not_equal(Self, Self) -> Bool
 pub fn Role::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct SourceBinding {
   format : String
   path : String
   span : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn SourceBinding::equal(Self, Self) -> Bool
 pub fn SourceBinding::new(String, String, span? : @diagrams.Span) -> Self
 pub fn SourceBinding::not_equal(Self, Self) -> Bool

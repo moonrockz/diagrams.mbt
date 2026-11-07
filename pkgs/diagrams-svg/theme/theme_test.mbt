@@ -1,13 +1,22 @@
 ///|
 let families : Array[@theme.Family] = [
-  Frontend, Backend, Database, Cloud, Security, MessageBus, External,
+  Frontend,
+  Backend,
+  Database,
+  Cloud,
+  Security,
+  MessageBus,
+  External,
 ]
 
 ///|
 test "colours write as hex or rgba" {
   assert_eq(@theme.Color::hex(0x020617).to_css(), "#020617")
   assert_eq(@theme.Color::rgba(8, 51, 68, 40).to_css(), "rgba(8, 51, 68, 0.4)")
-  assert_eq(@theme.Color::rgba(34, 211, 238, 15).to_css(), "rgba(34, 211, 238, 0.15)")
+  assert_eq(
+    @theme.Color::rgba(34, 211, 238, 15).to_css(),
+    "rgba(34, 211, 238, 0.15)",
+  )
 }
 
 ///|
@@ -62,23 +71,45 @@ test "all computed classic shades stay stored and retain their accents" {
   assert_eq(families.map(f => t.light.family(f).ink.to_css()), [
     "#077995", "#047d58", "#7c3aed", "#a75c05", "#d81c45", "#c3490a", "#606f85",
   ])
-  for f in families { assert_eq(t.dark.family(f).ink, t.dark.family(f).stroke) }
+  for f in families {
+    assert_eq(t.dark.family(f).ink, t.dark.family(f).stroke)
+  }
 }
 
 ///|
 test "CSS author colours parse without retaining executable CSS" {
   let cases = [
-    ("Purple", "#800080"), ("rebeccapurple", "#663399"), ("LightGoldenRodYellow", "#fafad2"),
-    ("#abc", "#aabbcc"), ("#aabbcc", "#aabbcc"), ("#abcd", "rgba(170, 187, 204, 0.87)"),
-    ("#aabbcc80", "rgba(170, 187, 204, 0.5)"), ("rgb(191, 223, 255)", "#bfdfff"),
+    ("Purple", "#800080"),
+    ("rebeccapurple", "#663399"),
+    ("LightGoldenRodYellow", "#fafad2"),
+    ("#abc", "#aabbcc"),
+    ("#aabbcc", "#aabbcc"),
+    ("#abcd", "rgba(170, 187, 204, 0.87)"),
+    ("#aabbcc80", "rgba(170, 187, 204, 0.5)"),
+    ("rgb(191, 223, 255)", "#bfdfff"),
     ("rgba(191, 223, 255, .5)", "rgba(191, 223, 255, 0.5)"),
-    ("rgb(100%, 0%, 50%)", "#ff0080"), ("rgb(256,-1,0)", "#ff0000"),
-    ("rgb(191 223 255 / 50%)", "rgba(191, 223, 255, 0.5)"), ("rgba(1e2 0 0)", "#640000"), ("transparent", "rgba(0, 0, 0, 0)"),
+    ("rgb(100%, 0%, 50%)", "#ff0080"),
+    ("rgb(256,-1,0)", "#ff0000"),
+    ("rgb(191 223 255 / 50%)", "rgba(191, 223, 255, 0.5)"),
+    ("rgba(1e2 0 0)", "#640000"),
+    ("transparent", "rgba(0, 0, 0, 0)"),
   ]
-  for (source, css) in cases { assert_eq(@theme.parse_color(source).unwrap().to_css(), css) }
-  for invalid in ["notacolour", "currentColor", "url(https://example.com)", "red;fill:url(x)", "#zzzzzz", "#12", "rgb(1,2,3/.5)", "rgba(0,0,0,NaN)", "rgb(1,2)"] {
+  for (source, css) in cases {
+    assert_eq(@theme.parse_color(source).unwrap().to_css(), css)
+  }
+  for
+    invalid in [
+      "notacolour", "currentColor", "url(https://example.com)", "red;fill:url(x)",
+      "#zzzzzz", "#12", "rgb(1,2,3/.5)", "rgba(0,0,0,NaN)", "rgb(1,2)",
+    ] {
     assert_eq(@theme.parse_color(invalid), None, msg=invalid)
   }
-  assert_eq(@theme.parse_color("Purple").unwrap().tint().to_css(), "rgba(128, 0, 128, 0.18)")
-  assert_eq(@theme.parse_color("rgba(191,223,255,.5)").unwrap().tint().to_css(), "rgba(191, 223, 255, 0.09)")
+  assert_eq(
+    @theme.parse_color("Purple").unwrap().tint().to_css(),
+    "rgba(128, 0, 128, 0.18)",
+  )
+  assert_eq(
+    @theme.parse_color("rgba(191,223,255,.5)").unwrap().tint().to_css(),
+    "rgba(191, 223, 255, 0.09)",
+  )
 }

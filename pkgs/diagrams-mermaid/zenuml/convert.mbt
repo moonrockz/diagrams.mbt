@@ -1,8 +1,9 @@
 ///|
+#derive(Eq, Debug)
 pub struct Conversion {
   sequence : @model.Sequence?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Conversion with Eq::{equal, not_equal}

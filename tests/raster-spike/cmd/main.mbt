@@ -1,34 +1,64 @@
 ///|
 fn main {
   let fonts : @spike.SpikeFonts = {
-    regular: @font.parse_font(@base64.decode_lossy(regular,ignore_whitespace=true)).unwrap(),
-    fallbacks: [@font.parse_font(@base64.decode_lossy(symbols,ignore_whitespace=true)).unwrap()],
-    bold: @font.parse_font(@base64.decode_lossy(bold,ignore_whitespace=true)).unwrap(),
+    regular: @font.parse_font(
+      @base64.decode_lossy(regular, ignore_whitespace=true),
+    ).unwrap(),
+    fallbacks: [
+      @font.parse_font(@base64.decode_lossy(symbols, ignore_whitespace=true)).unwrap(),
+    ],
+    bold: @font.parse_font(@base64.decode_lossy(bold, ignore_whitespace=true)).unwrap(),
   }
   for (id, source, w, h) in fixtures {
     try {
-      let normalized = @spike.normalize_generated_svg(source,"light",fonts)
-      println("svg:"+id+":"+@base64.encode(@utf8.encode(normalized)))
-      let image = @spike.render_normalized(normalized,w,h)
+      let normalized = @spike.normalize_generated_svg(source, "light", fonts)
+      println("svg:" + id + ":" + @base64.encode(@utf8.encode(normalized)))
+      let image = @spike.render_normalized(normalized, w, h)
       let data : Array[Byte] = []
       for color in image.pixels {
-        data.push(color.r.to_byte());data.push(color.g.to_byte());data.push(color.b.to_byte());data.push(color.a.to_byte())
+        data.push(color.r.to_byte())
+        data.push(color.g.to_byte())
+        data.push(color.b.to_byte())
+        data.push(color.a.to_byte())
       }
-      let png = @image.encode_png({width:w,height:h,data:Bytes::from_array(data)})
-      println("png:"+id+":"+@base64.encode(png))
-      let jpeg = @spike.encode_jpeg({width:w,height:h,data:Bytes::from_array(data)},quality=80)
-      println("jpeg:"+id+":"+@base64.encode(jpeg))
+      let png = @image.encode_png({
+        width: w,
+        height: h,
+        data: Bytes::from_array(data),
+      })
+      println("png:" + id + ":" + @base64.encode(png))
+      let jpeg = @spike.encode_jpeg(
+        { width: w, height: h, data: Bytes::from_array(data), },
+        quality=80,
+      )
+      println("jpeg:" + id + ":" + @base64.encode(jpeg))
       if id == "sequence" {
         let shifted = image.clone()
-        shifted.fill_rect(40,40,12,12,@svg.Color::rgb(255,0,0))
+        shifted.fill_rect(40, 40, 12, 12, @svg.Color::rgb(255, 0, 0))
         let second : Array[Byte] = []
         for color in shifted.pixels {
-          second.push(color.r.to_byte());second.push(color.g.to_byte());second.push(color.b.to_byte());second.push(color.a.to_byte())
+          second.push(color.r.to_byte())
+          second.push(color.g.to_byte())
+          second.push(color.b.to_byte())
+          second.push(color.a.to_byte())
         }
-        let gif = @codec.encode_gif_animation_pure({frames:[{width:w,height:h,channels:4,data:Bytes::from_array(data)},{width:w,height:h,channels:4,data:Bytes::from_array(second)}],delays:[100,200]})
-        println("gif:"+id+":"+@base64.encode(gif))
+        let gif = @codec.encode_gif_animation_pure({
+          frames: [
+            { width: w, height: h, channels: 4, data: Bytes::from_array(data), },
+            {
+              width: w,
+              height: h,
+              channels: 4,
+              data: Bytes::from_array(second),
+            },
+          ],
+          delays: [100, 200],
+        })
+        println("gif:" + id + ":" + @base64.encode(gif))
       }
-    } catch { e => println("error:"+id+":"+e.to_string()) }
+    } catch {
+      e => println("error:" + id + ":" + e.to_string())
+    }
   }
 }
 
@@ -13886,21 +13916,21 @@ let bold : String =
   #|B2QLBgsTCyYLPgtEC0kLTAtgC3sLgQuGAAEAAAABAAgAAQAGChkAAQABABMAAQAAAAEACAABAAYHXQABAAEBQQ==
 
 ///|
-let fixtures : Array[(String,String,Int,Int)] = [
-  ("icons-clip-mask",fixture_icons,400,200),
-  ("sequence",fixture_0,371,288),
-  ("zenuml",fixture_1,1254,376),
-  ("architecture",fixture_2,2196,596),
-  ("bpmn",fixture_3,964,544),
-  ("swimlane",fixture_4,683,549),
-  ("flowchart",fixture_5,1344,684),
-  ("regex",fixture_6,926,349),
-  ("ebnf",fixture_7,560,838),
-  ("json",fixture_8,896,332),
-  ("yaml",fixture_9,616,382),
-  ("state",fixture_10,300,946),
-  ("adaptive-sequence",fixture_11,468,240),
-  ("crossing-mask",fixture_12,1275,2454),
+let fixtures : Array[(String, String, Int32, Int32)] = [
+  ("icons-clip-mask", fixture_icons, 400, 200),
+  ("sequence", fixture_0, 371, 288),
+  ("zenuml", fixture_1, 1254, 376),
+  ("architecture", fixture_2, 2196, 596),
+  ("bpmn", fixture_3, 964, 544),
+  ("swimlane", fixture_4, 683, 549),
+  ("flowchart", fixture_5, 1344, 684),
+  ("regex", fixture_6, 926, 349),
+  ("ebnf", fixture_7, 560, 838),
+  ("json", fixture_8, 896, 332),
+  ("yaml", fixture_9, 616, 382),
+  ("state", fixture_10, 300, 946),
+  ("adaptive-sequence", fixture_11, 468, 240),
+  ("crossing-mask", fixture_12, 1275, 2454),
 ]
 
 ///|

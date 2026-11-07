@@ -39,7 +39,9 @@ test "invalid bounds, missing nodes, cycles and orphans are reported" {
     ["regex/invalid-bounds"],
   )
   assert_eq(
-    codes(@regex.Regex::new("r", "p", [@regex.Node::new("p", Group(Capturing, "x"))])),
+    codes(
+      @regex.Regex::new("r", "p", [@regex.Node::new("p", Group(Capturing, "x"))]),
+    ),
     ["regex/missing-node"],
   )
   assert_eq(

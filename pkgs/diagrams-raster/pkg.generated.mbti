@@ -3,6 +3,7 @@ package "moonrockz/diagrams-raster"
 
 import {
   "moonbitlang/core/debug",
+  "moonbitlang/core/json",
   "moonrockz/diagrams-svg",
   "moonrockz/diagrams/animation",
 }
@@ -10,27 +11,29 @@ import {
 // Values
 pub fn export_gif(@diagrams-svg.Scene, @animation.PlaybackPlan, options? : GifOptions, fonts? : FontSet, limits? : RasterLimits) -> RasterResult
 
-pub fn export_gif_data(Json, plan? : Json, options? : GifOptions, fonts? : FontSet, limits? : RasterLimits) -> RasterResult
+pub fn export_gif_data(@json.Json, plan? : @json.Json, options? : GifOptions, fonts? : FontSet, limits? : RasterLimits) -> RasterResult
 
 pub fn gif_export_data(@diagrams-svg.Scene, @animation.PlaybackPlan, limits? : RasterLimits) -> GifDataResult
 
 pub fn rasterize(String, options? : StillOptions, fonts? : FontSet, limits? : RasterLimits) -> RasterResult
 
 // Errors
-type GifError derive(@debug.Debug)
+#derive(@debug.Debug)
+type GifError
 pub fn GifError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum ExportTheme {
   Light
   Dark
-} derive(Eq, @debug.Debug)
+}
 pub fn ExportTheme::equal(Self, Self) -> Bool
 pub fn ExportTheme::not_equal(Self, Self) -> Bool
 pub fn ExportTheme::to_repr(Self) -> @debug.Repr
 
 pub struct FontDataResult {
-  data : Json?
+  data : @json.Json?
   diagnostics : ReadOnlyArray[RasterDiagnostic]
 }
 
@@ -48,7 +51,7 @@ pub(all) struct FontSet {
 }
 pub fn FontSet::default() -> Self
 pub fn FontSet::export_data(Self, limits? : RasterLimits) -> FontDataResult
-pub fn FontSet::from_export_data(Json, limits? : RasterLimits) -> FontSubsetResult
+pub fn FontSet::from_export_data(@json.Json, limits? : RasterLimits) -> FontSubsetResult
 pub fn FontSet::new(ArrayView[FontFace], fallback_families? : ArrayView[String]) -> Self
 pub fn FontSet::subset_for_svg(Self, String, limits? : RasterLimits) -> FontSubsetResult
 
@@ -58,7 +61,7 @@ pub(all) struct FontSubsetResult {
 }
 
 pub struct GifDataResult {
-  data : Json?
+  data : @json.Json?
   diagnostics : ReadOnlyArray[RasterDiagnostic]
 }
 
@@ -74,19 +77,21 @@ pub struct GifFrameSample {
   occurrences : ReadOnlyArray[GifOccurrence]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GifInterval {
   Full
   Interval(start_ms~ : Int64, end_ms~ : Int64)
-} derive(Eq, @debug.Debug)
+}
 pub fn GifInterval::equal(Self, Self) -> Bool
 pub fn GifInterval::not_equal(Self, Self) -> Bool
 pub fn GifInterval::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum GifLoop {
   Once
   Forever
   Repeat(Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn GifLoop::equal(Self, Self) -> Bool
 pub fn GifLoop::not_equal(Self, Self) -> Bool
 pub fn GifLoop::to_repr(Self) -> @debug.Repr
@@ -96,6 +101,7 @@ pub struct GifOccurrence {
   target : GifTarget
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) struct GifOptions {
   size : RasterSize
   background : Rgba
@@ -103,7 +109,7 @@ pub(all) struct GifOptions {
   interval : GifInterval
   frame_rate : Int32
   loop_behavior : GifLoop
-} derive(Eq, @debug.Debug)
+}
 pub fn GifOptions::equal(Self, Self) -> Bool
 pub fn GifOptions::new(size? : RasterSize, background? : Rgba, theme? : ExportTheme, interval? : GifInterval, frame_rate? : Int32, loop_behavior? : GifLoop) -> Self
 pub fn GifOptions::not_equal(Self, Self) -> Bool
@@ -129,20 +135,22 @@ pub(all) enum GifTarget {
   Visit(@diagrams-svg.NodeBindingKind)
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) struct RasterDiagnostic {
   code : String
   message : String
   source_id : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn RasterDiagnostic::equal(Self, Self) -> Bool
 pub fn RasterDiagnostic::not_equal(Self, Self) -> Bool
 pub fn RasterDiagnostic::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RasterFormat {
   Png
   Jpeg
   Gif
-} derive(Eq, @debug.Debug)
+}
 pub fn RasterFormat::equal(Self, Self) -> Bool
 pub fn RasterFormat::not_equal(Self, Self) -> Bool
 pub fn RasterFormat::to_repr(Self) -> @debug.Repr
@@ -155,6 +163,7 @@ pub(all) struct RasterImage {
   format : RasterFormat
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) struct RasterLimits {
   max_source_units : Int32
   max_svg_nodes : Int32
@@ -164,7 +173,7 @@ pub(all) struct RasterLimits {
   max_output_bytes : Int32
   max_frames : Int32
   max_cumulative_pixels : Int64
-} derive(Eq, @debug.Debug)
+}
 pub fn RasterLimits::default() -> Self
 pub fn RasterLimits::equal(Self, Self) -> Bool
 pub fn RasterLimits::not_equal(Self, Self) -> Bool
@@ -175,13 +184,14 @@ pub(all) struct RasterResult {
   diagnostics : ReadOnlyArray[RasterDiagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RasterSize {
   Original
   Scale(Double)
   Width(Int32)
   Height(Int32)
   Fit(Int32, Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn RasterSize::equal(Self, Self) -> Bool
 pub fn RasterSize::not_equal(Self, Self) -> Bool
 pub fn RasterSize::to_repr(Self) -> @debug.Repr
@@ -190,16 +200,17 @@ pub struct Rasterizer {
   fonts : FontSet
   limits : RasterLimits
 }
-pub fn Rasterizer::export_gif_data(Self, Json, plan? : Json, options? : GifOptions) -> RasterResult
+pub fn Rasterizer::export_gif_data(Self, @json.Json, plan? : @json.Json, options? : GifOptions) -> RasterResult
 pub fn Rasterizer::new(FontSet, limits? : RasterLimits) -> Self
 pub fn Rasterizer::rasterize(Self, String, options? : StillOptions) -> RasterResult
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Rgba {
   red : Int32
   green : Int32
   blue : Int32
   alpha : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Rgba::equal(Self, Self) -> Bool
 pub fn Rgba::new(Int32, Int32, Int32, alpha? : Int32) -> Self
 pub fn Rgba::not_equal(Self, Self) -> Bool
@@ -207,20 +218,22 @@ pub fn Rgba::to_repr(Self) -> @debug.Repr
 pub fn Rgba::transparent() -> Self
 pub fn Rgba::white() -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum StillFormat {
   Png
   Jpeg(quality~ : Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn StillFormat::equal(Self, Self) -> Bool
 pub fn StillFormat::not_equal(Self, Self) -> Bool
 pub fn StillFormat::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct StillOptions {
   format : StillFormat
   size : RasterSize
   background : Rgba
   theme : ExportTheme
-} derive(Eq, @debug.Debug)
+}
 pub fn StillOptions::equal(Self, Self) -> Bool
 pub fn StillOptions::new(format? : StillFormat, size? : RasterSize, background? : Rgba, theme? : ExportTheme) -> Self
 pub fn StillOptions::not_equal(Self, Self) -> Bool

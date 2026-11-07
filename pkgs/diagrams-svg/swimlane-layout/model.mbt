@@ -1,5 +1,6 @@
 ///|
 /// Pure swimlane geometry has no dependency on BPMN document or geometry types.
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
@@ -7,7 +8,7 @@ pub struct Limits {
   work : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -22,18 +23,20 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Rect::contains(
@@ -56,13 +59,15 @@ pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Kind {
   Lane
   Group
   Node
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Label {
   text : String
   box : Rect
@@ -70,9 +75,10 @@ pub struct Label {
   weight : Int32
   owner : String
   family : @theme.Family?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Shape {
   id : String
   index : Int32
@@ -84,9 +90,10 @@ pub struct Shape {
   parent : String?
   lane : String?
   expanded : Bool
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Connection {
   connection : @model.Connection
   index : Int32
@@ -94,22 +101,24 @@ pub struct Connection {
   target : String
   line : ReadOnlyArray[Point]
   label : Label?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Geometry {
   view : @model.Swimlane
   shapes : ReadOnlyArray[Shape]
   connections : ReadOnlyArray[Connection]
   width : Int32
   height : Int32
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Result {
   geometry : Geometry?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 priv struct Budget {
@@ -171,10 +180,10 @@ pub fn label_text(text : String) -> String {
       cursor += 1
       continue
     }
-    if normalized.view(start_offset=cursor).has_prefix("<!--") {
-      if normalized.view(start_offset=cursor + 4).find("-->") is Some(relative) {
+    if normalized.exact_view(start=cursor).has_prefix("<!--") {
+      if normalized.exact_view(start=cursor + 4).find("-->") is Some(relative) {
         out.write_string(
-          normalized.view(start_offset=chunk, end_offset=cursor).to_owned(),
+          normalized.exact_view(start=chunk, end=cursor).to_owned(),
         )
         cursor += 4 + relative + 3
         chunk = cursor
@@ -192,7 +201,7 @@ pub fn label_text(text : String) -> String {
     if name >= normalized.length() ||
       (
         !letter(normalized.code_unit_at(name).to_int()) &&
-        !normalized.view(start_offset=cursor).has_prefix("<!--")
+        !normalized.exact_view(start=cursor).has_prefix("<!--")
       ) {
       cursor += 1
       continue
@@ -221,7 +230,7 @@ pub fn label_text(text : String) -> String {
     }
     if closed {
       out.write_string(
-        normalized.view(start_offset=chunk, end_offset=cursor).to_owned(),
+        normalized.exact_view(start=chunk, end=cursor).to_owned(),
       )
       cursor = end
       chunk = end
@@ -231,7 +240,7 @@ pub fn label_text(text : String) -> String {
       cursor = normalized.length()
     }
   }
-  out.write_string(normalized.view(start_offset=chunk).to_owned())
+  out.write_string(normalized.exact_view(start=chunk).to_owned())
   out
   .to_string()
   .replace_all(old="&lt;", new="<")
@@ -419,32 +428,28 @@ fn strip_pairs(text : String, marker : String) -> String {
   let out = StringBuilder()
   let mut cursor = 0
   while cursor < text.length() {
-    let tail = text.view(start_offset=cursor)
+    let tail = text.exact_view(start=cursor)
     guard tail.find(marker) is Some(relative) else {
       out.write_string(tail.to_owned())
       break
     }
     let open = cursor + relative
     let start = open + marker.length()
-    guard text.view(start_offset=start).find(marker) is Some(relative_end) else {
+    guard text.exact_view(start~).find(marker) is Some(relative_end) else {
       out.write_string(tail.to_owned())
       break
     }
     let end = start + relative_end
-    let content = text.view(start_offset=start, end_offset=end)
+    let content = text.exact_view(start~, end~)
     if end == start ||
       content.has_prefix(" ") ||
       content.has_suffix(" ") ||
       content.has_prefix("\n") ||
       content.has_suffix("\n") {
-      out.write_string(
-        text.view(start_offset=cursor, end_offset=start).to_owned(),
-      )
+      out.write_string(text.exact_view(start=cursor, end=start).to_owned())
       cursor = start
     } else {
-      out.write_string(
-        text.view(start_offset=cursor, end_offset=open).to_owned(),
-      )
+      out.write_string(text.exact_view(start=cursor, end=open).to_owned())
       out.write_string(content.to_owned())
       cursor = end + marker.length()
     }

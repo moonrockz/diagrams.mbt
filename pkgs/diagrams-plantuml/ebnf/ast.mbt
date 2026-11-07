@@ -1,6 +1,7 @@
 ///|
 /// One typed EBNF expression. Concatenations and alternations are flat.
 /// Grouping parentheses are syntax only; the tree records the structure.
+#derive(Eq, Debug)
 pub(all) enum Expr {
   Terminal(String, @model.Quote, Notes, @diagrams.Span?)
   /// A nonterminal reference by name.
@@ -15,14 +16,15 @@ pub(all) enum Expr {
   Count(String, Expr, @diagrams.Span?)
   /// `- x`: an exclusion of `x` from the previous item of its concatenation.
   Not(Expr, @diagrams.Span?)
-} derive(Eq, Debug)
+}
 
 ///|
 /// The note above and the note below a leaf term.
+#derive(Eq, Debug)
 pub struct Notes {
   above : String?
   below : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub let no_note : Notes = { above: None, below: None, }
@@ -59,13 +61,14 @@ pub fn Expr::without_spans(self : Expr) -> Expr {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Rule {
   name : String
   body : Expr?
   above : String?
   below : String?
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 /// A rule from typed values, without a source location.
@@ -85,11 +88,12 @@ pub extend Rule with Eq::{not_equal, equal}
 pub extend Rule with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Item {
   Rule(Rule)
   /// A free-standing note, one entry per line.
   Note(ReadOnlyArray[String], @diagrams.Span?)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Item with Eq::{not_equal, equal}
@@ -98,11 +102,12 @@ pub extend Item with Eq::{not_equal, equal}
 pub extend Item with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Document {
   name : String?
   statements : ReadOnlyArray[@envelope.Statement]
   items : ReadOnlyArray[Item]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Document with Eq::{not_equal, equal}

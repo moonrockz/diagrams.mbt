@@ -1,5 +1,6 @@
 ///|
 /// One segment of a `#highlight` path.
+#derive(Eq, Debug)
 pub(all) enum Segment {
   /// A member name or an array position. Both compare as text, so `0`
   /// selects array position 0 and also an object member named `0`.
@@ -12,7 +13,7 @@ pub(all) enum Segment {
   /// `**`: zero or more member levels. At the end of a path, every member
   /// below the current container.
   Deep
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Segment with Eq::{equal, not_equal}
@@ -23,12 +24,13 @@ pub extend Segment with @debug.Debug::{to_repr}
 ///|
 /// A typed `#highlight` selector. The stereotype is inert author metadata;
 /// library themes paint every highlight.
+#derive(Eq, Debug)
 pub struct Selector {
   segments : ReadOnlyArray[Segment]
   /// The text between `<<` and `>>`, without the outer markers.
   stereotype : String?
   span : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Selector with Eq::{equal, not_equal}

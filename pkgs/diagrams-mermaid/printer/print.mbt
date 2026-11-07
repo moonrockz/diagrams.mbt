@@ -1,5 +1,5 @@
 ///|
-fn line(buf : StringBuilder, depth : Int, text : String) -> Unit {
+fn line(buf : StringBuilder, depth : Int32, text : String) -> Unit {
   for _ in 0..<depth {
     buf.write_string("  ")
   }
@@ -53,7 +53,7 @@ fn section_keyword(kind : @ast.FrameKind) -> String {
 ///|
 fn statements(
   buf : StringBuilder,
-  depth : Int,
+  depth : Int32,
   list : ReadOnlyArray[@ast.Statement],
 ) -> Unit {
   for s in list {
@@ -62,7 +62,11 @@ fn statements(
 }
 
 ///|
-fn statement(buf : StringBuilder, depth : Int, kind : @ast.StatementKind) -> Unit {
+fn statement(
+  buf : StringBuilder,
+  depth : Int32,
+  kind : @ast.StatementKind,
+) -> Unit {
   match kind {
     Participant(p) => {
       let head = (if p.created { "create " } else { "" }) +
@@ -96,7 +100,10 @@ fn statement(buf : StringBuilder, depth : Int, kind : @ast.StatementKind) -> Uni
       line(
         buf,
         depth,
-        colon("\{m.sender}\{before}\{m.arrow}\{after}\{central}\{m.receiver}", m.text),
+        colon(
+          "\{m.sender}\{before}\{m.arrow}\{after}\{central}\{m.receiver}",
+          m.text,
+        ),
       )
     }
     Note(n) => {

@@ -403,7 +403,7 @@ async fn main {
       )
     }
     let arguments = [
-      "moonrockz/zig-cross@0.3.2", "exec", "host", "--", "moonx", "scripts/test.mbtx",
+      "moonrockz/zig-cross@0.4.1", "exec", "host", "--", "moonx", "scripts/test.mbtx",
       "native",
     ]
     if options.jobs is Some(jobs) {

@@ -2,6 +2,7 @@
 pub let max_duration_ms : Int64 = 9007199254740991L
 
 ///|
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
@@ -9,7 +10,7 @@ pub struct Limits {
   results : Int32
   work : Int32
   depth : Int32
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -35,6 +36,7 @@ pub fn Limits::valid(self : Limits) -> Bool {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum OccurrenceKind {
   Bpmn(@bpmn.ConnectionKind)
   SequenceMessage
@@ -48,10 +50,11 @@ pub(all) enum OccurrenceKind {
   DataConnector
   /// A visible node or row without a connection path.
   Visit(VisitKind)
-} derive(Eq, Debug)
+}
 
 ///|
 /// The kind of a node-visit target.
+#derive(Eq, Debug)
 pub(all) enum VisitKind {
   StateNode(@state.Role)
   StateNote
@@ -63,9 +66,10 @@ pub(all) enum VisitKind {
   DataRow
   /// A data container box, or a scalar root box.
   DataBox
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Occurrence {
   key : String
   index : Int32
@@ -79,7 +83,7 @@ pub struct Occurrence {
   railroad_term : @railroad_trace.Term?
   data_member : @data_tree.Member?
   data_node : @data_tree.Node?
-} derive(Eq, Debug)
+}
 
 ///|
 /// True for a node-visit target, which has no connection path.
@@ -88,27 +92,31 @@ pub fn Occurrence::is_visit(self : Occurrence) -> Bool {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Control {
   Message(Int32)
   Frame(Int32)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct SectionInfo {
   role : @sequence.SectionRole
   label : String?
   controls : ReadOnlyArray[Control]
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct FrameInfo {
   key : String
   path : ReadOnlyArray[Int32]
   kind : @sequence.FrameKind
   sections : ReadOnlyArray[SectionInfo]
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum NodeKind {
   Bpmn(@bpmn.NodeKind)
   Message
@@ -134,9 +142,10 @@ pub(all) enum NodeKind {
   RailroadPoint
   /// One structured-data value.
   DataValue
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct GraphNode {
   id : String
   label : String
@@ -144,9 +153,10 @@ pub struct GraphNode {
   occurrence : String?
   source_node : @bpmn.Node?
   swimlane_node : @swimlane.Node?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum EdgeKind {
   SequenceFlow
   MessageFlow
@@ -160,16 +170,17 @@ pub(all) enum EdgeKind {
   Railroad
   /// A data parent/child containment relation.
   Containment
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct GraphEdge {
   kind : EdgeKind
   source : String
   target : String
   occurrence : String?
   reversed : Bool
-} derive(Eq, Debug)
+}
 
 ///|
 pub struct Graph {
@@ -217,6 +228,7 @@ pub struct CatalogResult {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Motion {
   Step(String, Int64)
   OrientedStep(String, Int64, Bool)
@@ -224,7 +236,7 @@ pub(all) enum Motion {
   Visit(String, Int64)
   Serial(ReadOnlyArray[Motion])
   Parallel(ReadOnlyArray[Motion])
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Motion::serial(children : ArrayView[Motion]) -> Motion {
@@ -237,18 +249,20 @@ pub fn Motion::parallel(children : ArrayView[Motion]) -> Motion {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Choice {
   Alternative(Int32)
   Repetitions(Int32)
   Optional(Bool)
   ExceptionSections(ReadOnlyArray[Int32])
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Selection {
   frame_key : String
   choice : Choice
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Selection::new(frame_key : String, choice : Choice) -> Selection {
@@ -256,12 +270,14 @@ pub fn Selection::new(frame_key : String, choice : Choice) -> Selection {
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum PlaybackMode {
   Finite
   Illustrative
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct ScheduledStep {
   ordinal : Int32
   occurrence : Occurrence
@@ -270,16 +286,17 @@ pub struct ScheduledStep {
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
   visit : Bool
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct PlaybackPlan {
   view_id : String
   mode : PlaybackMode
   duration_ms : Int64
   steps : ReadOnlyArray[ScheduledStep]
   priv source : @render.Diagram
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn PlaybackPlan::matches(self : PlaybackPlan, catalog : Catalog) -> Bool {
@@ -293,6 +310,7 @@ pub struct PlanResult {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Active {
   ordinal : Int32
   key : String
@@ -301,15 +319,16 @@ pub struct Active {
   concurrent_groups : ReadOnlyArray[Int32]
   reversed : Bool
   visit : Bool
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Sample {
   elapsed_ms : Int64
   duration_ms : Int64
   finished : Bool
   active : ReadOnlyArray[Active]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn PlaybackPlan::sample_at(
@@ -345,13 +364,15 @@ pub fn PlaybackPlan::sample_at(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Direction {
   Forward
   Reverse
   Both
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum LimitKind {
   Nodes
   Edges
@@ -359,17 +380,19 @@ pub(all) enum LimitKind {
   Work
   Steps
   Depth
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum QueryFailure {
   InvalidEndpoint(String)
   OutsideView(String)
   InvalidLimits
   Limit(LimitKind)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Route {
   view_id : String
   direction : Direction
@@ -377,20 +400,22 @@ pub struct Route {
   edges : ReadOnlyArray[GraphEdge]
   reversed : ReadOnlyArray[Bool]
   priv source : @render.Diagram
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum RouteResult {
   Found(Route)
   Unreachable
   Failed(QueryFailure)
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum ReachabilityResult {
   Complete(ReadOnlyArray[GraphNode])
   Failed(QueryFailure)
-} derive(Eq, Debug)
+}
 
 ///|
 priv struct Budget {

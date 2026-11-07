@@ -472,7 +472,7 @@ fn generate_enums(
     enums.push((name, values, union_value))
     let symbol = type_symbol(name)
     code.write_string(
-      "\n///|\n/// Values of the pinned XSD type \{name.1}.\npub(all) enum \{symbol} {\n",
+      "\n///|\n/// Values of the pinned XSD type \{name.1}.\n#derive(Eq, Debug)\npub(all) enum \{symbol} {\n",
     )
     for value in values {
       code.write_string("  \{upper(value)}\n")
@@ -481,7 +481,7 @@ fn generate_enums(
       code.write_string("  Uri(String)\n")
     }
     code.write_string(
-      "} derive(Eq, Debug)\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::token(self : \{symbol}) -> String {\n  match self {\n",
+      "}\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::token(self : \{symbol}) -> String {\n  match self {\n",
     )
     for value in values {
       code.write_string("    \{upper(value)} => \{literal(value)}\n")
@@ -507,14 +507,14 @@ fn generate_enums(
     code.write_string("  }\n}\n")
   }
   code.write_string(
-    "\n///|\n/// Typed alternatives retain the identity of each normative enumeration.\npub(all) enum BpmnEnum {\n",
+    "\n///|\n/// Typed alternatives retain the identity of each normative enumeration.\n#derive(Eq, Debug)\npub(all) enum BpmnEnum {\n",
   )
   for (name, _, _) in enums {
     let symbol = type_symbol(name)
     code.write_string("  \{symbol}(\{symbol})\n")
   }
   code.write_string(
-    "} derive(Eq, Debug)\n\n///|\npub extend BpmnEnum with Eq::{equal, not_equal}\n\n///|\npub extend BpmnEnum with @debug.Debug::{to_repr}\n\n///|\npub fn BpmnEnum::type_id(self : BpmnEnum) -> TypeId {\n  match self {\n",
+    "}\n\n///|\npub extend BpmnEnum with Eq::{equal, not_equal}\n\n///|\npub extend BpmnEnum with @debug.Debug::{to_repr}\n\n///|\npub fn BpmnEnum::type_id(self : BpmnEnum) -> TypeId {\n  match self {\n",
   )
   for (name, _, _) in enums {
     let symbol = type_symbol(name)
@@ -586,7 +586,7 @@ fn generates(schemas : Array[Schema]) -> (String, String) {
   let identities = kinds.values().to_array()
   identities.sort_by((a, b) => name_key(a.0, a.1).compare(name_key(b.0, b.1)))
   code.write_string(
-    "///|\n/// Standard element names derived from global and local declarations.\npub(all) enum Kind {\n",
+    "///|\n/// Standard element names derived from global and local declarations.\n#derive(Eq, Debug)\npub(all) enum Kind {\n",
   )
   let symbols : Map[String, Bool] = Map([])
   for name in identities {
@@ -598,7 +598,7 @@ fn generates(schemas : Array[Schema]) -> (String, String) {
     code.write_string("  \{symbol}\n")
   }
   code.write_string(
-    "  Foreign(ExpandedName)\n  Unknown(ExpandedName)\n} derive(Eq, Debug)\n\n///|\npub extend Kind with Eq::{equal, not_equal}\n\n///|\npub extend Kind with @debug.Debug::{to_repr}\n\n///|\npub fn Kind::local_name(self : Kind) -> String {\n  match self {\n",
+    "  Foreign(ExpandedName)\n  Unknown(ExpandedName)\n}\n\n///|\npub extend Kind with Eq::{equal, not_equal}\n\n///|\npub extend Kind with @debug.Debug::{to_repr}\n\n///|\npub fn Kind::local_name(self : Kind) -> String {\n  match self {\n",
   )
   for name in identities {
     code.write_string("    \{kind_symbol(name)} => \{literal(name.1)}\n")
@@ -615,7 +615,7 @@ fn generates(schemas : Array[Schema]) -> (String, String) {
   for name in identities {
     code.write_string("  \{kind_symbol(name)},\n")
   }
-  code.write_string("]\n\n///|\npub(all) enum TypeId {\n")
+  code.write_string("]\n\n///|\n#derive(Eq, Debug)\npub(all) enum TypeId {\n")
   let type_symbols : Map[String, Bool] = Map([])
   for (_, name) in type_entries {
     let symbol = type_symbol(name)
@@ -626,7 +626,7 @@ fn generates(schemas : Array[Schema]) -> (String, String) {
     code.write_string("  \{symbol}\n")
   }
   code.write_string(
-    "} derive(Eq, Debug)\n\n///|\npub extend TypeId with Eq::{equal, not_equal}\n\n///|\npub extend TypeId with @debug.Debug::{to_repr}\n\n///|\npub let schema_types : ReadOnlyArray[SchemaType] = [\n",
+    "}\n\n///|\npub extend TypeId with Eq::{equal, not_equal}\n\n///|\npub extend TypeId with @debug.Debug::{to_repr}\n\n///|\npub let schema_types : ReadOnlyArray[SchemaType] = [\n",
   )
   for (node, name) in type_entries {
     let members : Array[(String, String)] = []
@@ -1062,7 +1062,7 @@ fn generate_models(schemas : Array[Schema]) -> String {
     }
     let fields = model_fields(name, types, globals)
     b.write_string(
-      "\n///|\n/// Immutable typed view of schema \{name.1}.\npub struct \{symbol} { element : Element } derive(Eq, Debug)\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::from_element(element : Element) -> \{symbol}? {\n  if typed_element_is(element,TypeId::\{type_id}) { Some({ element, }) } else { None }\n}\n",
+      "\n///|\n/// Immutable typed view of schema \{name.1}.\n#derive(Eq, Debug)\npub struct \{symbol} { element : Element }\n\n///|\npub extend \{symbol} with Eq::{equal, not_equal}\n\n///|\npub extend \{symbol} with @debug.Debug::{to_repr}\n\n///|\npub fn \{symbol}::from_element(element : Element) -> \{symbol}? {\n  if typed_element_is(element,TypeId::\{type_id}) { Some({ element, }) } else { None }\n}\n",
     )
     if node.attrs.get("abstract") != Some("true") &&
       elements.iter().find_first(e => e.1 == name) is Some((element, _)) {

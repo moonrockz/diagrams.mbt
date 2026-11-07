@@ -1,9 +1,10 @@
 ///|
 /// The schemes understood by diagram adapters.
+#derive(Eq, Debug)
 pub(all) enum LinkScheme {
   Smithy
   OpenRpc
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend LinkScheme with Eq::{not_equal, equal}
@@ -13,10 +14,11 @@ pub extend LinkScheme with @debug.Debug::{to_repr}
 
 ///|
 /// A format-independent link. Smithy targets use the canonical `#` spelling.
+#derive(Eq, Debug)
 pub struct Link {
   scheme : LinkScheme
   target : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Link with Eq::{not_equal, equal}
@@ -31,11 +33,12 @@ pub fn Link::new(scheme : LinkScheme, target : String) -> Link {
 
 ///|
 /// A box group. `id` distinguishes groups that have the same label.
+#derive(Eq, Debug)
 pub struct BoxGroup {
   id : String
   label : String
   colour : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend BoxGroup with Eq::{not_equal, equal}
@@ -50,11 +53,12 @@ pub fn BoxGroup::new(id : String, label : String, colour? : String) -> BoxGroup 
 
 ///|
 /// Properties supplied by an adapter. The declared kind stays on the participant.
+#derive(Eq, Debug)
 pub struct ParticipantProperties {
   kind : ParticipantKind?
   sublabel : String?
   description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ParticipantProperties with Eq::{not_equal, equal}
@@ -73,10 +77,11 @@ pub fn ParticipantProperties::new(
 
 ///|
 /// Additional message text supplied by an adapter.
+#derive(Eq, Debug)
 pub struct MessageProperties {
   sublabel : String?
   description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend MessageProperties with Eq::{not_equal, equal}
@@ -117,11 +122,12 @@ pub fn Message::with_properties(
 
 ///|
 /// The placement of a note.
+#derive(Eq, Debug)
 pub(all) enum Placement {
   LeftOf
   RightOf
   Over
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Placement with Eq::{not_equal, equal}
@@ -131,11 +137,12 @@ pub extend Placement with @debug.Debug::{to_repr}
 
 ///|
 /// A note on one or more participants.
+#derive(Eq, Debug)
 pub struct Note {
   placement : Placement
   participants : ReadOnlyArray[String]
   text : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Note with Eq::{not_equal, equal}
@@ -154,6 +161,7 @@ pub fn Note::new(
 
 ///|
 /// The meaning of a frame. `ParOver` permits overlapping parallel sections.
+#derive(Eq, Debug)
 pub(all) enum FrameKind {
   Loop
   Alt
@@ -164,7 +172,7 @@ pub(all) enum FrameKind {
   Break
   Rect
   Try
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend FrameKind with Eq::{not_equal, equal}
@@ -174,12 +182,13 @@ pub extend FrameKind with @debug.Debug::{to_repr}
 
 ///|
 /// One ordered section of a frame.
+#derive(Eq, Debug)
 pub(all) enum SectionRole {
   Plain
   Try
   Catch
   Finally
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend SectionRole with Eq::{equal, not_equal}
@@ -188,11 +197,12 @@ pub extend SectionRole with Eq::{equal, not_equal}
 pub extend SectionRole with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Section {
   role : SectionRole
   label : String?
   events : ReadOnlyArray[Event]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Section with Eq::{not_equal, equal}
@@ -212,11 +222,12 @@ pub fn Section::new(
 ///|
 /// A nested frame. A first section is required; `colour` belongs to rect frames.
 /// The colour is stored on the frame rather than as a section label.
+#derive(Eq, Debug)
 pub struct Frame {
   kind : FrameKind
   sections : ReadOnlyArray[Section]
   colour : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Frame with Eq::{not_equal, equal}
@@ -236,10 +247,11 @@ pub fn Frame::new(
 
 ///|
 /// A numbering change at this point in the event stream.
+#derive(Eq, Debug)
 pub(all) enum Autonumber {
   On(start~ : Double?, step~ : Double?)
   Off
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Autonumber with Eq::{not_equal, equal}

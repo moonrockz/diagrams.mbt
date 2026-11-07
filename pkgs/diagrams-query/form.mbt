@@ -1,10 +1,11 @@
 ///|
 /// An unresolved name of the query form. `prefix` is a query namespace
 /// prefix; `None` means no namespace.
+#derive(Eq, Debug)
 pub struct QName {
   prefix : String?
   local_name : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QName with Eq::{equal, not_equal}
@@ -14,16 +15,17 @@ pub extend QName with @debug.Debug::{to_repr}
 
 ///|
 pub fn QName::new(local_name : String, prefix? : String) -> QName {
-  { prefix, local_name }
+  { prefix, local_name, }
 }
 
 ///|
 /// What a node pattern selects: an exact kind, a category or any node.
+#derive(Eq, Debug)
 pub(all) enum Selector {
   Kind(QName)
   Category(String)
   Wildcard
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Selector with Eq::{equal, not_equal}
@@ -35,10 +37,11 @@ pub extend Selector with @debug.Debug::{to_repr}
 /// A structural pattern. `Node` has a selector, ordered parts and capture
 /// names. `Alternation` tries its branches in order; its captures bind the
 /// node that the selected branch matched.
+#derive(Eq, Debug)
 pub(all) enum Pattern {
   Node(Selector, ReadOnlyArray[Part], ReadOnlyArray[String])
   Alternation(ReadOnlyArray[Pattern], ReadOnlyArray[String])
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Pattern with Eq::{equal, not_equal}
@@ -50,11 +53,12 @@ pub extend Pattern with @debug.Debug::{to_repr}
 /// A part of a node pattern. `Child` matches a direct child, `Field` a
 /// direct child in a named field, and `Absent` requires that the field has no
 /// child.
+#derive(Eq, Debug)
 pub(all) enum Part {
   Child(Pattern)
   Field(QName, Pattern)
   Absent(QName)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Part with Eq::{equal, not_equal}
@@ -65,11 +69,12 @@ pub extend Part with @debug.Debug::{to_repr}
 ///|
 /// A native predicate. `name` is the predicate name without `#`, for example
 /// `attr-eq?`. `operands` are the strings after the capture.
+#derive(Eq, Debug)
 pub struct Predicate {
   name : String
   capture : String
   operands : ReadOnlyArray[String]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Predicate with Eq::{equal, not_equal}
@@ -79,10 +84,11 @@ pub extend Predicate with @debug.Debug::{to_repr}
 
 ///|
 /// One source pattern with its conjunctive predicates.
+#derive(Eq, Debug)
 pub struct Rule {
   pattern : Pattern
   predicates : ReadOnlyArray[Predicate]
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}
@@ -100,7 +106,7 @@ pub struct QueryForm {
 
 ///|
 /// Forms are equal when their rules are equal; source spans do not count.
-pub impl Eq for QueryForm with equal(a, b) {
+pub impl Eq for QueryForm with fn equal(a, b) {
   a.rules == b.rules
 }
 
@@ -108,7 +114,7 @@ pub impl Eq for QueryForm with equal(a, b) {
 pub extend QueryForm with Eq::{equal, not_equal}
 
 ///|
-pub impl @debug.Debug for QueryForm with to_repr(self) {
+pub impl @debug.Debug for QueryForm with fn to_repr(self) {
   @debug.Repr::Repr(self.rules.iter().to_array())
 }
 
@@ -117,23 +123,23 @@ pub extend QueryForm with @debug.Debug::{to_repr}
 
 ///|
 pub fn QueryForm::new(rules : ArrayView[Rule]) -> QueryForm {
-  { rules: ReadOnlyArray::from_array(rules.to_owned()), spans: [] }
+  { rules: ReadOnlyArray::from_array(rules.to_owned()), spans: [], }
 }
 
 ///|
 pub fn Rule::new(
   pattern : Pattern,
-  predicates? : ArrayView[Predicate] = [],
+  predicates~ : ArrayView[Predicate] = [],
 ) -> Rule {
-  { pattern, predicates: ReadOnlyArray::from_array(predicates.to_owned()) }
+  { pattern, predicates: ReadOnlyArray::from_array(predicates.to_owned()), }
 }
 
 ///|
 /// A node pattern.
 pub fn Pattern::node(
   selector : Selector,
-  parts? : ArrayView[Part] = [],
-  captures? : ArrayView[String] = [],
+  parts~ : ArrayView[Part] = [],
+  captures~ : ArrayView[String] = [],
 ) -> Pattern {
   Node(
     selector,
@@ -145,7 +151,7 @@ pub fn Pattern::node(
 ///|
 pub fn Pattern::alternation(
   branches : ArrayView[Pattern],
-  captures? : ArrayView[String] = [],
+  captures~ : ArrayView[String] = [],
 ) -> Pattern {
   Alternation(
     ReadOnlyArray::from_array(branches.to_owned()),
@@ -157,9 +163,9 @@ pub fn Pattern::alternation(
 pub fn Predicate::new(
   name : String,
   capture : String,
-  operands? : ArrayView[String] = [],
+  operands~ : ArrayView[String] = [],
 ) -> Predicate {
-  { name, capture, operands: ReadOnlyArray::from_array(operands.to_owned()) }
+  { name, capture, operands: ReadOnlyArray::from_array(operands.to_owned()), }
 }
 
 ///|

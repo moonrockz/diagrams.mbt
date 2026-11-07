@@ -1,5 +1,6 @@
 ///|
 /// The rule that a legibility finding breaks.
+#derive(Eq, Debug)
 pub(all) enum Rule {
   /// Boxes, rows or labels overlap, or a connector crosses an unrelated box.
   Overlap
@@ -15,7 +16,7 @@ pub(all) enum Rule {
   Endpoint
   /// The check stopped at its work limit.
   Limit
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Rule with Eq::{equal, not_equal}
@@ -24,11 +25,12 @@ pub extend Rule with Eq::{equal, not_equal}
 pub extend Rule with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Finding with Eq::{equal, not_equal}

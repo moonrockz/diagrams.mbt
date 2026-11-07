@@ -444,7 +444,8 @@ pub fn read(
       let words = header.split(" ").filter(word => !word.is_empty()).to_array()
       let placement = if header.has_prefix("floating note") {
         "floating"
-      } else if words.length() > 1 && ["left", "right", "top", "bottom"].contains(words[1].to_owned()) {
+      } else if words.length() > 1 &&
+        ["left", "right", "top", "bottom"].contains(words[1].to_owned()) {
         words[1].to_owned()
       } else {
         "right"

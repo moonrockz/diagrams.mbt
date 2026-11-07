@@ -32,6 +32,7 @@ pub fn text_width(String, size? : Int32, weight? : Int32) -> Double
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Box {
   node : String
   kind : Kind
@@ -41,32 +42,35 @@ pub struct Box {
   label : Label?
   highlighted : Bool
   depth : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Box::equal(Self, Self) -> Bool
 pub fn Box::not_equal(Self, Self) -> Bool
 pub fn Box::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Connector {
   entry : String
   source : String
   target : String
   points : ReadOnlyArray[Point]
-} derive(Eq, @debug.Debug)
+}
 pub fn Connector::equal(Self, Self) -> Bool
 pub fn Connector::not_equal(Self, Self) -> Bool
 pub fn Connector::path(Self) -> String
 pub fn Connector::samples(Self, count? : Int32) -> Array[Point]
 pub fn Connector::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Finding::equal(Self, Self) -> Bool
 pub fn Finding::not_equal(Self, Self) -> Bool
 pub fn Finding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Geometry {
   tree : @data-tree.DataTree
   width : Int32
@@ -74,11 +78,12 @@ pub struct Geometry {
   title : Label?
   boxes : ReadOnlyArray[Box]
   connectors : ReadOnlyArray[Connector]
-} derive(Eq, @debug.Debug)
+}
 pub fn Geometry::equal(Self, Self) -> Bool
 pub fn Geometry::not_equal(Self, Self) -> Bool
 pub fn Geometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Ink {
   Key
   Index
@@ -88,13 +93,14 @@ pub(all) enum Ink {
   Null
   Container
   Title
-} derive(Eq, @debug.Debug)
+}
 pub fn Ink::color(Self, @theme.Palette) -> @theme.Color
 pub fn Ink::equal(Self, Self) -> Bool
 pub fn Ink::not_equal(Self, Self) -> Bool
 pub fn Ink::to_repr(Self) -> @debug.Repr
 pub fn Ink::token(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Object
   Array
@@ -102,23 +108,25 @@ pub(all) enum Kind {
   Number
   Boolean
   Null
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::name(Self) -> String
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Label {
   lines : ReadOnlyArray[String]
   box : Rect
   size : Double
   weight : Int32
   ink : Ink
-} derive(Eq, @debug.Debug)
+}
 pub fn Label::equal(Self, Self) -> Bool
 pub fn Label::not_equal(Self, Self) -> Bool
 pub fn Label::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
@@ -126,27 +134,29 @@ pub struct Limits {
   width : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32, width? : Int32, output_units? : Int32, minimum_approach? : Double) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::with_minimum_approach(Self, Double) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Point::equal(Self, Self) -> Bool
 pub fn Point::not_equal(Self, Self) -> Bool
 pub fn Point::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Rect::bottom(Self) -> Double
 pub fn Rect::contains(Self, Self, tolerance? : Double) -> Bool
 pub fn Rect::equal(Self, Self) -> Bool
@@ -160,6 +170,7 @@ pub struct Result {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub struct Row {
   entry : String
   node : String
@@ -169,11 +180,12 @@ pub struct Row {
   value : Label?
   highlighted : Bool
   port : Point?
-} derive(Eq, @debug.Debug)
+}
 pub fn Row::equal(Self, Self) -> Bool
 pub fn Row::not_equal(Self, Self) -> Bool
 pub fn Row::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Rule {
   Overlap
   Fit
@@ -182,7 +194,7 @@ pub(all) enum Rule {
   Containment
   Endpoint
   Limit
-} derive(Eq, @debug.Debug)
+}
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::not_equal(Self, Self) -> Bool
 pub fn Rule::to_repr(Self) -> @debug.Repr

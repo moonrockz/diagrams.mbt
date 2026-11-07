@@ -154,13 +154,14 @@ fn api_dirs(site_json : String) -> Array[String] {
 
 ///|
 /// What one step does.
+#derive(Eq, Debug)
 enum Action {
   /// Run the command with the arguments.
   Run(String, Array[String])
   /// Serve `_site/` on the port with `serve-site.mbtx --no-watch`, run the browser smoke test against
   /// the tree at the path below the base path (`""` for the whole site), and stop the server.
   BrowserTest(Int32, String)
-} derive(Eq, Debug)
+}
 
 ///|
 /// The port of the preview server during the browser smoke test (design D16).
@@ -184,10 +185,11 @@ fn site_base(text : String) -> String raise Failure {
 
 ///|
 /// One step of a site task.
+#derive(Eq, Debug)
 struct Step {
   name : String
   action : Action
-} derive(Eq, Debug)
+}
 
 ///|
 fn run(name : String, command : String, args : Array[String]) -> Step {

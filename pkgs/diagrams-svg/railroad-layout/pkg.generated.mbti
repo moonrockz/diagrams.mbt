@@ -24,39 +24,43 @@ pub fn term_colors(@theme.Palette, Shape) -> (@theme.Color, @theme.Color, @theme
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) enum Channel {
   Matched
   NotMatched
   Taken
   Failure
-} derive(Eq, @debug.Debug)
+}
 pub fn Channel::equal(Self, Self) -> Bool
 pub fn Channel::not_equal(Self, Self) -> Bool
 pub fn Channel::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Finding {
   rule : Rule
   identities : ReadOnlyArray[String]
   message : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Finding::equal(Self, Self) -> Bool
 pub fn Finding::not_equal(Self, Self) -> Bool
 pub fn Finding::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Frame {
   owner : String
   role : FrameRole
   rect : Rect
   label : Label
-} derive(Eq, @debug.Debug)
+}
 pub fn Frame::equal(Self, Self) -> Bool
 pub fn Frame::not_equal(Self, Self) -> Bool
 pub fn Frame::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum FrameRole {
   Group
   Except
-} derive(Eq, @debug.Debug)
+}
 pub fn FrameRole::equal(Self, Self) -> Bool
 pub fn FrameRole::not_equal(Self, Self) -> Bool
 pub fn FrameRole::to_repr(Self) -> @debug.Repr
@@ -77,6 +81,7 @@ pub fn Geometry::new(@railroad-trace.Topology, Double, Double, ArrayView[TrackBo
 pub fn Geometry::point(Self, String) -> Point?
 pub fn Geometry::points(Self) -> Array[(String, Point)]
 
+#derive(Eq, @debug.Debug)
 pub struct Label {
   lines : ReadOnlyArray[String]
   x : Double
@@ -84,11 +89,12 @@ pub struct Label {
   weight : Int32
   box : Rect
   owner : String
-} derive(Eq, @debug.Debug)
+}
 pub fn Label::equal(Self, Self) -> Bool
 pub fn Label::not_equal(Self, Self) -> Bool
 pub fn Label::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
@@ -96,44 +102,48 @@ pub struct Limits {
   width : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32, width? : Int32, output_units? : Int32, minimum_approach? : Double) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 pub fn Limits::with_minimum_approach(Self, Double) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Model {
   Regex(@regex.Regex)
   Ebnf(@ebnf.Grammar)
-} derive(Eq, @debug.Debug)
+}
 pub fn Model::equal(Self, Self) -> Bool
 pub fn Model::not_equal(Self, Self) -> Bool
 pub fn Model::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct NoteBox {
   id : String
   rect : Rect
   label : Label
-} derive(Eq, @debug.Debug)
+}
 pub fn NoteBox::equal(Self, Self) -> Bool
 pub fn NoteBox::not_equal(Self, Self) -> Bool
 pub fn NoteBox::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Point::equal(Self, Self) -> Bool
 pub fn Point::not_equal(Self, Self) -> Bool
 pub fn Point::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn Rect::contains(Self, Self, tolerance? : Double) -> Bool
 pub fn Rect::equal(Self, Self) -> Bool
 pub fn Rect::not_equal(Self, Self) -> Bool
@@ -145,6 +155,7 @@ pub struct Result {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Rule {
   Overlap
   Fit
@@ -152,11 +163,12 @@ pub(all) enum Rule {
   Endpoint
   Length
   Limit
-} derive(Eq, @debug.Debug)
+}
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::not_equal(Self, Self) -> Bool
 pub fn Rule::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Shape {
   Pill
   Square
@@ -165,39 +177,42 @@ pub(all) enum Shape {
   Anchor
   Lookaround
   Dot
-} derive(Eq, @debug.Debug)
+}
 pub fn Shape::equal(Self, Self) -> Bool
 pub fn Shape::not_equal(Self, Self) -> Bool
 pub fn Shape::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct TermBox {
   term : @railroad-trace.Term
   shape : Shape
   rect : Rect
   label : Label
   notes : ReadOnlyArray[Label]
-} derive(Eq, @debug.Debug)
+}
 pub fn TermBox::equal(Self, Self) -> Bool
 pub fn TermBox::not_equal(Self, Self) -> Bool
 pub fn TermBox::to_repr(Self) -> @debug.Repr
 pub fn TermBox::with_rect(Self, Rect) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct TrackBox {
   track : @railroad-trace.Track
   label : Label
   start : Point
   end : Point
   notes : ReadOnlyArray[Label]
-} derive(Eq, @debug.Debug)
+}
 pub fn TrackBox::equal(Self, Self) -> Bool
 pub fn TrackBox::not_equal(Self, Self) -> Bool
 pub fn TrackBox::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Wire {
   connector : @railroad-trace.Connector
   points : ReadOnlyArray[Point]
   label : Label?
-} derive(Eq, @debug.Debug)
+}
 pub fn Wire::equal(Self, Self) -> Bool
 pub fn Wire::length(Self) -> Double
 pub fn Wire::not_equal(Self, Self) -> Bool

@@ -23,7 +23,16 @@ pub fn AnimatedRenderer::new(
   output_units~ : Int32 = 33554432,
   raster_fonts? : @raster.FontSet,
 ) -> AnimatedRenderer {
-  { plan, playback, svg, limits, query_limits, sequence_view_id, output_units, raster_fonts, }
+  {
+    plan,
+    playback,
+    svg,
+    limits,
+    query_limits,
+    sequence_view_id,
+    output_units,
+    raster_fonts,
+  }
 }
 
 ///|
@@ -111,12 +120,21 @@ pub impl @render.Renderer for AnimatedRenderer with fn render(self, diagram) {
       "animation/render-limit", "Display SVG exceeds the HTML output limit",
     )
   }
-  let font_subset = self.raster_fonts.unwrap_or_else(@raster.FontSet::default).subset_for_svg(scene.canonical_svg)
+  let font_subset = self.raster_fonts
+    .unwrap_or_else(@raster.FontSet::default)
+    .subset_for_svg(scene.canonical_svg)
   let font_result = font_subset.fonts.map(fonts => fonts.export_data())
   let font_data = font_result.bind(result => result.data).unwrap_or(Json(null))
   let gif_result = @raster.gif_export_data(scene, plan)
-  let raster_errors = font_subset.diagnostics.iter().map(d => d.code + ": " + d.message).to_array()
-  if font_result is Some(result) { raster_errors.append(result.diagnostics.iter().map(d => d.code + ": " + d.message).to_array()) }
+  let raster_errors = font_subset.diagnostics
+    .iter()
+    .map(d => d.code + ": " + d.message)
+    .to_array()
+  if font_result is Some(result) {
+    raster_errors.append(
+      result.diagnostics.iter().map(d => d.code + ": " + d.message).to_array(),
+    )
+  }
   let data = playback_data(
     scene,
     plan,
@@ -126,7 +144,11 @@ pub impl @render.Renderer for AnimatedRenderer with fn render(self, diagram) {
     font_data,
     gif_result.data.unwrap_or(Json(null)),
     raster_errors.join("; "),
-    gif_result.diagnostics.iter().map(d => d.code + ": " + d.message).to_array().join("; "),
+    gif_result.diagnostics
+    .iter()
+    .map(d => d.code + ": " + d.message)
+    .to_array()
+    .join("; "),
   )
   if budget.failed {
     return failed(

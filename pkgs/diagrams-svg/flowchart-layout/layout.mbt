@@ -1,6 +1,7 @@
 ///|
 /// Flowcharts share vector geometry primitives with the swimlane layout engine.
 /// The adapter preserves ordinary groups and introduces no responsibility lanes.
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
@@ -10,7 +11,7 @@ pub struct Limits {
   width : Int32
   height : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -27,6 +28,7 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Connection {
   connection : @model.Connection
   index : Int32
@@ -34,9 +36,10 @@ pub struct Connection {
   target : String
   line : ReadOnlyArray[@geometry.Point]
   label : @geometry.Label?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Geometry {
   view : @model.Flowchart
   shapes : ReadOnlyArray[@geometry.Shape]
@@ -48,13 +51,14 @@ pub struct Geometry {
   priv prior_diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
   priv intentional : ReadOnlyArray[(String, String)]
   priv hidden_containers : ReadOnlyArray[String]
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Result {
   geometry : Geometry?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 fn vector_direction(value : @model.Direction) -> @vector.Direction {
@@ -114,8 +118,8 @@ pub fn diagnostics(
 pub fn layout(
   view : @model.Flowchart,
   limits~ : Limits = Limits::new(),
-  ordered_scopes~ : ArrayView[(String,@model.Direction)] = [],
-  region_directions~ : ArrayView[(String,@model.Direction)] = [],
+  ordered_scopes~ : ArrayView[(String, @model.Direction)] = [],
+  region_directions~ : ArrayView[(String, @model.Direction)] = [],
   scope_padding~ : Double = 0.0,
 ) -> Result {
   fn failed(code : String, message : String) -> Result {
@@ -537,9 +541,9 @@ pub fn layout(
     vector,
     limits=geometry_limits,
     flowchart=true,
-    ordered_scopes=ordered_scopes.map(p => (p.0,vector_direction(p.1))),
+    ordered_scopes=ordered_scopes.map(p => (p.0, vector_direction(p.1))),
     scope_padding~,
-    region_directions=region_directions.map(p => (p.0,vector_direction(p.1))),
+    region_directions=region_directions.map(p => (p.0, vector_direction(p.1))),
     direction_hints~,
   )
   let mut overlay_applied = false

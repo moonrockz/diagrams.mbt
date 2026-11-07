@@ -93,7 +93,10 @@ test "a column counts a non-BMP character as two UTF-16 code units" {
 
 ///|
 test "participant forms" {
-  assert_eq(sig(first("participant A")), [(Keyword, "participant"), (Identifier, "A")])
+  assert_eq(sig(first("participant A")), [
+    (Keyword, "participant"),
+    (Identifier, "A"),
+  ])
   assert_eq(sig(first("Participant Alice Smith")), [
     (Keyword, "Participant"),
     (Identifier, "Alice Smith"),
@@ -104,15 +107,18 @@ test "participant forms" {
     (Keyword, "as"),
     (Text, "Alice<br/>Johnson"),
   ])
-  assert_eq(sig(first("actor DB@{ \"type\": \"database\" } as User Database")), [
-    (Keyword, "actor"),
-    (Identifier, "DB"),
-    (ConfigOpen, "@{"),
-    (Config, " \"type\": \"database\" "),
-    (ConfigClose, "}"),
-    (Keyword, "as"),
-    (Text, "User Database"),
-  ])
+  assert_eq(
+    sig(first("actor DB@{ \"type\": \"database\" } as User Database")),
+    [
+      (Keyword, "actor"),
+      (Identifier, "DB"),
+      (ConfigOpen, "@{"),
+      (Config, " \"type\": \"database\" "),
+      (ConfigClose, "}"),
+      (Keyword, "as"),
+      (Text, "User Database"),
+    ],
+  )
   assert_eq(sig(first("create actor D as Donald")), [
     (Keyword, "create"),
     (Keyword, "actor"),
@@ -127,7 +133,10 @@ test "participant forms" {
 test "destroy, activate and deactivate" {
   assert_eq(first("destroy Carl").kind, Destroy)
   assert_eq(first("activate John").kind, Activate)
-  assert_eq(sig(first("deactivate John")), [(Keyword, "deactivate"), (Identifier, "John")])
+  assert_eq(sig(first("deactivate John")), [
+    (Keyword, "deactivate"),
+    (Identifier, "John"),
+  ])
 }
 
 ///|
@@ -144,7 +153,13 @@ test "every arrow of the Mermaid 12.2.0 grammar" {
     assert_eq(node.kind, Message, msg=arrow)
     assert_eq(
       sig(node),
-      [(Identifier, "Alice"), (Arrow, arrow), (Identifier, "Bob"), (Colon, ":"), (Text, "hi")],
+      [
+        (Identifier, "Alice"),
+        (Arrow, arrow),
+        (Identifier, "Bob"),
+        (Colon, ":"),
+        (Text, "hi"),
+      ],
       msg=arrow,
     )
   }
@@ -168,8 +183,14 @@ test "activation and central connection modifiers" {
 
 ///|
 test "participant names can have spaces and single dashes" {
-  assert_eq(sig(first("My Service->>Other-Thing: x"))[0], (Identifier, "My Service"))
-  assert_eq(sig(first("My Service->>Other-Thing: x"))[2], (Identifier, "Other-Thing"))
+  assert_eq(
+    sig(first("My Service->>Other-Thing: x"))[0],
+    (Identifier, "My Service"),
+  )
+  assert_eq(
+    sig(first("My Service->>Other-Thing: x"))[2],
+    (Identifier, "Other-Thing"),
+  )
 }
 
 ///|
@@ -195,21 +216,37 @@ test "notes" {
 
 ///|
 test "links, properties and details" {
-  assert_eq(sig(first("link Alice: Dashboard @ https://dashboard.contoso.com/alice")), [
-    (Keyword, "link"),
-    (Identifier, "Alice"),
-    (Colon, ":"),
-    (Text, "Dashboard @ https://dashboard.contoso.com/alice"),
-  ])
-  assert_eq(first("links Alice: {\"Wiki\": \"https://wiki.contoso.com/alice\"}").kind, Links)
-  assert_eq(first("properties Alice: {\"class\": \"internal\"}").kind, Properties)
+  assert_eq(
+    sig(first("link Alice: Dashboard @ https://dashboard.contoso.com/alice")),
+    [
+      (Keyword, "link"),
+      (Identifier, "Alice"),
+      (Colon, ":"),
+      (Text, "Dashboard @ https://dashboard.contoso.com/alice"),
+    ],
+  )
+  assert_eq(
+    first("links Alice: {\"Wiki\": \"https://wiki.contoso.com/alice\"}").kind,
+    Links,
+  )
+  assert_eq(
+    first("properties Alice: {\"class\": \"internal\"}").kind,
+    Properties,
+  )
   assert_eq(first("details Alice: {}").kind, Details)
 }
 
 ///|
 test "titles and accessibility text" {
-  assert_eq(sig(first("title Login flow")), [(Keyword, "title"), (Text, "Login flow")])
-  assert_eq(sig(first("title: Login flow")), [(Keyword, "title"), (Colon, ":"), (Text, "Login flow")])
+  assert_eq(sig(first("title Login flow")), [
+    (Keyword, "title"),
+    (Text, "Login flow"),
+  ])
+  assert_eq(sig(first("title: Login flow")), [
+    (Keyword, "title"),
+    (Colon, ":"),
+    (Text, "Login flow"),
+  ])
   assert_eq(sig(first("accTitle: The login; # flow")), [
     (Keyword, "accTitle"),
     (Colon, ":"),
@@ -225,13 +262,19 @@ test "titles and accessibility text" {
 ///|
 test "autonumber forms" {
   assert_eq(sig(first("autonumber")), [(Keyword, "autonumber")])
-  assert_eq(sig(first("autonumber 10")), [(Keyword, "autonumber"), (Number, "10")])
+  assert_eq(sig(first("autonumber 10")), [
+    (Keyword, "autonumber"),
+    (Number, "10"),
+  ])
   assert_eq(sig(first("autonumber 10 5")), [
     (Keyword, "autonumber"),
     (Number, "10"),
     (Number, "5"),
   ])
-  assert_eq(sig(first("autonumber off")), [(Keyword, "autonumber"), (Keyword, "off")])
+  assert_eq(sig(first("autonumber off")), [
+    (Keyword, "autonumber"),
+    (Keyword, "off"),
+  ])
 }
 
 ///|
@@ -246,16 +289,17 @@ test "a hash starts a comment, but an entity code is text" {
   let node = first("A->>B: hi # a comment")
   assert_eq(sig(node).last(), Some((Text, "hi")))
   assert_true(clean("A->>B: hi # a comment"))
-  assert_eq(sig(first("A->>B: I #9829; you #infin; times more!")).last(), Some(
-    (Text, "I #9829; you #infin; times more!"),
-  ))
+  assert_eq(
+    sig(first("A->>B: I #9829; you #infin; times more!")).last(),
+    Some((Text, "I #9829; you #infin; times more!")),
+  )
 }
 
 ///|
 test "blocks nest and keep their statements" {
   let tree = @syntax.parse(
-    "sequenceDiagram\nalt is sick\n  B->>A: no\nelse is well\n  loop daily\n    B->>A: yes\n  end\nend\n",
-  ).tree
+      "sequenceDiagram\nalt is sick\n  B->>A: no\nelse is well\n  loop daily\n    B->>A: yes\n  end\nend\n",
+    ).tree
   assert_eq(kinds(tree), [Header, Block])
   let alt = tree.nodes()[1]
   assert_eq(kinds(alt), [BlockStart, Message, Section, Block, BlockEnd])
@@ -265,12 +309,18 @@ test "blocks nest and keep their statements" {
 
 ///|
 test "every block keyword" {
-  for opener in ["loop x", "rect rgb(191, 223, 255)", "opt x", "break x", "critical x", "par x", "par_over x"] {
+  for
+    opener in [
+      "loop x", "rect rgb(191, 223, 255)", "opt x", "break x", "critical x", "par x",
+      "par_over x",
+    ] {
     assert_true(clean("\{opener}\nA->>B: m\nend"), msg=opener)
   }
   assert_true(clean("par a\nA->>B: m\nand b\nA->>C: n\nend"))
   assert_true(clean("critical a\nA->>B: m\noption b\nA->>C: n\nend"))
-  assert_true(clean("box Purple Alice & John\nparticipant A\nparticipant J\nend"))
+  assert_true(
+    clean("box Purple Alice & John\nparticipant A\nparticipant J\nend"),
+  )
 }
 
 ///|
@@ -282,7 +332,11 @@ test "keywords are case-insensitive, and a keyword inside a name is a name" {
 ///|
 test "every documented construct reads without diagnostics" {
   assert_true(clean("participant Alice@{ \"type\" : \"boundary\" }"))
-  assert_true(clean("participant API@{ \"type\": \"boundary\", \"alias\": \"Public API\" }"))
+  assert_true(
+    clean(
+      "participant API@{ \"type\": \"boundary\", \"alias\": \"Public API\" }",
+    ),
+  )
   assert_true(clean("Alice->John: Hello John,<br/>how are you?"))
   assert_true(clean("Bob->>Alice: Not so good :("))
   assert_true(clean("A->>B:"))
@@ -301,8 +355,8 @@ test "an unknown statement gives a diagnostic at its line" {
   assert_eq(d.code, "mermaid/unknown-statement")
   assert_eq(d.severity, @diagrams.Severity::Error)
   let span = d.span.unwrap()
-  assert_eq(span.start, { offset: 26, line: 3, column: 1 })
-  assert_eq(span.end, { offset: 38, line: 3, column: 13 })
+  assert_eq(span.start, { offset: 26, line: 3, column: 1, })
+  assert_eq(span.end, { offset: 38, line: 3, column: 13, })
 }
 
 ///|
@@ -310,7 +364,14 @@ test "statements after a bad statement still parse" {
   let source = "sequenceDiagram\nA->>B: one\n?? bad\nA->>B: two\n!! bad\nA->>B: three\n"
   let result = @syntax.parse(source)
   assert_eq(result.diagnostics.length(), 2)
-  assert_eq(kinds(result.tree), [Header, Message, Error, Message, Error, Message])
+  assert_eq(kinds(result.tree), [
+    Header,
+    Message,
+    Error,
+    Message,
+    Error,
+    Message,
+  ])
 }
 
 ///|
@@ -331,7 +392,9 @@ test "an empty or comment-only source gives the missing-header diagnostic at its
 
 ///|
 test "a second header is an error" {
-  assert_eq(codes("sequenceDiagram\nsequenceDiagram\n"), ["mermaid/unexpected-header"])
+  assert_eq(codes("sequenceDiagram\nsequenceDiagram\n"), [
+    "mermaid/unexpected-header",
+  ])
 }
 
 ///|
@@ -346,8 +409,12 @@ test "a message without a receiver is an error" {
 
 ///|
 test "a bad participant declaration is an error" {
-  assert_eq(codes("sequenceDiagram\nparticipant A<B\n"), ["mermaid/invalid-participant"])
-  assert_eq(codes("sequenceDiagram\ncreate note\n"), ["mermaid/invalid-participant"])
+  assert_eq(codes("sequenceDiagram\nparticipant A<B\n"), [
+    "mermaid/invalid-participant",
+  ])
+  assert_eq(codes("sequenceDiagram\ncreate note\n"), [
+    "mermaid/invalid-participant",
+  ])
   assert_eq(codes("sequenceDiagram\nparticipant A@{ \"type\": \"queue\"\n"), [
     "mermaid/invalid-participant",
   ])
@@ -357,12 +424,16 @@ test "a bad participant declaration is an error" {
 test "a bad note is an error" {
   assert_eq(codes("sequenceDiagram\nnote A: x\n"), ["mermaid/invalid-note"])
   assert_eq(codes("sequenceDiagram\nnote over A\n"), ["mermaid/invalid-note"])
-  assert_eq(codes("sequenceDiagram\nnote left of A,B: x\n"), ["mermaid/invalid-note"])
+  assert_eq(codes("sequenceDiagram\nnote left of A,B: x\n"), [
+    "mermaid/invalid-note",
+  ])
 }
 
 ///|
 test "a bad autonumber is an error" {
-  assert_eq(codes("sequenceDiagram\nautonumber ten\n"), ["mermaid/invalid-autonumber"])
+  assert_eq(codes("sequenceDiagram\nautonumber ten\n"), [
+    "mermaid/invalid-autonumber",
+  ])
 }
 
 ///|
@@ -380,7 +451,9 @@ test "a missing frame end is reported at the frame keyword, and the frame keeps 
   let source = "sequenceDiagram\nloop every minute\nA->>B: ping\nB->>A: pong\n"
   let result = @syntax.parse(source)
   assert_eq(result.tree.text(), source)
-  assert_eq(result.diagnostics.map(d => d.code).iter().to_array(), ["mermaid/missing-end"])
+  assert_eq(result.diagnostics.map(d => d.code).iter().to_array(), [
+    "mermaid/missing-end",
+  ])
   let span = result.diagnostics[0].span.unwrap()
   assert_eq((span.start.line, span.start.column, span.end.column), (2, 1, 5))
   let block = result.tree.nodes()[1]
@@ -395,13 +468,19 @@ test "an end without a frame is an error" {
 ///|
 test "a section keyword outside its frame is an error" {
   assert_eq(codes("sequenceDiagram\nelse x\n"), ["mermaid/misplaced-section"])
-  assert_eq(codes("sequenceDiagram\nloop x\nand y\nend\n"), ["mermaid/misplaced-section"])
-  assert_eq(codes("sequenceDiagram\nalt x\noption y\nend\n"), ["mermaid/misplaced-section"])
+  assert_eq(codes("sequenceDiagram\nloop x\nand y\nend\n"), [
+    "mermaid/misplaced-section",
+  ])
+  assert_eq(codes("sequenceDiagram\nalt x\noption y\nend\n"), [
+    "mermaid/misplaced-section",
+  ])
 }
 
 ///|
 test "a box can only hold participant statements" {
-  assert_eq(codes("sequenceDiagram\nbox Group\nA->>B: x\nend\n"), ["mermaid/invalid-in-box"])
+  assert_eq(codes("sequenceDiagram\nbox Group\nA->>B: x\nend\n"), [
+    "mermaid/invalid-in-box",
+  ])
 }
 
 ///|
@@ -413,7 +492,9 @@ test "an unclosed directive is an error" {
 
 ///|
 test "an unclosed multi-line description is an error" {
-  assert_eq(codes("sequenceDiagram\naccDescr {\n  text\n"), ["mermaid/unclosed-description"])
+  assert_eq(codes("sequenceDiagram\naccDescr {\n  text\n"), [
+    "mermaid/unclosed-description",
+  ])
 }
 
 ///|
@@ -421,9 +502,9 @@ test "each diagnostic code is listed" {
   assert_eq(@syntax.diagnostic_codes.iter().to_array(), [
     "mermaid/missing-header", "mermaid/unexpected-header", "mermaid/unknown-statement",
     "mermaid/missing-message-text", "mermaid/invalid-message", "mermaid/invalid-participant",
-    "mermaid/invalid-note", "mermaid/invalid-autonumber", "mermaid/invalid-link", "mermaid/invalid-title",
-    "mermaid/missing-end", "mermaid/unexpected-end", "mermaid/misplaced-section", "mermaid/invalid-in-box",
-    "mermaid/unclosed-directive", "mermaid/unclosed-description",
+    "mermaid/invalid-note", "mermaid/invalid-autonumber", "mermaid/invalid-link",
+    "mermaid/invalid-title", "mermaid/missing-end", "mermaid/unexpected-end", "mermaid/misplaced-section",
+    "mermaid/invalid-in-box", "mermaid/unclosed-directive", "mermaid/unclosed-description",
   ])
 }
 
@@ -433,8 +514,12 @@ test "each diagnostic code is listed" {
 /// parser rejects `autonumber 10;` and `autonumber 10 5;` but accepts
 /// `autonumber;`. The grammar wins over the general rule for `;`.
 test "a semicolon right after an autonumber number is an error, as in Mermaid" {
-  assert_eq(codes("sequenceDiagram\nautonumber 10; A->>B: hi\n"), ["mermaid/invalid-autonumber"])
-  assert_eq(codes("sequenceDiagram\nautonumber 10 5;\nA->>B: hi\n"), ["mermaid/invalid-autonumber"])
+  assert_eq(codes("sequenceDiagram\nautonumber 10; A->>B: hi\n"), [
+    "mermaid/invalid-autonumber",
+  ])
+  assert_eq(codes("sequenceDiagram\nautonumber 10 5;\nA->>B: hi\n"), [
+    "mermaid/invalid-autonumber",
+  ])
   assert_eq(codes("sequenceDiagram\nautonumber; A->>B: hi\n"), [])
   assert_eq(codes("sequenceDiagram\nautonumber 10 ; A->>B: hi\n"), [])
 }

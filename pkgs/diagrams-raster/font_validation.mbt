@@ -304,7 +304,9 @@ fn validated_font_bytes(
     }
     let length = font_u32(data, at + 12)
     guard length <= limits.max_source_units.to_int64() - table_units else {
-      raise raster_fail("raster/font-limit", "TrueType table copies exceed the source budget")
+      raise raster_fail(
+        "raster/font-limit", "TrueType table copies exceed the source budget",
+      )
     }
     table_units += length
     tables[name] = font_slice(data, font_u32(data, at + 8), length)
@@ -464,43 +466,67 @@ fn validated_font_bytes(
   selected[6] = ("cmap", positive_font_cmap(parsed, limits))
   let rebuilt = @font.rebuild_sfnt(65536, selected)
   guard rebuilt.length() <= limits.max_source_units else {
-    raise raster_fail("raster/font-limit", "Normalized font exceeds the source budget")
+    raise raster_fail(
+      "raster/font-limit", "Normalized font exceeds the source budget",
+    )
   }
   rebuilt
 }
 
 ///|
-fn charge_cmap_mappings(mapped : Int64, count : Int64) -> Int64 raise RasterFailure {
+fn charge_cmap_mappings(
+  mapped : Int64,
+  count : Int64,
+) -> Int64 raise RasterFailure {
   guard count >= 0L && count <= 1200000L - mapped else {
-    raise raster_fail("raster/font-limit", "cmap expansion exceeds the font budget")
+    raise raster_fail(
+      "raster/font-limit", "cmap expansion exceeds the font budget",
+    )
   }
   mapped + count
 }
 
 ///|
-fn charge_cmap_bytes(copied : Int64, count : Int64, size : Int32) -> Int64 raise RasterFailure {
+fn charge_cmap_bytes(
+  copied : Int64,
+  count : Int64,
+  size : Int32,
+) -> Int64 raise RasterFailure {
   guard count >= 0L && count <= size.to_int64() * 4L - copied else {
-    raise raster_fail("raster/font-limit", "Overlapping cmap tables exceed the font byte budget")
+    raise raster_fail(
+      "raster/font-limit", "Overlapping cmap tables exceed the font byte budget",
+    )
   }
   copied + count
 }
 
 ///|
-fn positive_font_cmap(font : @font.TTFont, limits : RasterLimits) -> Bytes raise RasterFailure {
+fn positive_font_cmap(
+  font : @font.TTFont,
+  limits : RasterLimits,
+) -> Bytes raise RasterFailure {
   let cps = font.cmap.keys().to_array()
   cps.sort()
   let groups : Array[(Int32, Int32, Int32)] = []
   for cp in cps {
     let gid = font.cmap[cp] & 65535
     guard gid < font.num_glyphs else {
-      raise raster_fail("raster/font-data", "Normalized cmap references an absent glyph")
+      raise raster_fail(
+        "raster/font-data", "Normalized cmap references an absent glyph",
+      )
     }
-    if gid == 0 { continue }
-    if groups.last() is Some((first, last, start_gid)) && cp == last + 1 && gid == start_gid + cp - first {
+    if gid == 0 {
+      continue
+    }
+    if groups.last() is Some((first, last, start_gid)) &&
+      cp == last + 1 &&
+      gid == start_gid + cp - first {
       groups[groups.length() - 1] = (first, cp, start_gid)
     } else {
       guard groups.length() < (limits.max_source_units - 28) / 12 else {
-        raise raster_fail("raster/font-limit", "Normalized cmap exceeds the source budget")
+        raise raster_fail(
+          "raster/font-limit", "Normalized cmap exceeds the source budget",
+        )
       }
       groups.push((cp, cp, gid))
     }

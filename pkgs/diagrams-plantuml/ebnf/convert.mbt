@@ -10,8 +10,8 @@ pub struct Conversion {
 /// exclusion constrains the term before it and is never an alternative.
 pub fn to_grammar(
   document : Document,
-  id? : String = "ebnf",
-  limits? : @envelope.Limits = @envelope.Limits::new(),
+  id~ : String = "ebnf",
+  limits~ : @envelope.Limits = @envelope.Limits::new(),
 ) -> Conversion {
   let nodes : Array[@model.Node] = []
   let items : Array[@model.Item] = []
@@ -37,7 +37,7 @@ pub fn to_grammar(
     }
     id
   }
-  fn convert(e : Expr, id : String, depth : Int) -> String {
+  fn convert(e : Expr, id : String, depth : Int32) -> String {
     if depth > limits.depth {
       failure = Some("EBNF depth limit exceeded")
     }
@@ -45,7 +45,8 @@ pub fn to_grammar(
       return id
     }
     match e {
-      Terminal(text, quote, notes, span) => add(id, Terminal(text, quote), notes, span)
+      Terminal(text, quote, notes, span) =>
+        add(id, Terminal(text, quote), notes, span)
       Name(name, notes, span) => add(id, Reference(name, None), notes, span)
       Special(text, notes, span) => add(id, Special(text), notes, span)
       Concat(list) => {
@@ -92,7 +93,12 @@ pub fn to_grammar(
       OneOrMore(inner, span) =>
         add(id, OneOrMore(convert(inner, id + ".0", depth + 1)), no_note, span)
       Count(count, inner, span) =>
-        add(id, Count(count, convert(inner, id + ".0", depth + 1)), no_note, span)
+        add(
+          id,
+          Count(count, convert(inner, id + ".0", depth + 1)),
+          no_note,
+          span,
+        )
       Not(_, _) => {
         failure = Some("An exclusion has no term on its left")
         id
@@ -102,7 +108,8 @@ pub fn to_grammar(
   for k, item in document.items {
     let item_id = "item-" + k.to_string()
     match item {
-      Note(lines, _) => items.push(Note(item_id, lines.iter().collect().join("\n")))
+      Note(lines, _) =>
+        items.push(Note(item_id, lines.iter().collect().join("\n")))
       Rule(rule) => {
         let body = rule.body.map(e => convert(e, item_id + "/e", 0))
         items.push(
@@ -142,7 +149,7 @@ pub fn to_grammar(
     ),
   )
   if findings.iter().any(d => d.severity == Error) {
-    return { grammar: None, diagnostics: findings }
+    return { grammar: None, diagnostics: findings, }
   }
-  { grammar: Some(grammar), diagnostics: findings }
+  { grammar: Some(grammar), diagnostics: findings, }
 }

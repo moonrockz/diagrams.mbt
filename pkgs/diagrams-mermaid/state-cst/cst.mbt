@@ -1,4 +1,5 @@
 ///|
+#derive(Eq, Debug)
 pub(all) enum TokenKind {
   Header
   Statement
@@ -7,19 +8,21 @@ pub(all) enum TokenKind {
   FrontMatter
   Whitespace
   Error
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Token {
   kind : TokenKind
   text : String
   offset : Int32
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Node {
   children : ReadOnlyArray[Token]
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Node::new(children : ArrayView[Token]) -> Node {

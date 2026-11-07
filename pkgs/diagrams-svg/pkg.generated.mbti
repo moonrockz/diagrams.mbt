@@ -60,59 +60,65 @@ pub fn swimlane_path(@swimlane-layout.Connection) -> String
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct ChannelStyle {
   visible : Bool
   color : @theme.Color?
   width : Double
   dashed : Bool
-} derive(Eq, @debug.Debug)
+}
 pub fn ChannelStyle::equal(Self, Self) -> Bool
 pub fn ChannelStyle::hidden() -> Self
 pub fn ChannelStyle::new(visible? : Bool, color? : @theme.Color, width? : Double, dashed? : Bool) -> Self
 pub fn ChannelStyle::not_equal(Self, Self) -> Bool
 pub fn ChannelStyle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ConnectorCommand {
   Move(ConnectorPoint)
   Line(ConnectorPoint)
   Quadratic(ConnectorPoint, ConnectorPoint)
   Cubic(ConnectorPoint, ConnectorPoint, ConnectorPoint)
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorCommand::equal(Self, Self) -> Bool
 pub fn ConnectorCommand::not_equal(Self, Self) -> Bool
 pub fn ConnectorCommand::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConnectorGeometry {
   paths : ReadOnlyArray[ResolvedConnector]
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorGeometry::equal(Self, Self) -> Bool
 pub fn ConnectorGeometry::not_equal(Self, Self) -> Bool
 pub fn ConnectorGeometry::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConnectorLimits {
   candidates : Int32
   subdivisions : Int32
   segments : Int32
   crossings : Int32
   output_units : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorLimits::equal(Self, Self) -> Bool
 pub fn ConnectorLimits::new(candidates? : Int32, subdivisions? : Int32, segments? : Int32, crossings? : Int32, output_units? : Int32) -> Self
 pub fn ConnectorLimits::not_equal(Self, Self) -> Bool
 pub fn ConnectorLimits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ConnectorObstacle {
   owner : String
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorObstacle::equal(Self, Self) -> Bool
 pub fn ConnectorObstacle::not_equal(Self, Self) -> Bool
 pub fn ConnectorObstacle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConnectorOptions {
   style : ConnectorStyle?
   crossing : CrossingMode
@@ -121,15 +127,16 @@ pub struct ConnectorOptions {
   bridge_radius : Double
   style_supplied_bpmn : Bool
   limits : ConnectorLimits
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorOptions::equal(Self, Self) -> Bool
 pub fn ConnectorOptions::new(style? : ConnectorStyle, crossing? : CrossingMode, minimum_approach? : Double, corner_radius? : Double, bridge_radius? : Double, style_supplied_bpmn? : Bool, limits? : ConnectorLimits) -> Self
 pub fn ConnectorOptions::not_equal(Self, Self) -> Bool
 pub fn ConnectorOptions::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct ConnectorPath {
   commands : ReadOnlyArray[ConnectorCommand]
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorPath::equal(Self, Self) -> Bool
 pub fn ConnectorPath::new(ArrayView[ConnectorCommand]) -> Self?
 pub fn ConnectorPath::not_equal(Self, Self) -> Bool
@@ -137,35 +144,39 @@ pub fn ConnectorPath::parse(String) -> Self?
 pub fn ConnectorPath::svg(Self) -> String
 pub fn ConnectorPath::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ConnectorPoint {
   x : Double
   y : Double
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorPoint::equal(Self, Self) -> Bool
 pub fn ConnectorPoint::not_equal(Self, Self) -> Bool
 pub fn ConnectorPoint::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ConnectorStyle {
   Elbow
   Rounded
   Curved
-} derive(Eq, @debug.Debug)
+}
 pub fn ConnectorStyle::equal(Self, Self) -> Bool
 pub fn ConnectorStyle::not_equal(Self, Self) -> Bool
 pub fn ConnectorStyle::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum CrossingMode {
   Bridge
   Plain
-} derive(Eq, @debug.Debug)
+}
 pub fn CrossingMode::equal(Self, Self) -> Bool
 pub fn CrossingMode::not_equal(Self, Self) -> Bool
 pub fn CrossingMode::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Mode {
   Adaptive
   Fixed(Variant)
-} derive(Eq, @debug.Debug)
+}
 pub fn Mode::equal(Self, Self) -> Bool
 pub fn Mode::not_equal(Self, Self) -> Bool
 pub fn Mode::to_repr(Self) -> @debug.Repr
@@ -175,6 +186,7 @@ pub struct NodeBinding {
   kind : NodeBindingKind
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum NodeBindingKind {
   Bpmn(String)
   Message(Int32)
@@ -186,7 +198,7 @@ pub(all) enum NodeBindingKind {
   RailroadTerm(String)
   DataRow(String)
   DataBox(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn NodeBindingKind::equal(Self, Self) -> Bool
 pub fn NodeBindingKind::not_equal(Self, Self) -> Bool
 pub fn NodeBindingKind::to_repr(Self) -> @debug.Repr
@@ -198,6 +210,7 @@ pub struct PathBinding {
   mask : String?
 }
 
+#derive(Eq, @debug.Debug)
 pub struct ResolvedConnector {
   id : String
   source : String
@@ -205,7 +218,7 @@ pub struct ResolvedConnector {
   route : ConnectorPath
   path : ConnectorPath
   mask : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn ResolvedConnector::equal(Self, Self) -> Bool
 pub fn ResolvedConnector::not_equal(Self, Self) -> Bool
 pub fn ResolvedConnector::to_repr(Self) -> @debug.Repr
@@ -245,6 +258,7 @@ pub fn[P : @railroad-trace.RailroadTraceProvider] SvgRenderer::render_traced(Sel
 pub fn SvgRenderer::scene(Self, @render.Diagram, sequence_view_id? : String, limits? : @animation.Limits, output_units? : Int32) -> SceneResult
 pub impl @render.Renderer for SvgRenderer
 
+#derive(Eq, @debug.Debug)
 pub struct TraceHighlight {
   trace : @railroad-trace.Trace
   attempts : ReadOnlyArray[String]?
@@ -253,7 +267,7 @@ pub struct TraceHighlight {
   taken : ChannelStyle
   failure : ChannelStyle
   limits : @railroad-trace.TraceLimits
-} derive(Eq, @debug.Debug)
+}
 pub fn TraceHighlight::equal(Self, Self) -> Bool
 pub fn TraceHighlight::new(@railroad-trace.Trace, attempts? : ArrayView[String], matched? : ChannelStyle, not_matched? : ChannelStyle, taken? : ChannelStyle, failure? : ChannelStyle, limits? : @railroad-trace.TraceLimits) -> Self
 pub fn TraceHighlight::not_equal(Self, Self) -> Bool
@@ -265,10 +279,11 @@ pub struct TracedRender {
 }
 pub fn TracedRender::refused(ArrayView[@diagrams.Diagnostic]) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Variant {
   Dark
   Light
-} derive(Eq, @debug.Debug)
+}
 pub fn Variant::equal(Self, Self) -> Bool
 pub fn Variant::not_equal(Self, Self) -> Bool
 pub fn Variant::to_repr(Self) -> @debug.Repr

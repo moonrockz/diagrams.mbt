@@ -14,6 +14,7 @@ pub fn validate(Grammar, limits? : Limits) -> ReadOnlyArray[@diagrams.Diagnostic
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Grammar {
   id : String
   items : ReadOnlyArray[Item]
@@ -21,7 +22,7 @@ pub struct Grammar {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn Grammar::equal(Self, Self) -> Bool
 pub fn Grammar::new(String, ArrayView[Item], ArrayView[Node], title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
 pub fn Grammar::not_equal(Self, Self) -> Bool
@@ -46,14 +47,16 @@ pub struct IndexResult {
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
 }
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Item {
   Rule(Rule)
   Note(String, String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Item::equal(Self, Self) -> Bool
 pub fn Item::not_equal(Self, Self) -> Bool
 pub fn Item::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Kind {
   Terminal(String, Quote)
   Reference(String, String?)
@@ -66,28 +69,30 @@ pub(all) enum Kind {
   OneOrMore(String)
   Count(String, String)
   Exclusion(String, String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Kind::equal(Self, Self) -> Bool
 pub fn Kind::not_equal(Self, Self) -> Bool
 pub fn Kind::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Limits {
   nodes : Int32
   depth : Int32
   work : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn Limits::equal(Self, Self) -> Bool
 pub fn Limits::new(nodes? : Int32, depth? : Int32, work? : Int32) -> Self
 pub fn Limits::not_equal(Self, Self) -> Bool
 pub fn Limits::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Node {
   id : String
   kind : Kind
   notes_above : ReadOnlyArray[String]
   notes_below : ReadOnlyArray[String]
   source : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Node::children(Self) -> ReadOnlyArray[String]
 pub fn Node::equal(Self, Self) -> Bool
 pub fn Node::is_leaf(Self) -> Bool
@@ -96,23 +101,26 @@ pub fn Node::new(String, Kind, notes_above? : ArrayView[String], notes_below? : 
 pub fn Node::not_equal(Self, Self) -> Bool
 pub fn Node::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Quote {
   Double
   Single
-} derive(Eq, @debug.Debug)
+}
 pub fn Quote::equal(Self, Self) -> Bool
 pub fn Quote::not_equal(Self, Self) -> Bool
 pub fn Quote::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Resolution {
   Resolved(String)
   Unresolved
   Ambiguous(ReadOnlyArray[String])
-} derive(Eq, @debug.Debug)
+}
 pub fn Resolution::equal(Self, Self) -> Bool
 pub fn Resolution::not_equal(Self, Self) -> Bool
 pub fn Resolution::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Rule {
   id : String
   name : String
@@ -120,7 +128,7 @@ pub struct Rule {
   note_above : String?
   note_below : String?
   source : @diagrams.Span?
-} derive(Eq, @debug.Debug)
+}
 pub fn Rule::equal(Self, Self) -> Bool
 pub fn Rule::new(String, String, body? : String, note_above? : String, note_below? : String, source? : @diagrams.Span) -> Self
 pub fn Rule::not_equal(Self, Self) -> Bool

@@ -1,11 +1,12 @@
 ///|
 /// A position in source text. Offsets and columns count UTF-16 code units;
 /// lines and columns start at 1.
+#derive(Eq, Debug)
 pub(all) struct QueryPosition {
-  offset : Int
-  line : Int
-  column : Int
-} derive(Eq, Debug)
+  offset : Int32
+  line : Int32
+  column : Int32
+}
 
 ///|
 pub extend QueryPosition with Eq::{equal, not_equal}
@@ -15,11 +16,12 @@ pub extend QueryPosition with @debug.Debug::{to_repr}
 
 ///|
 /// A half-open source range with an optional source identifier.
+#derive(Eq, Debug)
 pub(all) struct QueryLocation {
   source_id : String?
   start : QueryPosition
   end : QueryPosition
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QueryLocation with Eq::{equal, not_equal}
@@ -30,10 +32,11 @@ pub extend QueryLocation with @debug.Debug::{to_repr}
 ///|
 /// A present attribute value. `tag` is one of the schema scalar tags and
 /// `text` is the decoded value that predicates compare.
+#derive(Eq, Debug)
 pub(all) struct ScalarValue {
   tag : String
   text : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ScalarValue with Eq::{equal, not_equal}
@@ -44,11 +47,12 @@ pub extend ScalarValue with @debug.Debug::{to_repr}
 ///|
 /// One step of a document-relative path: the containing field, the index in
 /// that field and the position among all children of the parent.
+#derive(Eq, Debug)
 pub(all) struct QueryPathStep {
   field : Name
-  index : Int
-  position : Int
-} derive(Eq, Debug)
+  index : Int32
+  position : Int32
+}
 
 ///|
 pub extend QueryPathStep with Eq::{equal, not_equal}
@@ -65,25 +69,25 @@ pub extend QueryPathStep with @debug.Debug::{to_repr}
 /// node for as long as a cursor uses it. All names and categories must be
 /// admitted by `schema()`.
 pub(open) trait QueryTree {
-  schema(Self) -> Schema
+  fn schema(Self) -> Schema
   /// The default search root.
-  root(Self) -> Int
-  node_count(Self) -> Int
+  fn root(Self) -> Int32
+  fn node_count(Self) -> Int32
   /// The exact kind of an element node, or `None` for other nodes.
-  kind(Self, Int) -> Name?
-  category(Self, Int) -> String
+  fn kind(Self, Int32) -> Name?
+  fn category(Self, Int32) -> String
   /// The ordered containment children.
-  children(Self, Int) -> ArrayView[Int]
+  fn children(Self, Int32) -> ArrayView[Int32]
   /// The field that contains the node in its parent, or `None` for a root.
-  field(Self, Int) -> Name?
+  fn field(Self, Int32) -> Name?
   /// The value of an attribute, or `None` when the attribute is absent.
-  attribute(Self, Int, Name) -> ScalarValue?
+  fn attribute(Self, Int32, Name) -> ScalarValue?
   /// The adapter-declared scalar text, or `None` when the node has none.
-  text(Self, Int) -> String?
+  fn text(Self, Int32) -> String?
   /// The value of an adapter-declared projection field.
-  extra(Self, Int, String) -> ScalarValue?
-  location(Self, Int) -> QueryLocation?
+  fn extra(Self, Int32, String) -> ScalarValue?
+  fn location(Self, Int32) -> QueryLocation?
   /// The document-relative path from the tree root.
-  path(Self, Int) -> ReadOnlyArray[QueryPathStep]
-  depth(Self, Int) -> Int
+  fn path(Self, Int32) -> ReadOnlyArray[QueryPathStep]
+  fn depth(Self, Int32) -> Int32
 }

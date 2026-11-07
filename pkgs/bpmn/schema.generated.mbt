@@ -2,6 +2,7 @@
 
 ///|
 /// Standard element names derived from global and local declarations.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   DcFont
   DiEdge
@@ -213,7 +214,7 @@ pub(all) enum Kind {
   CorrelationPropertyRetrievalExpression
   Foreign(ExpandedName)
   Unknown(ExpandedName)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Kind with Eq::{equal, not_equal}
@@ -864,6 +865,7 @@ pub let standard_kinds : ReadOnlyArray[Kind] = [
 ]
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum TypeId {
   Definitions
   Import
@@ -1035,7 +1037,7 @@ pub(all) enum TypeId {
   TransactionMethod
   AnonymousTTransactionMethod144
   UserTask
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TypeId with Eq::{equal, not_equal}
@@ -1832,6 +1834,7 @@ pub let schema_groups : ReadOnlyArray[SchemaGroup] = [
 
 ///|
 /// Values of the pinned XSD type ParticipantBandKind.
+#derive(Eq, Debug)
 pub(all) enum BpmnParticipantBandKind {
   TopInitiating
   MiddleInitiating
@@ -1839,7 +1842,7 @@ pub(all) enum BpmnParticipantBandKind {
   TopNonInitiating
   MiddleNonInitiating
   BottomNonInitiating
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend BpmnParticipantBandKind with Eq::{equal, not_equal}
@@ -1874,10 +1877,11 @@ pub fn BpmnParticipantBandKind::parse(token : String) -> BpmnParticipantBandKind
 
 ///|
 /// Values of the pinned XSD type MessageVisibleKind.
+#derive(Eq, Debug)
 pub(all) enum BpmnMessageVisibleKind {
   Initiating
   NonInitiating
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend BpmnMessageVisibleKind with Eq::{equal, not_equal}
@@ -1904,10 +1908,11 @@ pub fn BpmnMessageVisibleKind::parse(token : String) -> BpmnMessageVisibleKind? 
 
 ///|
 /// Values of the pinned XSD type tAdHocOrdering.
+#derive(Eq, Debug)
 pub(all) enum AdHocOrdering {
   Parallel
   Sequential
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AdHocOrdering with Eq::{equal, not_equal}
@@ -1934,11 +1939,12 @@ pub fn AdHocOrdering::parse(token : String) -> AdHocOrdering? {
 
 ///|
 /// Values of the pinned XSD type tAssociationDirection.
+#derive(Eq, Debug)
 pub(all) enum AssociationDirection {
   None
   One
   Both
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AssociationDirection with Eq::{equal, not_equal}
@@ -1967,12 +1973,13 @@ pub fn AssociationDirection::parse(token : String) -> AssociationDirection? {
 
 ///|
 /// Values of the pinned XSD type tChoreographyLoopType.
+#derive(Eq, Debug)
 pub(all) enum ChoreographyLoopType {
   None
   Standard
   MultiInstanceSequential
   MultiInstanceParallel
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ChoreographyLoopType with Eq::{equal, not_equal}
@@ -2003,10 +2010,11 @@ pub fn ChoreographyLoopType::parse(token : String) -> ChoreographyLoopType? {
 
 ///|
 /// Values of the pinned XSD type tEventBasedGatewayType.
+#derive(Eq, Debug)
 pub(all) enum EventBasedGatewayType {
   Exclusive
   Parallel
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend EventBasedGatewayType with Eq::{equal, not_equal}
@@ -2033,12 +2041,13 @@ pub fn EventBasedGatewayType::parse(token : String) -> EventBasedGatewayType? {
 
 ///|
 /// Values of the pinned XSD type tGatewayDirection.
+#derive(Eq, Debug)
 pub(all) enum GatewayDirection {
   Unspecified
   Converging
   Diverging
   Mixed
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend GatewayDirection with Eq::{equal, not_equal}
@@ -2069,11 +2078,12 @@ pub fn GatewayDirection::parse(token : String) -> GatewayDirection? {
 
 ///|
 /// Values of the pinned XSD type tImplementation.
+#derive(Eq, Debug)
 pub(all) enum Implementation {
   Unspecified
   WebService
   Uri(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Implementation with Eq::{equal, not_equal}
@@ -2101,10 +2111,11 @@ pub fn Implementation::parse(token : String) -> Implementation? {
 
 ///|
 /// Values of the pinned XSD type Anonymous_tImplementation_78.
+#derive(Eq, Debug)
 pub(all) enum AnonymousTImplementation78 {
   Unspecified
   WebService
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AnonymousTImplementation78 with Eq::{equal, not_equal}
@@ -2131,10 +2142,11 @@ pub fn AnonymousTImplementation78::parse(token : String) -> AnonymousTImplementa
 
 ///|
 /// Values of the pinned XSD type tItemKind.
+#derive(Eq, Debug)
 pub(all) enum ItemKind {
   Information
   Physical
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ItemKind with Eq::{equal, not_equal}
@@ -2161,12 +2173,13 @@ pub fn ItemKind::parse(token : String) -> ItemKind? {
 
 ///|
 /// Values of the pinned XSD type tMultiInstanceFlowCondition.
+#derive(Eq, Debug)
 pub(all) enum MultiInstanceFlowCondition {
   None
   One
   All
   Complex
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend MultiInstanceFlowCondition with Eq::{equal, not_equal}
@@ -2197,11 +2210,12 @@ pub fn MultiInstanceFlowCondition::parse(token : String) -> MultiInstanceFlowCon
 
 ///|
 /// Values of the pinned XSD type tProcessType.
+#derive(Eq, Debug)
 pub(all) enum ProcessType {
   None
   Public
   Private
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ProcessType with Eq::{equal, not_equal}
@@ -2230,12 +2244,13 @@ pub fn ProcessType::parse(token : String) -> ProcessType? {
 
 ///|
 /// Values of the pinned XSD type tRelationshipDirection.
+#derive(Eq, Debug)
 pub(all) enum RelationshipDirection {
   None
   Forward
   Backward
   Both
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend RelationshipDirection with Eq::{equal, not_equal}
@@ -2266,12 +2281,13 @@ pub fn RelationshipDirection::parse(token : String) -> RelationshipDirection? {
 
 ///|
 /// Values of the pinned XSD type tTransactionMethod.
+#derive(Eq, Debug)
 pub(all) enum TransactionMethod {
   Compensate
   Image
   Store
   Uri(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend TransactionMethod with Eq::{equal, not_equal}
@@ -2301,11 +2317,12 @@ pub fn TransactionMethod::parse(token : String) -> TransactionMethod? {
 
 ///|
 /// Values of the pinned XSD type Anonymous_tTransactionMethod_144.
+#derive(Eq, Debug)
 pub(all) enum AnonymousTTransactionMethod144 {
   Compensate
   Image
   Store
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AnonymousTTransactionMethod144 with Eq::{equal, not_equal}
@@ -2334,6 +2351,7 @@ pub fn AnonymousTTransactionMethod144::parse(token : String) -> AnonymousTTransa
 
 ///|
 /// Typed alternatives retain the identity of each normative enumeration.
+#derive(Eq, Debug)
 pub(all) enum BpmnEnum {
   BpmnParticipantBandKind(BpmnParticipantBandKind)
   BpmnMessageVisibleKind(BpmnMessageVisibleKind)
@@ -2350,7 +2368,7 @@ pub(all) enum BpmnEnum {
   RelationshipDirection(RelationshipDirection)
   TransactionMethod(TransactionMethod)
   AnonymousTTransactionMethod144(AnonymousTTransactionMethod144)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend BpmnEnum with Eq::{equal, not_equal}

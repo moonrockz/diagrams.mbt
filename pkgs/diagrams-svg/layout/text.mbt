@@ -60,7 +60,7 @@ fn message_text(m : @sequence.Message) -> String {
       let slash = link.target.replace_all(old="#", new="/")
       if m.label == slash || m.label == link.target {
         match m.label.find(if m.label == slash { "/" } else { "#" }) {
-          Some(i) => m.label.view(start_offset=i + 1).to_owned()
+          Some(i) => m.label.exact_view(start=i + 1).to_owned()
           None => m.label
         }
       } else {

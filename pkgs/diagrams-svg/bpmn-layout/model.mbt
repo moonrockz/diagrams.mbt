@@ -1,11 +1,12 @@
 ///|
+#derive(Eq, Debug)
 pub struct Limits {
   nodes : Int32
   edges : Int32
   work : Int32
   output_units : Int32
   minimum_approach : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Limits::new(
@@ -19,18 +20,20 @@ pub fn Limits::new(
 }
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Point {
   x : Double
   y : Double
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) struct Rect {
   x : Double
   y : Double
   width : Double
   height : Double
-} derive(Eq, Debug)
+}
 
 ///|
 pub fn Rect::contains(
@@ -53,6 +56,7 @@ pub fn Rect::overlaps(self : Rect, other : Rect) -> Bool {
 }
 
 ///|
+#derive(Eq, Debug)
 pub struct Label {
   text : String
   font : @model.Font
@@ -64,18 +68,20 @@ pub struct Label {
   mask : Bool
   owner : String
   family : @theme.Family?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Shape {
   node : @model.Node
   index : Int32
   bounds : @model.ExactBounds
   box : Rect
   label : Label?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Connection {
   flow : @model.Flow
   index : Int32
@@ -84,15 +90,17 @@ pub struct Connection {
   points : ReadOnlyArray[@model.ExactPoint]
   line : ReadOnlyArray[Point]
   label : Label?
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Source {
   Supplied
   Automatic
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Geometry {
   view : @model.Bpmn
   shapes : ReadOnlyArray[Shape]
@@ -102,13 +110,14 @@ pub struct Geometry {
   translate_y : Int64
   width : Int64
   height : Int64
-} derive(Eq, Debug)
+}
 
 ///|
+#derive(Eq, Debug)
 pub struct Result {
   geometry : Geometry?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 priv struct Budget {

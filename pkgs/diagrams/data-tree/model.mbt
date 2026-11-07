@@ -1,9 +1,10 @@
 ///|
 /// The key of one member occurrence: an object member name or an array position.
+#derive(Eq, Debug)
 pub(all) enum Key {
   Name(String)
-  Index(Int)
-} derive(Eq, Debug)
+  Index(Int32)
+}
 
 ///|
 pub extend Key with Eq::{equal, not_equal}
@@ -14,12 +15,13 @@ pub extend Key with @debug.Debug::{to_repr}
 ///|
 /// One member occurrence of a container. `value` names the child node.
 /// Repeated names and equal values keep separate member identities.
+#derive(Eq, Debug)
 pub struct Member {
   id : String
   key : Key
   value : String
   source : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Member with Eq::{equal, not_equal}
@@ -34,22 +36,23 @@ pub fn Member::named(
   value : String,
   source? : @diagrams.Span,
 ) -> Member {
-  { id, key: Name(name), value, source }
+  { id, key: Name(name), value, source, }
 }
 
 ///|
 pub fn Member::index(
   id : String,
-  index : Int,
+  index : Int32,
   value : String,
   source? : @diagrams.Span,
 ) -> Member {
-  { id, key: Index(index), value, source }
+  { id, key: Index(index), value, source, }
 }
 
 ///|
 /// A typed value. Numbers keep their exact decimal lexeme; no machine
 /// floating-point value is computed.
+#derive(Eq, Debug)
 pub(all) enum Value {
   Object(ReadOnlyArray[Member])
   Array(ReadOnlyArray[Member])
@@ -57,7 +60,7 @@ pub(all) enum Value {
   Number(String)
   Boolean(Bool)
   Null
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Value with Eq::{equal, not_equal}
@@ -66,11 +69,12 @@ pub extend Value with Eq::{equal, not_equal}
 pub extend Value with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Node {
   id : String
   value : Value
   source : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Node with Eq::{equal, not_equal}
@@ -80,7 +84,7 @@ pub extend Node with @debug.Debug::{to_repr}
 
 ///|
 pub fn Node::new(id : String, value : Value, source? : @diagrams.Span) -> Node {
-  { id, value, source }
+  { id, value, source, }
 }
 
 ///|
@@ -89,7 +93,7 @@ pub fn Node::object(
   members : ArrayView[Member],
   source? : @diagrams.Span,
 ) -> Node {
-  { id, value: Object(ReadOnlyArray::from_array(members)), source }
+  { id, value: Object(ReadOnlyArray::from_array(members)), source, }
 }
 
 ///|
@@ -98,7 +102,7 @@ pub fn Node::array(
   members : ArrayView[Member],
   source? : @diagrams.Span,
 ) -> Node {
-  { id, value: Array(ReadOnlyArray::from_array(members)), source }
+  { id, value: Array(ReadOnlyArray::from_array(members)), source, }
 }
 
 ///|
@@ -118,10 +122,11 @@ pub fn Node::is_container(self : Node) -> Bool {
 ///|
 /// A view highlight. Targets are member or node identities. The optional
 /// style is inert author metadata; library themes paint every highlight.
+#derive(Eq, Debug)
 pub struct Highlight {
   targets : ReadOnlyArray[String]
   style : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Highlight with Eq::{equal, not_equal}
@@ -130,12 +135,16 @@ pub extend Highlight with Eq::{equal, not_equal}
 pub extend Highlight with @debug.Debug::{to_repr}
 
 ///|
-pub fn Highlight::new(targets : ArrayView[String], style? : String) -> Highlight {
-  { targets: ReadOnlyArray::from_array(targets), style }
+pub fn Highlight::new(
+  targets : ArrayView[String],
+  style? : String,
+) -> Highlight {
+  { targets: ReadOnlyArray::from_array(targets), style, }
 }
 
 ///|
 /// One immutable structured-data diagram. It does not depend on JSON or YAML.
+#derive(Eq, Debug)
 pub struct DataTree {
   id : String
   root : String
@@ -144,7 +153,7 @@ pub struct DataTree {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend DataTree with Eq::{equal, not_equal}
@@ -157,7 +166,7 @@ pub fn DataTree::new(
   id : String,
   root : String,
   nodes : ArrayView[Node],
-  highlights? : ArrayView[Highlight] = [],
+  highlights~ : ArrayView[Highlight] = [],
   title? : String,
   accessibility_title? : String,
   accessibility_description? : String,
@@ -191,11 +200,12 @@ pub fn Value::scalar_text(self : Value) -> String? {
 pub fn valid_number(lexeme : String) -> Bool {
   let n = lexeme.length()
   let mut i = 0
-  fn digit(at : Int) -> Bool {
-    at < n && lexeme.code_unit_at(at) >= '0'.to_int().to_uint16() &&
+  fn digit(at : Int32) -> Bool {
+    at < n &&
+    lexeme.code_unit_at(at) >= '0'.to_int().to_uint16() &&
     lexeme.code_unit_at(at) <= '9'.to_int().to_uint16()
   }
-  fn at(position : Int, c : Char) -> Bool {
+  fn at(position : Int32, c : Char) -> Bool {
     position < n && lexeme.code_unit_at(position).to_int() == c.to_int()
   }
   if at(i, '-') {

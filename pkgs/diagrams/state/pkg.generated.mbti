@@ -15,6 +15,7 @@ pub fn validate(StateDiagram, nodes_limit? : Int32, edges_limit? : Int32, region
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Note {
   id : String
   text : String
@@ -23,12 +24,13 @@ pub struct Note {
   placement : String
   region : String
   origin : @flowchart.SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Note::equal(Self, Self) -> Bool
 pub fn Note::new(String, String, targets? : ArrayView[String], connection_targets? : ArrayView[String], placement? : String, region? : String, origin? : @flowchart.SourceBinding) -> Self
 pub fn Note::not_equal(Self, Self) -> Bool
 pub fn Note::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct Region {
   id : String
   owner : String?
@@ -36,12 +38,13 @@ pub struct Region {
   separator : Separator
   direction : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Region::equal(Self, Self) -> Bool
 pub fn Region::new(String, owner? : String, members? : ArrayView[String], separator? : Separator, direction? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
 pub fn Region::not_equal(Self, Self) -> Bool
 pub fn Region::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Role {
   Simple
   Composite
@@ -59,19 +62,21 @@ pub(all) enum Role {
   ExpansionInput
   ExpansionOutput
   Unsupported(String)
-} derive(Eq, @debug.Debug)
+}
 pub fn Role::equal(Self, Self) -> Bool
 pub fn Role::not_equal(Self, Self) -> Bool
 pub fn Role::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Separator {
   Horizontal
   Vertical
-} derive(Eq, @debug.Debug)
+}
 pub fn Separator::equal(Self, Self) -> Bool
 pub fn Separator::not_equal(Self, Self) -> Bool
 pub fn Separator::to_repr(Self) -> @debug.Repr
 
+#derive(Eq, @debug.Debug)
 pub struct State {
   id : String
   label : String
@@ -81,7 +86,7 @@ pub struct State {
   expanded : Bool
   direction : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn State::equal(Self, Self) -> Bool
 pub fn State::new(String, label? : String, region? : String, role? : Role, descriptions? : ArrayView[String], expanded? : Bool, direction? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
 pub fn State::not_equal(Self, Self) -> Bool
@@ -89,6 +94,7 @@ pub fn State::to_repr(Self) -> @debug.Repr
 pub fn State::with_descriptions(Self, ArrayView[String]) -> Self
 pub fn State::with_label(Self, String) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct StateDiagram {
   id : String
   states : ReadOnlyArray[State]
@@ -99,7 +105,7 @@ pub struct StateDiagram {
   title : String?
   accessibility_title : String?
   accessibility_description : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn StateDiagram::equal(Self, Self) -> Bool
 pub fn StateDiagram::new(String, ArrayView[State], ArrayView[Transition], regions? : ArrayView[Region], notes? : ArrayView[Note], direction? : @flowchart.Direction, title? : String, accessibility_title? : String, accessibility_description? : String) -> Self
 pub fn StateDiagram::not_equal(Self, Self) -> Bool
@@ -107,6 +113,7 @@ pub fn StateDiagram::to_repr(Self) -> @debug.Repr
 pub fn StateDiagram::with_direction(Self, @flowchart.Direction) -> Self
 pub fn StateDiagram::with_states(Self, ArrayView[State]) -> Self
 
+#derive(Eq, @debug.Debug)
 pub struct Transition {
   id : String
   source : String
@@ -119,7 +126,7 @@ pub struct Transition {
   direction : @flowchart.FlowDirection
   direction_hint : @flowchart.Direction?
   origin : @flowchart.SourceBinding?
-} derive(Eq, @debug.Debug)
+}
 pub fn Transition::equal(Self, Self) -> Bool
 pub fn Transition::new(String, String, String, label? : String, style? : @flowchart.LineStyle, source_marker? : @flowchart.Marker, target_marker? : @flowchart.Marker, min_length? : Int32, direction_hint? : @flowchart.Direction, origin? : @flowchart.SourceBinding) -> Self
 pub fn Transition::not_equal(Self, Self) -> Bool

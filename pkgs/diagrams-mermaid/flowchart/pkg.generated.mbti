@@ -16,10 +16,11 @@ pub fn to_flowchart(@flowchart-ast.Diagram, limits? : @swimlane-syntax.Limits, i
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub struct Conversion {
   flowchart : @moonrockz/diagrams/flowchart.Flowchart?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, @debug.Debug)
+}
 pub fn Conversion::equal(Self, Self) -> Bool
 pub fn Conversion::not_equal(Self, Self) -> Bool
 pub fn Conversion::to_repr(Self) -> @debug.Repr

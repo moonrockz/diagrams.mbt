@@ -1,5 +1,6 @@
 ///|
 /// A predefined character class. The spelling is kept for display.
+#derive(Eq, Debug)
 pub(all) enum ClassKind {
   /// `.`
   Any
@@ -11,7 +12,7 @@ pub(all) enum ClassKind {
   CodePoint(String)
   /// A POSIX bracket class such as `[[:alpha:]]`, stored as `alpha`.
   Posix(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend ClassKind with Eq::{equal, not_equal}
@@ -21,6 +22,7 @@ pub extend ClassKind with @debug.Debug::{to_repr}
 
 ///|
 /// One item of a bracketed character set.
+#derive(Eq, Debug)
 pub(all) enum SetItem {
   /// One literal character, or one escaped character.
   Char(String)
@@ -28,7 +30,7 @@ pub(all) enum SetItem {
   Range(String, String)
   /// A letter escape inside the set, such as `\d`.
   Escape(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend SetItem with Eq::{equal, not_equal}
@@ -38,6 +40,7 @@ pub extend SetItem with @debug.Debug::{to_repr}
 
 ///|
 /// A zero-width position test that consumes no input.
+#derive(Eq, Debug)
 pub(all) enum AnchorKind {
   /// `^`
   LineStart
@@ -55,7 +58,7 @@ pub(all) enum AnchorKind {
   WordBoundary
   /// `\B`
   NonWordBoundary
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend AnchorKind with Eq::{equal, not_equal}
@@ -64,11 +67,12 @@ pub extend AnchorKind with Eq::{equal, not_equal}
 pub extend AnchorKind with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum GroupKind {
   Capturing
   NonCapturing
   Named(String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend GroupKind with Eq::{equal, not_equal}
@@ -78,10 +82,11 @@ pub extend GroupKind with @debug.Debug::{to_repr}
 
 ///|
 /// The direction of a lookaround assertion.
+#derive(Eq, Debug)
 pub(all) enum Look {
   Ahead
   Behind
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Look with Eq::{equal, not_equal}
@@ -91,12 +96,13 @@ pub extend Look with @debug.Debug::{to_repr}
 
 ///|
 /// Symbolic repetition bounds. A repeat is never expanded into copies.
+#derive(Eq, Debug)
 pub struct Bounds {
-  min : Int
-  max : Int?
+  min : Int32
+  max : Int32?
   reluctant : Bool
   spelling : String
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Bounds with Eq::{equal, not_equal}
@@ -107,9 +113,9 @@ pub extend Bounds with @debug.Debug::{to_repr}
 ///|
 /// Make bounds. The spelling defaults to the canonical regex quantifier.
 pub fn Bounds::new(
-  min : Int,
-  max? : Int,
-  reluctant? : Bool = false,
+  min : Int32,
+  max? : Int32,
+  reluctant~ : Bool = false,
   spelling? : String,
 ) -> Bounds {
   let spelling = match spelling {
@@ -129,12 +135,13 @@ pub fn Bounds::new(
       }
     }
   }
-  { min, max, reluctant, spelling }
+  { min, max, reluctant, spelling, }
 }
 
 ///|
 /// The meaning of one expression node. Composite kinds name their children by
 /// node identity, so a model is a flat, bounded arena.
+#derive(Eq, Debug)
 pub(all) enum Kind {
   /// Consumed literal text of one or more code points.
   Literal(String)
@@ -150,7 +157,7 @@ pub(all) enum Kind {
   Repeat(Bounds, String)
   /// A lookaround constraint. `true` marks a positive assertion.
   Assertion(Look, Bool, String)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Kind with Eq::{equal, not_equal}
@@ -159,11 +166,12 @@ pub extend Kind with Eq::{equal, not_equal}
 pub extend Kind with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub struct Node {
   id : String
   kind : Kind
   source : @diagrams.Span?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Node with Eq::{equal, not_equal}
@@ -173,7 +181,7 @@ pub extend Node with @debug.Debug::{to_repr}
 
 ///|
 pub fn Node::new(id : String, kind : Kind, source? : @diagrams.Span) -> Node {
-  { id, kind, source }
+  { id, kind, source, }
 }
 
 ///|
@@ -253,6 +261,7 @@ pub fn Node::label(self : Node) -> String {
 ///|
 /// One immutable regular-expression diagram. It describes the structure of a
 /// pattern; it does not match input.
+#derive(Eq, Debug)
 pub struct Regex {
   id : String
   root : String
@@ -261,7 +270,7 @@ pub struct Regex {
   accessibility_title : String?
   accessibility_description : String?
   pattern : String?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Regex with Eq::{equal, not_equal}

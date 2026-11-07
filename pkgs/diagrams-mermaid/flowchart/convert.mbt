@@ -1,8 +1,9 @@
 ///|
+#derive(Eq, Debug)
 pub struct Conversion {
   flowchart : @model.Flowchart?
   diagnostics : ReadOnlyArray[@diagrams.Diagnostic]
-} derive(Eq, Debug)
+}
 
 ///|
 fn group_label(value : String) -> String {

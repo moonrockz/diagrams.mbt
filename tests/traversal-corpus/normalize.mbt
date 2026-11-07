@@ -809,7 +809,7 @@ pub fn normalize(file : String, files : (String) -> String?) -> String {
   out.push("tree length=\{tree.length()} res=" + opt(tree.resource_id()))
   node_lines(out, tree, rebuilt, other)
   traversal_lines(out, tree)
-  let stem = file.view(end_offset=file.length() - 5).to_owned()
+  let stem = file.exact_view(end=file.length() - 5).to_owned()
   if files(stem + ".graph") is Some(script) {
     graph_lines(out, document, script, files)
   }

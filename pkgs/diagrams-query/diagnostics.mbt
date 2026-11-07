@@ -1,9 +1,10 @@
 ///|
 /// A half-open range of query source text.
+#derive(Eq, Debug)
 pub struct QuerySpan {
   start : QueryPosition
   end : QueryPosition
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QuerySpan with Eq::{equal, not_equal}
@@ -12,10 +13,11 @@ pub extend QuerySpan with Eq::{equal, not_equal}
 pub extend QuerySpan with @debug.Debug::{to_repr}
 
 ///|
+#derive(Eq, Debug)
 pub(all) enum Severity {
   Error
   Warning
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend Severity with Eq::{equal, not_equal}
@@ -26,12 +28,13 @@ pub extend Severity with @debug.Debug::{to_repr}
 ///|
 /// A compile or input diagnostic. `span` is present for query text and absent
 /// for forms built in code.
+#derive(Eq, Debug)
 pub struct QueryDiagnostic {
   code : String
   severity : Severity
   message : String
   span : QuerySpan?
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend QueryDiagnostic with Eq::{equal, not_equal}
@@ -46,22 +49,22 @@ pub let query_diagnostic_codes : ReadOnlyArray[String] = [
   "query/empty-query", "query/unsupported-quantifier", "query/unsupported-anchor",
   "query/unsupported-directive", "query/unsupported-regex", "query/unsupported-anonymous-node",
   "query/unsupported-grouping", "query/unknown-kind", "query/unknown-category", "query/unknown-field",
-  "query/unbound-prefix", "query/invalid-namespace-map", "query/unknown-predicate", "query/predicate-arity",
-  "query/unknown-capture", "query/duplicate-capture", "query/source-limit", "query/pattern-limit",
-  "query/nesting-limit", "query/capture-limit", "query/invalid-limits", "query/unknown-projection-field",
-  "query/projection-limit",
+  "query/unbound-prefix", "query/invalid-namespace-map", "query/unknown-predicate",
+  "query/predicate-arity", "query/unknown-capture", "query/duplicate-capture", "query/source-limit",
+  "query/pattern-limit", "query/nesting-limit", "query/capture-limit", "query/invalid-limits",
+  "query/unknown-projection-field", "query/projection-limit",
 ]
 
 ///|
 fn error(code : String, message : String, span : QuerySpan?) -> QueryDiagnostic {
-  { code, severity: Error, message, span }
+  { code, severity: Error, message, span, }
 }
 
 ///|
 /// Maps UTF-16 offsets of a source text to lines and columns. CRLF, LF and
 /// CR each count as one line break.
 priv struct LineMap {
-  starts : Array[Int]
+  starts : Array[Int32]
 }
 
 ///|
@@ -84,7 +87,7 @@ fn LineMap::new(source : String) -> LineMap {
 }
 
 ///|
-fn LineMap::position(self : LineMap, offset : Int) -> QueryPosition {
+fn LineMap::position(self : LineMap, offset : Int32) -> QueryPosition {
   // The last line start at or before offset.
   let mut low = 0
   let mut high = self.starts.length() - 1
@@ -96,10 +99,10 @@ fn LineMap::position(self : LineMap, offset : Int) -> QueryPosition {
       high = middle - 1
     }
   }
-  { offset, line: low + 1, column: offset - self.starts[low] + 1 }
+  { offset, line: low + 1, column: offset - self.starts[low] + 1, }
 }
 
 ///|
-fn LineMap::span(self : LineMap, start : Int, end : Int) -> QuerySpan {
-  { start: self.position(start), end: self.position(end) }
+fn LineMap::span(self : LineMap, start : Int32, end : Int32) -> QuerySpan {
+  { start: self.position(start), end: self.position(end), }
 }

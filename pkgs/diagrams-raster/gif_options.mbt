@@ -1,10 +1,11 @@
 ///|
 /// GIF uses an explicit logical interval. Full samples a finite plan's complete
 /// duration, or one period of an illustrative plan.
+#derive(Eq, Debug)
 pub(all) enum GifInterval {
   Full
   Interval(start_ms~ : Int64, end_ms~ : Int64)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend GifInterval with Eq::{equal, not_equal}
@@ -15,11 +16,12 @@ pub extend GifInterval with @debug.Debug::{to_repr}
 ///|
 /// Repeat is the number of additional plays after the first, from 1 to 65535.
 /// Once omits the Netscape extension; Forever writes its zero loop count.
+#derive(Eq, Debug)
 pub(all) enum GifLoop {
   Once
   Forever
   Repeat(Int32)
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend GifLoop with Eq::{equal, not_equal}
@@ -31,6 +33,7 @@ pub extend GifLoop with @debug.Debug::{to_repr}
 /// GIF composites onto an opaque background. Frame rate ranges from 1 to 100.
 /// Sampling includes the exact final logical view with one final frame hold.
 /// Delays are rounded deterministically to centiseconds, with a 10ms minimum.
+#derive(Eq, Debug)
 pub(all) struct GifOptions {
   size : RasterSize
   background : Rgba
@@ -38,7 +41,7 @@ pub(all) struct GifOptions {
   interval : GifInterval
   frame_rate : Int32
   loop_behavior : GifLoop
-} derive(Eq, Debug)
+}
 
 ///|
 pub extend GifOptions with Eq::{equal, not_equal}
@@ -102,10 +105,14 @@ fn gif_times(
   }
   let count = intervals + 1L
   guard pixels > 0L && count <= limits.max_cumulative_pixels / pixels else {
-    raise raster_fail("raster/cumulative-pixel-limit", "GIF exceeds its cumulative pixel budget")
+    raise raster_fail(
+      "raster/cumulative-pixel-limit", "GIF exceeds its cumulative pixel budget",
+    )
   }
   guard limits.max_output_bytes.to_int64() >= 782L + count * 20L else {
-    raise raster_fail("raster/output-limit", "GIF byte budget cannot hold its headers and frames")
+    raise raster_fail(
+      "raster/output-limit", "GIF byte budget cannot hold its headers and frames",
+    )
   }
   let result : Array[(Int64, Int32)] = []
   for i in 0L..<intervals {

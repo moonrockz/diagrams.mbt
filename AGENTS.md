@@ -87,9 +87,9 @@ project without updating the PyPI publisher.
 
 Use the shared `html-design` schema for new changes. Read `openspec/README.md`
 and `openspec/config.yaml`; repository-local tracking and approval rules still apply.
-The files under `openspec/schemas/html-design/` and `scripts/openspec-ext.mbtx`
-are managed by Mission Control's openspec-ext bundle. Change the shared source
-and reinstall instead of editing these snapshots. Run `mise run openspec:check`
-and `mise exec -- openspec validate --all --strict` after configuration changes.
+The files under `openspec/schemas/html-design/` are managed by the pinned
+`mission-control-tools` CLI (`.config/mise/config.toml`). Change the shared source
+and reinstall instead of editing these snapshots. Run `mise run openspec:verify`
+after configuration changes.
 OpenSpec artifacts are committed project documentation; existing scratch-document
 rules continue to apply to local notes. Existing changes retain their own schema.
