@@ -8,7 +8,7 @@ import {
   "Milky2018/xml@0.6.1",
   "Milky2018/svg@0.6.0",
   "mizchi/font@0.7.4",
-  "mizchi/image@0.4.3",
+  "mizchi/image@0.5.0",
   "mizchi/zlib@0.4.10",
   "mizchi/pixelmatch@0.6.2",
   "moonbitlang/x@0.5.5",

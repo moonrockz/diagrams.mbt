@@ -9,7 +9,7 @@ pub(all) enum StatementKind {
     operation~ : String,
     assignment~ : String?,
     creation~ : Bool,
-    scope~ : Bool
+    scope~ : Bool,
   )
   Async(sender~ : String, receiver~ : String, label~ : String, reply~ : Bool)
   Starter(String)

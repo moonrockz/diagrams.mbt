@@ -120,7 +120,7 @@ async fn main {
   main.write_string(literals.to_string())
   @fs.write_file(
     directory + "/moon.mod",
-    "name = \"qualification/font-subsets\"\nversion = \"0.0.0\"\nimport {\n  \"mizchi/font@0.7.4\",\n  \"mizchi/pixelmatch@0.6.2\",\n  \"mizchi/image@0.4.3\",\n  \"mizchi/zlib@0.4.10\",\n  \"moonbitlang/x@0.5.5\",\n  \"moonbitlang/async@0.22.7\",\n}\n",
+    "name = \"qualification/font-subsets\"\nversion = \"0.0.0\"\nimport {\n  \"mizchi/font@0.7.4\",\n  \"mizchi/pixelmatch@0.6.2\",\n  \"mizchi/image@0.5.0\",\n  \"mizchi/zlib@0.4.10\",\n  \"moonbitlang/x@0.5.5\",\n  \"moonbitlang/async@0.22.7\",\n}\n",
   )
   @fs.write_file(
     directory + "/moon.pkg",

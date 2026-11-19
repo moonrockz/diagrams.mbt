@@ -6,7 +6,7 @@ pub(all) enum GifTarget {
     id~ : String,
     path~ : String,
     mask~ : String?,
-    point~ : @svg.ConnectorPoint
+    point~ : @svg.ConnectorPoint,
   )
   Visit(@svg.NodeBindingKind)
 }

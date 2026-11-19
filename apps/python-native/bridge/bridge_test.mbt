@@ -68,15 +68,15 @@ test "invalid syntax gives a diagnostic record with a span" {
                       [
                         List([Int(2L), Int(3L), Int(_)]),
                         List([Int(_), Int(_), Int(_)]),
-                      ]
+                      ],
                     ),
-                  ]
+                  ],
                 ),
-              ]
+              ],
             ),
-          ]
+          ],
         ),
-      ]
+      ],
     ) else {
     fail("unexpected response")
   }
@@ -93,7 +93,7 @@ test "invalid UTF-8 gives a diagnostic and no output" {
   assert_true(
     response
     is List(
-      [Int(0L), List([_, Null, List([List([Str("python/invalid-utf8"), ..])])])]
+      [Int(0L), List([_, Null, List([List([Str("python/invalid-utf8"), ..])])])],
     ),
   )
 }

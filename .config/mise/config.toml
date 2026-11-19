@@ -39,7 +39,7 @@ zig = "0.17.0"
 # with tools/bootstrap-moonbit-windows.ps1 (copied from finos/morphir-moonbit with its digests).
 
 [tools."http:moonbit"]
-version = "0.10.20+65efd5b93"
+version = "0.10.21+06da1ed44"
 bin_path = "bin"
 # The "-" markers remove the newlines around each command. Windows runs the hook
 # with `cmd /s /c`, which stops at the first newline: a leading newline runs nothing.
@@ -52,12 +52,12 @@ pwsh -NoProfile -File "{{config_root}}/tools/bootstrap-moonbit-windows.ps1"
 """
 
 [tools."http:moonbit".platforms]
-linux-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.20%2B65efd5b93/moonbit-linux-x86_64.tar.gz" }
-linux-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.20%2B65efd5b93/moonbit-linux-aarch64.tar.gz" }
-macos-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.20%2B65efd5b93/moonbit-darwin-aarch64.tar.gz" }
-windows-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.20%2B65efd5b93/moonbit-windows-x86_64.zip", format = "zip" }
+linux-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.21%2B06da1ed44/moonbit-linux-x86_64.tar.gz" }
+linux-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.21%2B06da1ed44/moonbit-linux-aarch64.tar.gz" }
+macos-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.21%2B06da1ed44/moonbit-darwin-aarch64.tar.gz" }
+windows-x64 = { url = "https://cli.moonbitlang.com/binaries/0.10.21%2B06da1ed44/moonbit-windows-x86_64.zip", format = "zip" }
 # No Windows arm64 build is published; Windows on Arm runs the x64 build under emulation.
-windows-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.20%2B65efd5b93/moonbit-windows-x86_64.zip", format = "zip" }
+windows-arm64 = { url = "https://cli.moonbitlang.com/binaries/0.10.21%2B06da1ed44/moonbit-windows-x86_64.zip", format = "zip" }
 
 # Shared OpenSpec html-design schema check, install and skill setup (mission-control-tools). A released
 # binary, so a MoonBit toolchain change cannot break the OpenSpec tasks. The version must match the

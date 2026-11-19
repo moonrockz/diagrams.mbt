@@ -150,7 +150,7 @@ test "node records walk and lookup through tokens" {
         List([Int(_), Int(_)]),
         Int(0L),
         List([Str("Element")]),
-      ]
+      ],
     ) else {
     fail("task record")
   }
@@ -510,7 +510,7 @@ test "absent external resources fail like MoonBit" {
   }
   guard ok("bpmn_graph_reachable", [Int(without), item, kinds, Null, Null])
     is List(
-      [Str("Failed"), List([Str("InvalidReference"), List([Null, Int(_)])])]
+      [Str("Failed"), List([Str("InvalidReference"), List([Null, Int(_)])])],
     ) else {
     fail("absent resource reference")
   }

@@ -8,7 +8,7 @@ pub(all) enum StatementKind {
     label~ : String?,
     role~ : String?,
     description~ : String?,
-    classes~ : ReadOnlyArray[String]
+    classes~ : ReadOnlyArray[String],
   )
   Composite(id~ : String, label~ : String?)
   EndComposite
@@ -18,7 +18,7 @@ pub(all) enum StatementKind {
     target~ : String,
     label~ : String?,
     source_classes~ : ReadOnlyArray[String],
-    target_classes~ : ReadOnlyArray[String]
+    target_classes~ : ReadOnlyArray[String],
   )
   Description(id~ : String, text~ : String)
   Note(target~ : String, placement~ : String, text~ : String)
