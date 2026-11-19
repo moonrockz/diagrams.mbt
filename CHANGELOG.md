@@ -29,6 +29,9 @@
 - Mermaid flowchart and swimlane labels `.inf` and `-.inf` stay `Infinity` and
   `-Infinity` on MoonBit 0.10.20, whose core writes non-finite JSON numbers as
   quoted strings.
+- `moonrockz/diagrams-raster` imports `mizchi/image@0.5.0`. Version 0.4.3 does
+  not compile on MoonBit 0.10.21, which no longer calls trait implementations
+  as methods without `extend`.
 
 ## 0.4.0 - 2026-10-28
 

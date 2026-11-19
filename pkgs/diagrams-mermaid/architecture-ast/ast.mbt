@@ -7,7 +7,7 @@ pub(all) enum StatementKind {
     icon~ : String?,
     icon_text~ : String?,
     label~ : String?,
-    parent~ : String?
+    parent~ : String?,
   )
   Junction(id~ : String, parent~ : String?)
   Edge(
@@ -15,7 +15,7 @@ pub(all) enum StatementKind {
     target~ : @model.Endpoint,
     label~ : String?,
     source_head~ : Bool,
-    target_head~ : Bool
+    target_head~ : Bool,
   )
   Alignment(axis~ : @model.Axis, members~ : ReadOnlyArray[String])
   Title(String)

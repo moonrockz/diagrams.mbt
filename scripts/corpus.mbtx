@@ -181,8 +181,8 @@ async fn references(
             "source_sha256": String(found),
             "model": Object(_),
             ..
-          }
-        )
+          },
+        ),
       ) if found == sha => ()
       _ =>
         problems.push(

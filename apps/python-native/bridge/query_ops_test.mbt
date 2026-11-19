@@ -78,7 +78,7 @@ test "query records cross the boundary on every target" {
       [
         Str("rows"),
         List([List([Int(0L), List([List([Str("t"), _, values])])])]),
-      ]
+      ],
     ) else {
     fail("no rows")
   }
@@ -104,7 +104,7 @@ test "query records cross the boundary on every target" {
       query_call("query_compile", [Str("(bpmn.task)*"), bindings, Null]),
     )
     is List(
-      [Str("error"), List([List([Str("query/unsupported-quantifier"), ..])])]
+      [Str("error"), List([List([Str("query/unsupported-quantifier"), ..])])],
     ) else {
     fail("expected a diagnostic")
   }
